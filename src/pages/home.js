@@ -1,10 +1,12 @@
 import React from 'react'
+import HeroPost from '../components/HeroPost';
 
 class Home extends React.Component {
-    render(){
+    render() {
         return (
-            <h1>Hi</h1>
-        )}
+            <HeroPost/>
+        )
+    }
 }
 
 export default Home;
