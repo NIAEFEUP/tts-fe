@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 class CardFeature extends React.Component {
     render() {
         return (
-            <Box sx={{
+            <Box
+             sx={{
                 my: 9,
                 display: "flex",
                 justifyContent: "space-around",
@@ -16,9 +17,6 @@ class CardFeature extends React.Component {
                     <Typography
                         variant="h4"
                         color="initial"
-                        sx={{
-                            fontWeight:"normal"
-                        }}
                     >
                         {this.props.title}
                     </Typography>
@@ -56,7 +54,7 @@ CardFeature.propTypes = {
     subtitle: PropTypes.string.isRequired, 
     text: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
-    diretion: PropTypes.string.isRequired,
+    direction: PropTypes.string.isRequired,
 }
 
 export default CardFeature;

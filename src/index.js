@@ -7,7 +7,7 @@ import "./style.css"
 ReactDOM.render( 
   <React.StrictMode> 
     <Header/>
-    <Home/>
+    <Home/> 
   </React.StrictMode>,
   document.getElementById('root')
-);
+); 

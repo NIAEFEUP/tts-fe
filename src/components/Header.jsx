@@ -9,7 +9,6 @@ class Header extends React.Component {
     return (
       <AppBar
         position="static"
-        elevation={1}
         sx={{
           background: Colors.BLACK
         }}
