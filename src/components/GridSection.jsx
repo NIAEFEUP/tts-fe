@@ -9,7 +9,7 @@ import { CalendarIcon, PencilAltIcon, ClockIcon } from "@heroicons/react/outline
 const useStyles = makeStyles({
   box: {
     width: "100%",
-    padding: "1rem",
+    padding: "1rem 0",
     margin: "4rem auto",
     backgroundColor: "#eee",
     border: "0.2rem solid #ccc",
