@@ -2,10 +2,21 @@ import { Container, Divider } from '@mui/material';
 import React from 'react'
 import Hero from '../components/Hero';
 import CardFeature from '../components/CardFeature';
+import ProfileCard from '../components/profile/ProfileCard';
+import Student from '../components/profile/Student';
 import GridSection from '../components/GridSection';
 
 class Home extends React.Component {
+
     render() {
+
+        let student = new Student({
+            id: "id",
+            name: "Afonso Medeiros",
+            email: "up20xxxxxxx@edu.fe.up.pt",
+            profilePicture: "some-path.png",
+        });
+
         return (
             <Container>
                 <Hero />
@@ -24,6 +35,11 @@ class Home extends React.Component {
                     image=""
                     direction="row-reverse"
                 />
+
+                <ProfileCard 
+                    student={student}
+                />
+
                 <GridSection />
             </Container>
         )
