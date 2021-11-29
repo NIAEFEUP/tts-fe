@@ -2,6 +2,7 @@ import { Container, Divider } from '@mui/material';
 import React from 'react'
 import Hero from '../components/Hero';
 import CardFeature from '../components/CardFeature';
+import GridSection from '../components/GridSection';
 
 class Home extends React.Component {
     render() {
@@ -23,6 +24,7 @@ class Home extends React.Component {
                     image=""
                     direction="row-reverse"
                 />
+                <GridSection />
             </Container>
         )
     }
