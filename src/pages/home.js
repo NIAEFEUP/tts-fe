@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import CardFeature from '../components/CardFeature';
 import ProfileCard from '../components/profile/ProfileCard';
 import Student from '../components/profile/Student';
+import GridSection from '../components/GridSection';
 
 class Home extends React.Component {
 
@@ -34,11 +35,15 @@ class Home extends React.Component {
                     image=""
                     direction="row-reverse"
                 />
+<<<<<<< HEAD
 
                 <ProfileCard 
                     student={student}
                 />
 
+=======
+                <GridSection />
+>>>>>>> e5221d7938323fe7c59b26d60d7f64c1fc455eb9
             </Container>
         )
     }
