@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
         textTransform: "none",
         width: "100%",
         justifyContent: "flex-start",
-        color: "#444444",
+        color: theme.palette.dark.main,
         paddingLeft: "1em",
     },
     selectedButton: {

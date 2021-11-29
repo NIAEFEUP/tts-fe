@@ -1,21 +1,22 @@
 import React, {useState} from "react";
 import PropTypes from 'prop-types';
 import { makeStyles } from "@mui/styles";
-import { Home, Assessment, Today, Tune } from '@mui/icons-material';
-import Button from '@mui/material/Button';
+import { Home, Assessment, Today, Tune, Menu } from '@mui/icons-material';
 
 import Student from "./Student";
 import OptionRow from "./OptionRow";
 import Logo from "./Logo";
-import { Avatar, Divider, Grid } from "@mui/material";
+import { Avatar, Divider, Grid, Button } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
     profileCard: {
         maxWidth: "17em",
         height: "80vh",
-        border: "2px solid black",
+        border: "1px solid " + theme.palette.dark.main,
+        borderRadius: "10px",
         margin: "1em",
         padding: "2em",
+        position: "relative",
     },
     studentInfo: {
         margin: "1em 0",
@@ -37,6 +38,25 @@ const useStyles = makeStyles((theme) => ({
     },
     optionButtons: {
         textTransform: "none",
+    },
+    closeSidebar: {
+        position: "absolute",
+        bottom: "2em",
+        right: "2em",
+        border: "1px solid " + theme.palette.primary.main,
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.main,
+        }
+    },
+    bottomButton: {
+        position: "absolute",
+        bottom: "2em",
+        left: "2em",
+        backgroundColor: "#dddddd",
+        border: "1px solid " + theme.palette.dark.main,
+        "&:hover": {
+            backgroundColor: "#dddddd",
+        }
     },
 }));
 
@@ -93,6 +113,25 @@ const ProfileCard = ({ student }) => {
                     setSelectedButton={setSelectedButton}
                 />
             ))}
+
+
+            <Button
+                variant="contained"
+                color="secondary"
+                className={classes.bottomButton} 
+            >
+                Something
+            </Button>
+
+
+            <Button 
+                className={classes.closeSidebar} 
+                variant="contained"
+                color="secondary"
+            >
+                <Menu />
+            </Button>
+            
 
         </div>
     );
