@@ -12,7 +12,8 @@ class Home extends React.Component {
         let student = new Student({
             id: "id",
             name: "Afonso Medeiros",
-            email: "up20xxxxxxx@edu.fe.up.pt"
+            email: "up20xxxxxxx@edu.fe.up.pt",
+            profilePicture: "some-path.png",
         });
 
         return (
