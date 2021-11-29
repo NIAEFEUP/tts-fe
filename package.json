@@ -5,8 +5,8 @@
   "dependencies": {
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^5.1.1",
     "@heroicons/react": "^1.0.5",
+    "@mui/icons-material": "^5.1.1",
     "@mui/material": "^5.1.0",
     "@mui/styles": "^5.2.1",
     "@testing-library/jest-dom": "^5.11.4",

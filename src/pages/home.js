@@ -35,15 +35,12 @@ class Home extends React.Component {
                     image=""
                     direction="row-reverse"
                 />
-<<<<<<< HEAD
 
                 <ProfileCard 
                     student={student}
                 />
 
-=======
                 <GridSection />
->>>>>>> e5221d7938323fe7c59b26d60d7f64c1fc455eb9
             </Container>
         )
     }

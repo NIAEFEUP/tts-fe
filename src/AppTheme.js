@@ -1,14 +1,25 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
+
 const theme = responsiveFontSizes(createTheme({
     palette: {
         primary: {
-            main: "#46ae9a",
+            main: "#DC4F47",
         },
         secondary: {
-            main: "#e0f2f2",
+            main: "#4F1315",
         },
-    }
+    },
+    status: {
+        danger: "orange",
+    },
+    typography: {
+        fontFamily: [
+            "Poppins",
+            "Roboto",
+            "sans-serif",
+        ].join(","),
+    },
 }));
 
 // Add custom palette variants
@@ -18,7 +29,7 @@ theme.palette = {
         main: "#C1D2D6",
     },
     dark: {
-        main: "#444444",
+        main: "#333333",
     },
 };
 
