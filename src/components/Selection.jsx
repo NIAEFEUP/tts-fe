@@ -4,8 +4,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
 
@@ -29,33 +29,26 @@ const useStyles = makeStyles((theme) => ({
   header: {
     textAlign: "center",
     color: `${theme.palette.primary.main}`,
-    marginBottom: "1rem"
-  }
+    marginBottom: "1rem",
+  },
 }));
 
-const semesters = [
-  { label: 1 },
-  { label: 2 },
-]
+const semesters = [{ label: 1 }, { label: 2 }];
 
-const years = [
-  { label: 1 },
-  { label: 2 },
-  { label: 3 },
-]
+const years = [{ label: 1 }, { label: 2 }, { label: 3 }];
 
 const universities = [
-  { label: 'Faculdade de Engenharia da Universidade do Porto' },
-  { label: 'Faculdade de Ciêcnias da Universidade do Porto' },
-  { label: 'Faculdade de Desporto da Universidade do Porto' },
-  { label: 'Faculdade de Farmácia da Universidade do Porto' },
+  { label: "Faculdade de Engenharia da Universidade do Porto" },
+  { label: "Faculdade de Ciêcnias da Universidade do Porto" },
+  { label: "Faculdade de Desporto da Universidade do Porto" },
+  { label: "Faculdade de Farmácia da Universidade do Porto" },
 ];
 
 const courses = [
-  { label: 'Licenciatura em Engenharia Informática e Computação' },
-  { label: 'Licenciatura em Engenharia Eletrotécnica e de Computadores' },
-  { label: 'Licenciatura em Engenharia Mecânica' },
-  { label: 'Mestrado em Engenharia Informática e Computação' },
+  { label: "Licenciatura em Engenharia Informática e Computação" },
+  { label: "Licenciatura em Engenharia Eletrotécnica e de Computadores" },
+  { label: "Licenciatura em Engenharia Mecânica" },
+  { label: "Mestrado em Engenharia Informática e Computação" },
 ];
 
 const Item = styled(Paper)(({ theme }) => ({
