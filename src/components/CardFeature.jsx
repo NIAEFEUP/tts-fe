@@ -1,53 +1,55 @@
-import { CardMedia, Typography, Container } from '@mui/material';
-import React from 'react';
-import { Box } from '@mui/system';
+import React from 'react'; 
 import PropTypes from 'prop-types';
+import { CardMedia, Typography, Container } from '@mui/material';
+import { Box } from '@mui/system'; 
+import { makeStyles } from "@mui/styles"; 
 
-class CardFeature extends React.Component {
-    render() {
+const useStyles = makeStyles((theme) => ({
+    leadText: { 
+        fontWeight: "light",
+        mb: 2,
+    },
+    featureImage: {
+        width: 600
+    },
+    layout: {
+        marginTop: "4em",
+        display: "flex", 
+        justifyContent: "space-around", 
+        flexDirection: (props) => props.direction
+    },
+
+})); 
+
+const CardFeature = ({title, subtitle, text, image, direction}) => { 
+    const styleProps = { direction: direction }
+    const classes = useStyles(styleProps);
         return (
-            <Box
-             sx={{
-                my: 9,
-                display: "flex",
-                justifyContent: "space-around",
-                flexDirection: this.props.direction,
-            }}>
+            <Box className={classes.layout} >
                 <Container maxWidth="lg">
-                    <Typography
-                        variant="h4"
-                        color="initial"
-                    >
-                        {this.props.title}
+                    <Typography variant="h4" >
+                        {title}
                     </Typography>
-
                     <Typography
                         variant="h6"
                         color="text.secondary"
-                        sx={{
-                            fontWeight: "light",
-                            mb: 2,
-                        }}
+                        className={classes.leadText}
                     >
-                        {this.props.subtitle}
+                        {subtitle}
                     </Typography> 
-
-                    <Typography 
-                    variant="tbody" 
-                    color="initial">
-                        {this.props.text}
+                    <Typography variant="tbody">
+                        {text}
                     </Typography>
 
                 </Container>
-                <CardMedia
-                    sx={{ width: 600 }}
+                <CardMedia 
+                    className={classes.featureImage}
                     component="img"
-                    image={this.props.image}
+                    image={image}
                 />
             </Box>
         )
-    }
-}
+};
 
 CardFeature.propTypes = {
     title: PropTypes.string.isRequired, 
