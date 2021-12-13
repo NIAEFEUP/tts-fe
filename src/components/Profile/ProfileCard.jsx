@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     studentName: {
         fontSize: "1.2em",
         fontWeight: "bold",
-        color: theme.palette.primary.main,
+        color: theme.palette.dark.main,
         marginBottom: "0.2em",
     },
     divider: {
@@ -43,10 +43,10 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute",
         bottom: "2em",
         right: "2em",
-        border: "1px solid " + theme.palette.primary.main,
+        border: "1px solid ",
         "&:hover": {
             backgroundColor: theme.palette.secondary.main,
-        }
+        }, 
     },
     bottomButton: {
         position: "absolute",

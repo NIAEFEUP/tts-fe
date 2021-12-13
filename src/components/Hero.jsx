@@ -1,6 +1,5 @@
 import React from 'react';
 import Typography from '@mui/material/Typography'
-import { Stack, Button } from '@mui/material';
 import { Box } from '@mui/system';
 
 
@@ -8,10 +7,7 @@ class HeroPost extends React.Component {
     render() {
         return (
             <Box
-                sx={{
-                    pt: 9,
-                    pb: 6,
-                }}
+                sx={{ pt: 12, pb: 10, }}
             >
                 <Typography
                     component="h1"
@@ -26,37 +22,12 @@ class HeroPost extends React.Component {
                     variant="h5"
                     color="text.secondary"
                     align="center"
-                    sx={{
-                        fontWeight: 'light'
-                    }}
+                    sx={{ fontWeight: 'light' }}
                     paragraph
                 >
                     The best application to choose your schedule
                 </Typography>
 
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    justifyContent="center"
-                    sx={{
-                        pt: 3
-                    }}
-                >
-                    <Button
-                        variant="outlined"
-                        href="#"
-                        color="inherit"
-                    >
-                        TTS website
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        href="#"
-                        color="inherit"
-                    >
-                        FEUP exchange website
-                    </Button>
-                </Stack>
             </Box>
         )
     }
