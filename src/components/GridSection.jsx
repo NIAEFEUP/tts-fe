@@ -4,9 +4,9 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import { CalendarIcon, PencilAltIcon, ClockIcon } from "@heroicons/react/outline";
+import { Event, Edit, Schedule } from "@mui/icons-material";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   box: {
     width: "100%",
     padding: "1rem 0",
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   icon: {
     width: "auto",
     height: "auto",
-    color: "#10948b",
+    color: `${theme.palette.primary.main}`,
     padding: "auto 10rem",
   },
   dialog: {
@@ -35,9 +35,9 @@ const useStyles = makeStyles({
     textAlign: "center",
   },
   text: {
-    fontSize: "large"
-  }
-});
+    fontSize: "large",
+  },
+}));
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -46,38 +46,28 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const information = [
+  { icon: Event, headline: "Horário Inicial", text: "Consultar horário incial feito pelo departamento do curso", },
+  { icon: Edit, headline: "Solicitar Troca", text: "Escolher a(s) turma(s) destino para as unidades curriculares com horários indesejados", },
+  { icon: Schedule, headline: "Aguardar Resultados", text: "Consultar horário incial feito pelo departamento do curso", },
+];
+
 export default function GridSection() {
   const classes = useStyles();
   return (
     <Box className={classes.box} sx={{ flexGrow: 1 }}>
       <Grid container spacing={4}>
-        <Grid item xs={12} sm={4} md={4} xl={4}>
-          <Item className={classes.item}>
-            <CalendarIcon className={classes.icon} />
-          </Item>
-          <span className={classes.dialog}>
-            <h2>Horário Inicial</h2>
-            <p className={classes.text}>Consultar horário incial feito pelo departamento do curso</p>
-          </span>
-        </Grid>
-        <Grid item xs={12} sm={4} md={4} xl={4}>
-          <Item className={classes.item}>
-            <PencilAltIcon className={classes.icon} />
-          </Item>
-          <span className={classes.dialog}>
-            <h2>Solicitar troca</h2>
-            <p className={classes.text}>Escolher a(s) turma(s) destino para as unidades curriculares com horários indesejados</p>
-          </span>
-        </Grid>
-        <Grid item xs={12} sm={4} md={4} xl={4}>
-          <Item className={classes.item}>
-            <ClockIcon className={classes.icon} />
-          </Item>
-          <span className={classes.dialog}>
-            <h2>Aguardar resultados</h2>
-            <p className={classes.text}>Esperar pelo resultado do processamento otimizado</p>
-          </span>
-        </Grid>
+        {information.map((item, key) => (
+          <Grid item key={key} xs={12} sm={4} md={4} xl={4}>
+            <Item className={classes.item}>
+              <item.icon className={classes.icon}/>
+            </Item>
+            <span className={classes.dialog}>
+              <h2>{item.headline}</h2>
+              <p className={classes.text}>{item.text}</p>
+            </span>
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );
