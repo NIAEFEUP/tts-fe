@@ -1,4 +1,4 @@
-FROM node:10.16.0-alpine
+FROM node:16-alpine3.12
 
 RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
