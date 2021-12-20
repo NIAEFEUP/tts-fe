@@ -1,13 +1,19 @@
 import * as React from "react";
-import Autocomplete from "@mui/material/Autocomplete";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
+import {
+  Box,
+  Grid,
+  Paper,
+  TextField,
+  Stack,
+  Button,
+  Autocomplete,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -26,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 1rem",
     margin: "auto",
   },
+  menuItem: {
+    textAlign: "left",
+  },
   header: {
     textAlign: "center",
     color: `${theme.palette.primary.main}`,
@@ -33,9 +42,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const semesters = [{ label: 1 }, { label: 2 }];
-
-const years = [{ label: 1 }, { label: 2 }, { label: 3 }];
+const semesters = [1, 2];
+const schoolyears = [1, 2, 3];
 
 const universities = [
   { label: "Faculdade de Engenharia da Universidade do Porto" },
@@ -59,6 +67,17 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Selection() {
+  const [semester, setSemester] = React.useState("");
+  const [schoolyear, setSchoolyear] = React.useState("");
+
+  const handleChangeSchoolyear = (event) => {
+    setSchoolyear(event.target.value);
+  };
+
+  const handleChangeSemester = (event) => {
+    setSemester(event.target.value);
+  };
+
   const classes = useStyles();
   return (
     <Box className={classes.box} sx={{ flexGrow: 1 }}>
@@ -87,22 +106,40 @@ export default function Selection() {
         </Grid>
         <Grid item xs={12} sm={6} md={6} xl={6}>
           <Item className={classes.item}>
-            <Autocomplete
-              disablePortal
-              id="university-selection"
-              options={years}
-              renderInput={(params) => <TextField {...params} label="Ano Letivo" />}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="schoolyear-selection-select-label">Ano Letivo</InputLabel>
+              <Select
+                labelId="schoolyear-selection-select-label"
+                id="schoolyear-selection"
+                label="Ano Letivo"
+                className={classes.menuItem}
+                value={schoolyear}
+                onChange={handleChangeSchoolyear}
+              >
+                {schoolyears.map((item, key) => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Item>
         </Grid>
         <Grid item xs={12} sm={6} md={6} xl={6}>
           <Item className={classes.item}>
-            <Autocomplete
-              disablePortal
-              id="semester-selection"
-              options={semesters}
-              renderInput={(params) => <TextField {...params} label="Semestre" />}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="semester-selection-select-label">Semestre</InputLabel>
+              <Select
+                labelId="semester-selection-select-label"
+                label="Semestre"
+                id="semester-selection"
+                className={classes.menuItem}
+                value={semester}
+                onChange={handleChangeSemester}
+              >
+                {semesters.map((item, key) => (
+                  <MenuItem value={item}>{item}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Item>
         </Grid>
         <Grid item xs={12} sm={12} md={12} xl={12}>
