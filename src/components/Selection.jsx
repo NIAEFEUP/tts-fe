@@ -1,6 +1,6 @@
-import * as React from "react";
-import { makeStyles } from "@mui/styles";
-import { styled } from "@mui/material/styles";
+import * as React from 'react';
+import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import {
   Box,
   Grid,
@@ -13,32 +13,32 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from "@mui/material";
+} from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
   box: {
-    width: "100%",
-    padding: "1rem 0",
-    margin: "4rem auto",
-    backgroundColor: "#fafafa",
-    border: "0.2rem solid #ccc",
-    borderRadius: "0.25rem",
+    width: '100%',
+    padding: '1rem 0',
+    margin: '4rem auto',
+    backgroundColor: '#fafafa',
+    border: '0.2rem solid #ccc',
+    borderRadius: '0.25rem',
   },
   item: {
-    color: "white",
-    boxShadow: "none",
-    borderRadius: "0.25rem",
-    background: "#fafafa",
-    padding: "0 1rem",
-    margin: "auto",
+    color: 'white',
+    boxShadow: 'none',
+    borderRadius: '0.25rem',
+    background: '#fafafa',
+    padding: '0 1rem',
+    margin: 'auto',
   },
   menuItem: {
-    textAlign: "left",
+    textAlign: 'left',
   },
   header: {
-    textAlign: "center",
+    textAlign: 'center',
     color: `${theme.palette.primary.main}`,
-    marginBottom: "1rem",
+    marginBottom: '1rem',
   },
 }));
 
@@ -46,29 +46,29 @@ const semesters = [1, 2];
 const schoolyears = [1, 2, 3];
 
 const universities = [
-  { label: "Faculdade de Engenharia da Universidade do Porto" },
-  { label: "Faculdade de Ciêcnias da Universidade do Porto" },
-  { label: "Faculdade de Desporto da Universidade do Porto" },
-  { label: "Faculdade de Farmácia da Universidade do Porto" },
+  { label: 'Faculdade de Engenharia da Universidade do Porto' },
+  { label: 'Faculdade de Ciêcnias da Universidade do Porto' },
+  { label: 'Faculdade de Desporto da Universidade do Porto' },
+  { label: 'Faculdade de Farmácia da Universidade do Porto' },
 ];
 
 const courses = [
-  { label: "Licenciatura em Engenharia Informática e Computação" },
-  { label: "Licenciatura em Engenharia Eletrotécnica e de Computadores" },
-  { label: "Licenciatura em Engenharia Mecânica" },
-  { label: "Mestrado em Engenharia Informática e Computação" },
+  { label: 'Licenciatura em Engenharia Informática e Computação' },
+  { label: 'Licenciatura em Engenharia Eletrotécnica e de Computadores' },
+  { label: 'Licenciatura em Engenharia Mecânica' },
+  { label: 'Mestrado em Engenharia Informática e Computação' },
 ];
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "center",
+  textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
 
 export default function Selection() {
-  const [semester, setSemester] = React.useState("");
-  const [schoolyear, setSchoolyear] = React.useState("");
+  const [semester, setSemester] = React.useState('');
+  const [schoolyear, setSchoolyear] = React.useState('');
 
   const handleChangeSchoolyear = (event) => {
     setSchoolyear(event.target.value);
@@ -90,7 +90,9 @@ export default function Selection() {
               id="university-selection"
               className={classes.autocomplete}
               options={universities}
-              renderInput={(params) => <TextField {...params} label="Faculdade" />}
+              renderInput={(params) => (
+                <TextField {...params} label="Faculdade" />
+              )}
             />
           </Item>
         </Grid>
@@ -107,17 +109,21 @@ export default function Selection() {
         <Grid item xs={12} sm={6} md={6} xl={6}>
           <Item className={classes.item}>
             <FormControl fullWidth>
-              <InputLabel id="schoolyear-selection-select-label">Ano Letivo</InputLabel>
+              <InputLabel id="schoolyear-selection-select-label">
+                Ano Letivo
+              </InputLabel>
               <Select
                 labelId="schoolyear-selection-select-label"
                 id="schoolyear-selection"
                 label="Ano Letivo"
                 className={classes.menuItem}
                 value={schoolyear}
-                onChange={handleChangeSchoolyear}
+                onChange={(e) => handleChangeSchoolyear(e)}
               >
-                {schoolyears.map((item, key) => (
-                  <MenuItem value={item}>{item}</MenuItem>
+                {schoolyears.map((item, index) => (
+                  <MenuItem value={item} key={`schoolyear-${index}`}>
+                    {item}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -126,17 +132,21 @@ export default function Selection() {
         <Grid item xs={12} sm={6} md={6} xl={6}>
           <Item className={classes.item}>
             <FormControl fullWidth>
-              <InputLabel id="semester-selection-select-label">Semestre</InputLabel>
+              <InputLabel id="semester-selection-select-label">
+                Semestre
+              </InputLabel>
               <Select
                 labelId="semester-selection-select-label"
                 label="Semestre"
                 id="semester-selection"
                 className={classes.menuItem}
                 value={semester}
-                onChange={handleChangeSemester}
+                onChange={(e) => handleChangeSemester(e)}
               >
-                {semesters.map((item, key) => (
-                  <MenuItem value={item}>{item}</MenuItem>
+                {semesters.map((item, index) => (
+                  <MenuItem value={item} key={`semester-${index}`}>
+                    {item}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
