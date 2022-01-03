@@ -29,7 +29,7 @@ docker-compose build
 
 After build, run to execute:
 ```bash
-docker-compose up -d
+docker-compose up
 ```
 
 To stop the container: 
