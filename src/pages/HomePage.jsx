@@ -1,6 +1,5 @@
-import React from 'react'
-import { Container, Divider } from '@mui/material';
-
+import React from "react";
+import { Container, Divider } from "@mui/material";
 import Hero from '../components/Hero';
 import CardFeature from '../components/CardFeature';
 import GridSection from '../components/GridSection';

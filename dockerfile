@@ -3,6 +3,8 @@ FROM node:16-alpine3.12
 RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
 
+COPY .*rc ./
+COPY .prettier* ./
 COPY package*.json ./
 
 RUN npm install
