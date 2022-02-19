@@ -1,14 +1,10 @@
 import React from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageLayout from "./components/Layout/PageLayout";
 import FeupExchangePage from "./pages/FeupExchangePage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
-import TimeTablePage from "./pages/TimeTablePage";
+import TimetablePage from "./pages/TimetablePage";
 
 const AppRouter = () => (
     <BrowserRouter>
@@ -23,7 +19,7 @@ const AppRouter = () => (
                     </PageLayout>
                 }
             />
-                
+
             <Route
                 exact
                 path="/profile"
@@ -39,7 +35,7 @@ const AppRouter = () => (
                 path="/timetable"
                 element={
                     <PageLayout key="/">
-                        <TimeTablePage />
+                        <TimetablePage />
                     </PageLayout>
                 }
             />
