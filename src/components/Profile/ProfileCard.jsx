@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
         height: "80vh",
         border: "1px solid " + theme.palette.dark.main,
         borderRadius: "10px",
-        margin: "1rem",
         padding: "2rem",
         position: "relative",
     },

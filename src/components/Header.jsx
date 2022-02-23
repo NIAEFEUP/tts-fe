@@ -1,37 +1,25 @@
-import React from 'react'
+import React from "react";
 import { Link } from "react-router-dom";
-import Toolbar from '@mui/material/Toolbar';
-import { Typography, AppBar, Button, MenuItem } from '@mui/material';
-
+import Toolbar from "@mui/material/Toolbar";
+import { Typography, AppBar, Button, MenuItem } from "@mui/material";
 
 const Header = () => {
     return (
-        <AppBar
-            position="static"
-            >
+        <AppBar position="static">
             <Toolbar variant="dense">
-                <MenuItem component={Link} to={'/'}>
-                    <Typography
-                        variant="h6"
-                        sx={{ mr: 2 }}
-                    >
+                <MenuItem component={Link} to={"/"}>
+                    <Typography variant="h6" sx={{ mr: 2 }}>
                         TTS Niaefeup
                     </Typography>
                 </MenuItem>
-                <MenuItem component={Link} to={'/timetable'}>
-                    <Button color="inherit">
-                        Time Table
-                    </Button>
+                <MenuItem component={Link} to={"/timetable"}>
+                    <Button color="inherit">Time Table</Button>
                 </MenuItem>
-                <MenuItem component={Link} to={'/feupexchange'}>
-                    <Button color="inherit">
-                        FEUP exchange
-                    </Button>
+                <MenuItem component={Link} to={"/feupexchange"}>
+                    <Button color="inherit">FEUP exchange</Button>
                 </MenuItem>
-                    <MenuItem component={Link} to={'/profile'}>
-                        <Button color="inherit">
-                            Profile
-                        </Button>
+                <MenuItem component={Link} to={"/profile"}>
+                    <Button color="inherit">Profile</Button>
                 </MenuItem>
             </Toolbar>
         </AppBar>

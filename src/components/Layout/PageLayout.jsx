@@ -4,7 +4,7 @@ import Header from "../Header";
 import Footer from "../Footer";
 
 const PageLayout = ({ children }) => (
-    <div>
+    <div className="layout">
         <Header />
         {children}
         <Footer />
