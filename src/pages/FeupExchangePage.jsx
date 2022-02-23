@@ -1,10 +1,10 @@
-import React from "react";
-import { feupExchangeStyles } from "../styles/FeupExchange";
+import * as React from "react";
+import Box from "@mui/material/Box";
 import Student from "../components/Profile/Student";
 import ProfileCard from "../components/Profile/ProfileCard";
-import { Grid } from "@mui/material";
+import { feupExchangeStyles } from "../styles/FeupExchange";
 
-const FeupExchangePage = () => {
+export default function FeupExchangePage() {
     let student = new Student({
         id: "id",
         name: "Afonso Medeiros",
@@ -14,17 +14,21 @@ const FeupExchangePage = () => {
     const classes = feupExchangeStyles();
 
     return (
-        <Grid container className={classes.container}>
-            <Grid container spacing={2} className={classes.container}>
-                <Grid item xs={12} sm={8} md={6} xl={4}>
+        <div className={classes.container}>
+            <Box
+                sx={{
+                    display: "flex",
+                    borderRadius: 1,
+                    padding: "1rem",
+                }}
+            >
+                <Box>
                     <ProfileCard student={student} />
-                </Grid>
-                <Grid item xs={12} sm={8} md={6} xl={4}>
-                    <div></div>
-                </Grid>
-            </Grid>
-        </Grid>
+                </Box>
+                <Box sx={{ flexGrow: 1 }}>
+                    <div className="schedule"></div>
+                </Box>
+            </Box>
+        </div>
     );
-};
-
-export default FeupExchangePage;
+}
