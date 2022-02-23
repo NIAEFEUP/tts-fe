@@ -1,8 +1,8 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { makeStyles } from "@mui/styles";
 
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({
     optionButton: {
@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         justifyContent: "flex-start",
         color: theme.palette.dark.main,
-        paddingLeft: "1em",
+        paddingLeft: "1rem",
     },
     selectedButton: {
         fontWeight: "bold",
@@ -21,12 +21,11 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     icon: {
-        marginRight: "0.3em",
+        marginRight: "0.3rem",
     },
 }));
 
 const OptionRow = ({ Icon, label, selectedButton, setSelectedButton }) => {
-
     const isSelected = selectedButton === label;
 
     const classes = useStyles();
@@ -38,7 +37,11 @@ const OptionRow = ({ Icon, label, selectedButton, setSelectedButton }) => {
                 variant={isSelected ? "contained" : "text"}
                 size="large"
                 color={isSelected ? "secondary" : "primary"}
-                className={isSelected ? `${classes.optionButton} ${classes.selectedButton}` : classes.optionButton}
+                className={
+                    isSelected
+                        ? `${classes.optionButton} ${classes.selectedButton}`
+                        : classes.optionButton
+                }
             >
                 <Icon className={classes.icon} />
                 {label}
@@ -53,6 +56,5 @@ OptionRow.propTypes = {
     selectedButton: PropTypes.string.isRequired,
     setSelectedButton: PropTypes.func.isRequired,
 };
-
 
 export default OptionRow;

@@ -9,10 +9,8 @@ const ProfilePage = () => {
         email: "up20xxxxxxx@edu.fe.up.pt",
         profilePicture: "some-path.png",
     });
-    
-    return (
-        <ProfileCard student={student} />
-    );
+
+    return <ProfileCard student={student} />;
 };
 
 export default ProfilePage;
