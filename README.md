@@ -9,31 +9,37 @@
       <img src="https://img.shields.io/badge/nodejs-v16-red&?style=for-the-badge&logo=node.js" alt="nodejs"> 
     </a> 
   </p>
-</p> 
+</p>
 
 A platform to students build their schedules.  
 Made with :heart: by NIAEFEUP.
 
-# Installation 
+# Installation
 
-## Dependencies 
+## Dependencies
+
 To run this project you must have installed:
-- [`docker`](https://www.docker.com/)
-- [`docker compose`](https://www.docker.com/)
 
-## How to run 
-To build the application run: 
+-   [`docker`](https://www.docker.com/)
+-   [`docker compose`](https://www.docker.com/)
+
+## How to run
+
+To build the application run:
+
 ```bash
 docker-compose build
 ```
 
 After build, run to execute:
+
 ```bash
 docker-compose up
 ```
 
-To stop the container: 
-```bash 
+To stop the container:
+
+```bash
 docker-compose down
 ```
 

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import {
     Box,
@@ -13,7 +13,7 @@ import {
     FormControl,
     InputLabel,
 } from "@mui/material";
-import { selectionStyles } from "../styles/components/Selection";
+import { selectionStyles } from "../../styles/components/Selection";
 
 const semesters = [1, 2];
 const schoolyears = ["2020/2021", "2021/2022", "2022/2023"];

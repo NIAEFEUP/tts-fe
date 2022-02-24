@@ -1,5 +1,5 @@
 import React from "react";
-import Selection from "../components/Selection";
+import Selection from "../components/TimeTableScheduler/Selection";
 import { timeTableStyles } from "../styles/TimeTable";
 
 const TimeTablePage = () => {

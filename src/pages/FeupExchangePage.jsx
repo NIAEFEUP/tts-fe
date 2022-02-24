@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Student from "../components/Profile/Student";
 import ProfileCard from "../components/Profile/ProfileCard";
