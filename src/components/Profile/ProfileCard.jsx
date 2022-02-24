@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@mui/styles";
-import { Home, Assessment, Today, Tune, Menu } from "@mui/icons-material";
+import { Home, Assessment, Today, Tune } from "@mui/icons-material";
 
 import Student from "./Student";
 import OptionRow from "./OptionRow";
@@ -11,14 +11,18 @@ import { Avatar, Divider, Grid, Button } from "@mui/material";
 const useStyles = makeStyles((theme) => ({
     profileCard: {
         maxWidth: "17rem",
-        height: "80vh",
-        border: "1px solid " + theme.palette.dark.main,
-        borderRadius: "10px",
+        minHeight: "75vh",
+        maxHeight: "100%",
+        border: "2px solid #eee",
+        borderRadius: "0.5rem",
+        backgroundColor: "#fcfcfc",
         padding: "2rem",
         position: "relative",
     },
     studentInfo: {
         margin: "1rem 0",
+        display: "flex",
+        flexDirection: "row",
     },
     profilePicture: {
         marginRight: "1rem",
@@ -64,9 +68,9 @@ const ProfileCard = ({ student }) => {
 
     const options = [
         { Icon: Home, label: "Home" },
-        { Icon: Assessment, label: "My Schedule" },
-        { Icon: Today, label: "Time Table Scheduler" },
-        { Icon: Tune, label: "Preferences" },
+        { Icon: Assessment, label: "Preferences" },
+        { Icon: Today, label: "My Current Schedule" },
+        { Icon: Tune, label: "Settings" },
     ];
 
     const classes = useStyles();
@@ -74,9 +78,7 @@ const ProfileCard = ({ student }) => {
     return (
         <div className={classes.profileCard}>
             <Logo className={classes.logo} />
-
             <Divider className={classes.divider} />
-
             <Grid container className={classes.studentInfo}>
                 <Grid item className={classes.profilePicture}>
                     <Avatar
@@ -93,13 +95,10 @@ const ProfileCard = ({ student }) => {
                     </div>
                 </Grid>
             </Grid>
-
             <Button variant="outlined" className={classes.signOutButton}>
                 Sign Out
             </Button>
-
             <Divider className={classes.divider} />
-
             {options.map(({ Icon, label }, key) => (
                 <OptionRow
                     key={key}
@@ -109,22 +108,6 @@ const ProfileCard = ({ student }) => {
                     setSelectedButton={setSelectedButton}
                 />
             ))}
-
-            <Button
-                variant="contained"
-                color="secondary"
-                className={classes.bottomButton}
-            >
-                Something
-            </Button>
-
-            <Button
-                className={classes.closeSidebar}
-                variant="contained"
-                color="secondary"
-            >
-                <Menu />
-            </Button>
         </div>
     );
 };

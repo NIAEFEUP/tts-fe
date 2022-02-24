@@ -16,7 +16,7 @@ import {
 import { selectionStyles } from "../styles/components/Selection";
 
 const semesters = [1, 2];
-const schoolyears = [1, 2, 3];
+const schoolyears = ["2020/2021", "2021/2022", "2022/2023"];
 
 const universities = [
     { label: "Faculdade de Engenharia da Universidade do Porto" },
@@ -34,9 +34,6 @@ const courses = [
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
 }));
 
 export default function Selection() {
@@ -52,9 +49,10 @@ export default function Selection() {
     };
 
     const classes = selectionStyles();
+
     return (
         <Box className={classes.box} sx={{ flexGrow: 1 }}>
-            <h1 className={classes.header}>Escolhas</h1>
+            <h1 className={classes.header}>Escolha de UCs</h1>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={12} xl={12}>
                     <Item className={classes.item}>
@@ -107,7 +105,15 @@ export default function Selection() {
                         </FormControl>
                     </Item>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6} xl={6}>
+
+                <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={6}
+                    xl={6}
+                    className={classes.spacing}
+                >
                     <Item className={classes.item}>
                         <FormControl fullWidth>
                             <InputLabel id="semester-selection-select-label">
@@ -133,7 +139,8 @@ export default function Selection() {
                         </FormControl>
                     </Item>
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} xl={12}>
+
+                <Grid item xs={12}>
                     <Item className={classes.item}>
                         <Stack
                             spacing={2}

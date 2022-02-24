@@ -2,7 +2,9 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Student from "../components/Profile/Student";
 import ProfileCard from "../components/Profile/ProfileCard";
-import { feupExchangeStyles } from "../styles/FeupExchange";
+import { useStyles, sxs } from "../styles/FeupExchange";
+import ChangeScheduleForm from "../components/FeupExchange/ChangeScheduleForm";
+import ChangeSchedulePreview from "../components/FeupExchange/ChangeSchedulePreview";
 
 export default function FeupExchangePage() {
     let student = new Student({
@@ -11,22 +13,22 @@ export default function FeupExchangePage() {
         email: "up20xxxxxxx@edu.fe.up.pt",
         profilePicture: "some-path.png",
     });
-    const classes = feupExchangeStyles();
+
+    const classes = useStyles();
 
     return (
         <div className={classes.container}>
-            <Box
-                sx={{
-                    display: "flex",
-                    borderRadius: 1,
-                    padding: "1rem",
-                }}
-            >
-                <Box>
+            <Box sx={sxs.wrapper}>
+                <Box sx={sxs.spacing}>
                     <ProfileCard student={student} />
                 </Box>
-                <Box sx={{ flexGrow: 1 }}>
-                    <div className="schedule"></div>
+
+                <Box sx={sxs.form} className={classes.height}>
+                    <ChangeScheduleForm />
+                </Box>
+
+                <Box sx={sxs.preview} className={classes.height}>
+                    <ChangeSchedulePreview />
                 </Box>
             </Box>
         </div>

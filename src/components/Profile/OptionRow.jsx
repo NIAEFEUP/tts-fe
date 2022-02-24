@@ -9,15 +9,17 @@ const useStyles = makeStyles((theme) => ({
         textTransform: "none",
         width: "100%",
         justifyContent: "flex-start",
-        color: theme.palette.dark.main,
+        color: `${theme.palette.dark.main}dd`,
         paddingLeft: "1rem",
+        marginBottom: "0.5rem",
     },
     selectedButton: {
         fontWeight: "bold",
-        color: theme.palette.secondary.main,
-        backgroundColor: theme.palette.primary.main,
+        color: "#fff",
+        marginBottom: "0.5rem",
+        backgroundColor: theme.palette.secondary.main,
         "&:hover": {
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.secondary.light,
         },
     },
     icon: {
