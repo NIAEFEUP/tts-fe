@@ -1,8 +1,8 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { useStyles, sxs } from "../../styles/ChangeScheduleForm";
-import ChooseUCs from "./ChooseUCs";
-import ChooseOptions from "./ChooseOptions";
+import SelectCourses from "./SelectCourses";
+import SelectClassOptions from "./SelectClassOptions";
 import ScheduleBoxFormat from "./ScheduleBoxFormat";
 
 export default function ChangeScheduleForm() {
@@ -16,8 +16,8 @@ export default function ChangeScheduleForm() {
             </Box>
 
             <Box display="flex" sx={sxs.spaceAbove}>
-                <ChooseUCs />
-                <ChooseOptions />
+                <SelectCourses />
+                <SelectClassOptions />
             </Box>
         </Box>
     );

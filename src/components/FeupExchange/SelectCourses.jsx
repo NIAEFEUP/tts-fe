@@ -3,7 +3,7 @@ import { ucs } from "../../utils";
 import { useStyles } from "../../styles/ChangeScheduleForm";
 import { Checkbox, FormGroup, FormControlLabel } from "@mui/material";
 
-export default function ChooseUCs() {
+export default function SelectCourses() {
     const classes = useStyles();
 
     return (
