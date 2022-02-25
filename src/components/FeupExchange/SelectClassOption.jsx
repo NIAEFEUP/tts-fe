@@ -1,4 +1,7 @@
 import React from "react";
+import { sxs } from "../../styles/ChangeScheduleForm";
+import { useTheme } from "@mui/material/styles";
+import { MenuProps } from "../../utils";
 import {
     Box,
     Chip,
@@ -10,25 +13,38 @@ import {
     ListItemText,
     OutlinedInput,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { sxs } from "../../styles/ChangeScheduleForm";
-import { MenuProps, courseSchedules, getStyles } from "../../utils";
 
 export default function SelectClassOption({ course, index }) {
     const theme = useTheme();
-    const [personName, setPersonName] = React.useState([]);
-
+    const [scheduleChoice, setScheduleChoice] = React.useState([]);
     const handleChange = (event) => {
         const {
             target: { value },
         } = event;
-
-        // On autofill we get a stringified value.
-        setPersonName(typeof value === "string" ? value.split(",") : value);
+        setScheduleChoice(typeof value === "string" ? value.split(",") : value); // On autofill we get a stringified value.
     };
 
+    const getStyles = (displayName, scheduleChoice, theme) => {
+        return {
+            fontWeight:
+                scheduleChoice.indexOf(displayName) === -1
+                    ? theme.typography.fontWeightRegular
+                    : theme.typography.fontWeightMedium,
+        };
+    };
+
+    const courseSchedules = [
+        { class: "3MIEIC01", time: "09:00-11:00", weekday: "2ªf", teacher: "RGR" },
+        { class: "3MIEIC02", time: "09:30-11:30", weekday: "2ªf", teacher: "PFS" },
+        { class: "3MIEIC03", time: "10:30-12:30", weekday: "2ªf", teacher: "SFCF" },
+        { class: "3MIEIC04", time: "11:00-13:00", weekday: "4ªf", teacher: "SFCF" },
+        { class: "3MIEIC05", time: "11:00-13:00", weekday: "4ªf", teacher: "RGR" },
+        { class: "3MIEIC06", time: "14:00-16:00", weekday: "6ªf", teacher: "RGR" },
+        { class: "3MIEIC07", time: "14:00-16:00", weekday: "6ªf", teacher: "PFS" },
+    ];
+
     return (
-        <FormControl sx={sxs.select} key={`${course.acronym}-${index}`} size="small">
+        <FormControl sx={sxs.select} size="small">
             <InputLabel sx={sxs.input} id="multiple-chip-label">
                 {`${course.name} (${course.acronym})`}
             </InputLabel>
@@ -36,14 +52,14 @@ export default function SelectClassOption({ course, index }) {
                 multiple
                 id="multiple-chip"
                 labelId="multiple-chip-label"
-                value={personName}
+                value={scheduleChoice}
                 MenuProps={MenuProps}
                 onChange={handleChange}
                 input={<OutlinedInput id="select-multiple-chip" label={`${course.name} (${course.acronym})`} />}
                 renderValue={(selected) => (
                     <Box sx={sxs.selectValue}>
                         {selected.map((value) => (
-                            <Chip key={value} label={value} />
+                            <Chip color="primary" key={value} label={value} />
                         ))}
                     </Box>
                 )}
@@ -54,9 +70,9 @@ export default function SelectClassOption({ course, index }) {
                         <MenuItem
                             key={`${course.acronym}-${schedule.class}`}
                             value={displayName}
-                            style={getStyles(schedule.class, personName, theme)}
+                            style={getStyles(schedule.class, scheduleChoice, theme)}
                         >
-                            <Checkbox checked={personName.indexOf(displayName) > -1} />
+                            <Checkbox checked={scheduleChoice.indexOf(displayName) > -1} />
                             <ListItemText primary={displayName} />
                         </MenuItem>
                     );

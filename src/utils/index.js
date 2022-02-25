@@ -1,10 +1,3 @@
-export function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
-    };
-}
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 export const MenuProps = {
@@ -15,16 +8,6 @@ export const MenuProps = {
         },
     },
 };
-
-export const courseSchedules = [
-    { class: "3MIEIC01", time: "09:00-11:00", weekday: "2ªf", teacher: "RGR" },
-    { class: "3MIEIC02", time: "09:30-11:30", weekday: "2ªf", teacher: "PFS" },
-    { class: "3MIEIC03", time: "10:30-12:30", weekday: "2ªf", teacher: "SFCF" },
-    { class: "3MIEIC04", time: "11:00-13:00", weekday: "4ªf", teacher: "SFCF" },
-    { class: "3MIEIC05", time: "11:00-13:00", weekday: "4ªf", teacher: "RGR" },
-    { class: "3MIEIC06", time: "14:00-16:00", weekday: "6ªf", teacher: "RGR" },
-    { class: "3MIEIC07", time: "14:00-16:00", weekday: "6ªf", teacher: "PFS" },
-];
 
 export const ucs = [
     {

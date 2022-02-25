@@ -30,6 +30,7 @@ export const sxs = {
         marginTop: 0.5,
         marginBottom: 0.75,
         width: "auto",
+        maxWidth: 360,
     },
     flexColumn: {
         flexDirection: "column",
