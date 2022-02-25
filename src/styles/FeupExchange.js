@@ -33,7 +33,7 @@ export const sxs = {
     form: {
         marginRight: "1rem",
         minHeight: "100%",
-        backgroundColor: "#fcfcfc",
+        backgroundColor: "#fafafa",
         padding: "1rem",
         borderRadius: "0.5rem",
         border: "2px solid #eeeeee",
@@ -41,7 +41,7 @@ export const sxs = {
     preview: {
         flexGrow: 1,
         minHeight: "100%",
-        backgroundColor: "#fcfcfc",
+        backgroundColor: "#fafafa",
         padding: "1rem",
         borderRadius: "0.5rem",
         border: "2px solid #eeeeee",

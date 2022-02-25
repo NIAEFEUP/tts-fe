@@ -27,11 +27,14 @@ export const useStyles = makeStyles((theme) => ({
 export const sxs = {
     select: {
         marginTop: 0.5,
-        marginBottom: 1,
+        marginBottom: 0.75,
         width: 350,
     },
     flexColumn: {
         flexDirection: "column",
+    },
+    spaceAbove: {
+        marginTop: "1.5rem",
     },
     selectValue: {
         display: "flex",

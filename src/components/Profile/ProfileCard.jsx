@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
         maxHeight: "100%",
         border: "2px solid #eee",
         borderRadius: "0.5rem",
-        backgroundColor: "#fcfcfc",
-        padding: "2rem",
+        backgroundColor: "#fafafa",
+        padding: "1.5rem",
         position: "relative",
     },
     studentInfo: {
