@@ -39,11 +39,7 @@ const OptionRow = ({ Icon, label, selectedButton, setSelectedButton }) => {
                 variant={isSelected ? "contained" : "text"}
                 size="large"
                 color={isSelected ? "secondary" : "primary"}
-                className={
-                    isSelected
-                        ? `${classes.optionButton} ${classes.selectedButton}`
-                        : classes.optionButton
-                }
+                className={isSelected ? `${classes.optionButton} ${classes.selectedButton}` : classes.optionButton}
             >
                 <Icon className={classes.icon} />
                 {label}

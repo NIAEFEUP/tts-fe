@@ -13,7 +13,7 @@ import {
     FormControl,
     InputLabel,
 } from "@mui/material";
-import { selectionStyles } from "../../styles/components/Selection";
+import { selectionStyles } from "../../styles/Selection";
 
 const semesters = [1, 2];
 const schoolyears = ["2020/2021", "2021/2022", "2022/2023"];
@@ -61,9 +61,7 @@ export default function Selection() {
                             id="university-selection"
                             className={classes.autocomplete}
                             options={universities}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Faculdade" />
-                            )}
+                            renderInput={(params) => <TextField {...params} label="Faculdade" />}
                         />
                     </Item>
                 </Grid>
@@ -73,18 +71,14 @@ export default function Selection() {
                             disablePortal
                             id="course-selection"
                             options={courses}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Curso" />
-                            )}
+                            renderInput={(params) => <TextField {...params} label="Curso" />}
                         />
                     </Item>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6} xl={6}>
                     <Item className={classes.item}>
                         <FormControl fullWidth>
-                            <InputLabel id="schoolyear-selection-select-label">
-                                Ano Letivo
-                            </InputLabel>
+                            <InputLabel id="schoolyear-selection-select-label">Ano Letivo</InputLabel>
                             <Select
                                 labelId="schoolyear-selection-select-label"
                                 id="schoolyear-selection"
@@ -94,10 +88,7 @@ export default function Selection() {
                                 onChange={(e) => handleChangeSchoolyear(e)}
                             >
                                 {schoolyears.map((item, index) => (
-                                    <MenuItem
-                                        value={item}
-                                        key={`schoolyear-${index}`}
-                                    >
+                                    <MenuItem value={item} key={`schoolyear-${index}`}>
                                         {item}
                                     </MenuItem>
                                 ))}
@@ -106,19 +97,10 @@ export default function Selection() {
                     </Item>
                 </Grid>
 
-                <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    md={6}
-                    xl={6}
-                    className={classes.spacing}
-                >
+                <Grid item xs={12} sm={6} md={6} xl={6} className={classes.spacing}>
                     <Item className={classes.item}>
                         <FormControl fullWidth>
-                            <InputLabel id="semester-selection-select-label">
-                                Semestre
-                            </InputLabel>
+                            <InputLabel id="semester-selection-select-label">Semestre</InputLabel>
                             <Select
                                 labelId="semester-selection-select-label"
                                 label="Semestre"
@@ -128,10 +110,7 @@ export default function Selection() {
                                 onChange={(e) => handleChangeSemester(e)}
                             >
                                 {semesters.map((item, index) => (
-                                    <MenuItem
-                                        value={item}
-                                        key={`semester-${index}`}
-                                    >
+                                    <MenuItem value={item} key={`semester-${index}`}>
                                         {item}
                                     </MenuItem>
                                 ))}
@@ -142,11 +121,7 @@ export default function Selection() {
 
                 <Grid item xs={12}>
                     <Item className={classes.item}>
-                        <Stack
-                            spacing={2}
-                            direction="row"
-                            justifyContent="space-between"
-                        >
+                        <Stack spacing={2} direction="row" justifyContent="space-between">
                             <Button variant="outlined">Contacte-nos</Button>
                             <Button variant="contained">Confirmar</Button>
                         </Stack>

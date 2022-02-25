@@ -10,7 +10,7 @@ export default function Hero() {
                 variant="h2"
                 align="center"
                 color="text.primary"
-                gutterBottom="true"
+                gutterBottom={true}
             >
                 Time Table Selector
             </Typography>

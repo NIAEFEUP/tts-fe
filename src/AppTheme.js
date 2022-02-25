@@ -9,15 +9,9 @@ const theme = responsiveFontSizes(
             },
             secondary: {
                 main: "#893632",
+                dark: "#ECC2C1",
                 light: "#9E5956",
-                bright: "#ECC2C1",
             },
-            courses: {
-                t: "#A8A199",
-                tp: "#69656A",
-                al: "#4F2E2E",
-            },
-            feup: "#7D221E",
         },
         status: {
             danger: "orange",
@@ -36,6 +30,23 @@ theme.palette = {
     },
     dark: {
         main: "#2C2C2C",
+        dark: "#444444",
+        light: "#333333",
+    },
+    feup: {
+        main: "#7D221E",
+    },
+    pratical: {
+        main: "#69656A",
+        light: "#868387",
+    },
+    theoretical: {
+        main: "#A8A199",
+        light: "#B9B3AD",
+    },
+    labs: {
+        main: "#4F2E2E",
+        light: "#725757",
     },
 };
 

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
         right: "2rem",
         border: "1px solid ",
         "&:hover": {
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.primary.main,
         },
     },
     bottomButton: {
@@ -81,21 +81,16 @@ const ProfileCard = ({ student }) => {
             <Divider className={classes.divider} />
             <Grid container className={classes.studentInfo}>
                 <Grid item className={classes.profilePicture}>
-                    <Avatar
-                        src={student?.profileImage}
-                        sx={{ width: 50, height: 50 }}
-                    />
+                    <Avatar src={student?.profileImage} sx={{ width: 50, height: 50 }} />
                 </Grid>
                 <Grid item>
                     <div>
-                        <div className={classes.studentName}>
-                            {student?.name}
-                        </div>
+                        <div className={classes.studentName}>{student?.name}</div>
                         <div>{student?.email}</div>
                     </div>
                 </Grid>
             </Grid>
-            <Button variant="outlined" className={classes.signOutButton}>
+            <Button variant="outlined" className={classes.signOutButton} color="secondary">
                 Sign Out
             </Button>
             <Divider className={classes.divider} />
