@@ -29,7 +29,7 @@ export default function ChooseOptions() {
     };
 
     return (
-        <div>
+        <Box display="flex" sx={{ display: "block", flexGrow: 1 }}>
             <h5 className={classes.subheader}>Novas opções</h5>
             <Box display="flex" sx={sxs.flexColumn}>
                 {ucs.map((uc, ucIdx) => (
@@ -63,6 +63,6 @@ export default function ChooseOptions() {
                     </FormControl>
                 ))}
             </Box>
-        </div>
+        </Box>
     );
 }

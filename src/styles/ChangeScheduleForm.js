@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     checkbox: {
         padding: "0.25rem",
         marginLeft: "0.25rem",
+        color: theme.palette.secondary.main,
     },
     header: {
         fontWeight: "600",
@@ -28,7 +29,7 @@ export const sxs = {
     select: {
         marginTop: 0.5,
         marginBottom: 0.75,
-        width: 350,
+        width: "auto",
     },
     flexColumn: {
         flexDirection: "column",

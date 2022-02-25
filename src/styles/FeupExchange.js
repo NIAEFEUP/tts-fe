@@ -36,7 +36,7 @@ export const sxs = {
         backgroundColor: "#fafafa",
         padding: "1rem",
         borderRadius: "0.5rem",
-        border: "2px solid #eeeeee",
+        border: "2px solid #ddd",
     },
     preview: {
         flexGrow: 1,
@@ -44,6 +44,6 @@ export const sxs = {
         backgroundColor: "#fafafa",
         padding: "1rem",
         borderRadius: "0.5rem",
-        border: "2px solid #eeeeee",
+        border: "2px solid #ddd",
     },
 };

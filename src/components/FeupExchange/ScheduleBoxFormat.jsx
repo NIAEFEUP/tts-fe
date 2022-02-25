@@ -8,22 +8,19 @@ export default function ScheduleBoxFormat() {
 
     return (
         <div>
-            <h4 className={classes.header}>Mudança de Horário</h4>
-            <div>
-                <h5 className={classes.subheader}>Turmas alocadas inicialmente</h5>
-                {ucs.map((uc, ucIdx) => (
-                    <>
-                        <Stack direction="row" spacing={1} sx={{ marginBottom: "0.25rem", fontSize: "smaller" }}>
-                            <Chip color="secondary" label={uc.acronym} sx={{ minWidth: 65 }} />
-                            <Chip label={uc.weekday} sx={{ minWidth: 80 }} />
-                            <Chip label={uc.time} sx={{ minWidth: 110 }} />
-                            <Chip label={uc.room} sx={{ minWidth: 60 }} />
-                            <Chip label={uc.teacher} sx={{ minWidth: 75 }} />
-                            <Chip label={uc.class} sx={{ minWidth: 80 }} />
-                        </Stack>
-                    </>
-                ))}
-            </div>
+            <h5 className={classes.subheader}>Turmas alocadas inicialmente</h5>
+            {ucs.map((uc, ucIdx) => (
+                <>
+                    <Stack direction="row" spacing={0.5} sx={{ marginBottom: "0.25rem" }}>
+                        <Chip color="secondary" label={uc.acronym} sx={{ fontSize: "small", minWidth: 65 }} />
+                        <Chip label={uc.weekday} sx={{ fontSize: "small", minWidth: 80 }} />
+                        <Chip label={uc.time} sx={{ fontSize: "small", minWidth: 110 }} />
+                        <Chip label={uc.room} sx={{ fontSize: "small", minWidth: 60 }} />
+                        <Chip label={uc.teacher} sx={{ fontSize: "small", minWidth: 60 }} />
+                        <Chip label={uc.class} sx={{ fontSize: "small", minWidth: 80 }} />
+                    </Stack>
+                </>
+            ))}
         </div>
     );
 }

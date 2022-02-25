@@ -6,11 +6,11 @@ import ChooseOptions from "./ChooseOptions";
 import ScheduleBoxFormat from "./ScheduleBoxFormat";
 
 export default function ChangeScheduleForm() {
-    // eslint-disable-next-line
     const classes = useStyles();
 
     return (
         <Box display="flex" sx={sxs.flexColumn}>
+            <h4 className={classes.header}>Mudança de Horário</h4>
             <Box display="flex">
                 <ScheduleBoxFormat />
             </Box>
