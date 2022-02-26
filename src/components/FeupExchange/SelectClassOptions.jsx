@@ -12,7 +12,7 @@ export default function SelectClassOptions() {
             <h5 className={classes.subheader}>Novas opções</h5>
             <Box display="flex" sx={sxs.flexColumn}>
                 {ucs.map((uc, ucIdx) => (
-                    <SelectClassOption course={uc} index={ucIdx} key={`option-box-${uc.acronym}`} />
+                    <SelectClassOption course={uc} key={`option-box-${uc.acronym}`} />
                 ))}
             </Box>
         </Box>

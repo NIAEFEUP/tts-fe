@@ -1,6 +1,5 @@
 import React from "react";
 import { sxs } from "../../styles/ChangeScheduleForm";
-import { useTheme } from "@mui/material/styles";
 import { MenuProps } from "../../utils";
 import {
     Box,
@@ -14,23 +13,13 @@ import {
     OutlinedInput,
 } from "@mui/material";
 
-export default function SelectClassOption({ course, index }) {
-    const theme = useTheme();
+export default function SelectClassOption({ course }) {
     const [scheduleChoice, setScheduleChoice] = React.useState([]);
     const handleChange = (event) => {
         const {
             target: { value },
         } = event;
         setScheduleChoice(typeof value === "string" ? value.split(",") : value); // On autofill we get a stringified value.
-    };
-
-    const getStyles = (displayName, scheduleChoice, theme) => {
-        return {
-            fontWeight:
-                scheduleChoice.indexOf(displayName) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
     };
 
     const courseSchedules = [
@@ -58,22 +47,21 @@ export default function SelectClassOption({ course, index }) {
                 input={<OutlinedInput id="select-multiple-chip" label={`${course.name} (${course.acronym})`} />}
                 renderValue={(selected) => (
                     <Box sx={sxs.selectValue}>
-                        {selected.map((value) => (
-                            <Chip color="primary" key={value} label={value} />
+                        {selected.map((value, valueIdx) => (
+                            <Chip color="primary" key={`${value}-${valueIdx}`} label={`(${valueIdx + 1}) ${value}`} />
                         ))}
                     </Box>
                 )}
             >
                 {courseSchedules.map((schedule) => {
-                    let displayName = `${schedule.class}, ${schedule.teacher}, ${schedule.weekday}, ${schedule.time}`;
+                    let option = `${schedule.class}, ${schedule.teacher}, ${schedule.weekday}, ${schedule.time}`;
+                    let isChecked = scheduleChoice.indexOf(option) > -1;
+                    let finalText = isChecked ? `(${scheduleChoice.indexOf(option) + 1}) ${option}` : option;
+
                     return (
-                        <MenuItem
-                            key={`${course.acronym}-${schedule.class}`}
-                            value={displayName}
-                            style={getStyles(schedule.class, scheduleChoice, theme)}
-                        >
-                            <Checkbox checked={scheduleChoice.indexOf(displayName) > -1} />
-                            <ListItemText primary={displayName} />
+                        <MenuItem key={`${course.acronym}-${schedule.class}`} value={option}>
+                            <Checkbox checked={isChecked} />
+                            <ListItemText primary={finalText} />
                         </MenuItem>
                     );
                 })}
