@@ -1,12 +1,12 @@
 version: "3"
 services:
-  tts-frontend:
-    build:
-      context: .
-    volumes:
-      - ./src:/usr/src/tts-fe/src
-      - ./public:/usr/src/tts-fe/public
-    ports:
-      - 3000:3000
-    environment:
-      - PORT=3000
+    tts-frontend:
+        build:
+            context: .
+        volumes:
+            - ./src:/usr/src/tts-fe/src
+            - ./public:/usr/src/tts-fe/public
+        ports:
+            - 3000:3000
+        environment:
+            - PORT=3000

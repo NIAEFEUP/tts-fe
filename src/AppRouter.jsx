@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageLayout from "./components/Layout/PageLayout";
 import FeupExchangePage from "./pages/FeupExchangePage";
 import HomePage from "./pages/HomePage";
@@ -23,7 +19,7 @@ const AppRouter = () => (
                     </PageLayout>
                 }
             />
-                
+
             <Route
                 exact
                 path="/profile"

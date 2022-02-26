@@ -22,10 +22,9 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "lint": "npm run eslint .",
-        "style:all": "npm run style:write && npm run lint",
-        "style:check": "npm run prettier --check .",
-        "style:write": "npm run prettier --write ."
+        "lint": "npx eslint .",
+        "check": "npx prettier --check .",
+        "format": "npx prettier --write ."
     },
     "eslintConfig": {
         "extends": [

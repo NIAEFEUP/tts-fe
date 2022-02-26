@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import Selection from "../components/TimeTableScheduler/Selection";
+import { timeTableStyles } from "../styles/TimeTable";
 
-const TimeTablePage = () => (
-    <div>
-        Welcome to the TimeTablePage!
-    </div>
-);
+const TimeTablePage = () => {
+    const classes = timeTableStyles();
+
+    return (
+        <div className={classes.container}>
+            <Selection />
+        </div>
+    );
+};
 
 export default TimeTablePage;
