@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { useStyles, sxs } from "../../styles/ChangeScheduleForm";
 import SelectClassOption from "./SelectClassOption";
 
-export default function SelectClassOptions({ checkedHook, ucs }) {
+export default function SelectClassOptions({ checkedHook, ucs, selectedClasses, setSelectedClasses }) {
     const classes = useStyles();
     const [checked] = checkedHook;
 
@@ -12,7 +12,13 @@ export default function SelectClassOptions({ checkedHook, ucs }) {
             <h5 className={classes.subheader}>Novas opções</h5>
             <Box display="flex" sx={sxs.flexColumn}>
                 {ucs.map((uc, ucIdx) => (
-                    <SelectClassOption active={checked[ucIdx]} course={uc} key={`option-box-${uc.acronym}`} />
+                    <SelectClassOption
+                        key={`option-box-${uc.acronym}`}
+                        course={uc}
+                        active={checked[ucIdx]}
+                        selectedClasses={selectedClasses}
+                        setSelectedClasses={setSelectedClasses}
+                    />
                 ))}
             </Box>
         </Box>

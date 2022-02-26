@@ -6,7 +6,7 @@ import SelectCourses from "./SelectCourses";
 import SelectClassOptions from "./SelectClassOptions";
 import ScheduleBoxFormat from "./ScheduleBoxFormat";
 
-export default function ChangeScheduleForm() {
+export default function ChangeScheduleForm({ selectedClasses, setSelectedClasses }) {
     const classes = useStyles();
     const [checked, setChecked] = useState(Array(ucs.length).fill(false));
 
@@ -19,7 +19,12 @@ export default function ChangeScheduleForm() {
 
             <Box display="flex" sx={sxs.spaceAbove}>
                 <SelectCourses checkedHook={[checked, setChecked]} ucs={ucs} />
-                <SelectClassOptions checkedHook={[checked, setChecked]} ucs={ucs} />
+                <SelectClassOptions
+                    checkedHook={[checked, setChecked]}
+                    ucs={ucs}
+                    selectedClasses={selectedClasses}
+                    setSelectedClasses={setSelectedClasses}
+                />
             </Box>
         </Box>
     );
