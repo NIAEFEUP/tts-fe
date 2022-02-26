@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
     footer: {
         height: "3rem",
         color: "#fff",
-        backgroundColor: theme.palette.dark.light,
+        backgroundColor: theme.palette.dark.main,
     },
 }));
 

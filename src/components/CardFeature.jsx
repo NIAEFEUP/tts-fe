@@ -27,20 +27,12 @@ const CardFeature = ({ title, subtitle, text, image, direction }) => {
         <Box className={classes.layout}>
             <Container maxWidth="lg">
                 <Typography variant="h4">{title}</Typography>
-                <Typography
-                    variant="h6"
-                    color="text.secondary"
-                    className={classes.leadText}
-                >
+                <Typography variant="h6" color="text.primary" className={classes.leadText}>
                     {subtitle}
                 </Typography>
                 <Typography variant="tbody">{text}</Typography>
             </Container>
-            <CardMedia
-                className={classes.featureImage}
-                component="img"
-                image={image}
-            />
+            <CardMedia className={classes.featureImage} component="img" image={image} />
         </Box>
     );
 };

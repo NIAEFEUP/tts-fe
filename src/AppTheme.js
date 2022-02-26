@@ -30,11 +30,13 @@ theme.palette = {
     },
     dark: {
         main: "#2C2C2C",
-        dark: "#444444",
-        light: "#333333",
+        dark: "#333",
+        light: "#888",
     },
     feup: {
-        main: "#7D221E",
+        main: "#893632", // 7D221E
+        dark: "#ECC2C1",
+        light: "#9E5956",
     },
     pratical: {
         main: "#69656A",

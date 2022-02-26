@@ -1,5 +1,5 @@
 import React from "react";
-import { sxs } from "../../styles/ChangeScheduleForm";
+import { useStyles, sxs } from "../../styles/ChangeScheduleForm";
 import { MenuProps } from "../../utils";
 import {
     Box,
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 
 export default function SelectClassOption({ course }) {
+    const classes = useStyles();
     const [scheduleChoice, setScheduleChoice] = React.useState([]);
     const handleChange = (event) => {
         const {
@@ -48,7 +49,7 @@ export default function SelectClassOption({ course }) {
                 renderValue={(selected) => (
                     <Box sx={sxs.selectValue}>
                         {selected.map((value, valueIdx) => (
-                            <Chip color="primary" key={`${value}-${valueIdx}`} label={`(${valueIdx + 1}) ${value}`} />
+                            <Chip key={`${value}-${valueIdx}`} label={`(${valueIdx + 1}) ${value}`} />
                         ))}
                     </Box>
                 )}
@@ -61,7 +62,10 @@ export default function SelectClassOption({ course }) {
                     return (
                         <MenuItem key={`${course.acronym}-${schedule.class}`} value={option}>
                             <Checkbox checked={isChecked} />
-                            <ListItemText primary={finalText} />
+                            <ListItemText
+                                primary={finalText}
+                                className={isChecked ? classes.checked : classes.unchecked}
+                            />
                         </MenuItem>
                     );
                 })}

@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     checkbox: {
         padding: "0.25rem",
         marginLeft: "0.25rem",
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
     },
     header: {
         fontWeight: "600",
@@ -22,6 +22,12 @@ export const useStyles = makeStyles((theme) => ({
         letterSpacing: "0.00rem",
         textTransform: "uppercase",
         color: theme.palette.pratical.main,
+    },
+    checked: {
+        color: theme.palette.dark.main,
+    },
+    unchecked: {
+        color: theme.palette.dark.light,
     },
 }));
 

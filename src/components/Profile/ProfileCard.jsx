@@ -90,7 +90,7 @@ const ProfileCard = ({ student }) => {
                     </div>
                 </Grid>
             </Grid>
-            <Button variant="outlined" className={classes.signOutButton} color="secondary">
+            <Button variant="outlined" className={classes.signOutButton} color="primary">
                 Sign Out
             </Button>
             <Divider className={classes.divider} />
