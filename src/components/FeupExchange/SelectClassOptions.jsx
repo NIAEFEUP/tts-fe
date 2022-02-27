@@ -6,7 +6,6 @@ import SelectClassOption from "./SelectClassOption";
 export default function SelectClassOptions({ checkedHook, ucs }) {
     const classes = useStyles();
     const [checked] = checkedHook;
-    console.log(checked);
 
     return (
         <Box display="flex" sx={{ display: "block", flexGrow: 1 }}>

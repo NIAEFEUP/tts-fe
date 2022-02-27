@@ -11,10 +11,12 @@ import {
     ListItemText,
     OutlinedInput,
 } from "@mui/material";
+import ChipBadge from "../Common/ChipBadge";
 
 export default function SelectClassOption({ course, active }) {
     const classes = useStyles();
     const [scheduleChoice, setScheduleChoice] = React.useState([]);
+
     const handleChange = (event) => {
         const {
             target: { value },
@@ -22,6 +24,7 @@ export default function SelectClassOption({ course, active }) {
         setScheduleChoice(typeof value === "string" ? value.split(",") : value); // On autofill we get a stringified value.
     };
 
+    // TODO: This should be a request based on the value of `course`
     const courseSchedules = [
         { class: "3MIEIC01", time: "09:00-11:00", weekday: "2ªf", teacher: "RGR" },
         { class: "3MIEIC02", time: "09:30-11:30", weekday: "2ªf", teacher: "PFS" },
@@ -50,7 +53,12 @@ export default function SelectClassOption({ course, active }) {
                         renderValue={(selected) => (
                             <Box sx={sxs.selectValue}>
                                 {selected.map((value, valueIdx) => (
-                                    <Chip key={`${value}-${valueIdx}`} label={`(${valueIdx + 1}) ${value}`} />
+                                    <Chip
+                                        size="small"
+                                        label={value}
+                                        key={`${value}-${valueIdx}`}
+                                        avatar={<ChipBadge label={valueIdx + 1} />}
+                                    />
                                 ))}
                             </Box>
                         )}
@@ -58,13 +66,13 @@ export default function SelectClassOption({ course, active }) {
                         {courseSchedules.map((schedule) => {
                             let option = `${schedule.class}, ${schedule.teacher}, ${schedule.weekday}, ${schedule.time}`;
                             let isChecked = scheduleChoice.indexOf(option) > -1;
-                            let finalText = isChecked ? `(${scheduleChoice.indexOf(option) + 1}) ${option}` : option;
 
                             return (
                                 <MenuItem key={`${course.acronym}-${schedule.class}`} value={option}>
                                     <Checkbox checked={isChecked} />
+                                    {isChecked ? <ChipBadge label={scheduleChoice.indexOf(option) + 1} /> : null}
                                     <ListItemText
-                                        primary={finalText}
+                                        primary={option}
                                         className={isChecked ? classes.checked : classes.unchecked}
                                     />
                                 </MenuItem>

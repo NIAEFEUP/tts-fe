@@ -36,6 +36,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     checked: {
         color: theme.palette.dark.main,
+        marginLeft: "0.5rem",
     },
     unchecked: {
         color: theme.palette.dark.light,
@@ -64,5 +65,10 @@ export const sxs = {
     input: {
         fontSize: "0.9rem",
         letterSpacing: 0,
+    },
+    badge: {
+        color: "#fff",
+        marginRight: "0",
+        padding: "-1px",
     },
 };
