@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    Table,
-    TableHead,
-    TableBody,
-    TableRow,
-    TableCell,
-} from "@mui/material";
+import { Table, TableHead, TableBody, TableRow, TableCell, Box } from "@mui/material";
 
 /**
  * This variable stores the first hour to be shown in the schedule table.
@@ -16,25 +10,17 @@ const firstHour = 8;
 /**
  * Titles in the head of the table.
  */
-const headElements = [
-    "Horário",
-    "Segunda",
-    "Terça",
-    "Quarta",
-    "Quinta",
-    "Sexta",
-    "Sábado",
-];
+const headElements = ["Horário", "SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB."];
 
 /**
  * Function resposible for building the table.
  * @returns The complete tts table.
  */
-const ScheduleTable = () => {
+const ScheduleTable = ({ selectedClasses }) => {
     return (
         <Table size="small">
             <ScheduleHead />
-            <ScheduleBody />
+            <ScheduleBody selectedClasses={selectedClasses} />
         </Table>
     );
 };
@@ -61,29 +47,73 @@ const ScheduleHead = () => {
 
 /**
  * Builds the schedule body considering slots of 30 minutes.
- * @param {} classes
+ * @param {} selectedClasses
  */
-const ScheduleBody = () => {
+const ScheduleBody = ({ selectedClasses }) => {
+    let subjectsInfo = selectedClasses.reduce((prev, subject) => [...prev, extractSubjectInfo(...subject)], []);
     let numberOfRows = hourToIndex("24:00") + 1;
-    let schedule = [];
+    let scheduleMatrix = getScheduleMatrix(numberOfRows, headElements.length, subjectsInfo);
+    let schedule = []; 
+    console.log(scheduleMatrix);
     for (let i = 0; i < numberOfRows; i++) {
-        schedule.push(ScheduleBodyLine(i));
+        schedule.push(ScheduleBodyLine(i, scheduleMatrix));
     }
-    return (<TableBody>{schedule}</TableBody>);
+    return <TableBody>{schedule}</TableBody>;
 };
 
-const ScheduleBodyLine = (index) => {
+const ScheduleBodyLine = (index, scheduleMatrix) => {
     return (
         <TableRow key={index}>
-            {headElements.map((obj, j) => {
-                return (
-                    <TableCell align="center" key={j}>
-                        {j === 0 ? getHourInTable(index) : <p>b</p>}
-                    </TableCell>
-                );
+            {headElements.map((obj, j) => { 
+                let matrixValue = scheduleMatrix[index][j]; 
+                if (matrixValue === 0) {
+                    return (
+                        <TableCell align="center" key={j}>
+                            {j === 0 ? getHourInTable(index) : <p>b</p>}
+                        </TableCell>
+                    );
+                } else if (matrixValue !== -1) { 
+                    let rowSpan = matrixValue.endHour - matrixValue.startHour; 
+                    return (
+                        <TableCell align="center" key={j} rowSpan={rowSpan}>
+                            <ScheduleCard subjectInfo={scheduleMatrix[index][j]} />
+                        </TableCell>
+                    );
+                }
             })}
         </TableRow>
     );
+};
+
+const getScheduleMatrix = (rows, cols, subjectsInfo) => {
+    let scheduleMatrix = Array(rows)
+        .fill(null)
+        .map(() => Array(cols).fill(0));
+    for (let i = 0; i < subjectsInfo.length; i++) {
+        let selectedClass = subjectsInfo[i];
+        scheduleMatrix[selectedClass.startHour][selectedClass.day] = selectedClass;
+        for (let j = selectedClass.startHour + 1; j < selectedClass.endHour; j++) {
+            scheduleMatrix[j][selectedClass.day] = -1;
+        }
+    }
+    return scheduleMatrix;
+};
+
+const ScheduleCard = ({ subjectInfo }) => {
+    return <Box></Box>;
+};
+
+/**
+ * IMPORTANT: by the addition of the database this class must be modified.
+ * @param {String} subject The description of the subject in the following format: 'id, professor, day, startHour-endHour'
+ */
+const extractSubjectInfo = (subject) => {
+    let splittedInfo = subject.split(",");
+    let day = parseInt(splittedInfo[2].split("f")) - 1; // 1 - segunda, 2 - terça ...
+    let splittedHour = splittedInfo[3].split("-");
+    let startHour = hourToIndex(splittedHour[0]);
+    let endHour = hourToIndex(splittedHour[1]);
+    return { class: splittedInfo[0], docent: splittedInfo[1], day: day, startHour: startHour, endHour: endHour };
 };
 
 // AUX FUNCTIONS =======================================
@@ -94,7 +124,7 @@ const ScheduleBodyLine = (index) => {
  * @returns The formated hour.
  */
 const getHourInTable = (index) => {
-    if (index % 2 === 0) return (<b>{indexToHour(index)}</b>);
+    if (index % 2 === 0) return <b>{indexToHour(index)}</b>;
 };
 
 /**

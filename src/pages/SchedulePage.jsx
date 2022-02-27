@@ -17,7 +17,7 @@ export default function SchedulePage() {
                 </Box>
                 <Box sx={sxs.preview} className={classes.height}>   
                     <ChangeSchedulePreview />
-                    <ScheduleTable></ScheduleTable>
+                    <ScheduleTable selectedClasses={selectedClasses}/>
                 </Box>
             </Box>
         </div>
