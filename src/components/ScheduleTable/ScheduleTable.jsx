@@ -11,7 +11,7 @@ const firstHour = 8;
  * Titles in the head of the table.
  */
 const headElements = ["Horário", "SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB."];
-
+const weekDay = {'Segunda': 1, 'Terça': 2, 'Quarta': 3, 'Quinta': 4, 'Sexta': 5, 'Sábado': 6}; 
 /**
  * Function resposible for building the table.
  * @returns The complete tts table.
@@ -50,11 +50,10 @@ const ScheduleHead = () => {
  * @param {} selectedClasses
  */
 const ScheduleBody = ({ selectedClasses }) => {
-    let subjectsInfo = selectedClasses.reduce((prev, subject) => [...prev, extractSubjectInfo(...subject)], []);
+    let subjectsInfo = selectedClasses.reduce((prev, subject) => [...prev, extractSubjectInfo(subject)], []);
     let numberOfRows = hourToIndex("24:00") + 1;
     let scheduleMatrix = getScheduleMatrix(numberOfRows, headElements.length, subjectsInfo);
-    let schedule = []; 
-    console.log(scheduleMatrix);
+    let schedule = [];
     for (let i = 0; i < numberOfRows; i++) {
         schedule.push(ScheduleBodyLine(i, scheduleMatrix));
     }
@@ -64,18 +63,18 @@ const ScheduleBody = ({ selectedClasses }) => {
 const ScheduleBodyLine = (index, scheduleMatrix) => {
     return (
         <TableRow key={index}>
-            {headElements.map((obj, j) => { 
-                let matrixValue = scheduleMatrix[index][j]; 
+            {headElements.map((obj, j) => {
+                let matrixValue = scheduleMatrix[index][j];
                 if (matrixValue === 0) {
                     return (
                         <TableCell align="center" key={j}>
-                            {j === 0 ? getHourInTable(index) : <p>b</p>}
+                            {j === 0 ? getHourInTable(index) : <p> </p>}
                         </TableCell>
                     );
-                } else if (matrixValue !== -1) { 
-                    let rowSpan = matrixValue.endHour - matrixValue.startHour; 
+                } else if (matrixValue !== -1) {
+                    let rowSpan = matrixValue.endHour - matrixValue.startHour;
                     return (
-                        <TableCell align="center" key={j} rowSpan={rowSpan}>
+                        <TableCell align="center" key={j} rowSpan={rowSpan} sx={{borderRadius: 2, backgroundColor: "primary.main", zIndex:2}}>
                             <ScheduleCard subjectInfo={scheduleMatrix[index][j]} />
                         </TableCell>
                     );
@@ -100,20 +99,28 @@ const getScheduleMatrix = (rows, cols, subjectsInfo) => {
 };
 
 const ScheduleCard = ({ subjectInfo }) => {
-    return <Box></Box>;
+    return (
+        <Box sx={{ p: 2,  color: "white", fontWeight: "bold",  }}>
+            {subjectInfo.acronym} <br/> 
+            {subjectInfo.class}<br/> 
+            {subjectInfo.name}<br/> 
+            {subjectInfo.time} <br/> 
+            {subjectInfo.teacher}  <br/> 
+            {subjectInfo.room} <br/> 
+        </Box>
+    );
 };
 
 /**
  * IMPORTANT: by the addition of the database this class must be modified.
  * @param {String} subject The description of the subject in the following format: 'id, professor, day, startHour-endHour'
  */
-const extractSubjectInfo = (subject) => {
-    let splittedInfo = subject.split(",");
-    let day = parseInt(splittedInfo[2].split("f")) - 1; // 1 - segunda, 2 - terça ...
-    let splittedHour = splittedInfo[3].split("-");
-    let startHour = hourToIndex(splittedHour[0]);
-    let endHour = hourToIndex(splittedHour[1]);
-    return { class: splittedInfo[0], docent: splittedInfo[1], day: day, startHour: startHour, endHour: endHour };
+const extractSubjectInfo = (subject) => {  
+    let splittedTime = subject.time.split("-"); 
+    subject.startHour = hourToIndex(splittedTime[0]); 
+    subject.endHour = hourToIndex(splittedTime[1]); 
+    subject.day = weekDay[subject.weekday];
+    return subject; 
 };
 
 // AUX FUNCTIONS =======================================
