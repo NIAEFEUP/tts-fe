@@ -27,13 +27,13 @@ export default function SelectClassOption({ course, active, setSelectedClasses, 
 
     // TODO: This should be a request based on the value of `course`
     const courseSchedules = [
-        { class: "3MIEIC01", time: "09:00-11:00", weekday: "2f", teacher: "RGR" },
-        { class: "3MIEIC02", time: "09:30-11:30", weekday: "2f", teacher: "PFS" },
-        { class: "3MIEIC03", time: "10:30-12:30", weekday: "2f", teacher: "SFCF" },
-        { class: "3MIEIC04", time: "11:00-13:00", weekday: "4f", teacher: "SFCF" },
-        { class: "3MIEIC05", time: "11:00-13:00", weekday: "4f", teacher: "RGR" },
-        { class: "3MIEIC06", time: "14:00-16:00", weekday: "6f", teacher: "RGR" },
-        { class: "3MIEIC07", time: "14:00-16:00", weekday: "6f", teacher: "PFS" },
+        { class: "3MIEIC01", time: "09:00-11:00", weekday: "2ªf", teacher: "RGR" },
+        { class: "3MIEIC02", time: "09:30-11:30", weekday: "2ªf", teacher: "PFS" },
+        { class: "3MIEIC03", time: "10:30-12:30", weekday: "2ªf", teacher: "SFCF" },
+        { class: "3MIEIC04", time: "11:00-13:00", weekday: "4ªf", teacher: "SFCF" },
+        { class: "3MIEIC05", time: "11:00-13:00", weekday: "4ªf", teacher: "RGR" },
+        { class: "3MIEIC06", time: "14:00-16:00", weekday: "6ªf", teacher: "RGR" },
+        { class: "3MIEIC07", time: "14:00-16:00", weekday: "6ªf", teacher: "PFS" },
     ];
 
     return (
