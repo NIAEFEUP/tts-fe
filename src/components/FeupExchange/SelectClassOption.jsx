@@ -1,6 +1,5 @@
 import React from "react";
-import { useStyles, sxs } from "../../styles/ChangeScheduleForm";
-import { MenuProps } from "../../utils";
+import { useStyles, sxs, MenuProps } from "../../styles/ChangeScheduleForm";
 import {
     Box,
     Chip,
@@ -13,7 +12,7 @@ import {
     OutlinedInput,
 } from "@mui/material";
 
-export default function SelectClassOption({ course }) {
+export default function SelectClassOption({ course, active }) {
     const classes = useStyles();
     const [scheduleChoice, setScheduleChoice] = React.useState([]);
     const handleChange = (event) => {
@@ -34,42 +33,46 @@ export default function SelectClassOption({ course }) {
     ];
 
     return (
-        <FormControl sx={sxs.select} size="small">
-            <InputLabel sx={sxs.input} id="multiple-chip-label">
-                {`${course.name} (${course.acronym})`}
-            </InputLabel>
-            <Select
-                multiple
-                id="multiple-chip"
-                labelId="multiple-chip-label"
-                value={scheduleChoice}
-                MenuProps={MenuProps}
-                onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label={`${course.name} (${course.acronym})`} />}
-                renderValue={(selected) => (
-                    <Box sx={sxs.selectValue}>
-                        {selected.map((value, valueIdx) => (
-                            <Chip key={`${value}-${valueIdx}`} label={`(${valueIdx + 1}) ${value}`} />
-                        ))}
-                    </Box>
-                )}
-            >
-                {courseSchedules.map((schedule) => {
-                    let option = `${schedule.class}, ${schedule.teacher}, ${schedule.weekday}, ${schedule.time}`;
-                    let isChecked = scheduleChoice.indexOf(option) > -1;
-                    let finalText = isChecked ? `(${scheduleChoice.indexOf(option) + 1}) ${option}` : option;
+        <>
+            {active ? (
+                <FormControl sx={sxs.select} size="small">
+                    <InputLabel sx={sxs.input} id="multiple-chip-label">
+                        {`${course.name} (${course.acronym})`}
+                    </InputLabel>
+                    <Select
+                        multiple
+                        id="multiple-chip"
+                        labelId="multiple-chip-label"
+                        value={scheduleChoice}
+                        MenuProps={MenuProps}
+                        onChange={handleChange}
+                        input={<OutlinedInput id="select-multiple-chip" label={`${course.name} (${course.acronym})`} />}
+                        renderValue={(selected) => (
+                            <Box sx={sxs.selectValue}>
+                                {selected.map((value, valueIdx) => (
+                                    <Chip key={`${value}-${valueIdx}`} label={`(${valueIdx + 1}) ${value}`} />
+                                ))}
+                            </Box>
+                        )}
+                    >
+                        {courseSchedules.map((schedule) => {
+                            let option = `${schedule.class}, ${schedule.teacher}, ${schedule.weekday}, ${schedule.time}`;
+                            let isChecked = scheduleChoice.indexOf(option) > -1;
+                            let finalText = isChecked ? `(${scheduleChoice.indexOf(option) + 1}) ${option}` : option;
 
-                    return (
-                        <MenuItem key={`${course.acronym}-${schedule.class}`} value={option}>
-                            <Checkbox checked={isChecked} />
-                            <ListItemText
-                                primary={finalText}
-                                className={isChecked ? classes.checked : classes.unchecked}
-                            />
-                        </MenuItem>
-                    );
-                })}
-            </Select>
-        </FormControl>
+                            return (
+                                <MenuItem key={`${course.acronym}-${schedule.class}`} value={option}>
+                                    <Checkbox checked={isChecked} />
+                                    <ListItemText
+                                        primary={finalText}
+                                        className={isChecked ? classes.checked : classes.unchecked}
+                                    />
+                                </MenuItem>
+                            );
+                        })}
+                    </Select>
+                </FormControl>
+            ) : null}
+        </>
     );
 }

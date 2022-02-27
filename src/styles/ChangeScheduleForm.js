@@ -1,5 +1,16 @@
 import { makeStyles } from "@mui/styles";
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+export const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
 export const useStyles = makeStyles((theme) => ({
     form: {
         marginRight: "1rem",
@@ -37,6 +48,7 @@ export const sxs = {
         marginBottom: 0.75,
         width: "auto",
         maxWidth: 360,
+        backgroundColor: "#fff",
     },
     flexColumn: {
         flexDirection: "column",

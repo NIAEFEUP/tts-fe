@@ -1,9 +1,8 @@
 import React from "react";
 import { useStyles } from "../../styles/ChangeScheduleForm";
-import { ucs } from "../../utils";
 import { Chip, Stack } from "@mui/material";
 
-export default function ScheduleBoxFormat() {
+export default function ScheduleBoxFormat({ ucs }) {
     const classes = useStyles();
 
     return (
