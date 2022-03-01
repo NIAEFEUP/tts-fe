@@ -3,12 +3,15 @@ import { makeStyles } from "@mui/styles";
 export const selectionStyles = makeStyles((theme) => ({
     box: {
         width: "70vw",
-        padding: "1rem 0",
+        padding: "2rem 1rem",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        boxShadow: 24,
         margin: "auto",
         backgroundColor: "#fafafa",
-        border: "0.2rem solid #ccc",
         borderRadius: "0.25rem",
-        position: "relative",
     },
     item: {
         color: "white",
@@ -27,7 +30,7 @@ export const selectionStyles = makeStyles((theme) => ({
         justifyContent: "start",
     },
     headerBox: {
-        margin: "0 1rem 0.75rem 1rem",
+        margin: "0 1rem 1rem 1rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
