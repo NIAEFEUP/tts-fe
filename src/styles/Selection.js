@@ -14,7 +14,6 @@ export const selectionStyles = makeStyles((theme) => ({
         borderRadius: "0.25rem",
     },
     item: {
-        color: "white",
         boxShadow: "none",
         borderRadius: "0.25rem",
         background: "#fafafa",

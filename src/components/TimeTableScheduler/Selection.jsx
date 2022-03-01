@@ -1,118 +1,138 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/utilities.css";
-import { getDisplayDate, getSchoolYear, getSemester } from "../../utils";
+import { semesterUCs, courses, getSchoolYear, getSemester } from "../../utils";
 import { styled } from "@mui/material/styles";
 import { selectionStyles } from "../../styles/Selection";
-import { Box, Alert, Chip, Paper, Grid, TextField, Stack, Button, Autocomplete, Modal } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
-import DashboardCustomizeRoundedIcon from "@mui/icons-material/DashboardCustomizeRounded";
+import { Collapse, Box, Alert, Chip, Paper, Grid, TextField, Stack, Button, Autocomplete, Modal } from "@mui/material";
+import CourseCheckboxes from "./CourseCheckboxes";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
 }));
 
-export default function Selection() {
+export default function Selection({ openHook, coursesPicked, setCoursesPicked }) {
     const classes = selectionStyles();
-    const [alert, setAlert] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = openHook;
     const [course, setCourse] = useState("");
-    const [inputCourse, setInputCourse] = React.useState("");
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-        if (course !== "") setOpen(false);
-        else {
-            setAlert(true);
-            setTimeout(() => {
-                setAlert(false);
-            }, 5000);
-        }
-    };
+    const [infoOpen, setInfoOpen] = useState(true);
+    const [nextAvailable, setNextAvailable] = useState(false);
 
-    const courses = [
-        { label: "Mestrado em Planeamento e Projecto Urbano" },
-        { label: "Programa de Doutoramento em Arquitetura" },
-        { label: "Programa Doutoral em Segurança e Saúde Ocupacionais" },
-        { label: "Licenciatura em Engenharia Informática e Computação" },
-        { label: "Licenciatura em Engenharia Eletrotécnica e de Computadores" },
-        { label: "Licenciatura em Engenharia Mecânica" },
-        { label: "Mestrado em Engenharia Informática e Computação" },
-    ];
+    useEffect(() => {
+        if (courses.indexOf(course) !== -1 && coursesPicked.length > 0) setNextAvailable(true);
+        else setNextAvailable(false);
+    }, [course, coursesPicked]);
 
     return (
-        <div>
-            <Button variant="outlined" onClick={handleOpen} className={classes.flexCenterStart}>
-                <DashboardCustomizeRoundedIcon color="secondary" sx={{ height: "auto", marginRight: "0.5rem" }} />
-                <span>Editar UCs</span>
-            </Button>
-
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box className={classes.box} sx={{ flexGrow: 1 }}>
-                    <div className={classes.headerBox}>
-                        <div className={classes.flexCenterStart}>
-                            <SchoolOutlinedIcon color="secondary" sx={{ height: "auto" }} />
-                            <h3 className={classes.header}>Escolha de UCs</h3>
-                        </div>
-                        <div className={classes.flexCenterStart}>
-                            <Chip size="small" label={getDisplayDate()} sx={{ marginRight: "0.5rem" }} />
-                            <Chip
-                                color="secondary"
-                                size="small"
-                                label={getSchoolYear()}
-                                sx={{ marginRight: "0.5rem" }}
-                            />
-                            <Chip color="secondary" size="small" label={getSemester()} />
-                        </div>
+        <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+            <Box className={classes.box} sx={{ flexGrow: 1 }}>
+                {/* Header */}
+                <div className={classes.headerBox}>
+                    <div className={classes.flexCenterStart}>
+                        <SchoolOutlinedIcon color="primary" sx={{ height: "auto" }} />
+                        <h3 className={classes.header}>Escolha de UCs</h3>
                     </div>
+                    <div className={classes.flexCenterStart}>
+                        <Chip label={getSchoolYear()} sx={{ marginRight: "0.5rem", fontSize: "large" }} />
+                        <Chip label={getSemester()} sx={{ fontSize: "large" }} />
+                    </div>
+                </div>
 
-                    <Grid container spacing={2}>
-                        {alert ? (
-                            <Grid item xs={12} sm={12} md={12} xl={12}>
-                                <Item className={classes.item}>
-                                    <Alert severity="warning">Please select course before moving on!</Alert>
-                                </Item>
-                            </Grid>
-                        ) : null}
+                <Grid container spacing={2}>
+                    {/* Info Banner */}
+                    <Grid item xs={12} sm={12} md={12} xl={12}>
+                        <Item className={classes.item}>
+                            <Collapse in={infoOpen}>
+                                <Alert
+                                    severity="info"
+                                    size="small"
+                                    style={{ padding: "0 0.75rem" }}
+                                    action={
+                                        <IconButton
+                                            aria-label="close"
+                                            color="inherit"
+                                            size="small"
+                                            onClick={() => {
+                                                setInfoOpen(false);
+                                            }}
+                                        >
+                                            <CloseIcon fontSize="inherit" />
+                                        </IconButton>
+                                    }
+                                >
+                                    Por favor selecione o seu curso principal, seguido das UCs pretendidas.
+                                </Alert>
+                            </Collapse>
+                        </Item>
+                    </Grid>
 
-                        <Grid item xs={12} sm={12} md={12} xl={12}>
-                            <Item className={classes.item}>
-                                <Autocomplete
-                                    value={course}
-                                    onChange={(event, newCourse) => {
-                                        setCourse(newCourse);
-                                    }}
-                                    inputValue={inputCourse}
-                                    onInputChange={(event, newInputCourse) => {
-                                        setInputCourse(newInputCourse);
-                                    }}
-                                    className="bg-white"
-                                    id="course-selection"
-                                    options={courses}
-                                    renderInput={(params) => <TextField {...params} label="Curso" />}
-                                />
-                            </Item>
-                        </Grid>
+                    {/* Autocomplete */}
+                    <Grid item xs={12} sm={12} md={12} xl={12} sx={{ mb: 2 }}>
+                        <Item className={classes.item}>
+                            <Autocomplete
+                                // FIXME: Empty string passed to getElementById().
+                                id="course-selection"
+                                className="bg-white"
+                                options={courses}
+                                value={course}
+                                onChange={(event, newCourse) => {
+                                    setCourse(newCourse);
+                                }}
+                                isOptionEqualToValue={(option, value) => {
+                                    return "" === value.label || option.label === value.label;
+                                }}
+                                renderInput={(params) => <TextField {...params} placeholder="Curso" />}
+                            />
+                        </Item>
+                    </Grid>
 
+                    {/* Choose Courses */}
+                    {courses.indexOf(course) !== -1 ? (
                         <Grid item xs={12}>
                             <Item className={classes.item}>
-                                <Stack spacing={2} direction="row" justifyContent="space-between">
-                                    <Button variant="outlined" href="https://ni.fe.up.pt/#contacts" target="_blank">
-                                        Contacte-nos
-                                    </Button>
-                                    <Button onClick={handleClose} variant="contained">
-                                        Confirmar
-                                    </Button>
+                                <Stack spacing={2} direction="row" justifyContent="center">
+                                    {semesterUCs
+                                        .filter((entry) => entry.semester === 2)
+                                        .map((entry, entryIdx) => (
+                                            <CourseCheckboxes
+                                                key={`select-${entryIdx}`}
+                                                ucs={entry.ucs}
+                                                year={entry.year}
+                                                semester={entry.semester}
+                                                coursesPicked={coursesPicked}
+                                                setCoursesPicked={setCoursesPicked}
+                                            />
+                                        ))}
                                 </Stack>
                             </Item>
                         </Grid>
+                    ) : null}
+
+                    {/* Footer */}
+                    <Grid item xs={12}>
+                        <Item className={classes.item}>
+                            <Stack spacing={2} direction="row" justifyContent="space-between">
+                                <Button variant="outlined" href="https://ni.fe.up.pt/#contacts" target="_blank">
+                                    Contacte-nos
+                                </Button>
+                                {nextAvailable ? (
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => {
+                                            if (nextAvailable) setOpen(false);
+                                        }}
+                                    >
+                                        Confirmar
+                                    </Button>
+                                ) : null}
+                            </Stack>
+                        </Item>
                     </Grid>
-                </Box>
-            </Modal>
-        </div>
+                </Grid>
+            </Box>
+        </Modal>
     );
 }
 

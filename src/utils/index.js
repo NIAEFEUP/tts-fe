@@ -1,5 +1,75 @@
-const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
-const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+export const courses = [
+    { label: "Mestrado em Planeamento e Projecto Urbano" },
+    { label: "Programa de Doutoramento em Arquitetura" },
+    { label: "Programa Doutoral em Segurança e Saúde Ocupacionais" },
+    { label: "Licenciatura em Engenharia Informática e Computação" },
+    { label: "Licenciatura em Engenharia Eletrotécnica e de Computadores" },
+    { label: "Licenciatura em Engenharia Mecânica" },
+    { label: "Mestrado em Engenharia Informática e Computação" },
+];
+
+export const semesterUCs = [
+    { year: 1, semester: 1, ucs: ["AC", "DS", "PRI", "SDLE", "SGI"] },
+    {
+        year: 1,
+        semester: 2,
+        ucs: [
+            "LGP",
+            "ASMA",
+            "ASSO",
+            "BDNR",
+            "CAC",
+            "CPM",
+            "CPA",
+            "DDJD",
+            "ER",
+            "EDAA",
+            "GEE",
+            "GRS",
+            "GSSI",
+            "MK",
+            "MFS",
+            "O",
+            "PLN",
+            "PLR",
+            "SR",
+            "SSI",
+            "SAM",
+            "SETR",
+            "TBD",
+            "VC",
+        ],
+    },
+    {
+        year: 2,
+        semester: 1,
+        ucs: [
+            "API",
+            "AID",
+            "CAC",
+            "CHE",
+            "CPA",
+            "ELS",
+            "ESS",
+            "GSAI",
+            "MS",
+            "MNEC",
+            "RVA",
+            "RI",
+            "S",
+            "SCI",
+            "TACS",
+            "TVVS",
+            "TAIM",
+            "WSDL",
+        ],
+    },
+    {
+        year: 2,
+        semester: 2,
+        ucs: ["D"],
+    },
+];
 
 export const ucs = [
     {
@@ -48,6 +118,9 @@ export const ucs = [
         class: "3MIEIC02",
     },
 ];
+
+const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
 export const getDisplayDate = () => {
     const date = new Date();
