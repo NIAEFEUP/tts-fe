@@ -1,15 +1,9 @@
 import React from "react";
 import ScheduleCell from "./ScheduleCell";
-import { hourToIndex, indexToHour } from "./ScheduleUtils";
+import { getHourList, headElements } from "./ScheduleUtils";
 import { timeTableStyles } from "../../../styles/TimeTable";
 import { SubjectCard } from "./SubjectCard";
-
-/**
- * This variable stores the first hour to be shown in the schedule table.
- * The last hour is always 24:00.
- */
-export const firstHour = 8;
-const headElements = ["", "SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB."];
+import { Hours } from "./Cells/Hour";
 
 const ScheduleTable = ({ selectedClasses }) => {
     return (
@@ -34,28 +28,27 @@ const ScheduleHead = () => {
 const ScheduleBody = ({ selectedClasses }) => {
     const classes = timeTableStyles();
     const hourList = getHourList();
+    const weekDays = headElements;
+    let borderTop = ""; 
     return (
         <div className={classes.tableLineContainer}>
+            {hourList.map((hour, top) => {
+                return weekDays.map((day, left) => {
+                    if (left !== 0 && top !== 0) { 
+                        if (hour === "") borderTop = "0"; 
+                        else borderTop = "solid";
+                        let divClass = timeTableStyles({ top, left, borderTop });
+                        return <div className={divClass.borderHalfHour}></div>;
+                    } return <></>
+                });
+            })}
             {selectedClasses.map((info, _) => {
                 return <SubjectCard subjectInfo={info} />;
             })}
-
-            {hourList.map((hour, i) => {
-                return <ScheduleCell top={i + 1} left={0} rowSpan={1} text={hour} />;
-            })}
+            <Hours/>
+            
         </div>
     );
-};
-
-const getHourList = () => {
-    let numberOfRows = hourToIndex("24:00", firstHour) + 1;
-    let hourList = [];
-    for (let i = 0; i < numberOfRows; i++) {
-        let hour = indexToHour(i, firstHour);
-        if (hour.split(":")[1]  === "30") hourList.push("");
-        else hourList.push(hour);
-    }
-    return hourList;
 };
 
 export default ScheduleTable;

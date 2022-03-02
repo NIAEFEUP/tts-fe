@@ -1,4 +1,3 @@
-
 /**
  *
  * @param {String} hour Hour string in the format "hh:mm". Attention, the fields of minutes can only be "30" or "00".
@@ -20,9 +19,9 @@ export const hourToIndex = (hour, firstHour) => {
 };
 
 /**
- * 
- * @param {Integer} index 
- * @returns 
+ *
+ * @param {Integer} index
+ * @returns
  */
 export const indexToHour = (index, firstHour) => {
     let hour = Math.floor(index / 2 + firstHour)
@@ -30,7 +29,7 @@ export const indexToHour = (index, firstHour) => {
         .padStart(2, "0");
     let minutes = index % 2 === 0 ? "00" : "30";
     return hour + ":" + minutes;
-}; 
+};
 
 /**
  * The formated hour given the index in the column.
@@ -43,8 +42,21 @@ export const getHourInTable = (row, firstHour) => {
 };
 
 export const dayToIndex = (day) => {
-    const weekDay = { Segunda: 1, Terça: 2, Quarta: 3, Quinta: 4, Sexta: 5, Sábado: 6 }; 
+    const weekDay = { Segunda: 1, Terça: 2, Quarta: 3, Quinta: 4, Sexta: 5, Sábado: 6 };
     return weekDay[day];
+};
 
+export const getHourList = () => {
+    let hourList = [];
+    for (let i = 0; i < numberOfRows; i++) {
+        let hour = indexToHour(i, firstHour);
+        if (hour.split(":")[1] === "30") hourList.push("");
+        else hourList.push(hour);
+    }
+    return hourList;
+};
 
-}
+// SINGLETON =======================================================================
+export const firstHour = 8;
+export const headElements = ["", "SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB."];
+export const numberOfRows = hourToIndex("24:00", firstHour) + 1;

@@ -1,7 +1,6 @@
 import React from "react";
-import { sxs } from "../../../styles/ChangeScheduleForm";
+import { sxs, MenuProps } from "../../../styles/ChangeScheduleForm";
 import { useTheme } from "@mui/material/styles";
-import { MenuProps } from "../../../utils";
 import {
     Box,
     Chip,
@@ -14,26 +13,24 @@ import {
     OutlinedInput,
 } from "@mui/material";
 
-export default function SelectClassOption({ course, index, setSelectedClasses, selectedClasses}) {
+export default function SelectClassOption({ course, index, setSelectedClasses, selectedClasses }) {
     const theme = useTheme();
     const [scheduleChoice, setScheduleChoice] = React.useState([]);
     const handleChange = (event, schedule) => {
         const {
             target: { value },
-        } = event;  
-        setScheduleChoice(typeof value === "string" ? value.split(",") : value); // On autofill we get a stringified value. 
+        } = event;
+        setScheduleChoice(typeof value === "string" ? value.split(",") : value); // On autofill we get a stringified value.
         handleSelectedClasses(schedule);
     };
 
-
-    // TODO: in the future change the condition of equaility by the id. 
+    // TODO: in the future change the condition of equaility by the id.
     const handleSelectedClasses = (schedule) => {
         console.log(schedule);
-        if (!selectedClasses.some(element => element.id === schedule.id))
-            setSelectedClasses([...selectedClasses, schedule]); 
+        if (!selectedClasses.some((element) => element.id === schedule.id))
+            setSelectedClasses([...selectedClasses, schedule]);
         else setSelectedClasses(selectedClasses.filter((element) => element.id != schedule.id));
-
-    }
+    };
 
     const getStyles = (displayName, scheduleChoice, theme) => {
         return {
@@ -65,7 +62,7 @@ export default function SelectClassOption({ course, index, setSelectedClasses, s
                 labelId="multiple-chip-label"
                 value={scheduleChoice}
                 MenuProps={MenuProps}
-                onChange={(e) => handleChange(e, course)}  
+                onChange={(e) => handleChange(e, course)}
                 input={<OutlinedInput id="select-multiple-chip" label={`${course.name} (${course.acronym})`} />}
                 renderValue={(selected) => (
                     <Box sx={sxs.selectValue}>
@@ -81,7 +78,7 @@ export default function SelectClassOption({ course, index, setSelectedClasses, s
                         <MenuItem
                             key={`${course.acronym}-${schedule.class}`}
                             value={displayName}
-                            style={getStyles(schedule.class, scheduleChoice, theme)} 
+                            style={getStyles(schedule.class, scheduleChoice, theme)}
                         >
                             <ListItemText primary={displayName} />
                         </MenuItem>

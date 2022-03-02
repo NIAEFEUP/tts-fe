@@ -81,6 +81,27 @@ export const timeTableStyles = makeStyles((theme) => ({
         left: `${cardWidth * props.left}px`,
         background: `${getCardColor(props.classType, theme)}`,
     }),
+    borderHalfHour: (props) => ({
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderTop: `${props.borderTop}`,
+        borderColor: "lightgrey",
+        position: "absolute",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardWidth * props.left}px`,
+    }),
+    hour: (props) => ({
+        positions: "absolute",
+        fontWeight: "bold",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardHeight * 2}px`,
+        fontSize: "smaller",
+        textAlign: "center",
+    }),
 }));
 
 export const sxs = {
@@ -105,8 +126,9 @@ export const sxs = {
         border: "2px solid #ddd",
     },
 };
-export const cardHeight = 20;
-const cardWidth = 150;
+
+export const cardHeight = 23;
+const cardWidth = 130;
 const getCardColor = (classType, theme) => {
     if (classType === "T") return theme.palette.theoretical.main;
     else if (classType === "P") return theme.palette.pratical.main;
