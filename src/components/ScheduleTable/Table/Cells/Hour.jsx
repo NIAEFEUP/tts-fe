@@ -5,12 +5,8 @@ import { Box } from "@mui/material";
 
 export function Hours() {
     const hourList = ["", ...getHourList()];
-    return (
-        <div>
-            {hourList.map((hour, top) => {
-                const classes = timeTableStyles({ top });
-                return <Box className={classes.hour}>{hour}</Box>;
-            })}
-        </div>
-    );
+    return hourList.map((hour, top) => {
+        const classes = timeTableStyles({ top });
+        return <Box className={classes.hourCell}>{hour}</Box>;
+    });
 }

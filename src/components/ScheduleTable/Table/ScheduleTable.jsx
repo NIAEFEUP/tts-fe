@@ -1,52 +1,40 @@
 import React from "react";
-import ScheduleCell from "./ScheduleCell";
 import { getHourList, headElements } from "./ScheduleUtils";
 import { timeTableStyles } from "../../../styles/TimeTable";
-import { SubjectCard } from "./SubjectCard";
+import { SubjectCard, Subjects } from "./Cells/Subjects";
 import { Hours } from "./Cells/Hour";
+import { Weekdays } from "./Cells/Weekdays";
 
 const ScheduleTable = ({ selectedClasses }) => {
     return (
         <>
-            <ScheduleHead />
+            <Weekdays />
             <ScheduleBody selectedClasses={selectedClasses} />
         </>
     );
 };
 
-const ScheduleHead = () => {
-    const classes = timeTableStyles();
-    return (
-        <div className={classes.tableLineContainer}>
-            {headElements.map((day, i) => {
-                return <ScheduleCell top={0} left={i} text={day} rowSpan={1} />;
-            })}
-        </div>
-    );
-};
+
 
 const ScheduleBody = ({ selectedClasses }) => {
     const classes = timeTableStyles();
     const hourList = getHourList();
     const weekDays = headElements;
     let borderTop = ""; 
+    
     return (
-        <div className={classes.tableLineContainer}>
+        <div className={classes.positionRelative}>
             {hourList.map((hour, top) => {
                 return weekDays.map((day, left) => {
                     if (left !== 0 && top !== 0) { 
-                        if (hour === "") borderTop = "0"; 
-                        else borderTop = "solid";
+                        borderTop = "solid";
                         let divClass = timeTableStyles({ top, left, borderTop });
-                        return <div className={divClass.borderHalfHour}></div>;
-                    } return <></>
+                        return <div className={divClass.border}></div>;
+                    } else return <></>
                 });
-            })}
-            {selectedClasses.map((info, _) => {
-                return <SubjectCard subjectInfo={info} />;
-            })}
+            })} 
+            <Subjects selectedClasses={selectedClasses}/>
             <Hours/>
-            
         </div>
     );
 };

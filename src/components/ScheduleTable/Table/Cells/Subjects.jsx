@@ -1,14 +1,21 @@
 import React from "react";
-import ScheduleCell from "./ScheduleCell";
-import { hourToIndex, dayToIndex, firstHour } from "./ScheduleUtils";
+import { hourToIndex, dayToIndex, firstHour } from "../ScheduleUtils";
+import { timeTableStyles } from "../../../../styles/TimeTable";
 
-
-export function SubjectCard({ subjectInfo }) {
+export function Subjects({ selectedClasses }) {
+    return selectedClasses.map((info, _) => {
+        return <Subject subjectInfo={info} />;
+    });
+}
+function Subject({ subjectInfo }) {
     const subject = extractSubjectInfo(subjectInfo);
     const left = dayToIndex(subject.weekday);
-    const rowSpan = subject.endHour - subject.startHour; 
+    const rowSpan = subject.endHour - subject.startHour;
     const text = `${subject.acronym} ${subject.class} ${subject.time} ${subject.teacher} ${subject.room}`;
-    return <ScheduleCell text={text} left={left} top={subject.startHour} rowSpan={rowSpan} classType="T"/>;
+    const top = subject.startHour;
+    const classType = "T";
+    const classes = timeTableStyles({ left, top, rowSpan, classType });
+    return <div className={classes.subjectCell}>{text}</div>;
 }
 
 /**
@@ -22,4 +29,3 @@ const extractSubjectInfo = (subject) => {
     subject.day = dayToIndex[subject.weekday];
     return subject;
 };
-

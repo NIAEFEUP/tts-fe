@@ -102,6 +102,52 @@ export const timeTableStyles = makeStyles((theme) => ({
         fontSize: "smaller",
         textAlign: "center",
     }),
+    positionRelative: {
+        position: "relative",
+    },
+    subjectCell: (props) => ({
+        borderRadius: 7,
+        height: `${cardHeight * props.rowSpan}px`,
+        width: `${cardWidth}px`,
+        position: "absolute",
+        top: `${cardHeight * props.top}px`,
+        left: `${cardWidth * props.left}px`,
+        background: `${getCardColor(props.classType, theme)}`,
+    }),
+    hourCell: (props) => ({
+        positions: "absolute",
+        fontWeight: "bold",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardHeight * 2}px`,
+        fontSize: "smaller",
+        textAlign: "center",
+    }),
+    weekdayContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
+    },
+    weekdayCell: (props) => ({
+        left: `${cardWidth * props.left}px`,
+        fontWeight: "bold",
+        textAlign: "center",
+        width: `${cardWidth}px`,
+        height: `${cardHeight}px`,
+    }),
+    border: (props) => ({
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderTop: `${props.borderTop}`,
+        borderColor: "lightgrey",
+        position: "absolute",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardWidth * props.left}px`,
+    }),
 }));
 
 export const sxs = {
