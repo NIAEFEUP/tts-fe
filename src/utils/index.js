@@ -8,7 +8,7 @@ export const majors = [
     { label: "Mestrado em Engenharia Informática e Computação" },
 ];
 
-export const initialSelectedCourses = () => {
+export const initializeCourses = () => {
     const ucArray = [
         [
             "LGP",
