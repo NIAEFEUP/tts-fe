@@ -1,9 +1,9 @@
 import React from "react";
+import { Button } from "@mui/material";
 import { timeTableStyles } from "../../styles/TimeTable";
 import DashboardCustomizeRoundedIcon from "@mui/icons-material/DashboardCustomizeRounded";
-import { Button } from "@mui/material";
 
-export default function Sidebar({ openModal, coursesPicked }) {
+export default function Sidebar({ openModal, courses = [] }) {
     const classes = timeTableStyles();
 
     return (
@@ -13,7 +13,7 @@ export default function Sidebar({ openModal, coursesPicked }) {
                 <span>Editar UCs</span>
             </Button>
             <ul>
-                {coursesPicked.map((uc, ucIdx) => (
+                {courses.map((uc, ucIdx) => (
                     <li key={`${uc}-${ucIdx}`}>{uc}</li>
                 ))}
             </ul>

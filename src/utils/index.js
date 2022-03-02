@@ -1,4 +1,4 @@
-export const courses = [
+export const majors = [
     { label: "Mestrado em Planeamento e Projecto Urbano" },
     { label: "Programa de Doutoramento em Arquitetura" },
     { label: "Programa Doutoral em Segurança e Saúde Ocupacionais" },
@@ -8,12 +8,9 @@ export const courses = [
     { label: "Mestrado em Engenharia Informática e Computação" },
 ];
 
-export const semesterUCs = [
-    { year: 1, semester: 1, ucs: ["AC", "DS", "PRI", "SDLE", "SGI"] },
-    {
-        year: 1,
-        semester: 2,
-        ucs: [
+export const initialSelectedCourses = () => {
+    const ucArray = [
+        [
             "LGP",
             "ASMA",
             "ASSO",
@@ -39,37 +36,20 @@ export const semesterUCs = [
             "TBD",
             "VC",
         ],
-    },
-    {
-        year: 2,
-        semester: 1,
-        ucs: [
-            "API",
-            "AID",
-            "CAC",
-            "CHE",
-            "CPA",
-            "ELS",
-            "ESS",
-            "GSAI",
-            "MS",
-            "MNEC",
-            "RVA",
-            "RI",
-            "S",
-            "SCI",
-            "TACS",
-            "TVVS",
-            "TAIM",
-            "WSDL",
-        ],
-    },
-    {
-        year: 2,
-        semester: 2,
-        ucs: ["D"],
-    },
-];
+        ["D"],
+    ];
+
+    let courses = [];
+    for (let i = 0; i < ucArray.length; i++) {
+        courses.push({
+            year: i + 1,
+            ucs: ucArray[i],
+            checked: Array(ucArray[i].length).fill(false),
+        });
+    }
+
+    return courses;
+};
 
 export const ucs = [
     {
