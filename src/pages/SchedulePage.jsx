@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ScheduleTable from "../components/ScheduleTable/ScheduleTable";
-import ChangeScheduleForm from "../components/FeupExchange/ChangeScheduleForm";
-import ChangeSchedulePreview from "../components/FeupExchange/ChangeSchedulePreview";
+import ChangeScheduleForm from "../components/ScheduleTable/Form/ChangeScheduleForm";
+import ChangeSchedulePreview from "../components/ScheduleTable/Form/ChangeSchedulePreview";
 import { useStyles, sxs } from "../styles/FeupExchange";
 import { Box } from "@mui/material";
 
