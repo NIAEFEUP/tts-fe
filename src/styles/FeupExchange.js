@@ -1,4 +1,5 @@
 import { makeStyles } from "@mui/styles";
+import { cardHeight } from "./TimeTable";
 
 export const useStyles = makeStyles((theme) => ({
     container: {
@@ -18,7 +19,8 @@ export const useStyles = makeStyles((theme) => ({
     },
     height: {
         minHeight: "100%",
-    },
+    }, 
+
 }));
 
 export const sxs = {
@@ -39,8 +41,8 @@ export const sxs = {
         border: "2px solid #ddd",
     },
     preview: {
-        flexGrow: 1,
-        minHeight: "100%",
+        flexGrow: 1, 
+        minHeight: `${cardHeight*36}px`,
         backgroundColor: "#fafafa",
         padding: "1rem",
         borderRadius: "0.5rem",

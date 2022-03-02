@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ScheduleTable from "../components/ScheduleTable/ScheduleTable";
+import ScheduleTable from "../components/ScheduleTable/Table/ScheduleTable";
 import ChangeScheduleForm from "../components/ScheduleTable/Form/ChangeScheduleForm";
 import ChangeSchedulePreview from "../components/ScheduleTable/Form/ChangeSchedulePreview";
 import { useStyles, sxs } from "../styles/FeupExchange";
@@ -15,9 +15,10 @@ export default function SchedulePage() {
                 <Box sx={sxs.form} className={classes.height}>
                     <ChangeScheduleForm selectedClasses={selectedClasses} setSelectedClasses={setSelectedClasses} />
                 </Box>
-                <Box sx={sxs.preview} className={classes.height}>   
-                    <ChangeSchedulePreview />
-                    <ScheduleTable selectedClasses={selectedClasses}/>
+                <Box sx={sxs.preview} className={classes.scheduleHeight}>
+                    <ChangeSchedulePreview>
+                        <ScheduleTable selectedClasses={selectedClasses} />
+                    </ChangeSchedulePreview>
                 </Box>
             </Box>
         </div>

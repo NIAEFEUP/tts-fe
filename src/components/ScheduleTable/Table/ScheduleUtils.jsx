@@ -5,7 +5,7 @@
  * Case the minute field doesn't obey the contraint cited above, an error will be displayed in the command line.
  * @returns The index of the hour case valid. -1 otherwise.
  */
-const hourToIndex = (hour, firstHour) => {
+export const hourToIndex = (hour, firstHour) => {
     let splitedHour = hour.split(":");
     let hourField = splitedHour[0],
         minuteField = splitedHour[1];
@@ -24,7 +24,7 @@ const hourToIndex = (hour, firstHour) => {
  * @param {Integer} index 
  * @returns 
  */
-const indexToHour = (index, firstHour) => {
+export const indexToHour = (index, firstHour) => {
     let hour = Math.floor(index / 2 + firstHour)
         .toString()
         .padStart(2, "0");
@@ -38,8 +38,13 @@ const indexToHour = (index, firstHour) => {
  * @param {Integer} index
  * @returns The formated hour.
  */
-const getHourInTable = (row, firstHour) => {
+export const getHourInTable = (row, firstHour) => {
     if (row % 2 === 0) return <b>{indexToHour(row, firstHour)}</b>;
 };
 
-export default {hourToIndex, indexToHour, getHourInTable};
+export const dayToIndex = (day) => {
+    const weekDay = { Segunda: 1, Terça: 2, Quarta: 3, Quinta: 4, Sexta: 5, Sábado: 6 }; 
+    return weekDay[day];
+
+
+}
