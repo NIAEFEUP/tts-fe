@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
 }));
 
-export default function CourseSelection({ majorHook, chosenHook, openHook }) {
+export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) {
     const classes = timeTableStyles();
     const coursesInit = initializeCourses();
 
@@ -150,6 +150,7 @@ export default function CourseSelection({ majorHook, chosenHook, openHook }) {
                                     setMajor(newMajor);
                                 }}
                                 renderInput={(params) => <TextField {...params} placeholder="Curso" />}
+                                ListboxProps={{ style: { maxHeight: "15rem" } }}
                             />
                         </Item>
                     </Grid>
