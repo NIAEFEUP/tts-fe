@@ -2,8 +2,8 @@ import { makeStyles } from "@mui/styles";
 
 export const timeTableStyles = makeStyles((theme) => ({
     container: {
-        margin: "auto 0",
-        padding: "2rem",
+        margin: "0 auto auto auto",
+        width: "100%",
     },
     card: {
         padding: "1rem",

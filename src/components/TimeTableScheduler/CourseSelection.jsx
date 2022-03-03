@@ -193,14 +193,16 @@ export default function CourseSelection({ majorHook, chosenHook, openHook }) {
                                                     {ucs.map((uc, ucIdx) => (
                                                         <Box
                                                             gridColumn="span 1"
-                                                            key={`G-${entryIdx}-Y${year}S-${2}-${uc}-${ucIdx}`}
+                                                            key={`G-${entryIdx}-Y${year}-${uc}-${ucIdx}`}
                                                         >
                                                             <FormControlLabel
                                                                 label={uc}
                                                                 control={
                                                                     <Checkbox
                                                                         size="small"
-                                                                        sx={{ p: 0.5 }}
+                                                                        sx={{
+                                                                            p: 0.5,
+                                                                        }}
                                                                         checked={checked[ucIdx]}
                                                                         onChange={(event) =>
                                                                             handleCheck(

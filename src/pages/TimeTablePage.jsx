@@ -47,9 +47,9 @@ const TimeTablePage = () => {
                 openHook={[modalOpen, setModalOpen]}
             />
 
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1, padding: "2rem" }}>
                 <Grid container direction="row" justifyContent="space-evenly" alignItems="stretch" spacing={4}>
-                    <Grid item xs={9}>
+                    <Grid item xs={9} sm={9} md={9} lg={9} xl={9}>
                         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                             <Tabs
                                 variant="fullWidth"
@@ -63,19 +63,17 @@ const TimeTablePage = () => {
                             </Tabs>
                         </Box>
                         {tabs.map((tab, tabIdx) => (
-                            <TabPanel value={value} index={tabIdx}>
-                                <ul>
-                                    {tab.options.map((option) => (
-                                        <li>
-                                            {option.uc}: {option.class}
-                                        </li>
-                                    ))}
-                                </ul>
+                            <TabPanel value={value} index={tabIdx} key={`tabpanel-${tabIdx}`}>
+                                {tab.options.map((option, optionIdx) => (
+                                    <span key={`option-${tabIdx}-${optionIdx}`}>
+                                        {option.uc}: {option.class}
+                                    </span>
+                                ))}
                             </TabPanel>
                         ))}
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={3} sm={3} md={3} lg={3} xl={3}>
                         <Sidebar openModal={() => setModalOpen(true)} courses={chosen} />
                     </Grid>
                 </Grid>
