@@ -19,13 +19,13 @@ const TimeTablePage = () => {
                 openHook={[modalOpen, setModalOpen]}
             />
 
-            <Box sx={{ flexGrow: 1, padding: "2rem" }}>
+            <Box sx={{ flexGrow: 1, padding: "2rem", maxWidth: "xl", margin: "auto" }}>
                 <Grid container direction="row" justifyContent="space-evenly" alignItems="stretch" spacing={4}>
-                    <Grid item xs={9} sm={9} md={9} lg={9} xl={9}>
-                        <ChooseSchedule chosen={chosen} />
+                    <Grid item xs={12} sm={12} md={8} lg={9} order={{ xs: 2, sm: 2, md: 1, lg: 1 }}>
+                        <ChooseSchedule courses={chosen} />
                     </Grid>
 
-                    <Grid item xs={3} sm={3} md={3} lg={3} xl={3}>
+                    <Grid item xs={12} sm={12} md={4} lg={3} order={{ xs: 1, sm: 1, md: 2, lg: 2 }}>
                         <Sidebar openModal={() => setModalOpen(true)} courses={chosen} />
                     </Grid>
                 </Grid>

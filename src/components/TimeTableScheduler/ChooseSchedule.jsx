@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import TabPanel from "../Common/TabPanel";
 import { Box, Tabs, Tab } from "@mui/material";
 
-export default function ChooseSchedule({ chosen }) {
+export default function ChooseSchedule({ courses }) {
     const createOptionsArray = () => {
         let optionsArray = [];
-        for (let i = 0; i < chosen.length; i++) {
-            optionsArray.push({ uc: chosen[i], class: null });
+        for (let i = 0; i < courses.length; i++) {
+            optionsArray.push({ uc: courses[i], class: null });
         }
         return optionsArray;
     };
 
     const tabs = Array(10).fill({
-        label: "Option",
+        label: "Schedule #",
         options: createOptionsArray(),
     });
 
@@ -32,20 +32,23 @@ export default function ChooseSchedule({ chosen }) {
 
     return (
         <>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="TTS Option Tabs">
+            <Box sx={{ borderBottom: 1, borderColor: "divider", margin: "auto" }}>
+                <Tabs value={value} variant="scrollable" onChange={handleChange} aria-label="TTS Option Tabs">
                     {tabs.map((tab, tabIdx) => (
-                        <Tab label={`${tab.label} ${tabIdx + 1}`} {...a11yProps(tabIdx)} />
+                        <Tab label={`${tab.label}${tabIdx + 1}`} {...a11yProps(tabIdx)} />
                     ))}
                 </Tabs>
             </Box>
+
             {tabs.map((tab, tabIdx) => (
                 <TabPanel value={value} index={tabIdx} key={`tabpanel-${tabIdx}`}>
-                    {tab.options.map((option, optionIdx) => (
-                        <span key={`option-${tabIdx}-${optionIdx}`}>
-                            {option.uc}: {option.class}
-                        </span>
-                    ))}
+                    <ul>
+                        {tab.options.map((option, optionIdx) => (
+                            <li key={`option-${tabIdx}-${optionIdx}`}>
+                                {option.uc}: {option.class}
+                            </li>
+                        ))}
+                    </ul>
                 </TabPanel>
             ))}
         </>

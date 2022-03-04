@@ -36,6 +36,11 @@ export const timeTableStyles = makeStyles((theme) => ({
         alignItems: "center",
         justifyContent: "start",
     },
+    flexCenterBetween: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
     headerBox: {
         margin: "0 1rem 1rem 1rem",
         display: "flex",
@@ -49,6 +54,12 @@ export const timeTableStyles = makeStyles((theme) => ({
     },
     spacing: {
         marginBottom: "2rem",
+    },
+    picker: {
+        marginTop: "0.5rem",
+    },
+    pickersBox: {
+        marginTop: "0.5rem",
     },
 }));
 
