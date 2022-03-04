@@ -12,7 +12,7 @@ const TimeTablePage = () => {
     const [modalOpen, setModalOpen] = useState(false);
 
     return (
-        <div className={classes.container}>
+        <div className={`${classes.container} ${modalOpen ? classes.blur : ""}`}>
             <ChooseCoursesModal
                 majorHook={[major, setMajor]}
                 chosenHook={[chosen, setChosen]}

@@ -33,33 +33,34 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
     const [major, setMajor] = majorHook;
     const [chosen, setChosen] = chosenHook;
     const [modalOpen, setModalOpen] = openHook;
-
     const [courses, setCourses] = useState(coursesInit);
-    const [infoBannerOpen, setInfoBannerOpen] = useState(true);
+
+    const [bannerOpen, setBannerOpen] = useState(true);
     const [nextAvailable, setNextAvailable] = useState(false);
+    const [bannerSeverity, setBannerSeverity] = useState("info");
 
     useEffect(() => {
-        if (chosen.length > 0) setNextAvailable(true);
-        else setNextAvailable(false);
+        if (chosen.length > 0) {
+            setNextAvailable(true);
+            setBannerSeverity("success");
+        } else {
+            setNextAvailable(false);
+            setBannerSeverity("info");
+        }
     }, [chosen, courses]);
 
     const handleCheck = (value, groupIndex, ucIndex) => {
+        // FIXME: Optimize setCourses (weird setState [groupIndex].checked[ucIndex])
         let newCourses = [];
         for (let i = 0; i < courses.length; i++) {
             if (i !== groupIndex) newCourses.push(courses[i]);
             else {
                 let newChecked = [];
                 for (let j = 0; j < courses[i].ucs.length; j++) {
-                    if (j === ucIndex) {
-                        newChecked.push(value);
-                    } else newChecked.push(courses[i].checked[j]);
+                    if (j === ucIndex) newChecked.push(value);
+                    else newChecked.push(courses[i].checked[j]);
                 }
-
-                newCourses.push({
-                    year: courses[i].year,
-                    ucs: courses[i].ucs,
-                    checked: newChecked,
-                });
+                newCourses.push({ year: courses[i].year, ucs: courses[i].ucs, checked: newChecked });
             }
         }
         setCourses(newCourses);
@@ -92,8 +93,30 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
         setChosen(newChosen);
     };
 
+    const handleClose = () => {
+        if (nextAvailable) setModalOpen(false);
+        else {
+            setBannerOpen(true);
+            switch (bannerSeverity) {
+                case "info":
+                    setBannerSeverity("warning");
+                    break;
+                case "warning":
+                    setBannerSeverity("error");
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     return (
-        <Modal open={modalOpen} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Modal
+            open={modalOpen}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
             <Box className={classes.box} sx={{ flexGrow: 1 }}>
                 {/* Header */}
                 <div className={classes.headerBox}>
@@ -111,9 +134,9 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                     {/* Info Banner */}
                     <Grid item xs={12} sm={12} md={12} xl={12}>
                         <Item className={classes.item}>
-                            <Collapse in={infoBannerOpen}>
+                            <Collapse in={bannerOpen}>
                                 <Alert
-                                    severity="info"
+                                    severity={bannerSeverity}
                                     size="small"
                                     style={{ padding: "0 0.75rem" }}
                                     action={
@@ -122,7 +145,7 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                                             color="inherit"
                                             size="small"
                                             onClick={() => {
-                                                setInfoBannerOpen(false);
+                                                setBannerOpen(false);
                                             }}
                                         >
                                             <CloseIcon fontSize="inherit" />

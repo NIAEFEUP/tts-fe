@@ -5,6 +5,9 @@ export const timeTableStyles = makeStyles((theme) => ({
         margin: "0 auto auto auto",
         width: "100%",
     },
+    blur: {
+        filter: "blur(5px)",
+    },
     card: {
         padding: "1rem",
         minHeight: "6rem",
