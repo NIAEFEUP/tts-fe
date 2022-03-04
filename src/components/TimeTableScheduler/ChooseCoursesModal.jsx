@@ -44,9 +44,7 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
     }, [chosen, courses]);
 
     const handleCheck = (value, groupIndex, ucIndex) => {
-        let newChosen = chosen;
         let newCourses = [];
-
         for (let i = 0; i < courses.length; i++) {
             if (i !== groupIndex) newCourses.push(courses[i]);
             else {
@@ -54,8 +52,6 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                 for (let j = 0; j < courses[i].ucs.length; j++) {
                     if (j === ucIndex) {
                         newChecked.push(value);
-                        if (value) newChosen.push(courses[i].ucs[j]);
-                        else newChosen = newChosen.filter((item) => item !== courses[i].ucs[j]);
                     } else newChecked.push(courses[i].checked[j]);
                 }
 
@@ -66,9 +62,12 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                 });
             }
         }
-
-        setChosen(newChosen);
         setCourses(newCourses);
+
+        let newChosen = chosen;
+        if (value) newChosen.push(courses[groupIndex].ucs[ucIndex]);
+        else newChosen = newChosen.filter((item) => item !== courses[groupIndex].ucs[ucIndex]);
+        setChosen(newChosen);
     };
 
     const handleCheckAll = (value, index) => {
