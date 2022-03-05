@@ -14,7 +14,7 @@ export const timeTableStyles = makeStyles((theme) => ({
     },
     box: {
         width: "70vw",
-        padding: "2rem 1rem",
+        padding: "1.5rem 0.5rem",
         position: "absolute",
         top: "50%",
         left: "50%",

@@ -10,33 +10,9 @@ export const majors = [
 
 export const initializeCourses = () => {
     const ucArray = [
-        [
-            "LGP",
-            "ASMA",
-            "ASSO",
-            "BDNR",
-            "CAC",
-            "CPM",
-            "CPA",
-            "DDJD",
-            "ER",
-            "EDAA",
-            "GEE",
-            "GRS",
-            "GSSI",
-            "MK",
-            "MFS",
-            "O",
-            "PLN",
-            "PLR",
-            "SR",
-            "SSI",
-            "SAM",
-            "SETR",
-            "TBD",
-            "VC",
-        ],
-        ["D"],
+        ["AM II", "F I", "TC", "AC", "P"],
+        ["LC", "LTW", "DA", "ES", "ME"],
+        ["CPD", "C", "CG", "PI", "IA"],
     ];
 
     let courses = [];
