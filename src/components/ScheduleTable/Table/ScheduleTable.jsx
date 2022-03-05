@@ -1,7 +1,7 @@
 import React from "react";
 import { getHourList, headElements } from "./ScheduleUtils";
 import { timeTableStyles } from "../../../styles/TimeTable";
-import { SubjectCard, Subjects } from "./Cells/Subjects";
+import { Subjects } from "./Cells/Subjects";
 import { Hours } from "./Cells/Hour";
 import { Weekdays } from "./Cells/Weekdays";
 

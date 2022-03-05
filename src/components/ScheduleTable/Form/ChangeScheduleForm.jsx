@@ -9,7 +9,7 @@ export default function ChangeScheduleForm({ selectedClasses, setSelectedClasses
         <Box display="flex" sx={sxs.flexColumn}>
             <h4 className={classes.header}>Escolha de horário</h4>
 
-            <Box display="flex" sx={sxs.spaceAbove, sxs.flexColumn}>
+            <Box display="flex" sx={`${sxs.spaceAbove} ${sxs.flexColumn}`}>
                 <SelectClassOptions selectedClasses={selectedClasses} setSelectedClasses={setSelectedClasses} />
             </Box>
         </Box>

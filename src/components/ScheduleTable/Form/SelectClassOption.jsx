@@ -1,17 +1,7 @@
 import React from "react";
 import { sxs, MenuProps } from "../../../styles/ChangeScheduleForm";
 import { useTheme } from "@mui/material/styles";
-import {
-    Box,
-    Chip,
-    Select,
-    MenuItem,
-    Checkbox,
-    InputLabel,
-    FormControl,
-    ListItemText,
-    OutlinedInput,
-} from "@mui/material";
+import { Box, Chip, Select, MenuItem, InputLabel, FormControl, ListItemText, OutlinedInput } from "@mui/material";
 
 export default function SelectClassOption({ course, index, setSelectedClasses, selectedClasses }) {
     const theme = useTheme();
@@ -29,7 +19,7 @@ export default function SelectClassOption({ course, index, setSelectedClasses, s
         console.log(schedule);
         if (!selectedClasses.some((element) => element.id === schedule.id))
             setSelectedClasses([...selectedClasses, schedule]);
-        else setSelectedClasses(selectedClasses.filter((element) => element.id != schedule.id));
+        else setSelectedClasses(selectedClasses.filter((element) => element.id !== schedule.id));
     };
 
     const getStyles = (displayName, scheduleChoice, theme) => {
