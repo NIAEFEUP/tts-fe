@@ -5,7 +5,7 @@ import { Typography, AppBar, Button, MenuItem } from "@mui/material";
 
 const Header = () => {
     return (
-        <AppBar position="static" color="secondary">
+        <AppBar position="static" color="primary">
             <Toolbar variant="dense">
                 <MenuItem component={Link} to={"/"}>
                     <Typography variant="h6" sx={{ mr: 2 }}>

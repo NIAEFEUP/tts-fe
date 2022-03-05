@@ -1,9 +1,8 @@
 import React from "react";
 import { useStyles } from "../../styles/ChangeScheduleForm";
-import { ucs } from "../../utils";
 import { Chip, Stack } from "@mui/material";
 
-export default function ScheduleBoxFormat() {
+export default function ScheduleBoxFormat({ ucs }) {
     const classes = useStyles();
 
     return (
@@ -16,7 +15,7 @@ export default function ScheduleBoxFormat() {
                     sx={{ marginBottom: "0.25rem" }}
                     key={`schedule-box-${uc.acronym}`}
                 >
-                    <Chip color="secondary" label={uc.acronym} sx={{ fontSize: "small", minWidth: 65 }} />
+                    <Chip color="primary" label={uc.acronym} sx={{ fontSize: "small", minWidth: 65 }} />
                     <Chip label={uc.weekday} sx={{ fontSize: "small", minWidth: 80 }} />
                     <Chip label={uc.time} sx={{ fontSize: "small", minWidth: 110 }} />
                     <Chip label={uc.room} sx={{ fontSize: "small", minWidth: 60 }} />

@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: "bold",
         color: "#fff",
         marginBottom: "0.5rem",
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
         "&:hover": {
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: theme.palette.primary.light,
         },
     },
     icon: {
@@ -38,7 +38,7 @@ const OptionRow = ({ Icon, label, selectedButton, setSelectedButton }) => {
                 onClick={() => setSelectedButton(label)}
                 variant={isSelected ? "contained" : "text"}
                 size="large"
-                color={isSelected ? "secondary" : "primary"}
+                color={isSelected ? "primary" : "primary"}
                 className={isSelected ? `${classes.optionButton} ${classes.selectedButton}` : classes.optionButton}
             >
                 <Icon className={classes.icon} />
