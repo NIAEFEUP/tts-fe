@@ -9,7 +9,7 @@ const TimeTablePage = () => {
     const classes = timeTableStyles();
     const [major, setMajor] = useState("");
     const [chosen, setChosen] = useState([]);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(true);
 
     return (
         <div className={`${classes.container} ${modalOpen ? classes.blur : ""}`}>

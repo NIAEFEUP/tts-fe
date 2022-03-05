@@ -1,7 +1,9 @@
 import "../../styles/utilities.css";
 import React, { useState, useEffect } from "react";
+import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import CheckIcon from "@mui/icons-material/Check";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import { timeTableStyles } from "../../styles/TimeTable";
 import { initializeCourses, majors, getSchoolYear, getSemester } from "../../utils";
@@ -35,6 +37,7 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
     const [modalOpen, setModalOpen] = openHook;
     const [courses, setCourses] = useState(coursesInit);
 
+    const [extraUcs, setExtraUcs] = useState(false);
     const [bannerOpen, setBannerOpen] = useState(true);
     const [nextAvailable, setNextAvailable] = useState(false);
     const [bannerSeverity, setBannerSeverity] = useState("info");
@@ -159,7 +162,7 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                     </Grid>
 
                     {/* Course Autocomplete */}
-                    <Grid item xs={12} sm={12} md={12} xl={12} sx={{ mb: 2 }}>
+                    <Grid item xs={12} sm={12} md={12} xl={12}>
                         <Item className={classes.item}>
                             <Autocomplete
                                 // FIXME: Empty string passed to getElementById().
@@ -172,16 +175,46 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                                     setMajor(newMajor);
                                 }}
                                 renderInput={(params) => <TextField {...params} placeholder="Curso" />}
-                                ListboxProps={{ style: { maxHeight: "15rem" } }}
+                                ListboxProps={{ style: { maxHeight: "15rem", fontSize: "smaller" } }}
                             />
                         </Item>
                     </Grid>
+
+                    {extraUcs ? (
+                        <Grid item xs={12}>
+                            <Item className={classes.item}>
+                                <Stack spacing={1} direction="row" justifyContent="space-between">
+                                    <Autocomplete
+                                        multiple
+                                        fullWidth
+                                        size="small"
+                                        id="tags-outlined"
+                                        className="bg-white"
+                                        options={["EPE", "ABC", "IDE"]}
+                                        getOptionLabel={(option) => option}
+                                        defaultValue={[]}
+                                        filterSelectedOptions
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                placeholder="Selecione unidades curriculares externas"
+                                            />
+                                        )}
+                                        ListboxProps={{ style: { maxHeight: "15rem", fontSize: "smaller" } }}
+                                    />
+                                    <Button size="small" variant="text" onClick={() => setExtraUcs(false)}>
+                                        <CloseIcon />
+                                    </Button>
+                                </Stack>
+                            </Item>
+                        </Grid>
+                    ) : null}
 
                     {/* Choose Courses */}
                     {majors.indexOf(major) !== -1 ? (
                         <Grid item xs={12}>
                             <Item className={classes.item}>
-                                <Stack spacing={2} direction="row" justifyContent="center">
+                                <Stack spacing={4} direction="row" justifyContent="center">
                                     {courses.map((entry, entryIdx) => {
                                         const ucs = entry.ucs;
                                         const year = entry.year;
@@ -207,11 +240,12 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                                                 />
 
                                                 {/* Children checkboxes */}
-                                                <Box
-                                                    display="grid"
-                                                    gridTemplateColumns="repeat(3, 1fr)"
-                                                    gap={0}
+                                                <Grid
+                                                    item
                                                     sx={{ ml: 3 }}
+                                                    display="grid"
+                                                    gridTemplateRows="repeat(6, minmax(0, 1fr))"
+                                                    gridAutoFlow="column"
                                                 >
                                                     {ucs.map((uc, ucIdx) => (
                                                         <Box
@@ -223,9 +257,7 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                                                                 control={
                                                                     <Checkbox
                                                                         size="small"
-                                                                        sx={{
-                                                                            p: 0.5,
-                                                                        }}
+                                                                        sx={{ p: 0.4 }}
                                                                         checked={checked[ucIdx]}
                                                                         onChange={(event) =>
                                                                             handleCheck(
@@ -239,7 +271,7 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                                                             />
                                                         </Box>
                                                     ))}
-                                                </Box>
+                                                </Grid>
                                             </div>
                                         );
                                     })}
@@ -249,18 +281,32 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                     ) : null}
 
                     {/* Footer */}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sx={{ mt: 3 }}>
                         <Item className={classes.item}>
                             <Stack spacing={2} direction="row" justifyContent="space-between">
-                                <Button variant="outlined" href="https://ni.fe.up.pt/#contacts" target="_blank">
+                                <Button
+                                    variant="outlined"
+                                    color="dark"
+                                    href="https://ni.fe.up.pt/#contacts"
+                                    target="_blank"
+                                >
                                     Contacte-nos
                                 </Button>
 
-                                {nextAvailable ? (
-                                    <Button variant="contained" onClick={() => setModalOpen(false)}>
-                                        Confirmar
+                                <Stack spacing={2} direction="row" justifyContent="space-between">
+                                    <Button variant="text" onClick={() => setExtraUcs(true)} endIcon={<AddIcon />}>
+                                        UCs fora do curso
                                     </Button>
-                                ) : null}
+                                    {nextAvailable ? (
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => setModalOpen(false)}
+                                            endIcon={<CheckIcon />}
+                                        >
+                                            Confirmar
+                                        </Button>
+                                    ) : null}
+                                </Stack>
                             </Stack>
                         </Item>
                     </Grid>
