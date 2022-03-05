@@ -29,6 +29,7 @@ export const initializeCourses = () => {
 
 export const ucs = [
     {
+        id: 1,
         acronym: "COMP",
         name: "Compiladores",
         weekday: "Sexta",
@@ -38,6 +39,7 @@ export const ucs = [
         class: "3MIEIC01",
     },
     {
+        id: 2,
         acronym: "SDIS",
         name: "Sistemas Distribuídos",
         weekday: "Segunda",
@@ -47,6 +49,7 @@ export const ucs = [
         class: "3MIEIC04",
     },
     {
+        id: 3,
         acronym: "LBAW",
         name: "Laboratório de Bases de Dados e Aplicações Web",
         weekday: "Segunda",
@@ -56,6 +59,7 @@ export const ucs = [
         class: "3MIEIC01",
     },
     {
+        id: 4,
         acronym: "PPIN",
         name: "Proficiência Pessoal e Interpessoal",
         weekday: "Quinta",
@@ -65,6 +69,7 @@ export const ucs = [
         class: "3MIEIC05",
     },
     {
+        id: 5,
         acronym: "IART",
         name: "Inteligência Artificial",
         weekday: "Terça",

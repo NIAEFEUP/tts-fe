@@ -1,21 +1,21 @@
 import React from "react";
+import { ucs } from "../../../utils";
 import { Box } from "@mui/material";
-import { useStyles, sxs } from "../../styles/ChangeScheduleForm";
+import { useStyles, sxs } from "../../../styles/ChangeScheduleForm";
 import SelectClassOption from "./SelectClassOption";
 
-export default function SelectClassOptions({ checkedHook, ucs, selectedClasses, setSelectedClasses }) {
+export default function SelectClassOptions({ selectedClasses, setSelectedClasses }) {
     const classes = useStyles();
-    const [checked] = checkedHook;
 
     return (
-        <Box display="flex" sx={{ display: "block", flexGrow: 1 }}>
-            <h5 className={classes.subheader}>Novas opções</h5>
+        <Box display="flex" sx={{ display: "block", flexGrow: 1, minWidth: "300px" }}>
+            <h5 className={classes.subheader}>Seleção</h5>
             <Box display="flex" sx={sxs.flexColumn}>
                 {ucs.map((uc, ucIdx) => (
                     <SelectClassOption
-                        key={`option-box-${uc.acronym}`}
                         course={uc}
-                        active={checked[ucIdx]}
+                        index={ucIdx}
+                        key={`option-box-${uc.acronym}`}
                         selectedClasses={selectedClasses}
                         setSelectedClasses={setSelectedClasses}
                     />

@@ -64,6 +64,90 @@ export const timeTableStyles = makeStyles((theme) => ({
     pickersBox: {
         marginTop: "0.5rem",
     },
+    tableLineContainer: {
+        display: "flex",
+        flexDirection: "row",
+        padding: 0,
+        alignItems: "center",
+        justifyContent: "flex-start",
+        position: "relative",
+    },
+    tableCard: (props) => ({
+        borderRadius: 7,
+        height: `${cardHeight * props.rowSpan}px`,
+        width: `${cardWidth}px`,
+        position: "absolute",
+        top: `${cardHeight * props.top}px`,
+        left: `${cardWidth * props.left}px`,
+        background: `${getCardColor(props.classType, theme)}`,
+    }),
+    borderHalfHour: (props) => ({
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderTop: `${props.borderTop}`,
+        borderColor: "lightgrey",
+        position: "absolute",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardWidth * props.left}px`,
+    }),
+    hour: (props) => ({
+        positions: "absolute",
+        fontWeight: "bold",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardHeight * 2}px`,
+        fontSize: "smaller",
+        textAlign: "center",
+    }),
+    positionRelative: {
+        position: "relative",
+    },
+    subjectCell: (props) => ({
+        borderRadius: 7,
+        height: `${cardHeight * props.rowSpan}px`,
+        width: `${cardWidth}px`,
+        position: "absolute",
+        top: `${cardHeight * props.top}px`,
+        left: `${cardWidth * props.left}px`,
+        background: `${getCardColor(props.classType, theme)}`,
+    }),
+    hourCell: (props) => ({
+        positions: "absolute",
+        fontWeight: "bold",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardHeight * 2}px`,
+        fontSize: "smaller",
+        textAlign: "center",
+    }),
+    weekdayContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
+    },
+    weekdayCell: (props) => ({
+        left: `${cardWidth * props.left}px`,
+        fontWeight: "bold",
+        textAlign: "center",
+        width: `${cardWidth}px`,
+        height: `${cardHeight}px`,
+    }),
+    border: (props) => ({
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderTop: `${props.borderTop}`,
+        borderColor: "lightgrey",
+        position: "absolute",
+        height: `${cardHeight}px`,
+        width: `${cardWidth}px`,
+        top: `${cardHeight * props.top}px`,
+        left: `${cardWidth * props.left}px`,
+    }),
 }));
 
 export const sxs = {
@@ -87,4 +171,12 @@ export const sxs = {
         borderRadius: "0.5rem",
         border: "2px solid #ddd",
     },
+};
+
+export const cardHeight = 23;
+const cardWidth = 130;
+const getCardColor = (classType, theme) => {
+    if (classType === "T") return theme.palette.theoretical.main;
+    else if (classType === "P") return theme.palette.pratical.main;
+    else if (classType === "L") return theme.palette.labs.main;
 };

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import ChipBadge from "../Common/ChipBadge";
 
-export default function SelectClassOption({ course, active }) {
+export default function SelectClassOption({ course, active, setSelectedClasses, selectedClasses }) {
     const classes = useStyles();
     const [scheduleChoice, setScheduleChoice] = React.useState([]);
 
@@ -21,6 +21,7 @@ export default function SelectClassOption({ course, active }) {
         const {
             target: { value },
         } = event;
+        setSelectedClasses([...selectedClasses, value]);
         setScheduleChoice(typeof value === "string" ? value.split(",") : value); // On autofill we get a stringified value.
     };
 
