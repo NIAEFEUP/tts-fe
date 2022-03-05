@@ -1,3 +1,56 @@
+export const majors = [
+    { label: "Mestrado em Planeamento e Projecto Urbano" },
+    { label: "Programa de Doutoramento em Arquitetura" },
+    { label: "Programa Doutoral em Segurança e Saúde Ocupacionais" },
+    { label: "Licenciatura em Engenharia Informática e Computação" },
+    { label: "Licenciatura em Engenharia Eletrotécnica e de Computadores" },
+    { label: "Licenciatura em Engenharia Mecânica" },
+    { label: "Mestrado em Engenharia Informática e Computação" },
+];
+
+export const initializeCourses = () => {
+    const ucArray = [
+        [
+            "LGP",
+            "ASMA",
+            "ASSO",
+            "BDNR",
+            "CAC",
+            "CPM",
+            "CPA",
+            "DDJD",
+            "ER",
+            "EDAA",
+            "GEE",
+            "GRS",
+            "GSSI",
+            "MK",
+            "MFS",
+            "O",
+            "PLN",
+            "PLR",
+            "SR",
+            "SSI",
+            "SAM",
+            "SETR",
+            "TBD",
+            "VC",
+        ],
+        ["D"],
+    ];
+
+    let courses = [];
+    for (let i = 0; i < ucArray.length; i++) {
+        courses.push({
+            year: i + 1,
+            ucs: ucArray[i],
+            checked: Array(ucArray[i].length).fill(false),
+        });
+    }
+
+    return courses;
+};
+
 export const ucs = [
     {
         acronym: "COMP",
@@ -45,3 +98,29 @@ export const ucs = [
         class: "3MIEIC02",
     },
 ];
+
+const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+export const getDisplayDate = () => {
+    const date = new Date();
+    return `${dayNames[date.getDay()]}, ${date.getDate() + 1} ${monthNames[date.getMonth()]}`;
+};
+
+export const getSemester = () => {
+    //jan-jul --> 2º Semestre
+    const date = new Date();
+    const month = date.getMonth();
+
+    return month >= 0 && month <= 6 ? "2ºS" : "1ºS";
+};
+
+export const getSchoolYear = () => {
+    const date = new Date();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    return month >= 0 && month <= 6
+        ? `${year - 1}/${year.toString().slice(2, 4)}`
+        : `${year}/${(year + 1).toString().slice(2, 4)}`;
+};
