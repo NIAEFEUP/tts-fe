@@ -45,7 +45,7 @@ export default function ChooseSchedule({ courses }) {
                     <ul>
                         {tab.options.map((option, optionIdx) => (
                             <li key={`option-${tabIdx}-${optionIdx}`}>
-                                {option.uc}: {option.class}
+                                {option.uc.acronym}: {option.class}
                             </li>
                         ))}
                     </ul>

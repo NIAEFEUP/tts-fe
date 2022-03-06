@@ -19,8 +19,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     height: {
         minHeight: "100%",
-    }, 
-
+    },
 }));
 
 export const sxs = {
@@ -41,8 +40,8 @@ export const sxs = {
         border: "2px solid #ddd",
     },
     preview: {
-        flexGrow: 1, 
-        minHeight: `${cardHeight*36}px`,
+        flexGrow: 1,
+        minHeight: `${cardHeight * 36}px`,
         backgroundColor: "#fafafa",
         padding: "1rem",
         borderRadius: "0.5rem",
