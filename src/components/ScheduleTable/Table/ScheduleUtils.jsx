@@ -10,7 +10,7 @@ export const hourToIndex = (hour, firstHour) => {
         minuteField = splitedHour[1];
 
     if (minuteField === "00" || minuteField === "30") {
-        let isHalfHour = minuteField == "30" ? 1 : 0;
+        let isHalfHour = minuteField === "30" ? 1 : 0;
         return (parseInt(hourField) - firstHour) * 2 + isHalfHour;
     }
 

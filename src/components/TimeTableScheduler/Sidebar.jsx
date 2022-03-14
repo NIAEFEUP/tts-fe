@@ -3,7 +3,7 @@ import { Box, FormControlLabel, Button, Checkbox } from "@mui/material";
 import { timeTableStyles } from "../../styles/TimeTable";
 import DashboardCustomizeRoundedIcon from "@mui/icons-material/DashboardCustomizeRounded";
 
-export default function Sidebar({ openModal, courses = [] }) {
+export default function Sidebar({ openModal, courses }) {
     const classes = timeTableStyles();
     const [checkedPracticalClasses, setCheckedPracticalClasses] = useState(true);
     const [checkedTheoreticalClasses, setCheckedTheoreticalClasses] = useState(true);
@@ -54,7 +54,7 @@ export default function Sidebar({ openModal, courses = [] }) {
             <section className={classes.pickersBox}>
                 {courses.map((uc, ucIdx) => (
                     <div className={classes.picker} key={`${uc}-${ucIdx}`}>
-                        {uc}
+                        {uc.acronym}
                     </div>
                 ))}
             </section>

@@ -5,7 +5,7 @@ import FeupExchangePage from "./pages/FeupExchangePage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import TimeTablePage from "./pages/TimeTablePage";
-import SchedulePage from "./pages/SchedulePage"; 
+import SchedulePage from "./pages/SchedulePage";
 
 const AppRouter = () => (
     <BrowserRouter>
@@ -40,15 +40,15 @@ const AppRouter = () => (
                     </PageLayout>
                 }
             />
-            <Route 
-                exact 
+            <Route
+                exact
                 path="/select"
                 element={
                     <PageLayout key="/">
-                        <SchedulePage/> 
+                        <SchedulePage />
                     </PageLayout>
                 }
-            /> 
+            />
             <Route
                 exact
                 path="/feupexchange"

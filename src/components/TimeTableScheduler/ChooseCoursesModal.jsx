@@ -167,7 +167,8 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                             <Autocomplete
                                 // FIXME: Empty string passed to getElementById().
                                 // FIXME: None of the options match with `""`. Use `isOptionEqualToValue` to customize the equality test.
-                                id="course-selection"
+                                size="small"
+                                id="major-selection"
                                 className="bg-white"
                                 options={majors}
                                 value={major}
@@ -188,7 +189,7 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                                         multiple
                                         fullWidth
                                         size="small"
-                                        id="tags-outlined"
+                                        id="extra-courses-selection"
                                         className="bg-white"
                                         options={["EPE", "ABC", "IDE"]}
                                         getOptionLabel={(option) => option}
@@ -250,10 +251,10 @@ export default function ChooseCoursesModal({ majorHook, chosenHook, openHook }) 
                                                     {ucs.map((uc, ucIdx) => (
                                                         <Box
                                                             gridColumn="span 1"
-                                                            key={`G-${entryIdx}-Y${year}-${uc}-${ucIdx}`}
+                                                            key={`G${entryIdx}-Y${uc.course_year}-S${uc.semester}-${uc.acronym}-${ucIdx}`}
                                                         >
                                                             <FormControlLabel
-                                                                label={uc}
+                                                                label={uc.acronym}
                                                                 control={
                                                                     <Checkbox
                                                                         size="small"
