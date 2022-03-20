@@ -1,22 +1,31 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
-import { Grid, IconButton } from "@mui/material";
+import { Grid, IconButton, Link, Typography } from "@mui/material";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import LaunchIcon from '@mui/icons-material/Launch';
 
 const useStyles = makeStyles((theme) => ({
     footer: {
-        color: "#fff",
+        color: theme.palette.tertiary.main,
         backgroundColor: theme.palette.dark.main,
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
     },
+    button: {
+        color: theme.palette.dark.light,
+        fontSize: 28,
+    },
+    link: {
+        display: "flex",
+        alignItems: "center",
+        fontSize: 18,
+    }
 }));
 
 const Footer = () => {
-    const buttonColor = "#fff";
     const classes = useStyles();
 
     return (
@@ -26,51 +35,61 @@ const Footer = () => {
                     <Grid item>
                         <IconButton
                             href="https://github.com/NIAEFEUP"
-                            size="large"
-                            color="secondary"
+                            target="_blank"
+                            rel="noopener"
                         >
-                            <GitHubIcon />
+                            <GitHubIcon className={classes.button} />
                         </IconButton>
                     </Grid>
                     <Grid item>
                         <IconButton
                             href="https://facebook.com/NIAEFEUP/"
-                            size="large"
-                            color="secondary"
+                            target="_blank"
+                            rel="noopener"
                         >
-                            <FacebookIcon />
+                            <FacebookIcon className={classes.button} />
                         </IconButton>
                     </Grid>
                     <Grid item>
                         <IconButton
                             href="https://www.instagram.com/niaefeup/"
-                            size="large"
-                            color="secondary"
+                            target="_blank"
+                            rel="noopener"
                         >
-                            <InstagramIcon />
+                            <InstagramIcon className={classes.button} />
                         </IconButton>
                     </Grid>
                     <Grid item>
                         <IconButton
                             href="https://twitter.com/niaefeup"
-                            size="large"
-                            color="secondary"
+                            target="_blank"
+                            rel="noopener"
                         >
-                            <TwitterIcon />
+                            <TwitterIcon className={classes.button} />
                         </IconButton>
                     </Grid>
                     <Grid item>
                         <IconButton
                             href="https://pt.linkedin.com/company/nifeup"
-                            size="large"
-                            color="secondary"
+                            target="_blank"
+                            rel="noopener"
                         >
-                            <LinkedInIcon />
+                            <LinkedInIcon className={classes.button} />
                         </IconButton>
                     </Grid>
                 </Grid>
                 <Grid container item justifyContent="center">
-                    Niaefeup
+                    <Link
+                        href="https://ni.fe.up.pt"
+                        className={classes.footer}
+                        target="_blank"
+                        underline="hover"
+                        rel="noopener"
+                    >
+                        <Typography className={classes.link}>
+                          Niaefeup <LaunchIcon fontSize="small" />
+                        </Typography>
+                    </Link>
                 </Grid>
             </Grid>
         </div>
