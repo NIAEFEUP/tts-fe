@@ -10,8 +10,8 @@ type Props = {
 const Layout = ({ children, location }: Props) => {
   return (
     <div className="layout">
-      <Header location={location} siteTitle="TTS Revamp" />
-      {children}
+      <Header location={location} siteTitle="Time Table Selector" />
+      <div className="content">{children}</div>
       <Footer />
     </div>
   )

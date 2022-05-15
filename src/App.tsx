@@ -8,7 +8,7 @@ const pages = [
   { path: '/', location: 'Home', element: HomePage },
   { path: '/profile', location: 'Profile', element: ProfilePage },
   { path: '/schedule', location: 'Schedule', element: SchedulePage },
-  { path: '/tts', location: 'Time Table Selector', element: TimeTableSchedulerPage },
+  { path: '/tts', location: 'Planner', element: TimeTableSchedulerPage },
   { path: '/feupexchange', location: 'Exchange', element: FeupExchangePage },
 ]
 

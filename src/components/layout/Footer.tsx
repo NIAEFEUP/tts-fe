@@ -21,31 +21,36 @@ const socials: Social[] = [
 
 const Footer = () => {
   return (
-    <div className="">
-      <div className="flex items-center justify-between">
-        <div className="xs:grid-cols-12 grid sm:grid-cols-6 md:grid-cols-3">
-          <ul>
-            <li>
-              <div className="grid gap-1">
-                <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-[65rem]" />
-                <h4 className="text-lg font-bold">NIAEFEUP</h4>
-              </div>
-            </li>
-            <li>
-              <p>Rua Dr. Roberto Frias 4200-465, Porto</p>
-            </li>
-            <li>
-              <p>Sala B315</p>
-            </li>
-          </ul>
+    <div className="bg-tertiary px-6 py-4 dark:bg-dark">
+      <div className="flex items-center justify-center">
+        <div className="flex grow">
+          <div className="flex items-center justify-center space-x-4">
+            <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-20" />
+            <ul>
+              <li>
+                <h4 className="text-xl font-bold text-gray-900">NIAEFEUP</h4>
+              </li>
+              <li className="text-base text-gray-700 dark:text-gray-400">
+                <p>Rua Dr. Roberto Frias 4200-465, Porto</p>
+              </li>
+              <li className="text-sm text-gray-500 dark:text-gray-500">
+                <p>Sala B315</p>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <ul className="xs:grid-cols-12 grid sm:grid-cols-6 md:grid-cols-3">
+        <ul className="grid grid-cols-4 gap-2">
           {socials.map((social, socialIdx) => (
             <li key={`social-${socialIdx}`}>
-              <a href={social.url} target="_blank" rel="noreferrer">
-                <social.icon className="z-50 h-6 w-6 text-black" />
-                <span className="text-tertiary">{social.label}</span>
+              <a
+                className="inline-flex items-center justify-center space-x-2 text-sm transition hover:opacity-80"
+                href={social.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <social.icon className="h-5 w-5 text-primary dark:text-white" />
+                <span className="text-gray-800 dark:text-white">{social.label}</span>
               </a>
             </li>
           ))}

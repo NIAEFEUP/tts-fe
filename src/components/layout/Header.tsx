@@ -1,15 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { DarkModeSwitch } from './DarkModeSwitch'
-import { EmojiHappyIcon, BriefcaseIcon, DocumentDuplicateIcon } from '@heroicons/react/outline'
 import { LogoFELightImage, LogoFEDarkImage } from '../../images'
+import {
+  MenuIcon,
+  XIcon,
+  HomeIcon,
+  EmojiHappyIcon,
+  CollectionIcon,
+  CalendarIcon,
+  SwitchHorizontalIcon,
+} from '@heroicons/react/outline'
 
 const navigation = [
-  { title: 'TTS', location: '/timetable', icon: <EmojiHappyIcon className="mr-1.5 mt-0.5 h-[1.2rem] w-[1.2rem]" /> },
-  { title: 'FE', location: '/schedule', icon: <BriefcaseIcon className="mr-1.5 mt-0.5 h-[1.2rem] w-[1.2rem]" /> },
-  { title: 'About', location: '/about', icon: <DocumentDuplicateIcon className="mr-1.5 h-[1.2rem] w-[1.2rem]" /> },
+  { title: 'Home', location: '/', icon: <HomeIcon className="h-5 w-5" /> },
+  { title: 'Profile', location: '/profile', icon: <EmojiHappyIcon className="h-5 w-5" /> },
+  { title: 'Schedule', location: '/schedule', icon: <CalendarIcon className="h-5 w-5" /> },
+  { title: 'Planner', location: '/tts', icon: <CollectionIcon className="h-5 w-5" /> },
+  { title: 'Exchange', location: '/feupexchange', icon: <SwitchHorizontalIcon className="h-5 w-5" /> },
 ]
 
 type Props = {
@@ -30,12 +39,12 @@ const Header = ({ siteTitle, location }: Props) => {
                   <Link to="/" className="flex items-center space-x-2">
                     <img
                       src={LogoFELightImage}
-                      alt="TTS Revamp"
+                      alt="Time Table Selector"
                       className="z-20 inline-flex h-6 w-6 rounded-full transition dark:hidden"
                     />
                     <img
                       src={LogoFEDarkImage}
-                      alt="TTS Revamp"
+                      alt="Time Table Selector"
                       className="z-20 hidden h-6 w-6 rounded-full transition dark:inline-flex"
                     />
                     <h2 className="text-xs font-bold tracking-tighter duration-150 lg:text-base">{siteTitle}</h2>
@@ -47,19 +56,19 @@ const Header = ({ siteTitle, location }: Props) => {
                     <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                       <button
                         type="button"
-                        className={`flex h-12 items-center justify-center font-medium uppercase tracking-wider transition ${
+                        className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
                           location === link.title
                             ? 'text-primary dark:text-white'
                             : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
                         }`}
                       >
-                        <span className="flex items-center justify-center">
-                          {link.icon}
-                          {link.title}
+                        <span className="flex items-center justify-center space-x-1.5">
+                          <span>{link.icon}</span>
+                          <span>{link.title}</span>
                         </span>
                       </button>
                       {location === link.title ? (
-                        <span className="absolute bottom-0 h-1 w-full rounded-t-sm bg-primary dark:bg-blue-600" />
+                        <span className="absolute bottom-0 h-1 w-full rounded-t-sm bg-primary dark:bg-primary" />
                       ) : null}
                     </Link>
                   ))}
@@ -94,9 +103,9 @@ const Hamburger = ({ open }: HamburgerProps) => (
   >
     <Link to="/">
       {open ? (
-        <img className="avatar top-0.5 h-5 w-5 dark:inline-flex" src={LogoFEDarkImage} alt="TTS Revamp" />
+        <img className="avatar top-0.5 h-5 w-5 dark:inline-flex" src={LogoFEDarkImage} alt="Time Table Selector" />
       ) : (
-        <img className="avatar h-6 w-6" src={LogoFELightImage} alt="TTS Revamp" />
+        <img className="avatar h-6 w-6" src={LogoFELightImage} alt="Time Table Selector" />
       )}
     </Link>
 
@@ -130,18 +139,18 @@ const Mobile = ({ location }: MobileProps) => (
       <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
         <button
           type="button"
-          className={`flex h-auto items-center justify-center font-medium uppercase tracking-wider transition ${
+          className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
             location === link.title
               ? 'text-primary dark:text-white'
               : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
           }`}
         >
-          <span className="flex items-center justify-center">
-            {link.icon}
-            {link.title}
+          <span className="flex items-center justify-center space-x-2">
+            <span>{link.icon}</span>
+            <span>{link.title}</span>
           </span>
           {location === link.title ? (
-            <span className="absolute -left-4 h-full w-1 rounded-sm bg-primary dark:bg-blue-600" />
+            <span className="absolute -left-4 h-full w-1 rounded-sm bg-primary dark:bg-primary" />
           ) : null}
         </button>
       </Link>
