@@ -1,19 +1,19 @@
 import React from 'react'
-import { Event, Edit, Schedule } from '@mui/icons-material'
+import { CalendarIcon, PencilAltIcon, ClockIcon } from '@heroicons/react/outline'
 
 const information = [
   {
-    icon: Event,
+    icon: CalendarIcon,
     headline: 'Horário Inicial',
     text: 'Consultar horário incial feito pelo departamento do curso',
   },
   {
-    icon: Edit,
+    icon: PencilAltIcon,
     headline: 'Solicitar Troca',
     text: 'Escolher a(s) turma(s) destino para as unidades curriculares com horários indesejados',
   },
   {
-    icon: Schedule,
+    icon: ClockIcon,
     headline: 'Aguardar Resultados',
     text: 'Consultar horário incial feito pelo departamento do curso',
   },
@@ -24,9 +24,9 @@ export default function GridSection() {
     <div className="my-8 mx-auto w-full grow rounded border-2 bg-lighter py-2 px-0">
       <div className="container grid grid-cols-3 gap-4">
         {information.map((item, itemIdx) => (
-          <div key={`item-${itemIdx}`}>
-            <span className="m-auto w-1/5 rounded bg-lightest text-white opacity-90">
-              <item.icon className="h-auto w-auto px-40 text-primary" />
+          <div key={`item-${itemIdx}`} className="flex flex-col items-center justify-center">
+            <span className="m-auto w-1/5 rounded text-white opacity-90">
+              <item.icon className="z-50 h-24 w-auto text-primary" />
             </span>
             <span className="text-center text-gray-700">
               <h2>{item.headline}</h2>

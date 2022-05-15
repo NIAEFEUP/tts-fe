@@ -2,6 +2,7 @@ import React from 'react'
 import Layout from './components/layout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { HomePage, ProfilePage, SchedulePage, FeupExchangePage, TimeTableSchedulerPage } from './pages'
+import './index.css'
 
 const pages = [
   { path: '/', location: 'Home', element: HomePage },

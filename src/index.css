@@ -9,10 +9,36 @@
   font-family: 'Inter', sans-serif !important;
 }
 
+.min-h-adjusted {
+  min-height: calc(100vh - 3.5rem);
+}
+
+/* Layout */
 .layout {
   @apply flex min-h-screen flex-col overflow-clip bg-light font-prose font-medium text-gray-800 opacity-[99%] dark:bg-darkest dark:text-white;
 }
 
-.sidebar {
-  @apply rounded bg-light p-2 shadow-md;
+.content {
+  @apply container z-10 mx-auto my-auto max-w-7xl;
+}
+
+.content-liquid {
+  @apply container z-10 mx-auto my-auto max-w-8xl;
+}
+
+/* Navbar */
+.navbar {
+  @apply sticky top-0 z-20 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3;
+}
+
+.hamburger {
+  @apply text-gray-800 transition duration-200 ease-in dark:text-white md:hidden;
+}
+
+.header {
+  @apply flex flex-1 items-center justify-between md:items-stretch md:justify-between;
+}
+
+.avatar {
+  @apply rounded-full transition hover:opacity-80 md:hidden;
 }

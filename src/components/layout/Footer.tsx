@@ -1,6 +1,7 @@
 import React from 'react'
-import { LogoNIAEFEUP } from '../../images'
-import { Email, Language, LinkedIn, Facebook, Twitter, Instagram, GitHub } from '@mui/icons-material'
+import { LogoNIAEFEUPImage } from '../../images'
+import { GithubIcon, FacebookIcon, TwitterIcon, InstagramIcon, LinkedinIcon } from '../svgs'
+import { GlobeAltIcon, InboxInIcon } from '@heroicons/react/outline'
 
 type Social = {
   label: string
@@ -9,24 +10,24 @@ type Social = {
 }
 
 const socials: Social[] = [
-  { label: 'Github', url: 'https://github.com/NIAEFEUP', icon: GitHub },
-  { label: 'Facebook', url: 'https://facebook.com/NIAEFEUP', icon: Facebook },
-  { label: 'Twitter', url: 'https://twitter.com/niaefeup', icon: Twitter },
-  { label: 'Instagram', url: 'https://www.instagram.com/niaefeup', icon: Instagram },
-  { label: 'Linkedin', url: 'https://pt.linkedin.com/company/nifeup', icon: LinkedIn },
-  { label: 'Website', url: 'https://ni.fe.up.pt/', icon: Language },
-  { label: 'Email us', url: 'mailto:ni@aefeup.pt', icon: Email },
+  { label: 'Github', url: 'https://github.com/NIAEFEUP', icon: GithubIcon },
+  { label: 'Facebook', url: 'https://facebook.com/NIAEFEUP', icon: FacebookIcon },
+  { label: 'Twitter', url: 'https://twitter.com/niaefeup', icon: TwitterIcon },
+  { label: 'Instagram', url: 'https://www.instagram.com/niaefeup', icon: InstagramIcon },
+  { label: 'Linkedin', url: 'https://pt.linkedin.com/company/nifeup', icon: LinkedinIcon },
+  { label: 'Website', url: 'https://ni.fe.up.pt/', icon: GlobeAltIcon },
+  { label: 'Email us', url: 'mailto:ni@aefeup.pt', icon: InboxInIcon },
 ]
 
 const Footer = () => {
   return (
-    <div className="bg-dark text-tertiary">
+    <div className="">
       <div className="flex items-center justify-between">
         <div className="xs:grid-cols-12 grid sm:grid-cols-6 md:grid-cols-3">
           <ul>
             <li>
               <div className="grid gap-1">
-                <img src={LogoNIAEFEUP} alt="NIAEFEUP" className="h-auto w-[65rem]" />
+                <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-[65rem]" />
                 <h4 className="text-lg font-bold">NIAEFEUP</h4>
               </div>
             </li>
@@ -41,9 +42,9 @@ const Footer = () => {
 
         <ul className="xs:grid-cols-12 grid sm:grid-cols-6 md:grid-cols-3">
           {socials.map((social, socialIdx) => (
-            <li>
+            <li key={`social-${socialIdx}`}>
               <a href={social.url} target="_blank" rel="noreferrer">
-                <social.icon className="text-tertiary" />
+                <social.icon className="z-50 h-6 w-6 text-black" />
                 <span className="text-tertiary">{social.label}</span>
               </a>
             </li>

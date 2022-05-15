@@ -4,7 +4,7 @@ import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { DarkModeSwitch } from './DarkModeSwitch'
 import { EmojiHappyIcon, BriefcaseIcon, DocumentDuplicateIcon } from '@heroicons/react/outline'
-import { LogoFELight, LogoFEDark } from '../../images'
+import { LogoFELightImage, LogoFEDarkImage } from '../../images'
 
 const navigation = [
   { title: 'TTS', location: '/timetable', icon: <EmojiHappyIcon className="mr-1.5 mt-0.5 h-[1.2rem] w-[1.2rem]" /> },
@@ -29,12 +29,12 @@ const Header = ({ siteTitle, location }: Props) => {
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to="/" className="flex items-center space-x-2">
                     <img
-                      src={LogoFELight}
+                      src={LogoFELightImage}
                       alt="TTS Revamp"
                       className="z-20 inline-flex h-6 w-6 rounded-full transition dark:hidden"
                     />
                     <img
-                      src={LogoFEDark}
+                      src={LogoFEDarkImage}
                       alt="TTS Revamp"
                       className="z-20 hidden h-6 w-6 rounded-full transition dark:inline-flex"
                     />
@@ -94,9 +94,9 @@ const Hamburger = ({ open }: HamburgerProps) => (
   >
     <Link to="/">
       {open ? (
-        <img className="avatar top-0.5 h-5 w-5 dark:inline-flex" src={LogoFEDark} alt="TTS Revamp" />
+        <img className="avatar top-0.5 h-5 w-5 dark:inline-flex" src={LogoFEDarkImage} alt="TTS Revamp" />
       ) : (
-        <img className="avatar h-6 w-6" src={LogoFELight} alt="TTS Revamp" />
+        <img className="avatar h-6 w-6" src={LogoFELightImage} alt="TTS Revamp" />
       )}
     </Link>
 

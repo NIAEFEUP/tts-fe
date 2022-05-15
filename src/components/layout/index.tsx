@@ -1,4 +1,6 @@
 import React from 'react'
+import Header from './Header'
+import Footer from './Footer'
 
 type Props = {
   children: JSX.Element
@@ -8,8 +10,9 @@ type Props = {
 const Layout = ({ children, location }: Props) => {
   return (
     <div className="layout">
-      <div></div>
+      <Header location={location} siteTitle="TTS Revamp" />
       {children}
+      <Footer />
     </div>
   )
 }
