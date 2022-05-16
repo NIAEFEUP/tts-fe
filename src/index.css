@@ -9,7 +9,7 @@
 }
 
 .min-h-adjusted {
-  min-height: calc(100vh - 3.5rem - 8rem);
+  min-height: calc(100vh - 3.5rem - 10.5rem);
 }
 
 .layout {

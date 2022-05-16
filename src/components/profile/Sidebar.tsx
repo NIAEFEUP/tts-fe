@@ -15,7 +15,7 @@ const Sidebar = () => {
   ]
 
   return (
-    <aside className="flex h-full min-h-max flex-col justify-between">
+    <aside className="flex h-full min-h-max flex-col justify-between bg-lightest dark:bg-dark rounded">
       <div className="flex h-full flex-col space-y-6 divide-y p-4">
         <header className="flex flex-col items-start justify-start space-y-4">
           <div className="flex items-center justify-start space-x-2">
@@ -39,7 +39,7 @@ const Sidebar = () => {
                 className={({ selected }: SelectedProps) =>
                   classNames(
                     'inline-flex w-full items-center space-x-2 rounded px-3 py-2 text-sm font-medium transition',
-                    selected ? 'bg-primary text-white' : 'hover:bg-white dark:hover:bg-primary/20'
+                    selected ? 'bg-primary text-white' : 'hover:text-white hover:bg-primary/50 dark:hover:bg-primary/20'
                   )
                 }
               >
@@ -51,7 +51,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <footer className="flex shrink flex-col divide-y px-4 pt-4">
+      <footer className="flex shrink flex-col divide-y px-4 py-4">
         <p className="border-t pt-2 text-sm">
           Need help?{' '}
           <a className="text-primary hover:underline" href="mailto:ni@fe.up.pt">

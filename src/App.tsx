@@ -5,7 +5,7 @@ import './index.css'
 
 const pages = [
   { path: '/', location: 'Home', element: HomePage, liquid: true },
-  { path: '/profile', location: 'Profile', element: ProfilePage, liquid: false },
+  { path: '/profile', location: 'Profile', element: ProfilePage, liquid: true },
   { path: '/schedule', location: 'Schedule', element: SchedulePage, liquid: true },
   { path: '/tts', location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
   { path: '/feupexchange', location: 'Exchange', element: FeupExchangePage, liquid: true },

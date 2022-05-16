@@ -38,7 +38,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30"
+          className="rounded-md bg-darkest bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30"
         >
           Editar UCs
         </button>
@@ -152,7 +152,7 @@ const OuterMask = () => (
     leaveFrom="opacity-100"
     leaveTo="opacity-0"
   >
-    <div className="fixed inset-0 bg-black bg-opacity-25" />
+    <div className="fixed inset-0 bg-darkest bg-opacity-25" />
   </Transition.Child>
 )
 

@@ -1,6 +1,6 @@
 /* Dialog */
 .dialog {
-  @apply w-full max-w-5xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all;
+  @apply w-full max-w-5xl transform rounded-2xl bg-lightest p-6 text-left align-middle shadow-xl transition-all;
 }
 
 /* Dialog Header */
