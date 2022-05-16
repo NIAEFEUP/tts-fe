@@ -1,4 +1,3 @@
-import React from 'react'
 import UseCaseSection from '../components/exchange/UseCaseSection'
 
 const FeupExchangePage = () => (

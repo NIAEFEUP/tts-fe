@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import classNames from 'classnames'
 import { Tab } from '@headlessui/react'
 import { LogoNIAEFEUPImage } from '../../images'

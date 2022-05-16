@@ -1,4 +1,3 @@
-import React from 'react'
 import { CalendarIcon, PencilAltIcon, ClockIcon } from '@heroicons/react/outline'
 
 const information = [

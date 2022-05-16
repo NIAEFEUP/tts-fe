@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import Header from './Header'
 import Footer from './Footer'
 import classNames from 'classnames'
@@ -12,8 +12,8 @@ type Props = {
 
 const Layout = ({ children, location, liquid, title }: Props) => {
   useEffect(() => {
-    document.title = `${title} | ${process.env.REACT_APP_SITE_TITLE}`;
-  }, [title]);
+    document.title = `${title} | ${process.env.REACT_APP_SITE_TITLE}`
+  }, [title])
 
   return (
     <div className="layout">

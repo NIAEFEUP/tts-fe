@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Main from '../components/profile/Main'
 import Sidebar from '../components/profile/Sidebar'
 import { Tab } from '@headlessui/react'

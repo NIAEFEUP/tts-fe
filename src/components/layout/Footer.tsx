@@ -1,4 +1,3 @@
-import React from 'react'
 import { LogoNIAEFEUPImage } from '../../images'
 import { GithubIcon, FacebookIcon, TwitterIcon, InstagramIcon, LinkedinIcon } from '../svgs'
 import { GlobeAltIcon, InboxInIcon } from '@heroicons/react/outline'
@@ -21,7 +20,7 @@ const socials: Social[] = [
 
 const Footer = () => {
   return (
-    <div className="bg-gray-700 px-2 md:px-6 py-3 md:py-4 dark:bg-dark">
+    <div className="bg-gray-700 px-2 py-3 dark:bg-dark md:px-6 md:py-4">
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12 md:col-span-9">
           <div className="flex items-center justify-center space-x-4 md:items-start md:justify-start">
@@ -40,7 +39,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="col-span-12 md:col-span-3 my-auto">
+        <div className="col-span-12 my-auto md:col-span-3">
           <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:items-end md:justify-end">
             {socials.map((social, socialIdx) => (
               <li key={`social-${socialIdx}`}>
