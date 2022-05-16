@@ -1,9 +1,12 @@
 import '../../styles/modal.css'
+import { Major } from '../../@types'
 import { Fragment, SetStateAction, useState, useEffect } from 'react'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, AcademicCapIcon } from '@heroicons/react/solid'
 import Alert, { AlertType } from './Alert'
-import { Major } from '../../@types'
+import { coursesData } from '../../utils/data'
+import { truncateCourses } from '../../utils/index'
+import { TruncatedCourse, YearCourses, Course } from '../../@types/index'
 
 type Props = {
   majors: any
@@ -12,10 +15,12 @@ type Props = {
 }
 
 const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
+  const truncatedCourses = truncateCourses(coursesData)
   const [isOpen, setIsOpen] = openHook
   const [query, setQuery] = useState('')
-  const [selectedMajor, setSelectedMajor] = selectedMajorHook
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
+  const [selectedMajor, setSelectedMajor] = selectedMajorHook
+  const [selectedCourses, setSelectedCourses] = useState<TruncatedCourse[]>([])
 
   const filteredMajors =
     query === ''
@@ -27,6 +32,8 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
   useEffect(() => {
     if (selectedMajor !== '') setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
+
+    console.log(selectedCourses)
   }, [selectedMajor])
 
   function closeModal() {
@@ -54,10 +61,11 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
-          <div className="fixed inset-0 bottom-48 overflow-y-auto">
+          <div className="fixed inset-0 bottom-0 overflow-y-auto md:bottom-24">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <InnerCustomTransition>
                 <Dialog.Panel className="dialog">
+                  {/* Header */}
                   <Dialog.Title as="header" className="dialog-header">
                     <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
                     <h3 className="text-xl font-semibold leading-6 tracking-tight">Escolha de UCs</h3>
@@ -65,17 +73,17 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
                   {/* Alert banner */}
                   <Alert type={alertLevel}>
-                    Por favor selecione o seu <strong>curso principal</strong>, seguido das{' '}
-                    <strong>Unidades Curriculares</strong> pretendidas.
+                    Selecione o seu <strong>curso principal</strong>, seguido das <strong>Unidades Curriculares</strong>{' '}
+                    pretendidas.
                   </Alert>
 
                   {/* Select major dropdown */}
                   <Combobox value={selectedMajor} onChange={setSelectedMajor}>
                     <div className="relative mt-4">
-                      <div className="relative w-full overflow-hidden rounded border-2 border-gray-200 text-left text-base">
+                      <div className="relative w-full rounded border-2 border-gray-200 text-left">
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
-                          className="w-full bg-gray-50 py-4 px-4 leading-5 text-gray-900 focus:ring-0"
+                          className="w-full bg-gray-50 py-4 px-4 text-xs leading-5 text-gray-900 focus:ring-0 md:text-sm"
                           displayValue={(major: { name: string }) => major.name}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
                             setQuery(event.target.value)
@@ -98,7 +106,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                       >
                         <Combobox.Options
                           className="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-md border-2 
-                        border-gray-200 bg-lightest py-2 text-base dark:bg-lighter sm:text-sm"
+                        border-gray-200 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                         >
                           {filteredMajors.length === 0 && query !== '' ? (
                             <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
@@ -138,6 +146,46 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                       </Transition>
                     </div>
                   </Combobox>
+
+                  {/* Courses checkboxes */}
+                  {alertLevel === AlertType.success ? (
+                    <div className="mx-auto mt-4 flex max-w-md items-center justify-between">
+                      {truncatedCourses.map((year: YearCourses, yearIdx: number) => (
+                        <div key={`year-${yearIdx}`}>
+                          {/* Parent checkbox */}
+                          <div className="flex items-center">
+                            <input
+                              id={`year-checkbox-${yearIdx}`}
+                              type="checkbox"
+                              className="form-checkbox rounded text-primary"
+                            />
+                            <label htmlFor={`year-checkbox-${yearIdx}`} className="ml-2 block text-sm">
+                              {yearIdx + 1}º Ano
+                            </label>
+                          </div>
+
+                          {/* Children checkboxes */}
+                          <div className="mt-2 ml-3 grid grid-flow-row grid-rows-3 gap-1">
+                            {year.map((course: TruncatedCourse, courseIdx: number) => (
+                              <div key={`checkbox-group-${yearIdx}`} className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="rounded text-primary"
+                                  id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                />
+                                <label
+                                  className="ml-2 block text-sm"
+                                  htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                >
+                                  {course.acronym}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
 
                   {/* Bottom action buttons */}
                   <footer className="mt-8 flex items-center justify-between">

@@ -24,24 +24,24 @@ const Alert = ({ children, type }: Props) => {
     <div
       role="alert"
       className={classNames(
-        'flex items-center justify-between rounded border-2 px-3 py-2',
+        'flex items-center justify-between rounded border-2 px-2 py-2',
         type === undefined ? 'border-gray-700/20 bg-gray-50 text-gray-700' : '',
         type === AlertType.info ? 'border-sky-700/20 bg-sky-50 text-sky-700' : '',
-        type === AlertType.error ? 'border-rose-700/20 bg-rose-50 text-rose-700 animate-wiggle' : '',
-        type === AlertType.warning ? 'border-amber-900/10 bg-amber-50 text-amber-700 animate-wiggle' : '',
+        type === AlertType.error ? 'animate-wiggle border-rose-700/20 bg-rose-50 text-rose-700' : '',
+        type === AlertType.warning ? 'animate-wiggle border-amber-900/10 bg-amber-50 text-amber-700' : '',
         type === AlertType.success ? 'border-teal-700/30 bg-teal-50 text-teal-600' : ''
       )}
     >
       <div className="inline-flex items-center justify-center space-x-2">
-        {type === AlertType.info ? <InformationCircleIcon className="h-5 w-5" /> : null}
-        {type === AlertType.warning ? <ExclamationIcon className="h-5 w-5" /> : null}
-        {type === AlertType.error ? <ExclamationCircleIcon className="h-5 w-5" /> : null}
-        {type === AlertType.success ? <CheckCircleIcon className="h-5 w-5" /> : null}
-        <strong className="text-sm font-medium">{children}</strong>
+        {type === AlertType.info ? <InformationCircleIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
+        {type === AlertType.warning ? <ExclamationIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
+        {type === AlertType.error ? <ExclamationCircleIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
+        {type === AlertType.success ? <CheckCircleIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
+        <strong className="text-xs font-medium md:text-sm">{children}</strong>
       </div>
 
       {/* Close */}
-      <button className="opacity-90" type="button">
+      {/* <button className="opacity-90" type="button">
         <span className="sr-only">Close</span>
         <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
           <path
@@ -50,7 +50,7 @@ const Alert = ({ children, type }: Props) => {
             clipRule="evenodd"
           />
         </svg>
-      </button>
+      </button> */}
     </div>
   )
 }

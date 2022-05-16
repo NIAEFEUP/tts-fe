@@ -14,7 +14,7 @@
 }
 
 .layout {
-  @apply flex min-h-screen flex-col overflow-clip bg-light font-prose font-normal text-gray-800 opacity-[99%] dark:bg-darkest dark:text-white;
+  @apply flex min-h-screen flex-col bg-light font-prose font-normal text-gray-800 opacity-[99%] dark:bg-darkest dark:text-white;
 }
 
 .navbar {

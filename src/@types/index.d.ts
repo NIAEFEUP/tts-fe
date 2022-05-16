@@ -5,8 +5,8 @@ export type Student = {
   picture?: string
 }
 
-export type UC = {
-  course_unit_id: string
+export type Course = {
+  course_unit_id: number
   course: string
   name: string
   acronym: string
@@ -16,6 +16,14 @@ export type UC = {
   year: number
   schedule_url: string
   last_updated: string
+}
+
+export type YearCourses = Course[]
+export type MajorCourses = YearCourses[]
+
+export type TruncatedCourse = {
+  acronym: string
+  course_unit_id: number
 }
 
 export type Major = {

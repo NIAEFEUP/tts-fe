@@ -7,7 +7,7 @@ const ProfilePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-0 xl:gap-x-4 gap-y-8 xl:gap-y-0 px-4 py-4">
+    <div className="grid w-full grid-cols-12 gap-x-0 gap-y-8 px-4 py-4 xl:gap-x-4 xl:gap-y-0">
       <Tab.Group vertical selectedIndex={selectedIndex} onChange={setSelectedIndex}>
         <div className="col-span-12 xl:col-span-2">
           <Sidebar />
