@@ -27,7 +27,7 @@ const Sidebar = () => {
               <h5 className="text-xs font-normal tracking-tighter text-gray-400">up202212345@fe.up.pt</h5>
             </div>
           </div>
-          <button className="w-full rounded border-2 border-primary/50 bg-primary/10 py-2">Sign Out</button>
+          <button className="w-full rounded border-2 border-primary/50 bg-primary/10 py-2 transition hover:bg-primary hover:text-white">Sign Out</button>
         </header>
 
         {/* Navigation */}

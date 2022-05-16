@@ -21,40 +21,42 @@ const socials: Social[] = [
 
 const Footer = () => {
   return (
-    <div className="bg-tertiary px-6 py-4 dark:bg-dark">
-      <div className="flex items-center justify-center">
-        <div className="flex grow">
-          <div className="flex items-center justify-center space-x-4">
+    <div className="bg-gray-700 px-2 md:px-6 py-3 md:py-4 dark:bg-dark">
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-12 md:col-span-9">
+          <div className="flex items-center justify-center space-x-4 md:items-start md:justify-start">
             <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-20" />
             <ul>
               <li>
-                <h4 className="text-xl font-bold text-gray-900 dark:text-white">NIAEFEUP</h4>
+                <h4 className="text-xl font-bold text-white dark:text-white">NIAEFEUP</h4>
               </li>
-              <li className="text-base text-gray-700 dark:text-gray-400">
+              <li className="text-base text-gray-300 dark:text-gray-400">
                 <p>Rua Dr. Roberto Frias 4200-465, Porto</p>
               </li>
-              <li className="text-sm text-gray-500 dark:text-gray-500">
+              <li className="text-sm text-gray-400 dark:text-gray-500">
                 <p>Sala B315</p>
               </li>
             </ul>
           </div>
         </div>
 
-        <ul className="grid grid-cols-4 gap-2">
-          {socials.map((social, socialIdx) => (
-            <li key={`social-${socialIdx}`}>
-              <a
-                className="inline-flex items-center justify-center space-x-2 text-sm transition hover:opacity-80"
-                href={social.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <social.icon className="h-5 w-5 text-primary dark:text-white" />
-                <span className="text-gray-800 dark:text-white">{social.label}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="col-span-12 md:col-span-3 my-auto">
+          <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:items-end md:justify-end">
+            {socials.map((social, socialIdx) => (
+              <li key={`social-${socialIdx}`}>
+                <a
+                  className="inline-flex items-center justify-center space-x-1 text-sm transition hover:opacity-80"
+                  href={social.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <social.icon className="h-5 w-5 text-white dark:text-white" />
+                  <span className="text-white dark:text-white">{social.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   )
