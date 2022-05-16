@@ -18,18 +18,18 @@ const information = [
   },
 ]
 
-export default function UseCaseSection() {
-  return (
-    <div className="w-full grow rounded py-4 px-6">
-      <div className="container grid grid-cols-1 gap-8 md:grid-cols-3">
-        {information.map((item, itemIdx) => (
-          <div key={`item-${itemIdx}`} className="flex flex-col items-center justify-start">
-            <item.icon className="z-50 mb-3 h-12 w-auto text-primary" />
-            <h2 className="text-center text-xl font-bold uppercase tracking-wide">{item.headline}</h2>
-            <p className="text-center text-base">{item.text}</p>
-          </div>
-        ))}
-      </div>
+const UseCaseSection = () => (
+  <div className="w-full grow rounded py-4 px-6">
+    <div className="container grid grid-cols-1 gap-8 md:grid-cols-3">
+      {information.map((item, itemIdx) => (
+        <div key={`item-${itemIdx}`} className="flex flex-col items-center justify-start">
+          <item.icon className="z-50 mb-3 h-12 w-auto text-primary" />
+          <h2 className="text-center text-xl font-bold uppercase tracking-wide">{item.headline}</h2>
+          <p className="text-center text-base">{item.text}</p>
+        </div>
+      ))}
     </div>
-  )
-}
+  </div>
+)
+
+export default UseCaseSection

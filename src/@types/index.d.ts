@@ -17,3 +17,7 @@ export type UC = {
   schedule_url: string
   last_updated: string
 }
+
+export type Major = {
+  name: string
+}
