@@ -5,7 +5,7 @@ import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, AcademicCapIcon } from '@heroicons/react/solid'
 import Alert, { AlertType } from './Alert'
 import { coursesData } from '../../utils/data'
-import { TruncatedCourse, YearCourses } from '../../@types'
+import { TruncatedCourse } from '../../@types'
 
 type Props = {
   majors: any
@@ -14,13 +14,13 @@ type Props = {
 }
 
 const truncateCourses = (courses: MajorCourses) => {
-  return courses.map((year, yearIdx) => {
-    return year.map(({ acronym, course_unit_id }) => ({
+  return courses.map((year) =>
+    year.map(({ acronym, course_unit_id }) => ({
       checked: false,
       acronym: acronym,
       course_unit_id: course_unit_id,
     }))
-  })
+  )
 }
 
 const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
@@ -200,7 +200,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
                   {/* Courses checkboxes */}
                   {alertLevel === AlertType.success ? (
-                    <div className="mx-auto mt-6 flex max-w-md items-center justify-between">
+                    <div className="mx-auto mt-6 flex max-w-2xl items-start justify-center space-x-8">
                       {truncatedCourses.map((year: TruncatedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
@@ -214,16 +214,13 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                                 handleCheckGroup(event, yearIdx)
                               }}
                             />
-                            <label
-                              htmlFor={`year-checkbox-${yearIdx}`}
-                              className="ml-2 block text-sm font-semibold"
-                            >
-                              {yearIdx + 1}º Ano
+                            <label className="ml-1 block text-sm font-semibold" htmlFor={`year-checkbox-${yearIdx}`}>
+                              <span>{yearIdx + 1}º Ano</span>
                             </label>
                           </div>
 
                           {/* Children checkboxes */}
-                          <div className="mt-2 ml-5 grid grid-flow-row grid-rows-3 gap-1">
+                          <div className="mt-2 ml-5 grid grid-rows-6 grid-flow-col gap-x-3 gap-y-1.5">
                             {year.map((course: TruncatedCourse, courseIdx: number) => (
                               <div
                                 key={`checkbox-${yearIdx}-${courseIdx}`}
@@ -239,7 +236,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                                   }}
                                 />
                                 <label
-                                  className="ml-2 block text-sm"
+                                  className="ml-1.5 block text-sm"
                                   htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
                                 >
                                   {course.acronym}
