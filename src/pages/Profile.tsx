@@ -3,7 +3,7 @@ import Main from '../components/profile/Main'
 import Sidebar from '../components/profile/Sidebar'
 
 const ProfilePage = () => (
-  <div className="grid w-full grid-cols-12 gap-x-0 gap-y-8 xl:gap-x-4 xl:gap-y-0">
+  <div className="grid w-full grid-cols-12 gap-y-8 xl:gap-y-0">
     <div className="col-span-12 xl:col-span-2">
       <Sidebar />
     </div>

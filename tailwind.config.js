@@ -31,8 +31,10 @@ module.exports = {
       flex: {
         end: '0 1 auto',
       },
+      minHeight: {
+        'half-screen': '50vh',
+      },
       maxWidth: {
-        screen: '100vw',
         '8xl': '88rem',
         '9xl': '96rem',
       },

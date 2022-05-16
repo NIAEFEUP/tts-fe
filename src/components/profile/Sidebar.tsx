@@ -17,9 +17,9 @@ const Sidebar = () => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   return (
-    <aside className="flex h-full flex-col justify-between">
+    <aside className="flex h-full min-h-max flex-col justify-between">
       <div className="flex h-full flex-col space-y-6 divide-y p-4">
-        <div className="flex flex-col items-start justify-start space-y-4">
+        <header className="flex flex-col items-start justify-start space-y-4">
           <div className="flex items-center justify-start space-x-2">
             <img src={LogoNIAEFEUPImage} className="h-12 w-auto rounded" alt="App" />
             <div>
@@ -28,17 +28,19 @@ const Sidebar = () => {
             </div>
           </div>
           <button className="w-full rounded border-2 border-primary/50 bg-primary/10 py-2">Sign Out</button>
-        </div>
+        </header>
+
+        {/* Navigation */}
         <div className="flex py-4">
           <Tab.Group vertical selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-            <Tab.List className="flex w-full flex-col space-y-1 rounded-xl">
+            <Tab.List className="flex w-full flex-col space-y-2 rounded-xl">
               {navigation.map((item, itemIdx) => (
                 <Tab
                   key={`nav-profile-${itemIdx}`}
                   className={({ selected }: SelectedProps) =>
                     classNames(
-                      'inline-flex w-full items-center space-x-2 rounded px-2 py-2 text-sm font-medium transition',
-                      selected ? 'bg-primary text-white' : 'hover:bg-primary/10'
+                      'inline-flex w-full items-center space-x-2 rounded px-3 py-2 text-sm font-medium transition',
+                      selected ? 'bg-primary text-white' : 'hover:bg-white dark:hover:bg-primary/20'
                     )
                   }
                 >
@@ -51,14 +53,14 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div className="flex h-full flex-col divide-y px-4 py-2">
-        <p className="border-t py-2 text-sm">
+      <footer className="flex shrink flex-col divide-y px-4 pt-4">
+        <p className="text-sm border-t pt-2">
           Need help?{' '}
           <a className="text-primary hover:underline" href="mailto:ni@fe.up.pt">
             Contact Support
           </a>
         </p>
-      </div>
+      </footer>
     </aside>
   )
 }
