@@ -20,7 +20,7 @@ const App = () => (
           path={page.path}
           key={`page-${pageIdx}`}
           element={
-            <Layout location={page.location} liquid={page.liquid}>
+            <Layout location={page.location} title={page.location} liquid={page.liquid}>
               <page.element />
             </Layout>
           }
