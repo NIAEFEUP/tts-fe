@@ -1,17 +1,26 @@
 import '../../styles/modal.css'
-import { Major } from '../../@types'
+import { Major, MajorCourses } from '../../@types'
 import { Fragment, SetStateAction, useState, useEffect } from 'react'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, AcademicCapIcon } from '@heroicons/react/solid'
 import Alert, { AlertType } from './Alert'
 import { coursesData } from '../../utils/data'
-import { truncateCourses } from '../../utils/index'
-import { TruncatedCourse, YearCourses, Course } from '../../@types/index'
+import { TruncatedCourse, YearCourses } from '../../@types'
 
 type Props = {
   majors: any
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   selectedMajorHook: [any, React.Dispatch<React.SetStateAction<any>>]
+}
+
+const truncateCourses = (courses: MajorCourses) => {
+  return courses.map((year, yearIdx) => {
+    return year.map(({ acronym, course_unit_id }) => ({
+      checked: false,
+      acronym: acronym,
+      course_unit_id: course_unit_id,
+    }))
+  })
 }
 
 const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
@@ -20,7 +29,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
   const [query, setQuery] = useState('')
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
   const [selectedMajor, setSelectedMajor] = selectedMajorHook
-  const [selectedCourses, setSelectedCourses] = useState<TruncatedCourse[]>([])
+  const [selectedCourses, setSelectedCourses] = useState<TruncatedCourse[][]>(truncatedCourses)
 
   const filteredMajors =
     query === ''
@@ -41,6 +50,18 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
   function openModal() {
     setIsOpen(true)
+  }
+
+  function handleCheck(event: React.ChangeEvent<HTMLInputElement>, i: number, j: number) {
+    let copy = selectedCourses
+    let newEntry: TruncatedCourse = {
+      checked: event.target.checked,
+      acronym: truncatedCourses[i][j].acronym,
+      course_unit_id: truncatedCourses[i][j].course_unit_id,
+    }
+    copy[i][j] = newEntry
+
+    setSelectedCourses([...copy])
   }
 
   return (
@@ -148,7 +169,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                   {/* Courses checkboxes */}
                   {alertLevel === AlertType.success ? (
                     <div className="mx-auto mt-4 flex max-w-md items-center justify-between">
-                      {truncatedCourses.map((year: YearCourses, yearIdx: number) => (
+                      {truncatedCourses.map((year: TruncatedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
                           <div className="flex items-center">
@@ -169,7 +190,11 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                                 <input
                                   type="checkbox"
                                   className="rounded text-primary"
+                                  checked={selectedCourses[yearIdx][courseIdx].checked}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                  onChange={(event) => {
+                                    handleCheck(event, yearIdx, courseIdx)
+                                  }}
                                 />
                                 <label
                                   className="ml-2 block text-sm"

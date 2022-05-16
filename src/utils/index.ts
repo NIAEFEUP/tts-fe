@@ -1,5 +1,3 @@
-import { MajorCourses } from '../@types'
-
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
@@ -24,12 +22,6 @@ export const getSchoolYear = () => {
   return month >= 0 && month <= 6
     ? `${year - 1}/${year.toString().slice(2, 4)}`
     : `${year}/${(year + 1).toString().slice(2, 4)}`
-}
-
-export const truncateCourses: any = (courses: MajorCourses) => {
-  return courses.map((year, yearIdx) => {
-    return year.map(({ acronym, course_unit_id }) => ({ acronym, course_unit_id }))
-  })
 }
 
 /* 

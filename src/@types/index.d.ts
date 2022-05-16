@@ -23,6 +23,7 @@ export type MajorCourses = YearCourses[]
 
 export type TruncatedCourse = {
   acronym: string
+  checked: boolean
   course_unit_id: number
 }
 
