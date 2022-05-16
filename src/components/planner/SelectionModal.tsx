@@ -62,6 +62,26 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
     copy[i][j] = newEntry
     setSelectedCourses([...copy])
+
+    let some = copy[i].some((course) => course.checked)
+    let every = copy[i].every((course) => course.checked)
+
+    if (every) {
+      //@ts-ignore
+      document.getElementById(`year-checkbox-${i}`).checked = true
+      //@ts-ignore
+      document.getElementById(`year-checkbox-${i}`).indeterminate = false
+    } else if (some) {
+      //@ts-ignore
+      document.getElementById(`year-checkbox-${i}`).checked = false
+      //@ts-ignore
+      document.getElementById(`year-checkbox-${i}`).indeterminate = true
+    } else {
+      //@ts-ignore
+      document.getElementById(`year-checkbox-${i}`).checked = false
+      //@ts-ignore
+      document.getElementById(`year-checkbox-${i}`).indeterminate = false
+    }
   }
 
   function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, i: number) {
