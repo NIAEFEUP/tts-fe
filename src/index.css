@@ -9,7 +9,8 @@
 }
 
 .min-h-adjusted {
-  min-height: calc(100vh - 3.5rem - 10.5rem);
+  /* minHeight = pageHeight - headerHeight - footerHeight */
+  min-height: calc(100vh - 3.5rem - 9rem);
 }
 
 .layout {

@@ -1,5 +1,5 @@
 import '../../styles/modal.css'
-import { Fragment, SetStateAction, useState } from 'react'
+import { Fragment, SetStateAction, useState, useEffect } from 'react'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon, AcademicCapIcon } from '@heroicons/react/solid'
 import Alert, { AlertType } from './Alert'
@@ -15,6 +15,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
   const [isOpen, setIsOpen] = openHook
   const [query, setQuery] = useState('')
   const [selectedMajor, setSelectedMajor] = selectedMajorHook
+  const [alertLevel, setAlertLevel] = useState(AlertType.info)
 
   const filteredMajors =
     query === ''
@@ -23,8 +24,14 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
           major.name.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
         )
 
+  useEffect(() => {
+    if (selectedMajor !== '') setAlertLevel(AlertType.success)
+    else setAlertLevel(AlertType.info)
+  }, [selectedMajor])
+
   function closeModal() {
-    setIsOpen(false)
+    if (selectedMajor === '') setAlertLevel(AlertType.warning)
+    else setIsOpen(false)
   }
 
   function openModal() {
@@ -47,7 +54,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 bottom-48 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <InnerCustomTransition>
                 <Dialog.Panel className="dialog">
@@ -56,15 +63,19 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                     <h3 className="text-xl font-semibold leading-6 tracking-tight">Escolha de UCs</h3>
                   </Dialog.Title>
 
-                  <Alert type={AlertType.info}>
-                    Por favor selecione o seu curso principal, seguido das UCs pretendidas.
+                  {/* Alert banner */}
+                  <Alert type={alertLevel}>
+                    Por favor selecione o seu <strong>curso principal</strong>, seguido das{' '}
+                    <strong>Unidades Curriculares</strong> pretendidas.
                   </Alert>
 
+                  {/* Select major dropdown */}
                   <Combobox value={selectedMajor} onChange={setSelectedMajor}>
                     <div className="relative mt-4">
-                      <div className="relative w-full overflow-hidden rounded border-2 border-slate-200 text-left text-sm ">
+                      <div className="relative w-full overflow-hidden rounded border-2 border-gray-200 text-left text-base">
                         <Combobox.Input
-                          className="w-full bg-lighter py-4 px-4 leading-5 text-gray-900 focus:ring-0"
+                          placeholder="Digite ou escolha o seu ciclo de estudos"
+                          className="w-full bg-gray-50 py-4 px-4 leading-5 text-gray-900 focus:ring-0"
                           displayValue={(major: { name: string }) => major.name}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
                             setQuery(event.target.value)
@@ -72,7 +83,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                         />
                         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                           <SelectorIcon
-                            className="h-7 w-7 py-0.5 rounded-full text-gray-500 transition hover:text-white hover:bg-primary"
+                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-primary hover:text-white"
                             aria-hidden="true"
                           />
                         </Combobox.Button>
@@ -85,7 +96,10 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                         leaveTo="opacity-0"
                         afterLeave={() => setQuery('')}
                       >
-                        <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border-2 border-slate-200 bg-lighter py-2 text-base dark:bg-lighter sm:text-sm">
+                        <Combobox.Options
+                          className="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-md border-2 
+                        border-gray-200 bg-lightest py-2 text-base dark:bg-lighter sm:text-sm"
+                        >
                           {filteredMajors.length === 0 && query !== '' ? (
                             <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
                               Nenhum curso encontrado com este nome.
@@ -125,8 +139,9 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                     </div>
                   </Combobox>
 
+                  {/* Bottom action buttons */}
                   <footer className="mt-8 flex items-center justify-between">
-                    <button type="button" className="contact-button bg-slate-50" onClick={closeModal}>
+                    <button type="button" className="contact-button bg-slate-100" onClick={closeModal}>
                       Contacte-nos
                     </button>
 

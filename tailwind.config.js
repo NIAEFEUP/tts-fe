@@ -47,6 +47,15 @@ module.exports = {
         headings: ['Inter', ...defaultTheme.fontFamily.sans],
         mono: ['Fira Code', ...defaultTheme.fontFamily.mono],
       },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(0.5deg)' },
+          '50%': { transform: 'rotate(-0.5deg)' },
+        },
+      },
+      animation: {
+        wiggle: 'wiggle 400ms ease-in-out',
+      },
     },
   },
   plugins: [],

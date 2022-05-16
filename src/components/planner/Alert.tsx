@@ -1,4 +1,4 @@
-import React from 'react'
+import { ReactNode } from 'react'
 import classNames from 'classnames'
 import {
   InformationCircleIcon,
@@ -15,7 +15,7 @@ export enum AlertType {
 }
 
 type Props = {
-  children: JSX.Element | JSX.Element[] | string | string[]
+  children: ReactNode | ReactNode[]
   type: AlertType
 }
 
@@ -24,19 +24,19 @@ const Alert = ({ children, type }: Props) => {
     <div
       role="alert"
       className={classNames(
-        'flex items-center justify-between rounded border-2 px-4 py-2.5',
-        type === undefined ? 'border-gray-900/10 bg-gray-50 text-gray-700' : '',
-        type === AlertType.info ? 'border-sky-900/10 bg-sky-50 text-sky-700' : '',
-        type === AlertType.error ? 'border-rose-900/10 bg-rose-50 text-rose-700' : '',
-        type === AlertType.warning ? 'border-amber-900/10 bg-amber-50 text-amber-700' : '',
-        type === AlertType.success ? 'border-teal-900/10 bg-teal-50 text-teal-600' : ''
+        'flex items-center justify-between rounded border-2 px-3 py-2',
+        type === undefined ? 'border-gray-700/20 bg-gray-50 text-gray-700' : '',
+        type === AlertType.info ? 'border-sky-700/20 bg-sky-50 text-sky-700' : '',
+        type === AlertType.error ? 'border-rose-700/20 bg-rose-50 text-rose-700 animate-wiggle' : '',
+        type === AlertType.warning ? 'border-amber-900/10 bg-amber-50 text-amber-700 animate-wiggle' : '',
+        type === AlertType.success ? 'border-teal-700/30 bg-teal-50 text-teal-600' : ''
       )}
     >
-      <div className="inline-flex space-x-2">
-        {type === AlertType.info ? <InformationCircleIcon className="h-6 w-6" /> : null}
-        {type === AlertType.warning ? <ExclamationIcon className="h-6 w-6" /> : null}
-        {type === AlertType.error ? <ExclamationCircleIcon className="h-6 w-6" /> : null}
-        {type === AlertType.success ? <CheckCircleIcon className="h-6 w-6" /> : null}
+      <div className="inline-flex items-center justify-center space-x-2">
+        {type === AlertType.info ? <InformationCircleIcon className="h-5 w-5" /> : null}
+        {type === AlertType.warning ? <ExclamationIcon className="h-5 w-5" /> : null}
+        {type === AlertType.error ? <ExclamationCircleIcon className="h-5 w-5" /> : null}
+        {type === AlertType.success ? <CheckCircleIcon className="h-5 w-5" /> : null}
         <strong className="text-sm font-medium">{children}</strong>
       </div>
 

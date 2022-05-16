@@ -20,16 +20,16 @@ const socials: Social[] = [
 
 const Footer = () => {
   return (
-    <div className="bg-gray-700 px-2 py-3 dark:bg-dark md:px-6 md:py-4">
+    <div className="bg-gray-700 px-2 py-3 dark:bg-dark md:px-5 md:py-3">
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12 md:col-span-9">
           <div className="flex items-center justify-center space-x-4 md:items-start md:justify-start">
-            <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-20" />
+            <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-12" />
             <ul>
               <li>
-                <h4 className="text-xl font-bold text-white dark:text-white">NIAEFEUP</h4>
+                <h4 className="text- leading-5 font-bold text-white dark:text-white">NIAEFEUP</h4>
               </li>
-              <li className="text-base text-gray-300 dark:text-gray-400">
+              <li className="text-sm text-gray-300 dark:text-gray-400">
                 <p>Rua Dr. Roberto Frias 4200-465, Porto</p>
               </li>
               <li className="text-sm text-gray-400 dark:text-gray-500">

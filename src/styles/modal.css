@@ -10,11 +10,12 @@
 
 /* Dialog Footer */
 .contact-button {
-  @apply inline-flex justify-center rounded-md border-2 border-slate-600 px-4 
-  py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-600 hover:text-white
-  focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-600 focus-visible:ring-offset-2;
+  @apply inline-flex justify-center rounded-md border-2 border-slate-300 px-4 
+  py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-400 hover:text-white
+  focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2;
 }
 
 .confirm-button {
-  @apply inline-flex justify-center rounded-md border-2 border-transparent bg-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  @apply inline-flex justify-center rounded-md border-2 border-primary/20 
+  bg-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-white;
 }
