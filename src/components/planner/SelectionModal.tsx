@@ -62,7 +62,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
                   <Combobox value={selectedMajor} onChange={setSelectedMajor}>
                     <div className="relative mt-4">
-                      <div className="relative w-full border-2 border-slate-200 overflow-hidden rounded text-left sm:text-sm">
+                      <div className="relative w-full overflow-hidden rounded border-2 border-slate-200 text-left text-sm ">
                         <Combobox.Input
                           className="w-full bg-lighter py-4 px-4 leading-5 text-gray-900 focus:ring-0"
                           displayValue={(major: { name: string }) => major.name}
@@ -70,8 +70,11 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                             setQuery(event.target.value)
                           }
                         />
-                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-4">
-                          <SelectorIcon className="h-6 w-6 text-gray-500" aria-hidden="true" />
+                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                          <SelectorIcon
+                            className="h-7 w-7 py-0.5 rounded-full text-gray-500 transition hover:text-white hover:bg-primary"
+                            aria-hidden="true"
+                          />
                         </Combobox.Button>
                       </div>
 
@@ -82,17 +85,17 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                         leaveTo="opacity-0"
                         afterLeave={() => setQuery('')}
                       >
-                        <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md py-1 text-base bg-slate-50 sm:text-sm">
-                          {majors.length === 0 && query !== '' ? (
-                            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                              Nothing found.
+                        <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border-2 border-slate-200 bg-lighter py-2 text-base dark:bg-lighter sm:text-sm">
+                          {filteredMajors.length === 0 && query !== '' ? (
+                            <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
+                              Nenhum curso encontrado com este nome.
                             </div>
                           ) : (
-                            majors.map((major: Major, majorIdx: number) => (
+                            filteredMajors.map((major: Major, majorIdx: number) => (
                               <Combobox.Option
                                 key={majorIdx}
                                 className={({ active }) =>
-                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                  `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
                                     active ? 'bg-primary text-white' : 'text-gray-900'
                                   }`
                                 }
@@ -100,7 +103,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                               >
                                 {({ selected, active }) => (
                                   <>
-                                    <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                                    <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
                                       {major.name}
                                     </span>
                                     {selected ? (
@@ -122,7 +125,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                     </div>
                   </Combobox>
 
-                  <footer className="flex items-center justify-between mt-8">
+                  <footer className="mt-8 flex items-center justify-between">
                     <button type="button" className="contact-button bg-slate-50" onClick={closeModal}>
                       Contacte-nos
                     </button>

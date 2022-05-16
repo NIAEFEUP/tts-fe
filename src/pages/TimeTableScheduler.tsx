@@ -19,7 +19,7 @@ const majors: Major[] = [
 
 const TimeTableSchedulerPage = () => {
   const [isOpen, setIsOpen] = useState(true)
-  const [selectedMajor, setSelectedMajor] = useState(majors[0])
+  const [selectedMajor, setSelectedMajor] = useState('')
 
   return (
     <div className={classNames('container mx-auto w-full px-6 md:px-0')}>
