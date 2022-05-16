@@ -32,8 +32,6 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
   useEffect(() => {
     if (selectedMajor !== '') setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
-
-    console.log(selectedCourses)
   }, [selectedMajor])
 
   function closeModal() {
@@ -167,7 +165,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                           {/* Children checkboxes */}
                           <div className="mt-2 ml-3 grid grid-flow-row grid-rows-3 gap-1">
                             {year.map((course: TruncatedCourse, courseIdx: number) => (
-                              <div key={`checkbox-group-${yearIdx}`} className="flex items-center">
+                              <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center">
                                 <input
                                   type="checkbox"
                                   className="rounded text-primary"
