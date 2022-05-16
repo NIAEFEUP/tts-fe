@@ -59,8 +59,24 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
       acronym: truncatedCourses[i][j].acronym,
       course_unit_id: truncatedCourses[i][j].course_unit_id,
     }
-    copy[i][j] = newEntry
 
+    copy[i][j] = newEntry
+    setSelectedCourses([...copy])
+  }
+
+  function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, i: number) {
+    let copy = selectedCourses
+    let newGroupEntry: TruncatedCourse[] = []
+    copy[i].forEach((course, courseIdx) => {
+      let newEntry: TruncatedCourse = {
+        checked: event.target.checked,
+        acronym: truncatedCourses[i][courseIdx].acronym,
+        course_unit_id: truncatedCourses[i][courseIdx].course_unit_id,
+      }
+      newGroupEntry.push(newEntry)
+    })
+
+    copy[i] = newGroupEntry
     setSelectedCourses([...copy])
   }
 
@@ -174,9 +190,13 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                           {/* Parent checkbox */}
                           <div className="flex items-center">
                             <input
-                              id={`year-checkbox-${yearIdx}`}
                               type="checkbox"
                               className="form-checkbox rounded text-primary"
+                              checked={selectedCourses[yearIdx].every((course) => course.checked)}
+                              id={`year-checkbox-${yearIdx}`}
+                              onChange={(event) => {
+                                handleCheckGroup(event, yearIdx)
+                              }}
                             />
                             <label htmlFor={`year-checkbox-${yearIdx}`} className="ml-2 block text-sm">
                               {yearIdx + 1}º Ano
