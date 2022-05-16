@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-import { LogoFELightImage, LogoFEDarkImage } from '../../images'
+import { AppLogo } from '../../images'
 import {
   MenuIcon,
   XIcon,
@@ -38,14 +38,14 @@ const Header = ({ siteTitle, location }: Props) => {
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to="/" className="flex items-center space-x-2">
                     <img
-                      src={LogoFELightImage}
+                      src={AppLogo}
                       alt="Time Table Selector"
-                      className="z-20 inline-flex h-6 w-6 rounded-full transition dark:hidden"
+                      className="z-20 inline-flex h-6 w-auto rounded-full transition dark:hidden"
                     />
                     <img
-                      src={LogoFEDarkImage}
+                      src={AppLogo}
                       alt="Time Table Selector"
-                      className="z-20 hidden h-6 w-6 rounded-full transition dark:inline-flex"
+                      className="z-20 hidden h-6 w-auto rounded-full transition dark:inline-flex"
                     />
                     <h2 className="text-xs font-bold tracking-tighter duration-150 lg:text-base">{siteTitle}</h2>
                   </Link>
@@ -103,9 +103,9 @@ const Hamburger = ({ open }: HamburgerProps) => (
   >
     <Link to="/">
       {open ? (
-        <img className="avatar top-0.5 h-5 w-5 dark:inline-flex" src={LogoFEDarkImage} alt="Time Table Selector" />
+        <img className="avatar top-0.5 h-5 w-auto dark:inline-flex" src={AppLogo} alt="Time Table Selector" />
       ) : (
-        <img className="avatar h-6 w-6" src={LogoFELightImage} alt="Time Table Selector" />
+        <img className="avatar h-6 w-auto" src={AppLogo} alt="Time Table Selector" />
       )}
     </Link>
 

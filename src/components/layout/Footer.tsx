@@ -28,7 +28,7 @@ const Footer = () => {
             <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-20" />
             <ul>
               <li>
-                <h4 className="text-xl font-bold text-gray-900">NIAEFEUP</h4>
+                <h4 className="text-xl font-bold text-gray-900 dark:text-white">NIAEFEUP</h4>
               </li>
               <li className="text-base text-gray-700 dark:text-gray-400">
                 <p>Rua Dr. Roberto Frias 4200-465, Porto</p>

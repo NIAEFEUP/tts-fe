@@ -28,6 +28,9 @@ module.exports = {
         'pratical-light': '#868387',
         'theoretical-light': '#B9B3AD',
       },
+      flex: {
+        end: '0 1 auto',
+      },
       maxWidth: {
         screen: '100vw',
         '8xl': '88rem',

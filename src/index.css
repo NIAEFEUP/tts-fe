@@ -12,20 +12,10 @@
   min-height: calc(100vh - 3.5rem);
 }
 
-/* Layout */
 .layout {
   @apply flex min-h-screen flex-col overflow-clip bg-light font-prose font-normal text-gray-800 opacity-[99%] dark:bg-darkest dark:text-white;
 }
 
-.content {
-  @apply container z-10 mx-auto my-auto max-w-7xl;
-}
-
-.content-liquid {
-  @apply container z-10 mx-auto my-auto max-w-8xl;
-}
-
-/* Navbar */
 .navbar {
   @apply sticky top-0 z-20 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3;
 }
