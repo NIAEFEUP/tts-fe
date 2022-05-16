@@ -66,21 +66,17 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
     let some = copy[i].some((course) => course.checked)
     let every = copy[i].every((course) => course.checked)
 
+    //@ts-ignore
+    let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${i}`)
     if (every) {
-      //@ts-ignore
-      document.getElementById(`year-checkbox-${i}`).checked = true
-      //@ts-ignore
-      document.getElementById(`year-checkbox-${i}`).indeterminate = false
+      checkbox.checked = true
+      checkbox.indeterminate = false
     } else if (some) {
-      //@ts-ignore
-      document.getElementById(`year-checkbox-${i}`).checked = false
-      //@ts-ignore
-      document.getElementById(`year-checkbox-${i}`).indeterminate = true
+      checkbox.checked = false
+      checkbox.indeterminate = true
     } else {
-      //@ts-ignore
-      document.getElementById(`year-checkbox-${i}`).checked = false
-      //@ts-ignore
-      document.getElementById(`year-checkbox-${i}`).indeterminate = false
+      checkbox.checked = false
+      checkbox.indeterminate = false
     }
   }
 
@@ -204,32 +200,38 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
                   {/* Courses checkboxes */}
                   {alertLevel === AlertType.success ? (
-                    <div className="mx-auto mt-4 flex max-w-md items-center justify-between">
+                    <div className="mx-auto mt-6 flex max-w-md items-center justify-between">
                       {truncatedCourses.map((year: TruncatedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
-                          <div className="flex items-center">
+                          <div className="flex cursor-pointer items-center transition hover:opacity-90">
                             <input
                               type="checkbox"
-                              className="form-checkbox rounded text-primary"
+                              className="cursor-pointer rounded text-primary accent-primary focus:ring-primary"
                               checked={selectedCourses[yearIdx].every((course) => course.checked)}
                               id={`year-checkbox-${yearIdx}`}
                               onChange={(event) => {
                                 handleCheckGroup(event, yearIdx)
                               }}
                             />
-                            <label htmlFor={`year-checkbox-${yearIdx}`} className="ml-2 block text-sm">
+                            <label
+                              htmlFor={`year-checkbox-${yearIdx}`}
+                              className="ml-2 block text-sm font-semibold"
+                            >
                               {yearIdx + 1}º Ano
                             </label>
                           </div>
 
                           {/* Children checkboxes */}
-                          <div className="mt-2 ml-3 grid grid-flow-row grid-rows-3 gap-1">
+                          <div className="mt-2 ml-5 grid grid-flow-row grid-rows-3 gap-1">
                             {year.map((course: TruncatedCourse, courseIdx: number) => (
-                              <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center">
+                              <div
+                                key={`checkbox-${yearIdx}-${courseIdx}`}
+                                className="flex cursor-pointer items-center transition hover:opacity-90"
+                              >
                                 <input
                                   type="checkbox"
-                                  className="rounded text-primary"
+                                  className="cursor-pointer rounded text-primary accent-primary focus:ring-primary"
                                   checked={selectedCourses[yearIdx][courseIdx].checked}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => {
