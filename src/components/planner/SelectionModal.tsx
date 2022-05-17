@@ -5,6 +5,7 @@ import { Major, MajorCourses, TruncatedCourse } from '../../@types'
 import { AcademicCapIcon, CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import '../../styles/modal.css'
+import classNames from 'classnames'
 
 type Props = {
   majors: any
@@ -20,6 +21,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
   const [selectedMajor, setSelectedMajor] = selectedMajorHook
   const [selectedCourses, setSelectedCourses] = useState<TruncatedCourse[][]>(truncatedCourses)
 
+  const atLeastOneCourse = selectedCourses.some((item) => item.some((course) => course.checked))
   const filteredMajors =
     majorQuery === ''
       ? majors
@@ -33,8 +35,8 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
   }, [selectedMajor])
 
   function closeModal() {
-    if (selectedMajor === '') setAlertLevel(AlertType.warning)
-    else setIsOpen(false)
+    if (selectedMajor !== '' && atLeastOneCourse) setIsOpen(false)
+    else setAlertLevel(AlertType.warning)
   }
 
   function openModal() {
@@ -198,7 +200,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                   </Combobox>
 
                   {/* Courses checkboxes */}
-                  {alertLevel === AlertType.success ? (
+                  {selectedMajor !== '' ? (
                     <div className="checkboxes">
                       {truncatedCourses.map((year: TruncatedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -253,11 +255,29 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
                   {/* Bottom action buttons */}
                   <footer className="mt-8 flex items-center justify-between">
-                    <button type="button" className="contact-button bg-slate-100" onClick={closeModal}>
+                    <a
+                      type="button"
+                      className={classNames(
+                        'inline-flex justify-center rounded-md px-4 py-2 text-sm font-medium text-slate-600',
+                        'border-2 border-slate-400 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
+                      )}
+                      href="mailto:projetos.niaefeup@gmail.com"
+                    >
                       Contacte-nos
-                    </button>
+                    </a>
 
-                    <button type="button" className="confirm-button bg-rose-50" onClick={closeModal}>
+                    <button
+                      type="button"
+                      className={classNames(
+                        'inline-flex justify-center rounded-md border-2 border-teal-700/30 bg-green-50',
+                        'px-4 py-2 text-sm font-medium text-teal-700 transition',
+                        selectedMajor === '' || !atLeastOneCourse
+                          ? 'cursor-not-allowed opacity-50'
+                          : 'hover:bg-teal-700 hover:text-white'
+                      )}
+                      onClick={closeModal}
+                      disabled={selectedMajor === '' || !atLeastOneCourse}
+                    >
                       Confirmar
                     </button>
                   </footer>
