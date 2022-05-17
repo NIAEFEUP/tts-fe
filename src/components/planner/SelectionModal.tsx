@@ -2,19 +2,19 @@ import '../../styles/modal.css'
 import classNames from 'classnames'
 import Alert, { AlertType } from './Alert'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Major, TruncatedCourse, TruncatedMajorCourses, TruncatedYearCourses } from '../../@types'
+import { Major, CheckedCourse, CheckedMajorCourses, CheckedYearCourses, Course } from '../../@types'
 import { AcademicCapIcon, CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 
 type Props = {
   majors: Major[]
-  truncatedCourses: TruncatedMajorCourses
+  checkedCourses: CheckedMajorCourses
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   selectedMajorHook: [any, React.Dispatch<React.SetStateAction<any>>]
   selectedCoursesHook: [any, React.Dispatch<React.SetStateAction<any>>]
 }
 
-const SelectionModal = ({ majors, truncatedCourses, openHook, selectedMajorHook, selectedCoursesHook }: Props) => {
+const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, selectedCoursesHook }: Props) => {
   const [isOpen, setIsOpen] = openHook
   const [majorQuery, setMajorQuery] = useState('')
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
@@ -45,10 +45,9 @@ const SelectionModal = ({ majors, truncatedCourses, openHook, selectedMajorHook,
 
   function handleCheck(event: React.ChangeEvent<HTMLInputElement>, year: number, course: number) {
     let copy = selectedCourses
-    let newEntry: TruncatedCourse = {
+    let newEntry: CheckedCourse = {
       checked: event.target.checked,
-      acronym: truncatedCourses[year][course].acronym,
-      course_unit_id: truncatedCourses[year][course].course_unit_id,
+      info: copy[year][course],
     }
 
     copy[year][course] = newEntry
@@ -73,12 +72,11 @@ const SelectionModal = ({ majors, truncatedCourses, openHook, selectedMajorHook,
 
   function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, year: number) {
     let copy = selectedCourses
-    let newGroupEntry: TruncatedYearCourses = []
-    copy[year].forEach((course, courseIdx) => {
-      let newEntry: TruncatedCourse = {
+    let newGroupEntry: CheckedYearCourses = []
+    copy[year].forEach((course: Course) => {
+      let newEntry: CheckedCourse = {
         checked: event.target.checked,
-        acronym: truncatedCourses[year][courseIdx].acronym,
-        course_unit_id: truncatedCourses[year][courseIdx].course_unit_id,
+        info: course,
       }
       newGroupEntry.push(newEntry)
     })
@@ -192,7 +190,7 @@ const SelectionModal = ({ majors, truncatedCourses, openHook, selectedMajorHook,
                   {/* Courses checkboxes */}
                   {selectedMajor !== '' ? (
                     <div className="checkboxes">
-                      {truncatedCourses.map((year: TruncatedYearCourses, yearIdx: number) => (
+                      {checkedCourses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
                           <div className="flex items-center transition hover:opacity-90">
@@ -215,7 +213,7 @@ const SelectionModal = ({ majors, truncatedCourses, openHook, selectedMajorHook,
 
                           {/* Children checkboxes */}
                           <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
-                            {year.map((course: TruncatedCourse, courseIdx: number) => (
+                            {year.map((course: CheckedCourse, courseIdx: number) => (
                               <div
                                 key={`checkbox-${yearIdx}-${courseIdx}`}
                                 className="flex items-center transition hover:opacity-90"
@@ -233,7 +231,7 @@ const SelectionModal = ({ majors, truncatedCourses, openHook, selectedMajorHook,
                                   className="ml-1.5 block cursor-pointer text-sm dark:text-white"
                                   htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
                                 >
-                                  {course.acronym}
+                                  {course.info.acronym}
                                 </label>
                               </div>
                             ))}

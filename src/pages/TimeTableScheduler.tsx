@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 import { coursesData } from '../utils/data'
-import { Major, MajorCourses, TruncatedMajorCourses } from '../@types'
+import { Major, MajorCourses, CheckedMajorCourses } from '../@types'
 import SelectionModal from '../components/planner/SelectionModal'
 
 const majors: Major[] = [
@@ -21,15 +21,14 @@ const majors: Major[] = [
 const TimeTableSchedulerPage = () => {
   const [isOpen, setIsOpen] = useState(true)
   const [selectedMajor, setSelectedMajor] = useState('')
-  const truncatedCourses = truncateCourses(coursesData)
-  const [selectedCourses, setSelectedCourses] = useState<TruncatedMajorCourses>(truncatedCourses)
+  const checkedCourses = coursesAddCheckProperty(coursesData)
+  const [selectedCourses, setSelectedCourses] = useState<CheckedMajorCourses>(checkedCourses)
 
-  function truncateCourses(courses: MajorCourses): TruncatedMajorCourses {
+  function coursesAddCheckProperty(courses: MajorCourses): CheckedMajorCourses {
     return courses.map((year) =>
-      year.map(({ acronym, course_unit_id }) => ({
+      year.map((item) => ({
         checked: false,
-        acronym: acronym,
-        course_unit_id: course_unit_id,
+        info: item,
       }))
     )
   }
@@ -43,7 +42,7 @@ const TimeTableSchedulerPage = () => {
         <div className="flex items-start justify-start">
           <SelectionModal
             majors={majors}
-            truncatedCourses={truncatedCourses}
+            checkedCourses={checkedCourses}
             openHook={[isOpen, setIsOpen]}
             selectedMajorHook={[selectedMajor, setSelectedMajor]}
             selectedCoursesHook={[selectedCourses, setSelectedCourses]}
@@ -53,7 +52,7 @@ const TimeTableSchedulerPage = () => {
           .flat()
           .filter((course) => course.checked)
           .map((course, courseIdx) => (
-            <div key={`selected-course-${courseIdx}`}>{course.acronym}</div>
+            <div key={`selected-course-${courseIdx}`}>{course.info.acronym}</div>
           ))}
       </div>
     </div>

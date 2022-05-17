@@ -22,13 +22,12 @@ export type Course = {
 export type YearCourses = Course[]
 export type MajorCourses = YearCourses[]
 
-export type TruncatedCourse = {
-  acronym: string
+export type CheckedCourse = {
   checked: boolean
-  course_unit_id: number
+  info: Course
 }
-export type TruncatedYearCourses = TruncatedCourse[]
-export type TruncatedMajorCourses = TruncatedYearCourses[]
+export type CheckedYearCourses = CheckedCourse[]
+export type CheckedMajorCourses = CheckedYearCourses[]
 
 /* Majors */
 export type Major = {
