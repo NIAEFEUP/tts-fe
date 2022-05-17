@@ -43,18 +43,12 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
     setIsOpen(true)
   }
 
-  function handleCheck(event: React.ChangeEvent<HTMLInputElement>, year: number, course: number) {
-    let copy = selectedCourses
-    let newEntry: CheckedCourse = {
-      checked: event.target.checked,
-      info: copy[year][course],
-    }
+  function handleCheck(event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) {
+    selectedCourses[year][courseIdx].checked = event.target.checked
+    setSelectedCourses([...selectedCourses])
 
-    copy[year][course] = newEntry
-    setSelectedCourses([...copy])
-
-    let some = copy[year].some((course) => course.checked)
-    let every = copy[year].every((course) => course.checked)
+    let some = selectedCourses[year].some((course) => course.checked)
+    let every = selectedCourses[year].every((course) => course.checked)
 
     //@ts-ignore
     let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
@@ -71,18 +65,13 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
   }
 
   function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, year: number) {
-    let copy = selectedCourses
     let newGroupEntry: CheckedYearCourses = []
-    copy[year].forEach((course: Course) => {
-      let newEntry: CheckedCourse = {
-        checked: event.target.checked,
-        info: course,
-      }
-      newGroupEntry.push(newEntry)
+    selectedCourses[year].forEach((course: CheckedCourse) => {
+      course.checked = event.target.checked
+      newGroupEntry.push(course)
     })
-
-    copy[year] = newGroupEntry
-    setSelectedCourses([...copy])
+    selectedCourses[year] = newGroupEntry
+    setSelectedCourses([...selectedCourses])
   }
 
   return (

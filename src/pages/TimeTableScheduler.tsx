@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 import { coursesData } from '../utils/data'
-import { Major, MajorCourses, CheckedMajorCourses } from '../@types'
+import { Major, MajorCourses, CheckedMajorCourses, YearCourses, Course } from '../@types'
 import SelectionModal from '../components/planner/SelectionModal'
 
 const majors: Major[] = [
@@ -25,8 +25,8 @@ const TimeTableSchedulerPage = () => {
   const [selectedCourses, setSelectedCourses] = useState<CheckedMajorCourses>(checkedCourses)
 
   function coursesAddCheckProperty(courses: MajorCourses): CheckedMajorCourses {
-    return courses.map((year) =>
-      year.map((item) => ({
+    return courses.map((year: YearCourses) =>
+      year.map((item: Course) => ({
         checked: false,
         info: item,
       }))
@@ -48,12 +48,19 @@ const TimeTableSchedulerPage = () => {
             selectedCoursesHook={[selectedCourses, setSelectedCourses]}
           />
         </div>
-        {selectedCourses
-          .flat()
-          .filter((course) => course.checked)
-          .map((course, courseIdx) => (
-            <div key={`selected-course-${courseIdx}`}>{course.info.acronym}</div>
-          ))}
+        <div>
+          {selectedCourses
+            .flat()
+            .filter((course) => course.checked)
+            .map((course, courseIdx) => {
+              console.log(course)
+              return (
+                <div key={`selected-course-${courseIdx}`}>
+                  {course.info.acronym}
+                </div>
+              )
+            })}
+        </div>
       </div>
     </div>
   )
