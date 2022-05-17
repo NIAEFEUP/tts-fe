@@ -97,7 +97,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="flex items-center justify-center">
         {/* Edit button */}
         <button
           type="button"
@@ -111,7 +111,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
-          <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-24">
+          <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-12">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <InnerCustomTransition>
                 <Dialog.Panel className="dialog">

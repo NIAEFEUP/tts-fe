@@ -22,7 +22,7 @@ const Footer = () => {
   return (
     <div className="bg-gray-700 px-2 py-3 dark:bg-dark md:px-5 md:py-3">
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 md:col-span-9">
+        <div className="col-span-12 md:col-span-8">
           <div className="flex items-center justify-center space-x-4 md:items-start md:justify-start">
             <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-12" />
             <ul>
@@ -39,7 +39,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="col-span-12 my-auto md:col-span-3">
+        <div className="col-span-12 my-auto md:col-span-4">
           <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:items-end md:justify-end">
             {socials.map((social, socialIdx) => (
               <li key={`social-${socialIdx}`}>

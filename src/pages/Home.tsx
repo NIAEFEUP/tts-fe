@@ -3,7 +3,7 @@ import CardFeature from '../components/home/CardFeature'
 import { HomePageImage, HomePageAltImage } from '../images'
 
 const HomePage = () => (
-  <div className="container mx-auto w-full px-6 md:px-0">
+  <div className="container mx-auto w-full px-4 md:px-6">
     <div className="my-12">
       <Hero />
     </div>

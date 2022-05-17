@@ -25,7 +25,7 @@ const CardFeature = ({ title, subtitle, text, image, reverse }: Props) => (
       <div className="container grow">
         <h4 className="text-center text-xl font-semibold">{title}</h4>
         <h6 className="mb-3 text-center text-base font-medium text-primary">{subtitle}</h6>
-        <p className="prose text-center">{text}</p>
+        <p className="prose text-center text-sm">{text}</p>
       </div>
     </div>
   </>
