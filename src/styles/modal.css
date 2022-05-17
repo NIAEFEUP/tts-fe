@@ -1,21 +1,22 @@
 /* Dialog */
 .dialog {
-  @apply w-full max-w-5xl transform rounded-2xl bg-lightest p-6 text-left align-middle shadow-xl transition-all;
+  @apply w-full max-w-5xl transform rounded-2xl bg-lightest p-6 text-left align-middle shadow-xl transition-all dark:bg-dark;
 }
-
-/* Dialog Header */
-.dialog > .dialog-header {
+.dialog .dialog-header {
   @apply mb-4 inline-flex w-full items-center justify-center space-x-2 text-center font-medium;
 }
 
-/* Dialog Footer */
-.contact-button {
+.dialog .checkboxes {
+  @apply mx-auto mt-6 flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8;
+}
+
+.dialog .contact-button {
   @apply inline-flex justify-center rounded-md border-2 border-slate-300 px-4 
   py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-400 hover:text-white
   focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2;
 }
 
-.confirm-button {
-  @apply inline-flex justify-center rounded-md border-2 border-primary/20 
-  bg-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-white;
+.dialog .confirm-button {
+  @apply inline-flex justify-center rounded-md border-2 border-primary/30 
+  px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-white;
 }

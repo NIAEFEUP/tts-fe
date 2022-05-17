@@ -1,11 +1,10 @@
-import '../../styles/modal.css'
-import { Major, MajorCourses } from '../../@types'
-import { Fragment, SetStateAction, useState, useEffect } from 'react'
-import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { CheckIcon, SelectorIcon, AcademicCapIcon } from '@heroicons/react/solid'
 import Alert, { AlertType } from './Alert'
 import { coursesData } from '../../utils/data'
-import { TruncatedCourse } from '../../@types'
+import { Combobox, Dialog, Transition } from '@headlessui/react'
+import { Major, MajorCourses, TruncatedCourse } from '../../@types'
+import { AcademicCapIcon, CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { Fragment, SetStateAction, useEffect, useState } from 'react'
+import '../../styles/modal.css'
 
 type Props = {
   majors: any
@@ -13,29 +12,19 @@ type Props = {
   selectedMajorHook: [any, React.Dispatch<React.SetStateAction<any>>]
 }
 
-const truncateCourses = (courses: MajorCourses) => {
-  return courses.map((year) =>
-    year.map(({ acronym, course_unit_id }) => ({
-      checked: false,
-      acronym: acronym,
-      course_unit_id: course_unit_id,
-    }))
-  )
-}
-
 const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
   const truncatedCourses = truncateCourses(coursesData)
   const [isOpen, setIsOpen] = openHook
-  const [query, setQuery] = useState('')
+  const [majorQuery, setMajorQuery] = useState('')
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
   const [selectedMajor, setSelectedMajor] = selectedMajorHook
   const [selectedCourses, setSelectedCourses] = useState<TruncatedCourse[][]>(truncatedCourses)
 
   const filteredMajors =
-    query === ''
+    majorQuery === ''
       ? majors
       : majors.filter((major: Major) =>
-          major.name.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
+          major.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
   useEffect(() => {
@@ -52,22 +41,32 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
     setIsOpen(true)
   }
 
-  function handleCheck(event: React.ChangeEvent<HTMLInputElement>, i: number, j: number) {
+  function truncateCourses(courses: MajorCourses): TruncatedCourse[][] {
+    return courses.map((year) =>
+      year.map(({ acronym, course_unit_id }) => ({
+        checked: false,
+        acronym: acronym,
+        course_unit_id: course_unit_id,
+      }))
+    )
+  }
+
+  function handleCheck(event: React.ChangeEvent<HTMLInputElement>, year: number, course: number) {
     let copy = selectedCourses
     let newEntry: TruncatedCourse = {
       checked: event.target.checked,
-      acronym: truncatedCourses[i][j].acronym,
-      course_unit_id: truncatedCourses[i][j].course_unit_id,
+      acronym: truncatedCourses[year][course].acronym,
+      course_unit_id: truncatedCourses[year][course].course_unit_id,
     }
 
-    copy[i][j] = newEntry
+    copy[year][course] = newEntry
     setSelectedCourses([...copy])
 
-    let some = copy[i].some((course) => course.checked)
-    let every = copy[i].every((course) => course.checked)
+    let some = copy[year].some((course) => course.checked)
+    let every = copy[year].every((course) => course.checked)
 
     //@ts-ignore
-    let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${i}`)
+    let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
     if (every) {
       checkbox.checked = true
       checkbox.indeterminate = false
@@ -80,19 +79,19 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
     }
   }
 
-  function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, i: number) {
+  function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, year: number) {
     let copy = selectedCourses
     let newGroupEntry: TruncatedCourse[] = []
-    copy[i].forEach((course, courseIdx) => {
+    copy[year].forEach((course, courseIdx) => {
       let newEntry: TruncatedCourse = {
         checked: event.target.checked,
-        acronym: truncatedCourses[i][courseIdx].acronym,
-        course_unit_id: truncatedCourses[i][courseIdx].course_unit_id,
+        acronym: truncatedCourses[year][courseIdx].acronym,
+        course_unit_id: truncatedCourses[year][courseIdx].course_unit_id,
       }
       newGroupEntry.push(newEntry)
     })
 
-    copy[i] = newGroupEntry
+    copy[year] = newGroupEntry
     setSelectedCourses([...copy])
   }
 
@@ -112,14 +111,14 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
-          <div className="fixed inset-0 bottom-0 overflow-y-auto md:bottom-24">
+          <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-24">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <InnerCustomTransition>
                 <Dialog.Panel className="dialog">
                   {/* Header */}
                   <Dialog.Title as="header" className="dialog-header">
                     <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-                    <h3 className="text-xl font-semibold leading-6 tracking-tight">Escolha de UCs</h3>
+                    <h3 className="text-xl font-semibold leading-6 tracking-tight dark:text-white">Escolha de UCs</h3>
                   </Dialog.Title>
 
                   {/* Alert banner */}
@@ -131,13 +130,13 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                   {/* Select major dropdown */}
                   <Combobox value={selectedMajor} onChange={setSelectedMajor}>
                     <div className="relative mt-4">
-                      <div className="relative w-full rounded border-2 border-gray-200 text-left">
+                      <div className="relative w-full rounded text-left">
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
-                          className="w-full bg-gray-50 py-4 px-4 text-xs leading-5 text-gray-900 focus:ring-0 md:text-sm"
+                          className="w-full rounded bg-gray-50 py-4 px-4 text-xs leading-5 text-gray-900 focus:shadow focus:ring-0 md:text-sm"
                           displayValue={(major: { name: string }) => major.name}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
-                            setQuery(event.target.value)
+                            setMajorQuery(event.target.value)
                           }
                         />
                         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -153,13 +152,13 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                         leave="transition ease-in duration-100"
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
-                        afterLeave={() => setQuery('')}
+                        afterLeave={() => setMajorQuery('')}
                       >
                         <Combobox.Options
-                          className="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-md border-2 
-                        border-gray-200 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
+                          className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded-md border
+                        border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                         >
-                          {filteredMajors.length === 0 && query !== '' ? (
+                          {filteredMajors.length === 0 && majorQuery !== '' ? (
                             <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
                               Nenhum curso encontrado com este nome.
                             </div>
@@ -168,7 +167,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                               <Combobox.Option
                                 key={majorIdx}
                                 className={({ active }) =>
-                                  `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                                  `relative cursor-pointer select-none py-2 px-3 pl-10 ${
                                     active ? 'bg-primary text-white' : 'text-gray-900'
                                   }`
                                 }
@@ -200,35 +199,38 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
                   {/* Courses checkboxes */}
                   {alertLevel === AlertType.success ? (
-                    <div className="mx-auto mt-6 flex max-w-2xl items-start justify-center space-x-8">
+                    <div className="checkboxes">
                       {truncatedCourses.map((year: TruncatedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
-                          <div className="flex cursor-pointer items-center transition hover:opacity-90">
+                          <div className="flex items-center transition hover:opacity-90">
                             <input
                               type="checkbox"
-                              className="cursor-pointer rounded text-primary accent-primary focus:ring-primary"
+                              className="cursor-pointer rounded text-primary focus:ring-primary"
                               checked={selectedCourses[yearIdx].every((course) => course.checked)}
                               id={`year-checkbox-${yearIdx}`}
                               onChange={(event) => {
                                 handleCheckGroup(event, yearIdx)
                               }}
                             />
-                            <label className="ml-1 block text-sm font-semibold" htmlFor={`year-checkbox-${yearIdx}`}>
+                            <label
+                              className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
+                              htmlFor={`year-checkbox-${yearIdx}`}
+                            >
                               <span>{yearIdx + 1}º Ano</span>
                             </label>
                           </div>
 
                           {/* Children checkboxes */}
-                          <div className="mt-2 ml-5 grid grid-rows-6 grid-flow-col gap-x-3 gap-y-1.5">
+                          <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
                             {year.map((course: TruncatedCourse, courseIdx: number) => (
                               <div
                                 key={`checkbox-${yearIdx}-${courseIdx}`}
-                                className="flex cursor-pointer items-center transition hover:opacity-90"
+                                className="flex items-center transition hover:opacity-90"
                               >
                                 <input
                                   type="checkbox"
-                                  className="cursor-pointer rounded text-primary accent-primary focus:ring-primary"
+                                  className="cursor-pointer rounded text-primary focus:ring-primary"
                                   checked={selectedCourses[yearIdx][courseIdx].checked}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => {
@@ -236,7 +238,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                                   }}
                                 />
                                 <label
-                                  className="ml-1.5 block text-sm"
+                                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
                                   htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
                                 >
                                   {course.acronym}
@@ -280,7 +282,7 @@ const OuterMask = () => (
     leaveFrom="opacity-100"
     leaveTo="opacity-0"
   >
-    <div className="fixed inset-0 bg-darkest bg-opacity-25" />
+    <div className="fixed inset-0 bg-darkest bg-opacity-25 dark:bg-light dark:bg-opacity-[30%]" />
   </Transition.Child>
 )
 
