@@ -1,3 +1,4 @@
+/* General */
 export type Student = {
   id: number
   name: string
@@ -5,6 +6,7 @@ export type Student = {
   picture?: string
 }
 
+/* Courses */
 export type Course = {
   course_unit_id: number
   course: string
@@ -17,7 +19,6 @@ export type Course = {
   schedule_url: string
   last_updated: string
 }
-
 export type YearCourses = Course[]
 export type MajorCourses = YearCourses[]
 
@@ -26,7 +27,10 @@ export type TruncatedCourse = {
   checked: boolean
   course_unit_id: number
 }
+export type TruncatedYearCourses = TruncatedCourse[]
+export type TruncatedMajorCourses = TruncatedYearCourses[]
 
+/* Majors */
 export type Major = {
   name: string
 }

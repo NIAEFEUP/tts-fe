@@ -1,25 +1,25 @@
-import Alert, { AlertType } from './Alert'
-import { coursesData } from '../../utils/data'
-import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Major, MajorCourses, TruncatedCourse } from '../../@types'
-import { AcademicCapIcon, CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import '../../styles/modal.css'
 import classNames from 'classnames'
+import Alert, { AlertType } from './Alert'
+import { Combobox, Dialog, Transition } from '@headlessui/react'
+import { Major, TruncatedCourse, TruncatedMajorCourses, TruncatedYearCourses } from '../../@types'
+import { AcademicCapIcon, CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { Fragment, SetStateAction, useEffect, useState } from 'react'
 
 type Props = {
-  majors: any
+  majors: Major[]
+  truncatedCourses: TruncatedMajorCourses
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   selectedMajorHook: [any, React.Dispatch<React.SetStateAction<any>>]
+  selectedCoursesHook: [any, React.Dispatch<React.SetStateAction<any>>]
 }
 
-const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
-  const truncatedCourses = truncateCourses(coursesData)
+const SelectionModal = ({ majors, truncatedCourses, openHook, selectedMajorHook, selectedCoursesHook }: Props) => {
   const [isOpen, setIsOpen] = openHook
   const [majorQuery, setMajorQuery] = useState('')
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
   const [selectedMajor, setSelectedMajor] = selectedMajorHook
-  const [selectedCourses, setSelectedCourses] = useState<TruncatedCourse[][]>(truncatedCourses)
+  const [selectedCourses, setSelectedCourses] = selectedCoursesHook
 
   const atLeastOneCourse = selectedCourses.some((item) => item.some((course) => course.checked))
   const filteredMajors =
@@ -41,16 +41,6 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
   function openModal() {
     setIsOpen(true)
-  }
-
-  function truncateCourses(courses: MajorCourses): TruncatedCourse[][] {
-    return courses.map((year) =>
-      year.map(({ acronym, course_unit_id }) => ({
-        checked: false,
-        acronym: acronym,
-        course_unit_id: course_unit_id,
-      }))
-    )
   }
 
   function handleCheck(event: React.ChangeEvent<HTMLInputElement>, year: number, course: number) {
@@ -83,7 +73,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
 
   function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, year: number) {
     let copy = selectedCourses
-    let newGroupEntry: TruncatedCourse[] = []
+    let newGroupEntry: TruncatedYearCourses = []
     copy[year].forEach((course, courseIdx) => {
       let newEntry: TruncatedCourse = {
         checked: event.target.checked,
@@ -202,7 +192,7 @@ const SelectionModal = ({ majors, openHook, selectedMajorHook }: Props) => {
                   {/* Courses checkboxes */}
                   {selectedMajor !== '' ? (
                     <div className="checkboxes">
-                      {truncatedCourses.map((year: TruncatedCourse[], yearIdx: number) => (
+                      {truncatedCourses.map((year: TruncatedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
                           <div className="flex items-center transition hover:opacity-90">
