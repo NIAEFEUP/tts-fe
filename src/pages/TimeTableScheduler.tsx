@@ -93,7 +93,7 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: ClassesTypeCheck
         <input
           type="checkbox"
           id="checkbox-classesT"
-          className="cursor-pointer rounded text-gray-800 focus:ring-gray-800"
+          className="cursor-pointer rounded text-gray-800 focus:ring-gray-800 dark:text-primary dark:focus:ring-primary"
           checked={classesT}
           onChange={(event) => setClassesT(event.target.checked)}
         />
@@ -105,7 +105,7 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: ClassesTypeCheck
         <input
           type="checkbox"
           id="checkbox-classesTP"
-          className="cursor-pointer rounded text-gray-800 focus:ring-gray-800"
+          className="cursor-pointer rounded text-gray-800 focus:ring-gray-800 dark:text-primary dark:focus:ring-primary"
           checked={classesTP}
           onChange={(event) => setClassesTP(event.target.checked)}
         />
