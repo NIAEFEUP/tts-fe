@@ -2,7 +2,7 @@ import '../../styles/modal.css'
 import classNames from 'classnames'
 import Alert, { AlertType } from './Alert'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Major, CheckedCourse, CheckedMajorCourses, CheckedYearCourses, Course } from '../../@types'
+import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses } from '../../@types'
 import { AcademicCapIcon, CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 
@@ -76,12 +76,13 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
 
   return (
     <>
-      <div className="flex items-center justify-center">
+      <div className="flex w-full flex-col items-center justify-center">
         {/* Edit button */}
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md bg-darkest bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30"
+          className="w-full rounded-md bg-darkest/20 px-4 py-2 text-sm font-medium
+          text-white transition hover:bg-darkest/30 dark:bg-lightest/20 hover:dark:bg-lightest/30"
         >
           Editar UCs
         </button>
