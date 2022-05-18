@@ -50,3 +50,11 @@ export type CourseSchedule = {
 
 export type CourseSchedules = CourseSchedule[]
 export type Schedules = CourseSchedules[]
+
+/* Options */
+export type CourseOption = {
+  course: CheckedCourse
+  option: CourseSchedule | null
+  schedules: CourseSchedules
+}
+export type CourseOptions = CourseOption[]
