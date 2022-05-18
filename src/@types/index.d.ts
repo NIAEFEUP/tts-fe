@@ -33,3 +33,20 @@ export type CheckedMajorCourses = CheckedYearCourses[]
 export type Major = {
   name: string
 }
+
+/* Schedule */
+export type CourseSchedule = {
+  day: number
+  duration: number
+  start_time: number
+  location: string
+  lesson_type: string
+  teacher_acronym: string
+  course_unit_id: number
+  last_updated: string
+  class_name: string // e.g. 1MIEIC01
+  composed_class_name: string // e.g. COMP752
+}
+
+export type CourseSchedules = CourseSchedule[]
+export type Schedules = CourseSchedules[]

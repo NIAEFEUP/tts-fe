@@ -1,36 +1,22 @@
-import { useState } from 'react'
 import classNames from 'classnames'
-import { coursesData } from '../utils/data'
-import { Major, MajorCourses, CheckedMajorCourses, YearCourses, Course } from '../@types'
 import SelectionModal from '../components/planner/SelectionModal'
-
-// TODO: replace majors with select all majors query
-const majors: Major[] = [
-  { name: 'Licenciatura em Engenharia Informática e Computação' },
-  { name: 'Licenciatura em Engenharia Eletrotécnica e de Computadores' },
-  { name: 'Licenciatura em Engenharia Civil' },
-  { name: 'Licenciatura em Engenharia Mecânica' },
-  { name: 'Mestrado em Engenharia Informática e Computação' },
-  { name: 'Mestrado em Engenharia Eletrotécnica e de Computadores' },
-  { name: 'Mestrado em Engenharia Civil' },
-  { name: 'Mestrado em Engenharia Química' },
-  { name: 'Mestrado em Engenharia Mecânica' },
-  { name: 'Mestrado em Engenharia do Ambiente' },
-  { name: 'Mestrado em Engenharia e Gestão Industrial' },
-]
+import ScheduleListbox from '../components/planner/ScheduleListbox'
+import { useState, useEffect } from 'react'
+import { majorsData, coursesData, schedulesData } from '../utils/data'
+import { MajorCourses, CheckedMajorCourses, YearCourses, Course, CourseSchedule, Schedules } from '../@types'
 
 const TimeTableSchedulerPage = () => {
-  //TODO: replace courseData with select all courses in selectedMajor
-  const checkedCourses = coursesAddCheckProperty(coursesData)
-
+  const majors = majorsData // TODO: replace majors with select all majors query
+  const checkedCourses = coursesAddCheckProperty(coursesData) //TODO: replace courseData with select all courses in selectedMajor
   const [isOpen, setIsOpen] = useState(true)
   const [classesT, setClassesT] = useState(true)
   const [classesTP, setClassesTP] = useState(true)
   const [selectedMajor, setSelectedMajor] = useState('')
-  const [selectedCourses, setSelectedCourses] = useState<CheckedMajorCourses>(checkedCourses)
+  const [courses, setCourses] = useState<CheckedMajorCourses>(checkedCourses)
+  const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
 
-  function coursesAddCheckProperty(courses: MajorCourses): CheckedMajorCourses {
-    return courses.map((year: YearCourses) =>
+  function coursesAddCheckProperty(majorCourses: MajorCourses): CheckedMajorCourses {
+    return majorCourses.map((year: YearCourses) =>
       year.map((item: Course) => ({
         checked: false,
         info: item,
@@ -38,13 +24,31 @@ const TimeTableSchedulerPage = () => {
     )
   }
 
+  const getSchedulesOfSelectedCourses = () => {
+    let newSchedules = []
+    selectedCourses.forEach((course) => {
+      newSchedules.push(schedulesData) // TODO: Replace schedulesData (static IART) with get schedules for course.course_unit_id
+    })
+
+    return newSchedules
+  }
+
+  const createSelectedSchedules = () => {
+    return Array(selectedCourses.length).fill(null)
+  }
+
+  const selectedCourses = courses.flat().filter((course) => course.checked)
+  const [selectedSchedules, setSelectedSchedules] = useState<Array<CourseSchedule | null>>(createSelectedSchedules())
+
+  useEffect(() => {
+    setSchedules(getSchedulesOfSelectedCourses())
+  }, [courses, selectedSchedules])
+
   return (
     <div className={classNames('grid w-full grid-cols-12', 'gap-x-0 gap-y-8 py-4 px-6 md:px-4 xl:gap-x-4 xl:gap-y-0')}>
       {/* Schedule Preview */}
       <div className="min-h-adjusted col-span-12 bg-lightest p-3 dark:bg-dark lg:col-span-9">
-        <div className="w-full">
-          Schedule preview content
-        </div>
+        <div className="w-full">Schedule preview content</div>
       </div>
 
       {/* Sidebar */}
@@ -56,21 +60,23 @@ const TimeTableSchedulerPage = () => {
             checkedCourses={checkedCourses}
             openHook={[isOpen, setIsOpen]}
             selectedMajorHook={[selectedMajor, setSelectedMajor]}
-            selectedCoursesHook={[selectedCourses, setSelectedCourses]}
+            selectedCoursesHook={[courses, setCourses]}
           />
           <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
         </div>
 
         {/* Dropdowns */}
-        <div className="mt-2 flex flex-col space-y-2">
-          {selectedCourses
-            .flat()
-            .filter((course) => course.checked)
-            .map((course, courseIdx) => (
-              <div key={`selected-course-${courseIdx}`}>
-                {course.info.acronym}
-              </div>
-            ))}
+        <div className="mt-2 flex flex-col space-y-3 border-t py-2 px-2">
+          {schedules.length > 0
+            ? selectedCourses.map((course, courseIdx) => (
+                <ScheduleListbox
+                  key={`course-schedule-listbox-${courseIdx}`}
+                  course={course}
+                  schedules={schedules[courseIdx]}
+                  selectedSchedulesHook={[selectedSchedules, setSelectedSchedules]}
+                />
+              ))
+            : null}
         </div>
       </div>
     </div>
@@ -86,10 +92,10 @@ type ClassesTypeCheckboxesProps = {
 const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: ClassesTypeCheckboxesProps) => {
   const [classesT, setClassesT] = classesTHook
   const [classesTP, setClassesTP] = classesTPHook
-  
+
   return (
     <div className="flex items-center justify-start space-x-4">
-      <div className="flex">
+      <div className="flex items-center justify-start">
         <input
           type="checkbox"
           id="checkbox-classesT"
@@ -97,11 +103,11 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: ClassesTypeCheck
           checked={classesT}
           onChange={(event) => setClassesT(event.target.checked)}
         />
-        <label className="ml-1.5 cursor-pointer text-sm" htmlFor="checkbox-classesTP">
+        <label className="ml-1.5 cursor-pointer text-sm" htmlFor="checkbox-classesT">
           <span>Teóricas</span>
         </label>
       </div>
-      <div className="flex">
+      <div className="flex items-center justify-start">
         <input
           type="checkbox"
           id="checkbox-classesTP"

@@ -19,9 +19,9 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
   const [majorQuery, setMajorQuery] = useState('')
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
   const [selectedMajor, setSelectedMajor] = selectedMajorHook
-  const [selectedCourses, setSelectedCourses] = selectedCoursesHook
+  const [courses, setCourses] = selectedCoursesHook
 
-  const atLeastOneCourse = selectedCourses.some((item) => item.some((course) => course.checked))
+  const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
   const filteredMajors =
     majorQuery === ''
       ? majors
@@ -44,11 +44,11 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
   }
 
   function handleCheck(event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) {
-    selectedCourses[year][courseIdx].checked = event.target.checked
-    setSelectedCourses([...selectedCourses])
+    courses[year][courseIdx].checked = event.target.checked
+    setCourses([...courses])
 
-    let some = selectedCourses[year].some((course) => course.checked)
-    let every = selectedCourses[year].every((course) => course.checked)
+    let some = courses[year].some((course) => course.checked)
+    let every = courses[year].every((course) => course.checked)
 
     //@ts-ignore
     let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
@@ -66,12 +66,12 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
 
   function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, year: number) {
     let newGroupEntry: CheckedYearCourses = []
-    selectedCourses[year].forEach((course: CheckedCourse) => {
+    courses[year].forEach((course: CheckedCourse) => {
       course.checked = event.target.checked
       newGroupEntry.push(course)
     })
-    selectedCourses[year] = newGroupEntry
-    setSelectedCourses([...selectedCourses])
+    courses[year] = newGroupEntry
+    setCourses([...courses])
   }
 
   return (
@@ -187,7 +187,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
                             <input
                               type="checkbox"
                               className="cursor-pointer rounded text-primary focus:ring-primary"
-                              checked={selectedCourses[yearIdx].every((course) => course.checked)}
+                              checked={courses[yearIdx].every((course) => course.checked)}
                               id={`year-checkbox-${yearIdx}`}
                               onChange={(event) => {
                                 handleCheckGroup(event, yearIdx)
@@ -211,7 +211,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
                                 <input
                                   type="checkbox"
                                   className="cursor-pointer rounded text-primary focus:ring-primary"
-                                  checked={selectedCourses[yearIdx][courseIdx].checked}
+                                  checked={courses[yearIdx][courseIdx].checked}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => {
                                     handleCheck(event, yearIdx, courseIdx)

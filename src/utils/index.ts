@@ -24,30 +24,7 @@ export const getSchoolYear = () => {
     : `${year}/${(year + 1).toString().slice(2, 4)}`
 }
 
-/* 
-export const majors = [
-  { label: 'Mestrado em Planeamento e Projecto Urbano' },
-  { label: 'Programa de Doutoramento em Arquitetura' },
-  { label: 'Programa Doutoral em Segurança e Saúde Ocupacionais' },
-  { label: 'Licenciatura em Engenharia Informática e Computação' },
-  { label: 'Licenciatura em Engenharia Eletrotécnica e de Computadores' },
-  { label: 'Licenciatura em Engenharia Mecânica' },
-  { label: 'Mestrado em Engenharia Informática e Computação' },
-]
-
-export const initializeCourses = () => {
-  let courses = []
-  for (let i = 0; i < ucArray.length; i++) {
-    courses.push({
-      year: i + 1,
-      ucs: ucArray[i],
-      checked: Array(ucArray[i].length).fill(false),
-    })
-  }
-
-  return courses
-}
-
+/*
 export const ucs = [
   {
     id: 1,

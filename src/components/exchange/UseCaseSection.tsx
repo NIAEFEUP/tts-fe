@@ -23,8 +23,8 @@ const UseCaseSection = () => (
     <div className="container grid grid-cols-1 gap-8 md:grid-cols-3">
       {information.map((item, itemIdx) => (
         <div key={`item-${itemIdx}`} className="flex flex-col items-center justify-start">
-          <item.icon className="z-50 mb-3 h-8 md:h-12 w-auto text-primary" />
-          <h2 className="text-center text-lg md:text-xl font-bold uppercase tracking-wide">{item.headline}</h2>
+          <item.icon className="z-50 mb-3 h-8 w-auto text-primary md:h-12" />
+          <h2 className="text-center text-lg font-bold uppercase tracking-wide md:text-xl">{item.headline}</h2>
           <p className="text-center text-xs md:text-sm">{item.text}</p>
         </div>
       ))}
