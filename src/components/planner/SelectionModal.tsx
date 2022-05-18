@@ -9,15 +9,15 @@ type Props = {
   majors: Major[]
   checkedCourses: CheckedMajorCourses
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  selectedMajorHook: [any, React.Dispatch<React.SetStateAction<any>>]
+  majorHook: [any, React.Dispatch<React.SetStateAction<any>>]
   selectedCoursesHook: [any, React.Dispatch<React.SetStateAction<any>>]
 }
 
-const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, selectedCoursesHook }: Props) => {
+const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, selectedCoursesHook }: Props) => {
   const [isOpen, setIsOpen] = openHook
   const [majorQuery, setMajorQuery] = useState('')
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
-  const [selectedMajor, setSelectedMajor] = selectedMajorHook
+  const [major, setMajor] = majorHook
   const [courses, setCourses] = selectedCoursesHook
 
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
@@ -29,12 +29,12 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
         )
 
   useEffect(() => {
-    if (selectedMajor !== '') setAlertLevel(AlertType.success)
+    if (major !== '') setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
-  }, [selectedMajor])
+  }, [major])
 
   function closeModal() {
-    if (selectedMajor !== '' && atLeastOneCourse) setIsOpen(false)
+    if (major !== '' && atLeastOneCourse) setIsOpen(false)
     else setAlertLevel(AlertType.warning)
   }
 
@@ -109,7 +109,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
                   </Alert>
 
                   {/* Select major dropdown */}
-                  <Combobox value={selectedMajor} onChange={setSelectedMajor}>
+                  <Combobox value={major} onChange={setMajor}>
                     <div className="relative mt-4">
                       <div className="relative w-full rounded text-left">
                         <Combobox.Input
@@ -179,7 +179,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
                   </Combobox>
 
                   {/* Courses checkboxes */}
-                  {selectedMajor !== '' ? (
+                  {major !== '' ? (
                     <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8">
                       {checkedCourses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -250,12 +250,12 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
                       className={classNames(
                         'inline-flex justify-center rounded-md border-2 border-teal-700/30 bg-green-50',
                         'px-4 py-2 text-sm font-medium text-teal-700 transition',
-                        selectedMajor === '' || !atLeastOneCourse
+                        major === '' || !atLeastOneCourse
                           ? 'cursor-not-allowed opacity-50'
                           : 'hover:bg-teal-700 hover:text-white'
                       )}
                       onClick={closeModal}
-                      disabled={selectedMajor === '' || !atLeastOneCourse}
+                      disabled={major === '' || !atLeastOneCourse}
                     >
                       Confirmar
                     </button>

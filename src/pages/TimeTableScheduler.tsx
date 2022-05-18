@@ -7,11 +7,11 @@ import { MajorCourses, CheckedMajorCourses, YearCourses, Course, CourseSchedule,
 
 const TimeTableSchedulerPage = () => {
   const majors = majorsData // TODO: replace majors with select all majors query
-  const checkedCourses = coursesAddCheckProperty(coursesData) //TODO: replace courseData with select all courses in selectedMajor
+  const checkedCourses = coursesAddCheckProperty(coursesData) //TODO: replace courseData with select all courses in major
   const [isOpen, setIsOpen] = useState(true)
   const [classesT, setClassesT] = useState(true)
   const [classesTP, setClassesTP] = useState(true)
-  const [selectedMajor, setSelectedMajor] = useState('')
+  const [major, setMajor] = useState('')
   const [courses, setCourses] = useState<CheckedMajorCourses>(checkedCourses)
   const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
 
@@ -59,14 +59,14 @@ const TimeTableSchedulerPage = () => {
             majors={majors}
             checkedCourses={checkedCourses}
             openHook={[isOpen, setIsOpen]}
-            selectedMajorHook={[selectedMajor, setSelectedMajor]}
+            majorHook={[major, setMajor]}
             selectedCoursesHook={[courses, setCourses]}
           />
           <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
         </div>
 
         {/* Dropdowns */}
-        <div className="mt-2 flex flex-col space-y-3 border-t py-2 px-2">
+        <div className="mt-2 flex flex-col space-y-4 border-t py-3 px-0">
           {schedules.length > 0
             ? selectedCourses.map((course, courseIdx) => (
                 <ScheduleListbox
