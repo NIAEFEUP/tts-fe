@@ -1,4 +1,3 @@
-import '../../styles/modal.css'
 import classNames from 'classnames'
 import Alert, { AlertType } from './Alert'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
@@ -81,8 +80,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
         <button
           type="button"
           onClick={openModal}
-          className="w-full rounded-md bg-darkest/20 px-4 py-2 text-sm font-medium
-          text-white transition hover:bg-darkest/30 dark:bg-lightest/20 hover:dark:bg-lightest/30"
+          className="w-full rounded-md bg-darkest/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-darkest/30 dark:bg-lightest/20 hover:dark:bg-lightest/30"
         >
           Editar UCs
         </button>
@@ -94,9 +92,12 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
           <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-12">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <InnerCustomTransition>
-                <Dialog.Panel className="dialog">
+                <Dialog.Panel className="w-full max-w-5xl transform rounded-2xl bg-lightest p-6 text-left align-middle shadow-xl transition-all dark:bg-dark">
                   {/* Header */}
-                  <Dialog.Title as="header" className="dialog-header">
+                  <Dialog.Title
+                    as="header"
+                    className="mb-4 inline-flex w-full items-center justify-center space-x-2 text-center font-medium"
+                  >
                     <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
                     <h3 className="text-xl font-semibold leading-6 tracking-tight dark:text-white">Escolha de UCs</h3>
                   </Dialog.Title>
@@ -179,7 +180,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, selectedMajorHook, s
 
                   {/* Courses checkboxes */}
                   {selectedMajor !== '' ? (
-                    <div className="checkboxes">
+                    <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8">
                       {checkedCourses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
