@@ -52,13 +52,17 @@ const ScheduleListbox = ({ course, schedules, selectedSchedulesHook }: Props) =>
                 }
                 value={option === null ? <>&nbsp;</> : option}
               >
-                {({ selected }) => (
+                {({ selected, active }) => (
                   <>
                     <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
                       {getOptionDisplayText(course.info.acronym, option)}
                     </span>
                     {selected ? (
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary group-hover:text-white">
+                      <span
+                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                          active ? 'text-white' : 'text-primary'
+                        }`}
+                      >
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
                     ) : null}
