@@ -57,7 +57,7 @@ const TimeTableSchedulerPage = () => {
 
   // majors
   const majors = getMajors()
-  const [major, setMajor] = useState('')
+  const [major, setMajor] = useState({ name: '' })
 
   // courses
   const checkedCourses = coursesAddCheckProperty(getCourses())
@@ -99,7 +99,7 @@ const TimeTableSchedulerPage = () => {
         </div>
 
         {/* Dropdowns */}
-        <div className="mt-2 flex flex-col space-y-4 border-t py-3 px-0">
+        <div className="mt-3 flex flex-col space-y-4 border-t py-3 px-0">
           {schedules.length > 0
             ? selectedCourses.map((course, courseIdx) => (
                 <ScheduleListbox

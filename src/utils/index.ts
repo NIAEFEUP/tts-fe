@@ -24,57 +24,19 @@ export const getSchoolYear = () => {
     : `${year}/${(year + 1).toString().slice(2, 4)}`
 }
 
-/*
-export const ucs = [
-  {
-    id: 1,
-    acronym: 'COMP',
-    name: 'Compiladores',
-    weekday: 'Sexta',
-    time: '11:30-12:30',
-    room: 'B112',
-    teacher: 'TDRC',
-    class: '3MIEIC01',
-  },
-  {
-    id: 2,
-    acronym: 'SDIS',
-    name: 'Sistemas Distribuídos',
-    weekday: 'Segunda',
-    time: '14:30-16:30',
-    room: 'B301',
-    teacher: 'RGR',
-    class: '3MIEIC04',
-  },
-  {
-    id: 3,
-    acronym: 'LBAW',
-    name: 'Laboratório de Bases de Dados e Aplicações Web',
-    weekday: 'Segunda',
-    time: '09:00-12:00',
-    room: 'B314',
-    teacher: 'JCL',
-    class: '3MIEIC01',
-  },
-  {
-    id: 4,
-    acronym: 'PPIN',
-    name: 'Proficiência Pessoal e Interpessoal',
-    weekday: 'Quinta',
-    time: '10:30-12:30',
-    room: 'B107',
-    teacher: 'MFT',
-    class: '3MIEIC05',
-  },
-  {
-    id: 5,
-    acronym: 'IART',
-    name: 'Inteligência Artificial',
-    weekday: 'Terça',
-    time: '11:30-12:30',
-    room: 'B105',
-    teacher: 'HLC',
-    class: '3MIEIC02',
-  },
-]
-*/
+export const convertWeekday = (dayNumber: number) => {
+  if (dayNumber < 1 || dayNumber > 8) return null
+
+  const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sab', 'Dom']
+  return weekdays[dayNumber - 1]
+}
+
+export const convertHour = (hourNumber: number) => {
+  if (hourNumber < 0 || hourNumber > 24) return null
+
+  const split = hourNumber.toString().split('.')
+  const hour = split[0].padStart(2, '0')
+  const minutes = split[1] === '0' || !split[1] ? '00' : '30'
+
+  return `${hour}:${minutes}`
+}

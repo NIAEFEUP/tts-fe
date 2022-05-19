@@ -2,6 +2,7 @@ import { useState, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CheckedCourse, CourseSchedule, CourseSchedules } from '../../@types'
+import { convertHour, convertWeekday } from '../../utils'
 
 type Props = {
   course: CheckedCourse
@@ -16,7 +17,9 @@ const ScheduleListbox = ({ course, schedules, selectedSchedulesHook }: Props) =>
 
   function getOptionDisplayText(acronym: string, option: CourseSchedule | null) {
     if (option === null || !option.course_unit_id) return <>&nbsp;</>
-    return `${acronym} ${option.class_name} ${option.start_time} ${option.start_time + option.duration}`
+    return `${option.class_name}, ${option.teacher_acronym}, ${convertWeekday(option.day)}, ${convertHour(
+      option.start_time
+    )}-${convertHour(option.start_time + option.duration)}`
   }
 
   const adaptedSchedules = createAdaptedSchedules()
@@ -32,8 +35,13 @@ const ScheduleListbox = ({ course, schedules, selectedSchedulesHook }: Props) =>
         <h4 className="mb-1 text-sm md:text-xs">
           {course.info.name} (<strong>{course.info.acronym}</strong>)
         </h4>
-        <Listbox.Button className="relative w-full cursor-default rounded-lg border-2 border-transparent bg-lightish py-2 pl-3 pr-10 text-left shadow dark:bg-darkish sm:text-sm">
-          <span className="block truncate">{getOptionDisplayText(course.info.acronym, selectedOption)}</span>
+        <Listbox.Button
+          className="relative w-full cursor-pointer rounded-lg border-2 border-transparent bg-lightish py-2 pl-3 pr-10 
+          text-left transition hover:bg-primary/10 dark:hover:bg-primary/25 dark:bg-darkish dark:shadow sm:text-sm"
+        >
+          <span className="block truncate font-medium">
+            {getOptionDisplayText(course.info.acronym, selectedOption)}
+          </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </span>
@@ -43,12 +51,12 @@ const ScheduleListbox = ({ course, schedules, selectedSchedulesHook }: Props) =>
             {adaptedSchedules.map((option, personIdx) => (
               <Listbox.Option
                 key={personIdx}
+                value={option === null ? <>&nbsp;</> : option}
                 className={({ active }) =>
-                  `group relative cursor-default select-none py-2 pl-10 pr-4 ${
-                    active ? 'bg-primary text-white' : 'text-gray-900'
+                  `group relative cursor-default select-none py-2 ${selectedOption !== null ? 'pl-10' : 'pl-4'} pr-4 ${
+                    active ? 'bg-primary/75 dark:bg-primary/75 text-white' : 'text-gray-900'
                   }`
                 }
-                value={option === null ? <>&nbsp;</> : option}
               >
                 {({ selected, active }) => (
                   <>

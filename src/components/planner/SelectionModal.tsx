@@ -10,8 +10,8 @@ type Props = {
   majors: Major[]
   checkedCourses: CheckedMajorCourses
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  majorHook: [any, React.Dispatch<React.SetStateAction<any>>]
-  coursesHook: [any, React.Dispatch<React.SetStateAction<any>>]
+  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
+  coursesHook: [CheckedMajorCourses, React.Dispatch<React.SetStateAction<CheckedMajorCourses>>]
 }
 
 const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHook }: Props) => {
@@ -29,12 +29,12 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
         )
 
   useEffect(() => {
-    if (major !== '') setAlertLevel(AlertType.success)
+    if (major.name !== '') setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
   }, [major])
 
   function closeModal() {
-    if (major !== '' && atLeastOneCourse) setIsOpen(false)
+    if (major.name !== '' && atLeastOneCourse) setIsOpen(false)
     else setAlertLevel(AlertType.warning)
   }
 
@@ -105,10 +105,10 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
-                      <span className="rounded-xl bg-gradient-to-br from-rose-500 via-rose-600 to-primary px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span className="rounded bg-primary-light px-3 py-1 text-sm text-white transition-all duration-500">
                         {getSemester()}
                       </span>
-                      <span className="rounded-xl bg-gradient-to-br from-rose-500 via-rose-600 to-primary px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span className="rounded bg-primary-light px-3 py-1 text-sm text-white transition-all duration-500">
                         {getSchoolYear()}
                       </span>
                     </div>
@@ -127,7 +127,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
                           className="w-full rounded bg-gray-50 py-4 px-4 text-xs leading-5 text-gray-900 focus:shadow focus:ring-0 md:text-sm"
-                          displayValue={(major: { name: string }) => major.name}
+                          displayValue={(major: Major) => major.name}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
                             setMajorQuery(event.target.value)
                           }
@@ -160,9 +160,9 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                               <Combobox.Option
                                 key={majorIdx}
                                 className={({ active }) =>
-                                  `relative cursor-pointer select-none py-2 px-3 pl-10 ${
-                                    active ? 'bg-primary text-white' : 'text-gray-900'
-                                  }`
+                                  `relative cursor-pointer select-none py-2 px-3 ${
+                                    major.name !== '' ? 'pl-10' : 'pl-4'
+                                  } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
                                 }
                                 value={major}
                               >
@@ -191,7 +191,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                   </Combobox>
 
                   {/* Courses checkboxes */}
-                  {major !== '' ? (
+                  {major.name !== '' ? (
                     <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8">
                       {checkedCourses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -262,12 +262,12 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                       className={classNames(
                         'inline-flex justify-center rounded-md border-2 border-teal-700/30 bg-green-50',
                         'px-4 py-2 text-sm font-medium text-teal-700 transition',
-                        major === '' || !atLeastOneCourse
+                        major.name === '' || !atLeastOneCourse
                           ? 'cursor-not-allowed opacity-50'
                           : 'hover:bg-teal-700 hover:text-white'
                       )}
                       onClick={closeModal}
-                      disabled={major === '' || !atLeastOneCourse}
+                      disabled={major.name === '' || !atLeastOneCourse}
                     >
                       Confirmar
                     </button>
