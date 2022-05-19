@@ -6,28 +6,28 @@ import { majorsData, coursesData, schedulesData } from '../utils/data'
 import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
 
 const TimeTableSchedulerPage = () => {
-  function getMajors() {
+  const getMajors = () => {
     // TODO: replace majorsData with backend request
     return majorsData
   }
 
-  function getCourses() {
+  const getCourses = () => {
     //TODO: replace courseData with backend request
     return coursesData
   }
 
-  function getCourseSchedule(course) {
+  const getCourseSchedule = (course) => {
     // TODO: Replace schedulesData (static IART) with backend request
     return schedulesData
   }
 
-  function initializeMajor(): Major {
+  const initializeMajor = (): Major => {
     const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
     if (storedMajor === null) return { name: '' }
     else return storedMajor
   }
 
-  function coursesAddCheckProperty(majorCourses: MajorCourses): CheckedMajorCourses {
+  const coursesAddCheckProperty = (majorCourses: MajorCourses): CheckedMajorCourses => {
     return majorCourses.map((year: YearCourses) =>
       year.map((item: Course) => ({
         checked: false,
@@ -36,11 +36,11 @@ const TimeTableSchedulerPage = () => {
     )
   }
 
-  function getCheckedCourses(courses: CheckedMajorCourses): CheckedCourse[] {
+  const getCheckedCourses = (courses: CheckedMajorCourses): CheckedCourse[] => {
     return courses.flat().filter((course) => course.checked)
   }
 
-  function getSelected(): CourseOptions {
+  const getSelected = (): CourseOptions => {
     const selectedCourses = getCheckedCourses(courses)
     return selectedCourses.map((course: CheckedCourse) => ({
       course: course,

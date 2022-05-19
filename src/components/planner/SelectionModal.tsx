@@ -32,16 +32,16 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     else setAlertLevel(AlertType.info)
   }, [major, courses])
 
-  function closeModal() {
+  const closeModal = () => {
     if (major.name !== '' && atLeastOneCourse) setIsOpen(false)
     else setAlertLevel(AlertType.warning)
   }
 
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true)
   }
 
-  function handleCheck(event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) {
+  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
     setCourses([...courses])
 
@@ -62,7 +62,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     }
   }
 
-  function handleCheckGroup(event: React.ChangeEvent<HTMLInputElement>, year: number) {
+  const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
     let newGroupEntry: CheckedYearCourses = []
     courses[year].forEach((course: CheckedCourse) => {
       course.checked = event.target.checked

@@ -10,18 +10,18 @@ type Props = {
 }
 
 const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
-  function createAdaptedSchedules() {
+  const createAdaptedSchedules = () => {
     return [null, courseOption.schedules]
       .flat()
       .filter((option: CourseSchedule | null) => null || option?.class_name !== null)
   }
 
-  function getOptionDisplayText(option: CourseSchedule | null) {
+  const getOptionDisplayText = (option: CourseSchedule | null) => {
     if (option === null || !option.course_unit_id) return <>&nbsp;</>
     return `${option.class_name}, ${option.teacher_acronym}, ${convertWeekday(option.day)}, ${convertHour(option.start_time)}-${convertHour(option.start_time + option.duration)}` //prettier-ignore
   }
 
-  function updateSelected() {
+  const updateSelected = () => {
     selected.find((option, optionIdx) => {
       if (option === courseOption) {
         let newSelected = selected
@@ -39,10 +39,6 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   useEffect(() => {
     if (selectedOption !== null) updateSelected()
   }, [selectedOption])
-
-  useEffect(() => {
-    console.log(selected)
-  }, [selected])
 
   return adaptedSchedules ? (
     <Listbox
