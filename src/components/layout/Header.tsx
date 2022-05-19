@@ -27,13 +27,16 @@ type Props = {
 
 const Header = ({ siteTitle, location }: Props) => {
   return (
-    <Disclosure as="nav" className="navbar">
+    <Disclosure
+      as="nav"
+      className="sticky top-0 z-20 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
+    >
       {({ open }) => {
         return (
           <>
             <div className={`${open ? 'p-0' : 'p-2'} relative flex items-center justify-between md:py-0`}>
               <Hamburger open={open} />
-              <div className="header">
+              <div className="flex flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to="/" className="flex items-center space-x-2">
                     <img
@@ -102,15 +105,23 @@ const Hamburger = ({ open }: HamburgerProps) => (
   >
     <Link to="/">
       {open ? (
-        <img className="avatar top-0.5 h-5 w-auto dark:inline-flex" src={AppLogo} alt="Time Table Selector" />
+        <img
+          className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
+          src={AppLogo}
+          alt="Time Table Selector"
+        />
       ) : (
-        <img className="avatar h-6 w-auto" src={AppLogo} alt="Time Table Selector" />
+        <img
+          className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
+          src={AppLogo}
+          alt="Time Table Selector"
+        />
       )}
     </Link>
 
     <div className="flex items-center space-x-1">
       <DarkModeSwitch />
-      <Disclosure.Button className="hamburger group">
+      <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
         <span className="sr-only">Open nav menu</span>
         {open ? (
           <XIcon

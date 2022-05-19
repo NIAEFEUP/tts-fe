@@ -3,32 +3,25 @@
 @tailwind utilities;
 
 * {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif !important;
+  @apply m-0 p-0;
+}
+
+body {
+  @apply bg-light text-gray-800 dark:bg-darkest dark:text-white;
+}
+
+::-webkit-scrollbar {
+  @apply mx-2 w-3 rounded-full md:w-3.5;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full border-2 border-solid border-black/0 bg-black/40 bg-clip-padding md:border-4;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-inherit;
 }
 
 .min-h-adjusted {
-  /* minHeight = pageHeight - headerHeight - footerHeight */
-  min-height: calc(100vh - 3.5rem - 9rem);
-}
-
-.layout {
-  @apply flex min-h-screen flex-col bg-light font-prose font-normal text-gray-800 opacity-[99%] dark:bg-darkest dark:text-white;
-}
-
-.navbar {
-  @apply sticky top-0 z-20 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3;
-}
-
-.hamburger {
-  @apply text-gray-800 transition duration-200 ease-in dark:text-white md:hidden;
-}
-
-.header {
-  @apply flex flex-1 items-center justify-between md:items-stretch md:justify-between;
-}
-
-.avatar {
-  @apply rounded-full transition hover:opacity-80 md:hidden;
+  min-height: calc(100vh - 3.5rem - 9rem); /* minHeight = pageHeight - headerHeight - footerHeight */
 }
