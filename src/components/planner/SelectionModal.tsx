@@ -18,8 +18,8 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [majorQuery, setMajorQuery] = useState('')
-  const [alertLevel, setAlertLevel] = useState(AlertType.info)
+  const [majorQuery, setMajorQuery] = useState<string>('')
+  const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
   const filteredMajors =
     majorQuery === ''
@@ -29,9 +29,9 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
         )
 
   useEffect(() => {
-    if (major.name !== '') setAlertLevel(AlertType.success)
+    if (major.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
-  }, [major])
+  }, [major, checkedCourses])
 
   function closeModal() {
     if (major.name !== '' && atLeastOneCourse) setIsOpen(false)
@@ -105,10 +105,10 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
-                      <span className="rounded bg-primary-light px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span className="rounded bg-rose-600 px-3 py-1 text-sm text-white transition-all duration-500">
                         {getSemester()}
                       </span>
-                      <span className="rounded bg-primary-light px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span className="rounded bg-rose-600 px-3 py-1 text-sm text-white transition-all duration-500">
                         {getSchoolYear()}
                       </span>
                     </div>

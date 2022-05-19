@@ -64,7 +64,7 @@ const TimeTableSchedulerPage = () => {
 
   // majors
   const majors = getMajors()
-  const [major, setMajor] = useState(initializeMajor())
+  const [major, setMajor] = useState<Major>(initializeMajor())
 
   // courses
   const checkedCourses = coursesAddCheckProperty(getCourses())
@@ -72,9 +72,9 @@ const TimeTableSchedulerPage = () => {
   const selectedCourses = getCheckedCourses(courses)
 
   // boolean controller properties
-  const [classesT, setClassesT] = useState(true)
-  const [classesTP, setClassesTP] = useState(true)
-  const [isModalOpen, setIsModalOpen] = useState(true)
+  const [classesT, setClassesT] = useState<boolean>(true)
+  const [classesTP, setClassesTP] = useState<boolean>(true)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
 
   // selected
   const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
