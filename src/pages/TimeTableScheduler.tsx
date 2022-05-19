@@ -40,7 +40,7 @@ const TimeTableSchedulerPage = () => {
     return courses.flat().filter((course) => course.checked)
   }
 
-  const getSelected = (): CourseOptions => {
+  const initializeSelected = (): CourseOptions => {
     const selectedCourses = getCheckedCourses(courses)
     return selectedCourses.map((course: CheckedCourse) => ({
       course: course,
@@ -55,14 +55,24 @@ const TimeTableSchedulerPage = () => {
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
-  const [selected, setSelected] = useState<CourseOptions>([])
+  const [selected, setSelected] = useState<CourseOptions>(initializeSelected())
 
   useEffect(() => {
     localStorage.setItem('niaefeup-tts.major', JSON.stringify(major))
   }, [major])
 
   useEffect(() => {
-    setSelected(getSelected())
+    // FIXME: Resolve selected needs to be merged with selected courses!
+    const resolveSelected = (): CourseOptions => {
+      const selectedCourses = getCheckedCourses(courses)
+      return selectedCourses.map((course: CheckedCourse) => ({
+        course: course,
+        option: null,
+        schedules: getCourseSchedule(course),
+      }))
+    }
+
+    setSelected(resolveSelected())
   }, [courses])
 
   return (
