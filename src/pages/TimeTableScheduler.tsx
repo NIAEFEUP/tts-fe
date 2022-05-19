@@ -1,16 +1,18 @@
 import SelectionModal from '../components/planner/SelectionModal'
 import ScheduleListbox from '../components/planner/ScheduleListbox'
+import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
 import { useState, useEffect } from 'react'
 import { majorsData, coursesData, schedulesData } from '../utils/data'
 import {
-  MajorCourses,
-  CheckedMajorCourses,
-  YearCourses,
-  Course,
-  CourseSchedule,
-  Schedules,
   CheckedCourse,
+  CheckedMajorCourses,
+  Course,
+  CourseOptions,
+  CourseSchedule,
   Major,
+  MajorCourses,
+  Schedules,
+  YearCourses,
 } from '../@types'
 
 const TimeTableSchedulerPage = () => {
@@ -61,8 +63,7 @@ const TimeTableSchedulerPage = () => {
   const [major, setMajor] = useState<Major>(initializeMajor())
 
   // courses
-  const checkedCourses = coursesAddCheckProperty(getCourses())
-  const [courses, setCourses] = useState<CheckedMajorCourses>(checkedCourses)
+  const [courses, setCourses] = useState<CheckedMajorCourses>(coursesAddCheckProperty(getCourses()))
   const selectedCourses = getCheckedCourses(courses)
 
   // boolean controller properties
@@ -71,6 +72,7 @@ const TimeTableSchedulerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
 
   // selected
+  const [selected, setSelected] = useState<CourseOptions>([])
   const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
   const [selectedSchedules, setSelectedSchedules] = useState<Array<CourseSchedule | null>>(createSelectedSchedules())
 
@@ -81,6 +83,16 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     setSchedules(getSchedulesOfSelectedCourses())
   }, [courses, selectedSchedules])
+
+  useEffect(() => {
+    // let ola = checkedCourses.map((course) => ({
+    //   course: course,
+    //   option: null,
+    //   schedules: 
+    // }))
+    // console.log(ola)
+    console.log(selectedCourses)
+  }, [selectedCourses])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-0 gap-y-8 py-4 px-6 md:px-4 xl:gap-x-6 xl:gap-y-0">
@@ -95,7 +107,6 @@ const TimeTableSchedulerPage = () => {
         <div className="flex flex-col items-start justify-start space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-2">
           <SelectionModal
             majors={majors}
-            checkedCourses={checkedCourses}
             openHook={[isModalOpen, setIsModalOpen]}
             majorHook={[major, setMajor]}
             coursesHook={[courses, setCourses]}
@@ -116,46 +127,6 @@ const TimeTableSchedulerPage = () => {
               ))
             : null}
         </div>
-      </div>
-    </div>
-  )
-}
-
-/* Sidebar Classes Type Checkboxes */
-type ClassesTypeCheckboxesProps = {
-  classesTHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  classesTPHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-}
-
-const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: ClassesTypeCheckboxesProps) => {
-  const [classesT, setClassesT] = classesTHook
-  const [classesTP, setClassesTP] = classesTPHook
-
-  return (
-    <div className="flex flex-row items-center justify-start space-x-4 space-y-0 md:flex-col md:space-y-1 md:space-x-0">
-      <div className="flex items-center justify-start">
-        <input
-          type="checkbox"
-          id="checkbox-classesT"
-          className="cursor-pointer rounded text-gray-800 hover:opacity-90 focus:ring-gray-800 dark:text-primary dark:focus:ring-primary"
-          checked={classesT}
-          onChange={(event) => setClassesT(event.target.checked)}
-        />
-        <label className="ml-1.5 cursor-pointer text-sm" htmlFor="checkbox-classesT">
-          <span>Teóricas</span>
-        </label>
-      </div>
-      <div className="flex items-center justify-start">
-        <input
-          type="checkbox"
-          id="checkbox-classesTP"
-          className="cursor-pointer rounded text-gray-800 hover:opacity-90 focus:ring-gray-800 dark:text-primary dark:focus:ring-primary"
-          checked={classesTP}
-          onChange={(event) => setClassesTP(event.target.checked)}
-        />
-        <label className="ml-1.5 cursor-pointer text-sm" htmlFor="checkbox-classesTP">
-          <span>Práticas</span>
-        </label>
       </div>
     </div>
   )

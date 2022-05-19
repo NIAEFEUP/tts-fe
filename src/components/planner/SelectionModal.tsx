@@ -8,13 +8,12 @@ import { getSchoolYear, getSemester } from '../../utils'
 
 type Props = {
   majors: Major[]
-  checkedCourses: CheckedMajorCourses
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedMajorCourses, React.Dispatch<React.SetStateAction<CheckedMajorCourses>>]
 }
 
-const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHook }: Props) => {
+const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
@@ -31,7 +30,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
   useEffect(() => {
     if (major.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
-  }, [major, checkedCourses])
+  }, [major, courses])
 
   function closeModal() {
     if (major.name !== '' && atLeastOneCourse) setIsOpen(false)
@@ -193,7 +192,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                   {/* Courses checkboxes */}
                   {major.name !== '' ? (
                     <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8">
-                      {checkedCourses.map((year: CheckedYearCourses, yearIdx: number) => (
+                      {courses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
                           <div className="flex items-center transition hover:opacity-90">
