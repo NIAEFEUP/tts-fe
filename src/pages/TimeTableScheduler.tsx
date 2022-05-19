@@ -3,17 +3,7 @@ import ScheduleListbox from '../components/planner/ScheduleListbox'
 import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
 import { useState, useEffect } from 'react'
 import { majorsData, coursesData, schedulesData } from '../utils/data'
-import {
-  CheckedCourse,
-  CheckedMajorCourses,
-  Course,
-  CourseOptions,
-  CourseSchedule,
-  Major,
-  MajorCourses,
-  Schedules,
-  YearCourses,
-} from '../@types'
+import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
 
 const TimeTableSchedulerPage = () => {
   function getMajors() {
@@ -37,14 +27,6 @@ const TimeTableSchedulerPage = () => {
     else return storedMajor
   }
 
-  function getSchedulesOfSelectedCourses() {
-    return selectedCourses.map((course) => getCourseSchedule(course))
-  }
-
-  function createSelectedSchedules() {
-    return Array(selectedCourses.length).fill(null)
-  }
-
   function coursesAddCheckProperty(majorCourses: MajorCourses): CheckedMajorCourses {
     return majorCourses.map((year: YearCourses) =>
       year.map((item: Course) => ({
@@ -58,41 +40,30 @@ const TimeTableSchedulerPage = () => {
     return courses.flat().filter((course) => course.checked)
   }
 
-  // majors
+  function getSelected(): CourseOptions {
+    const selectedCourses = getCheckedCourses(courses)
+    return selectedCourses.map((course: CheckedCourse) => ({
+      course: course,
+      option: null,
+      schedules: getCourseSchedule(course),
+    }))
+  }
+
   const majors = getMajors()
   const [major, setMajor] = useState<Major>(initializeMajor())
-
-  // courses
   const [courses, setCourses] = useState<CheckedMajorCourses>(coursesAddCheckProperty(getCourses()))
-  const selectedCourses = getCheckedCourses(courses)
-
-  // boolean controller properties
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
-
-  // selected
   const [selected, setSelected] = useState<CourseOptions>([])
-  const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
-  const [selectedSchedules, setSelectedSchedules] = useState<Array<CourseSchedule | null>>(createSelectedSchedules())
 
   useEffect(() => {
     localStorage.setItem('niaefeup-tts.major', JSON.stringify(major))
   }, [major])
 
   useEffect(() => {
-    setSchedules(getSchedulesOfSelectedCourses())
-  }, [courses, selectedSchedules])
-
-  useEffect(() => {
-    // let ola = checkedCourses.map((course) => ({
-    //   course: course,
-    //   option: null,
-    //   schedules: 
-    // }))
-    // console.log(ola)
-    console.log(selectedCourses)
-  }, [selectedCourses])
+    setSelected(getSelected())
+  }, [courses])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-0 gap-y-8 py-4 px-6 md:px-4 xl:gap-x-6 xl:gap-y-0">
@@ -116,16 +87,14 @@ const TimeTableSchedulerPage = () => {
 
         {/* Dropdowns */}
         <div className="mt-3 flex flex-col space-y-4 border-t py-3 px-0">
-          {schedules.length > 0
-            ? selectedCourses.map((course, courseIdx) => (
-                <ScheduleListbox
-                  key={`course-schedule-listbox-${courseIdx}`}
-                  course={course}
-                  schedules={schedules[courseIdx]}
-                  selectedSchedulesHook={[selectedSchedules, setSelectedSchedules]}
-                />
-              ))
-            : null}
+          {selected.length > 0 &&
+            selected.map((courseOption, courseOptionIdx) => (
+              <ScheduleListbox
+                courseOption={courseOption}
+                selectedHook={[selected, setSelected]}
+                key={`course-schedule-listbox-${courseOptionIdx}`}
+              />
+            ))}
         </div>
       </div>
     </div>
