@@ -1,4 +1,3 @@
-import classNames from 'classnames'
 import SelectionModal from '../components/planner/SelectionModal'
 import ScheduleListbox from '../components/planner/ScheduleListbox'
 import { useState, useEffect } from 'react'
@@ -37,12 +36,7 @@ const TimeTableSchedulerPage = () => {
   }
 
   function getSchedulesOfSelectedCourses() {
-    let newSchedules = []
-    selectedCourses.forEach((course) => {
-      newSchedules.push(getCourseSchedule(course))
-    })
-
-    return newSchedules
+    return selectedCourses.map((course) => getCourseSchedule(course))
   }
 
   function createSelectedSchedules() {

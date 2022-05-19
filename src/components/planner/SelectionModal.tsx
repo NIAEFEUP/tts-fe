@@ -105,10 +105,10 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
-                      <span className="rounded bg-rose-600 px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500">
                         {getSemester()}
                       </span>
-                      <span className="rounded bg-rose-600 px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500">
                         {getSchoolYear()}
                       </span>
                     </div>
