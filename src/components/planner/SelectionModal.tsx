@@ -10,16 +10,15 @@ type Props = {
   checkedCourses: CheckedMajorCourses
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   majorHook: [any, React.Dispatch<React.SetStateAction<any>>]
-  selectedCoursesHook: [any, React.Dispatch<React.SetStateAction<any>>]
+  coursesHook: [any, React.Dispatch<React.SetStateAction<any>>]
 }
 
-const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, selectedCoursesHook }: Props) => {
+const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHook }: Props) => {
+  const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
+  const [courses, setCourses] = coursesHook
   const [majorQuery, setMajorQuery] = useState('')
   const [alertLevel, setAlertLevel] = useState(AlertType.info)
-  const [major, setMajor] = majorHook
-  const [courses, setCourses] = selectedCoursesHook
-
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
   const filteredMajors =
     majorQuery === ''

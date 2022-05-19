@@ -3,17 +3,44 @@ import SelectionModal from '../components/planner/SelectionModal'
 import ScheduleListbox from '../components/planner/ScheduleListbox'
 import { useState, useEffect } from 'react'
 import { majorsData, coursesData, schedulesData } from '../utils/data'
-import { MajorCourses, CheckedMajorCourses, YearCourses, Course, CourseSchedule, Schedules } from '../@types'
+import {
+  MajorCourses,
+  CheckedMajorCourses,
+  YearCourses,
+  Course,
+  CourseSchedule,
+  Schedules,
+  CheckedCourse,
+} from '../@types'
 
 const TimeTableSchedulerPage = () => {
-  const majors = majorsData // TODO: replace majors with select all majors query
-  const checkedCourses = coursesAddCheckProperty(coursesData) //TODO: replace courseData with select all courses in major
-  const [isOpen, setIsOpen] = useState(true)
-  const [classesT, setClassesT] = useState(true)
-  const [classesTP, setClassesTP] = useState(true)
-  const [major, setMajor] = useState('')
-  const [courses, setCourses] = useState<CheckedMajorCourses>(checkedCourses)
-  const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
+  function getMajors() {
+    // TODO: replace majorsData with backend request
+    return majorsData
+  }
+
+  function getCourses() {
+    //TODO: replace courseData with backend request
+    return coursesData
+  }
+
+  function getCourseSchedule(course) {
+    // TODO: Replace schedulesData (static IART) with backend request
+    return schedulesData
+  }
+
+  function getSchedulesOfSelectedCourses() {
+    let newSchedules = []
+    selectedCourses.forEach((course) => {
+      newSchedules.push(getCourseSchedule(course))
+    })
+
+    return newSchedules
+  }
+
+  function createSelectedSchedules() {
+    return Array(selectedCourses.length).fill(null)
+  }
 
   function coursesAddCheckProperty(majorCourses: MajorCourses): CheckedMajorCourses {
     return majorCourses.map((year: YearCourses) =>
@@ -24,20 +51,26 @@ const TimeTableSchedulerPage = () => {
     )
   }
 
-  const getSchedulesOfSelectedCourses = () => {
-    let newSchedules = []
-    selectedCourses.forEach((course) => {
-      newSchedules.push(schedulesData) // TODO: Replace schedulesData (static IART) with get schedules for course.course_unit_id
-    })
-
-    return newSchedules
+  function getCheckedCourses(courses: CheckedMajorCourses): CheckedCourse[] {
+    return courses.flat().filter((course) => course.checked)
   }
 
-  const createSelectedSchedules = () => {
-    return Array(selectedCourses.length).fill(null)
-  }
+  // majors
+  const majors = getMajors()
+  const [major, setMajor] = useState('')
 
-  const selectedCourses = courses.flat().filter((course) => course.checked)
+  // courses
+  const checkedCourses = coursesAddCheckProperty(getCourses())
+  const [courses, setCourses] = useState<CheckedMajorCourses>(checkedCourses)
+  const selectedCourses = getCheckedCourses(courses)
+
+  // boolean controller properties
+  const [classesT, setClassesT] = useState(true)
+  const [classesTP, setClassesTP] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(true)
+
+  // selected
+  const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
   const [selectedSchedules, setSelectedSchedules] = useState<Array<CourseSchedule | null>>(createSelectedSchedules())
 
   useEffect(() => {
@@ -58,9 +91,9 @@ const TimeTableSchedulerPage = () => {
           <SelectionModal
             majors={majors}
             checkedCourses={checkedCourses}
-            openHook={[isOpen, setIsOpen]}
+            openHook={[isModalOpen, setIsModalOpen]}
             majorHook={[major, setMajor]}
-            selectedCoursesHook={[courses, setCourses]}
+            coursesHook={[courses, setCourses]}
           />
           <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
         </div>
