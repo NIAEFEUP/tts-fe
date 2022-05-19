@@ -58,6 +58,13 @@ module.exports = {
       animation: {
         wiggle: 'wiggle 400ms ease-in-out',
       },
+      backgroundSize: {
+        'size-200': '200% 200%',
+      },
+      backgroundPosition: {
+        'pos-0': '0% 0%',
+        'pos-100': '100% 100%',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms')],

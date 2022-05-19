@@ -2,8 +2,9 @@ import classNames from 'classnames'
 import Alert, { AlertType } from './Alert'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses } from '../../@types'
-import { AcademicCapIcon, CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { AcademicCapIcon, CheckIcon, SelectorIcon, PencilAltIcon } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
+import { getSchoolYear, getSemester } from '../../utils'
 
 type Props = {
   majors: Major[]
@@ -74,14 +75,15 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
 
   return (
     <>
-      <div className="flex w-full flex-col items-center justify-center">
+      <div className="flex w-full items-center justify-center">
         {/* Edit button */}
         <button
           type="button"
           onClick={openModal}
-          className="w-full rounded-md bg-darkest/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-darkest/30 dark:bg-lightest/20 hover:dark:bg-lightest/30"
+          className="flex h-auto w-full items-center justify-center space-x-2 rounded bg-primary px-4 py-3 text-sm font-medium text-white transition hover:-translate-y-1 hover:opacity-90"
         >
-          Editar UCs
+          <span>Editar UCs</span>
+          <PencilAltIcon className="h-5 w-5 text-white" />
         </button>
       </div>
 
@@ -95,10 +97,21 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                   {/* Header */}
                   <Dialog.Title
                     as="header"
-                    className="mb-4 inline-flex w-full items-center justify-center space-x-2 text-center font-medium"
+                    className="mb-4 flex w-full items-center justify-between space-x-2 text-center font-medium"
                   >
-                    <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-                    <h3 className="text-xl font-semibold leading-6 tracking-tight dark:text-white">Escolha de UCs</h3>
+                    <div className="flex items-center justify-start space-x-1">
+                      <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
+                      <h3 className="text-xl font-semibold leading-6 tracking-tight dark:text-white">Escolha de UCs</h3>
+                    </div>
+
+                    <div className="flex items-center justify-start space-x-2">
+                      <span className="rounded-xl bg-gradient-to-br from-rose-500 via-rose-600 to-primary px-3 py-1 text-sm text-white transition-all duration-500">
+                        {getSemester()}
+                      </span>
+                      <span className="rounded-xl bg-gradient-to-br from-rose-500 via-rose-600 to-primary px-3 py-1 text-sm text-white transition-all duration-500">
+                        {getSchoolYear()}
+                      </span>
+                    </div>
                   </Dialog.Title>
 
                   {/* Alert banner */}
