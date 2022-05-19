@@ -199,7 +199,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                           <div className="flex items-center transition hover:opacity-90">
                             <input
                               type="checkbox"
-                              className="cursor-pointer rounded text-primary focus:ring-primary"
+                              className="cursor-pointer rounded border-2 p-2 text-primary focus:ring-primary"
                               checked={courses[yearIdx].every((course) => course.checked)}
                               id={`year-checkbox-${yearIdx}`}
                               onChange={(event) => {
@@ -223,7 +223,7 @@ const SelectionModal = ({ majors, checkedCourses, openHook, majorHook, coursesHo
                               >
                                 <input
                                   type="checkbox"
-                                  className="cursor-pointer rounded text-primary focus:ring-primary"
+                                  className="cursor-pointer rounded border-2 p-2 text-primary focus:ring-primary"
                                   checked={courses[yearIdx][courseIdx].checked}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => {

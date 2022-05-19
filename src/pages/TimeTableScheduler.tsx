@@ -11,6 +11,7 @@ import {
   CourseSchedule,
   Schedules,
   CheckedCourse,
+  Major,
 } from '../@types'
 
 const TimeTableSchedulerPage = () => {
@@ -27,6 +28,12 @@ const TimeTableSchedulerPage = () => {
   function getCourseSchedule(course) {
     // TODO: Replace schedulesData (static IART) with backend request
     return schedulesData
+  }
+
+  function initializeMajor(): Major {
+    const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
+    if (storedMajor === null) return { name: '' }
+    else return storedMajor
   }
 
   function getSchedulesOfSelectedCourses() {
@@ -57,7 +64,7 @@ const TimeTableSchedulerPage = () => {
 
   // majors
   const majors = getMajors()
-  const [major, setMajor] = useState({ name: '' })
+  const [major, setMajor] = useState(initializeMajor())
 
   // courses
   const checkedCourses = coursesAddCheckProperty(getCourses())
@@ -72,6 +79,10 @@ const TimeTableSchedulerPage = () => {
   // selected
   const [schedules, setSchedules] = useState<Schedules>([[]]) // schecules[uc][horario]
   const [selectedSchedules, setSelectedSchedules] = useState<Array<CourseSchedule | null>>(createSelectedSchedules())
+
+  useEffect(() => {
+    localStorage.setItem('niaefeup-tts.major', JSON.stringify(major))
+  }, [major])
 
   useEffect(() => {
     setSchedules(getSchedulesOfSelectedCourses())
