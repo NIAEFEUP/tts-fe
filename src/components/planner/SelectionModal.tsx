@@ -13,10 +13,18 @@ type Props = {
   coursesHook: [CheckedMajorCourses, React.Dispatch<React.SetStateAction<CheckedMajorCourses>>]
 }
 
+
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
+  const initMajor = () => {
+    const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
+    if (storedMajor === null) return { name: '' }
+    else return majors.find((item) => item.name === storedMajor.name)
+  }
+
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
+  const [selected, setSelected] = useState<Major>(initMajor())
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
@@ -30,7 +38,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   useEffect(() => {
     if (major.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
-  }, [major, courses])
+  }, [major, courses, atLeastOneCourse])
 
   const closeModal = () => {
     if (major.name !== '' && atLeastOneCourse) setIsOpen(false)
@@ -120,7 +128,13 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   </Alert>
 
                   {/* Select major dropdown */}
-                  <Combobox value={major} onChange={setMajor}>
+                  <Combobox
+                    value={selected}
+                    onChange={(value) => {
+                      setMajor(value)
+                      setSelected(value)
+                    }}
+                  >
                     <div className="relative mt-4">
                       <div className="relative w-full rounded text-left">
                         <Combobox.Input
