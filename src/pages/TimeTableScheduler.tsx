@@ -103,7 +103,7 @@ const TimeTableSchedulerPage = () => {
       {/* Sidebar */}
       <div className="min-h-adjusted order-1 col-span-12 bg-lightest p-3 dark:bg-dark md:order-2 lg:col-span-3">
         {/* Sidebar top */}
-        <div className="flex flex-col items-start justify-start space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-2">
+        <div className="flex flex-col items-center justify-center space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-3">
           <SelectionModal
             majors={majors}
             openHook={[isModalOpen, setIsModalOpen]}

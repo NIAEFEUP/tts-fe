@@ -8,28 +8,28 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
   const [classesTP, setClassesTP] = classesTPHook
 
   return (
-    <div className="flex flex-row items-center justify-start space-x-4 space-y-0 md:flex-col md:space-y-1 md:space-x-0">
-      <div className="flex items-center justify-start">
+    <div className="flex items-center justify-center space-x-4 space-y-0 md:flex-col md:space-y-1 md:space-x-0">
+      <div className="flex items-center justify-center space-x-2">
         <input
           type="checkbox"
           id="checkbox-classesT"
-          className="cursor-pointer rounded text-gray-800 hover:opacity-90 focus:ring-gray-800 dark:text-primary dark:focus:ring-primary"
+          className="checkbox"
           checked={classesT}
           onChange={(event) => setClassesT(event.target.checked)}
         />
-        <label className="ml-1.5 cursor-pointer text-sm" htmlFor="checkbox-classesT">
+        <label className="cursor-pointer text-sm font-medium uppercase tracking-wide" htmlFor="checkbox-classesT">
           <span>Teóricas</span>
         </label>
       </div>
-      <div className="flex items-center justify-start">
+      <div className="flex items-center justify-center space-x-2">
         <input
           type="checkbox"
           id="checkbox-classesTP"
-          className="cursor-pointer rounded text-gray-800 hover:opacity-90 focus:ring-gray-800 dark:text-primary dark:focus:ring-primary"
+          className="checkbox"
           checked={classesTP}
           onChange={(event) => setClassesTP(event.target.checked)}
         />
-        <label className="ml-1.5 cursor-pointer text-sm" htmlFor="checkbox-classesTP">
+        <label className="cursor-pointer text-sm font-medium uppercase tracking-wide" htmlFor="checkbox-classesTP">
           <span>Práticas</span>
         </label>
       </div>

@@ -21,3 +21,8 @@ body {
 .min-h-adjusted {
   min-height: calc(100vh - 3.5rem - 9rem); /* minHeight = pageHeight - headerHeight - footerHeight */
 }
+
+.checkbox {
+  @apply cursor-pointer rounded-md border-2 p-2 text-darkish transition focus:ring-transparent 
+  dark:border-transparent dark:bg-darkish dark:text-gray-500 dark:focus:text-darkish;
+}
