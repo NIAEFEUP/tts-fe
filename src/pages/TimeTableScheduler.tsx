@@ -3,7 +3,16 @@ import ScheduleListbox from '../components/planner/ScheduleListbox'
 import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
 import { useState, useEffect } from 'react'
 import { majorsData, coursesData, schedulesData } from '../utils/data'
-import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
+import {
+  CheckedCourse,
+  CheckedMajorCourses,
+  Course,
+  CourseOptions,
+  CourseSchedule,
+  Major,
+  MajorCourses,
+  YearCourses,
+} from '../@types'
 
 const TimeTableSchedulerPage = () => {
   const getMajors = () => {
@@ -62,7 +71,12 @@ const TimeTableSchedulerPage = () => {
   }, [major])
 
   useEffect(() => {
-    // FIXME: Resolve selected needs to be merged with selected courses!
+    // FIXME: Maybe move this logic to the handle check because otherwise this has infinite renders or missing deps
+    const findPreviousEntry = (course: CheckedCourse): CourseSchedule | null => {
+      const value = selected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
+      return value ? value.option : null
+    }
+
     const resolveSelected = (): CourseOptions => {
       const selectedCourses = getCheckedCourses(courses)
       return selectedCourses.map((course: CheckedCourse) => ({
@@ -75,15 +89,19 @@ const TimeTableSchedulerPage = () => {
     setSelected(resolveSelected())
   }, [courses])
 
+  useEffect(() => {
+    console.log(selected)
+  }, [selected])
+
   return (
     <div className="grid w-full grid-cols-12 gap-x-0 gap-y-8 py-4 px-6 md:px-4 xl:gap-x-6 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="order-2 md:order-1 min-h-adjusted col-span-12 bg-lightest p-3 dark:bg-dark lg:col-span-9">
+      <div className="min-h-adjusted order-2 col-span-12 bg-lightest p-3 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="w-full">Schedule preview content</div>
       </div>
 
       {/* Sidebar */}
-      <div className="order-1 md:order-2 min-h-adjusted col-span-12 bg-lightest p-3 dark:bg-dark lg:col-span-3">
+      <div className="min-h-adjusted order-1 col-span-12 bg-lightest p-3 dark:bg-dark md:order-2 lg:col-span-3">
         {/* Sidebar top */}
         <div className="flex flex-col items-start justify-start space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-2">
           <SelectionModal

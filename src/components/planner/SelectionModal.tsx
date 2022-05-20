@@ -13,7 +13,6 @@ type Props = {
   coursesHook: [CheckedMajorCourses, React.Dispatch<React.SetStateAction<CheckedMajorCourses>>]
 }
 
-
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
   const initMajor = () => {
     const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))

@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { CourseOption, CourseOptions, CourseSchedule, CourseSchedules } from '../../@types'
+import { CourseOption, CourseOptions, CourseSchedule } from '../../@types'
 import { convertHour, convertWeekday } from '../../utils'
 
 type Props = {
@@ -21,8 +21,12 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
     return `${option.class_name}, ${option.teacher_acronym}, ${convertWeekday(option.day)}, ${convertHour(option.start_time)}-${convertHour(option.start_time + option.duration)}` //prettier-ignore
   }
 
-  const updateSelected = () => {
-    selected.find((option, optionIdx) => {
+  const adaptedSchedules = createAdaptedSchedules()
+  const [selected, setSelected] = selectedHook
+  const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(adaptedSchedules[0])
+
+  useEffect(() => {
+    selected.forEach((option, optionIdx) => {
       if (option === courseOption) {
         let newSelected = selected
         newSelected[optionIdx].option = selectedOption
@@ -30,14 +34,6 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
         return
       }
     })
-  }
-
-  const adaptedSchedules = createAdaptedSchedules()
-  const [selected, setSelected] = selectedHook
-  const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(adaptedSchedules[0])
-
-  useEffect(() => {
-    if (selectedOption !== null) updateSelected()
   }, [selectedOption])
 
   return adaptedSchedules ? (
