@@ -81,7 +81,7 @@ const TimeTableSchedulerPage = () => {
       const selectedCourses = getCheckedCourses(courses)
       return selectedCourses.map((course: CheckedCourse) => ({
         course: course,
-        option: null,
+        option: findPreviousEntry(course),
         schedules: getCourseSchedule(course),
       }))
     }
@@ -90,7 +90,7 @@ const TimeTableSchedulerPage = () => {
   }, [courses])
 
   useEffect(() => {
-    console.log(selected)
+    // console.log(selected)
   }, [selected])
 
   return (
