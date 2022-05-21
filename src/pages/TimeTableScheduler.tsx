@@ -1,3 +1,4 @@
+import Schedule from '../components/planner/Schedule'
 import SelectionModal from '../components/planner/SelectionModal'
 import ScheduleListbox from '../components/planner/ScheduleListbox'
 import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
@@ -92,18 +93,7 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="min-h-adjusted order-2 col-span-12 bg-lightest p-3 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="w-full">
-          <ul className="font-medium text-gray-700">
-            {selected.map((courseOption, courseOptionIdx) => (
-              <li key={courseOptionIdx}>
-                <span>{courseOption.course.info.acronym}</span>
-                {courseOption.option ? (
-                  <span>
-                    : <strong>{courseOption.option.class_name}</strong>
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
+          <Schedule selectedHook={[selected, setSelected]} />
         </div>
       </div>
 
