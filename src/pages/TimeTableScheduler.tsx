@@ -58,12 +58,20 @@ const TimeTableSchedulerPage = () => {
     }))
   }
 
+  const initializeModalState = () => {
+    if (process.env.REACT_APP_DEVELOPMENT) {
+      return major.name === '' ? true : false
+    } else if (process.env.REACT_APP_PRODUCTION) {
+      return major.name !== '' && selected.length > 0 ? false : true
+    } else return true
+  }
+
   const majors = getMajors()
   const [major, setMajor] = useState<Major>(initializeMajor())
   const [courses, setCourses] = useState<CheckedMajorCourses>(coursesAddCheckProperty(getCourses()))
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(initializeModalState())
   const [selected, setSelected] = useState<CourseOptions>(initializeSelected())
 
   useEffect(() => {
@@ -86,7 +94,9 @@ const TimeTableSchedulerPage = () => {
       }))
     }
 
-    setSelected(resolveSelected())
+    return () => {
+      setSelected(resolveSelected())
+    }
   }, [courses])
 
   return (

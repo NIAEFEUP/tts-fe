@@ -17,7 +17,7 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
           checked={classesT}
           onChange={(event) => setClassesT(event.target.checked)}
         />
-        <label className="cursor-pointer text-sm font-medium uppercase tracking-wide" htmlFor="checkbox-classesT">
+        <label className="cursor-pointer text-sm font-medium capitalize tracking-tight" htmlFor="checkbox-classesT">
           <span>Teóricas</span>
         </label>
       </div>
@@ -29,7 +29,7 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
           checked={classesTP}
           onChange={(event) => setClassesTP(event.target.checked)}
         />
-        <label className="cursor-pointer text-sm font-medium uppercase tracking-wide" htmlFor="checkbox-classesTP">
+        <label className="cursor-pointer text-sm font-medium capitalize tracking-tight" htmlFor="checkbox-classesTP">
           <span>Práticas</span>
         </label>
       </div>

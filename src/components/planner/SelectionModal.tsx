@@ -229,10 +229,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           {/* Children checkboxes */}
                           <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
                             {year.map((course: CheckedCourse, courseIdx: number) => (
-                              <div
-                                key={`checkbox-${yearIdx}-${courseIdx}`}
-                                className="flex items-center transition"
-                              >
+                              <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center transition">
                                 <input
                                   type="checkbox"
                                   className="checkbox"
