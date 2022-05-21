@@ -208,7 +208,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                       {courses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
-                          <div className="flex items-center transition hover:opacity-90">
+                          <div className="flex items-center transition">
                             <input
                               type="checkbox"
                               className="checkbox"
@@ -231,7 +231,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                             {year.map((course: CheckedCourse, courseIdx: number) => (
                               <div
                                 key={`checkbox-${yearIdx}-${courseIdx}`}
-                                className="flex items-center transition hover:opacity-90"
+                                className="flex items-center transition"
                               >
                                 <input
                                   type="checkbox"
