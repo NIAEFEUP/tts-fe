@@ -30,13 +30,14 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   }, [courseOption])
 
   useEffect(() => {
-    selected.forEach((option, optionIdx) => {
-      if (option === courseOption) {
-        let newSelected = selected
-        newSelected[optionIdx].option = selectedOption
-        setSelected([...newSelected])
-        return
-      }
+    setSelected((prevSelected) => {
+      let newSelected = prevSelected
+      prevSelected.forEach((option, optionIdx) => {
+        if (option === courseOption) {
+          newSelected[optionIdx].option = selectedOption
+        }
+      })
+      return newSelected
     })
   }, [selectedOption, courseOption])
 

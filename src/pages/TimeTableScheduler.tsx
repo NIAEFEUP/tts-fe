@@ -79,24 +79,13 @@ const TimeTableSchedulerPage = () => {
   }, [major])
 
   useEffect(() => {
-    // FIXME: Maybe move this logic to the handle check because otherwise this has infinite renders or missing deps
-    const findPreviousEntry = (course: CheckedCourse): CourseSchedule | null => {
-      const value = selected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value ? value.option : null
-    }
-
-    const resolveSelected = (): CourseOptions => {
-      const selectedCourses = getCheckedCourses(courses)
-      return selectedCourses.map((course: CheckedCourse) => ({
+    setSelected((prevSelected) =>
+      getCheckedCourses(courses).map((course: CheckedCourse) => ({
         course: course,
-        option: findPreviousEntry(course),
+        option: null,
         schedules: getCourseSchedule(course),
       }))
-    }
-
-    return () => {
-      setSelected(resolveSelected())
-    }
+    )
   }, [courses])
 
   return (
@@ -104,7 +93,7 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="min-h-adjusted order-2 col-span-12 bg-lightest p-3 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="w-full">
-          <ul className="text-gray-700 font-medium">
+          <ul className="font-medium text-gray-700">
             {selected.map((courseOption, courseOptionIdx) => (
               <li key={courseOptionIdx}>
                 <span>{courseOption.course.info.acronym}</span>
