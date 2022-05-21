@@ -6,16 +6,14 @@ import {
   MenuIcon,
   XIcon,
   HomeIcon,
-  EmojiHappyIcon,
+  UserCircleIcon,
   CollectionIcon,
-  CalendarIcon,
   SwitchHorizontalIcon,
 } from '@heroicons/react/outline'
 
 const navigation = [
   { title: 'Home', location: '/', icon: <HomeIcon className="h-5 w-5" /> },
-  { title: 'Profile', location: '/profile', icon: <EmojiHappyIcon className="h-5 w-5" /> },
-  { title: 'Schedule', location: '/schedule', icon: <CalendarIcon className="h-5 w-5" /> },
+  { title: 'Profile', location: '/profile', icon: <UserCircleIcon className="h-5 w-5" /> },
   { title: 'Planner', location: '/tts', icon: <CollectionIcon className="h-5 w-5" /> },
   { title: 'Exchange', location: '/feupexchange', icon: <SwitchHorizontalIcon className="h-5 w-5" /> },
 ]
