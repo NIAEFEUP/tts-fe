@@ -24,6 +24,6 @@ body {
 
 .checkbox {
   @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-darkish transition 
-  hover:bg-primary/50 hover:text-primary/50 focus:ring-transparent dark:bg-darkish dark:text-gray-500
-  dark:hover:bg-primary/30 dark:hover:text-primary/30 dark:focus:text-darkish dark:focus:ring-transparent;
+  hover:bg-primary/50 hover:text-primary/50 focus:ring-transparent dark:bg-darkish dark:checked:bg-gray-500
+  dark:indeterminate:bg-gray-500 dark:hover:bg-primary/50 dark:hover:text-primary/50 dark:focus:text-darkish dark:focus:ring-transparent;
 }
