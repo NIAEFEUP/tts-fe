@@ -8,7 +8,6 @@ import {
   CheckedMajorCourses,
   Course,
   CourseOptions,
-  CourseSchedule,
   Major,
   MajorCourses,
   YearCourses,

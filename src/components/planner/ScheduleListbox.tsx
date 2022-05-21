@@ -22,7 +22,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   }
 
   const adaptedSchedules = createAdaptedSchedules()
-  const [selected, setSelected] = selectedHook
+  const [, setSelected] = selectedHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
       })
       return newSelected
     })
-  }, [selectedOption, courseOption])
+  }, [selectedOption, courseOption, setSelected])
 
   return adaptedSchedules ? (
     <Listbox
