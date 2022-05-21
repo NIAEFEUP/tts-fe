@@ -19,7 +19,7 @@ body {
 }
 
 .min-h-adjusted {
-  min-height: calc(100vh - 3.5rem - 9rem); /* minHeight = pageHeight - headerHeight - footerHeight */
+  min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
 }
 
 .checkbox {
