@@ -103,7 +103,20 @@ const TimeTableSchedulerPage = () => {
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-8 py-4 px-6 md:px-4 xl:gap-x-4 xl:gap-y-0">
       {/* Schedule Preview */}
       <div className="min-h-adjusted order-2 col-span-12 bg-lightest p-3 dark:bg-dark md:order-1 lg:col-span-9">
-        <div className="w-full">Schedule preview content</div>
+        <div className="w-full">
+          <ul className="text-gray-700 font-medium">
+            {selected.map((courseOption, courseOptionIdx) => (
+              <li key={courseOptionIdx}>
+                <span>{courseOption.course.info.acronym}</span>
+                {courseOption.option ? (
+                  <span>
+                    : <strong>{courseOption.option.class_name}</strong>
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       {/* Sidebar */}
