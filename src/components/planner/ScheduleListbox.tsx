@@ -30,7 +30,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   }, [courseOption])
 
   useEffect(() => {
-    setSelected((prevSelected) => {
+    const resolveSelected = (prevSelected: CourseOptions) => {
       let newSelected = prevSelected
       prevSelected.forEach((option, optionIdx) => {
         if (option === courseOption) {
@@ -38,7 +38,9 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
         }
       })
       return newSelected
-    })
+    }
+
+    setSelected((prevSelected) => [...resolveSelected(prevSelected)])
   }, [selectedOption, courseOption, setSelected])
 
   return adaptedSchedules ? (

@@ -4,15 +4,7 @@ import ScheduleListbox from '../components/planner/ScheduleListbox'
 import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
 import { useState, useEffect } from 'react'
 import { majorsData, coursesData, schedulesData } from '../utils/data'
-import {
-  CheckedCourse,
-  CheckedMajorCourses,
-  Course,
-  CourseOptions,
-  Major,
-  MajorCourses,
-  YearCourses,
-} from '../@types'
+import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
 
 const TimeTableSchedulerPage = () => {
   const getMajors = () => {
@@ -79,13 +71,13 @@ const TimeTableSchedulerPage = () => {
   }, [major])
 
   useEffect(() => {
-    setSelected((prevSelected) =>
-      getCheckedCourses(courses).map((course: CheckedCourse) => ({
+    setSelected((prevSelected) => [
+      ...getCheckedCourses(courses).map((course: CheckedCourse) => ({
         course: course,
         option: null,
         schedules: getCourseSchedule(course),
-      }))
-    )
+      })),
+    ])
   }, [courses])
 
   return (
@@ -93,7 +85,7 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="min-h-adjusted order-2 col-span-12 bg-lightest p-3 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="w-full">
-          <Schedule selectedHook={[selected, setSelected]} />
+          <Schedule courseOptionsHook={[selected, setSelected]} />
         </div>
       </div>
 

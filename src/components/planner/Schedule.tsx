@@ -1,17 +1,17 @@
-import React from 'react'
 import '../../styles/schedule.css'
+import { useEffect } from 'react'
 import { CourseOptions } from '../../@types'
 
 type Props = {
-  selectedHook: [CourseOptions, React.Dispatch<React.SetStateAction<CourseOptions>>]
+  courseOptionsHook: [CourseOptions, React.Dispatch<React.SetStateAction<CourseOptions>>]
 }
 
-const Schedule = ({ selectedHook }: Props) => {
-  const [selected, setSelected] = selectedHook
+const Schedule = ({ courseOptionsHook }: Props) => {
+  const [courseOptions, setCourseOptions] = courseOptionsHook
 
   return (
     <div className="schedule">
-      {selected.map((courseOption, courseOptionIdx) => (
+      {courseOptions.map((courseOption, courseOptionIdx) => (
         <div key={courseOptionIdx}>
           <span>{courseOption.course.info.acronym}</span>
           {courseOption.option ? (
