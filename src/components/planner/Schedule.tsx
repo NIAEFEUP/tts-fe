@@ -1,14 +1,11 @@
 import '../../styles/schedule.css'
-import { useEffect } from 'react'
 import { CourseOptions } from '../../@types'
 
 type Props = {
-  courseOptionsHook: [CourseOptions, React.Dispatch<React.SetStateAction<CourseOptions>>]
+  courseOptions: CourseOptions
 }
 
-const Schedule = ({ courseOptionsHook }: Props) => {
-  const [courseOptions, setCourseOptions] = courseOptionsHook
-
+const Schedule = ({ courseOptions }: Props) => {
   return (
     <div className="schedule">
       {courseOptions.map((courseOption, courseOptionIdx) => (

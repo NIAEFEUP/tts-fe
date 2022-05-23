@@ -85,7 +85,7 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="min-h-adjusted order-2 col-span-12 bg-lightest p-3 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="w-full">
-          <Schedule courseOptionsHook={[selected, setSelected]} />
+          <Schedule courseOptions={selected} />
         </div>
       </div>
 
