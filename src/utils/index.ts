@@ -31,6 +31,13 @@ export const convertWeekday = (dayNumber: number) => {
   return weekdays[dayNumber - 1]
 }
 
+export const convertWeekdayLong = (dayNumber: number) => {
+  if (dayNumber < 1 || dayNumber > 8) return null
+
+  const weekdays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
+  return weekdays[dayNumber - 1]
+}
+
 export const convertHour = (hourNumber: number) => {
   if (hourNumber < 0 || hourNumber > 24) return null
 

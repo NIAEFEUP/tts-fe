@@ -1,30 +1,62 @@
 import '../../styles/schedule.css'
-import { CourseOptions } from '../../@types'
 import classNames from 'classnames'
+import { CourseOptions } from '../../@types'
+import { convertHour, convertWeekdayLong } from '../../utils'
 
 type Props = {
   courseOptions: CourseOptions
 }
 
+const minHour = 8
+const maxHour = 24
+
 const Schedule = ({ courseOptions }: Props) => {
+  const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
+  const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
+
   return (
-    <div className="schedule">
-      <ScheduleGrid courseOptions={courseOptions} />
+    <div className="schedule-area">
+      <div className="schedule-top">
+        <div className="schedule-top-empty">
+          <span>00:00</span>
+        </div>
+
+        <div className="schedule-top-days">
+          {dayValues.map((day: number, dayLabelIdx: number) => (
+            <span key={`day-label-${dayLabelIdx}`}>{convertWeekdayLong(day)}</span>
+          ))}
+        </div>
+      </div>
+
+      <div className="schedule-main">
+        {/* Left Side */}
+        <div className="schedule-main-left">
+          {hourValues.map((hour: number, hourLabelIdx: number) => (
+            <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour)}</span>
+          ))}
+        </div>
+
+        {/* Right Side */}
+        <div className="schedule-main-right">
+          {/* Schedule Grid */}
+          <div className="schedule-grid-wrapper">
+            <ScheduleGrid courseOptions={courseOptions} />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
 
 const ScheduleGrid = ({ courseOptions }: Props) => {
-  const minHour = 8
-  const maxHour = 24
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
   const hourValues = Array.from({ length: (maxHour - minHour) * 2 }, (_, i) => minHour + i * 0.5)
 
   return (
     <div className="schedule-grid">
-      {dayValues.map((dayValue, columnIdx) => (
+      {dayValues.map((dayValue: number, columnIdx: number) => (
         <div className={`schedule-column schedule-column-${columnIdx}`} key={`schedule-column-${columnIdx}`}>
-          {hourValues.map((hourValue, rowIdx) => (
+          {hourValues.map((hourValue: number, rowIdx: number) => (
             <div
               key={`schedule-row-${rowIdx}`}
               className={classNames(

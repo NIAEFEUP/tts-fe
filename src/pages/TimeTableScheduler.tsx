@@ -81,16 +81,16 @@ const TimeTableSchedulerPage = () => {
   }, [courses])
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-8 py-4 px-6 md:px-4 xl:gap-x-4 xl:gap-y-0">
+    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-6 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="min-h-adjusted order-2 col-span-12 bg-lightest p-3 dark:bg-dark md:order-1 lg:col-span-9">
+      <div className="rounded min-h-adjusted order-2 col-span-12 bg-lightest px-8 py-4 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="w-full h-full">
           <Schedule courseOptions={selected} />
         </div>
       </div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-1 col-span-12 bg-lightest p-3 dark:bg-dark md:order-2 lg:col-span-3">
+      <div className="rounded min-h-adjusted order-1 col-span-12 bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
         {/* Sidebar top */}
         <div className="flex flex-col items-center justify-center space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-3">
           <SelectionModal
