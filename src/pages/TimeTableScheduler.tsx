@@ -24,7 +24,7 @@ const TimeTableSchedulerPage = () => {
 
   const initializeMajor = (): Major => {
     const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
-    if (storedMajor === null) return { name: '' }
+    if (storedMajor === null) return null
     else return storedMajor
   }
 
@@ -52,9 +52,9 @@ const TimeTableSchedulerPage = () => {
 
   const initializeModalState = () => {
     if (process.env.REACT_APP_DEVELOPMENT) {
-      return major.name === '' ? true : false
+      return major?.name === '' ? true : false
     } else if (process.env.REACT_APP_PRODUCTION) {
-      return major.name !== '' && selected.length > 0 ? false : true
+      return major?.name !== '' && selected.length > 0 ? false : true
     } else return true
   }
 

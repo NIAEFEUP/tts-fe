@@ -32,14 +32,14 @@ export type CheckedMajorCourses = CheckedYearCourses[]
 /* Majors */
 export type Major = {
   name: string
-  // course_id: number
-  // faculty: number
-  // acronym: string
-  // course_type: string
-  // year: number
-  // url: string
-  // plan_url: string
-  // last_updated: string
+  course_id: number
+  faculty: number
+  acronym: string
+  course_type: string
+  year: number
+  url: string
+  plan_url: string
+  last_updated: string
 }
 
 /* Schedule */

@@ -16,8 +16,8 @@ type Props = {
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
   const initMajor = () => {
     const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
-    if (storedMajor === null) return { name: '' }
-    else return majors.find((item) => item.name === storedMajor.name)
+    if (storedMajor === null) return null
+    else return majors.find((item) => item.name === storedMajor?.name)
   }
 
   const [major, setMajor] = majorHook
@@ -31,16 +31,16 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     majorQuery === ''
       ? majors
       : majors.filter((major: Major) =>
-          major.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
+          major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
   useEffect(() => {
-    if (major.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
+    if (major?.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
   }, [major, courses, atLeastOneCourse])
 
   const closeModal = () => {
-    if (major.name !== '' && atLeastOneCourse) setIsOpen(false)
+    if (major?.name !== '' && atLeastOneCourse) setIsOpen(false)
     else setAlertLevel(AlertType.warning)
   }
 
@@ -139,7 +139,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
                           className="w-full rounded bg-gray-50 py-4 px-4 text-xs leading-5 text-gray-900 focus:shadow focus:ring-0 md:text-sm"
-                          displayValue={(major: Major) => major.name}
+                          displayValue={(major: Major) => major?.name}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
                             setMajorQuery(event.target.value)
                           }
@@ -173,7 +173,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                 key={majorIdx}
                                 className={({ active }) =>
                                   `relative cursor-pointer select-none py-2 px-3 ${
-                                    major.name !== '' ? 'pl-10' : 'pl-4'
+                                    major?.name !== '' ? 'pl-10' : 'pl-4'
                                   } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
                                 }
                                 value={major}
@@ -181,7 +181,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                 {({ selected, active }) => (
                                   <>
                                     <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
-                                      {major.name}
+                                      {major?.name}
                                     </span>
                                     {selected ? (
                                       <span
@@ -203,7 +203,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   </Combobox>
 
                   {/* Courses checkboxes */}
-                  {major.name !== '' ? (
+                  {major?.name !== '' ? (
                     <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8">
                       {courses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -271,12 +271,12 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                       className={classNames(
                         'inline-flex justify-center rounded-md border-2 border-teal-700/30 bg-green-50',
                         'px-4 py-2 text-sm font-medium text-teal-700 transition',
-                        major.name === '' || !atLeastOneCourse
+                        major?.name === '' || !atLeastOneCourse
                           ? 'cursor-not-allowed opacity-50'
                           : 'hover:bg-teal-700 hover:text-white'
                       )}
                       onClick={closeModal}
-                      disabled={major.name === '' || !atLeastOneCourse}
+                      disabled={major?.name === '' || !atLeastOneCourse}
                     >
                       Confirmar
                     </button>
