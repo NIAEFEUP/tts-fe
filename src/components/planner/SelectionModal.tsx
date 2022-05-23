@@ -48,6 +48,10 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     setIsOpen(true)
   }
 
+  const getDisplayMajorText = (major: Major) => (
+    major === null ? '' : `${major?.name} (${major?.acronym})`
+  )
+
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
     setCourses([...courses])
@@ -139,7 +143,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
                           className="w-full rounded bg-gray-50 py-4 px-4 text-xs leading-5 text-gray-900 focus:shadow focus:ring-0 md:text-sm"
-                          displayValue={(major: Major) => major?.name}
+                          displayValue={(major: Major) => getDisplayMajorText(major)}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
                             setMajorQuery(event.target.value)
                           }
@@ -181,7 +185,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                 {({ selected, active }) => (
                                   <>
                                     <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
-                                      {major?.name}
+                                      {getDisplayMajorText(major)}
                                     </span>
                                     {selected ? (
                                       <span
