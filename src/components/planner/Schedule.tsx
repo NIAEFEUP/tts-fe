@@ -7,12 +7,20 @@ type Props = {
   courseOptions: CourseOptions
 }
 
+type ClassesProps = {
+  course: Course
+  schedule: CourseSchedule
+  classesT: CourseSchedules
+}
+
 const minHour = 8
 const maxHour = 23
 
 const Schedule = ({ courseOptions }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
+  const classes = courseOptions.filter((item) => item.option !== null)
+  const classesT = classes.map((item) => item.schedules.filter((item) => item.lesson_type === 'T'))
 
   return (
     <div className="schedule-area">
@@ -38,7 +46,16 @@ const Schedule = ({ courseOptions }: Props) => {
         <div className="schedule-main-right">
           <div className="schedule-grid-wrapper">
             <ScheduleGrid />
-            <ScheduleClasses courseOptions={courseOptions} />
+            <div className="schedule-classes">
+              {classes.map((courseOption, courseOptionIdx) => (
+                <Classes
+                  key={`tp-${courseOptionIdx}`}
+                  course={courseOption.course.info}
+                  schedule={courseOption.option}
+                  classesT={classesT[courseOptionIdx]}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -70,30 +87,6 @@ const ScheduleGrid = () => {
   )
 }
 
-const ScheduleClasses = ({ courseOptions }: Props) => {
-  const classes = courseOptions.filter((item) => item.option !== null)
-  const classesT = classes.map((item) => item.schedules.filter((item) => item.lesson_type === 'T'))
-
-  return (
-    <div className="schedule-classes">
-      {classes.map((courseOption, courseOptionIdx) => (
-        <Classes
-          key={`tp-${courseOptionIdx}`}
-          course={courseOption.course.info}
-          schedule={courseOption.option}
-          classesT={classesT[courseOptionIdx]}
-        />
-      ))}
-    </div>
-  )
-}
-
-type ClassesProps = {
-  course: Course
-  schedule: CourseSchedule
-  classesT: CourseSchedules
-}
-
 const Classes = ({ course, schedule, classesT }: ClassesProps) => {
   const getStyles = (startTime: number, duration: number, day: number) => {
     const step = (maxHour - minHour) * 2
@@ -114,12 +107,12 @@ const Classes = ({ course, schedule, classesT }: ClassesProps) => {
     <>
       {/* Practical Class */}
       <div
+        style={stylesTP}
         className={classNames(
           'schedule-class',
           schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
           schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
         )}
-        style={stylesTP}
       >
         {schedule.duration > 1 ? (
           <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs tracking-tighter text-white xl:text-xs 2xl:p-2 2xl:text-base">
@@ -158,7 +151,7 @@ const Classes = ({ course, schedule, classesT }: ClassesProps) => {
         const stylesT = getStyles(schedule.start_time, schedule.duration, schedule.day)
 
         return (
-          <div className={classNames('schedule-class schedule-class-t')} style={stylesT} key={scheduleIdx}>
+          <div style={stylesT} key={scheduleIdx} className={classNames('schedule-class schedule-class-t')}>
             {schedule.duration > 1 ? (
               <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs tracking-tighter text-white xl:text-xs 2xl:p-1 2xl:text-sm">
                 <div className="flex w-full items-center justify-between">

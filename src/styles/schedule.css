@@ -128,3 +128,7 @@
 .schedule-class-lab {
   @apply bg-labs/70 hover:bg-labs;
 }
+
+.schedule-class-conflict {
+  @apply border-4 border-red-500;
+}
