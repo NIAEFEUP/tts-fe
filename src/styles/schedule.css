@@ -84,7 +84,8 @@
 
 /* Cells */
 .schedule-cell {
-  @apply m-0 h-[3.125%] w-full border-r border-gray-200 dark:border-[#f0f0ff33];
+  @apply m-0 w-full border-r border-gray-200 dark:border-[#f0f0ff33];
+  height: calc(100% / 30);
 }
 
 .schedule-cell-last-in-row {
