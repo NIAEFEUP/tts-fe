@@ -1,4 +1,3 @@
-/* Schedule */
 .schedule-area {
   @apply hidden h-full w-full flex-none lg:flex lg:flex-col;
 }
@@ -43,11 +42,44 @@
 
 /* Schedule Grid */
 .schedule-grid-wrapper {
-  @apply h-full w-full;
+  @apply relative h-full w-full;
 }
 
 .schedule-grid {
-  @apply relative h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
+  @apply absolute top-0 h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
+}
+
+.schedule-classes {
+  @apply absolute top-0 h-full w-full;
+}
+
+/* Columns */
+.schedule-column {
+  @apply absolute top-0 h-full w-1/6;
+}
+
+.schedule-column-0 {
+  @apply left-0;
+}
+
+.schedule-column-1 {
+  @apply left-1/6;
+}
+
+.schedule-column-2 {
+  @apply left-1/3;
+}
+
+.schedule-column-3 {
+  @apply left-1/2;
+}
+
+.schedule-column-4 {
+  @apply left-2/3;
+}
+
+.schedule-column-5 {
+  @apply left-5/6;
 }
 
 /* Cells */
@@ -79,33 +111,19 @@
   border-bottom: 1px solid #f0f0ff11;
 }
 
-/* Schedule Columns */
-.schedule-column {
-  @apply absolute top-0 h-full w-1/6;
+/* Classes */
+.schedule-class {
+  @apply absolute w-1/6 transition;
 }
 
-.schedule-column-0 {
-  @apply left-0;
+.schedule-class-t {
+  @apply bg-theoretical/80 hover:bg-theoretical;
 }
 
-.schedule-column-1 {
-  @apply left-1/6;
+.schedule-class-tp {
+  @apply bg-pratical/80 hover:bg-pratical;
 }
 
-.schedule-column-2 {
-  @apply left-1/3;
+.schedule-class-lab {
+  @apply bg-labs/80 hover:bg-labs;
 }
-
-.schedule-column-3 {
-  @apply left-1/2;
-}
-
-.schedule-column-4 {
-  @apply left-2/3;
-}
-
-.schedule-column-5 {
-  @apply left-5/6;
-}
-
-/*  */

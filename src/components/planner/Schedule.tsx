@@ -38,6 +38,7 @@ const Schedule = ({ courseOptions }: Props) => {
         <div className="schedule-main-right">
           <div className="schedule-grid-wrapper">
             <ScheduleGrid courseOptions={courseOptions} />
+            <ScheduleClasses courseOptions={courseOptions} />
           </div>
         </div>
       </div>
@@ -68,20 +69,37 @@ const ScheduleGrid = ({ courseOptions }: Props) => {
     </div>
   )
 }
+const ScheduleClasses = ({ courseOptions }: Props) => {
+  const getStyles = (startTime: number, duration: number, day: number) => {
+    const top = (startTime - minHour) * 2
+    const length = duration * 2
 
-const ScheduleClassBoxes = ({ courseOptions }: Props) => (
-  <>
-    {courseOptions.map((courseOption, courseOptionIdx) => (
-      <div key={courseOptionIdx}>
-        <span>{courseOption.course.info.acronym}</span>
-        {courseOption.option && (
-          <span>
-            : <strong>{courseOption.option.class_name}</strong>
-          </span>
-        )}
-      </div>
-    ))}
-  </>
-)
+    const styles = {
+      top: `${(top * 100) / 32}%`,
+      left: `${((day - 1) * 100) / 6}%`,
+      height: `${length * 3.125}%`,
+    }
+
+    return styles
+  }
+
+  return (
+    <div className="schedule-classes">
+      {courseOptions
+        .filter((item) => item.option !== null)
+        .map((courseOption, courseOptionIdx) => (
+          <div
+            key={courseOptionIdx}
+            className={classNames(
+              'schedule-class',
+              courseOption.option.lesson_type === 'TP' ? 'schedule-class-tp' : '',
+              courseOption.option.lesson_type === 'P' ? 'schedule-class-lab' : ''
+            )}
+            style={getStyles(courseOption.option.start_time, courseOption.option.duration, courseOption.option.day)}
+          ></div>
+        ))}
+    </div>
+  )
+}
 
 export default Schedule
