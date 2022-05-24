@@ -85,7 +85,7 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="min-h-adjusted order-2 col-span-12 rounded bg-lightest px-8 py-4 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="h-full w-full">
-          <Schedule courseOptions={selected} />
+          <Schedule courseOptions={selected} activeClassesT={classesT} activeClassesTP={classesTP} />
         </div>
       </div>
 
@@ -114,20 +114,20 @@ const TimeTableSchedulerPage = () => {
         </div>
 
         <div className="flex flex-col space-y-2 text-xs lg:text-sm">
-          <div className="inline-flex items-center space-x-1">
-            <span className="h-5 w-5 rounded border bg-theoretical shadow" />
+          <div className="inline-flex items-center space-x-1 lg:space-x-2">
+            <span className="h-5 w-5 rounded bg-theoretical shadow" />
             <span>Teóricas</span>
           </div>
-          <div className="inline-flex items-center space-x-1">
-            <span className="h-5 w-5 rounded border bg-practical shadow" />
+          <div className="inline-flex items-center space-x-1 lg:space-x-2">
+            <span className="h-5 w-5 rounded bg-practical shadow" />
             <span>Práticas</span>
           </div>
-          <div className="inline-flex items-center space-x-1">
-            <span className="h-5 w-5 rounded border bg-labs shadow" />
+          <div className="inline-flex items-center space-x-1 lg:space-x-2">
+            <span className="h-5 w-5 rounded bg-labs shadow" />
             <span>Laboratório</span>
           </div>
-          <div className="inline-flex items-center space-x-1">
-            <span className="h-5 w-5 rounded border bg-teal-600/50 shadow" />
+          <div className="inline-flex items-center space-x-1 lg:space-x-2">
+            <span className="h-5 w-5 rounded bg-teal-600/50 shadow" />
             <span>Almoço</span>
           </div>
         </div>

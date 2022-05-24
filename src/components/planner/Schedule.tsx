@@ -4,6 +4,8 @@ import { convertHour, convertWeekdayLong } from '../../utils'
 import { Course, CourseOptions, CourseSchedule, CourseSchedules } from '../../@types'
 
 type Props = {
+  activeClassesT: boolean
+  activeClassesTP: boolean
   courseOptions: CourseOptions
 }
 
@@ -11,12 +13,14 @@ type ClassesProps = {
   course: Course
   schedule: CourseSchedule
   classesT: CourseSchedules
+  activeClassesT: boolean
+  activeClassesTP: boolean
 }
 
 const minHour = 8
 const maxHour = 23
 
-const Schedule = ({ courseOptions }: Props) => {
+const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
   const classes = courseOptions.filter((item) => item.option !== null)
@@ -53,6 +57,8 @@ const Schedule = ({ courseOptions }: Props) => {
                   course={courseOption.course.info}
                   schedule={courseOption.option}
                   classesT={classesT[courseOptionIdx]}
+                  activeClassesT={activeClassesT}
+                  activeClassesTP={activeClassesTP}
                 />
               ))}
             </div>
@@ -88,7 +94,7 @@ const ScheduleGrid = () => {
   )
 }
 
-const Classes = ({ course, schedule, classesT }: ClassesProps) => {
+const Classes = ({ course, schedule, classesT, activeClassesT, activeClassesTP }: ClassesProps) => {
   const getStyles = (startTime: number, duration: number, day: number) => {
     const step = (maxHour - minHour) * 2
     const top = (startTime - minHour) * 2
@@ -107,85 +113,89 @@ const Classes = ({ course, schedule, classesT }: ClassesProps) => {
   return (
     <>
       {/* Practical Class */}
-      <div
-        style={stylesTP}
-        className={classNames(
-          'schedule-class',
-          schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
-          schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
-        )}
-      >
-        {schedule.duration > 1 ? (
-          <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
-            <div className="flex w-full items-center justify-between">
-              <span>{timeTP}</span>
-            </div>
+      {activeClassesTP && (
+        <div
+          style={stylesTP}
+          className={classNames(
+            'schedule-class',
+            schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
+            schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
+          )}
+        >
+          {schedule.duration > 1 ? (
+            <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
+              <div className="flex w-full items-center justify-between">
+                <span>{timeTP}</span>
+              </div>
 
-            <div className="flex w-full items-center justify-between">
-              <span className="font-semibold">{course.acronym}</span>
-              <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
-            </div>
+              <div className="flex w-full items-center justify-between">
+                <span className="font-semibold">{course.acronym}</span>
+                <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
+              </div>
 
-            <div className="flex w-full items-center justify-between">
-              <span>{schedule.location}</span>
-              <span>{schedule.teacher_acronym}</span>
+              <div className="flex w-full items-center justify-between">
+                <span>{schedule.location}</span>
+                <span>{schedule.teacher_acronym}</span>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
-            <div className="flex w-full items-center justify-between">
-              <span>{timeTP}</span>
-              <span className="font-semibold">{course.acronym}</span>
-            </div>
+          ) : (
+            <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
+              <div className="flex w-full items-center justify-between">
+                <span>{timeTP}</span>
+                <span className="font-semibold">{course.acronym}</span>
+              </div>
 
-            <div className="flex w-full items-center justify-between">
-              <span>{schedule.location}</span>
-              <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
-              <span>{schedule.teacher_acronym}</span>
+              <div className="flex w-full items-center justify-between">
+                <span>{schedule.location}</span>
+                <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
+                <span>{schedule.teacher_acronym}</span>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
+
       {/* All Theoretical Classes */}
-      {classesT.map((schedule, scheduleIdx) => {
-        const timeT = `${convertHour(schedule.start_time)}-${convertHour(schedule.start_time + schedule.duration)}`
-        const stylesT = getStyles(schedule.start_time, schedule.duration, schedule.day)
+      {activeClassesT &&
+        classesT.map((schedule, scheduleIdx) => {
+          const timeT = `${convertHour(schedule.start_time)}-${convertHour(schedule.start_time + schedule.duration)}`
+          const stylesT = getStyles(schedule.start_time, schedule.duration, schedule.day)
 
-        return (
-          <div style={stylesT} key={scheduleIdx} className={classNames('schedule-class schedule-class-t')}>
-            {schedule.duration > 1 ? (
-              <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
-                <div className="flex w-full items-center justify-between">
-                  <span>{timeT}</span>
-                </div>
+          return (
+            <div style={stylesT} key={scheduleIdx} className={classNames('schedule-class schedule-class-t')}>
+              {schedule.duration > 1 ? (
+                <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
+                  <div className="flex w-full items-center justify-between">
+                    <span>{timeT}</span>
+                  </div>
 
-                <div className="flex w-full items-center justify-between">
-                  <span className="font-semibold">{course.acronym}</span>
-                  <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
-                </div>
+                  <div className="flex w-full items-center justify-between">
+                    <span className="font-semibold">{course.acronym}</span>
+                    <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
+                  </div>
 
-                <div className="flex w-full items-center justify-between">
-                  <span>{schedule.location}</span>
-                  <span>{schedule.teacher_acronym}</span>
+                  <div className="flex w-full items-center justify-between">
+                    <span>{schedule.location}</span>
+                    <span>{schedule.teacher_acronym}</span>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
-                <div className="flex w-full items-center justify-between">
-                  <span>{timeT}</span>
-                  <span className="font-semibold">{course.acronym}</span>
-                </div>
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
+                  <div className="flex w-full items-center justify-between">
+                    <span>{timeT}</span>
+                    <span className="font-semibold">{course.acronym}</span>
+                  </div>
 
-                <div className="flex w-full items-center justify-between">
-                  <span>{schedule.location}</span>
-                  <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
-                  <span>{schedule.teacher_acronym}</span>
+                  <div className="flex w-full items-center justify-between">
+                    <span>{schedule.location}</span>
+                    <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
+                    <span>{schedule.teacher_acronym}</span>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )
-      })}
+              )}
+            </div>
+          )
+        })}
     </>
   )
 }
