@@ -71,6 +71,12 @@ const TimeTableSchedulerPage = () => {
   }, [major])
 
   useEffect(() => {
+    // eslint-disable-next-line
+    const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
+      const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
+      return value ? value.option : null
+    }
+
     setSelected((prevSelected) => [
       ...getCheckedCourses(courses).map((course: CheckedCourse) => ({
         course: course,
@@ -90,7 +96,7 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
+      <div className="min-h-adjusted order-1 col-span-12 flex flex-col space-y-2 justify-between rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
         <div>
           <div className="flex flex-col items-center justify-center space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-3">
             <SelectionModal
@@ -101,7 +107,7 @@ const TimeTableSchedulerPage = () => {
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
-          <div className="mt-3 flex flex-col space-y-4 border-t py-3 px-0">
+          <div className="mt-3 flex flex-col space-y-5 border-t py-3 px-0">
             {selected.length > 0 &&
               selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox

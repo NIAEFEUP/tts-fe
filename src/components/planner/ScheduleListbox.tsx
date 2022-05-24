@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { CourseOption, CourseOptions, CourseSchedule } from '../../@types'
+import { Course, CourseOption, CourseOptions, CourseSchedule } from '../../@types'
 import { convertHour, convertWeekday } from '../../utils'
 
 type Props = {
@@ -24,6 +24,8 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   const adaptedSchedules = createAdaptedSchedules()
   const [, setSelected] = selectedHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
+  const [classesT, setClassesT] = useState<boolean>(true)
+  const [classesTP, setClassesTP] = useState<boolean>(true)
 
   useEffect(() => {
     setSelectedOption(null)
@@ -93,9 +95,60 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
             ))}
           </Listbox.Options>
         </Transition>
+        <ShowHideClassesCheckboxes
+          course={courseOption.course.info}
+          classesTHook={[classesT, setClassesT]}
+          classesTPHook={[classesTP, setClassesTP]}
+        />
       </div>
     </Listbox>
   ) : null
+}
+
+type CheckboxesProps = {
+  course: Course
+  classesTHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+  classesTPHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+}
+
+const ShowHideClassesCheckboxes = ({ course, classesTHook, classesTPHook }: CheckboxesProps) => {
+  const [classesT, setClassesT] = classesTHook
+  const [classesTP, setClassesTP] = classesTPHook
+
+  return (
+    <div className="mt-1 flex items-center justify-start space-x-4">
+      <div className="flex items-center justify-center space-x-1">
+        <input
+          type="checkbox"
+          id={`checkbox-classes-t-${course.acronym}`}
+          className="checkbox-small"
+          checked={classesT}
+          onChange={(event) => setClassesT(event.target.checked)}
+        />
+        <label
+          className="cursor-pointer text-xs font-medium capitalize tracking-tight"
+          htmlFor={`checkbox-classes-t-${course.acronym}`}
+        >
+          <span>Teóricas</span>
+        </label>
+      </div>
+      <div className="flex items-center justify-center space-x-1">
+        <input
+          type="checkbox"
+          id={`checkbox-classes-tp-${course.acronym}`}
+          className="checkbox-small"
+          checked={classesTP}
+          onChange={(event) => setClassesTP(event.target.checked)}
+        />
+        <label
+          className="cursor-pointer text-xs font-medium capitalize tracking-tight"
+          htmlFor={`checkbox-classes-tp-${course.acronym}`}
+        >
+          <span>Práticas</span>
+        </label>
+      </div>
+    </div>
+  )
 }
 
 export default ScheduleListbox
