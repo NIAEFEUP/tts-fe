@@ -129,6 +129,10 @@
   @apply border-labs bg-labs/70 ring-labs hover:bg-labs;
 }
 
+.schedule-class-lunch {
+  @apply bg-teal-600/50;
+}
+
 .schedule-class-conflict {
   @apply ring-2 ring-red-500;
 }

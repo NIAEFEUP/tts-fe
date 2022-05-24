@@ -76,6 +76,7 @@ const ScheduleGrid = () => {
               key={`schedule-row-${rowIdx}`}
               className={classNames(
                 'schedule-cell',
+                hourValue >= 13 && hourValue < 14 ? 'schedule-class-lunch' : '',
                 rowIdx === hourValues.length - 1 ? 'schedule-cell-last-in-row' : '',
                 columnIdx === dayValues.length - 1 ? 'schedule-cell-last-in-column' : ''
               )}
