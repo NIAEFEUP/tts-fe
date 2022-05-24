@@ -115,7 +115,7 @@ const Classes = ({ course, schedule, classesT }: ClassesProps) => {
         )}
       >
         {schedule.duration > 1 ? (
-          <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs tracking-tighter text-white xl:text-xs 2xl:p-2 2xl:text-base">
+          <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
             <div className="flex w-full items-center justify-between">
               <span>{timeTP}</span>
             </div>
@@ -153,7 +153,7 @@ const Classes = ({ course, schedule, classesT }: ClassesProps) => {
         return (
           <div style={stylesT} key={scheduleIdx} className={classNames('schedule-class schedule-class-t')}>
             {schedule.duration > 1 ? (
-              <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs tracking-tighter text-white xl:text-xs 2xl:p-1 2xl:text-sm">
+              <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
                 <div className="flex w-full items-center justify-between">
                   <span>{timeT}</span>
                 </div>

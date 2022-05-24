@@ -118,15 +118,15 @@
 }
 
 .schedule-class-t {
-  @apply bg-theoretical/70 hover:bg-theoretical;
+  @apply bg-theoretical/60 hover:bg-theoretical;
 }
 
 .schedule-class-tp {
-  @apply bg-pratical/70 hover:bg-pratical;
+  @apply bg-pratical/60 hover:bg-pratical;
 }
 
 .schedule-class-lab {
-  @apply bg-labs/70 hover:bg-labs;
+  @apply bg-labs/60 hover:bg-labs;
 }
 
 .schedule-class-conflict {
