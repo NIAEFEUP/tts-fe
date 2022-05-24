@@ -115,6 +115,19 @@ const ShowHideClassesCheckboxes = ({ course, classesTHook, classesTPHook }: Chec
   const [classesT, setClassesT] = classesTHook
   const [classesTP, setClassesTP] = classesTPHook
 
+  // const getStorage = () => {
+  //   const showClasses = JSON.parse(localStorage.getItem('niaefeup-tts.states'))
+  //   if (showClasses === null) {
+  //     let item = { 'show-classes': [] }
+  //     putStorage(item)
+  //     return item
+  //   } else return showClasses
+  // }
+
+  // const putStorage = (item: any) => {
+  //   localStorage.setItem('niaefeup-tts.show-classes', JSON.stringify(item))
+  // }
+
   return (
     <div className="mt-1 flex items-center justify-start space-x-4">
       <div className="flex items-center justify-center space-x-1">
@@ -123,7 +136,14 @@ const ShowHideClassesCheckboxes = ({ course, classesTHook, classesTPHook }: Chec
           id={`checkbox-classes-t-${course.acronym}`}
           className="checkbox-small"
           checked={classesT}
-          onChange={(event) => setClassesT(event.target.checked)}
+          onChange={(event) => {
+            const value = event.target.checked
+            setClassesT(value)
+
+            // let storageStates = getStorage()
+            // storageStates['show-classes'][`t-${course.acronym}`] = value
+            // putStorage(storageStates)
+          }}
         />
         <label
           className="cursor-pointer text-xs font-medium capitalize tracking-tight"
