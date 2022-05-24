@@ -81,7 +81,7 @@ const TimeTableSchedulerPage = () => {
   }, [courses])
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-6 xl:gap-x-8 xl:gap-y-0">
+    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
       <div className="rounded min-h-adjusted order-2 col-span-12 bg-lightest px-8 py-4 dark:bg-dark md:order-1 lg:col-span-9">
         <div className="w-full h-full">

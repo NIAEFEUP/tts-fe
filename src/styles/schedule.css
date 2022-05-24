@@ -113,17 +113,17 @@
 
 /* Classes */
 .schedule-class {
-  @apply absolute w-1/6 transition;
+  @apply absolute w-1/6 border-0 transition;
 }
 
 .schedule-class-t {
-  @apply bg-theoretical/80 hover:bg-theoretical;
+  @apply bg-theoretical/70 hover:bg-theoretical;
 }
 
 .schedule-class-tp {
-  @apply bg-pratical/80 hover:bg-pratical;
+  @apply bg-pratical/70 hover:bg-pratical;
 }
 
 .schedule-class-lab {
-  @apply bg-labs/80 hover:bg-labs;
+  @apply bg-labs/70 hover:bg-labs;
 }

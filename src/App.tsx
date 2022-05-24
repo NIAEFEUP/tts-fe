@@ -1,12 +1,11 @@
 import Layout from './components/layout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { HomePage, ProfilePage, SchedulePage, FeupExchangePage, TimeTableSchedulerPage } from './pages'
+import { HomePage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage } from './pages'
 import './index.css'
 
 const pages = [
   { path: '/', location: 'Home', element: HomePage, liquid: true },
   { path: '/profile', location: 'Profile', element: ProfilePage, liquid: true },
-  { path: '/schedule', location: 'Schedule', element: SchedulePage, liquid: true },
   { path: '/tts', location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
   { path: '/feupexchange', location: 'Exchange', element: FeupExchangePage, liquid: true },
 ]
