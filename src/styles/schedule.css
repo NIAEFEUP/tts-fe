@@ -42,11 +42,11 @@
 
 /* Schedule Grid */
 .schedule-grid-wrapper {
-  @apply relative h-full w-full;
+  @apply relative h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
 }
 
 .schedule-grid {
-  @apply absolute top-0 h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
+  @apply absolute top-0 h-full w-full;
 }
 
 .schedule-classes {
@@ -84,7 +84,7 @@
 
 /* Cells */
 .schedule-cell {
-  @apply m-0 w-full border-r border-gray-200 dark:border-[#f0f0ff33];
+  @apply w-full border-r border-gray-200 dark:border-[#f0f0ff33];
   height: calc(100% / 30);
 }
 
@@ -114,21 +114,21 @@
 
 /* Classes */
 .schedule-class {
-  @apply absolute w-1/6 border-0 transition;
+  @apply absolute z-10 w-1/6 border-0 transition hover:ring-0;
 }
 
 .schedule-class-t {
-  @apply bg-theoretical/60 hover:bg-theoretical;
+  @apply border-theoretical bg-theoretical/70 ring-theoretical hover:bg-theoretical;
 }
 
 .schedule-class-tp {
-  @apply bg-pratical/60 hover:bg-pratical;
+  @apply border-practical bg-practical/70 ring-practical hover:bg-practical;
 }
 
 .schedule-class-lab {
-  @apply bg-labs/60 hover:bg-labs;
+  @apply border-labs bg-labs/70 ring-labs hover:bg-labs;
 }
 
 .schedule-class-conflict {
-  @apply border-4 border-red-500;
+  @apply ring-2 ring-red-500;
 }

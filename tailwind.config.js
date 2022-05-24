@@ -19,7 +19,7 @@ module.exports = {
         tertiary: '#C1D2D6',
         feup: '#893632', // 7D221E
         labs: '#4F2E2E',
-        pratical: '#69656A',
+        practical: '#69656A',
         theoretical: '#A8A199',
         'primary-light': '#BF6060',
         'secondary-light': '#9E5956',
@@ -27,7 +27,7 @@ module.exports = {
         'feup-dark': '#ECC2C1',
         'feup-light': '#9E5956',
         'labs-light': '#725757',
-        'pratical-light': '#868387',
+        'practical-light': '#868387',
         'theoretical-light': '#B9B3AD',
       },
       spacing: {
