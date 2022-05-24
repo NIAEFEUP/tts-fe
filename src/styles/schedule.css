@@ -43,16 +43,16 @@
 
 /* Schedule Grid */
 .schedule-grid-wrapper {
-  @apply h-full w-full rounded border border-gray-200 font-medium shadow dark:border-gray-600;
+  @apply h-full w-full;
 }
 
 .schedule-grid {
-  @apply relative h-full w-full;
+  @apply relative h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
 }
 
 /* Cells */
 .schedule-cell {
-  @apply m-0 h-[3.125%] w-full border-r border-gray-200 dark:border-gray-600;
+  @apply m-0 h-[3.125%] w-full border-r border-gray-200 dark:border-[#f0f0ff33];
 }
 
 .schedule-cell-last-in-row {
@@ -72,16 +72,16 @@
 }
 
 .dark .schedule-cell:nth-child(even) {
-  border-bottom: 1px solid theme('colors.gray.600');
+  border-bottom: 1px solid #f0f0ff33;
 }
 
 .dark .schedule-cell:nth-child(odd) {
-  border-bottom: 1px solid theme('colors.gray.600');
+  border-bottom: 1px solid #f0f0ff11;
 }
 
 /* Schedule Columns */
 .schedule-column {
-  @apply absolute top-0 left-0 h-full w-1/6;
+  @apply absolute top-0 h-full w-1/6;
 }
 
 .schedule-column-0 {
@@ -89,7 +89,7 @@
 }
 
 .schedule-column-1 {
-  @apply left-[16.6666666667%];
+  @apply left-1/6;
 }
 
 .schedule-column-2 {
@@ -105,5 +105,7 @@
 }
 
 .schedule-column-5 {
-  @apply left-[83.3333333333%];
+  @apply left-5/6;
 }
+
+/*  */

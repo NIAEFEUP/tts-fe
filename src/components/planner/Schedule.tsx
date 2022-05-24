@@ -29,16 +29,13 @@ const Schedule = ({ courseOptions }: Props) => {
       </div>
 
       <div className="schedule-main">
-        {/* Left Side */}
         <div className="schedule-main-left">
           {hourValues.map((hour: number, hourLabelIdx: number) => (
             <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour)}</span>
           ))}
         </div>
 
-        {/* Right Side */}
         <div className="schedule-main-right">
-          {/* Schedule Grid */}
           <div className="schedule-grid-wrapper">
             <ScheduleGrid courseOptions={courseOptions} />
           </div>
@@ -72,7 +69,7 @@ const ScheduleGrid = ({ courseOptions }: Props) => {
   )
 }
 
-const SchedulesText = ({ courseOptions }: Props) => (
+const ScheduleClassBoxes = ({ courseOptions }: Props) => (
   <>
     {courseOptions.map((courseOption, courseOptionIdx) => (
       <div key={courseOptionIdx}>

@@ -30,6 +30,10 @@ module.exports = {
         'pratical-light': '#868387',
         'theoretical-light': '#B9B3AD',
       },
+      spacing: {
+        '1/6': '16.6666666667%',
+        '5/6': '83.3333333333%',
+      },
       flex: {
         end: '0 1 auto',
       },
