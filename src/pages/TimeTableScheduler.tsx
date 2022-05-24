@@ -83,35 +83,53 @@ const TimeTableSchedulerPage = () => {
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="rounded min-h-adjusted order-2 col-span-12 bg-lightest px-8 py-4 dark:bg-dark md:order-1 lg:col-span-9">
-        <div className="w-full h-full">
+      <div className="min-h-adjusted order-2 col-span-12 rounded bg-lightest px-8 py-4 dark:bg-dark md:order-1 lg:col-span-9">
+        <div className="h-full w-full">
           <Schedule courseOptions={selected} />
         </div>
       </div>
 
       {/* Sidebar */}
-      <div className="rounded min-h-adjusted order-1 col-span-12 bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
-        {/* Sidebar top */}
-        <div className="flex flex-col items-center justify-center space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-3">
-          <SelectionModal
-            majors={majors}
-            openHook={[isModalOpen, setIsModalOpen]}
-            majorHook={[major, setMajor]}
-            coursesHook={[courses, setCourses]}
-          />
-          <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
+      <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
+        <div>
+          <div className="flex flex-col items-center justify-center space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-3">
+            <SelectionModal
+              majors={majors}
+              openHook={[isModalOpen, setIsModalOpen]}
+              majorHook={[major, setMajor]}
+              coursesHook={[courses, setCourses]}
+            />
+            <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
+          </div>
+          <div className="mt-3 flex flex-col space-y-4 border-t py-3 px-0">
+            {selected.length > 0 &&
+              selected.map((courseOption, courseOptionIdx) => (
+                <ScheduleListbox
+                  courseOption={courseOption}
+                  selectedHook={[selected, setSelected]}
+                  key={`course-schedule-listbox-${courseOptionIdx}`}
+                />
+              ))}
+          </div>
         </div>
 
-        {/* Dropdowns */}
-        <div className="mt-3 flex flex-col space-y-4 border-t py-3 px-0">
-          {selected.length > 0 &&
-            selected.map((courseOption, courseOptionIdx) => (
-              <ScheduleListbox
-                courseOption={courseOption}
-                selectedHook={[selected, setSelected]}
-                key={`course-schedule-listbox-${courseOptionIdx}`}
-              />
-            ))}
+        <div className="flex flex-col space-y-2 text-xs lg:text-sm">
+          <div className="inline-flex items-center space-x-1">
+            <span className="h-5 w-5 rounded border bg-theoretical shadow" />
+            <span>Teóricas</span>
+          </div>
+          <div className="inline-flex items-center space-x-1">
+            <span className="h-5 w-5 rounded border bg-practical shadow" />
+            <span>Práticas</span>
+          </div>
+          <div className="inline-flex items-center space-x-1">
+            <span className="h-5 w-5 rounded border bg-labs shadow" />
+            <span>Laboratório</span>
+          </div>
+          <div className="inline-flex items-center space-x-1">
+            <span className="h-5 w-5 rounded border bg-teal-600/50 shadow" />
+            <span>Almoço</span>
+          </div>
         </div>
       </div>
     </div>
