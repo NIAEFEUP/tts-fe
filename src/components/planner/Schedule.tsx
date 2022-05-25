@@ -1,7 +1,7 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { convertHour, convertWeekdayLong } from '../../utils'
-import { Subject, Course, CourseOptions, CourseSchedule, CourseSchedules } from '../../@types'
+import { Subject, CourseOptions, CourseSchedule } from '../../@types'
 import { useMemo } from 'react'
 
 type Props = {

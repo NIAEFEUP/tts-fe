@@ -1,8 +1,9 @@
-import { useState, useEffect, Fragment } from 'react'
+import { useState, useEffect, Fragment, useMemo } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CourseOption, CourseOptions, CourseSchedule } from '../../@types'
 import { convertHour, convertWeekday } from '../../utils'
+import useShownSubjects from '../../hooks/useShownSubjects'
 
 type Props = {
   courseOption: CourseOption
@@ -10,58 +11,40 @@ type Props = {
 }
 
 const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
-  const createAdaptedSchedules = () => {
+  const [, setSelected] = selectedHook
+  const [shownSubjects, setShownSubjects] = useShownSubjects()
+  const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
+
+  const [classesTShown, setClassesTShown] = useState<boolean>(() => {
+    const key = 't-' + courseOption.course.info.acronym
+    const value = shownSubjects[key]
+    return value ? value : true
+  })
+
+  const [classesTPShown, setClassesTPShown] = useState<boolean>(() => {
+    const key = 'tp-' + courseOption.course.info.acronym
+    const value = shownSubjects[key]
+    return value ? value : true
+  })
+
+  const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
       .flat()
       .filter((option: CourseSchedule | null) => null || option?.class_name !== null)
-  }
+  }, [courseOption])
 
   const getOptionDisplayText = (option: CourseSchedule | null) => {
     if (option === null || !option.course_unit_id) return <>&nbsp;</>
     return `${option.class_name}, ${option.teacher_acronym}, ${convertWeekday(option.day)}, ${convertHour(option.start_time)}-${convertHour(option.start_time + option.duration)}` //prettier-ignore
   }
 
-  const getStorage = () => {
-    const showClasses = JSON.parse(localStorage.getItem('niaefeup-tts.shown-classes'))
-
-    if (showClasses === null) {
-      let item = []
-      putStorage(item)
-      return item
-    } else return showClasses
-  }
-
-  const putStorage = (item: any) => {
-    localStorage.setItem('niaefeup-tts.shown-classes', JSON.stringify(item))
-  }
-
-  const initCheckbox = (type: 't' | 'tp') => {
-    const key = type + '-' + courseOption.course.info.acronym
-    const value = getStorage()[key]
-
-    return value ? value : true
-  }
-
-  const updateStorage = (type: 't' | 'tp', value: boolean): void => {
-    // FIXME: move local storage logic to hook
-    // const key = type + '-' + courseOption.course.info.acronym
-    // let storageState = getStorage()
-    // storageState[key] = value
-
+  const updateShown = (type: 't' | 'tp', value: boolean): void => {
     if (type === 't') {
-      setClassesT(value)
-      // putStorage(storageState)
+      setClassesTShown(value)
     } else if (type === 'tp') {
-      setClassesTP(value)
-      // putStorage(storageState)
+      setClassesTPShown(value)
     }
   }
-
-  const adaptedSchedules = createAdaptedSchedules()
-  const [, setSelected] = selectedHook
-  const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
-  const [classesT, setClassesT] = useState<boolean>(initCheckbox('t'))
-  const [classesTP, setClassesTP] = useState<boolean>(initCheckbox('tp'))
 
   useEffect(() => {
     setSelectedOption(null)
@@ -77,7 +60,6 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
       })
       return newSelected
     }
-
     setSelected((prevSelected) => [...resolveSelected(prevSelected)])
   }, [selectedOption, courseOption, setSelected])
 
@@ -139,8 +121,8 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
               type="checkbox"
               id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
               className="checkbox-small"
-              checked={classesT}
-              onChange={(event) => updateStorage('t', event.target.checked)}
+              checked={classesTShown}
+              onChange={(event) => updateShown('t', event.target.checked)}
             />
             <label
               className="cursor-pointer text-xs font-medium capitalize tracking-tight"
@@ -154,8 +136,8 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
               type="checkbox"
               id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
               className="checkbox-small"
-              checked={classesTP}
-              onChange={(event) => updateStorage('tp', event.target.checked)}
+              checked={classesTPShown}
+              onChange={(event) => updateShown('tp', event.target.checked)}
             />
             <label
               className="cursor-pointer text-xs font-medium capitalize tracking-tight"
