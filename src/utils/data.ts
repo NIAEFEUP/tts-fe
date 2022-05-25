@@ -434,4 +434,16 @@ export const schedulesData: CourseSchedules = [
     class_name: '3LEIC09',
     composed_class_name: null,
   },
+  {
+    day: 5,
+    duration: 3.0,
+    start_time: 14,
+    location: 'B304',
+    lesson_type: 'P',
+    teacher_acronym: 'HSF',
+    course_unit_id: 484442,
+    last_updated: '2022-05-17T21:45:51Z',
+    class_name: '3LEIC10',
+    composed_class_name: null,
+  },
 ]

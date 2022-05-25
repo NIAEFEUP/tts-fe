@@ -66,3 +66,9 @@ export type CourseOption = {
   schedules: CourseSchedules
 }
 export type CourseOptions = CourseOption[]
+
+export type Subject = {
+  course: Course
+  practicalLesson: CourseSchedule
+  theoreticalLessons: CourseSchedule[]
+}
