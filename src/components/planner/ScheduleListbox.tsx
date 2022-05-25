@@ -21,11 +21,40 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
     return `${option.class_name}, ${option.teacher_acronym}, ${convertWeekday(option.day)}, ${convertHour(option.start_time)}-${convertHour(option.start_time + option.duration)}` //prettier-ignore
   }
 
+  const getStorage = () => {
+    const showClasses = JSON.parse(localStorage.getItem('niaefeup-tts.shown-classes'))
+
+    if (showClasses === null) {
+      let item = []
+      putStorage(item)
+      return item
+    } else return showClasses
+  }
+
+  const putStorage = (item: any) => {
+    localStorage.setItem('niaefeup-tts.shown-classes', JSON.stringify(item))
+  }
+
+  const initCheckbox = (type: 't' | 'tp') => {
+    const key = type + '-' + courseOption.course.info.acronym
+    const value = getStorage()[key]
+
+    return value ? value : true
+  }
+
+  const updateStorage = (type: 't' | 'tp', value: boolean): void => {
+    // FIXME:
+    const key = type + '-' + courseOption.course.info.acronym
+    let storageState = getStorage()
+    storageState[key] = value
+    putStorage(storageState)
+  }
+
   const adaptedSchedules = createAdaptedSchedules()
   const [, setSelected] = selectedHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
-  const [classesT, setClassesT] = useState<boolean>(true)
-  const [classesTP, setClassesTP] = useState<boolean>(true)
+  const [classesT, setClassesT] = useState<boolean>(initCheckbox('t'))
+  const [classesTP, setClassesTP] = useState<boolean>(initCheckbox('tp'))
 
   useEffect(() => {
     setSelectedOption(null)
@@ -44,6 +73,14 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
     setSelected((prevSelected) => [...resolveSelected(prevSelected)])
   }, [selectedOption, courseOption, setSelected])
+
+  useEffect(() => {
+    updateStorage('t', classesT)
+  }, [classesT])
+
+  useEffect(() => {
+    updateStorage('tp', classesTP)
+  }, [classesTP])
 
   return adaptedSchedules ? (
     <Listbox
@@ -95,80 +132,43 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
             ))}
           </Listbox.Options>
         </Transition>
-        <ShowHideClassesCheckboxes
-          course={courseOption.course.info}
-          classesTHook={[classesT, setClassesT]}
-          classesTPHook={[classesTP, setClassesTP]}
-        />
+
+        {/* Show/Hide Checkboxes */}
+        <div className="mt-1 flex items-center justify-start space-x-4">
+          <div className="flex items-center justify-center space-x-1">
+            <input
+              type="checkbox"
+              id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
+              className="checkbox-small"
+              checked={classesT}
+              onChange={(event) => setClassesT(event.target.checked)}
+            />
+            <label
+              className="cursor-pointer text-xs font-medium capitalize tracking-tight"
+              htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
+            >
+              <span>Teóricas</span>
+            </label>
+          </div>
+          <div className="flex items-center justify-center space-x-1">
+            <input
+              type="checkbox"
+              id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
+              className="checkbox-small"
+              checked={classesTP}
+              onChange={(event) => setClassesTP(event.target.checked)}
+            />
+            <label
+              className="cursor-pointer text-xs font-medium capitalize tracking-tight"
+              htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
+            >
+              <span>Práticas</span>
+            </label>
+          </div>
+        </div>
       </div>
     </Listbox>
   ) : null
-}
-
-type CheckboxesProps = {
-  course: Course
-  classesTHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  classesTPHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-}
-
-const ShowHideClassesCheckboxes = ({ course, classesTHook, classesTPHook }: CheckboxesProps) => {
-  const [classesT, setClassesT] = classesTHook
-  const [classesTP, setClassesTP] = classesTPHook
-
-  // const getStorage = () => {
-  //   const showClasses = JSON.parse(localStorage.getItem('niaefeup-tts.states'))
-  //   if (showClasses === null) {
-  //     let item = { 'show-classes': [] }
-  //     putStorage(item)
-  //     return item
-  //   } else return showClasses
-  // }
-
-  // const putStorage = (item: any) => {
-  //   localStorage.setItem('niaefeup-tts.show-classes', JSON.stringify(item))
-  // }
-
-  return (
-    <div className="mt-1 flex items-center justify-start space-x-4">
-      <div className="flex items-center justify-center space-x-1">
-        <input
-          type="checkbox"
-          id={`checkbox-classes-t-${course.acronym}`}
-          className="checkbox-small"
-          checked={classesT}
-          onChange={(event) => {
-            const value = event.target.checked
-            setClassesT(value)
-
-            // let storageStates = getStorage()
-            // storageStates['show-classes'][`t-${course.acronym}`] = value
-            // putStorage(storageStates)
-          }}
-        />
-        <label
-          className="cursor-pointer text-xs font-medium capitalize tracking-tight"
-          htmlFor={`checkbox-classes-t-${course.acronym}`}
-        >
-          <span>Teóricas</span>
-        </label>
-      </div>
-      <div className="flex items-center justify-center space-x-1">
-        <input
-          type="checkbox"
-          id={`checkbox-classes-tp-${course.acronym}`}
-          className="checkbox-small"
-          checked={classesTP}
-          onChange={(event) => setClassesTP(event.target.checked)}
-        />
-        <label
-          className="cursor-pointer text-xs font-medium capitalize tracking-tight"
-          htmlFor={`checkbox-classes-tp-${course.acronym}`}
-        >
-          <span>Práticas</span>
-        </label>
-      </div>
-    </div>
-  )
 }
 
 export default ScheduleListbox
