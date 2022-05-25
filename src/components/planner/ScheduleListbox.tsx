@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { Course, CourseOption, CourseOptions, CourseSchedule } from '../../@types'
+import { CourseOption, CourseOptions, CourseSchedule } from '../../@types'
 import { convertHour, convertWeekday } from '../../utils'
 
 type Props = {
@@ -43,11 +43,18 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   }
 
   const updateStorage = (type: 't' | 'tp', value: boolean): void => {
-    // FIXME:
-    const key = type + '-' + courseOption.course.info.acronym
-    let storageState = getStorage()
-    storageState[key] = value
-    putStorage(storageState)
+    // FIXME: move local storage logic to hook
+    // const key = type + '-' + courseOption.course.info.acronym
+    // let storageState = getStorage()
+    // storageState[key] = value
+
+    if (type === 't') {
+      setClassesT(value)
+      // putStorage(storageState)
+    } else if (type === 'tp') {
+      setClassesTP(value)
+      // putStorage(storageState)
+    }
   }
 
   const adaptedSchedules = createAdaptedSchedules()
@@ -73,14 +80,6 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
     setSelected((prevSelected) => [...resolveSelected(prevSelected)])
   }, [selectedOption, courseOption, setSelected])
-
-  useEffect(() => {
-    updateStorage('t', classesT)
-  }, [classesT])
-
-  useEffect(() => {
-    updateStorage('tp', classesTP)
-  }, [classesTP])
 
   return adaptedSchedules ? (
     <Listbox
@@ -141,7 +140,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
               id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
               className="checkbox-small"
               checked={classesT}
-              onChange={(event) => setClassesT(event.target.checked)}
+              onChange={(event) => updateStorage('t', event.target.checked)}
             />
             <label
               className="cursor-pointer text-xs font-medium capitalize tracking-tight"
@@ -156,7 +155,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
               id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
               className="checkbox-small"
               checked={classesTP}
-              onChange={(event) => setClassesTP(event.target.checked)}
+              onChange={(event) => updateStorage('tp', event.target.checked)}
             />
             <label
               className="cursor-pointer text-xs font-medium capitalize tracking-tight"
