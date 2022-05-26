@@ -106,7 +106,7 @@ const TimeTableSchedulerPage = () => {
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
-          <div className="mt-3 flex flex-col space-y-5 border-t py-3 px-0">
+          <div className="mt-3 flex flex-col space-y-6 border-t py-3 px-0">
             {selected.length > 0 &&
               selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
