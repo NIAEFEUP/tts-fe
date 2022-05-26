@@ -59,23 +59,22 @@ const TimeTableSchedulerPage = () => {
   }
 
   const majors = getMajors()
-  const [major, setMajor] = useState<Major>(initializeMajor())
-  const [courses, setCourses] = useState<CheckedMajorCourses>(coursesAddCheckProperty(getCourses()))
+  const [major, setMajor] = useState<Major>(() => initializeMajor())
+  const [courses, setCourses] = useState<CheckedMajorCourses>(() => coursesAddCheckProperty(getCourses()))
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(initializeModalState())
-  const [selected, setSelected] = useState<CourseOptions>(initializeSelected())
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => initializeModalState())
+  const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
 
   useEffect(() => {
     localStorage.setItem('niaefeup-tts.major', JSON.stringify(major))
   }, [major])
 
   useEffect(() => {
-    // eslint-disable-next-line
-    const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
-      const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value ? value.option : null
-    }
+    // const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
+    //   const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
+    //   return value ? value.option : null
+    // }
 
     setSelected((prevSelected) => [
       ...getCheckedCourses(courses).map((course: CheckedCourse) => ({
@@ -89,14 +88,14 @@ const TimeTableSchedulerPage = () => {
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="min-h-adjusted order-2 col-span-12 rounded bg-lightest px-8 py-4 dark:bg-dark md:order-1 lg:col-span-9">
+      <div className="min-h-adjusted order-2 col-span-12 rounded bg-lightest px-6 py-4 dark:bg-dark md:order-1 lg:col-span-9 lg:px-4">
         <div className="h-full w-full">
           <Schedule courseOptions={selected} activeClassesT={classesT} activeClassesTP={classesTP} />
         </div>
       </div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-1 col-span-12 flex flex-col space-y-2 justify-between rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
+      <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
         <div>
           <div className="flex flex-col items-center justify-center space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-3">
             <SelectionModal

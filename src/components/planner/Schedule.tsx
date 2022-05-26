@@ -34,10 +34,12 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
 
   const lessons = useMemo(() => {
     let lessonsAcc: CourseSchedule[] = []
+
     subjects.forEach((subject) => {
       lessonsAcc.push(subject.practicalLesson)
       lessonsAcc.push(...subject.theoreticalLessons)
     })
+
     lessonsAcc.sort((first, second) => {
       if (first.day === second.day) return first.start_time > second.start_time ? 1 : -1
       else return first.day > second.day ? 1 : -1
@@ -47,20 +49,29 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
   }, [subjects])
 
   const conflicts = useMemo(() => {
+    let i = 0
+    let j = 0
     let conflictsAcc = []
-  }, [subjects])
 
-  // lista de tudo o que esta no quadro
-  // ordenar essa lista por dia e depois hora
-  // comparar cada elemento um com os seguintes (n^2/2)
+    while (i < lessons.length) {
+      let acc = []
+      while (j < lessons.length && lessons[i].day === lessons[j].day) {
+        acc.push(lessons[j])
+        j++
+      }
+      i = j
+      conflictsAcc.push(acc)
+    }
+
+    return conflictsAcc
+  }, [lessons])
 
   return (
     <div className="schedule-area">
       <div className="schedule-top">
         <div className="schedule-top-empty">
-          <span>00:00</span>
+          <span className="dummy">00:00</span>
         </div>
-
         <div className="schedule-top-days">
           {dayValues.map((day: number, dayLabelIdx: number) => (
             <span key={`day-label-${dayLabelIdx}`}>{convertWeekdayLong(day)}</span>
@@ -74,7 +85,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
             <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour)}</span>
           ))}
         </div>
-
         <div className="schedule-main-right">
           <div className="schedule-grid-wrapper">
             <ScheduleGrid />

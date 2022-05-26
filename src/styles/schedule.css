@@ -11,7 +11,7 @@
   @apply flex flex-col justify-between space-y-0;
 }
 
-.schedule-top-empty > span {
+.schedule-top-empty > .dummy {
   @apply invisible text-[0.65rem] font-medium leading-none xl:text-sm;
 }
 
