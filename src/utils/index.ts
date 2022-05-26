@@ -1,3 +1,5 @@
+import { CourseSchedule } from '../@types'
+
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
@@ -46,4 +48,8 @@ export const convertHour = (hourNumber: number) => {
   const minutes = split[1] === '0' || !split[1] ? '00' : '30'
 
   return `${hour}:${minutes}`
+}
+
+export const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
+  return second.start_time - first.start_time < second.duration
 }

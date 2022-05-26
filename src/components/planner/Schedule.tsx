@@ -1,8 +1,8 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { convertHour, convertWeekdayLong } from '../../utils'
-import { Lesson, Subject, CourseOptions, CourseSchedule } from '../../@types'
+import { convertHour, convertWeekdayLong, timesCollide } from '../../utils'
+import { Lesson, CourseOptions } from '../../@types'
 
 type Props = {
   showGrid: boolean
@@ -58,7 +58,10 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     while (i < lessons.length) {
       let acc = []
       while (j < lessons.length && lessons[i].schedule.day === lessons[j].schedule.day) {
-        acc.push(lessons[j])
+        if(timesCollide(lessons[i].schedule, lessons[j].schedule)) acc.push(lessons[j])
+        else {
+          //FIXME: handle logic when no collision
+        }
         j++
       }
       i = j
@@ -91,7 +94,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
           <div className="schedule-grid-wrapper">
             <ScheduleGrid showGrid={showGrid} />
             <div className="schedule-classes">
-              {/* FIXME: Refactor this using conflicts and lessons */}
               {lessons.length === conflicts.length
                 ? lessons.map((lesson: Lesson, lessonIdx: number) => (
                     <LessonBox
