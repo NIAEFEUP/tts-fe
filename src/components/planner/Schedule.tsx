@@ -2,7 +2,7 @@ import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { convertHour, convertWeekdayLong } from '../../utils'
-import { Subject, CourseOptions, CourseSchedule } from '../../@types'
+import { Lesson, Subject, CourseOptions, CourseSchedule } from '../../@types'
 
 type Props = {
   showGrid: boolean
@@ -11,10 +11,10 @@ type Props = {
   courseOptions: CourseOptions
 }
 
-type ClassesProps = {
-  subject: Subject
-  activeClassesT: boolean
-  activeClassesTP: boolean
+type LessonBoxProps = {
+  lesson: Lesson
+  active: boolean
+  conflict?: boolean
 }
 
 const minHour = 8
@@ -34,16 +34,17 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
   }, [courseOptions])
 
   const lessons = useMemo(() => {
-    let lessonsAcc: CourseSchedule[] = []
+    let lessonsAcc: Lesson[] = []
 
     subjects.forEach((subject) => {
-      lessonsAcc.push(subject.practicalLesson)
-      lessonsAcc.push(...subject.theoreticalLessons)
+      lessonsAcc.push({ course: subject.course, schedule: subject.practicalLesson })
+      subject.theoreticalLessons.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
     })
 
     lessonsAcc.sort((first, second) => {
-      if (first.day === second.day) return first.start_time > second.start_time ? 1 : -1
-      else return first.day > second.day ? 1 : -1
+      if (first.schedule.day === second.schedule.day)
+        return first.schedule.start_time > second.schedule.start_time ? 1 : -1
+      else return first.schedule.day > second.schedule.day ? 1 : -1
     })
 
     return lessonsAcc
@@ -56,7 +57,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
     while (i < lessons.length) {
       let acc = []
-      while (j < lessons.length && lessons[i].day === lessons[j].day) {
+      while (j < lessons.length && lessons[i].schedule.day === lessons[j].schedule.day) {
         acc.push(lessons[j])
         j++
       }
@@ -66,8 +67,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
     return conflictsAcc
   }, [lessons])
-
-  console.log(conflicts)
 
   return (
     <div className="schedule-area">
@@ -93,14 +92,24 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
             <ScheduleGrid showGrid={showGrid} />
             <div className="schedule-classes">
               {/* FIXME: Refactor this using conflicts and lessons */}
-              {subjects.map((subject: Subject, subjectIdx: number) => (
-                <Classes
-                  key={`tp-${subjectIdx}`}
-                  subject={subject}
-                  activeClassesT={activeClassesT}
-                  activeClassesTP={activeClassesTP}
-                />
-              ))}
+              {lessons.length === conflicts.length
+                ? lessons.map((lesson: Lesson, lessonIdx: number) => (
+                    <LessonBox
+                      key={`lesson-box-${lessonIdx}`}
+                      lesson={lesson}
+                      active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                    />
+                  ))
+                : conflicts.map((lessons: Lesson[]) =>
+                    lessons.map((lesson: Lesson, lessonIdx: number) => (
+                      <LessonBox
+                        key={`lesson-box-${lessonIdx}`}
+                        lesson={lesson}
+                        conflict={lessons.length > 1 ? true : false}
+                        active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                      />
+                    ))
+                  )}
             </div>
           </div>
         </div>
@@ -135,7 +144,7 @@ const ScheduleGrid = ({ showGrid }: { showGrid: boolean }) => {
   )
 }
 
-const Classes = ({ subject, activeClassesT, activeClassesTP }: ClassesProps) => {
+const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
   const getStyles = (startTime: number, duration: number, day: number) => {
     const step = (maxHour - minHour) * 2
     const top = (startTime - minHour) * 2
@@ -148,97 +157,58 @@ const Classes = ({ subject, activeClassesT, activeClassesTP }: ClassesProps) => 
     }
   }
 
-  const TP = subject.practicalLesson
-  const timeTP = `${convertHour(TP.start_time)}-${convertHour(TP.start_time + TP.duration)}`
-  const stylesTP = getStyles(TP.start_time, TP.duration, TP.day)
+  // prettier-ignore
+  const time = `${convertHour(lesson.schedule.start_time)}-${convertHour(lesson.schedule.start_time + lesson.schedule.duration)}`
+  const styles = getStyles(lesson.schedule.start_time, lesson.schedule.duration, lesson.schedule.day)
 
   return (
-    <>
-      {/* Practical Class */}
-      {activeClassesTP && (
-        <div
-          style={stylesTP}
-          className={classNames(
-            'schedule-class',
-            TP.lesson_type === 'P' ? 'schedule-class-lab' : '',
-            TP.lesson_type === 'TP' ? 'schedule-class-tp' : ''
-          )}
-        >
-          {TP.duration > 1 ? (
-            <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
-              <div className="flex w-full items-center justify-between">
-                <span>{timeTP}</span>
-              </div>
-
-              <div className="flex w-full items-center justify-between">
-                <span className="font-semibold">{subject.course.acronym}</span>
-                <span>{TP.class_name ? TP.class_name : TP.composed_class_name}</span>
-              </div>
-
-              <div className="flex w-full items-center justify-between">
-                <span>{TP.location}</span>
-                <span>{TP.teacher_acronym}</span>
-              </div>
+    active && (
+      <div
+        style={styles}
+        className={classNames(
+          'schedule-class',
+          conflict ? 'schedule-class-conflict': '',
+          lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
+          lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
+          lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
+        )}
+      >
+        {lesson.schedule.duration > 1 ? (
+          <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
+            <div className="flex w-full items-center justify-between">
+              <span>{time}</span>
             </div>
-          ) : (
-            <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
-              <div className="flex w-full items-center justify-between">
-                <span>{timeTP}</span>
-                <span className="font-semibold">{subject.course.acronym}</span>
-              </div>
 
-              <div className="flex w-full items-center justify-between">
-                <span>{TP.location}</span>
-                <span>{TP.class_name ? TP.class_name : TP.composed_class_name}</span>
-                <span>{TP.teacher_acronym}</span>
-              </div>
+            <div className="flex w-full items-center justify-between">
+              <span className="font-semibold">{lesson.course.acronym}</span>
+              <span>
+                {lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}
+              </span>
             </div>
-          )}
-        </div>
-      )}
 
-      {/* All Theoretical Classes */}
-      {activeClassesT &&
-        subject.theoreticalLessons.map((schedule, scheduleIdx) => {
-          const timeT = `${convertHour(schedule.start_time)}-${convertHour(schedule.start_time + schedule.duration)}`
-          const stylesT = getStyles(schedule.start_time, schedule.duration, schedule.day)
-
-          return (
-            <div style={stylesT} key={scheduleIdx} className={classNames('schedule-class schedule-class-t')}>
-              {schedule.duration > 1 ? (
-                <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
-                  <div className="flex w-full items-center justify-between">
-                    <span>{timeT}</span>
-                  </div>
-
-                  <div className="flex w-full items-center justify-between">
-                    <span className="font-semibold">{subject.course.acronym}</span>
-                    <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
-                  </div>
-
-                  <div className="flex w-full items-center justify-between">
-                    <span>{schedule.location}</span>
-                    <span>{schedule.teacher_acronym}</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
-                  <div className="flex w-full items-center justify-between">
-                    <span>{timeT}</span>
-                    <span className="font-semibold">{subject.course.acronym}</span>
-                  </div>
-
-                  <div className="flex w-full items-center justify-between">
-                    <span>{schedule.location}</span>
-                    <span>{schedule.class_name ? schedule.class_name : schedule.composed_class_name}</span>
-                    <span>{schedule.teacher_acronym}</span>
-                  </div>
-                </div>
-              )}
+            <div className="flex w-full items-center justify-between">
+              <span>{lesson.schedule.location}</span>
+              <span>{lesson.schedule.teacher_acronym}</span>
             </div>
-          )
-        })}
-    </>
+          </div>
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
+            <div className="flex w-full items-center justify-between">
+              <span>{time}</span>
+              <span className="font-semibold">{lesson.course.acronym}</span>
+            </div>
+
+            <div className="flex w-full items-center justify-between">
+              <span>{lesson.schedule.location}</span>
+              <span>
+                {lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}
+              </span>
+              <span>{lesson.schedule.teacher_acronym}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    )
   )
 }
 
