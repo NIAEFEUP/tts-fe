@@ -1,10 +1,11 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
+import { useMemo } from 'react'
 import { convertHour, convertWeekdayLong } from '../../utils'
 import { Subject, CourseOptions, CourseSchedule } from '../../@types'
-import { useMemo } from 'react'
 
 type Props = {
+  showGrid: boolean
   activeClassesT: boolean
   activeClassesTP: boolean
   courseOptions: CourseOptions
@@ -19,7 +20,7 @@ type ClassesProps = {
 const minHour = 8
 const maxHour = 23
 
-const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => {
+const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
@@ -66,6 +67,8 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
     return conflictsAcc
   }, [lessons])
 
+  console.log(conflicts)
+
   return (
     <div className="schedule-area">
       <div className="schedule-top">
@@ -87,8 +90,9 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
         </div>
         <div className="schedule-main-right">
           <div className="schedule-grid-wrapper">
-            <ScheduleGrid />
+            <ScheduleGrid showGrid={showGrid} />
             <div className="schedule-classes">
+              {/* FIXME: Refactor this using conflicts and lessons */}
               {subjects.map((subject: Subject, subjectIdx: number) => (
                 <Classes
                   key={`tp-${subjectIdx}`}
@@ -105,7 +109,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
   )
 }
 
-const ScheduleGrid = () => {
+const ScheduleGrid = ({ showGrid }: { showGrid: boolean }) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
   const hourValues = Array.from({ length: (maxHour - minHour) * 2 }, (_, i) => minHour + i * 0.5)
 
@@ -118,9 +122,10 @@ const ScheduleGrid = () => {
               key={`schedule-row-${rowIdx}`}
               className={classNames(
                 'schedule-cell',
-                hourValue >= 13 && hourValue < 14 ? 'schedule-class-lunch' : '',
                 rowIdx === hourValues.length - 1 ? 'schedule-cell-last-in-row' : '',
-                columnIdx === dayValues.length - 1 ? 'schedule-cell-last-in-column' : ''
+                columnIdx === dayValues.length - 1 ? 'schedule-cell-last-in-column' : '',
+                hourValue >= 13 && hourValue < 14 ? 'schedule-class-lunch' : '',
+                showGrid ? '' : 'no-borders'
               )}
             />
           ))}

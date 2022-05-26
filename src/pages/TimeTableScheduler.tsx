@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { majorsData, coursesData, schedulesData } from '../utils/data'
 import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
+import { SparklesIcon } from '@heroicons/react/outline'
 import Schedule from '../components/planner/Schedule'
 import SelectionModal from '../components/planner/SelectionModal'
 import ScheduleListbox from '../components/planner/ScheduleListbox'
 import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
+import useShowGrid from '../hooks/useShowGrid'
 
 const TimeTableSchedulerPage = () => {
   const getMajors = () => {
@@ -65,6 +67,7 @@ const TimeTableSchedulerPage = () => {
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => initializeModalState())
   const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
+  const [showGrid, setShowGrid] = useShowGrid()
 
   useEffect(() => {
     localStorage.setItem('niaefeup-tts.major', JSON.stringify(major))
@@ -90,14 +93,28 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="min-h-adjusted order-2 col-span-12 rounded bg-lightest px-6 py-4 dark:bg-dark md:order-1 lg:col-span-9 lg:px-4">
         <div className="h-full w-full">
-          <Schedule courseOptions={selected} activeClassesT={classesT} activeClassesTP={classesTP} />
+          <Schedule
+            showGrid={showGrid}
+            courseOptions={selected}
+            activeClassesT={classesT}
+            activeClassesTP={classesTP}
+          />
         </div>
       </div>
 
       {/* Sidebar */}
       <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
-        <div>
-          <div className="flex flex-col items-center justify-center space-y-2 space-x-0 md:flex-row md:space-y-0 md:space-x-3">
+        <div className="space-y-3">
+          <div className="flex flex-col items-center justify-center space-y-2 space-x-0 2xl:flex-row 2xl:space-y-0 2xl:space-x-3">
+            <button
+              type="button"
+              onClick={() => setShowGrid(!showGrid)}
+              className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-violet-400 px-2 
+              py-3 text-xs font-medium text-violet-400 transition hover:bg-violet-400 hover:text-white dark:text-white xl:px-4 xl:text-sm 2xl:w-min"
+            >
+              <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />
+              <span className="flex 2xl:hidden">Tidy</span>
+            </button>
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
@@ -106,7 +123,7 @@ const TimeTableSchedulerPage = () => {
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
-          <div className="mt-3 flex flex-col space-y-6 border-t py-3 px-0">
+          <div className="flex flex-col space-y-6 border-t py-3 px-0">
             {selected.length > 0 &&
               selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox

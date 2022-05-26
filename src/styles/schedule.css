@@ -136,3 +136,7 @@
 .schedule-class-conflict {
   @apply ring-2 ring-red-500;
 }
+
+.no-borders {
+  border: 0 !important
+}
