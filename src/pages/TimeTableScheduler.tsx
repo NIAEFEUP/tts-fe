@@ -1,10 +1,10 @@
+import { useState, useEffect } from 'react'
+import { majorsData, coursesData, schedulesData } from '../utils/data'
+import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
 import Schedule from '../components/planner/Schedule'
 import SelectionModal from '../components/planner/SelectionModal'
 import ScheduleListbox from '../components/planner/ScheduleListbox'
 import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
-import { useState, useEffect } from 'react'
-import { majorsData, coursesData, schedulesData } from '../utils/data'
-import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
 
 const TimeTableSchedulerPage = () => {
   const getMajors = () => {

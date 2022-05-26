@@ -48,9 +48,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     setIsOpen(true)
   }
 
-  const getDisplayMajorText = (major: Major) => (
-    major === null ? '' : `${major?.name} (${major?.acronym})`
-  )
+  const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
@@ -90,10 +88,11 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
         <button
           type="button"
           onClick={openModal}
-          className="flex h-auto w-full items-center justify-center space-x-2 rounded bg-primary px-4 py-3 text-sm font-medium text-white transition hover:-translate-y-1 hover:opacity-90"
+          className="flex h-auto w-full items-center justify-center space-x-2 rounded bg-primary 
+          px-2 py-3 text-xs font-medium text-white transition hover:-translate-y-1 hover:opacity-90 xl:px-4 xl:text-sm"
         >
           <span>Editar UCs</span>
-          <PencilAltIcon className="h-5 w-5 text-white" />
+          <PencilAltIcon className="h-4 w-4 text-white xl:h-5 xl:w-5" />
         </button>
       </div>
 

@@ -115,7 +115,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
         </Transition>
 
         {/* Show/Hide Checkboxes */}
-        <div className="mt-1 flex items-center justify-start space-x-4">
+        <div className="mt-1.5 flex items-center justify-start space-x-4">
           <div className="flex items-center justify-center space-x-1">
             <input
               type="checkbox"

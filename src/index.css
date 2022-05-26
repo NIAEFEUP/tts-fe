@@ -24,12 +24,14 @@ body {
 
 .checkbox {
   @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-darkish transition 
-  hover:bg-primary/50 hover:text-primary/50 focus:ring-transparent dark:bg-darkish dark:checked:bg-gray-500
-  dark:indeterminate:bg-gray-500 dark:hover:bg-primary/50 dark:hover:text-primary/50 dark:focus:text-darkish dark:focus:ring-transparent;
+  hover:bg-primary/50 hover:text-primary/50 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+  dark:focus:ring-transparent;
 }
 
 .checkbox-small {
   @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-0 text-darkish transition 
-  hover:bg-primary/50 hover:text-primary/50 focus:ring-transparent dark:bg-darkish dark:checked:bg-gray-500
-  dark:indeterminate:bg-gray-500 dark:hover:bg-primary/50 dark:hover:text-primary/50 dark:focus:text-darkish dark:focus:ring-transparent;
+  hover:bg-primary/50 hover:text-primary/50 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+  dark:focus:ring-0;
 }
