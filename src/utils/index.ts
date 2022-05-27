@@ -52,7 +52,5 @@ export const convertHour = (hourNumber: number) => {
 
 export const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   if (first.day !== second.day) return false
-
-  const result = second.start_time <= first.start_time + first.duration
-  return second.start_time <= first.start_time + first.duration
+  return second.start_time < first.start_time + first.duration
 }

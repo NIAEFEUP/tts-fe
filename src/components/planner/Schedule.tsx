@@ -43,7 +43,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
     lessonsAcc.sort((first, second) => {
       if (first.schedule.day === second.schedule.day)
-        return first.schedule.start_time > second.schedule.start_time ? 1 : -1
+        return first.schedule.start_time > second.schedule.start_time ? -1 : 1
       else return first.schedule.day > second.schedule.day ? 1 : -1
     })
 
@@ -54,26 +54,32 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     let acc = []
     let conflictsAcc = []
 
-    console.log(lessons.length)
     for (let i = 0; i < lessons.length; i++) {
-      const curLesson = lessons[i]
-
+      const curLesson = lessons[i] 
       if (acc.length === 0) {
         acc.push(curLesson)
-        if (i === lessons.length - 1) conflictsAcc.push(acc)
+        if (i === lessons.length - 1) {
+          conflictsAcc.push(acc)
+        }
         continue
       }
 
-      let lastOfAcc: Lesson = acc[acc.length - 1]
-      if (timesCollide(curLesson.schedule, lastOfAcc.schedule)) {
-        console.log('collision')
-        acc.push(lastOfAcc)
-        if (i === lessons.length - 1) conflictsAcc.push(acc)
-      } else {
-        console.log('no collision')
-        conflictsAcc.push(acc)
-        acc = []
+      let collidesWithAll = true
+      for (let j = 0; j < acc.length; j++) {
+        const curAccLesson = acc[j]
+        if (!timesCollide(curLesson.schedule, curAccLesson.schedule)) {
+          collidesWithAll = false
+          break
+        }
       }
+      if (collidesWithAll) {
+        acc.push(curLesson)
+      }
+      else {
+        conflictsAcc.push(acc)
+        acc = [curLesson]
+      }
+      if (i === lessons.length - 1) conflictsAcc.push(acc)
     }
 
     return conflictsAcc
