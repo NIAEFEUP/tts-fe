@@ -51,23 +51,29 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
   }, [subjects])
 
   const conflicts = useMemo(() => {
-    let i = 0
-    let j = 0
+    let acc = []
     let conflictsAcc = []
 
-    while (i < lessons.length) {
-      let acc = []
-      while (j < lessons.length && lessons[i].schedule.day === lessons[j].schedule.day) {
-        acc.push(lessons[j])
-        j++
-      }
-      i = j
+    console.log(lessons.length)
+    for (let i = 0; i < lessons.length; i++) {
+      const curLesson = lessons[i]
 
-      // FIXME: 
-      // acc is currently just grouped by days
-      // use acc result and compare hours with timesCollide
-      // we need to split acc if there are collisions inside
-      conflictsAcc.push(acc)
+      if (acc.length === 0) {
+        acc.push(curLesson)
+        if (i === lessons.length - 1) conflictsAcc.push(acc)
+        continue
+      }
+
+      let lastOfAcc: Lesson = acc[acc.length - 1]
+      if (timesCollide(curLesson.schedule, lastOfAcc.schedule)) {
+        console.log('collision')
+        acc.push(lastOfAcc)
+        if (i === lessons.length - 1) conflictsAcc.push(acc)
+      } else {
+        console.log('no collision')
+        conflictsAcc.push(acc)
+        acc = []
+      }
     }
 
     return conflictsAcc
@@ -171,7 +177,7 @@ const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
         style={styles}
         className={classNames(
           'schedule-class',
-          conflict ? 'schedule-class-conflict': '',
+          conflict ? 'schedule-class-conflict' : '',
           lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
           lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
           lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
