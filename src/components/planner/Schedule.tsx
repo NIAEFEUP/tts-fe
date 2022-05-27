@@ -58,13 +58,15 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     while (i < lessons.length) {
       let acc = []
       while (j < lessons.length && lessons[i].schedule.day === lessons[j].schedule.day) {
-        if(timesCollide(lessons[i].schedule, lessons[j].schedule)) acc.push(lessons[j])
-        else {
-          //FIXME: handle logic when no collision
-        }
+        acc.push(lessons[j])
         j++
       }
       i = j
+
+      // FIXME: 
+      // acc is currently just grouped by days
+      // use acc result and compare hours with timesCollide
+      // we need to split acc if there are collisions inside
       conflictsAcc.push(acc)
     }
 
