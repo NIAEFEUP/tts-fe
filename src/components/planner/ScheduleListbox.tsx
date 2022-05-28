@@ -12,7 +12,7 @@ type Props = {
 
 const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   const [, setSelected] = selectedHook
-  const [shownSubjects, setShownSubjects] = useShownSubjects()
+  const [shownSubjects] = useShownSubjects()
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
 
   const [classesTShown, setClassesTShown] = useState<boolean>(() => {
@@ -73,16 +73,18 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           {courseOption.course.info.name} (<strong>{courseOption.course.info.acronym}</strong>)
         </h4>
         <Listbox.Button
-          className="relative w-full cursor-pointer rounded-lg border-2 border-transparent bg-lightish py-2 pl-3 pr-10 
-          text-left transition hover:bg-primary/25 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 sm:text-sm"
+          className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-2 pl-3 pr-10 
+          text-left transition hover:bg-primary/75 dark:bg-lightish/10 dark:shadow dark:hover:bg-primary/50 sm:text-sm"
         >
-          <span className="block truncate font-medium">{getOptionDisplayText(selectedOption)}</span>
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-            <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <span className="block truncate font-medium group-hover:text-white">
+            {getOptionDisplayText(selectedOption)}
+          </span>
+          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
+            <SelectorIcon className="h-5 w-5 transition" aria-hidden="true" />
           </span>
         </Listbox.Button>
         <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-lightest py-1 text-base dark:bg-darkish sm:text-sm">
+          <Listbox.Options className="absolute z-20 mt-1 max-h-72 w-full overflow-auto rounded-md border bg-lightest py-1 text-base dark:bg-darkish sm:text-sm">
             {adaptedSchedules.map((option, personIdx) => (
               <Listbox.Option
                 key={personIdx}

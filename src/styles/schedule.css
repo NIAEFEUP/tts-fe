@@ -118,15 +118,15 @@
 }
 
 .schedule-class-t {
-  @apply border-theoretical bg-theoretical/70 hover:bg-theoretical;
+  @apply border-theoretical bg-theoretical/70 hover:bg-theoretical dark:bg-theoretical/50;
 }
 
 .schedule-class-tp {
-  @apply border-practical bg-practical/70 hover:bg-practical;
+  @apply border-practical bg-practical/70 hover:bg-practical  dark:bg-practical/50;
 }
 
 .schedule-class-lab {
-  @apply border-labs bg-labs/70 hover:bg-labs;
+  @apply border-labs bg-labs/70 hover:bg-labs dark:bg-labs/50;
 }
 
 .schedule-class-lunch {
@@ -134,7 +134,7 @@
 }
 
 .schedule-class-conflict {
-  @apply ring-2 ring-red-600 hover:ring-2;
+  @apply z-20 border-2 border-red-600 ring-red-600 hover:z-30 hover:ring-1;
 }
 
 .no-borders {

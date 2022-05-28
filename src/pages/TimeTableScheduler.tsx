@@ -109,8 +109,8 @@ const TimeTableSchedulerPage = () => {
             <button
               type="button"
               onClick={() => setShowGrid(!showGrid)}
-              className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-violet-400 px-2 
-              py-3 text-xs font-medium text-violet-400 transition hover:bg-violet-400 hover:text-white dark:text-white xl:px-4 xl:text-sm 2xl:w-min"
+              className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-secondary px-2 
+              py-3 text-xs font-medium text-secondary transition hover:bg-secondary hover:text-white dark:text-white xl:px-4 xl:text-sm 2xl:w-min"
             >
               <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />
               <span className="flex 2xl:hidden">Tidy</span>
