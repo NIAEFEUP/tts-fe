@@ -91,7 +91,7 @@ const TimeTableSchedulerPage = () => {
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="min-h-adjusted order-2 col-span-12 rounded bg-lightest px-6 py-4 dark:bg-dark md:order-1 lg:col-span-9 lg:px-4">
+      <div className="min-h-min lg:min-h-adjusted order-2 col-span-12 rounded bg-lightest px-6 py-4 dark:bg-dark md:order-1 lg:col-span-9 lg:px-4">
         <div className="h-full w-full">
           <Schedule
             showGrid={showGrid}
@@ -103,7 +103,7 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
+      <div className="min-h-min lg:min-h-adjusted order-1 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
         <div className="space-y-3">
           <div className="flex flex-col items-center justify-center space-y-2 space-x-0 2xl:flex-row 2xl:space-y-0 2xl:space-x-3">
             <SelectionModal
