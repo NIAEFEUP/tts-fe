@@ -23,15 +23,20 @@ body {
 }
 
 .checkbox {
-  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-darkish transition 
+  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-navy transition 
   hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-navy 
   dark:focus:ring-transparent;
 }
 
 .checkbox-small {
-  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-0 text-darkish transition 
-  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-0 text-navy transition 
+  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-navy dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-navy 
   dark:focus:ring-0;
+}
+
+.checkboxes {
+  @apply mx-auto flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8;
+  margin-top: 1.5rem !important;
 }

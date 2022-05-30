@@ -106,21 +106,21 @@ const TimeTableSchedulerPage = () => {
       <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
         <div className="space-y-3">
           <div className="flex flex-col items-center justify-center space-y-2 space-x-0 2xl:flex-row 2xl:space-y-0 2xl:space-x-3">
-            <button
-              type="button"
-              onClick={() => setShowGrid(!showGrid)}
-              className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-secondary px-2 
-              py-3 text-xs font-medium text-secondary transition hover:bg-secondary hover:text-white dark:text-white xl:px-4 xl:text-sm 2xl:w-min"
-            >
-              <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />
-              <span className="flex 2xl:hidden">Tidy</span>
-            </button>
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
               coursesHook={[courses, setCourses]}
             />
+            <button
+              type="button"
+              onClick={() => setShowGrid(!showGrid)}
+              className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-navy px-2 
+              py-3 text-xs font-medium text-navy transition hover:bg-navy hover:text-white dark:text-white xl:px-4 xl:text-sm 2xl:w-min"
+            >
+              <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />
+              <span className="flex 2xl:hidden">Tidy</span>
+            </button>
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
           <div className="flex flex-col space-y-6 border-t py-3 px-0">

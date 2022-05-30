@@ -1,10 +1,18 @@
 import classNames from 'classnames'
 import Alert, { AlertType } from './Alert'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses } from '../../@types'
-import { AcademicCapIcon, CheckIcon, SelectorIcon, PencilAltIcon } from '@heroicons/react/solid'
+import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses, Course } from '../../@types'
+import {
+  AcademicCapIcon,
+  CheckIcon,
+  SelectorIcon,
+  PencilAltIcon,
+  PlusCircleIcon,
+  MinusCircleIcon,
+} from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
+import { extraCoursesData } from '../../utils/data'
 
 type Props = {
   majors: Major[]
@@ -14,6 +22,10 @@ type Props = {
 }
 
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
+  const getExtraCourses = () => {
+    return extraCoursesData
+  }
+
   const initMajor = () => {
     const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
     if (storedMajor === null) return null
@@ -25,6 +37,8 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [courses, setCourses] = coursesHook
   const [selected, setSelected] = useState<Major>(initMajor())
   const [majorQuery, setMajorQuery] = useState<string>('')
+  const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
+  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
   const filteredMajors =
@@ -32,6 +46,19 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
       ? majors
       : majors.filter((major: Major) =>
           major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
+        )
+
+  const extraCourses = getExtraCourses()
+  const filteredExtraCourses =
+    extraCoursesQuery === ''
+      ? extraCourses
+      : extraCourses.filter((course: Course) =>
+          course?.name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/\p{Diacritic}/gu, '')
+            .replace(/\s+/g, '')
+            .includes(extraCoursesQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
   useEffect(() => {
@@ -49,6 +76,8 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   }
 
   const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
+  const getDisplayExtraCourseText = (course: Course) =>
+    course === null ? '' : `${course?.name} (${course?.acronym}, ${course?.course})`
 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
@@ -102,11 +131,16 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-12">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <InnerCustomTransition>
-                <Dialog.Panel className="w-full max-w-5xl transform rounded-2xl bg-lightest p-6 text-left align-middle shadow-xl transition-all dark:bg-dark">
+                <Dialog.Panel
+                  className={classNames(
+                    'w-full max-w-5xl transform space-y-3 rounded-2xl p-6 text-left',
+                    'bg-lightest align-middle shadow-xl transition-all dark:bg-dark'
+                  )}
+                >
                   {/* Header */}
                   <Dialog.Title
                     as="header"
-                    className="mb-4 flex w-full items-center justify-between space-x-2 text-center font-medium"
+                    className="mb-5 flex w-full items-center justify-between space-x-2 text-center font-medium"
                   >
                     <div className="flex items-center justify-start space-x-1">
                       <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
@@ -137,11 +171,15 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                       setSelected(value)
                     }}
                   >
-                    <div className="relative mt-4">
+                    <div className="relative">
                       <div className="relative w-full rounded text-left">
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
-                          className="w-full rounded bg-gray-50 py-4 px-4 text-xs leading-5 text-gray-900 focus:shadow focus:ring-0 md:text-sm"
+                          className={classNames(
+                            selected !== null ? 'font-bold' : '',
+                            'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
+                            'border-slate-700/25 bg-slate-50 text-slate-800 focus:shadow focus:ring-0'
+                          )}
                           displayValue={(major: Major) => getDisplayMajorText(major)}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
                             setMajorQuery(event.target.value)
@@ -149,7 +187,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         />
                         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                           <SelectorIcon
-                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-primary hover:text-white"
+                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-sky-800"
                             aria-hidden="true"
                           />
                         </Combobox.Button>
@@ -177,7 +215,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                 className={({ active }) =>
                                   `relative cursor-pointer select-none py-2 px-3 ${
                                     major?.name !== '' ? 'pl-10' : 'pl-4'
-                                  } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
+                                  } ${active ? 'bg-sky-800 text-white' : 'text-gray-900'}`
                                 }
                                 value={major}
                               >
@@ -189,7 +227,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                     {selected ? (
                                       <span
                                         className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                          active ? 'text-white' : 'text-primary'
+                                          active ? 'text-white' : 'text-sky-800'
                                         }`}
                                       >
                                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -205,9 +243,89 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     </div>
                   </Combobox>
 
+                  {/* Select extra courses */}
+                  {extraCoursesActive && (
+                    <Combobox
+                      value={null}
+                      onChange={(value) => {
+                        // FIXME: add new extra course to selected courses
+                      }}
+                    >
+                      <div className="relative">
+                        <div className="relative w-full rounded text-left">
+                          <Combobox.Input
+                            placeholder="Procure uma unidade curricular usando sigla, nome ou código"
+                            className={classNames(
+                              'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
+                              'border-slate-700/25 bg-slate-50 text-slate-800 focus:shadow focus:ring-0'
+                            )}
+                            displayValue={(extraCourse: Course) => getDisplayExtraCourseText(extraCourse)}
+                            onChange={(event: { target: { value: SetStateAction<string> } }) =>
+                              setExtraCoursesQuery(event.target.value)
+                            }
+                          />
+                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                            <SelectorIcon
+                              className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-sky-800"
+                              aria-hidden="true"
+                            />
+                          </Combobox.Button>
+                        </div>
+
+                        <Transition
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                          afterLeave={() => setExtraCoursesQuery('')}
+                        >
+                          <Combobox.Options
+                            className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded-md border
+                        border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
+                          >
+                            {filteredExtraCourses.length === 0 && extraCoursesQuery !== '' ? (
+                              <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
+                                Nenhuma unidade curricular encontrada.
+                              </div>
+                            ) : (
+                              filteredExtraCourses.map((extraCourse: Course, extraCourseIdx: number) => (
+                                <Combobox.Option
+                                  key={extraCourseIdx}
+                                  className={({ active }) =>
+                                    `relative cursor-pointer select-none py-2 px-3 ${
+                                      extraCourse?.name !== '' ? 'pl-10' : 'pl-4'
+                                    } ${active ? 'bg-sky-800 text-white' : 'text-gray-900'}`
+                                  }
+                                  value={extraCourse}
+                                >
+                                  {({ selected, active }) => (
+                                    <>
+                                      <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
+                                        {getDisplayExtraCourseText(extraCourse)}
+                                      </span>
+                                      {selected ? (
+                                        <span
+                                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                            active ? 'text-white' : 'text-sky-800'
+                                          }`}
+                                        >
+                                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                        </span>
+                                      ) : null}
+                                    </>
+                                  )}
+                                </Combobox.Option>
+                              ))
+                            )}
+                          </Combobox.Options>
+                        </Transition>
+                      </div>
+                    </Combobox>
+                  )}
+
                   {/* Courses checkboxes */}
                   {major?.name !== '' ? (
-                    <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8">
+                    <div className="checkboxes">
                       {courses.map((year: CheckedYearCourses, yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
@@ -257,32 +375,57 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   ) : null}
 
                   {/* Bottom action buttons */}
-                  <footer className="mt-8 flex items-center justify-between">
+                  <footer className="mt-8 flex items-center justify-between space-x-2">
                     <a
                       type="button"
                       className={classNames(
-                        'inline-flex justify-center rounded-md px-4 py-2 text-sm font-medium text-slate-600',
+                        'inline-flex justify-center rounded-lg px-4 py-2 text-sm font-medium text-slate-600',
                         'border-2 border-slate-400 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
                       )}
                       href="mailto:projetos.niaefeup@gmail.com"
                     >
-                      Contacte-nos
+                      <span className="hidden md:flex">Contacte-nos</span>
+                      <span className="flex md:hidden">Contactos</span>
                     </a>
 
-                    <button
-                      type="button"
-                      className={classNames(
-                        'inline-flex justify-center rounded-md border-2 border-teal-700/30 bg-green-50',
-                        'px-4 py-2 text-sm font-medium text-teal-700 transition',
-                        major?.name === '' || !atLeastOneCourse
-                          ? 'cursor-not-allowed opacity-50'
-                          : 'hover:bg-teal-700 hover:text-white'
-                      )}
-                      onClick={closeModal}
-                      disabled={major?.name === '' || !atLeastOneCourse}
-                    >
-                      Confirmar
-                    </button>
+                    <div className="flex items-center justify-between space-x-2 md:space-x-4">
+                      <button
+                        type="button"
+                        className={classNames(
+                          'inline-flex items-center justify-center space-x-1 md:space-x-2 rounded-lg border-2 px-2 py-2 text-sm font-medium transition md:px-4',
+                          'hover:text-white dark:text-white',
+                          extraCoursesActive
+                            ? 'border-rose-700/25 text-rose-700 hover:bg-rose-700'
+                            : 'border-sky-600/25 text-sky-600 hover:bg-sky-600',
+                          extraCoursesActive
+                            ? 'dark:bg-rose-600/25 dark:hover:bg-rose-700/75'
+                            : 'dark:bg-sky-600/25 dark:hover:bg-sky-600/75'
+                        )}
+                        onClick={() => setExtraCoursesActive(!extraCoursesActive)}
+                      >
+                        {extraCoursesActive ? (
+                          <MinusCircleIcon className="h-5 w-5" aria-hidden="true" />
+                        ) : (
+                          <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
+                        )}
+                        <span className="hidden md:flex">UCs fora do curso</span>
+                        <span className="flex md:hidden">Extra&nbsp;UCs</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={classNames(
+                          'inline-flex justify-center rounded-lg border-2 px-4 py-2 text-sm font-medium transition',
+                          'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700',
+                          major?.name === '' || !atLeastOneCourse
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-teal-700 hover:text-white'
+                        )}
+                        onClick={closeModal}
+                        disabled={major?.name === '' || !atLeastOneCourse}
+                      >
+                        Confirmar
+                      </button>
+                    </div>
                   </footer>
                 </Dialog.Panel>
               </InnerCustomTransition>
