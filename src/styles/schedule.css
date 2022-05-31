@@ -117,6 +117,10 @@
   @apply absolute z-10 w-1/6 border-0 transition hover:ring-0;
 }
 
+.schedule-class-responsive {
+  @apply z-10 border-0 transition hover:ring-0 min-w-[4.5rem] w-min;
+}
+
 .schedule-class-t {
   @apply border-theoretical bg-theoretical/70 hover:bg-theoretical dark:bg-theoretical/50;
 }

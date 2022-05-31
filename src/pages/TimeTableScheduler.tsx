@@ -91,7 +91,7 @@ const TimeTableSchedulerPage = () => {
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="min-h-min lg:min-h-adjusted order-2 col-span-12 rounded bg-lightest px-6 py-4 dark:bg-dark md:order-1 lg:col-span-9 lg:px-4">
+      <div className="lg:min-h-adjusted order-2 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark md:order-1 lg:col-span-9 lg:px-4 lg:py-4">
         <div className="h-full w-full">
           <Schedule
             showGrid={showGrid}

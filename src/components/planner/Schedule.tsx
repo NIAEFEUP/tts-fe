@@ -55,7 +55,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     let conflictsAcc = []
 
     for (let i = 0; i < lessons.length; i++) {
-      const curLesson = lessons[i] 
+      const curLesson = lessons[i]
       if (acc.length === 0) {
         acc.push(curLesson)
         if (i === lessons.length - 1) {
@@ -74,8 +74,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
       }
       if (collidesWithAll) {
         acc.push(curLesson)
-      }
-      else {
+      } else {
         conflictsAcc.push(acc)
         acc = [curLesson]
       }
@@ -85,52 +84,91 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     return conflictsAcc
   }, [lessons])
 
-  return (
-    <div className="schedule-area">
-      <div className="schedule-top">
-        <div className="schedule-top-empty">
-          <span className="dummy">00:00</span>
-        </div>
-        <div className="schedule-top-days">
-          {dayValues.map((day: number, dayLabelIdx: number) => (
-            <span key={`day-label-${dayLabelIdx}`}>{convertWeekdayLong(day)}</span>
-          ))}
-        </div>
-      </div>
+  const lessonsGroupedByDays = useMemo(() => {
+    let i = 0
+    let j = 0
+    let lessonsAcc = []
 
-      <div className="schedule-main">
-        <div className="schedule-main-left">
-          {hourValues.map((hour: number, hourLabelIdx: number) => (
-            <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour)}</span>
-          ))}
+    while (i < lessons.length) {
+      let acc = []
+      while (j < lessons.length && lessons[i].schedule.day === lessons[j].schedule.day) {
+        acc.push(lessons[j])
+        j++
+      }
+      i = j
+      lessonsAcc.push(acc)
+    }
+
+    return lessonsAcc
+  }, [lessons])
+
+  return (
+    <>
+      <div className="schedule-area">
+        <div className="schedule-top">
+          <div className="schedule-top-empty">
+            <span className="dummy">00:00</span>
+          </div>
+          <div className="schedule-top-days">
+            {dayValues.map((day: number, dayLabelIdx: number) => (
+              <span key={`day-label-${dayLabelIdx}`}>{convertWeekdayLong(day)}</span>
+            ))}
+          </div>
         </div>
-        <div className="schedule-main-right">
-          <div className="schedule-grid-wrapper">
-            <ScheduleGrid showGrid={showGrid} />
-            <div className="schedule-classes">
-              {lessons.length === conflicts.length
-                ? lessons.map((lesson: Lesson, lessonIdx: number) => (
-                    <LessonBox
-                      key={`lesson-box-${lessonIdx}`}
-                      lesson={lesson}
-                      active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
-                    />
-                  ))
-                : conflicts.map((lessons: Lesson[]) =>
-                    lessons.map((lesson: Lesson, lessonIdx: number) => (
+
+        <div className="schedule-main">
+          <div className="schedule-main-left">
+            {hourValues.map((hour: number, hourLabelIdx: number) => (
+              <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour)}</span>
+            ))}
+          </div>
+          <div className="schedule-main-right">
+            <div className="schedule-grid-wrapper">
+              <ScheduleGrid showGrid={showGrid} />
+              <div className="schedule-classes">
+                {lessons.length === conflicts.length
+                  ? lessons.map((lesson: Lesson, lessonIdx: number) => (
                       <LessonBox
                         key={`lesson-box-${lessonIdx}`}
                         lesson={lesson}
-                        conflict={lessons.length > 1 ? true : false}
                         active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
                       />
                     ))
-                  )}
+                  : conflicts.map((lessons: Lesson[]) =>
+                      lessons.map((lesson: Lesson, lessonIdx: number) => (
+                        <LessonBox
+                          key={`lesson-box-${lessonIdx}`}
+                          lesson={lesson}
+                          conflict={lessons.length > 1 ? true : false}
+                          active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                        />
+                      ))
+                    )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Schedule Mobile */}
+      <div className="flex h-full w-full flex-col items-center justify-start space-y-2 lg:hidden">
+        {lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
+          <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
+            <div className="h-full w-1 rounded-xl bg-primary"></div>
+            <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
+              {lessons.map((lesson: Lesson, lessonIdx: number) => (
+                <ResponsiveLessonBox
+                  key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
+                  lesson={lesson}
+                  conflict={false}
+                  active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   )
 }
 
@@ -223,6 +261,41 @@ const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
             </div>
           </div>
         )}
+      </div>
+    )
+  )
+}
+
+const ResponsiveLessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
+  // prettier-ignore
+  const time = `${convertHour(lesson.schedule.start_time)}-${convertHour(lesson.schedule.start_time + lesson.schedule.duration)}`
+
+  return (
+    active && (
+      <div
+        className={classNames(
+          'schedule-class-responsive',
+          conflict ? 'schedule-class-conflict' : '',
+          lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
+          lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
+          lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
+        )}
+      >
+        <div className="flex h-full w-full flex-col items-center justify-between space-y-4 p-1.5 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
+          <div className="flex w-full items-center justify-between">
+            <span>{time}</span>
+          </div>
+
+          <div className="flex w-full flex-col items-start space-y-1">
+            <span className="font-semibold">{lesson.course.acronym}</span>
+            <span>{lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}</span>
+          </div>
+
+          <div className="flex w-full items-center justify-between">
+            <span>{lesson.schedule.location}</span>
+            <span>{lesson.schedule.teacher_acronym}</span>
+          </div>
+        </div>
       </div>
     )
   )
