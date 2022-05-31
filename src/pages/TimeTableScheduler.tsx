@@ -91,7 +91,7 @@ const TimeTableSchedulerPage = () => {
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-2 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark md:order-1 lg:col-span-9 lg:px-4 lg:py-4">
+      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 lg:px-4 lg:py-4">
         <div className="h-full w-full">
           <Schedule
             showGrid={showGrid}
@@ -103,7 +103,7 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark md:order-2 lg:col-span-3">
+      <div className="min-h-adjusted order-2 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark lg:col-span-3">
         <div className="space-y-3">
           <div className="flex flex-col items-center justify-center space-y-2 space-x-0 2xl:flex-row 2xl:space-y-0 2xl:space-x-3">
             <SelectionModal
@@ -115,7 +115,7 @@ const TimeTableSchedulerPage = () => {
             <button
               type="button"
               onClick={() => setShowGrid(!showGrid)}
-              className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-navy px-2 
+              className="hidden lg:flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-navy px-2 
               py-3 text-xs font-medium text-navy transition hover:bg-navy hover:text-white dark:text-white xl:px-4 xl:text-sm 2xl:w-min"
             >
               <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />

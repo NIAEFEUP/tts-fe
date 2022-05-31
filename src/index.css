@@ -40,3 +40,7 @@ body {
   @apply mx-auto flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8;
   margin-top: 1.5rem !important;
 }
+
+.vertical-text {
+  writing-mode: vertical-lr;
+}

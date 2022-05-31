@@ -68,8 +68,8 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
       value={selectedOption}
       onChange={(value) => (value.course_unit_id ? setSelectedOption(value) : setSelectedOption(null))}
     >
-      <div className="relative">
-        <h4 className="mb-1 text-sm md:text-xs">
+      <div className="relative text-sm">
+        <h4 className="mb-1 text-xs">
           {courseOption.course.info.name} (<strong>{courseOption.course.info.acronym}</strong>)
         </h4>
         <Listbox.Button
@@ -84,7 +84,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           </span>
         </Listbox.Button>
         <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <Listbox.Options className="absolute z-20 mt-1 max-h-72 w-full overflow-auto rounded-md border bg-lightest py-1 text-base dark:bg-darkish sm:text-sm">
+          <Listbox.Options className="absolute z-20 mt-1 max-h-36 w-full overflow-auto rounded-md border bg-lightest py-1 text-sm tracking-tight dark:bg-darkish lg:max-h-72 xl:text-base">
             {adaptedSchedules.map((option, personIdx) => (
               <Listbox.Option
                 key={personIdx}

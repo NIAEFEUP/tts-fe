@@ -92,7 +92,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     while (i < lessons.length) {
       let acc = []
       while (j < lessons.length && lessons[i].schedule.day === lessons[j].schedule.day) {
-        acc.push(lessons[j])
+        acc.unshift(lessons[j])
         j++
       }
       i = j
@@ -104,6 +104,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
   return (
     <>
+      {/* Schedule Desktop */}
       <div className="schedule-area">
         <div className="schedule-top">
           <div className="schedule-top-empty">
@@ -152,21 +153,27 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
       {/* Schedule Mobile */}
       <div className="flex h-full w-full flex-col items-center justify-start space-y-2 lg:hidden">
-        {lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
-          <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
-            <div className="h-full w-1 rounded-xl bg-primary"></div>
-            <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
-              {lessons.map((lesson: Lesson, lessonIdx: number) => (
-                <ResponsiveLessonBox
-                  key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
-                  lesson={lesson}
-                  conflict={false}
-                  active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
-                />
-              ))}
+        {lessonsGroupedByDays.length > 0 ? (
+          lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
+            <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
+              <div className="h-full w-1 rounded-xl bg-primary">
+                <span></span>
+              </div>
+              <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
+                {lessons.map((lesson: Lesson, lessonIdx: number) => (
+                  <ResponsiveLessonBox
+                    key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
+                    lesson={lesson}
+                    conflict={false}
+                    active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <span>Nenhum horário selecionado</span>
+        )}
       </div>
     </>
   )
@@ -282,12 +289,13 @@ const ResponsiveLessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
         )}
       >
         <div className="flex h-full w-full flex-col items-center justify-between space-y-4 p-1.5 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
-          <div className="flex w-full items-center justify-between">
+          <div className="flex w-full flex-col justify-between space-y-0.5">
+            <span className="font-bold">{convertWeekdayLong(lesson.schedule.day)}</span>
             <span>{time}</span>
           </div>
 
           <div className="flex w-full flex-col items-start space-y-1">
-            <span className="font-semibold">{lesson.course.acronym}</span>
+            <span className="font-bold">{lesson.course.acronym}</span>
             <span>{lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}</span>
           </div>
 
