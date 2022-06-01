@@ -148,10 +148,16 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
-                      <span className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span
+                        title="Semestre"
+                        className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500"
+                      >
                         {getSemester()}
                       </span>
-                      <span className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500">
+                      <span
+                        title="Ano Letivo"
+                        className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500"
+                      >
                         {getSchoolYear()}
                       </span>
                     </div>
@@ -391,9 +397,11 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     <div className="flex items-center justify-between space-x-2 md:space-x-4">
                       <button
                         type="button"
+                        disabled
+                        title="Coming soon"
                         className={classNames(
                           'inline-flex items-center justify-center space-x-1 rounded-lg border-2 px-2 py-2 text-sm font-medium transition md:space-x-2 md:px-4',
-                          'hover:text-white dark:text-white',
+                          'hover:text-white disabled:cursor-not-allowed disabled:opacity-50 dark:text-white',
                           extraCoursesActive
                             ? 'border-rose-800/50 text-rose-800 hover:bg-rose-800 dark:bg-rose-600/10 dark:hover:bg-rose-800/75'
                             : 'border-secondary/30 text-secondary hover:bg-secondary dark:bg-secondary/30 dark:hover:bg-secondary/75'
@@ -410,6 +418,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                       </button>
                       <button
                         type="button"
+                        title="Avançar para seleção de horários"
                         className={classNames(
                           'inline-flex justify-center rounded-lg border-2 px-4 py-2 text-sm font-medium transition',
                           'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700',
