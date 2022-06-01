@@ -21,7 +21,7 @@ const information = [
 const HeroExchange = () => (
   <div id="exchange" className="flex flex-col items-center justify-center space-y-6">
     <div>
-      <h2 className="mb-2 text-center text-3xl font-bold uppercase text-primary">FEUP Exchange</h2>
+      <h2 className="mb-2 text-center text-3xl font-bold uppercase text-primary">FEUP Exchange (Coming Soon)</h2>
       <h5 className="mb-2 text-center text-xl font-medium">
         The only place you can swap your FEUP Schedule and get on the classes with your buddies.
       </h5>
