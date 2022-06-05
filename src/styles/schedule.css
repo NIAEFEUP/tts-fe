@@ -1,0 +1,146 @@
+.schedule-area {
+  @apply hidden h-full w-full flex-none lg:flex lg:flex-col;
+}
+
+/* Top */
+.schedule-top {
+  @apply mb-2 flex w-full space-x-3 xl:mb-1 xl:space-x-4;
+}
+
+.schedule-top-empty {
+  @apply flex flex-col justify-between space-y-0;
+}
+
+.schedule-top-empty > .dummy {
+  @apply invisible text-[0.65rem] font-medium leading-none xl:text-sm;
+}
+
+.schedule-top-days {
+  @apply flex grow flex-row items-center justify-between;
+}
+
+.schedule-top-days > span {
+  @apply h-auto w-1/6 text-center text-[0.65rem] font-medium leading-none xl:text-sm;
+}
+
+/* Main */
+.schedule-main {
+  @apply flex h-full w-full space-x-3 xl:space-x-4;
+}
+
+.schedule-main-left {
+  @apply flex h-full flex-col justify-between space-y-0;
+}
+
+.schedule-main-left > span {
+  @apply h-auto text-[0.65rem] font-medium leading-none xl:text-sm;
+}
+
+.schedule-main-right {
+  @apply h-full w-full pt-0 xl:pt-1;
+}
+
+/* Schedule Grid */
+.schedule-grid-wrapper {
+  @apply relative h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
+}
+
+.schedule-grid {
+  @apply absolute top-0 h-full w-full;
+}
+
+.schedule-classes {
+  @apply absolute top-0 h-full w-full;
+}
+
+/* Columns */
+.schedule-column {
+  @apply absolute top-0 h-full w-1/6;
+}
+
+.schedule-column-0 {
+  @apply left-0;
+}
+
+.schedule-column-1 {
+  @apply left-1/6;
+}
+
+.schedule-column-2 {
+  @apply left-1/3;
+}
+
+.schedule-column-3 {
+  @apply left-1/2;
+}
+
+.schedule-column-4 {
+  @apply left-2/3;
+}
+
+.schedule-column-5 {
+  @apply left-5/6;
+}
+
+/* Cells */
+.schedule-cell {
+  @apply w-full border-r border-gray-200 dark:border-[#f0f0ff33];
+  height: calc(100% / 30);
+}
+
+.schedule-cell-last-in-row {
+  border-bottom: 0 !important;
+}
+
+.schedule-cell-last-in-column {
+  border-right: 0 !important;
+}
+
+.schedule-cell:nth-child(even) {
+  border-bottom: 1px solid theme('colors.gray.200');
+}
+
+.schedule-cell:nth-child(odd) {
+  border-bottom: 1px solid theme('colors.gray.100');
+}
+
+.dark .schedule-cell:nth-child(even) {
+  border-bottom: 1px solid #f0f0ff33;
+}
+
+.dark .schedule-cell:nth-child(odd) {
+  border-bottom: 1px solid #f0f0ff11;
+}
+
+/* Classes */
+.schedule-class {
+  @apply absolute z-10 w-1/6 border-0 transition hover:ring-0;
+}
+
+.schedule-class-responsive {
+  @apply z-10 border-0 transition hover:ring-0 min-w-[4.5rem] w-min;
+}
+
+.schedule-class-t {
+  @apply border-theoretical bg-theoretical/70 hover:bg-theoretical dark:bg-theoretical/50;
+}
+
+.schedule-class-tp {
+  @apply border-practical bg-practical/70 hover:bg-practical  dark:bg-practical/50;
+}
+
+.schedule-class-lab {
+  @apply border-labs bg-labs/70 hover:bg-labs dark:bg-labs/50;
+}
+
+.schedule-class-lunch {
+  @apply bg-teal-600/50;
+}
+
+.schedule-class-conflict {
+  @apply z-20 border-2 border-red-600 ring-red-600 hover:z-30 hover:ring-1;
+}
+
+.no-borders {
+  border: 0 !important;
+}

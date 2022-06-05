@@ -4,8 +4,9 @@ RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
 
 COPY .*rc ./
+COPY *.json ./
 COPY .prettier* ./
-COPY package*.json ./
+COPY *.config.js ./
 
 RUN npm install
 

@@ -20,8 +20,8 @@ Made with :heart: by NIAEFEUP.
 
 To run this project you must have installed:
 
--   [`docker`](https://www.docker.com/)
--   [`docker compose`](https://www.docker.com/)
+- [`docker`](https://www.docker.com/)
+- [`docker compose`](https://www.docker.com/)
 
 ## How to run
 

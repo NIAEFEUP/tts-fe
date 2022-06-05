@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-light font-prose text-gray-800 dark:bg-darkest dark:text-white;
+}
+
+::-webkit-scrollbar {
+  @apply mx-2 w-3 rounded-full md:w-3.5;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full border-2 border-solid border-black/0 bg-black/40 bg-clip-padding md:border-4;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-inherit;
+}
+
+.min-h-adjusted {
+  min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
+}
+
+.checkbox {
+  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-secondary transition 
+  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-secondary 
+  dark:focus:ring-transparent;
+}
+
+.checkbox-small {
+  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-0 text-secondary transition 
+  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-secondary 
+  dark:focus:ring-0;
+}
+
+.checkboxes {
+  @apply mx-auto flex max-w-2xl flex-col items-center justify-center space-x-0 md:flex-row md:items-start md:space-x-8;
+  margin-top: 1.5rem !important;
+}
