@@ -68,7 +68,7 @@ const Header = ({ siteTitle, location }: Props) => {
                         </span>
                       </button>
                       {location === link.title ? (
-                        <span className="absolute bottom-0 h-1 w-full rounded-t-sm bg-primary dark:bg-primary" />
+                        <span className="absolute bottom-0 h-1 w-full rounded-t bg-primary dark:bg-primary" />
                       ) : null}
                     </Link>
                   ))}
@@ -158,7 +158,7 @@ const Mobile = ({ location }: MobileProps) => (
             <span>{link.title}</span>
           </span>
           {location === link.title ? (
-            <span className="absolute -left-4 h-full w-1 rounded-sm bg-primary dark:bg-primary" />
+            <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
           ) : null}
         </button>
       </Link>

@@ -13,6 +13,7 @@ import {
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
 import { extraCoursesData } from '../../utils/data'
+import { Link } from 'react-router-dom'
 
 type Props = {
   majors: Major[]
@@ -133,7 +134,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
               <InnerCustomTransition>
                 <Dialog.Panel
                   className={classNames(
-                    'w-full max-w-5xl transform space-y-3 rounded-2xl p-6 text-left',
+                    'w-full max-w-6xl transform space-y-3 rounded-2xl p-4 text-left lg:p-8',
                     'bg-lightest align-middle shadow-xl transition-all dark:bg-dark'
                   )}
                 >
@@ -207,7 +208,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         afterLeave={() => setMajorQuery('')}
                       >
                         <Combobox.Options
-                          className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded-md border
+                          className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
                         border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                         >
                           {filteredMajors.length === 0 && majorQuery !== '' ? (
@@ -286,7 +287,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           afterLeave={() => setExtraCoursesQuery('')}
                         >
                           <Combobox.Options
-                            className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded-md border
+                            className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
                         border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                           >
                             {filteredExtraCourses.length === 0 && extraCoursesQuery !== '' ? (
@@ -382,17 +383,28 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
                   {/* Bottom action buttons */}
                   <footer className="mt-8 flex items-center justify-between space-x-2">
-                    <a
-                      type="button"
-                      className={classNames(
-                        'inline-flex justify-center rounded-lg px-4 py-2 text-sm font-medium text-slate-600',
-                        'border-2 border-slate-400 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
-                      )}
-                      href="mailto:projetos.niaefeup@gmail.com"
-                    >
-                      <span className="hidden md:flex">Contacte-nos</span>
-                      <span className="flex md:hidden">Contactos</span>
-                    </a>
+                    <div className="flex space-x-3">
+                      <a
+                        type="button"
+                        className={classNames(
+                          'inline-flex justify-center rounded px-4 py-2 text-sm font-medium text-slate-600',
+                          'border-2 border-slate-400/50 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
+                        )}
+                        href="mailto:projetos.niaefeup@gmail.com"
+                      >
+                        <span className="hidden md:flex">Contacte-nos</span>
+                        <span className="flex md:hidden">Contactar</span>
+                      </a>
+                      <Link
+                        to="/"
+                        className={classNames(
+                          'inline-flex justify-center rounded px-4 py-2 text-sm font-medium text-slate-600',
+                          'border-2 border-slate-400/50 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
+                        )}
+                      >
+                        Go back home
+                      </Link>
+                    </div>
 
                     <div className="flex items-center justify-between space-x-2 md:space-x-4">
                       <button
@@ -400,7 +412,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         disabled
                         title="Coming soon"
                         className={classNames(
-                          'inline-flex items-center justify-center space-x-1 rounded-lg border-2 px-2 py-2 text-sm font-medium transition md:space-x-2 md:px-4',
+                          'inline-flex items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:space-x-2 md:px-4',
                           'hover:text-white disabled:cursor-not-allowed disabled:opacity-50 dark:text-white',
                           extraCoursesActive
                             ? 'border-rose-800/50 text-rose-800 hover:bg-rose-800 dark:bg-rose-600/10 dark:hover:bg-rose-800/75'
@@ -420,7 +432,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         type="button"
                         title="Avançar para seleção de horários"
                         className={classNames(
-                          'inline-flex justify-center rounded-lg border-2 px-4 py-2 text-sm font-medium transition',
+                          'inline-flex justify-center rounded border-2 px-4 py-2 text-sm font-medium transition',
                           'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700',
                           major?.name === '' || !atLeastOneCourse
                             ? 'cursor-not-allowed opacity-50'
