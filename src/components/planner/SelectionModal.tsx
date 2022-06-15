@@ -11,7 +11,7 @@ import {
   MinusCircleIcon,
   CheckCircleIcon,
   HomeIcon,
-  PhoneOutgoingIcon,
+  InboxInIcon,
 } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
@@ -212,7 +212,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                       >
                         <Combobox.Options
                           className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
-                        border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
+                         border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                         >
                           {filteredMajors.length === 0 && majorQuery !== '' ? (
                             <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
@@ -291,7 +291,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         >
                           <Combobox.Options
                             className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
-                        border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
+                          border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                           >
                             {filteredExtraCourses.length === 0 && extraCoursesQuery !== '' ? (
                               <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
@@ -390,38 +390,40 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                       <a
                         type="button"
                         className={classNames(
-                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium text-gray-700 lg:space-x-2',
-                          'border-2 border-gray-700/50 bg-gray-700/5 transition hover:bg-gray-700 hover:text-white'
+                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
+                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
+                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
                         )}
                         href="mailto:projetos.niaefeup@gmail.com"
                       >
-                        <PhoneOutgoingIcon className="h-4 w-4" aria-hidden="true" />
+                        <InboxInIcon className="h-5 w-5" aria-hidden="true" />
                         <span className="hidden md:flex">Contacte-nos</span>
                         <span className="flex md:hidden">Contactar</span>
                       </a>
                       <Link
                         to="/"
                         className={classNames(
-                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium text-gray-700',
-                          'border-2 border-gray-700/50 bg-gray-700/5 transition hover:bg-gray-700 hover:text-white'
+                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
+                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
+                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
                         )}
                       >
-                        <HomeIcon className="h-4 w-4" aria-hidden="true" />
+                        <HomeIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
                         <span>Voltar</span>
                       </Link>
                     </div>
 
-                    <div className="flex w-full flex-col items-center justify-between space-x-0 space-y-2 lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-2">
+                    <div className="flex w-full flex-col items-center justify-between space-x-0 space-y-2 lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
                       <button
                         type="button"
                         title="Coming soon"
                         disabled
                         className={classNames(
                           'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
-                          'hover:text-white disabled:cursor-not-allowed dark:text-white',
+                          'hover:text-white disabled:cursor-not-allowed disabled:opacity-50',
                           extraCoursesActive
-                            ? 'border-rose-700/70 text-rose-700 hover:bg-rose-700 dark:bg-rose-600/10 dark:hover:bg-rose-800/75'
-                            : 'border-secondary/70 bg-sky-50 text-secondary hover:bg-secondary dark:bg-secondary/30 dark:hover:bg-secondary/75'
+                            ? 'border-rose-700/70 bg-rose-50 text-rose-700 hover:bg-rose-700'
+                            : 'border-secondary/70 bg-sky-50 text-secondary hover:bg-secondary'
                         )}
                         onClick={() => setExtraCoursesActive(!extraCoursesActive)}
                       >
