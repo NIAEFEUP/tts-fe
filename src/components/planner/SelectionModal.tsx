@@ -9,6 +9,9 @@ import {
   PencilAltIcon,
   PlusCircleIcon,
   MinusCircleIcon,
+  CheckCircleIcon,
+  HomeIcon,
+  PhoneOutgoingIcon,
 } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
@@ -185,7 +188,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           className={classNames(
                             selected !== null ? 'font-bold' : '',
                             'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
-                            'border-slate-700/25 bg-slate-50 text-slate-800 focus:shadow focus:ring-0'
+                            'border-gray-700/25 bg-gray-50 text-gray-800 focus:shadow focus:ring-0'
                           )}
                           displayValue={(major: Major) => getDisplayMajorText(major)}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
@@ -264,7 +267,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                             placeholder="Procure uma unidade curricular usando sigla, nome ou código"
                             className={classNames(
                               'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
-                              'border-slate-700/25 bg-slate-50 text-slate-800 focus:shadow focus:ring-0'
+                              'border-gray-700/25 bg-gray-50 text-gray-800 focus:shadow focus:ring-0'
                             )}
                             displayValue={(extraCourse: Course) => getDisplayExtraCourseText(extraCourse)}
                             onChange={(event: { target: { value: SetStateAction<string> } }) =>
@@ -382,41 +385,43 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   ) : null}
 
                   {/* Bottom action buttons */}
-                  <footer className="mt-8 flex items-center justify-between space-x-2">
-                    <div className="flex space-x-3">
+                  <footer className="mt-8 flex flex-col items-center justify-between space-y-2 space-x-0 lg:flex-row lg:space-y-0 lg:space-x-2">
+                    <div className="flex w-full flex-col space-x-0 space-y-2 lg:flex-row lg:space-x-3 lg:space-y-0">
                       <a
                         type="button"
                         className={classNames(
-                          'inline-flex justify-center rounded px-4 py-2 text-sm font-medium text-slate-600',
-                          'border-2 border-slate-400/50 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
+                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium text-gray-700 lg:space-x-2',
+                          'border-2 border-gray-700/50 bg-gray-700/5 transition hover:bg-gray-700 hover:text-white'
                         )}
                         href="mailto:projetos.niaefeup@gmail.com"
                       >
+                        <PhoneOutgoingIcon className="h-4 w-4" aria-hidden="true" />
                         <span className="hidden md:flex">Contacte-nos</span>
                         <span className="flex md:hidden">Contactar</span>
                       </a>
                       <Link
                         to="/"
                         className={classNames(
-                          'inline-flex justify-center rounded px-4 py-2 text-sm font-medium text-slate-600',
-                          'border-2 border-slate-400/50 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
+                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium text-gray-700',
+                          'border-2 border-gray-700/50 bg-gray-700/5 transition hover:bg-gray-700 hover:text-white'
                         )}
                       >
-                        Go back home
+                        <HomeIcon className="h-4 w-4" aria-hidden="true" />
+                        <span>Voltar</span>
                       </Link>
                     </div>
 
-                    <div className="flex items-center justify-between space-x-2 md:space-x-4">
+                    <div className="flex w-full flex-col items-center justify-between space-x-0 space-y-2 lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-2">
                       <button
                         type="button"
-                        disabled
                         title="Coming soon"
+                        disabled
                         className={classNames(
-                          'inline-flex items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:space-x-2 md:px-4',
-                          'hover:text-white disabled:cursor-not-allowed disabled:opacity-50 dark:text-white',
+                          'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
+                          'hover:text-white disabled:cursor-not-allowed dark:text-white',
                           extraCoursesActive
-                            ? 'border-rose-800/50 text-rose-800 hover:bg-rose-800 dark:bg-rose-600/10 dark:hover:bg-rose-800/75'
-                            : 'border-secondary/30 text-secondary hover:bg-secondary dark:bg-secondary/30 dark:hover:bg-secondary/75'
+                            ? 'border-rose-700/70 text-rose-700 hover:bg-rose-700 dark:bg-rose-600/10 dark:hover:bg-rose-800/75'
+                            : 'border-secondary/70 bg-sky-50 text-secondary hover:bg-secondary dark:bg-secondary/30 dark:hover:bg-secondary/75'
                         )}
                         onClick={() => setExtraCoursesActive(!extraCoursesActive)}
                       >
@@ -425,14 +430,14 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         ) : (
                           <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
                         )}
-                        <span className="hidden md:flex">UCs fora do curso</span>
+                        <span className="hidden md:flex">UCs&nbsp;fora&nbsp;do&nbsp;curso</span>
                         <span className="flex md:hidden">Extra&nbsp;UCs</span>
                       </button>
                       <button
                         type="button"
                         title="Avançar para seleção de horários"
                         className={classNames(
-                          'inline-flex justify-center rounded border-2 px-4 py-2 text-sm font-medium transition',
+                          'flex w-full items-center justify-center space-x-1 rounded border-2 px-4 py-2 text-sm font-medium transition lg:w-auto',
                           'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700',
                           major?.name === '' || !atLeastOneCourse
                             ? 'cursor-not-allowed opacity-50'
@@ -441,7 +446,8 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         onClick={closeModal}
                         disabled={major?.name === '' || !atLeastOneCourse}
                       >
-                        Confirmar
+                        <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
+                        <span>Confirmar</span>
                       </button>
                     </div>
                   </footer>

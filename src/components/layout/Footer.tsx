@@ -61,7 +61,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <social.icon className="h-8 w-8 rounded text-white transition hover:-translate-y-1 hover:opacity-80" />
+                <social.icon className="h-8 w-8 rounded text-white transition hover:-trangray-y-1 hover:opacity-80" />
               </a>
             </li>
           ))}
