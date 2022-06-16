@@ -1,7 +1,7 @@
 import Layout from './components/layout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { HomePage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage } from './pages'
-import './index.css'
+import './app.css'
 
 const pages = [
   { path: '/', location: 'Home', element: HomePage, liquid: true },
