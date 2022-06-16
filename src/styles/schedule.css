@@ -42,7 +42,7 @@
 
 /* Schedule Grid */
 .schedule-grid-wrapper {
-  @apply relative h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
+  @apply relative h-full w-full rounded;
 }
 
 .schedule-grid {
@@ -118,7 +118,7 @@
 }
 
 .schedule-class-responsive {
-  @apply z-10 border-0 transition hover:ring-0 min-w-[4.5rem] w-min;
+  @apply z-10 w-min min-w-[4.5rem] border-0 transition hover:ring-0;
 }
 
 .schedule-class-t {

@@ -124,7 +124,12 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
             ))}
           </div>
           <div className="schedule-main-right">
-            <div className="schedule-grid-wrapper">
+            <div
+              className={classNames(
+                'schedule-grid-wrapper',
+                showGrid ? 'border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl' : ''
+              )}
+            >
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
                 {lessons.length === conflicts.length

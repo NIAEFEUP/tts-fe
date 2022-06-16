@@ -91,7 +91,7 @@ const TimeTableSchedulerPage = () => {
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
       {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 lg:px-4 lg:py-4">
+      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
           <Schedule
             showGrid={showGrid}
@@ -115,11 +115,11 @@ const TimeTableSchedulerPage = () => {
             <button
               type="button"
               onClick={() => setShowGrid(!showGrid)}
-              className="hidden h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 
-              py-3 text-xs font-medium text-white transition hover:opacity-80 lg:flex xl:px-4 xl:text-sm 2xl:w-min"
+              className="hidden h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 py-3 
+              text-xs font-medium text-white transition hover:opacity-80 lg:flex xl:px-4 xl:text-sm 2xl:w-min 2xl:space-x-0"
             >
+              <span className="flex 2xl:hidden">Minimal</span>
               <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />
-              <span className="flex 2xl:hidden">Tidy</span>
             </button>
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
