@@ -20,7 +20,7 @@ const socials: Social[] = [
 
 const Footer = () => {
   return (
-    <footer className="mt-8 bg-gradient-to-t from-secondary to-secondary px-2 py-4 transition dark:from-dark dark:to-dark md:px-6 md:py-8">
+    <footer className="mt-8 bg-navy px-2 py-4 transition dark:bg-darker md:px-6 md:py-8">
       <div className="justify-center md:flex md:justify-between">
         {/* Left */}
         <div className="flex items-center justify-center space-x-4 md:items-start md:justify-start">
@@ -61,7 +61,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <social.icon className="h-8 w-8 rounded text-white transition hover:-trangray-y-1 hover:opacity-80" />
+                <social.icon className="hover:-trangray-y-1 h-8 w-8 rounded text-white transition hover:opacity-80" />
               </a>
             </li>
           ))}

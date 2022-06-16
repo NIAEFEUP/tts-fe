@@ -74,7 +74,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
         </h4>
         <Listbox.Button
           className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-2 pl-3 pr-10 
-          text-left transition hover:bg-primary/75 dark:bg-lightish/10 dark:shadow dark:hover:bg-primary/50 sm:text-sm"
+          text-left transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 sm:text-sm"
         >
           <span className="block truncate font-medium group-hover:text-white">
             {getOptionDisplayText(selectedOption)}

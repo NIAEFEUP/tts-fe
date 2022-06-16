@@ -6,6 +6,12 @@ body {
   @apply bg-light font-prose text-gray-800 dark:bg-darkest dark:text-white;
 }
 
+h1,
+h2,
+h3 {
+  @apply font-headings;
+}
+
 ::-webkit-scrollbar {
   @apply mx-2 w-3 rounded-full md:w-3.5;
 }
@@ -23,16 +29,16 @@ body {
 }
 
 .checkbox {
-  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-secondary transition 
+  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-primary transition 
   hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-secondary 
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
   dark:focus:ring-transparent;
 }
 
 .checkbox-small {
-  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-0 text-secondary transition 
+  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-0 text-primary transition 
   hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-secondary 
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
   dark:focus:ring-0;
 }
 

@@ -147,20 +147,20 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     className="mb-5 flex w-full items-center justify-between space-x-2 text-center font-medium"
                   >
                     <div className="flex items-center justify-start space-x-1">
-                      <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
+                      <AcademicCapIcon className="h-6 w-6 text-feup" aria-hidden="true" />
                       <h3 className="text-xl font-semibold leading-6 tracking-tight dark:text-white">Escolha de UCs</h3>
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
                       <span
                         title="Semestre"
-                        className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {getSemester()}
                       </span>
                       <span
                         title="Ano Letivo"
-                        className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {getSchoolYear()}
                       </span>
@@ -186,9 +186,9 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
                           className={classNames(
-                            selected !== null ? 'font-bold' : '',
+                            selected !== null ? 'font-semibold' : '',
                             'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
-                            'border-gray-700/25 bg-gray-50 text-gray-800 focus:shadow focus:ring-0'
+                            'border-gray-700/25 bg-gray-50 text-gray-700 focus:shadow focus:ring-0'
                           )}
                           displayValue={(major: Major) => getDisplayMajorText(major)}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
@@ -197,7 +197,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         />
                         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                           <SelectorIcon
-                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-secondary"
+                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-gray-100 hover:text-primary"
                             aria-hidden="true"
                           />
                         </Combobox.Button>
@@ -225,7 +225,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                 className={({ active }) =>
                                   `relative cursor-pointer select-none py-2 px-3 ${
                                     major?.name !== '' ? 'pl-10' : 'pl-4'
-                                  } ${active ? 'bg-secondary text-white' : 'text-gray-900'}`
+                                  } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
                                 }
                                 value={major}
                               >
@@ -237,7 +237,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                     {selected ? (
                                       <span
                                         className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                          active ? 'text-white' : 'text-secondary'
+                                          active ? 'text-white' : 'text-primary'
                                         }`}
                                       >
                                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -276,7 +276,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                             <SelectorIcon
-                              className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-secondary"
+                              className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-primary"
                               aria-hidden="true"
                             />
                           </Combobox.Button>
@@ -304,7 +304,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                   className={({ active }) =>
                                     `relative cursor-pointer select-none py-2 px-3 ${
                                       extraCourse?.name !== '' ? 'pl-10' : 'pl-4'
-                                    } ${active ? 'bg-secondary text-white' : 'text-gray-900'}`
+                                    } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
                                   }
                                   value={extraCourse}
                                 >
@@ -316,7 +316,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                       {selected ? (
                                         <span
                                           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                            active ? 'text-white' : 'text-secondary'
+                                            active ? 'text-white' : 'text-primary'
                                           }`}
                                         >
                                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -423,7 +423,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           'hover:text-white disabled:cursor-not-allowed disabled:opacity-50',
                           extraCoursesActive
                             ? 'border-rose-700/70 bg-rose-50 text-rose-700 hover:bg-rose-700'
-                            : 'border-secondary/70 bg-sky-50 text-secondary hover:bg-secondary'
+                            : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'
                         )}
                         onClick={() => setExtraCoursesActive(!extraCoursesActive)}
                       >

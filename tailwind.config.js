@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        navy: '#204057',
+        navy: '#18222e',
         darkish: '#333640',
         dark: '#252832',
         darker: '#1e2028',
@@ -43,7 +43,7 @@ module.exports = {
       fontFamily: {
         flow: 'Flow',
         prose: ['Inter', ...defaultTheme.fontFamily.sans],
-        headings: ['Inter', ...defaultTheme.fontFamily.sans],
+        headings: ['Montserrat', ...defaultTheme.fontFamily.sans],
         mono: ['Fira Code', ...defaultTheme.fontFamily.mono],
       },
       keyframes: {
