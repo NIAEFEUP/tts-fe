@@ -30,16 +30,10 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     return extraCoursesData
   }
 
-  const initMajor = () => {
-    const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
-    if (storedMajor === null) return null
-    else return majors.find((item) => item.name === storedMajor?.name)
-  }
-
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [selected, setSelected] = useState<Major>(initMajor())
+  const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
@@ -124,7 +118,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary
           px-2 py-3 text-xs font-medium text-white transition hover:opacity-80 xl:px-4 xl:text-sm"
         >
-          <span>Editar</span>
+          <span className="flex">Editar</span>
           <PencilAltIcon className="h-4 w-4 text-white xl:h-5 xl:w-5" />
         </button>
       </div>
@@ -334,55 +328,55 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   )}
 
                   {/* Courses checkboxes */}
-                  {major?.name !== '' ? (
-                    <div className="checkboxes">
-                      {courses.map((year: CheckedYearCourses, yearIdx: number) => (
-                        <div key={`year-${yearIdx}`}>
-                          {/* Parent checkbox */}
-                          <div className="flex items-center transition">
-                            <input
-                              type="checkbox"
-                              className="checkbox"
-                              checked={courses[yearIdx].every((course) => course.checked)}
-                              id={`year-checkbox-${yearIdx}`}
-                              onChange={(event) => {
-                                handleCheckGroup(event, yearIdx)
-                              }}
-                            />
-                            <label
-                              className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                              htmlFor={`year-checkbox-${yearIdx}`}
-                            >
-                              <span>{yearIdx + 1}º Ano</span>
-                            </label>
-                          </div>
+                  <div className="checkboxes">
+                    {major
+                      ? courses.map((year: CheckedYearCourses, yearIdx: number) => (
+                          <div key={`year-${yearIdx}`}>
+                            {/* Parent checkbox */}
+                            <div className="flex items-center transition">
+                              <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={courses[yearIdx].every((course) => course.checked)}
+                                id={`year-checkbox-${yearIdx}`}
+                                onChange={(event) => {
+                                  handleCheckGroup(event, yearIdx)
+                                }}
+                              />
+                              <label
+                                className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
+                                htmlFor={`year-checkbox-${yearIdx}`}
+                              >
+                                <span>{yearIdx + 1}º Ano</span>
+                              </label>
+                            </div>
 
-                          {/* Children checkboxes */}
-                          <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
-                            {year.map((course: CheckedCourse, courseIdx: number) => (
-                              <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center transition">
-                                <input
-                                  type="checkbox"
-                                  className="checkbox"
-                                  checked={courses[yearIdx][courseIdx].checked}
-                                  id={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                  onChange={(event) => {
-                                    handleCheck(event, yearIdx, courseIdx)
-                                  }}
-                                />
-                                <label
-                                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                                  htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                >
-                                  {course.info.acronym}
-                                </label>
-                              </div>
-                            ))}
+                            {/* Children checkboxes */}
+                            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
+                              {year.map((course: CheckedCourse, courseIdx: number) => (
+                                <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center transition">
+                                  <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    checked={courses[yearIdx][courseIdx].checked}
+                                    id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                    onChange={(event) => {
+                                      handleCheck(event, yearIdx, courseIdx)
+                                    }}
+                                  />
+                                  <label
+                                    className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                                    htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                  >
+                                    {course.info.acronym}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : null}
+                        ))
+                      : null}
+                  </div>
 
                   {/* Bottom action buttons */}
                   <footer className="mt-8 flex flex-col items-center justify-between space-y-2 space-x-0 lg:flex-row lg:space-y-0 lg:space-x-2">

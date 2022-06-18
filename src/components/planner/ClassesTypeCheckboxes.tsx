@@ -8,7 +8,7 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
   const [classesTP, setClassesTP] = classesTPHook
 
   return (
-    <div className="flex items-center justify-center space-x-4 space-y-0 2xl:flex-col 2xl:space-y-1 2xl:space-x-0">
+    <div className="flex items-center justify-center space-x-4 space-y-0 xl:flex-col xl:space-y-1 xl:space-x-0">
       <div className="flex items-center justify-center space-x-2">
         <input
           type="checkbox"
