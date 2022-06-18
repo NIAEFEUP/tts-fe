@@ -17,6 +17,7 @@ import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
 import { extraCoursesData } from '../../utils/data'
 import { Link } from 'react-router-dom'
+import useCourses from '../../hooks/useCourses'
 
 type Props = {
   majors: Major[]
@@ -33,6 +34,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
+  const [, setCoursesLS] = useCourses()
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
@@ -80,6 +82,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
     setCourses([...courses])
+    setCoursesLS([...courses])
 
     let some = courses[year].some((course) => course.checked)
     let every = courses[year].every((course) => course.checked)
@@ -106,6 +109,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     })
     courses[year] = newGroupEntry
     setCourses([...courses])
+    setCoursesLS([...courses])
   }
 
   return (

@@ -8,6 +8,7 @@ import ScheduleListbox from '../components/planner/ScheduleListbox'
 import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
 import useShowGrid from '../hooks/useShowGrid'
 import useMajor from '../hooks/useMajor'
+import useCourses from '../hooks/useCourses'
 
 const TimeTableSchedulerPage = () => {
   const getMajors = () => {
@@ -47,27 +48,30 @@ const TimeTableSchedulerPage = () => {
     }))
   }
 
-  const initializeModalState = () => {
-    if (process.env.REACT_APP_DEVELOPMENT) {
-      return major?.name === '' ? true : false
-    } else if (process.env.REACT_APP_PRODUCTION) {
-      return major?.name !== '' && selected.length > 0 ? false : true
-    } else return true
+  const initCourses = () => {
+    if (coursesLS !== null) {
+      return coursesLS
+    } else {
+      const newCourses = coursesAddCheckProperty(getCourses())
+      setCoursesLS(newCourses)
+      return newCourses
+    }
   }
 
   const majors = getMajors()
   const [majorLS, setMajorLS] = useMajor()
+  const [coursesLS, setCoursesLS] = useCourses()
+  const [showGrid, setShowGrid] = useShowGrid()
   const [major, setMajor] = useState<Major>(majorLS)
-  const [courses, setCourses] = useState<CheckedMajorCourses>(() => coursesAddCheckProperty(getCourses()))
+  const [courses, setCourses] = useState<CheckedMajorCourses>(() => initCourses())
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => initializeModalState())
   const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
-  const [showGrid, setShowGrid] = useShowGrid()
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
 
   useEffect(() => {
     setMajorLS(major)
-  }, [major])
+  }, [major, setMajorLS])
 
   useEffect(() => {
     // const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
