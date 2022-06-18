@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-import { AppLogo } from '../../images'
+import { LogoNIAEFEUPImage } from '../../images'
 import {
   MenuIcon,
   XIcon,
@@ -38,16 +38,16 @@ const Header = ({ siteTitle, location }: Props) => {
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to="/" className="flex items-center space-x-2">
                     <img
-                      src={AppLogo}
+                      src={LogoNIAEFEUPImage}
                       alt="Time Table Selector"
                       className="z-20 inline-flex h-6 w-auto rounded-full transition dark:hidden"
                     />
                     <img
-                      src={AppLogo}
+                      src={LogoNIAEFEUPImage}
                       alt="Time Table Selector"
                       className="z-20 hidden h-6 w-auto rounded-full transition dark:inline-flex"
                     />
-                    <h2 className="text-xs font-bold tracking-tighter duration-150 lg:text-base">{siteTitle}</h2>
+                    <h3 className="text-xs font-bold tracking-tighter duration-150 lg:text-base">{siteTitle}</h3>
                   </Link>
                 </div>
 
@@ -105,13 +105,13 @@ const Hamburger = ({ open }: HamburgerProps) => (
       {open ? (
         <img
           className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
-          src={AppLogo}
+          src={LogoNIAEFEUPImage}
           alt="Time Table Selector"
         />
       ) : (
         <img
           className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
-          src={AppLogo}
+          src={LogoNIAEFEUPImage}
           alt="Time Table Selector"
         />
       )}
