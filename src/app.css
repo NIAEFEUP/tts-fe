@@ -25,7 +25,7 @@ h3 {
 }
 
 .min-h-adjusted {
-  min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
+  min-height: calc(100vh - 3.5rem - 3rem); /* minHeight = pageHeight - headerHeight - footerHeight */
 }
 
 .checkbox {
@@ -36,10 +36,10 @@ h3 {
 }
 
 .checkbox-small {
-  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-0 text-primary transition 
+  @apply h-3 w-3 cursor-pointer rounded border-2 border-transparent bg-lightish p-0 text-primary transition 
   hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
   dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
-  dark:focus:ring-0;
+  dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
 }
 
 .checkboxes {

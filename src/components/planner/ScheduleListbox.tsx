@@ -3,7 +3,6 @@ import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CourseOption, CourseOptions, CourseSchedule } from '../../@types'
 import { convertHour, convertWeekday } from '../../utils'
-import useShownSubjects from '../../hooks/useShownSubjects'
 
 type Props = {
   courseOption: CourseOption
@@ -12,20 +11,9 @@ type Props = {
 
 const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   const [, setSelected] = selectedHook
-  const [shownSubjects] = useShownSubjects()
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
-
-  const [classesTShown, setClassesTShown] = useState<boolean>(() => {
-    const key = 't-' + courseOption.course.info.acronym
-    const value = shownSubjects[key]
-    return value ? value : true
-  })
-
-  const [classesTPShown, setClassesTPShown] = useState<boolean>(() => {
-    const key = 'tp-' + courseOption.course.info.acronym
-    const value = shownSubjects[key]
-    return value ? value : true
-  })
+  const [classesTShown, setClassesTShown] = useState<boolean>(true)
+  const [classesTPShown, setClassesTPShown] = useState<boolean>(true)
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -73,8 +61,8 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           {courseOption.course.info.name} (<strong>{courseOption.course.info.acronym}</strong>)
         </h4>
         <Listbox.Button
-          className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-2 pl-3 pr-10 
-          text-left transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 sm:text-sm"
+          className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1.5 pl-2 pr-9 text-left 
+          text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-2 2xl:pl-3 2xl:pr-10 2xl:text-sm"
         >
           <span className="block truncate font-medium group-hover:text-white">
             {getOptionDisplayText(selectedOption)}

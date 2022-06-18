@@ -85,7 +85,7 @@ const TimeTableSchedulerPage = () => {
   }, [courses])
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-8 md:px-8 xl:gap-x-8 xl:gap-y-0">
+    <div className="grid w-full grid-cols-12 gap-x-6 gap-y-4 py-4 px-4">
       {/* Schedule Preview */}
       <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
@@ -99,9 +99,9 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-2 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark lg:col-span-3">
-        <div className="space-y-3">
-          <div className="flex flex-col items-center justify-center space-y-4 space-x-0 xl:flex-row xl:space-y-0 xl:space-x-3">
+      <div className="min-h-adjusted order-2 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
+        <div className="space-y-2">
+          <div className="flex flex-col items-center justify-center space-y-3 space-x-0 xl:flex-row xl:space-y-0 xl:space-x-3">
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
@@ -112,14 +112,14 @@ const TimeTableSchedulerPage = () => {
               type="button"
               onClick={() => setShowGrid(!showGrid)}
               className="hidden h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 py-3 
-              text-xs font-medium text-white transition hover:opacity-80 lg:flex xl:px-4 xl:text-sm xl:w-min xl:space-x-0"
+              text-xs font-medium text-white transition hover:opacity-80 lg:flex xl:w-min xl:space-x-0 xl:px-4 xl:text-sm"
             >
               <span className="flex xl:hidden">Minimal</span>
               <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />
             </button>
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
-          <div className="flex flex-col space-y-6 py-3 px-0">
+          <div className="flex flex-col space-y-4 py-2 px-0">
             {selected.length > 0 &&
               selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
@@ -131,21 +131,21 @@ const TimeTableSchedulerPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col space-y-2 text-xs lg:text-sm">
+        <div className="flex flex-col space-y-1 text-xxs 2xl:space-y-2 2xl:text-xs">
           <div className="inline-flex items-center space-x-1 lg:space-x-2">
-            <span className="h-5 w-5 rounded bg-theoretical shadow" />
+            <span className="h-3 w-3 rounded bg-theoretical shadow 2xl:h-4 2xl:w-4" />
             <span>Teóricas</span>
           </div>
           <div className="inline-flex items-center space-x-1 lg:space-x-2">
-            <span className="h-5 w-5 rounded bg-practical shadow" />
+            <span className="h-3 w-3 rounded bg-practical shadow 2xl:h-4 2xl:w-4" />
             <span>Práticas</span>
           </div>
           <div className="inline-flex items-center space-x-1 lg:space-x-2">
-            <span className="h-5 w-5 rounded bg-labs shadow" />
+            <span className="h-3 w-3 rounded bg-labs shadow 2xl:h-4 2xl:w-4" />
             <span>Laboratório</span>
           </div>
           <div className="inline-flex items-center space-x-1 lg:space-x-2">
-            <span className="h-5 w-5 rounded bg-teal-600/50 shadow" />
+            <span className="h-3 w-3 rounded bg-teal-600/50 shadow 2xl:h-4 2xl:w-4" />
             <span>Almoço</span>
           </div>
         </div>
