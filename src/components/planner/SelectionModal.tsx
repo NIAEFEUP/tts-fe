@@ -115,15 +115,15 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
   return (
     <>
-      <div className="flex w-full items-center justify-center">
+      <div className="flex w-full items-center justify-center xl:w-min">
         {/* Edit button */}
         <button
           type="button"
           onClick={openModal}
-          className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary
-          px-2 py-3 text-xs font-medium text-white transition hover:opacity-80 xl:px-4 xl:text-sm"
+          className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary px-2
+          py-3 text-xs font-medium text-white transition hover:opacity-80 xl:space-x-0 xl:px-4 xl:text-sm 2xl:space-x-2"
         >
-          <span className="flex">Editar</span>
+          <span className="flex xl:hidden 2xl:flex">Editar</span>
           <PencilAltIcon className="h-4 w-4 text-white xl:h-5 xl:w-5" />
         </button>
       </div>

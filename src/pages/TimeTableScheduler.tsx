@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react'
+import { SparklesIcon } from '@heroicons/react/outline'
+import { useCourses, useMajor, useShowGrid } from '../hooks'
 import { majorsData, coursesData, schedulesData } from '../utils/data'
 import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
-import { SparklesIcon } from '@heroicons/react/outline'
-import Schedule from '../components/planner/Schedule'
-import SelectionModal from '../components/planner/SelectionModal'
-import ScheduleListbox from '../components/planner/ScheduleListbox'
-import ClassesTypeCheckboxes from '../components/planner/ClassesTypeCheckboxes'
-import useShowGrid from '../hooks/useShowGrid'
-import useMajor from '../hooks/useMajor'
-import useCourses from '../hooks/useCourses'
+import { Schedule, SelectionModal, ScheduleListbox, ClassesTypeCheckboxes, ExportSchedule } from '../components/planner'
 
 const TimeTableSchedulerPage = () => {
   const getMajors = () => {
@@ -97,13 +92,14 @@ const TimeTableSchedulerPage = () => {
       {/* Sidebar */}
       <div className="min-h-adjusted order-2 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
-          <div className="flex flex-col items-center justify-center space-y-3 space-x-0 xl:flex-row xl:space-y-0 xl:space-x-3">
+          <div className="flex flex-col flex-wrap gap-3 items-center justify-start xl:flex-row">
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
               coursesHook={[courses, setCourses]}
             />
+            <ExportSchedule schedule={selected} />
             <button
               type="button"
               onClick={() => setShowGrid(!showGrid)}
