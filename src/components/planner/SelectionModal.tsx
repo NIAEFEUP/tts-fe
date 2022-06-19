@@ -28,6 +28,7 @@ type Props = {
 
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
   const getExtraCourses = () => {
+    // TODO: get all other courses data
     return extraCoursesData
   }
 

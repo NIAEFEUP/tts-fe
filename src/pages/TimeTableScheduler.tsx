@@ -39,6 +39,8 @@ const TimeTableSchedulerPage = () => {
     return courses.flat().filter((course) => course.checked)
   }
 
+  const initializeCourses = () => (coursesLS !== null ? coursesLS : coursesAddCheckProperty(getCourses()))
+
   const initializeSelected = (): CourseOptions => {
     const selectedCourses = getCheckedCourses(courses)
     return selectedCourses.map((course: CheckedCourse) => ({
@@ -48,22 +50,12 @@ const TimeTableSchedulerPage = () => {
     }))
   }
 
-  const initCourses = () => {
-    if (coursesLS !== null) {
-      return coursesLS
-    } else {
-      const newCourses = coursesAddCheckProperty(getCourses())
-      setCoursesLS(newCourses)
-      return newCourses
-    }
-  }
-
   const majors = getMajors()
   const [majorLS, setMajorLS] = useMajor()
-  const [coursesLS, setCoursesLS] = useCourses()
+  const [coursesLS] = useCourses()
   const [showGrid, setShowGrid] = useShowGrid()
   const [major, setMajor] = useState<Major>(majorLS)
-  const [courses, setCourses] = useState<CheckedMajorCourses>(() => initCourses())
+  const [courses, setCourses] = useState<CheckedMajorCourses>(() => initializeCourses())
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
