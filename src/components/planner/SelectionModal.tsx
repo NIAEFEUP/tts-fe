@@ -115,7 +115,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
   return (
     <>
-      <div className="flex w-full items-center justify-center xl:w-min">
+      <div className="flex w-full grow items-center justify-center xl:w-min">
         {/* Edit button */}
         <button
           type="button"

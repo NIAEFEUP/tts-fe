@@ -61,15 +61,16 @@ const TimeTableSchedulerPage = () => {
   }, [major, setMajorLS])
 
   useEffect(() => {
-    // const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
-    //   const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-    //   return value ? value.option : null
-    // }
+    const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
+      const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
+      return value !== undefined ? value.option : null
+    }
 
+    // FIXME: for some reason this doesn't work properly
     setSelected((prevSelected) => [
       ...getCheckedCourses(courses).map((course: CheckedCourse) => ({
         course: course,
-        option: null,
+        option: findPreviousEntry(prevSelected, course),
         schedules: getCourseSchedule(course),
       })),
     ])
@@ -92,7 +93,7 @@ const TimeTableSchedulerPage = () => {
       {/* Sidebar */}
       <div className="min-h-adjusted order-2 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
-          <div className="flex flex-col flex-wrap gap-3 items-center justify-start xl:flex-row">
+          <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
