@@ -74,7 +74,7 @@ const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) =>
   }
 }
 
-const getLessonBoxId = (lesson: Lesson, prefix?: string): string => {
+const getLessonBoxName = (lesson: Lesson, prefix?: string): string => {
   const tokens: string[] = [
     'lesson',
     lesson.schedule.lesson_type,
@@ -97,5 +97,5 @@ export {
   getScheduleOptionDisplayText,
   getLessonBoxTime,
   getLessonBoxStyles,
-  getLessonBoxId,
+  getLessonBoxName,
 }

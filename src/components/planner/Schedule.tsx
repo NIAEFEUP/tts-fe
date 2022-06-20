@@ -4,7 +4,7 @@ import { Lesson, CourseOptions } from '../../@types'
 import {
   convertHour,
   convertWeekdayLong,
-  getLessonBoxId,
+  getLessonBoxName,
   getLessonBoxStyles,
   getLessonBoxTime,
   timesCollide,
@@ -223,10 +223,10 @@ const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
   return (
     active && (
       <div
-        id={getLessonBoxId(lesson)}
         style={getLessonBoxStyles(lesson, maxHour, minHour)}
         className={classNames(
           'schedule-class',
+          getLessonBoxName(lesson),
           conflict ? 'schedule-class-conflict' : '',
           lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
           lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
@@ -276,9 +276,9 @@ const ResponsiveLessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
   return (
     active && (
       <div
-        id={getLessonBoxId(lesson, 'responsive')}
         className={classNames(
           'schedule-class-responsive',
+          getLessonBoxName(lesson, 'responsive'),
           conflict ? 'schedule-class-conflict' : '',
           lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
           lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',

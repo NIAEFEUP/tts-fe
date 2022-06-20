@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment, useMemo } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CourseOption, CourseOptions, CourseSchedule, Lesson } from '../../@types'
-import { getLessonBoxId, getScheduleOptionDisplayText } from '../../utils'
+import { getLessonBoxName, getScheduleOptionDisplayText } from '../../utils'
 
 type Props = {
   courseOption: CourseOption
@@ -39,14 +39,20 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
         schedule: courseOption.option,
       }
 
+      if (type === 'T') lesson.schedule.lesson_type = 'T'
+      else if (type === 'TP') lesson.schedule.lesson_type = 'TP'
+
       const lessonBoxId =
         window.matchMedia('(max-width: 1024px)').matches === true
-          ? getLessonBoxId(lesson, 'responsive')
-          : getLessonBoxId(lesson)
+          ? getLessonBoxName(lesson, 'responsive')
+          : getLessonBoxName(lesson)
 
-      const lessonBox = document.getElementById(lessonBoxId)
-      if (lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
-      else lessonBox.classList.add('hidden')
+      const lessonBoxes = document.getElementsByClassName(lessonBoxId)
+      for (let i = 0; i < lessonBoxes.length; i++) {
+        const lessonBox = lessonBoxes[i] as HTMLElement
+        if (lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+        else lessonBox.classList.add('hidden')
+      }
     }
   }
 
