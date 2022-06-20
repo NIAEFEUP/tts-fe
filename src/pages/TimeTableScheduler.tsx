@@ -1,26 +1,11 @@
+import * as backendAPI from '../backend'
 import { useState, useEffect } from 'react'
 import { SparklesIcon } from '@heroicons/react/outline'
 import { useCourses, useMajor, useShowGrid } from '../hooks'
-import { majorsData, coursesData, schedulesData } from '../utils/data'
 import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
 import { Schedule, SelectionModal, ScheduleListbox, ClassesTypeCheckboxes, ExportSchedule } from '../components/planner'
 
 const TimeTableSchedulerPage = () => {
-  const getMajors = () => {
-    // TODO: replace majorsData with backend request
-    return majorsData
-  }
-
-  const getCourses = () => {
-    //TODO: replace courseData with backend request
-    return coursesData
-  }
-
-  const getCourseSchedule = (course) => {
-    // TODO: Replace schedulesData (static IART) with backend request
-    return schedulesData
-  }
-
   const coursesAddCheckProperty = (majorCourses: MajorCourses): CheckedMajorCourses => {
     return majorCourses.map((year: YearCourses) =>
       year.map((item: Course) => ({
@@ -34,23 +19,25 @@ const TimeTableSchedulerPage = () => {
     return courses.flat().filter((course) => course.checked)
   }
 
-  const initializeCourses = () => (coursesLS !== null ? coursesLS : coursesAddCheckProperty(getCourses()))
+  const initializeCourses = (major: Major) => {
+    return coursesLS !== null ? coursesLS : coursesAddCheckProperty(backendAPI.getCourses(major))
+  }
 
   const initializeSelected = (): CourseOptions => {
     const selectedCourses = getCheckedCourses(courses)
     return selectedCourses.map((course: CheckedCourse) => ({
       course: course,
       option: null,
-      schedules: getCourseSchedule(course),
+      schedules: backendAPI.getCourseSchedule(course),
     }))
   }
 
-  const majors = getMajors()
+  const majors = backendAPI.getMajors()
   const [majorLS, setMajorLS] = useMajor()
   const [coursesLS] = useCourses()
   const [showGrid, setShowGrid] = useShowGrid()
   const [major, setMajor] = useState<Major>(majorLS)
-  const [courses, setCourses] = useState<CheckedMajorCourses>(() => initializeCourses())
+  const [courses, setCourses] = useState<CheckedMajorCourses>(() => initializeCourses(major))
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
@@ -71,7 +58,7 @@ const TimeTableSchedulerPage = () => {
       ...getCheckedCourses(courses).map((course: CheckedCourse) => ({
         course: course,
         option: findPreviousEntry(prevSelected, course),
-        schedules: getCourseSchedule(course),
+        schedules: backendAPI.getCourseSchedule(course),
       })),
     ])
   }, [courses])

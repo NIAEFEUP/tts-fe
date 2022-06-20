@@ -1,4 +1,6 @@
 import classNames from 'classnames'
+import * as backendAPI from '../../backend'
+import { Link } from 'react-router-dom'
 import Alert, { AlertType } from './Alert'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses, Course } from '../../@types'
@@ -15,9 +17,7 @@ import {
 } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
-import { extraCoursesData } from '../../utils/data'
-import { Link } from 'react-router-dom'
-import useCourses from '../../hooks/useCourses'
+import { useCourses } from '../../hooks'
 
 type Props = {
   majors: Major[]
@@ -27,11 +27,6 @@ type Props = {
 }
 
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
-  const getExtraCourses = () => {
-    // TODO: get all other courses data
-    return extraCoursesData
-  }
-
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
@@ -49,7 +44,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
-  const extraCourses = getExtraCourses()
+  const extraCourses = backendAPI.getExtraCourses(major)
   const filteredExtraCourses =
     extraCoursesQuery === ''
       ? extraCourses
