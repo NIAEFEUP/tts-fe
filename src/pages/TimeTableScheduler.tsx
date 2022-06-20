@@ -64,7 +64,7 @@ const TimeTableSchedulerPage = () => {
   }, [courses])
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-6 gap-y-4 py-4 px-4">
+    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
       {/* Schedule Preview */}
       <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
@@ -78,7 +78,7 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-2 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between space-y-2 rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
             <SelectionModal
