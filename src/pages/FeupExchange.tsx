@@ -3,7 +3,7 @@ const FeupExchangePage = () => {
   const isComingSoon = true
 
   return isComingSoon ? (
-    <div className="w-full mx-auto">
+    <div className="mx-auto w-full">
       <ComingSoon />
     </div>
   ) : (

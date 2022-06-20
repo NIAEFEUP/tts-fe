@@ -5,17 +5,17 @@ import { LogoNIAEFEUPImage } from '../../images'
 import {
   MenuIcon,
   XIcon,
-  HomeIcon,
+  AtSymbolIcon,
   UserCircleIcon,
   CollectionIcon,
   SwitchHorizontalIcon,
 } from '@heroicons/react/outline'
 
 const navigation = [
-  { title: 'Home', location: '/', icon: <HomeIcon className="h-5 w-5" /> },
-  { title: 'Planner', location: '/tts', icon: <CollectionIcon className="h-5 w-5" /> },
-  { title: 'Exchange', location: '/feupexchange', icon: <SwitchHorizontalIcon className="h-5 w-5" /> },
-  { title: 'Profile', location: '/profile', icon: <UserCircleIcon className="h-5 w-5" /> },
+  { title: 'Planner', location: '/planner', icon: <CollectionIcon className="h-5 w-5" />, wip: false },
+  { title: 'Exchange', location: '/exchange', icon: <SwitchHorizontalIcon className="h-5 w-5" />, wip: true },
+  { title: 'Profile', location: '/profile', icon: <UserCircleIcon className="h-5 w-5" />, wip: true },
+  { title: 'About', location: '/about', icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
 ]
 
 type Props = {
@@ -52,26 +52,28 @@ const Header = ({ siteTitle, location }: Props) => {
                 </div>
 
                 <div className="hidden space-x-8 self-center md:inline-flex">
-                  {navigation.map((link, index) => (
-                    <Link to={link.location} key={`nav-${index}`} className="relative py-1">
-                      <button
-                        type="button"
-                        className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
-                          location === link.title
-                            ? 'text-primary dark:text-white'
-                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
-                        }`}
-                      >
-                        <span className="flex items-center justify-center space-x-1.5">
-                          <span>{link.icon}</span>
-                          <span>{link.title}</span>
-                        </span>
-                      </button>
-                      {location === link.title ? (
-                        <span className="absolute bottom-0 h-1 w-full rounded-t bg-primary dark:bg-primary" />
-                      ) : null}
-                    </Link>
-                  ))}
+                  {navigation
+                    .filter((link) => !link.wip)
+                    .map((link, index) => (
+                      <Link to={link.location} key={`nav-${index}`} className="relative py-1">
+                        <button
+                          type="button"
+                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
+                            location === link.title
+                              ? 'text-primary dark:text-white'
+                              : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
+                          }`}
+                        >
+                          <span className="flex items-center justify-center space-x-1.5">
+                            <span>{link.icon}</span>
+                            <span>{link.title}</span>
+                          </span>
+                        </button>
+                        {location === link.title ? (
+                          <span className="absolute bottom-0 h-1 w-full rounded-t bg-primary dark:bg-primary" />
+                        ) : null}
+                      </Link>
+                    ))}
                 </div>
 
                 <div className="hidden self-center md:inline-flex">
@@ -143,25 +145,27 @@ type MobileProps = {
 
 const Mobile = ({ location }: MobileProps) => (
   <Disclosure.Panel className="flex flex-col space-y-3 py-2 md:hidden">
-    {navigation.map((link, index) => (
-      <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
-        <button
-          type="button"
-          className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
-            location === link.title
-              ? 'text-primary dark:text-white'
-              : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
-          }`}
-        >
-          <span className="flex items-center justify-center space-x-2">
-            <span>{link.icon}</span>
-            <span>{link.title}</span>
-          </span>
-          {location === link.title ? (
-            <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
-          ) : null}
-        </button>
-      </Link>
-    ))}
+    {navigation
+      .filter((link) => !link.wip)
+      .map((link, index) => (
+        <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
+          <button
+            type="button"
+            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
+              location === link.title
+                ? 'text-primary dark:text-white'
+                : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
+            }`}
+          >
+            <span className="flex items-center justify-center space-x-2">
+              <span>{link.icon}</span>
+              <span>{link.title}</span>
+            </span>
+            {location === link.title ? (
+              <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
+            ) : null}
+          </button>
+        </Link>
+      ))}
   </Disclosure.Panel>
 )
