@@ -23,7 +23,7 @@ const useLocalStorage = (key: string, initialValue?: any) => {
 }
 
 const useShowGrid = () => {
-  const [showGrid, setShowGrid] = useLocalStorage('niaefeup-tts.show-grid', false)
+  const [showGrid, setShowGrid] = useLocalStorage('niaefeup-tts.show-grid', true)
 
   useEffect(() => {
     // add some logic here

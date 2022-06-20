@@ -1,9 +1,15 @@
 import * as backendAPI from '../backend'
 import { useState, useEffect } from 'react'
-import { SparklesIcon } from '@heroicons/react/outline'
 import { useCourses, useMajor, useShowGrid } from '../hooks'
 import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
-import { Schedule, SelectionModal, ScheduleListbox, ClassesTypeCheckboxes, ExportSchedule } from '../components/planner'
+import {
+  Schedule,
+  SelectionModal,
+  ScheduleListbox,
+  ClassesTypeCheckboxes,
+  ExportSchedule,
+  TidySchedule,
+} from '../components/planner'
 
 const TimeTableSchedulerPage = () => {
   const coursesAddCheckProperty = (majorCourses: MajorCourses): CheckedMajorCourses => {
@@ -88,15 +94,7 @@ const TimeTableSchedulerPage = () => {
               coursesHook={[courses, setCourses]}
             />
             <ExportSchedule schedule={selected} />
-            <button
-              type="button"
-              onClick={() => setShowGrid(!showGrid)}
-              className="hidden h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 py-3 
-              text-xs font-medium text-white transition hover:opacity-80 lg:flex xl:w-min xl:space-x-0 xl:px-4 xl:text-sm"
-            >
-              <span className="flex xl:hidden">Minimal</span>
-              <SparklesIcon className="h-4 w-4 xl:h-5 xl:w-5" />
-            </button>
+            <TidySchedule showGridHook={[showGrid, setShowGrid]} />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
           <div className="flex flex-col space-y-4 py-2 px-0">
