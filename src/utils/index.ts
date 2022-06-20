@@ -55,15 +55,11 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   return second.start_time < first.start_time + first.duration
 }
 
-const getScheduleOptionDisplayText = (option: CourseSchedule | null) => (
+const getScheduleOptionDisplayText = (option: CourseSchedule | null) =>
   [option.class_name, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(',')
-)
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {
-  return [
-    convertHour(schedule.start_time),
-    convertHour(schedule.start_time + schedule.duration),
-  ].join('-')
+  return [convertHour(schedule.start_time), convertHour(schedule.start_time + schedule.duration)].join('-')
 }
 
 const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) => {
@@ -78,8 +74,14 @@ const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) =>
   }
 }
 
-const getLessonBoxId = (lesson: Lesson, prefix?: string) => {
-  return [prefix, 'lesson', lesson.schedule.lesson_type, lesson.course.acronym, lesson.course.course_unit_id].join('-')
+const getLessonBoxId = (lesson: Lesson, prefix?: string): string => {
+  const tokens: string[] = [
+    'lesson',
+    lesson.schedule.lesson_type,
+    lesson.course.acronym,
+    lesson.course.course_unit_id.toString(),
+  ]
+  return prefix ? [prefix, tokens].flat().join('-') : tokens.join('-')
 }
 
 export {

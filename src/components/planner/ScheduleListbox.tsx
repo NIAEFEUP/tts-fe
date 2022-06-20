@@ -1,8 +1,8 @@
 import { useState, useEffect, Fragment, useMemo } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { CourseOption, CourseOptions, CourseSchedule } from '../../@types'
-import { getScheduleOptionDisplayText } from '../../utils'
+import { CourseOption, CourseOptions, CourseSchedule, Lesson } from '../../@types'
+import { getLessonBoxId, getScheduleOptionDisplayText } from '../../utils'
 
 type Props = {
   courseOption: CourseOption
@@ -26,11 +26,27 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
     return getScheduleOptionDisplayText(option)
   }
 
-  const updateShown = (type: 't' | 'tp', value: boolean): void => {
-    if (type === 't') {
+  const updateShown = (value: boolean, type: string, courseOption?: CourseOption): void => {
+    if (type === 'T') {
       setClassesTShown(value)
-    } else if (type === 'tp') {
+    } else if (type === 'TP') {
       setClassesTPShown(value)
+    }
+
+    if (courseOption.option) {
+      const lesson: Lesson = {
+        course: courseOption.course.info,
+        schedule: courseOption.option,
+      }
+
+      const lessonBoxId =
+        window.matchMedia('(max-width: 1024px)').matches === true
+          ? getLessonBoxId(lesson, 'responsive')
+          : getLessonBoxId(lesson)
+
+      const lessonBox = document.getElementById(lessonBoxId)
+      if (lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+      else lessonBox.classList.add('hidden')
     }
   }
 
@@ -57,9 +73,12 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
       onChange={(value) => (value.course_unit_id ? setSelectedOption(value) : setSelectedOption(null))}
     >
       <div className="relative text-sm">
+        {/* Header */}
         <h4 className="mb-1 text-xs">
           {courseOption.course.info.name} (<strong>{courseOption.course.info.acronym}</strong>)
         </h4>
+
+        {/* Button */}
         <Listbox.Button
           className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1.5 pl-2 pr-9 text-left 
           text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-2 2xl:pl-3 2xl:pr-10 2xl:text-sm"
@@ -71,6 +90,8 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
             <SelectorIcon className="h-5 w-5 transition" aria-hidden="true" />
           </span>
         </Listbox.Button>
+
+        {/* Dropdown */}
         <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
           <Listbox.Options className="absolute z-20 mt-1 max-h-36 w-full overflow-auto rounded border bg-lightest py-1 text-sm tracking-tight dark:bg-darkish lg:max-h-72 xl:text-base">
             {adaptedSchedules.map((option, personIdx) => (
@@ -109,10 +130,11 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           <div className="flex items-center justify-center space-x-1">
             <input
               type="checkbox"
-              id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-              className="checkbox-small"
               checked={classesTShown}
-              onChange={(event) => updateShown('t', event.target.checked)}
+              id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
+              className="checkbox-small disabled:hidden"
+              disabled={courseOption.option === null}
+              onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
             />
             <label
               className="cursor-pointer text-xs font-medium capitalize tracking-tight"
@@ -124,10 +146,11 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           <div className="flex items-center justify-center space-x-1">
             <input
               type="checkbox"
-              id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-              className="checkbox-small"
               checked={classesTPShown}
-              onChange={(event) => updateShown('tp', event.target.checked)}
+              id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
+              className="checkbox-small disabled:hidden"
+              disabled={courseOption.option === null}
+              onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
             />
             <label
               className="cursor-pointer text-xs font-medium capitalize tracking-tight"

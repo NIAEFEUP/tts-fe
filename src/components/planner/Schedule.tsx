@@ -276,6 +276,7 @@ const ResponsiveLessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
   return (
     active && (
       <div
+        id={getLessonBoxId(lesson, 'responsive')}
         className={classNames(
           'schedule-class-responsive',
           conflict ? 'schedule-class-conflict' : '',
