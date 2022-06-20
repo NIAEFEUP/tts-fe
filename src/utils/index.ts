@@ -1,4 +1,4 @@
-import { CourseSchedule } from '../@types'
+import { CourseSchedule, Lesson } from '../@types'
 
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
@@ -55,6 +55,33 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   return second.start_time < first.start_time + first.duration
 }
 
+const getScheduleOptionDisplayText = (option: CourseSchedule | null) => (
+  [option.class_name, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(',')
+)
+
+const getLessonBoxTime = (schedule: CourseSchedule) => {
+  return [
+    convertHour(schedule.start_time),
+    convertHour(schedule.start_time + schedule.duration),
+  ].join('-')
+}
+
+const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) => {
+  const step = (maxHour - minHour) * 2
+  const top = (lesson.schedule.start_time - minHour) * 2
+  const length = lesson.schedule.duration * 2
+
+  return {
+    top: `${(top * 100) / step}%`,
+    left: `${((lesson.schedule.day - 1) * 100) / 6}%`,
+    height: `${length * (100 / step)}%`,
+  }
+}
+
+const getLessonBoxId = (lesson: Lesson, prefix?: string) => {
+  return [prefix, 'lesson', lesson.schedule.lesson_type, lesson.course.acronym, lesson.course.course_unit_id].join('-')
+}
+
 export {
   dayNames,
   monthNames,
@@ -65,4 +92,8 @@ export {
   convertWeekdayLong,
   convertHour,
   timesCollide,
+  getScheduleOptionDisplayText,
+  getLessonBoxTime,
+  getLessonBoxStyles,
+  getLessonBoxId,
 }

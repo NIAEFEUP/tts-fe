@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment, useMemo } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CourseOption, CourseOptions, CourseSchedule } from '../../@types'
-import { convertHour, convertWeekday } from '../../utils'
+import { getScheduleOptionDisplayText } from '../../utils'
 
 type Props = {
   courseOption: CourseOption
@@ -23,7 +23,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
   const getOptionDisplayText = (option: CourseSchedule | null) => {
     if (option === null || !option.course_unit_id) return <>&nbsp;</>
-    return `${option.class_name}, ${option.teacher_acronym}, ${convertWeekday(option.day)}, ${convertHour(option.start_time)}-${convertHour(option.start_time + option.duration)}` //prettier-ignore
+    return getScheduleOptionDisplayText(option)
   }
 
   const updateShown = (type: 't' | 'tp', value: boolean): void => {

@@ -1,7 +1,14 @@
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { convertHour, convertWeekdayLong, timesCollide } from '../../utils'
 import { Lesson, CourseOptions } from '../../@types'
+import {
+  convertHour,
+  convertWeekdayLong,
+  getLessonBoxId,
+  getLessonBoxStyles,
+  getLessonBoxTime,
+  timesCollide,
+} from '../../utils'
 import '../../styles/schedule.css'
 
 type Props = {
@@ -211,26 +218,13 @@ const ScheduleGrid = ({ showGrid }: { showGrid: boolean }) => {
 }
 
 const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
-  const getStyles = (startTime: number, duration: number, day: number) => {
-    const step = (maxHour - minHour) * 2
-    const top = (startTime - minHour) * 2
-    const length = duration * 2
-
-    return {
-      top: `${(top * 100) / step}%`,
-      left: `${((day - 1) * 100) / 6}%`,
-      height: `${length * (100 / step)}%`,
-    }
-  }
-
-  // prettier-ignore
-  const time = `${convertHour(lesson.schedule.start_time)}-${convertHour(lesson.schedule.start_time + lesson.schedule.duration)}`
-  const styles = getStyles(lesson.schedule.start_time, lesson.schedule.duration, lesson.schedule.day)
+  const timeSpan = getLessonBoxTime(lesson.schedule)
 
   return (
     active && (
       <div
-        style={styles}
+        id={getLessonBoxId(lesson)}
+        style={getLessonBoxStyles(lesson, maxHour, minHour)}
         className={classNames(
           'schedule-class',
           conflict ? 'schedule-class-conflict' : '',
@@ -242,7 +236,7 @@ const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
         {lesson.schedule.duration > 1 ? (
           <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
             <div className="flex w-full items-center justify-between">
-              <span>{time}</span>
+              <span>{timeSpan}</span>
             </div>
 
             <div className="flex w-full items-center justify-between">
@@ -260,7 +254,7 @@ const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
             <div className="flex w-full items-center justify-between">
-              <span>{time}</span>
+              <span>{timeSpan}</span>
               <span className="font-semibold">{lesson.course.acronym}</span>
             </div>
 
@@ -279,9 +273,6 @@ const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
 }
 
 const ResponsiveLessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
-  // prettier-ignore
-  const time = `${convertHour(lesson.schedule.start_time)}-${convertHour(lesson.schedule.start_time + lesson.schedule.duration)}`
-
   return (
     active && (
       <div
@@ -296,7 +287,7 @@ const ResponsiveLessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
         <div className="flex h-full w-full flex-col items-center justify-between space-y-4 p-1.5 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
           <div className="flex w-full flex-col justify-between space-y-0.5">
             <span className="font-bold">{convertWeekdayLong(lesson.schedule.day)}</span>
-            <span>{time}</span>
+            <span>{getLessonBoxTime(lesson.schedule)}</span>
           </div>
 
           <div className="flex w-full flex-col items-start space-y-1">
