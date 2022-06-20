@@ -1,8 +1,8 @@
-import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { convertHour, convertWeekdayLong, timesCollide } from '../../utils'
 import { Lesson, CourseOptions } from '../../@types'
+import '../../styles/schedule.css'
 
 type Props = {
   showGrid: boolean

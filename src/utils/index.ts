@@ -3,12 +3,12 @@ import { CourseSchedule } from '../@types'
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-export const getDisplayDate = () => {
+const getDisplayDate = () => {
   const date = new Date()
   return `${dayNames[date.getDay()]}, ${date.getDate() + 1} ${monthNames[date.getMonth()]}`
 }
 
-export const getSemester = () => {
+const getSemester = () => {
   //jan-jul --> 2º Semestre
   const date = new Date()
   const month = date.getMonth()
@@ -16,7 +16,7 @@ export const getSemester = () => {
   return month >= 0 && month <= 6 ? '2ºS' : '1ºS'
 }
 
-export const getSchoolYear = () => {
+const getSchoolYear = () => {
   const date = new Date()
   const month = date.getMonth()
   const year = date.getFullYear()
@@ -26,21 +26,21 @@ export const getSchoolYear = () => {
     : `${year}/${(year + 1).toString().slice(2, 4)}`
 }
 
-export const convertWeekday = (dayNumber: number) => {
+const convertWeekday = (dayNumber: number) => {
   if (dayNumber < 1 || dayNumber > 8) return null
 
   const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sab', 'Dom']
   return weekdays[dayNumber - 1]
 }
 
-export const convertWeekdayLong = (dayNumber: number) => {
+const convertWeekdayLong = (dayNumber: number) => {
   if (dayNumber < 1 || dayNumber > 8) return null
 
   const weekdays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
   return weekdays[dayNumber - 1]
 }
 
-export const convertHour = (hourNumber: number) => {
+const convertHour = (hourNumber: number) => {
   if (hourNumber < 0 || hourNumber > 24) return null
 
   const split = hourNumber.toString().split('.')
@@ -50,7 +50,19 @@ export const convertHour = (hourNumber: number) => {
   return `${hour}:${minutes}`
 }
 
-export const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
+const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   if (first.day !== second.day) return false
   return second.start_time < first.start_time + first.duration
+}
+
+export {
+  dayNames,
+  monthNames,
+  getDisplayDate,
+  getSemester,
+  getSchoolYear,
+  convertWeekday,
+  convertWeekdayLong,
+  convertHour,
+  timesCollide,
 }
