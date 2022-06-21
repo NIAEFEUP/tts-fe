@@ -36,12 +36,12 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
       if (type === 'T') lesson.schedule.lesson_type = 'T'
 
-      const lessonBoxId =
+      const lessonBoxClassName =
         window.matchMedia('(max-width: 1024px)').matches === true
           ? getLessonBoxName(lesson, 'responsive')
           : getLessonBoxName(lesson)
 
-      const lessonBoxes = document.getElementsByClassName(lessonBoxId)
+      const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
       for (let i = 0; i < lessonBoxes.length; i++) {
         const lessonBox = lessonBoxes[i] as HTMLElement
         if (lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
@@ -58,12 +58,12 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
         schedule: courseOptionCopy.option,
       }
 
-      const praticalLessonBoxId =
+      const praticalLessonBoxClassName =
         window.matchMedia('(max-width: 1024px)').matches === true
           ? getLessonBoxName(practicalLesson, 'responsive')
           : getLessonBoxName(practicalLesson)
 
-      const praticalLessonBoxes = document.getElementsByClassName(praticalLessonBoxId)
+      const praticalLessonBoxes = document.getElementsByClassName(praticalLessonBoxClassName)
       for (let i = 0; i < praticalLessonBoxes.length; i++) {
         const lessonBox = praticalLessonBoxes[i] as HTMLElement
         if (!showPractical && !lessonBox.classList.contains('hidden')) {
@@ -76,13 +76,12 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
       const theoreticalLesson: Lesson = cloneObject(practicalLesson)
       theoreticalLesson.schedule.lesson_type = 'T'
 
-      const theoreticalLessonBoxId =
+      const theoreticalLessonBoxClassName =
         window.matchMedia('(max-width: 1024px)').matches === true
           ? getLessonBoxName(theoreticalLesson, 'responsive')
           : getLessonBoxName(theoreticalLesson)
 
-      const theoreticalLessonBoxes = document.getElementsByClassName(theoreticalLessonBoxId)
-      console.log(theoreticalLessonBoxes)
+      const theoreticalLessonBoxes = document.getElementsByClassName(theoreticalLessonBoxClassName)
 
       for (let i = 0; i < theoreticalLessonBoxes.length; i++) {
         const lessonBox = theoreticalLessonBoxes[i] as HTMLElement
@@ -92,7 +91,6 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           lessonBox.classList.remove('hidden')
         }
       }
-    } else {
     }
   }
 
