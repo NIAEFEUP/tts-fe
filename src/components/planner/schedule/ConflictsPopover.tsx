@@ -65,8 +65,8 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="rounded border-2 border-transparent bg-green-50 px-4 py-2 text-sm font-medium 
-                    text-teal-800 transition hover:bg-teal-700 hover:text-white focus:outline-none"
+                    className="rounded border-2 border-transparent text-white px-4 py-2 text-sm font-medium 
+                    transition bg-teal-700 hover:opacity-80 focus:outline-none"
                   >
                     Entendido
                   </button>
