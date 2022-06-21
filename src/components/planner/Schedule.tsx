@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useMemo, useEffect } from 'react'
+import { useMemo } from 'react'
 import { Lesson, CourseOptions } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedule'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
