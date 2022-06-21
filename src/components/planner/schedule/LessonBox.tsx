@@ -12,14 +12,15 @@ type Props = {
 }
 
 const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
-  const [conflictsShown, setConflictsShown] = useState(false)
+  const type = lesson.schedule.lesson_type
   const timeSpan = getLessonBoxTime(lesson.schedule)
   const lessonBoxRef: LessonBoxRef = {
-    type: lesson.schedule.lesson_type,
+    type: type,
     id: lesson.course.course_unit_id,
     acronym: lesson.course.acronym,
   }
 
+  const [conflictsShown, setConflictsShown] = useState(false)
   const showConflicts = () => {
     if (!conflict) return
     setConflictsShown(true)
@@ -36,10 +37,11 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             'schedule-class',
             getLessonBoxName(lessonBoxRef),
             conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none',
-            lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
-            lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
-            lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : '',
-            lesson.schedule.lesson_type === 'OT' ? 'schedule-class-ot' : ''
+            type === 'T' ? 'schedule-class-t' : '',
+            type === 'AL' ? 'schedule-class-al' : '',
+            type === 'TP' ? 'schedule-class-tp' : '',
+            type === 'OT' ? 'schedule-class-ot' : '',
+            type === 'L' ? 'schedule-class-l' : ''
           )}
         >
           {lesson.schedule.duration > 1 ? (

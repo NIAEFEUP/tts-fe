@@ -19,10 +19,11 @@ module.exports = {
         secondary: '#0C4A6E',
         tertiary: '#115E59',
         feup: '#7D221E',
-        labs: '#4F2E2E',
         practical: '#69656A',
         theoretical: '#A8A199',
-        orientation: '#075985'
+        lab: '#4F2E2E',
+        orientation: '#075985',
+        laboratory: '#115E59',
       },
       spacing: {
         '1/6': '16.6666666667%',

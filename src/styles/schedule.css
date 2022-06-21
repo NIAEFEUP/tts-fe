@@ -129,12 +129,16 @@
   @apply border-practical bg-practical/70 hover:bg-practical  dark:bg-practical/80 dark:hover:bg-practical;
 }
 
-.schedule-class-lab {
-  @apply border-labs bg-labs/70 hover:bg-labs dark:bg-labs/80 dark:hover:bg-labs;
+.schedule-class-al {
+  @apply border-lab bg-lab/70 hover:bg-lab dark:bg-lab/80 dark:hover:bg-lab;
 }
 
 .schedule-class-ot {
   @apply border-orientation bg-orientation/70 hover:bg-orientation dark:bg-orientation/80 dark:hover:bg-orientation;
+}
+
+.schedule-class-l {
+  @apply border-laboratory bg-laboratory/70 hover:bg-laboratory dark:bg-laboratory/80 dark:hover:bg-laboratory;
 }
 
 .schedule-class-lunch {

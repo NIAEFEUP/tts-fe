@@ -59,7 +59,7 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
 }
 
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) =>
-  [option.class_name, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(',')
+  [option.class_name, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {
   return [convertHour(schedule.start_time), convertHour(schedule.start_time + schedule.duration)].join('-')

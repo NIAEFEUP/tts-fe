@@ -10,8 +10,9 @@ type Props = {
 }
 
 const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Props) => {
+  const type = lesson.schedule.lesson_type
   const lessonBoxRef: LessonBoxRef = {
-    type: lesson.schedule.lesson_type,
+    type: type,
     id: lesson.course.course_unit_id,
     acronym: lesson.course.acronym,
   }
@@ -23,10 +24,11 @@ const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Prop
           'schedule-class-responsive',
           getLessonBoxName(lessonBoxRef, 'responsive'),
           conflict ? 'schedule-class-conflict' : '',
-          lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
-          lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
-          lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : '',
-          lesson.schedule.lesson_type === 'OT' ? 'schedule-class-ot' : ''
+          type === 'T' ? 'schedule-class-t' : '',
+          type === 'AL' ? 'schedule-class-al' : '',
+          type === 'TP' ? 'schedule-class-tp' : '',
+          type === 'OT' ? 'schedule-class-ot' : '',
+          type === 'L' ? 'schedule-class-l' : ''
         )}
       >
         <div
