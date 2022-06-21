@@ -135,7 +135,7 @@ const TimeTableSchedulerPage = () => {
               <span>Orientação Tutorial</span>
             </div>
             <div className="inline-flex items-center space-x-1 lg:space-x-2">
-              <span className="h-3 w-3 rounded bg-teal-600/50 shadow 2xl:h-4 2xl:w-4" />
+              <span className="h-3 w-3 rounded bg-lunch shadow 2xl:h-4 2xl:w-4" />
               <span>Almoço</span>
             </div>
           </div>

@@ -19,6 +19,7 @@ module.exports = {
         secondary: '#0C4A6E',
         tertiary: '#115E59',
         feup: '#7D221E',
+        lunch: '#E11D4860',
         practical: '#69656A',
         theoretical: '#A8A199',
         lab: '#4F2E2E',

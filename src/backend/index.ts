@@ -13,7 +13,7 @@ const getCourses = (major: Major) => {
 
 const getCourseSchedule = (course: CheckedCourse) => {
   // TODO: Replace schedulesData (static IART) with backend request
-  return schedulesData[Math.floor(Math.random() * schedulesData.length)];
+  return schedulesData[Math.floor(Math.random() * schedulesData.length)]
 }
 
 const getExtraCourses = (major: Major) => {
