@@ -21,7 +21,7 @@ type Props = {
 
 const Alert = ({ children, type }: Props) => {
   const extraClassNames = useMemo(() => {
-    if (type === AlertType.error || type === AlertType.warning) {
+    if (type === AlertType.error) {
       return 'animate-wiggle'
     } else return ''
   }, [type])

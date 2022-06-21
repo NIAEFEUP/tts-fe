@@ -14,6 +14,7 @@ const CreditsBanner = ({ courses }: Props) => {
 
   useEffect(() => {
     if (credits > 42) setAlertLevel(AlertType.error)
+    else if (credits > 36) setAlertLevel(AlertType.warning)
     else setAlertLevel(AlertType.info)
   }, [credits])
 
