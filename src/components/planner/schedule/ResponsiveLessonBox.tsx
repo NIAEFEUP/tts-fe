@@ -6,9 +6,10 @@ type Props = {
   lesson: Lesson
   active: boolean
   conflict?: boolean
+  extraClassNames?: string
 }
 
-const ResponsiveLessonBox = ({ lesson, active, conflict }: Props) => {
+const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Props) => {
   const lessonBoxRef: LessonBoxRef = {
     type: lesson.schedule.lesson_type,
     id: lesson.course.course_unit_id,
@@ -27,7 +28,13 @@ const ResponsiveLessonBox = ({ lesson, active, conflict }: Props) => {
           lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
         )}
       >
-        <div className="flex h-full w-full flex-col items-center justify-between space-y-4 p-1.5 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
+        <div
+          className={classNames(
+            extraClassNames ? extraClassNames : 'text-sm',
+            'p-2 leading-none tracking-tighter text-white',
+            'flex h-full w-full flex-col items-center justify-between space-y-4'
+          )}
+        >
           <div className="flex w-full flex-col justify-between space-y-0.5">
             <span className="font-bold">{convertWeekdayLong(lesson.schedule.day)}</span>
             <span>{getLessonBoxTime(lesson.schedule)}</span>

@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { Lesson, CourseOptions } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedule'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
@@ -133,6 +133,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
                           key={`lesson-box-${lessonIdx}`}
                           lesson={lesson}
                           conflict={lessons.length > 1 ? true : false}
+                          conflicts={lessons.length > 1 ? lessons : undefined}
                           active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
                         />
                       ))
