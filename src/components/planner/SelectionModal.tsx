@@ -418,7 +418,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         disabled
                         className={classNames(
                           'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
-                          'hover:text-white disabled:cursor-not-allowed disabled:opacity-50',
+                          'hover:text-white disabled:hidden disabled:cursor-not-allowed disabled:opacity-50',
                           extraCoursesActive
                             ? 'border-rose-700/70 bg-rose-50 text-rose-700 hover:bg-rose-700'
                             : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'

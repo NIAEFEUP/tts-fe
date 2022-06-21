@@ -130,7 +130,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
         {/* Dropdown */}
         <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <Listbox.Options className="absolute z-20 mt-1 max-h-36 w-full overflow-auto rounded border bg-lightest py-1 text-sm tracking-tight dark:bg-darkish lg:max-h-72 xl:text-base">
+          <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-lightest py-1 text-sm tracking-tight dark:bg-darkish lg:max-h-72 xl:text-base">
             {adaptedSchedules.map((option, personIdx) => (
               <Listbox.Option
                 key={personIdx}

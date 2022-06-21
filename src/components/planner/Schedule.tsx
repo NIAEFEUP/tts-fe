@@ -153,9 +153,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
         {lessonsGroupedByDays.length > 0 ? (
           lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
             <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
-              <div className="h-full w-1 rounded bg-primary">
-                <span></span>
-              </div>
+              <div className="h-full w-1 rounded bg-primary" />
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
                 {lessons.map((lesson: Lesson, lessonIdx: number) => (
                   <ResponsiveLessonBox

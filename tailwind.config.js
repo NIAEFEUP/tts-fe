@@ -48,12 +48,15 @@ module.exports = {
       },
       keyframes: {
         wiggle: {
-          '0%, 100%': { transform: 'rotate(0.5deg)' },
+          '0%': { transform: 'rotate(-0.5deg)' },
+          '25%': { transform: 'rotate(0.5deg)' },
           '50%': { transform: 'rotate(-0.5deg)' },
+          '75%': { transform: 'rotate(0.5deg)' },
+          '100%': { transform: 'rotate(0)' },
         },
       },
       animation: {
-        wiggle: 'wiggle 400ms ease-in-out',
+        wiggle: 'wiggle 700ms ease-in-out',
       },
       backgroundSize: {
         'size-200': '200% 200%',
