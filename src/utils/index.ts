@@ -1,5 +1,7 @@
 import { CourseSchedule, Lesson } from '../@types'
 
+const minHour = 8
+const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
@@ -92,6 +94,8 @@ const getLessonBoxName = (lesson: Lesson, prefix?: string): string => {
 }
 
 export {
+  minHour,
+  maxHour,
   cloneObject,
   dayNames,
   monthNames,
