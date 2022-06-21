@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment, useMemo } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CourseOption, CourseOptions, CourseSchedule, Lesson } from '../../@types'
-import { getLessonBoxName, getScheduleOptionDisplayText } from '../../utils'
+import { cloneObject, getLessonBoxName, getScheduleOptionDisplayText } from '../../utils'
 
 type Props = {
   courseOption: CourseOption
@@ -12,8 +12,8 @@ type Props = {
 const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   const [, setSelected] = selectedHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
-  const [classesTShown, setClassesTShown] = useState<boolean>(true)
-  const [classesTPShown, setClassesTPShown] = useState<boolean>(true)
+  const [showTheoretical, setShowTheoretical] = useState<boolean>(true)
+  const [showPractical, setShowPractical] = useState<boolean>(true)
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -26,21 +26,15 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
     return getScheduleOptionDisplayText(option)
   }
 
-  const updateShown = (value: boolean, type: string, courseOption?: CourseOption): void => {
-    if (type === 'T') {
-      setClassesTShown(value)
-    } else if (type === 'TP') {
-      setClassesTPShown(value)
-    }
-
+  const updateHiddenLessons = (type: string, courseOption: CourseOption) => {
     if (courseOption.option) {
+      const courseOptionCopy = cloneObject(courseOption)
       const lesson: Lesson = {
-        course: courseOption.course.info,
-        schedule: courseOption.option,
+        course: courseOptionCopy.course.info,
+        schedule: courseOptionCopy.option,
       }
 
       if (type === 'T') lesson.schedule.lesson_type = 'T'
-      else if (type === 'TP') lesson.schedule.lesson_type = 'TP'
 
       const lessonBoxId =
         window.matchMedia('(max-width: 1024px)').matches === true
@@ -55,6 +49,57 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
       }
     }
   }
+
+  const refreshHiddenLessons = () => {
+    if (courseOption.option) {
+      const courseOptionCopy = cloneObject(courseOption)
+      const practicalLesson: Lesson = {
+        course: courseOptionCopy.course.info,
+        schedule: courseOptionCopy.option,
+      }
+
+      const praticalLessonBoxId =
+        window.matchMedia('(max-width: 1024px)').matches === true
+          ? getLessonBoxName(practicalLesson, 'responsive')
+          : getLessonBoxName(practicalLesson)
+
+      const praticalLessonBoxes = document.getElementsByClassName(praticalLessonBoxId)
+      for (let i = 0; i < praticalLessonBoxes.length; i++) {
+        const lessonBox = praticalLessonBoxes[i] as HTMLElement
+        if (!showPractical && !lessonBox.classList.contains('hidden')) {
+          lessonBox.classList.add('hidden')
+        } else if (showPractical && lessonBox.classList.contains('hidden')) {
+          lessonBox.classList.remove('hidden')
+        }
+      }
+
+      const theoreticalLesson: Lesson = cloneObject(practicalLesson)
+      theoreticalLesson.schedule.lesson_type = 'T'
+
+      const theoreticalLessonBoxId =
+        window.matchMedia('(max-width: 1024px)').matches === true
+          ? getLessonBoxName(theoreticalLesson, 'responsive')
+          : getLessonBoxName(theoreticalLesson)
+
+      const theoreticalLessonBoxes = document.getElementsByClassName(theoreticalLessonBoxId)
+      const lessonBox = theoreticalLessonBoxes[0]
+      if (!showTheoretical && !lessonBox.classList.contains('hidden')) {
+        lessonBox.classList.add('hidden')
+      } else if (showTheoretical && lessonBox.classList.contains('hidden')) {
+        lessonBox.classList.remove('hidden')
+      }
+    }
+  }
+
+  const updateShown = (value: boolean, type: string, courseOption?: CourseOption): void => {
+    if (type === 'T') setShowTheoretical(value)
+    else if (type === 'TP') setShowPractical(value)
+    updateHiddenLessons(type, courseOption)
+  }
+
+  useEffect(() => {
+    refreshHiddenLessons()
+  })
 
   useEffect(() => {
     setSelectedOption(null)
@@ -136,7 +181,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           <div className="flex items-center justify-center space-x-1">
             <input
               type="checkbox"
-              checked={classesTShown}
+              checked={showTheoretical}
               id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
               className="checkbox-small disabled:hidden"
               disabled={courseOption.option === null}
@@ -152,7 +197,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           <div className="flex items-center justify-center space-x-1">
             <input
               type="checkbox"
-              checked={classesTPShown}
+              checked={showPractical}
               id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
               className="checkbox-small disabled:hidden"
               disabled={courseOption.option === null}

@@ -3,6 +3,13 @@ import { CourseSchedule, Lesson } from '../@types'
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
+const cloneObject = (obj: any) => {
+  if (obj == null || typeof obj != 'object') return obj
+  let temp = new obj.constructor()
+  for (let key in obj) temp[key] = cloneObject(obj[key])
+  return temp
+}
+
 const getDisplayDate = () => {
   const date = new Date()
   return `${dayNames[date.getDay()]}, ${date.getDate() + 1} ${monthNames[date.getMonth()]}`
@@ -85,6 +92,7 @@ const getLessonBoxName = (lesson: Lesson, prefix?: string): string => {
 }
 
 export {
+  cloneObject,
   dayNames,
   monthNames,
   getDisplayDate,
