@@ -46,6 +46,9 @@ module.exports = {
         headings: ['Montserrat', ...defaultTheme.fontFamily.sans],
         mono: ['Fira Code', ...defaultTheme.fontFamily.mono],
       },
+      boxShadow: {
+        'inner-xl': 'inset 0px 0px 4px 4px rgb(0 0 0 / 0.1)',
+      },
       keyframes: {
         wiggle: {
           '0%': { transform: 'rotate(-0.5deg)' },

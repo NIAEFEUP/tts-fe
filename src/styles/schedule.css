@@ -141,6 +141,14 @@
   @apply z-20 border-2 border-red-600 ring-red-600 hover:z-30 hover:ring-1;
 }
 
+.show-grid-yes {
+  @apply border-2 border-gray-200 shadow dark:border-[#f0f0ff33];
+}
+
+.show-grid-no {
+  @apply border-2 border-transparent shadow-inner-xl;
+}
+
 .no-borders {
   border: 0 !important;
 }

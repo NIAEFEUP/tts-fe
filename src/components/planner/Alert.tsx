@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useEffect } from 'react'
+import { ReactNode, useMemo } from 'react'
 import classNames from 'classnames'
 import {
   InformationCircleIcon,
