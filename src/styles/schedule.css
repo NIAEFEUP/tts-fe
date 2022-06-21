@@ -142,7 +142,7 @@
 }
 
 .schedule-class-lunch {
-  @apply bg-lunch;
+  @apply bg-lunch/50;
 }
 
 .schedule-class-conflict {
