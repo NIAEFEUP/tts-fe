@@ -51,7 +51,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   }
 
   const refreshHiddenLessons = () => {
-    if (courseOption.option) {
+    if (courseOption.option !== null) {
       const courseOptionCopy = cloneObject(courseOption)
       const practicalLesson: Lesson = {
         course: courseOptionCopy.course.info,
@@ -82,12 +82,17 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           : getLessonBoxName(theoreticalLesson)
 
       const theoreticalLessonBoxes = document.getElementsByClassName(theoreticalLessonBoxId)
-      const lessonBox = theoreticalLessonBoxes[0]
-      if (!showTheoretical && !lessonBox.classList.contains('hidden')) {
-        lessonBox.classList.add('hidden')
-      } else if (showTheoretical && lessonBox.classList.contains('hidden')) {
-        lessonBox.classList.remove('hidden')
+      console.log(theoreticalLessonBoxes)
+
+      for (let i = 0; i < theoreticalLessonBoxes.length; i++) {
+        const lessonBox = theoreticalLessonBoxes[i] as HTMLElement
+        if (!showTheoretical && !lessonBox.classList.contains('hidden')) {
+          lessonBox.classList.add('hidden')
+        } else if (showTheoretical && lessonBox.classList.contains('hidden')) {
+          lessonBox.classList.remove('hidden')
+        }
       }
+    } else {
     }
   }
 
