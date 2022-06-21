@@ -38,7 +38,8 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none',
             lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
             lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
-            lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
+            lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : '',
+            lesson.schedule.lesson_type === 'OT' ? 'schedule-class-ot' : ''
           )}
         >
           {lesson.schedule.duration > 1 ? (

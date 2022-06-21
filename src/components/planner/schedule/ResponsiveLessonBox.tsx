@@ -25,7 +25,8 @@ const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Prop
           conflict ? 'schedule-class-conflict' : '',
           lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
           lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
-          lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
+          lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : '',
+          lesson.schedule.lesson_type === 'OT' ? 'schedule-class-ot' : ''
         )}
       >
         <div

@@ -133,6 +133,10 @@
   @apply border-labs bg-labs/70 hover:bg-labs dark:bg-labs/80 dark:hover:bg-labs;
 }
 
+.schedule-class-ot {
+  @apply border-orientation bg-orientation/70 hover:bg-orientation dark:bg-orientation/80 dark:hover:bg-orientation;
+}
+
 .schedule-class-lunch {
   @apply bg-teal-600/50;
 }

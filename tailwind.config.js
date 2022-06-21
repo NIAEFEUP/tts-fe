@@ -22,6 +22,7 @@ module.exports = {
         labs: '#4F2E2E',
         practical: '#69656A',
         theoretical: '#A8A199',
+        orientation: '#075985'
       },
       spacing: {
         '1/6': '16.6666666667%',
