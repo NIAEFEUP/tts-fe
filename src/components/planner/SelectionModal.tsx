@@ -1,7 +1,8 @@
 import classNames from 'classnames'
 import * as backendAPI from '../../backend'
-import { Link } from 'react-router-dom'
 import Alert, { AlertType } from './Alert'
+import CreditsBanner from './CreditsBanner'
+import { Link } from 'react-router-dom'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses, Course } from '../../@types'
 import {
@@ -161,6 +162,9 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     </div>
                   </Dialog.Title>
 
+                  {/* Credits banner */}
+                  <CreditsBanner courses={courses.flat().filter((course) => course.checked)} />
+
                   {/* Alert banner */}
                   <Alert type={alertLevel}>
                     Selecione o seu <strong>curso principal</strong>, seguido das <strong>Unidades Curriculares</strong>{' '}
@@ -181,7 +185,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           placeholder="Digite ou escolha o seu ciclo de estudos"
                           className={classNames(
                             selected !== null ? 'font-semibold' : '',
-                            'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
+                            'w-full rounded border-2 py-3 pl-4 pr-8 text-xs leading-5 md:text-sm',
                             'border-gray-700/25 bg-gray-50 text-gray-700 focus:shadow focus:ring-0'
                           )}
                           displayValue={(major: Major) => getDisplayMajorText(major)}
