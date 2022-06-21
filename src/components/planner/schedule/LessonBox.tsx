@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Lesson } from '../../../@types'
+import { Lesson, LessonBoxRef } from '../../../@types'
 import { getLessonBoxName, getLessonBoxStyles, getLessonBoxTime, maxHour, minHour } from '../../../utils'
 
 type Props = {
@@ -10,6 +10,11 @@ type Props = {
 
 const LessonBox = ({ lesson, active, conflict }: Props) => {
   const timeSpan = getLessonBoxTime(lesson.schedule)
+  const lessonBoxRef: LessonBoxRef = {
+    type: lesson.schedule.lesson_type,
+    id: lesson.course.course_unit_id,
+    acronym: lesson.course.acronym,
+  }
 
   return (
     active && (
@@ -17,7 +22,7 @@ const LessonBox = ({ lesson, active, conflict }: Props) => {
         style={getLessonBoxStyles(lesson, maxHour, minHour)}
         className={classNames(
           'schedule-class',
-          getLessonBoxName(lesson),
+          getLessonBoxName(lessonBoxRef),
           conflict ? 'schedule-class-conflict' : '',
           lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
           lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',

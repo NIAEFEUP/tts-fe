@@ -1,8 +1,8 @@
 import { useState, useEffect, Fragment, useMemo } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { CourseOption, CourseOptions, CourseSchedule, Lesson } from '../../@types'
-import { cloneObject, getLessonBoxName, getScheduleOptionDisplayText } from '../../utils'
+import { CourseOption, CourseOptions, CourseSchedule, LessonBoxRef } from '../../@types'
+import { getLessonBoxName, getScheduleOptionDisplayText, lessonTypes } from '../../utils'
 
 type Props = {
   courseOption: CourseOption
@@ -28,18 +28,16 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
   const updateHiddenLessons = (type: string, courseOption: CourseOption) => {
     if (courseOption.option) {
-      const courseOptionCopy = cloneObject(courseOption)
-      const lesson: Lesson = {
-        course: courseOptionCopy.course.info,
-        schedule: courseOptionCopy.option,
+      const lessonBoxRef: LessonBoxRef = {
+        type: type,
+        id: courseOption.course.info.course_unit_id,
+        acronym: courseOption.course.info.acronym,
       }
-
-      if (type === 'T') lesson.schedule.lesson_type = 'T'
 
       const lessonBoxClassName =
         window.matchMedia('(max-width: 1024px)').matches === true
-          ? getLessonBoxName(lesson, 'responsive')
-          : getLessonBoxName(lesson)
+          ? getLessonBoxName(lessonBoxRef, 'responsive')
+          : getLessonBoxName(lessonBoxRef)
 
       const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
       for (let i = 0; i < lessonBoxes.length; i++) {
@@ -52,45 +50,30 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
   const refreshHiddenLessons = () => {
     if (courseOption.option !== null) {
-      const courseOptionCopy = cloneObject(courseOption)
-      const practicalLesson: Lesson = {
-        course: courseOptionCopy.course.info,
-        schedule: courseOptionCopy.option,
-      }
-
-      const praticalLessonBoxClassName =
-        window.matchMedia('(max-width: 1024px)').matches === true
-          ? getLessonBoxName(practicalLesson, 'responsive')
-          : getLessonBoxName(practicalLesson)
-
-      const praticalLessonBoxes = document.getElementsByClassName(praticalLessonBoxClassName)
-      for (let i = 0; i < praticalLessonBoxes.length; i++) {
-        const lessonBox = praticalLessonBoxes[i] as HTMLElement
-        if (!showPractical && !lessonBox.classList.contains('hidden')) {
-          lessonBox.classList.add('hidden')
-        } else if (showPractical && lessonBox.classList.contains('hidden')) {
-          lessonBox.classList.remove('hidden')
+      lessonTypes.forEach((type) => {
+        const lessonBoxRef: LessonBoxRef = {
+          type: type,
+          id: courseOption.course.info.course_unit_id,
+          acronym: courseOption.course.info.acronym,
         }
-      }
 
-      const theoreticalLesson: Lesson = cloneObject(practicalLesson)
-      theoreticalLesson.schedule.lesson_type = 'T'
+        const lessonBoxClassName =
+          window.matchMedia('(max-width: 1024px)').matches === true
+            ? getLessonBoxName(lessonBoxRef, 'responsive')
+            : getLessonBoxName(lessonBoxRef)
 
-      const theoreticalLessonBoxClassName =
-        window.matchMedia('(max-width: 1024px)').matches === true
-          ? getLessonBoxName(theoreticalLesson, 'responsive')
-          : getLessonBoxName(theoreticalLesson)
-
-      const theoreticalLessonBoxes = document.getElementsByClassName(theoreticalLessonBoxClassName)
-
-      for (let i = 0; i < theoreticalLessonBoxes.length; i++) {
-        const lessonBox = theoreticalLessonBoxes[i] as HTMLElement
-        if (!showTheoretical && !lessonBox.classList.contains('hidden')) {
-          lessonBox.classList.add('hidden')
-        } else if (showTheoretical && lessonBox.classList.contains('hidden')) {
-          lessonBox.classList.remove('hidden')
+        const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
+        for (let i = 0; i < lessonBoxes.length; i++) {
+          const lessonBox = lessonBoxes[i] as HTMLElement
+          if (type === 'T') {
+            if (!showTheoretical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
+            else if (showTheoretical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+          } else {
+            if (!showPractical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
+            else if (showPractical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+          }
         }
-      }
+      })
     }
   }
 

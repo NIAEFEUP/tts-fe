@@ -1,16 +1,10 @@
-import { CourseSchedule, Lesson } from '../@types'
+import { CourseSchedule, Lesson, LessonBoxRef } from '../@types'
 
 const minHour = 8
 const maxHour = 23
+const lessonTypes = ['T', 'TP', 'P']
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-
-const cloneObject = (obj: any) => {
-  if (obj == null || typeof obj != 'object') return obj
-  let temp = new obj.constructor()
-  for (let key in obj) temp[key] = cloneObject(obj[key])
-  return temp
-}
 
 const getDisplayDate = () => {
   const date = new Date()
@@ -83,20 +77,15 @@ const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) =>
   }
 }
 
-const getLessonBoxName = (lesson: Lesson, prefix?: string): string => {
-  const tokens: string[] = [
-    'lesson',
-    lesson.schedule.lesson_type,
-    lesson.course.acronym,
-    lesson.course.course_unit_id.toString(),
-  ]
+const getLessonBoxName = (lessonBoxRef: LessonBoxRef, prefix?: string): string => {
+  const tokens: string[] = ['lesson', lessonBoxRef.type, lessonBoxRef.acronym, lessonBoxRef.id.toString()]
   return prefix ? [prefix, tokens].flat().join('-') : tokens.join('-')
 }
 
 export {
   minHour,
   maxHour,
-  cloneObject,
+  lessonTypes,
   dayNames,
   monthNames,
   getDisplayDate,
