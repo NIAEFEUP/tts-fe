@@ -2,7 +2,7 @@ import { CourseSchedule, Lesson, LessonBoxRef } from '../@types'
 
 const minHour = 8
 const maxHour = 23
-const lessonTypes = ['T', 'TP', 'AL', 'OT', 'L']
+const lessonTypes = ['T', 'TP', 'PL', 'OT', 'L', 'P']
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
@@ -58,8 +58,10 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   return second.start_time < first.start_time + first.duration
 }
 
-const getScheduleOptionDisplayText = (option: CourseSchedule | null) =>
-  [option.class_name, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
+  const className = option.class_name !== null ? option.class_name : option.composed_class_name
+  return [className, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+}
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {
   return [convertHour(schedule.start_time), convertHour(schedule.start_time + schedule.duration)].join('-')

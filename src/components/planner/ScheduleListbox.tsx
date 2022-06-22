@@ -18,7 +18,10 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
       .flat()
-      .filter((option: CourseSchedule | null) => null || option?.class_name !== null)
+      .filter((option: CourseSchedule | null) => option?.lesson_type !== 'T')
+      .filter(
+        (option: CourseSchedule | null) => null || option?.class_name !== null || option?.composed_class_name !== null
+      )
   }, [courseOption])
 
   const getOptionDisplayText = (option: CourseSchedule | null) => {

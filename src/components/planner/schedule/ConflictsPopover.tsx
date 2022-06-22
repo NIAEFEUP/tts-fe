@@ -42,11 +42,15 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className="w-full max-w-3xl transform space-y-4 overflow-hidden rounded-2xl 
+                className="w-full max-w-5xl transform space-y-4 overflow-hidden rounded-2xl 
                 bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
-                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-700">
-                  Inspeção de Conflitos de Horários
+                <Dialog.Title as="header">
+                  <h3 className="text-lg font-medium leading-none text-gray-700 mb-2">Inspeção de Conflitos de Horários</h3>
+                  <h4 className="text-sm text-rose-800">
+                    Um horário com colisões de <strong>aulas teóricas</strong> é geralmente permitido na maioria dos
+                    casos. O mesmo <strong>não</strong> se verifica para <strong>aulas práticas</strong>.
+                  </h4>
                 </Dialog.Title>
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
@@ -56,7 +60,7 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                       lesson={lesson}
                       conflict={false}
                       active={true}
-                      extraClassNames="py-4 pl-4 pr-6 text-lg"
+                      extraClassNames="py-4 pl-4 pr-6"
                     />
                   ))}
                 </div>

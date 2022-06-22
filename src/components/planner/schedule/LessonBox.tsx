@@ -38,10 +38,11 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             getLessonBoxName(lessonBoxRef),
             conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none',
             type === 'T' ? 'schedule-class-t' : '',
-            type === 'AL' ? 'schedule-class-al' : '',
+            type === 'PL' ? 'schedule-class-pl' : '',
             type === 'TP' ? 'schedule-class-tp' : '',
             type === 'OT' ? 'schedule-class-ot' : '',
-            type === 'L' ? 'schedule-class-l' : ''
+            type === 'L' ? 'schedule-class-l' : '',
+            type === 'P' ? 'schedule-class-p' : ''
           )}
         >
           {lesson.schedule.duration > 1 ? (

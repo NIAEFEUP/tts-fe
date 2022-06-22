@@ -122,31 +122,39 @@
 }
 
 .schedule-class-t {
-  @apply border-theoretical bg-theoretical/70 hover:bg-theoretical dark:bg-theoretical/80 dark:hover:bg-theoretical;
+  @apply border-theoretical bg-theoretical/80 hover:bg-theoretical dark:bg-theoretical/80 dark:hover:bg-theoretical;
 }
 
 .schedule-class-tp {
-  @apply border-practical bg-practical/70 hover:bg-practical  dark:bg-practical/80 dark:hover:bg-practical;
+  @apply border-practical bg-practical/80 hover:bg-practical  dark:bg-practical/80 dark:hover:bg-practical;
 }
 
-.schedule-class-al {
-  @apply border-lab bg-lab/70 hover:bg-lab dark:bg-lab/80 dark:hover:bg-lab;
+.schedule-class-pl {
+  @apply border-lab bg-lab/80 hover:bg-lab dark:bg-lab/80 dark:hover:bg-lab;
 }
 
 .schedule-class-ot {
-  @apply border-orientation bg-orientation/70 hover:bg-orientation dark:bg-orientation/80 dark:hover:bg-orientation;
+  @apply border-orientation bg-orientation/80 hover:bg-orientation dark:bg-orientation/80 dark:hover:bg-orientation;
 }
 
 .schedule-class-l {
-  @apply border-laboratory bg-laboratory/70 hover:bg-laboratory dark:bg-laboratory/80 dark:hover:bg-laboratory;
+  @apply border-laboratory bg-laboratory/80 hover:bg-laboratory dark:bg-laboratory/80 dark:hover:bg-laboratory;
+}
+
+.schedule-class-p {
+  @apply border-ppractical bg-ppractical/80 hover:bg-ppractical dark:bg-ppractical/80 dark:hover:bg-ppractical;
 }
 
 .schedule-class-lunch {
-  @apply bg-lunch/50;
+  @apply bg-lunch/25;
+}
+
+.schedule-class-unknown {
+  @apply border-rose-700 bg-rose-700/80 hover:bg-rose-700 dark:bg-rose-700/80 dark:hover:bg-rose-700;
 }
 
 .schedule-class-conflict {
-  @apply z-20 border-2 border-red-600 ring-red-600 hover:z-30 hover:ring-1;
+  @apply z-20 border-2 border-red-600 opacity-50 ring-red-600 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
 .schedule-class-conflict-none {
