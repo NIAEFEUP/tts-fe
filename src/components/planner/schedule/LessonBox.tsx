@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useState } from 'react'
 import { Lesson, LessonBoxRef } from '../../../@types'
-import { getLessonBoxName, getLessonBoxStyles, getLessonBoxTime, maxHour, minHour } from '../../../utils'
+import { getClassTypeClassName, getLessonBoxName, getLessonBoxStyles, getLessonBoxTime, maxHour, minHour } from '../../../utils'
 import ConflictsPopover from './ConflictsPopover'
 
 type Props = {
@@ -35,14 +35,9 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
           style={getLessonBoxStyles(lesson, maxHour, minHour)}
           className={classNames(
             'schedule-class',
+            getClassTypeClassName(type),
             getLessonBoxName(lessonBoxRef),
-            conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none',
-            type === 'T' ? 'schedule-class-t' : '',
-            type === 'PL' ? 'schedule-class-pl' : '',
-            type === 'TP' ? 'schedule-class-tp' : '',
-            type === 'OT' ? 'schedule-class-ot' : '',
-            type === 'L' ? 'schedule-class-l' : '',
-            type === 'P' ? 'schedule-class-p' : ''
+            conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none'
           )}
         >
           {lesson.schedule.duration > 1 ? (

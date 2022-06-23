@@ -84,6 +84,25 @@ const getLessonBoxName = (lessonBoxRef: LessonBoxRef, prefix?: string): string =
   return prefix ? [prefix, tokens].flat().join('-') : tokens.join('-')
 }
 
+const getClassTypeClassName = (type: string) => {
+  switch (type) {
+    case 'T':
+      return 'schedule-class-t'
+    case 'TP':
+      return 'schedule-class-tp'
+    case 'PL':
+      return 'schedule-class-pl'
+    case 'OT':
+      return 'schedule-class-ot'
+    case 'L':
+      return 'schedule-class-l'
+    case 'P':
+      return 'schedule-class-p'
+    default:
+      return 'schedule-class-default'
+  }
+}
+
 export {
   minHour,
   maxHour,
@@ -101,4 +120,5 @@ export {
   getLessonBoxTime,
   getLessonBoxStyles,
   getLessonBoxName,
+  getClassTypeClassName
 }

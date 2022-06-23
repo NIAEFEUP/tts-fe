@@ -20,7 +20,7 @@ const ScheduleGrid = ({ showGrid }: Props) => {
                 'schedule-cell',
                 rowIdx === hourValues.length - 1 ? 'schedule-cell-last-in-row' : '',
                 columnIdx === dayValues.length - 1 ? 'schedule-cell-last-in-column' : '',
-                hourValue >= 13 && hourValue < 14 ? 'schedule-class-lunch' : '',
+                hourValue >= 13 && hourValue < 14 ? 'schedule-class-schedule-lunch' : '',
                 showGrid ? '' : 'no-borders'
               )}
             />

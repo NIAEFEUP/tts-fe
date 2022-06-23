@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Lesson, LessonBoxRef } from '../../../@types'
-import { convertWeekdayLong, getLessonBoxName, getLessonBoxTime } from '../../../utils'
+import { convertWeekdayLong, getClassTypeClassName, getLessonBoxName, getLessonBoxTime } from '../../../utils'
 
 type Props = {
   lesson: Lesson
@@ -22,14 +22,9 @@ const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Prop
       <div
         className={classNames(
           'schedule-class-responsive',
+          getClassTypeClassName(type),
           getLessonBoxName(lessonBoxRef, 'responsive'),
-          conflict ? 'schedule-class-conflict' : '',
-          type === 'T' ? 'schedule-class-t' : '',
-          type === 'PL' ? 'schedule-class-pl' : '',
-          type === 'TP' ? 'schedule-class-tp' : '',
-          type === 'OT' ? 'schedule-class-ot' : '',
-          type === 'L' ? 'schedule-class-l' : '',
-          type === 'P' ? 'schedule-class-p' : ''
+          conflict ? 'schedule-class-conflict' : ''
         )}
       >
         <div
