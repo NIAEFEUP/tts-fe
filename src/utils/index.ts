@@ -2,9 +2,11 @@ import { CourseSchedule, Lesson, LessonBoxRef } from '../@types'
 
 const minHour = 8
 const maxHour = 23
-const lessonTypes = ['T', 'TP', 'PL', 'OT', 'L', 'P']
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+// FIXME: backend has to replace unwanted types (basically the ones not in this list)
+const lessonTypes = ['T', 'TP', 'PL', 'OT', 'L', 'P', 'TC', 'S']
 
 const getDisplayDate = () => {
   const date = new Date()
