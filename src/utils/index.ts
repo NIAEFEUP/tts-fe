@@ -88,16 +88,20 @@ const getClassTypeClassName = (type: string) => {
   switch (type) {
     case 'T':
       return 'schedule-class-t'
+
+    case 'P':
     case 'TP':
       return 'schedule-class-tp'
+
+    case 'L':
+    case 'S':
+    case 'TC':
     case 'PL':
       return 'schedule-class-pl'
+
     case 'OT':
       return 'schedule-class-ot'
-    case 'L':
-      return 'schedule-class-l'
-    case 'P':
-      return 'schedule-class-p'
+
     default:
       return 'schedule-class-default'
   }
@@ -120,5 +124,5 @@ export {
   getLessonBoxTime,
   getLessonBoxStyles,
   getLessonBoxName,
-  getClassTypeClassName
+  getClassTypeClassName,
 }

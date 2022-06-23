@@ -25,8 +25,6 @@ module.exports = {
           tp: '#69656A',
           pl: '#115E59',
           ot: '#075985',
-          p: '#C2410C',
-          l: '#4F2E2E',
           default: '#115E59',
         },
       },
