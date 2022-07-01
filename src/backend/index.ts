@@ -7,7 +7,7 @@ const getMajors = () => {
 }
 
 const getCourses = (major: Major) => {
-  //TODO: replace courseData with backend request
+  // TODO: replace courseData with backend request
   return coursesData
 }
 

@@ -16,7 +16,7 @@ import {
   HomeIcon,
   InboxInIcon,
 } from '@heroicons/react/solid'
-import { Fragment, SetStateAction, useEffect, useState } from 'react'
+import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
 import { useCourses } from '../../hooks'
 
@@ -45,7 +45,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
-  const extraCourses = backendAPI.getExtraCourses(major)
+  const extraCourses = useMemo(() => backendAPI.getExtraCourses(major), [])
   const filteredExtraCourses =
     extraCoursesQuery === ''
       ? extraCourses

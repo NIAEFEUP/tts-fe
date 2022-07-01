@@ -1,5 +1,5 @@
 import * as backendAPI from '../backend'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useCourses, useMajor, useShowGrid } from '../hooks'
 import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
 import {
@@ -39,7 +39,8 @@ const TimeTableSchedulerPage = () => {
     }))
   }
 
-  const majors = backendAPI.getMajors()
+  // FIXME: Possible overhaul: split all data variables from UI variables. Data variables would be wrapped in useMemo.
+  const majors = useMemo(() => backendAPI.getMajors(), [])
   const [majorLS, setMajorLS] = useMajor()
   const [coursesLS] = useCourses()
   const [showGrid, setShowGrid] = useShowGrid()
