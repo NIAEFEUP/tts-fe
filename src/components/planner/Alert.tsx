@@ -20,7 +20,7 @@ type Props = {
 }
 
 const Alert = ({ children, type }: Props) => {
-  const extraClassNames = useMemo(() => {
+  const animationClass = useMemo(() => {
     if (type === AlertType.error) {
       return 'animate-wiggle'
     } else return ''
@@ -30,7 +30,7 @@ const Alert = ({ children, type }: Props) => {
     <div
       role="alert"
       className={classNames(
-        extraClassNames,
+        animationClass,
         'flex items-center justify-between rounded border-2 px-2 py-2',
         type === undefined ? 'border-gray-700/20 bg-gray-50 text-gray-700' : '',
         type === AlertType.info ? 'border-sky-700/20 bg-sky-50 text-sky-700' : '',

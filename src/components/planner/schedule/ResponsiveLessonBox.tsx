@@ -10,12 +10,11 @@ import {
 
 type Props = {
   lesson: Lesson
-  active: boolean
   conflict?: boolean
-  extraClassNames?: string
+  specialClassnames?: string
 }
 
-const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Props) => {
+const ResponsiveLessonBox = ({ lesson, conflict, specialClassnames }: Props) => {
   const type = lesson.schedule.lesson_type
   const lessonBoxRef: LessonBoxRef = {
     type: type,
@@ -24,48 +23,46 @@ const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Prop
   }
 
   return (
-    active && (
+    <div
+      className={classNames(
+        'schedule-class-responsive group',
+        getClassTypeClassName(type),
+        getLessonBoxName(lessonBoxRef, 'responsive'),
+        conflict ? 'schedule-class-conflict' : ''
+      )}
+    >
       <div
         className={classNames(
-          'schedule-class-responsive group',
-          getClassTypeClassName(type),
-          getLessonBoxName(lessonBoxRef, 'responsive'),
-          conflict ? 'schedule-class-conflict' : ''
+          specialClassnames ? specialClassnames : 'text-sm',
+          'p-2 leading-none tracking-tighter text-white',
+          'flex h-full w-full flex-col items-center justify-between space-y-4'
         )}
       >
-        <div
-          className={classNames(
-            extraClassNames ? extraClassNames : 'text-sm',
-            'p-2 leading-none tracking-tighter text-white',
-            'flex h-full w-full flex-col items-center justify-between space-y-4'
-          )}
-        >
-          <div className="flex w-full flex-col justify-between gap-0.5">
-            <span className="flex w-full items-center justify-between">
-              <strong>{convertWeekdayLong(lesson.schedule.day)}</strong>
-              {extraClassNames ? (
-                <strong title={getLessonTypeLongName(type)}>{type}</strong>
-              ) : (
-                <strong title={getLessonTypeLongName(type)} className="hidden group-hover:inline-flex">
-                  {type}
-                </strong>
-              )}
-            </span>
-            <span>{getLessonBoxTime(lesson.schedule)}</span>
-          </div>
+        <div className="flex w-full flex-col justify-between gap-0.5">
+          <span className="flex w-full items-center justify-between">
+            <strong>{convertWeekdayLong(lesson.schedule.day)}</strong>
+            {specialClassnames ? (
+              <strong title={getLessonTypeLongName(type)}>{type}</strong>
+            ) : (
+              <strong title={getLessonTypeLongName(type)} className="hidden group-hover:inline-flex">
+                {type}
+              </strong>
+            )}
+          </span>
+          <span>{getLessonBoxTime(lesson.schedule)}</span>
+        </div>
 
-          <div className="flex w-full flex-col items-start gap-1">
-            <strong>{lesson.course.acronym}</strong>
-            <span>{lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}</span>
-          </div>
+        <div className="flex w-full flex-col items-start gap-1">
+          <strong>{lesson.course.acronym}</strong>
+          <span>{lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}</span>
+        </div>
 
-          <div className="flex w-full items-center justify-between gap-2">
-            <span>{lesson.schedule.location}</span>
-            <span className="whitespace-nowrap">{lesson.schedule.teacher_acronym}</span>
-          </div>
+        <div className="flex w-full items-center justify-between gap-2">
+          <span>{lesson.schedule.location}</span>
+          <span className="whitespace-nowrap">{lesson.schedule.teacher_acronym}</span>
         </div>
       </div>
-    )
+    </div>
   )
 }
 

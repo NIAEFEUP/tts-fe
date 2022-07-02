@@ -61,8 +61,7 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                       key={`responsive-lesson-box-${lessonIdx}`}
                       lesson={lesson}
                       conflict={false}
-                      active={true}
-                      extraClassNames="py-4 pl-4 pr-6"
+                      specialClassnames="py-4 pl-4 pr-6"
                     />
                   ))}
                 </div>
