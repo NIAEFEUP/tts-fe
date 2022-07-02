@@ -1,14 +1,19 @@
-import { CourseSchedule } from '../@types'
+import { CourseSchedule, Lesson, LessonBoxRef } from '../@types'
 
+const minHour = 8
+const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-export const getDisplayDate = () => {
+// FIXME: backend has to replace unwanted types (basically the ones not in this list)
+const lessonTypes = ['T', 'TP', 'PL', 'OT', 'L', 'P', 'TC', 'S']
+
+const getDisplayDate = () => {
   const date = new Date()
   return `${dayNames[date.getDay()]}, ${date.getDate() + 1} ${monthNames[date.getMonth()]}`
 }
 
-export const getSemester = () => {
+const getSemester = () => {
   //jan-jul --> 2º Semestre
   const date = new Date()
   const month = date.getMonth()
@@ -16,7 +21,7 @@ export const getSemester = () => {
   return month >= 0 && month <= 6 ? '2ºS' : '1ºS'
 }
 
-export const getSchoolYear = () => {
+const getSchoolYear = () => {
   const date = new Date()
   const month = date.getMonth()
   const year = date.getFullYear()
@@ -26,21 +31,21 @@ export const getSchoolYear = () => {
     : `${year}/${(year + 1).toString().slice(2, 4)}`
 }
 
-export const convertWeekday = (dayNumber: number) => {
+const convertWeekday = (dayNumber: number) => {
   if (dayNumber < 1 || dayNumber > 8) return null
 
   const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sab', 'Dom']
   return weekdays[dayNumber - 1]
 }
 
-export const convertWeekdayLong = (dayNumber: number) => {
+const convertWeekdayLong = (dayNumber: number) => {
   if (dayNumber < 1 || dayNumber > 8) return null
 
   const weekdays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
   return weekdays[dayNumber - 1]
 }
 
-export const convertHour = (hourNumber: number) => {
+const convertHour = (hourNumber: number) => {
   if (hourNumber < 0 || hourNumber > 24) return null
 
   const split = hourNumber.toString().split('.')
@@ -50,7 +55,108 @@ export const convertHour = (hourNumber: number) => {
   return `${hour}:${minutes}`
 }
 
-export const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
+const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   if (first.day !== second.day) return false
   return second.start_time < first.start_time + first.duration
+}
+
+const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
+  const className = option.class_name !== null ? option.class_name : option.composed_class_name
+  return [className, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+}
+
+const getLessonBoxTime = (schedule: CourseSchedule) => {
+  return [convertHour(schedule.start_time), convertHour(schedule.start_time + schedule.duration)].join('-')
+}
+
+const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) => {
+  const step = (maxHour - minHour) * 2
+  const top = (lesson.schedule.start_time - minHour) * 2
+  const length = lesson.schedule.duration * 2
+
+  return {
+    top: `${(top * 100) / step}%`,
+    left: `${((lesson.schedule.day - 1) * 100) / 6}%`,
+    height: `${length * (100 / step)}%`,
+  }
+}
+
+const getLessonBoxName = (lessonBoxRef: LessonBoxRef, prefix?: string): string => {
+  const tokens: string[] = ['lesson', lessonBoxRef.type, lessonBoxRef.acronym, lessonBoxRef.id.toString()]
+  return prefix ? [prefix, tokens].flat().join('-') : tokens.join('-')
+}
+
+const getLessonTypeLongName = (type: string) => {
+  switch (type) {
+    case 'T':
+      return 'Aula Teórica'
+
+    case 'P':
+      return 'Aula Prática'
+
+    case 'TP':
+      return 'Aula Teórico-Prática'
+
+    case 'L':
+      return 'Aula de Laboratório'
+
+    case 'S':
+      return 'Seminário'
+
+    case 'TC':
+      return 'Teórica de Campo'
+
+    case 'PL':
+      return 'Aula Prática Laboratorial'
+
+    case 'OT':
+      return 'Aula de Orientação'
+
+    default:
+      return 'Aula'
+  }
+}
+
+const getClassTypeClassName = (type: string) => {
+  switch (type) {
+    case 'T':
+      return 'schedule-class-t'
+
+    case 'P':
+    case 'TP':
+      return 'schedule-class-tp'
+
+    case 'L':
+    case 'S':
+    case 'TC':
+    case 'PL':
+      return 'schedule-class-pl'
+
+    case 'OT':
+      return 'schedule-class-ot'
+
+    default:
+      return 'schedule-class-default'
+  }
+}
+
+export {
+  minHour,
+  maxHour,
+  lessonTypes,
+  dayNames,
+  monthNames,
+  getDisplayDate,
+  getSemester,
+  getSchoolYear,
+  convertWeekday,
+  convertWeekdayLong,
+  convertHour,
+  timesCollide,
+  getScheduleOptionDisplayText,
+  getLessonBoxTime,
+  getLessonBoxStyles,
+  getLessonBoxName,
+  getClassTypeClassName,
+  getLessonTypeLongName,
 }

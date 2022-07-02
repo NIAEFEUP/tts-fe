@@ -1,5 +1,8 @@
 import classNames from 'classnames'
+import * as backendAPI from '../../backend'
 import Alert, { AlertType } from './Alert'
+import CreditsBanner from './CreditsBanner'
+import { Link } from 'react-router-dom'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses, Course } from '../../@types'
 import {
@@ -9,10 +12,13 @@ import {
   PencilAltIcon,
   PlusCircleIcon,
   MinusCircleIcon,
+  CheckCircleIcon,
+  HomeIcon,
+  InboxInIcon,
 } from '@heroicons/react/solid'
-import { Fragment, SetStateAction, useEffect, useState } from 'react'
+import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
-import { extraCoursesData } from '../../utils/data'
+import { useCourses } from '../../hooks'
 
 type Props = {
   majors: Major[]
@@ -22,20 +28,11 @@ type Props = {
 }
 
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
-  const getExtraCourses = () => {
-    return extraCoursesData
-  }
-
-  const initMajor = () => {
-    const storedMajor = JSON.parse(localStorage.getItem('niaefeup-tts.major'))
-    if (storedMajor === null) return null
-    else return majors.find((item) => item.name === storedMajor?.name)
-  }
-
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [selected, setSelected] = useState<Major>(initMajor())
+  const [, setCoursesLS] = useCourses()
+  const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
@@ -48,7 +45,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
-  const extraCourses = getExtraCourses()
+  const extraCourses = useMemo(() => backendAPI.getExtraCourses(major), [major])
   const filteredExtraCourses =
     extraCoursesQuery === ''
       ? extraCourses
@@ -82,6 +79,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
     setCourses([...courses])
+    setCoursesLS([...courses])
 
     let some = courses[year].some((course) => course.checked)
     let every = courses[year].every((course) => course.checked)
@@ -108,19 +106,20 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     })
     courses[year] = newGroupEntry
     setCourses([...courses])
+    setCoursesLS([...courses])
   }
 
   return (
     <>
-      <div className="flex w-full items-center justify-center">
+      <div className="flex w-full grow items-center justify-center xl:w-min">
         {/* Edit button */}
         <button
           type="button"
           onClick={openModal}
-          className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary
-          px-2 py-3 text-xs font-medium text-white transition hover:opacity-80 xl:px-4 xl:text-sm"
+          className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary px-2
+          py-3 text-xs font-medium text-white transition hover:opacity-80 xl:space-x-0 xl:px-4 xl:text-sm 2xl:space-x-2"
         >
-          <span>Editar</span>
+          <span className="flex xl:hidden 2xl:flex">Editar</span>
           <PencilAltIcon className="h-4 w-4 text-white xl:h-5 xl:w-5" />
         </button>
       </div>
@@ -133,7 +132,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
               <InnerCustomTransition>
                 <Dialog.Panel
                   className={classNames(
-                    'w-full max-w-5xl transform space-y-3 rounded-2xl p-6 text-left',
+                    'w-full max-w-6xl transform space-y-3 rounded-2xl p-4 text-left lg:p-8',
                     'bg-lightest align-middle shadow-xl transition-all dark:bg-dark'
                   )}
                 >
@@ -143,25 +142,28 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     className="mb-5 flex w-full items-center justify-between space-x-2 text-center font-medium"
                   >
                     <div className="flex items-center justify-start space-x-1">
-                      <AcademicCapIcon className="h-6 w-6 text-primary" aria-hidden="true" />
+                      <AcademicCapIcon className="h-6 w-6 text-feup" aria-hidden="true" />
                       <h3 className="text-xl font-semibold leading-6 tracking-tight dark:text-white">Escolha de UCs</h3>
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
                       <span
                         title="Semestre"
-                        className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {getSemester()}
                       </span>
                       <span
                         title="Ano Letivo"
-                        className="rounded bg-primary px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {getSchoolYear()}
                       </span>
                     </div>
                   </Dialog.Title>
+
+                  {/* Credits banner */}
+                  <CreditsBanner courses={courses.flat().filter((course) => course.checked)} />
 
                   {/* Alert banner */}
                   <Alert type={alertLevel}>
@@ -182,9 +184,9 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         <Combobox.Input
                           placeholder="Digite ou escolha o seu ciclo de estudos"
                           className={classNames(
-                            selected !== null ? 'font-bold' : '',
-                            'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
-                            'border-slate-700/25 bg-slate-50 text-slate-800 focus:shadow focus:ring-0'
+                            selected !== null ? 'font-semibold' : '',
+                            'w-full rounded border-2 py-3 pl-4 pr-8 text-xs leading-5 md:text-sm',
+                            'border-gray-700/25 bg-gray-50 text-gray-700 focus:shadow focus:ring-0'
                           )}
                           displayValue={(major: Major) => getDisplayMajorText(major)}
                           onChange={(event: { target: { value: SetStateAction<string> } }) =>
@@ -193,7 +195,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         />
                         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                           <SelectorIcon
-                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-secondary"
+                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-gray-100 hover:text-primary"
                             aria-hidden="true"
                           />
                         </Combobox.Button>
@@ -207,8 +209,8 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         afterLeave={() => setMajorQuery('')}
                       >
                         <Combobox.Options
-                          className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded-md border
-                        border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
+                          className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
+                         border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                         >
                           {filteredMajors.length === 0 && majorQuery !== '' ? (
                             <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
@@ -221,7 +223,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                 className={({ active }) =>
                                   `relative cursor-pointer select-none py-2 px-3 ${
                                     major?.name !== '' ? 'pl-10' : 'pl-4'
-                                  } ${active ? 'bg-secondary text-white' : 'text-gray-900'}`
+                                  } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
                                 }
                                 value={major}
                               >
@@ -233,7 +235,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                     {selected ? (
                                       <span
                                         className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                          active ? 'text-white' : 'text-secondary'
+                                          active ? 'text-white' : 'text-primary'
                                         }`}
                                       >
                                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -263,7 +265,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                             placeholder="Procure uma unidade curricular usando sigla, nome ou código"
                             className={classNames(
                               'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
-                              'border-slate-700/25 bg-slate-50 text-slate-800 focus:shadow focus:ring-0'
+                              'border-gray-700/25 bg-gray-50 text-gray-800 focus:shadow focus:ring-0'
                             )}
                             displayValue={(extraCourse: Course) => getDisplayExtraCourseText(extraCourse)}
                             onChange={(event: { target: { value: SetStateAction<string> } }) =>
@@ -272,7 +274,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                             <SelectorIcon
-                              className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-secondary"
+                              className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-primary"
                               aria-hidden="true"
                             />
                           </Combobox.Button>
@@ -286,8 +288,8 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           afterLeave={() => setExtraCoursesQuery('')}
                         >
                           <Combobox.Options
-                            className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded-md border
-                        border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
+                            className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
+                          border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
                           >
                             {filteredExtraCourses.length === 0 && extraCoursesQuery !== '' ? (
                               <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
@@ -300,7 +302,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                   className={({ active }) =>
                                     `relative cursor-pointer select-none py-2 px-3 ${
                                       extraCourse?.name !== '' ? 'pl-10' : 'pl-4'
-                                    } ${active ? 'bg-secondary text-white' : 'text-gray-900'}`
+                                    } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
                                   }
                                   value={extraCourse}
                                 >
@@ -312,7 +314,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                                       {selected ? (
                                         <span
                                           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                            active ? 'text-white' : 'text-secondary'
+                                            active ? 'text-white' : 'text-primary'
                                           }`}
                                         >
                                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -330,81 +332,96 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   )}
 
                   {/* Courses checkboxes */}
-                  {major?.name !== '' ? (
-                    <div className="checkboxes">
-                      {courses.map((year: CheckedYearCourses, yearIdx: number) => (
-                        <div key={`year-${yearIdx}`}>
-                          {/* Parent checkbox */}
-                          <div className="flex items-center transition">
-                            <input
-                              type="checkbox"
-                              className="checkbox"
-                              checked={courses[yearIdx].every((course) => course.checked)}
-                              id={`year-checkbox-${yearIdx}`}
-                              onChange={(event) => {
-                                handleCheckGroup(event, yearIdx)
-                              }}
-                            />
-                            <label
-                              className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                              htmlFor={`year-checkbox-${yearIdx}`}
-                            >
-                              <span>{yearIdx + 1}º Ano</span>
-                            </label>
-                          </div>
+                  <div className="checkboxes">
+                    {major
+                      ? courses.map((year: CheckedYearCourses, yearIdx: number) => (
+                          <div key={`year-${yearIdx}`}>
+                            {/* Parent checkbox */}
+                            <div className="flex items-center transition">
+                              <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={courses[yearIdx].every((course) => course.checked)}
+                                id={`year-checkbox-${yearIdx}`}
+                                onChange={(event) => {
+                                  handleCheckGroup(event, yearIdx)
+                                }}
+                              />
+                              <label
+                                className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
+                                htmlFor={`year-checkbox-${yearIdx}`}
+                              >
+                                <span>{yearIdx + 1}º Ano</span>
+                              </label>
+                            </div>
 
-                          {/* Children checkboxes */}
-                          <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
-                            {year.map((course: CheckedCourse, courseIdx: number) => (
-                              <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center transition">
-                                <input
-                                  type="checkbox"
-                                  className="checkbox"
-                                  checked={courses[yearIdx][courseIdx].checked}
-                                  id={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                  onChange={(event) => {
-                                    handleCheck(event, yearIdx, courseIdx)
-                                  }}
-                                />
-                                <label
-                                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                                  htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                >
-                                  {course.info.acronym}
-                                </label>
-                              </div>
-                            ))}
+                            {/* Children checkboxes */}
+                            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
+                              {year.map((course: CheckedCourse, courseIdx: number) => (
+                                <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center transition">
+                                  <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    checked={courses[yearIdx][courseIdx].checked}
+                                    id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                    onChange={(event) => {
+                                      handleCheck(event, yearIdx, courseIdx)
+                                    }}
+                                  />
+                                  <label
+                                    className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                                    htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                  >
+                                    {course.info.acronym}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : null}
+                        ))
+                      : null}
+                  </div>
 
                   {/* Bottom action buttons */}
-                  <footer className="mt-8 flex items-center justify-between space-x-2">
-                    <a
-                      type="button"
-                      className={classNames(
-                        'inline-flex justify-center rounded-lg px-4 py-2 text-sm font-medium text-slate-600',
-                        'border-2 border-slate-400 bg-slate-100 transition hover:bg-slate-400 hover:text-white'
-                      )}
-                      href="mailto:projetos.niaefeup@gmail.com"
-                    >
-                      <span className="hidden md:flex">Contacte-nos</span>
-                      <span className="flex md:hidden">Contactos</span>
-                    </a>
+                  <footer className="mt-8 flex flex-col items-center justify-between space-y-2 space-x-0 lg:flex-row lg:space-y-0 lg:space-x-2">
+                    <div className="flex w-full flex-col space-x-0 space-y-2 lg:flex-row lg:space-x-3 lg:space-y-0">
+                      <a
+                        type="button"
+                        className={classNames(
+                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
+                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
+                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
+                        )}
+                        href="mailto:projetos.niaefeup@gmail.com"
+                      >
+                        <InboxInIcon className="h-5 w-5" aria-hidden="true" />
+                        <span className="hidden md:flex">Contacte-nos</span>
+                        <span className="flex md:hidden">Contactar</span>
+                      </a>
+                      <Link
+                        to="/"
+                        className={classNames(
+                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
+                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
+                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
+                        )}
+                      >
+                        <HomeIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
+                        <span>Voltar</span>
+                      </Link>
+                    </div>
 
-                    <div className="flex items-center justify-between space-x-2 md:space-x-4">
+                    <div className="flex w-full flex-col items-center justify-between space-x-0 space-y-2 lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
                       <button
                         type="button"
-                        disabled
                         title="Coming soon"
+                        disabled
                         className={classNames(
-                          'inline-flex items-center justify-center space-x-1 rounded-lg border-2 px-2 py-2 text-sm font-medium transition md:space-x-2 md:px-4',
-                          'hover:text-white disabled:cursor-not-allowed disabled:opacity-50 dark:text-white',
+                          'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
+                          'hover:text-white disabled:hidden disabled:cursor-not-allowed disabled:opacity-50',
                           extraCoursesActive
-                            ? 'border-rose-800/50 text-rose-800 hover:bg-rose-800 dark:bg-rose-600/10 dark:hover:bg-rose-800/75'
-                            : 'border-secondary/30 text-secondary hover:bg-secondary dark:bg-secondary/30 dark:hover:bg-secondary/75'
+                            ? 'border-rose-700/70 bg-rose-50 text-rose-700 hover:bg-rose-700'
+                            : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'
                         )}
                         onClick={() => setExtraCoursesActive(!extraCoursesActive)}
                       >
@@ -413,14 +430,14 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         ) : (
                           <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
                         )}
-                        <span className="hidden md:flex">UCs fora do curso</span>
+                        <span className="hidden md:flex">UCs&nbsp;fora&nbsp;do&nbsp;curso</span>
                         <span className="flex md:hidden">Extra&nbsp;UCs</span>
                       </button>
                       <button
                         type="button"
                         title="Avançar para seleção de horários"
                         className={classNames(
-                          'inline-flex justify-center rounded-lg border-2 px-4 py-2 text-sm font-medium transition',
+                          'flex w-full items-center justify-center space-x-1 rounded border-2 px-4 py-2 text-sm font-medium transition lg:w-auto',
                           'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700',
                           major?.name === '' || !atLeastOneCourse
                             ? 'cursor-not-allowed opacity-50'
@@ -429,7 +446,8 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         onClick={closeModal}
                         disabled={major?.name === '' || !atLeastOneCourse}
                       >
-                        Confirmar
+                        <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
+                        <span>Confirmar</span>
                       </button>
                     </div>
                   </footer>

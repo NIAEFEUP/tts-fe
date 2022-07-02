@@ -3,7 +3,7 @@ const FeupExchangePage = () => {
   const isComingSoon = true
 
   return isComingSoon ? (
-    <div className="w-full mx-auto">
+    <div className="mx-auto w-full">
       <ComingSoon />
     </div>
   ) : (
@@ -12,7 +12,7 @@ const FeupExchangePage = () => {
       <div className="lg:min-h-adjusted order-2 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 lg:px-4 lg:py-4"></div>
 
       {/* Sidebar */}
-      <div className="min-h-adjusted order-1 col-span-12 flex flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark lg:col-span-3"></div>
+      <div className="lg:min-h-adjusted order-1 col-span-12 flex min-h-min flex-col justify-between space-y-2 rounded bg-lightest px-4 py-4 dark:bg-dark lg:col-span-3"></div>
     </div>
   )
 }

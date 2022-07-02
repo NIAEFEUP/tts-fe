@@ -1,8 +1,9 @@
-import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { convertHour, convertWeekdayLong, timesCollide } from '../../utils'
 import { Lesson, CourseOptions } from '../../@types'
+import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedule'
+import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
+import '../../styles/schedule.css'
 
 type Props = {
   showGrid: boolean
@@ -10,15 +11,6 @@ type Props = {
   activeClassesTP: boolean
   courseOptions: CourseOptions
 }
-
-type LessonBoxProps = {
-  lesson: Lesson
-  active: boolean
-  conflict?: boolean
-}
-
-const minHour = 8
-const maxHour = 23
 
 const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
@@ -124,7 +116,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
             ))}
           </div>
           <div className="schedule-main-right">
-            <div className="schedule-grid-wrapper">
+            <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
                 {lessons.length === conflicts.length
@@ -141,6 +133,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
                           key={`lesson-box-${lessonIdx}`}
                           lesson={lesson}
                           conflict={lessons.length > 1 ? true : false}
+                          conflicts={lessons.length > 1 ? lessons : undefined}
                           active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
                         />
                       ))
@@ -156,18 +149,19 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
         {lessonsGroupedByDays.length > 0 ? (
           lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
             <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
-              <div className="h-full w-1 rounded-xl bg-primary">
-                <span></span>
-              </div>
+              <div className="h-full w-1 rounded bg-primary" />
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
-                {lessons.map((lesson: Lesson, lessonIdx: number) => (
-                  <ResponsiveLessonBox
-                    key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
-                    lesson={lesson}
-                    conflict={false}
-                    active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
-                  />
-                ))}
+                {lessons.map((lesson: Lesson, lessonIdx: number) =>
+                  lesson.schedule.lesson_type === 'T'
+                    ? activeClassesT
+                    : activeClassesTP && (
+                        <ResponsiveLessonBox
+                          key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
+                          lesson={lesson}
+                          conflict={false}
+                        />
+                      )
+                )}
               </div>
             </div>
           ))
@@ -176,136 +170,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
         )}
       </div>
     </>
-  )
-}
-
-const ScheduleGrid = ({ showGrid }: { showGrid: boolean }) => {
-  const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
-  const hourValues = Array.from({ length: (maxHour - minHour) * 2 }, (_, i) => minHour + i * 0.5)
-
-  return (
-    <div className="schedule-grid">
-      {dayValues.map((dayValue: number, columnIdx: number) => (
-        <div className={`schedule-column schedule-column-${columnIdx}`} key={`schedule-column-${columnIdx}`}>
-          {hourValues.map((hourValue: number, rowIdx: number) => (
-            <div
-              key={`schedule-row-${rowIdx}`}
-              className={classNames(
-                'schedule-cell',
-                rowIdx === hourValues.length - 1 ? 'schedule-cell-last-in-row' : '',
-                columnIdx === dayValues.length - 1 ? 'schedule-cell-last-in-column' : '',
-                hourValue >= 13 && hourValue < 14 ? 'schedule-class-lunch' : '',
-                showGrid ? '' : 'no-borders'
-              )}
-            />
-          ))}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-const LessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
-  const getStyles = (startTime: number, duration: number, day: number) => {
-    const step = (maxHour - minHour) * 2
-    const top = (startTime - minHour) * 2
-    const length = duration * 2
-
-    return {
-      top: `${(top * 100) / step}%`,
-      left: `${((day - 1) * 100) / 6}%`,
-      height: `${length * (100 / step)}%`,
-    }
-  }
-
-  // prettier-ignore
-  const time = `${convertHour(lesson.schedule.start_time)}-${convertHour(lesson.schedule.start_time + lesson.schedule.duration)}`
-  const styles = getStyles(lesson.schedule.start_time, lesson.schedule.duration, lesson.schedule.day)
-
-  return (
-    active && (
-      <div
-        style={styles}
-        className={classNames(
-          'schedule-class',
-          conflict ? 'schedule-class-conflict' : '',
-          lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
-          lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
-          lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
-        )}
-      >
-        {lesson.schedule.duration > 1 ? (
-          <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
-            <div className="flex w-full items-center justify-between">
-              <span>{time}</span>
-            </div>
-
-            <div className="flex w-full items-center justify-between">
-              <span className="font-semibold">{lesson.course.acronym}</span>
-              <span>
-                {lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}
-              </span>
-            </div>
-
-            <div className="flex w-full items-center justify-between">
-              <span>{lesson.schedule.location}</span>
-              <span>{lesson.schedule.teacher_acronym}</span>
-            </div>
-          </div>
-        ) : (
-          <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
-            <div className="flex w-full items-center justify-between">
-              <span>{time}</span>
-              <span className="font-semibold">{lesson.course.acronym}</span>
-            </div>
-
-            <div className="flex w-full items-center justify-between">
-              <span>{lesson.schedule.location}</span>
-              <span>
-                {lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}
-              </span>
-              <span>{lesson.schedule.teacher_acronym}</span>
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  )
-}
-
-const ResponsiveLessonBox = ({ lesson, active, conflict }: LessonBoxProps) => {
-  // prettier-ignore
-  const time = `${convertHour(lesson.schedule.start_time)}-${convertHour(lesson.schedule.start_time + lesson.schedule.duration)}`
-
-  return (
-    active && (
-      <div
-        className={classNames(
-          'schedule-class-responsive',
-          conflict ? 'schedule-class-conflict' : '',
-          lesson.schedule.lesson_type === 'T' ? 'schedule-class-t' : '',
-          lesson.schedule.lesson_type === 'P' ? 'schedule-class-lab' : '',
-          lesson.schedule.lesson_type === 'TP' ? 'schedule-class-tp' : ''
-        )}
-      >
-        <div className="flex h-full w-full flex-col items-center justify-between space-y-4 p-1.5 text-xxs leading-none tracking-tighter text-white xl:text-sm 2xl:p-2 2xl:text-base">
-          <div className="flex w-full flex-col justify-between space-y-0.5">
-            <span className="font-bold">{convertWeekdayLong(lesson.schedule.day)}</span>
-            <span>{time}</span>
-          </div>
-
-          <div className="flex w-full flex-col items-start space-y-1">
-            <span className="font-bold">{lesson.course.acronym}</span>
-            <span>{lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}</span>
-          </div>
-
-          <div className="flex w-full items-center justify-between">
-            <span>{lesson.schedule.location}</span>
-            <span>{lesson.schedule.teacher_acronym}</span>
-          </div>
-        </div>
-      </div>
-    )
   )
 }
 

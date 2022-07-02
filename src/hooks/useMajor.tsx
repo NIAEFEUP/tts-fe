@@ -22,14 +22,14 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   return [storedValue, setValue]
 }
 
-const useShowGrid = () => {
-  const [showGrid, setShowGrid] = useLocalStorage('niaefeup-tts.show-grid', true)
+const useMajor = () => {
+  const [major, setMajor] = useLocalStorage('niaefeup-tts.major', null)
 
   useEffect(() => {
     // add some logic here
-  }, [showGrid])
+  }, [major])
 
-  return [showGrid, setShowGrid]
+  return [major, setMajor]
 }
 
-export default useShowGrid
+export default useMajor

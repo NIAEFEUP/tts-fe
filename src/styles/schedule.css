@@ -42,7 +42,7 @@
 
 /* Schedule Grid */
 .schedule-grid-wrapper {
-  @apply relative h-full w-full rounded border-2 border-gray-200 shadow dark:border-[#f0f0ff33] dark:shadow-xl;
+  @apply relative h-full w-full rounded;
 }
 
 .schedule-grid {
@@ -118,27 +118,47 @@
 }
 
 .schedule-class-responsive {
-  @apply z-10 border-0 transition hover:ring-0 min-w-[4.5rem] w-min;
+  @apply z-10 w-min min-w-[4.5rem] border-0 transition hover:ring-0;
 }
 
 .schedule-class-t {
-  @apply border-theoretical bg-theoretical/70 hover:bg-theoretical dark:bg-theoretical/50;
+  @apply border-schedule-t bg-schedule-t/80 hover:bg-schedule-t dark:bg-schedule-t/80 dark:hover:bg-schedule-t;
 }
 
 .schedule-class-tp {
-  @apply border-practical bg-practical/70 hover:bg-practical  dark:bg-practical/50;
+  @apply border-schedule-tp bg-schedule-tp/80 hover:bg-schedule-tp  dark:bg-schedule-tp/80 dark:hover:bg-schedule-tp;
 }
 
-.schedule-class-lab {
-  @apply border-labs bg-labs/70 hover:bg-labs dark:bg-labs/50;
+.schedule-class-pl {
+  @apply border-schedule-pl bg-schedule-pl/80 hover:bg-schedule-pl dark:bg-schedule-pl/80 dark:hover:bg-schedule-pl;
 }
 
-.schedule-class-lunch {
-  @apply bg-teal-600/50;
+.schedule-class-ot {
+  @apply border-schedule-ot bg-schedule-ot/80 hover:bg-schedule-ot dark:bg-schedule-ot/80 dark:hover:bg-schedule-ot;
+}
+
+.schedule-class-default {
+  @apply border-schedule-default bg-schedule-default/80 hover:bg-schedule-default dark:bg-schedule-default/80 dark:hover:bg-schedule-default;
+}
+
+.schedule-class-schedule-lunch {
+  @apply bg-schedule-lunch/25;
 }
 
 .schedule-class-conflict {
-  @apply z-20 border-2 border-red-600 ring-red-600 hover:z-30 hover:ring-1;
+  @apply z-20 border-2 border-red-600 opacity-50 ring-red-600 hover:z-30 hover:opacity-100 hover:ring-1;
+}
+
+.schedule-class-conflict-none {
+  @apply z-20 hover:cursor-default;
+}
+
+.show-grid-yes {
+  @apply border-2 border-gray-200 shadow dark:border-[#f0f0ff33];
+}
+
+.show-grid-no {
+  @apply border-2 border-transparent shadow-inner-xl;
 }
 
 .no-borders {

@@ -32,7 +32,7 @@ const Sidebar = () => {
 
         {/* Navigation */}
         <div className="flex py-4">
-          <Tab.List className="flex w-full flex-col space-y-2 rounded-xl">
+          <Tab.List className="flex w-full flex-col space-y-2 rounded">
             {navigation.map((item, itemIdx) => (
               <Tab
                 key={`nav-profile-${itemIdx}`}
