@@ -86,6 +86,37 @@ const getLessonBoxName = (lessonBoxRef: LessonBoxRef, prefix?: string): string =
   return prefix ? [prefix, tokens].flat().join('-') : tokens.join('-')
 }
 
+const getLessonTypeLongName = (type: string) => {
+  switch (type) {
+    case 'T':
+      return 'Aula Teórica'
+
+    case 'P':
+      return 'Aula Prática'
+
+    case 'TP':
+      return 'Aula Teórico-Prática'
+
+    case 'L':
+      return 'Aula de Laboratório'
+
+    case 'S':
+      return 'Seminário'
+
+    case 'TC':
+      return 'Teórica de Campo'
+
+    case 'PL':
+      return 'Aula Prática Laboratorial'
+
+    case 'OT':
+      return 'Aula de Orientação'
+
+    default:
+      return 'Aula'
+  }
+}
+
 const getClassTypeClassName = (type: string) => {
   switch (type) {
     case 'T':
@@ -127,4 +158,5 @@ export {
   getLessonBoxStyles,
   getLessonBoxName,
   getClassTypeClassName,
+  getLessonTypeLongName,
 }

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Lesson, LessonBoxRef } from '../../../@types'
 import {
   getClassTypeClassName,
+  getLessonTypeLongName,
   getLessonBoxName,
   getLessonBoxStyles,
   getLessonBoxTime,
@@ -41,7 +42,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
           onClick={showConflicts}
           style={getLessonBoxStyles(lesson, maxHour, minHour)}
           className={classNames(
-            'schedule-class',
+            'schedule-class group',
             getClassTypeClassName(type),
             getLessonBoxName(lessonBoxRef),
             conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none'
@@ -51,6 +52,9 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-sm">
               <div className="flex w-full items-center justify-between">
                 <span>{timeSpan}</span>
+                <strong title={getLessonTypeLongName(type)} className="hidden group-hover:inline-flex">
+                  {type}
+                </strong>
               </div>
 
               <div className="flex w-full items-center justify-between">

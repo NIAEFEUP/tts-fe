@@ -1,6 +1,12 @@
 import classNames from 'classnames'
 import { Lesson, LessonBoxRef } from '../../../@types'
-import { convertWeekdayLong, getClassTypeClassName, getLessonBoxName, getLessonBoxTime } from '../../../utils'
+import {
+  convertWeekdayLong,
+  getClassTypeClassName,
+  getLessonBoxName,
+  getLessonBoxTime,
+  getLessonTypeLongName,
+} from '../../../utils'
 
 type Props = {
   lesson: Lesson
@@ -21,7 +27,7 @@ const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Prop
     active && (
       <div
         className={classNames(
-          'schedule-class-responsive',
+          'schedule-class-responsive group',
           getClassTypeClassName(type),
           getLessonBoxName(lessonBoxRef, 'responsive'),
           conflict ? 'schedule-class-conflict' : ''
@@ -35,12 +41,21 @@ const ResponsiveLessonBox = ({ lesson, active, conflict, extraClassNames }: Prop
           )}
         >
           <div className="flex w-full flex-col justify-between gap-0.5">
-            <span className="font-bold">{convertWeekdayLong(lesson.schedule.day)}</span>
+            <span className="flex w-full items-center justify-between">
+              <strong>{convertWeekdayLong(lesson.schedule.day)}</strong>
+              {extraClassNames ? (
+                <strong title={getLessonTypeLongName(type)}>{type}</strong>
+              ) : (
+                <strong title={getLessonTypeLongName(type)} className="hidden group-hover:inline-flex">
+                  {type}
+                </strong>
+              )}
+            </span>
             <span>{getLessonBoxTime(lesson.schedule)}</span>
           </div>
 
           <div className="flex w-full flex-col items-start gap-1">
-            <span className="font-bold">{lesson.course.acronym}</span>
+            <strong>{lesson.course.acronym}</strong>
             <span>{lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}</span>
           </div>
 
