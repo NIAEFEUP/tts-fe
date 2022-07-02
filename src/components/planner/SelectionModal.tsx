@@ -45,7 +45,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
-  const extraCourses = useMemo(() => backendAPI.getExtraCourses(major), [])
+  const extraCourses = useMemo(() => backendAPI.getExtraCourses(major), [major])
   const filteredExtraCourses =
     extraCoursesQuery === ''
       ? extraCourses

@@ -46,7 +46,9 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                 bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <Dialog.Title as="header">
-                  <h3 className="text-lg font-medium leading-none text-gray-700 mb-2">Inspeção de Conflitos de Horários</h3>
+                  <h3 className="mb-2 text-lg font-medium leading-none text-gray-700">
+                    Inspeção de Conflitos de Horários
+                  </h3>
                   <h4 className="text-sm text-rose-800">
                     Um horário com colisões de <strong>aulas teóricas</strong> é geralmente permitido na maioria dos
                     casos. O mesmo <strong>não</strong> se verifica para <strong>aulas práticas</strong>.

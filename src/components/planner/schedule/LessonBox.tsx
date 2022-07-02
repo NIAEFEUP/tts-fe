@@ -1,7 +1,14 @@
 import classNames from 'classnames'
 import { useState } from 'react'
 import { Lesson, LessonBoxRef } from '../../../@types'
-import { getClassTypeClassName, getLessonBoxName, getLessonBoxStyles, getLessonBoxTime, maxHour, minHour } from '../../../utils'
+import {
+  getClassTypeClassName,
+  getLessonBoxName,
+  getLessonBoxStyles,
+  getLessonBoxTime,
+  maxHour,
+  minHour,
+} from '../../../utils'
 import ConflictsPopover from './ConflictsPopover'
 
 type Props = {
