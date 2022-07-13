@@ -3,11 +3,11 @@ import FaqBox from '../components/exchange/FaqBox'
 const FeupExchangePageFaqs = () => {
 
     return (
-        <div>
+        <div className="container mx-auto w-full space-y-12 py-6 px-4 md:py-10 md:px-6">
             <div >
-                <h2> Frequently asked questions</h2>
+                <h2 className="mb-2 text-center text-3xl font-bold uppercase text-primary"> Frequently asked questions</h2>
             </div>
-            <div >
+            <div className='flex flex-col gap-4 mx-90'>
                 <FaqBox
                     question="Se quiser mudar de turma a uma cadeira, preciso de encontrar previamente um outro aluno nessa turma que esteja disposto a fazer a troca comigo? "
                     answer="Não! Basta cada aluno indicar as suas preferências a cada cadeira, e o algoritmo irá automaticamente encontrar alguém que faça a troca com o mesmo."
