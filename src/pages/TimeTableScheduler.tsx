@@ -10,7 +10,7 @@ import {
   ExportSchedule,
   TidySchedule,
 } from '../components/planner'
-import { ScheduleColorLabels } from '../components/planner/schedule'
+import { ScheduleColorLabels } from '../components/planner/schedules'
 
 const TimeTableSchedulerPage = () => {
   const coursesAddCheckProperty = (majorCourses: MajorCourses): CheckedMajorCourses => {

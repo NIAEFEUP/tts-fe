@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Lesson, CourseOptions } from '../../@types'
-import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedule'
+import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
 import '../../styles/schedule.css'
 
