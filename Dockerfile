@@ -8,10 +8,11 @@ COPY *.json ./
 COPY .prettier* ./
 COPY *.config.js ./
 
+RUN npm install -g nodemon 
 RUN npm install
 
 COPY public/ public/
 COPY src/ src/
 
 EXPOSE $PORT
-CMD ["npm", "start"]
+CMD ["nodemon", "start"]

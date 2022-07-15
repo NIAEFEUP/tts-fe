@@ -11,8 +11,12 @@ import {
   TidySchedule,
 } from '../components/planner'
 import { ScheduleColorLabels } from '../components/planner/schedules'
+import classNames from 'classnames'
 
 const TimeTableSchedulerPage = () => {
+  // Request data. 
+  //
+
   const coursesAddCheckProperty = (majorCourses: MajorCourses): CheckedMajorCourses => {
     return majorCourses.map((year: YearCourses) =>
       year.map((item: Course) => ({
@@ -39,27 +43,33 @@ const TimeTableSchedulerPage = () => {
     }))
   }
 
+
+
   // FIXME: Possible overhaul: split all data variables from UI variables. Data variables would be wrapped in useMemo.
-  const majors = useMemo(() => backendAPI.getMajors(), [])
   const [majorLS, setMajorLS] = useMajor()
   const [coursesLS] = useCourses()
   const [showGrid, setShowGrid] = useShowGrid()
-  const [major, setMajor] = useState<Major>(majorLS)
+  const [major, setMajor] = useState<Major>(null)
   const [courses, setCourses] = useState<CheckedMajorCourses>(() => initializeCourses(major))
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
 
+
   useEffect(() => {
-    setMajorLS(major)
-  }, [major, setMajorLS])
+    backendAPI.getMajors().then(function(result){
+      setMajorLS(result)
+    }); 
+  }, []);
 
   useEffect(() => {
     const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
       return value !== undefined ? value.option : null
-    }
+    } 
+
+    
 
     // FIXME: for some reason this doesn't work properly
     setSelected((prevSelected) => [
@@ -93,7 +103,7 @@ const TimeTableSchedulerPage = () => {
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
             <SelectionModal
-              majors={majors}
+              majors={majorLS}
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
               coursesHook={[courses, setCourses]}

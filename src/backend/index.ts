@@ -1,10 +1,19 @@
 import { CheckedCourse, Major } from '../@types'
 import { majorsData, coursesData, schedulesData, extraCoursesData } from '../utils/data'
+//import fetch from 'node-fetch'; 
 
-const getMajors = () => {
+let backend: string = "https://localhost:8000";
+
+const getMajors = async () => {
+  const response =  await fetch(`http://localhost:8000/course/`)
+  .then((response)=> {
+    return response.json()}
+  )
+  .catch((error)=>console.error(error)); 
+  console.log(response)
   // TODO: replace majorsData with backend request
-  return majorsData
-}
+  return response
+}     
 
 const getCourses = (major: Major) => {
   // TODO: replace courseData with backend request

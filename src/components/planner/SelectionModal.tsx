@@ -38,6 +38,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
+
   const filteredMajors =
     majorQuery === ''
       ? majors
