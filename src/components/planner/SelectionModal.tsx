@@ -44,7 +44,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
   const filterMajors = () => {
     // The list of majors must be retrieved from the backend. 
-    if (majors !== null && majors !== []) {
+    if (majors !== null && majors !== [] && Array.isArray(majors)) {
       return majorQuery === '' ? 
         majors : 
         majors.filter((major: Major) =>
@@ -59,8 +59,6 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
 
   const filteredMajors = filterMajors();  
-
-  
 
   
   const extraCourses = useMemo(() => backendAPI.getExtraCourses(major), [major])

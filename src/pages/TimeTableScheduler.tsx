@@ -14,19 +14,46 @@ import { ScheduleColorLabels } from '../components/planner/schedules'
 import classNames from 'classnames'
 
 const TimeTableSchedulerPage = () => {
-  // Request data. 
-  //
 
-  const coursesAddCheckProperty = (majorCourses: MajorCourses): CheckedMajorCourses => {
-    console.log("year")
+  /**
+   * Adds the checked and info property to the major courses.
+   * @param majorCourses Courses in a major grouped by year. 
+   * @returns MajorCourses with the checked and info properties. 
+   */
+  const majorCourses2CheckedMajor = (majorCourses: MajorCourses): CheckedMajorCourses => {
+    return majorCourses.map((year: YearCourses) =>
+      year.map((item: Course) => ({
+        checked: false,
+        info: item,
+      }))
+    )
+  }
+
+  /**
+   * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year. 
+   * @param yearCourses All the courses in a major. 
+   * @returns The courses grouped by year. 
+   * For examples: 
+   * [{course:1, year:1}, {course:3, year:1 }, {course:2, year:2}]
+   * Returns:
+   * [[{course:1, year:1}, {course:3, year:1}], [{course:2, year:2}]]
+   */
+  const groupMajorCoursesByYear = (yearCourses: YearCourses): MajorCourses => {
+    let majorCourses: MajorCourses = [];
+    let currYear = 0;
+    for (let i = 0; i < yearCourses.length; i++) {
+      if (yearCourses[i].course_year !== currYear) {
+        currYear += 1;
+        majorCourses.push([yearCourses[i]]);
+      } else {
+        majorCourses[currYear - 1].push(yearCourses[i])
+      }
+    }
     console.log(majorCourses)
-    return majorCourses.map((year: YearCourses) => ({
-      checked: false,
-      info: year,
-    }));
-
+    return majorCourses
 
   }
+
 
   const getCheckedCourses = (courses: CheckedMajorCourses): CheckedCourse[] => {
     return courses.flat().filter((course) => course.checked)
@@ -64,8 +91,9 @@ const TimeTableSchedulerPage = () => {
 
   useEffect(() => {
     backendAPI.getCourses(major).then(function (courses) {
-      coursesAddCheckProperty(courses)
-      setCourses(courses)
+      const majorCourses: MajorCourses = groupMajorCoursesByYear(courses);
+      const checkedMajorCourses: CheckedMajorCourses = majorCourses2CheckedMajor(majorCourses)
+      setCourses(checkedMajorCourses)
     })
   }, [major])
 
