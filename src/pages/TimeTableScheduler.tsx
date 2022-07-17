@@ -7,8 +7,7 @@ import {
   SelectionModal,
   ScheduleListbox,
   ClassesTypeCheckboxes,
-  ExportSchedule,
-  TidySchedule,
+  MoreActionsButton,
 } from '../components/planner'
 import { ScheduleColorLabels } from '../components/planner/schedules'
 
@@ -98,8 +97,7 @@ const TimeTableSchedulerPage = () => {
               majorHook={[major, setMajor]}
               coursesHook={[courses, setCourses]}
             />
-            <ExportSchedule schedule={selected} />
-            <TidySchedule showGridHook={[showGrid, setShowGrid]} />
+            <MoreActionsButton schedule={selected} showGridHook={[showGrid, setShowGrid]} />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
           <div className="flex flex-col space-y-4 py-2 px-0">
