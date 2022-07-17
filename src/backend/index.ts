@@ -2,22 +2,30 @@ import { CheckedCourse, Major } from '../@types'
 import { majorsData, coursesData, schedulesData, extraCoursesData } from '../utils/data'
 //import fetch from 'node-fetch'; 
 
-let backend: string = "https://localhost:8000";
+let backendUrl: string = "http://localhost:8000";
+
+const getResponse = async (url: string) => {
+  console.log(url)
+  const response = await fetch(`${url}`)
+    .then((response) => {
+      return response.json()
+    })
+    .catch((error) => console.error(error));
+    console.log(response)
+    return response; 
+} 
+
 
 const getMajors = async () => {
-  const response =  await fetch(`http://localhost:8000/course/`)
-  .then((response)=> {
-    return response.json()}
-  )
-  .catch((error)=>console.error(error)); 
-  console.log(response)
-  // TODO: replace majorsData with backend request
-  return response
-}     
+  return await getResponse(`${backendUrl}/course/`);
+}
 
-const getCourses = (major: Major) => {
-  // TODO: replace courseData with backend request
-  return coursesData
+
+const getCourses = async (major: Major) => {
+  if (major === null) return [];
+  // TODO: store the env variable in a dotenv
+  return await getResponse(`${backendUrl}/course_units/35/1/`)
+  // return await getResponse(`${backendUrl}/course_units/${major.course_id}/1/`)
 }
 
 const getCourseSchedule = (course: CheckedCourse) => {

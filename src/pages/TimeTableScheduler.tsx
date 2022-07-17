@@ -18,21 +18,20 @@ const TimeTableSchedulerPage = () => {
   //
 
   const coursesAddCheckProperty = (majorCourses: MajorCourses): CheckedMajorCourses => {
-    return majorCourses.map((year: YearCourses) =>
-      year.map((item: Course) => ({
-        checked: false,
-        info: item,
-      }))
-    )
+    console.log("year")
+    console.log(majorCourses)
+    return majorCourses.map((year: YearCourses) => ({
+      checked: false,
+      info: year,
+    }));
+
+
   }
 
   const getCheckedCourses = (courses: CheckedMajorCourses): CheckedCourse[] => {
     return courses.flat().filter((course) => course.checked)
   }
 
-  const initializeCourses = (major: Major) => {
-    return coursesLS !== null ? coursesLS : coursesAddCheckProperty(backendAPI.getCourses(major))
-  }
 
   const initializeSelected = (): CourseOptions => {
     const selectedCourses = getCheckedCourses(courses)
@@ -50,7 +49,7 @@ const TimeTableSchedulerPage = () => {
   const [coursesLS] = useCourses()
   const [showGrid, setShowGrid] = useShowGrid()
   const [major, setMajor] = useState<Major>(null)
-  const [courses, setCourses] = useState<CheckedMajorCourses>(() => initializeCourses(major))
+  const [courses, setCourses] = useState<CheckedMajorCourses>([])
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
@@ -58,18 +57,24 @@ const TimeTableSchedulerPage = () => {
 
 
   useEffect(() => {
-    backendAPI.getMajors().then(function(result){
+    backendAPI.getMajors().then(function (result) {
       setMajorLS(result)
-    }); 
+    });
   }, []);
+
+  useEffect(() => {
+    backendAPI.getCourses(major).then(function (courses) {
+      coursesAddCheckProperty(courses)
+      setCourses(courses)
+    })
+  }, [major])
+
 
   useEffect(() => {
     const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
       return value !== undefined ? value.option : null
-    } 
-
-    
+    }
 
     // FIXME: for some reason this doesn't work properly
     setSelected((prevSelected) => [
