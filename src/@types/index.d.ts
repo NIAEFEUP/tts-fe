@@ -8,6 +8,7 @@ export type Student = {
 
 /* Courses */
 export type Course = {
+  id: number
   course_unit_id: number
   course: string
   name: string
@@ -31,6 +32,7 @@ export type CheckedMajorCourses = CheckedYearCourses[]
 
 /* Majors */
 export type Major = {
+  id: number
   name: string
   course_id: number
   faculty: number

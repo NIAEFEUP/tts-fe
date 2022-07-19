@@ -24,7 +24,7 @@ const getMajors = async () => {
 const getCourses = async (major: Major) => {
   if (major === null) return [];
   // TODO: store the env variable in a dotenv
-  return await getResponse(`${backendUrl}/course_units/35/1/`)
+  return await getResponse(`${backendUrl}/course_units/${major.id}/1/`)
   // return await getResponse(`${backendUrl}/course_units/${major.course_id}/1/`)
 }
 
