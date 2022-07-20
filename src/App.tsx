@@ -2,12 +2,14 @@ import Layout from './components/layout'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { HomePage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage } from './pages'
 import './app.css'
+import FeupExchangeFaqs from './pages/FeupExchangeFaqs'
 
 const pages = [
   { path: '/about', location: 'About', element: HomePage, liquid: true },
   { path: '/profile', location: 'Profile', element: ProfilePage, liquid: true },
   { path: '/planner', location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
   { path: '/exchange', location: 'Exchange', element: FeupExchangePage, liquid: true },
+  { path: '/faqs', location: 'FAQs', element: FeupExchangeFaqs, liquid: true },
 ]
 
 const redirects = [
