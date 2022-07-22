@@ -92,9 +92,6 @@ const TimeTableSchedulerPage = () => {
     });
   }
 
-  const updateSchedules = async (selectedCourses: CheckedCourse[], options = null) => {
-
-  }
 
   // Updates the selected Major. 
   useEffect(() => {
