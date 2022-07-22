@@ -9,6 +9,7 @@ export type Student = {
 /* Courses */
 export type Course = {
   id: number
+  course_id: number
   course_unit_id: number
   course: string
   name: string

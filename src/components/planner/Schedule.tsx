@@ -15,7 +15,7 @@ type Props = {
 const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
-
+  console.log(courseOptions)
   const subjects = useMemo(() => {
     const classes = courseOptions.filter((item) => item.option !== null)
     return classes.map((subject, subjectIdx) => ({

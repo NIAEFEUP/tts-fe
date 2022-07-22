@@ -25,12 +25,11 @@ const getCourses = async (major: Major) => {
   if (major === null) return [];
   // TODO: store the env variable in a dotenv
   return await getResponse(`${backendUrl}/course_units/${major.id}/1/`)
-  // return await getResponse(`${backendUrl}/course_units/${major.course_id}/1/`)
 }
 
-const getCourseSchedule = (course: CheckedCourse) => {
-  // TODO: Replace schedulesData (static IART) with backend request
-  return schedulesData[Math.floor(Math.random() * schedulesData.length)]
+const getCourseSchedule = async (course: CheckedCourse) => {
+  if (course === null ) return []; 
+  return await getResponse(`${backendUrl}/schedule/${course.info.id}/`)
 }
 
 const getExtraCourses = (major: Major) => {

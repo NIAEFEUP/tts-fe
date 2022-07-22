@@ -11,7 +11,7 @@ import {
   TidySchedule,
 } from '../components/planner'
 import { ScheduleColorLabels } from '../components/planner/schedules'
-import classNames from 'classnames'
+//import classNames from 'classnames'
 
 const TimeTableSchedulerPage = () => {
 
@@ -65,10 +65,9 @@ const TimeTableSchedulerPage = () => {
     return selectedCourses.map((course: CheckedCourse) => ({
       course: course,
       option: null,
-      schedules: backendAPI.getCourseSchedule(course),
+      schedules: [],
     }))
   }
-
 
 
   // FIXME: Possible overhaul: split all data variables from UI variables. Data variables would be wrapped in useMemo.
@@ -82,20 +81,49 @@ const TimeTableSchedulerPage = () => {
   const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
 
+  // UPDATING INTERNAL STATE =================================================== 
+  const getSchedule = async (checkedCourse: CheckedCourse, options = null) => {
+    return await backendAPI.getCourseSchedule(checkedCourse).then((response) => {
+      return {
+        course: checkedCourse,
+        option: options,
+        schedules: response
+      }
+    });
+  }
 
+  const updateSchedules = async (selectedCourses: CheckedCourse[], options = null) => {
+
+  }
+
+  // Updates the selected Major. 
   useEffect(() => {
     backendAPI.getMajors().then(function (result) {
       setMajorLS(result)
     });
   }, []);
 
+  // Updates the courses (course units). 
   useEffect(() => {
     backendAPI.getCourses(major).then(function (courses) {
       const majorCourses: MajorCourses = groupMajorCoursesByYear(courses);
       const checkedMajorCourses: CheckedMajorCourses = majorCourses2CheckedMajor(majorCourses)
       setCourses(checkedMajorCourses)
     })
-  }, [major])
+  }, [major]);
+
+
+  // Updates the schedules for a selected course. 
+  useEffect(() => {
+    const selectedCourses = getCheckedCourses(courses);
+    let schedules = [];
+    for (let i = 0; i < selectedCourses.length; i++) {
+      getSchedule(selectedCourses[i]).then((schedule) => { schedules.push(schedule) });
+    }
+
+    setSelected(schedules);
+  }, [courses]);
+
 
 
   useEffect(() => {
@@ -104,14 +132,14 @@ const TimeTableSchedulerPage = () => {
       return value !== undefined ? value.option : null
     }
 
-    // FIXME: for some reason this doesn't work properly
-    setSelected((prevSelected) => [
-      ...getCheckedCourses(courses).map((course: CheckedCourse) => ({
-        course: course,
-        option: findPreviousEntry(prevSelected, course),
-        schedules: backendAPI.getCourseSchedule(course),
-      })),
-    ])
+    let schedules = [];
+    const selectedCourses = getCheckedCourses(courses);
+    for (let i = 0; i < selectedCourses.length; i++) {
+      const option = findPreviousEntry(selected, selectedCourses[i]);
+      getSchedule(selectedCourses[i], option).then((schedule) => { console.log(schedule);   schedules.push(schedule) });
+    }
+
+    setSelected(schedules);
   }, [courses])
 
   return (

@@ -139,6 +139,7 @@ export const coursesData: MajorCourses = [
   [
     {
       id: 1,
+      course_id: 0,
       course_unit_id: 484400,
       course: 'L.EIC007',
       name: 'Análise Matemática II',
@@ -152,6 +153,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 2, 
+      course_id: 0,
       course_unit_id: 484401,
       course: 'L.EIC008',
       name: 'Física I',
@@ -165,6 +167,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 3, 
+      course_id: 0,
       course_unit_id: 484423,
       course: 'L.EIC010',
       name: 'Teoria da Computação',
@@ -178,6 +181,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 4, 
+      course_id: 0,
       course_unit_id: 484399,
       course: 'L.EIC006',
       name: 'Arquitetura de Computadores',
@@ -191,6 +195,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 5, 
+      course_id: 0,
       course_unit_id: 484422,
       course: 'L.EIC009',
       name: 'Programação',
@@ -206,6 +211,7 @@ export const coursesData: MajorCourses = [
   [
     {
       id: 6, 
+      course_id: 0,
       course_unit_id: 484426,
       course: 'L.EIC018',
       name: 'Laboratório de Computadores',
@@ -219,6 +225,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 7,
+      course_id: 0,
       course_unit_id: 484427,
       course: 'L.EIC019',
       name: 'Linguagens e Tecnologias Web',
@@ -232,6 +239,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 8,
+      course_id: 0,
       course_unit_id: 484424,
       course: 'L.EIC016',
       name: 'Desenho de Algoritmos',
@@ -245,6 +253,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 9,
+      course_id: 0,
       course_unit_id: 484425,
       course: 'L.EIC017',
       name: 'Engenharia de Software',
@@ -258,6 +267,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 10, 
+      course_id: 0,
       course_unit_id: 484428,
       course: 'L.EIC020',
       name: 'Métodos Estatísticos',
@@ -273,6 +283,7 @@ export const coursesData: MajorCourses = [
   [
     {
       id: 11,
+      course_id: 0,
       course_unit_id: 484381,
       course: 'L.EIC028',
       name: 'Computação Paralela e Distribuída',
@@ -286,6 +297,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 12,
+      course_id: 0,
       course_unit_id: 484379,
       course: 'L.EIC026',
       name: 'Compiladores',
@@ -299,6 +311,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id:13, 
+      course_id: 0,
       course_unit_id: 484380,
       course: 'L.EIC027',
       name: 'Computação Gráfica',
@@ -312,6 +325,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 14, 
+      course_id: 0,     
       course_unit_id: 484443,
       course: 'L.EIC030',
       name: 'Projeto Integrador',
@@ -325,6 +339,7 @@ export const coursesData: MajorCourses = [
     },
     {
       id: 15,
+      course_id: 0,
       course_unit_id: 484442,
       course: 'L.EIC029',
       name: 'Inteligência Artificial',
@@ -883,6 +898,7 @@ export const schedulesData: CourseSchedules[] = [
 export const extraCoursesData: Course[] = [
   {
     id: 1,
+    course_id: 0,
     course_unit_id: 484400,
     course: 'L.EIC007',
     name: 'Análise Matemática II',
@@ -896,6 +912,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 2,
+    course_id: 0,
     course_unit_id: 484401,
     course: 'L.EIC008',
     name: 'Física I',
@@ -909,6 +926,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 3,
+    course_id: 0,
     course_unit_id: 484423,
     course: 'L.EIC010',
     name: 'Teoria da Computação',
@@ -922,6 +940,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 4,
+    course_id: 0,
     course_unit_id: 484399,
     course: 'L.EIC006',
     name: 'Arquitetura de Computadores',
@@ -935,6 +954,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 5, 
+    course_id: 0,
     course_unit_id: 484422,
     course: 'L.EIC009',
     name: 'Programação',
@@ -948,6 +968,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 6, 
+    course_id: 0,
     course_unit_id: 484426,
     course: 'L.EIC018',
     name: 'Laboratório de Computadores',
@@ -961,6 +982,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 7,
+    course_id: 0,
     course_unit_id: 484427,
     course: 'L.EIC019',
     name: 'Linguagens e Tecnologias Web',
@@ -974,6 +996,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 8,
+    course_id: 0,
     course_unit_id: 484424,
     course: 'L.EIC016',
     name: 'Desenho de Algoritmos',
@@ -987,6 +1010,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 9,
+    course_id: 0,
     course_unit_id: 484425,
     course: 'L.EIC017',
     name: 'Engenharia de Software',
@@ -1000,6 +1024,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 10,
+    course_id: 0,
     course_unit_id: 484428,
     course: 'L.EIC020',
     name: 'Métodos Estatísticos',
@@ -1013,6 +1038,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 11,
+    course_id: 0,
     course_unit_id: 484381,
     course: 'L.EIC028',
     name: 'Computação Paralela e Distribuída',
@@ -1026,6 +1052,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 12, 
+    course_id: 0,
     course_unit_id: 484379,
     course: 'L.EIC026',
     name: 'Compiladores',
@@ -1039,6 +1066,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 13,
+    course_id: 0,
     course_unit_id: 484380,
     course: 'L.EIC027',
     name: 'Computação Gráfica',
@@ -1052,6 +1080,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 14,
+    course_id: 0,
     course_unit_id: 484443,
     course: 'L.EIC030',
     name: 'Projeto Integrador',
@@ -1065,6 +1094,7 @@ export const extraCoursesData: Course[] = [
   },
   {
     id: 15,
+    course_id: 0,
     course_unit_id: 484442,
     course: 'L.EIC029',
     name: 'Inteligência Artificial',

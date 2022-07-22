@@ -76,7 +76,7 @@ const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) =>
 
   return {
     top: `${(top * 100) / step}%`,
-    left: `${((lesson.schedule.day - 1) * 100) / 6}%`,
+    left: `${((lesson.schedule.day) * 100) / 6}%`,
     height: `${length * (100 / step)}%`,
   }
 }
