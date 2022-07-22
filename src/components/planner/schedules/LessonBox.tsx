@@ -48,7 +48,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none'
           )}
         >
-          {lesson.schedule.duration > 1 ? (
+          {parseFloat(lesson.schedule.duration) > 1 ? (
             <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-sm">
               <div className="flex w-full items-center justify-between">
                 <span>{timeSpan}</span>

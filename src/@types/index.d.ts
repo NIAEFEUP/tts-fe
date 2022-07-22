@@ -48,8 +48,8 @@ export type Major = {
 /* Schedule */
 export type CourseSchedule = {
   day: number
-  duration: number
-  start_time: number
+  duration: string
+  start_time: string
   location: string
   lesson_type: string
   teacher_acronym: string

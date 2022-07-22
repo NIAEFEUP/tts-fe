@@ -45,10 +45,10 @@ const convertWeekdayLong = (dayNumber: number) => {
   return weekdays[dayNumber - 1]
 }
 
-const convertHour = (hourNumber: number) => {
-  if (hourNumber < 0 || hourNumber > 24) return null
+const convertHour = (hourNumber: string) => {
+  if (parseFloat(hourNumber) < 0 || parseFloat(hourNumber) > 24) return null
 
-  const split = hourNumber.toString().split('.')
+  const split = hourNumber.split('.')
   const hour = split[0].padStart(2, '0')
   const minutes = split[1] === '0' || !split[1] ? '00' : '30'
 
@@ -66,13 +66,19 @@ const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
 }
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {
-  return [convertHour(schedule.start_time), convertHour(schedule.start_time + schedule.duration)].join('-')
+  console.log(`${schedule.class_name} = start_time: ${schedule.start_time}; duration: ${schedule.duration};converted_start_hour: ${convertHour(schedule.start_time)} ; convert_finished_hour: ${convertHour(addHour(schedule.start_time, schedule.duration))}`); 
+  console.log(`${schedule.start_time} + ${schedule.duration} = ${addHour(schedule.start_time, schedule.duration)}`)
+  return [convertHour(schedule.start_time), convertHour(addHour(schedule.start_time, schedule.duration))].join('-')
+}
+
+const addHour = (hour1: string, hour2: string) : string => {
+  return (parseFloat(hour1) + parseFloat(hour2)).toString()
 }
 
 const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) => {
   const step = (maxHour - minHour) * 2
-  const top = (lesson.schedule.start_time - minHour) * 2
-  const length = lesson.schedule.duration * 2
+  const top = (parseFloat(lesson.schedule.start_time) - minHour) * 2
+  const length = parseFloat(lesson.schedule.duration) * 2
 
   return {
     top: `${(top * 100) / step}%`,

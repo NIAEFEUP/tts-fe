@@ -45,7 +45,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
   const conflicts = useMemo(() => {
     let acc = []
     let conflictsAcc = []
-
+  
     for (let i = 0; i < lessons.length; i++) {
       const curLesson = lessons[i]
       if (acc.length === 0) {
@@ -73,6 +73,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
       if (i === lessons.length - 1) conflictsAcc.push(acc)
     }
 
+    console.log(conflictsAcc)
     return conflictsAcc
   }, [lessons])
 
@@ -112,7 +113,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
         <div className="schedule-main">
           <div className="schedule-main-left">
             {hourValues.map((hour: number, hourLabelIdx: number) => (
-              <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour)}</span>
+              <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour.toString())}</span>
             ))}
           </div>
           <div className="schedule-main-right">

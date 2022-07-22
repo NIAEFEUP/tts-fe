@@ -1,4 +1,4 @@
-import { CheckedCourse, Major } from '../@types'
+  import { CheckedCourse, Major } from '../@types'
 import { majorsData, coursesData, schedulesData, extraCoursesData } from '../utils/data'
 //import fetch from 'node-fetch'; 
 
