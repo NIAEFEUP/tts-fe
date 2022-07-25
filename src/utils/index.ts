@@ -35,7 +35,7 @@ const convertWeekday = (dayNumber: number) => {
   if (dayNumber < 1 || dayNumber > 8) return null
 
   const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sab', 'Dom']
-  return weekdays[dayNumber - 1]
+  return weekdays[dayNumber]
 }
 
 const convertWeekdayLong = (dayNumber: number) => {
