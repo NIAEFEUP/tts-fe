@@ -35,9 +35,10 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
     lessonsAcc.sort((first, second) => {
       if (first.schedule.day === second.schedule.day)
-        return first.schedule.start_time > second.schedule.start_time ? -1 : 1
+        return parseFloat(first.schedule.start_time) > parseFloat(second.schedule.start_time) ? -1 : 1
       else return first.schedule.day > second.schedule.day ? 1 : -1
     })
+    console.log(lessonsAcc)
 
     return lessonsAcc
   }, [subjects])
@@ -72,7 +73,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
       }
       if (i === lessons.length - 1) conflictsAcc.push(acc)
     }
-
     console.log(conflictsAcc)
     return conflictsAcc
   }, [lessons])
