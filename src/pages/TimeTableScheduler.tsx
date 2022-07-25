@@ -49,9 +49,7 @@ const TimeTableSchedulerPage = () => {
         majorCourses[currYear - 1].push(yearCourses[i])
       }
     }
-    console.log(majorCourses)
     return majorCourses
-
   }
 
 

@@ -38,8 +38,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
         return parseFloat(first.schedule.start_time) > parseFloat(second.schedule.start_time) ? -1 : 1
       else return first.schedule.day > second.schedule.day ? 1 : -1
     })
-    console.log(lessonsAcc)
-
     return lessonsAcc
   }, [subjects])
 
