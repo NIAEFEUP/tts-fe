@@ -72,7 +72,6 @@ const TimeTableSchedulerPage = () => {
 
   // FIXME: Possible overhaul: split all data variables from UI variables. Data variables would be wrapped in useMemo.
   const [majorLS, setMajorLS] = useMajor()
-  const [coursesLS] = useCourses()
   const [showGrid, setShowGrid] = useShowGrid()
   const [major, setMajor] = useState<Major>(null)
   const [courses, setCourses] = useState<CheckedMajorCourses>([])

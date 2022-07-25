@@ -66,8 +66,6 @@ const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
 }
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {
-  // console.log(`${schedule.class_name} = start_time: ${schedule.start_time}; duration: ${schedule.duration};converted_start_hour: ${convertHour(schedule.start_time)} ; convert_finished_hour: ${convertHour(addHour(schedule.start_time, schedule.duration))}`); 
-  // console.log(`${schedule.start_time} + ${schedule.duration} = ${addHour(schedule.start_time, schedule.duration)}`)
   return [convertHour(schedule.start_time), convertHour(addHour(schedule.start_time, schedule.duration))].join('-')
 }
 

@@ -43,6 +43,20 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     return lessonsAcc
   }, [subjects])
 
+
+  /**
+   * Find conflicts among classes between classes. 
+   * Consider that the classes are ordered in ascending order by the start_time. 
+   * The final result is a matrix o schedules, where conflictuos classes are grouped together. 
+   * Example: 
+   * => AMAT:   9h~11h
+   * => RC:     11h~12h
+   * => TC:     11~13h 
+   * 
+   * 1st iteraction: acc = [AMAT]
+   * 2nd iteraction: acc = [RC], conflictsAcc = [[AMAT]]
+   * 2rd iteraction: acc = [RC, TC], conflictsAcc = [[AMAT], [RC, TC]]
+   */
   const conflicts = useMemo(() => {
     let acc = []
     let conflictsAcc = []
