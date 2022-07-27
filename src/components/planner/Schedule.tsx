@@ -15,15 +15,15 @@ type Props = {
 const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i + 1)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
-
   const subjects = useMemo(() => {
     const classes = courseOptions.filter((item) => item.option !== null)
     return classes.map((subject, subjectIdx) => ({
       course: subject.course.info,
       practicalLesson: subject.option,
-      theoreticalLessons: classes.map((item) => item.schedules.filter((elem) => elem.lesson_type === 'T'))[subjectIdx],
+      theoreticalLessons: classes.map((item) => item.schedules.filter((elem) => elem.lesson_type === 'T' && elem.class_name === subject.option.class_name))[subjectIdx],
     }))
   }, [courseOptions])
+
 
   const lessons = useMemo(() => {
     let lessonsAcc: Lesson[] = []
@@ -35,17 +35,30 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
     lessonsAcc.sort((first, second) => {
       if (first.schedule.day === second.schedule.day)
-        return first.schedule.start_time > second.schedule.start_time ? -1 : 1
+        return parseFloat(first.schedule.start_time) > parseFloat(second.schedule.start_time) ? -1 : 1
       else return first.schedule.day > second.schedule.day ? 1 : -1
     })
-
     return lessonsAcc
   }, [subjects])
 
+
+  /**
+   * Find conflicts among classes between classes. 
+   * Consider that the classes are ordered in ascending order by the start_time. 
+   * The final result is a matrix o schedules, where conflictuos classes are grouped together. 
+   * Example: 
+   * => AMAT:   9h~11h
+   * => RC:     11h~12h
+   * => TC:     11~13h 
+   * 
+   * 1st iteraction: acc = [AMAT]
+   * 2nd iteraction: acc = [RC], conflictsAcc = [[AMAT]]
+   * 2rd iteraction: acc = [RC, TC], conflictsAcc = [[AMAT], [RC, TC]]
+   */
   const conflicts = useMemo(() => {
     let acc = []
     let conflictsAcc = []
-
+  
     for (let i = 0; i < lessons.length; i++) {
       const curLesson = lessons[i]
       if (acc.length === 0) {
@@ -72,7 +85,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
       }
       if (i === lessons.length - 1) conflictsAcc.push(acc)
     }
-
+    console.log(conflictsAcc)
     return conflictsAcc
   }, [lessons])
 
@@ -112,7 +125,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
         <div className="schedule-main">
           <div className="schedule-main-left">
             {hourValues.map((hour: number, hourLabelIdx: number) => (
-              <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour)}</span>
+              <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour.toString())}</span>
             ))}
           </div>
           <div className="schedule-main-right">

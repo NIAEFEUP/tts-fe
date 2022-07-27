@@ -38,13 +38,29 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
-  const filteredMajors =
-    majorQuery === ''
-      ? majors
-      : majors.filter((major: Major) =>
+
+  // SETUP =========================================================================================
+  // While the backend information is not loaded, set empty structures. 
+
+  const filterMajors = () => {
+    // The list of majors must be retrieved from the backend. 
+    if (majors !== null && majors.length !== 0 && Array.isArray(majors)) {
+      return majorQuery === '' ? 
+        majors : 
+        majors.filter((major: Major) =>
           major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
         )
+    }
+    else {
+      // Didn't retrieve information from backend yet. 
+      return [];
+    }
+  }
 
+
+  const filteredMajors = filterMajors();  
+
+  
   const extraCourses = useMemo(() => backendAPI.getExtraCourses(major), [major])
   const filteredExtraCourses =
     extraCoursesQuery === ''

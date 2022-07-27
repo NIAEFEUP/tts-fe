@@ -2,6 +2,7 @@ import { Major, Course, MajorCourses, CourseSchedules } from '../@types'
 
 export const majorsData: Major[] = [
   {
+    id: 1,
     name: 'Licenciatura em Engenharia Informática e Computação',
     course_id: 0,
     faculty: 1,
@@ -13,6 +14,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 2, 
     name: 'Licenciatura em Engenharia Eletrotécnica e de Computadores',
     course_id: 0,
     faculty: 1,
@@ -24,6 +26,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 3, 
     name: 'Licenciatura em Engenharia Civil',
     course_id: 0,
     faculty: 1,
@@ -35,6 +38,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 4, 
     name: 'Licenciatura em Engenharia Mecânica',
     course_id: 0,
     faculty: 1,
@@ -46,6 +50,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 5, 
     name: 'Mestrado em Engenharia Informática e Computação',
     course_id: 0,
     faculty: 1,
@@ -57,6 +62,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 6,
     name: 'Mestrado em Engenharia Eletrotécnica e de Computadores',
     course_id: 0,
     faculty: 1,
@@ -68,6 +74,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 7, 
     name: 'Mestrado em Engenharia Civil',
     course_id: 0,
     faculty: 1,
@@ -79,6 +86,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 8, 
     name: 'Mestrado em Engenharia Química',
     course_id: 0,
     faculty: 1,
@@ -90,6 +98,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 9,
     name: 'Mestrado em Engenharia Mecânica',
     course_id: 0,
     faculty: 1,
@@ -101,6 +110,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 10, 
     name: 'Mestrado em Engenharia do Ambiente',
     course_id: 0,
     faculty: 1,
@@ -112,6 +122,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
+    id: 11, 
     name: 'Mestrado em Engenharia e Gestão Industrial',
     course_id: 0,
     faculty: 1,
@@ -127,6 +138,8 @@ export const majorsData: Major[] = [
 export const coursesData: MajorCourses = [
   [
     {
+      id: 1,
+      course_id: 0,
       course_unit_id: 484400,
       course: 'L.EIC007',
       name: 'Análise Matemática II',
@@ -139,6 +152,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 2, 
+      course_id: 0,
       course_unit_id: 484401,
       course: 'L.EIC008',
       name: 'Física I',
@@ -151,6 +166,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 3, 
+      course_id: 0,
       course_unit_id: 484423,
       course: 'L.EIC010',
       name: 'Teoria da Computação',
@@ -163,6 +180,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 4, 
+      course_id: 0,
       course_unit_id: 484399,
       course: 'L.EIC006',
       name: 'Arquitetura de Computadores',
@@ -175,6 +194,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 5, 
+      course_id: 0,
       course_unit_id: 484422,
       course: 'L.EIC009',
       name: 'Programação',
@@ -189,6 +210,8 @@ export const coursesData: MajorCourses = [
   ],
   [
     {
+      id: 6, 
+      course_id: 0,
       course_unit_id: 484426,
       course: 'L.EIC018',
       name: 'Laboratório de Computadores',
@@ -201,6 +224,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 7,
+      course_id: 0,
       course_unit_id: 484427,
       course: 'L.EIC019',
       name: 'Linguagens e Tecnologias Web',
@@ -213,6 +238,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 8,
+      course_id: 0,
       course_unit_id: 484424,
       course: 'L.EIC016',
       name: 'Desenho de Algoritmos',
@@ -225,6 +252,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 9,
+      course_id: 0,
       course_unit_id: 484425,
       course: 'L.EIC017',
       name: 'Engenharia de Software',
@@ -237,6 +266,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 10, 
+      course_id: 0,
       course_unit_id: 484428,
       course: 'L.EIC020',
       name: 'Métodos Estatísticos',
@@ -251,6 +282,8 @@ export const coursesData: MajorCourses = [
   ],
   [
     {
+      id: 11,
+      course_id: 0,
       course_unit_id: 484381,
       course: 'L.EIC028',
       name: 'Computação Paralela e Distribuída',
@@ -263,6 +296,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 12,
+      course_id: 0,
       course_unit_id: 484379,
       course: 'L.EIC026',
       name: 'Compiladores',
@@ -275,6 +310,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id:13, 
+      course_id: 0,
       course_unit_id: 484380,
       course: 'L.EIC027',
       name: 'Computação Gráfica',
@@ -287,6 +324,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 14, 
+      course_id: 0,     
       course_unit_id: 484443,
       course: 'L.EIC030',
       name: 'Projeto Integrador',
@@ -299,6 +338,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
+      id: 15,
+      course_id: 0,
       course_unit_id: 484442,
       course: 'L.EIC029',
       name: 'Inteligência Artificial',
@@ -317,8 +358,8 @@ export const schedulesData: CourseSchedules[] = [
   [
     {
       day: 1,
-      duration: 2.0,
-      start_time: 9.0,
+      duration: '2.0',
+      start_time: '9.0',
       location: 'B002',
       lesson_type: 'T',
       teacher_acronym: 'LPR',
@@ -329,8 +370,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B342',
       lesson_type: 'TP',
       teacher_acronym: 'HLC',
@@ -341,8 +382,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B217',
       lesson_type: 'TP',
       teacher_acronym: 'APR',
@@ -353,8 +394,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B206',
       lesson_type: 'TP',
       teacher_acronym: 'NRSG',
@@ -365,8 +406,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B202',
       lesson_type: 'TP',
       teacher_acronym: 'NRSG',
@@ -377,8 +418,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B107',
       lesson_type: 'TP',
       teacher_acronym: 'LPR',
@@ -389,8 +430,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B307',
       lesson_type: 'TP',
       teacher_acronym: 'HLC',
@@ -401,8 +442,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B306',
       lesson_type: 'TP',
       teacher_acronym: 'APR',
@@ -413,8 +454,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B204',
       lesson_type: 'TP',
       teacher_acronym: 'HLC',
@@ -427,8 +468,8 @@ export const schedulesData: CourseSchedules[] = [
   [
     {
       day: 5,
-      duration: 3.0,
-      start_time: 10,
+      duration: '3.0',
+      start_time: '10',
       location: 'B119',
       lesson_type: 'OT',
       teacher_acronym: 'APR',
@@ -439,8 +480,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 5,
-      duration: 3.0,
-      start_time: 14,
+      duration: '3.0',
+      start_time: '14',
       location: 'B340',
       lesson_type: 'OT',
       teacher_acronym: 'NHF',
@@ -451,8 +492,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 5,
-      duration: 3.0,
-      start_time: 14,
+      duration: '3.0',
+      start_time: '14',
       location: 'B113',
       lesson_type: 'OT',
       teacher_acronym: 'JPF',
@@ -463,8 +504,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 5,
-      duration: 3.0,
-      start_time: 14,
+      duration: '3.0',
+      start_time: '14',
       location: 'B115',
       lesson_type: 'OT',
       teacher_acronym: 'MTC',
@@ -475,8 +516,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 5,
-      duration: 3.0,
-      start_time: 10,
+      duration: '3.0',
+      start_time: '10',
       location: 'B220',
       lesson_type: 'OT',
       teacher_acronym: 'NHF',
@@ -487,8 +528,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 5,
-      duration: 3.0,
-      start_time: 10,
+      duration: '3.0',
+      start_time: '10',
       location: 'B339',
       lesson_type: 'OT',
       teacher_acronym: 'PMAB',
@@ -499,8 +540,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 5,
-      duration: 3.0,
-      start_time: 14,
+      duration: '3.0',
+      start_time: '14',
       location: 'B322',
       lesson_type: 'OT',
       teacher_acronym: 'PMAB',
@@ -511,8 +552,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 5,
-      duration: 3.0,
-      start_time: 10,
+      duration: '3.0',
+      start_time: '10',
       location: 'B340',
       lesson_type: 'OT',
       teacher_acronym: 'tbs',
@@ -525,8 +566,8 @@ export const schedulesData: CourseSchedules[] = [
   [
     {
       day: 4,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B013',
       lesson_type: 'T',
       teacher_acronym: 'DCC-AMSMF+PNF',
@@ -537,8 +578,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 4,
-      duration: 2.0,
-      start_time: 14,
+      duration: '2.0',
+      start_time: '14',
       location: 'B013',
       lesson_type: 'T',
       teacher_acronym: 'DCC-AMSMF+PNF',
@@ -549,8 +590,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B342',
       lesson_type: 'P',
       teacher_acronym: 'AMSMF',
@@ -561,8 +602,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B217',
       lesson_type: 'P',
       teacher_acronym: 'LGBC',
@@ -573,8 +614,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B205',
       lesson_type: 'P',
       teacher_acronym: 'PMSP',
@@ -585,8 +626,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B310',
       lesson_type: 'P',
       teacher_acronym: 'PMSP',
@@ -597,8 +638,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B107',
       lesson_type: 'P',
       teacher_acronym: 'PNFRCD',
@@ -609,8 +650,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B202',
       lesson_type: 'P',
       teacher_acronym: 'PNFRCD',
@@ -621,8 +662,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B306',
       lesson_type: 'P',
       teacher_acronym: 'LGBC',
@@ -633,8 +674,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B302',
       lesson_type: 'P',
       teacher_acronym: 'JBispo',
@@ -645,8 +686,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B204',
       lesson_type: 'P',
       teacher_acronym: 'TDRC',
@@ -659,8 +700,8 @@ export const schedulesData: CourseSchedules[] = [
   [
     {
       day: 1,
-      duration: 2.0,
-      start_time: 11,
+      duration: '2.0',
+      start_time: '11',
       location: 'B011',
       lesson_type: 'T',
       teacher_acronym: 'AAS',
@@ -671,8 +712,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 14,
+      duration: '2.0',
+      start_time: '14',
       location: 'B306',
       lesson_type: 'PL',
       teacher_acronym: 'RPR',
@@ -683,8 +724,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B103',
       lesson_type: 'PL',
       teacher_acronym: 'TCCM',
@@ -695,8 +736,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B302',
       lesson_type: 'PL',
       teacher_acronym: 'TCCM',
@@ -709,8 +750,8 @@ export const schedulesData: CourseSchedules[] = [
   [
     {
       day: 4,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B007',
       lesson_type: 'T',
       teacher_acronym: 'JGB+PF',
@@ -721,8 +762,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 4,
-      duration: 2.0,
-      start_time: 14,
+      duration: '2.0',
+      start_time: '14',
       location: 'B020',
       lesson_type: 'T',
       teacher_acronym: 'JGB+PF',
@@ -733,8 +774,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B342',
       lesson_type: 'L',
       teacher_acronym: 'PFS+JGB',
@@ -745,8 +786,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B343',
       lesson_type: 'L',
       teacher_acronym: 'SCS1',
@@ -757,8 +798,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B205',
       lesson_type: 'L',
       teacher_acronym: 'PMAADO',
@@ -769,8 +810,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B202',
       lesson_type: 'L',
       teacher_acronym: 'AJMC',
@@ -781,8 +822,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 2,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B107',
       lesson_type: 'L',
       teacher_acronym: 'AJMC',
@@ -793,8 +834,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B202',
       lesson_type: 'L',
       teacher_acronym: 'AJMC',
@@ -805,8 +846,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B309',
       lesson_type: 'L',
       teacher_acronym: 'JGB',
@@ -817,8 +858,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B204',
       lesson_type: 'L',
       teacher_acronym: 'PMAADO',
@@ -829,8 +870,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 10.5,
+      duration: '2.0',
+      start_time: '10.5',
       location: 'B311',
       lesson_type: 'L',
       teacher_acronym: 'JGB',
@@ -841,8 +882,8 @@ export const schedulesData: CourseSchedules[] = [
     },
     {
       day: 3,
-      duration: 2.0,
-      start_time: 8.5,
+      duration: '2.0',
+      start_time: '8.5',
       location: 'B302',
       lesson_type: 'L',
       teacher_acronym: 'SCS1',
@@ -856,6 +897,8 @@ export const schedulesData: CourseSchedules[] = [
 
 export const extraCoursesData: Course[] = [
   {
+    id: 1,
+    course_id: 0,
     course_unit_id: 484400,
     course: 'L.EIC007',
     name: 'Análise Matemática II',
@@ -868,6 +911,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 2,
+    course_id: 0,
     course_unit_id: 484401,
     course: 'L.EIC008',
     name: 'Física I',
@@ -880,6 +925,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 3,
+    course_id: 0,
     course_unit_id: 484423,
     course: 'L.EIC010',
     name: 'Teoria da Computação',
@@ -892,6 +939,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 4,
+    course_id: 0,
     course_unit_id: 484399,
     course: 'L.EIC006',
     name: 'Arquitetura de Computadores',
@@ -904,6 +953,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 5, 
+    course_id: 0,
     course_unit_id: 484422,
     course: 'L.EIC009',
     name: 'Programação',
@@ -916,6 +967,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 6, 
+    course_id: 0,
     course_unit_id: 484426,
     course: 'L.EIC018',
     name: 'Laboratório de Computadores',
@@ -928,6 +981,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 7,
+    course_id: 0,
     course_unit_id: 484427,
     course: 'L.EIC019',
     name: 'Linguagens e Tecnologias Web',
@@ -940,6 +995,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 8,
+    course_id: 0,
     course_unit_id: 484424,
     course: 'L.EIC016',
     name: 'Desenho de Algoritmos',
@@ -952,6 +1009,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 9,
+    course_id: 0,
     course_unit_id: 484425,
     course: 'L.EIC017',
     name: 'Engenharia de Software',
@@ -964,6 +1023,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 10,
+    course_id: 0,
     course_unit_id: 484428,
     course: 'L.EIC020',
     name: 'Métodos Estatísticos',
@@ -976,6 +1037,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 11,
+    course_id: 0,
     course_unit_id: 484381,
     course: 'L.EIC028',
     name: 'Computação Paralela e Distribuída',
@@ -988,6 +1051,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 12, 
+    course_id: 0,
     course_unit_id: 484379,
     course: 'L.EIC026',
     name: 'Compiladores',
@@ -1000,6 +1065,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 13,
+    course_id: 0,
     course_unit_id: 484380,
     course: 'L.EIC027',
     name: 'Computação Gráfica',
@@ -1012,6 +1079,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 14,
+    course_id: 0,
     course_unit_id: 484443,
     course: 'L.EIC030',
     name: 'Projeto Integrador',
@@ -1024,6 +1093,8 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
+    id: 15,
+    course_id: 0,
     course_unit_id: 484442,
     course: 'L.EIC029',
     name: 'Inteligência Artificial',

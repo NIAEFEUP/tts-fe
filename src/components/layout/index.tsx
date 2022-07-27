@@ -12,7 +12,7 @@ type Props = {
 
 const Layout = ({ children, location, liquid, title }: Props) => {
   useEffect(() => {
-    document.title = `${title} | ${process.env.REACT_APP_SITE_TITLE}`
+    document.title = `${title} | ${process.env.REACT_APP_SITE_TITLE || 'Time Table Scheduler'}`
   }, [title])
 
   return (
