@@ -123,7 +123,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1.5 pl-2 pr-9 text-left 
           text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-2 2xl:pl-3 2xl:pr-10 2xl:text-sm"
         >
-          <span className="block truncate font-medium text-gray-700 group-hover:text-white">
+          <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
             {getOptionDisplayText(selectedOption)}
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
