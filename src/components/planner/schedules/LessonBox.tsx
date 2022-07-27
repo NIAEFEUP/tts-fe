@@ -78,9 +78,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
 
               <div className="flex w-full items-center justify-between">
                 <span>{lesson.schedule.location}</span>
-                <span>
-                  {lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}
-                </span>
+                <span>{lesson.schedule.composed_class_name ? lesson.schedule.composed_class_name : lesson.schedule.class_name}</span>
                 <span>{lesson.schedule.teacher_acronym}</span>
               </div>
             </div>

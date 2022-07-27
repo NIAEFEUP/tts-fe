@@ -39,10 +39,10 @@ const convertWeekday = (dayNumber: number) => {
 }
 
 const convertWeekdayLong = (dayNumber: number) => {
-  if (dayNumber < 1 || dayNumber > 8) return null
+  if (dayNumber < 0 || dayNumber > 7) return null
 
   const weekdays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
-  return weekdays[dayNumber - 1]
+  return weekdays[dayNumber]
 }
 
 const convertHour = (hourNumber: string) => {
@@ -61,7 +61,7 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
 }
 
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
-  const className = option.class_name !== null ? option.class_name : option.composed_class_name
+  const className = option.composed_class_name !== null ? option.composed_class_name : option.class_name
   return [className, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
 }
 
