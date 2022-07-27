@@ -44,7 +44,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
   const filterMajors = () => {
     // The list of majors must be retrieved from the backend. 
-    if (majors !== null && majors !== [] && Array.isArray(majors)) {
+    if (majors !== null && majors.length !== 0 && Array.isArray(majors)) {
       return majorQuery === '' ? 
         majors : 
         majors.filter((major: Major) =>
