@@ -69,7 +69,7 @@ const getLessonBoxTime = (schedule: CourseSchedule) => {
   return [convertHour(schedule.start_time), convertHour(addHour(schedule.start_time, schedule.duration))].join('-')
 }
 
-const addHour = (hour1: string, hour2: string) : string => {
+const addHour = (hour1: string, hour2: string): string => {
   return (parseFloat(hour1) + parseFloat(hour2)).toString()
 }
 
@@ -80,7 +80,7 @@ const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) =>
 
   return {
     top: `${(top * 100) / step}%`,
-    left: `${((lesson.schedule.day) * 100) / 6}%`,
+    left: `${(lesson.schedule.day * 100) / 6}%`,
     height: `${length * (100 / step)}%`,
   }
 }

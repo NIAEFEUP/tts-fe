@@ -27,6 +27,13 @@ input:disabled + label {
   display: none;
 }
 
+button {
+  user-select: text;
+  -ms-user-select: text;
+  -moz-user-select: text;
+  -webkit-user-select: text;
+}
+
 .min-h-adjusted {
   min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
 }

@@ -14,7 +14,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 2, 
+    id: 2,
     name: 'Licenciatura em Engenharia Eletrotécnica e de Computadores',
     course_id: 0,
     faculty: 1,
@@ -26,7 +26,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 3, 
+    id: 3,
     name: 'Licenciatura em Engenharia Civil',
     course_id: 0,
     faculty: 1,
@@ -38,7 +38,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 4, 
+    id: 4,
     name: 'Licenciatura em Engenharia Mecânica',
     course_id: 0,
     faculty: 1,
@@ -50,7 +50,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 5, 
+    id: 5,
     name: 'Mestrado em Engenharia Informática e Computação',
     course_id: 0,
     faculty: 1,
@@ -74,7 +74,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 7, 
+    id: 7,
     name: 'Mestrado em Engenharia Civil',
     course_id: 0,
     faculty: 1,
@@ -86,7 +86,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 8, 
+    id: 8,
     name: 'Mestrado em Engenharia Química',
     course_id: 0,
     faculty: 1,
@@ -110,7 +110,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 10, 
+    id: 10,
     name: 'Mestrado em Engenharia do Ambiente',
     course_id: 0,
     faculty: 1,
@@ -122,7 +122,7 @@ export const majorsData: Major[] = [
     last_updated: '2022-02-19T14:41:34Z',
   },
   {
-    id: 11, 
+    id: 11,
     name: 'Mestrado em Engenharia e Gestão Industrial',
     course_id: 0,
     faculty: 1,
@@ -152,7 +152,7 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
-      id: 2, 
+      id: 2,
       course_id: 0,
       course_unit_id: 484401,
       course: 'L.EIC008',
@@ -166,7 +166,7 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
-      id: 3, 
+      id: 3,
       course_id: 0,
       course_unit_id: 484423,
       course: 'L.EIC010',
@@ -180,7 +180,7 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
-      id: 4, 
+      id: 4,
       course_id: 0,
       course_unit_id: 484399,
       course: 'L.EIC006',
@@ -194,7 +194,7 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
-      id: 5, 
+      id: 5,
       course_id: 0,
       course_unit_id: 484422,
       course: 'L.EIC009',
@@ -210,7 +210,7 @@ export const coursesData: MajorCourses = [
   ],
   [
     {
-      id: 6, 
+      id: 6,
       course_id: 0,
       course_unit_id: 484426,
       course: 'L.EIC018',
@@ -266,7 +266,7 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
-      id: 10, 
+      id: 10,
       course_id: 0,
       course_unit_id: 484428,
       course: 'L.EIC020',
@@ -310,7 +310,7 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
-      id:13, 
+      id: 13,
       course_id: 0,
       course_unit_id: 484380,
       course: 'L.EIC027',
@@ -324,8 +324,8 @@ export const coursesData: MajorCourses = [
       last_updated: '2022-02-19T14:43:27Z',
     },
     {
-      id: 14, 
-      course_id: 0,     
+      id: 14,
+      course_id: 0,
       course_unit_id: 484443,
       course: 'L.EIC030',
       name: 'Projeto Integrador',
@@ -953,7 +953,7 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
-    id: 5, 
+    id: 5,
     course_id: 0,
     course_unit_id: 484422,
     course: 'L.EIC009',
@@ -967,7 +967,7 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
-    id: 6, 
+    id: 6,
     course_id: 0,
     course_unit_id: 484426,
     course: 'L.EIC018',
@@ -1051,7 +1051,7 @@ export const extraCoursesData: Course[] = [
     last_updated: '2022-02-19T14:43:27Z',
   },
   {
-    id: 12, 
+    id: 12,
     course_id: 0,
     course_unit_id: 484379,
     course: 'L.EIC026',

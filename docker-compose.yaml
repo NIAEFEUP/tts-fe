@@ -1,8 +1,7 @@
 version: '3'
 services:
   tts-frontend:
-    container_name: 
-      tts_frontend
+    container_name: tts_frontend
     build:
       context: .
     volumes:
@@ -12,7 +11,7 @@ services:
       - 3000:3000
     environment:
       PORT: 3000
-      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_USEPOLLING: 'true'
 
 networks:
   default:

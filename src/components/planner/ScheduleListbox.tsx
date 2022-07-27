@@ -114,7 +114,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
     >
       <div className="relative text-sm">
         {/* Header */}
-        <h4 className="mb-1 text-xs">
+        <h4 className="mb-0.5 text-xs">
           {courseOption.course.info.name} (<strong>{courseOption.course.info.acronym}</strong>)
         </h4>
 
@@ -123,7 +123,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
           className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1.5 pl-2 pr-9 text-left 
           text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-2 2xl:pl-3 2xl:pr-10 2xl:text-sm"
         >
-          <span className="block truncate font-medium group-hover:text-white">
+          <span className="block truncate font-medium text-gray-700 group-hover:text-white">
             {getOptionDisplayText(selectedOption)}
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
@@ -133,15 +133,15 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
 
         {/* Dropdown */}
         <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-lightest py-1 text-sm tracking-tight dark:bg-darkish lg:max-h-72 xl:text-base">
+          <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-lightish py-1 text-sm tracking-tight dark:bg-darkish lg:max-h-72 xl:text-base">
             {adaptedSchedules.map((option, personIdx) => (
               <Listbox.Option
                 key={personIdx}
                 value={option === null ? <>&nbsp;</> : option}
                 className={({ active }) =>
-                  `group relative cursor-default select-none py-2 ${selectedOption !== null ? 'pl-10' : 'pl-4'} pr-4 ${
-                    active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'
-                  }`
+                  `group relative cursor-default select-none py-2 text-sm ${
+                    selectedOption !== null ? 'pl-10' : 'pl-4'
+                  } pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                 }
               >
                 {({ selected, active }) => (
@@ -166,7 +166,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
         </Transition>
 
         {/* Show/Hide Checkboxes */}
-        <div className="mt-1.5 flex items-center justify-start space-x-4">
+        <div className="mt-1 flex items-center justify-start space-x-4">
           <div className="flex items-center justify-center space-x-1">
             <input
               type="checkbox"

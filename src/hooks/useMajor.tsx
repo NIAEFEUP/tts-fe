@@ -23,11 +23,12 @@ const useLocalStorage = (key: string, initialValue?: any) => {
 }
 
 const useMajor = () => {
-  const [major, setMajor] = useLocalStorage('niaefeup-tts.major', null)
+  const key = 'niaefeup-tts.major'
+  const [major, setMajor] = useLocalStorage(key, null)
 
   useEffect(() => {
-    // add some logic here
-  }, [major])
+    window.localStorage.setItem(key, JSON.stringify(major))
+  }, [major, setMajor])
 
   return [major, setMajor]
 }

@@ -54,7 +54,9 @@ const ResponsiveLessonBox = ({ lesson, conflict, specialClassnames }: Props) => 
 
         <div className="flex w-full flex-col items-start gap-1">
           <strong>{lesson.course.acronym}</strong>
-          <span>{lesson.schedule.composed_class_name ? lesson.schedule.composed_class_name : lesson.schedule.class_name}</span>
+          <span>
+            {lesson.schedule.composed_class_name ? lesson.schedule.composed_class_name : lesson.schedule.class_name}
+          </span>
         </div>
 
         <div className="flex w-full items-center justify-between gap-2">
