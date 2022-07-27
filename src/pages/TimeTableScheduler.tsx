@@ -1,7 +1,16 @@
-import * as backendAPI from '../backend'
+import BackendAPI from '../backend'
 import { useState, useEffect, useMemo } from 'react'
 import { useCourses, useMajor, useShowGrid } from '../hooks'
-import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
+import {
+  CheckedCourse,
+  CheckedMajorCourses,
+  Course,
+  CourseOptions,
+  CourseSchedules,
+  Major,
+  MajorCourses,
+  YearCourses,
+} from '../@types'
 import {
   Schedule,
   SelectionModal,
@@ -10,7 +19,6 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { ScheduleColorLabels } from '../components/planner/schedules'
-//import classNames from 'classnames'
 
 const TimeTableSchedulerPage = () => {
   /**
@@ -18,7 +26,7 @@ const TimeTableSchedulerPage = () => {
    * @param majorCourses Courses in a major grouped by year.
    * @returns MajorCourses with the checked and info properties.
    */
-  const majorCourses2CheckedMajor = (majorCourses: MajorCourses): CheckedMajorCourses => {
+  const majorCoursesToCheckedMajor = (majorCourses: MajorCourses): CheckedMajorCourses => {
     return majorCourses.map((year: YearCourses) =>
       year.map((item: Course) => ({
         checked: false,
@@ -31,10 +39,10 @@ const TimeTableSchedulerPage = () => {
    * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year.
    * @param yearCourses All the courses in a major.
    * @returns The courses grouped by year.
-   * For examples:
-   * [{course:1, year:1}, {course:3, year:1 }, {course:2, year:2}]
+   * Example input:
+   * [{ course: 1, year: 1}, { course: 3, year: 1 }, { course: 2, year: 2}]
    * Returns:
-   * [[{course:1, year:1}, {course:3, year:1}], [{course:2, year:2}]]
+   * [[{ course: 1, year: 1}, { course: 3, year: 1}], [{ course: 2, year: 2}]]
    */
   const groupMajorCoursesByYear = (yearCourses: YearCourses): MajorCourses => {
     let majorCourses: MajorCourses = []
@@ -55,7 +63,6 @@ const TimeTableSchedulerPage = () => {
   }
 
   const initializeSelected = (): CourseOptions => {
-    const selectedCourses = getCheckedCourses(courses)
     return selectedCourses.map((course: CheckedCourse) => ({
       course: course,
       option: null,
@@ -63,73 +70,85 @@ const TimeTableSchedulerPage = () => {
     }))
   }
 
-  // FIXME: Possible overhaul: split all data variables from UI variables. Data variables would be wrapped in useMemo.
-  const [major, setMajor] = useMajor()
-  const [majors, setMajors] = useState<Major[]>([])
-  const [showGrid, setShowGrid] = useShowGrid()
-  const [courses, setCourses] = useState<CheckedMajorCourses>([])
-  const [classesT, setClassesT] = useState<boolean>(true)
-  const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
-
-  // UPDATING INTERNAL STATE ===================================================
   const getSchedule = async (checkedCourse: CheckedCourse, options = null) => {
-    return await backendAPI.getCourseSchedule(checkedCourse).then((response) => {
-      return {
-        course: checkedCourse,
-        option: options,
-        schedules: response,
-      }
+    return await BackendAPI.getCourseSchedule(checkedCourse).then((response: CourseSchedules) => ({
+      course: checkedCourse,
+      option: options,
+      schedules: response,
+    }))
+  }
+
+  const fetchAndSetMajors = () => {
+    BackendAPI.getMajors().then((majors: Major[]) => {
+      setMajors(majors)
     })
   }
 
-  // Updates the majors.
-  useEffect(() => {
-    backendAPI.getMajors().then(function (result) {
-      setMajors(result)
-    })
-  }, [])
-
-  // Updates the courses (course units).
-  useEffect(() => {
-    backendAPI.getCourses(major).then(function (courses) {
+  const fetchAndSetCourses = () => {
+    BackendAPI.getCourses(major).then((courses: YearCourses) => {
       const majorCourses: MajorCourses = groupMajorCoursesByYear(courses)
-      const checkedMajorCourses: CheckedMajorCourses = majorCourses2CheckedMajor(majorCourses)
+      const checkedMajorCourses: CheckedMajorCourses = majorCoursesToCheckedMajor(majorCourses)
       setCourses(checkedMajorCourses)
     })
-  }, [major])
+  }
 
-  // Updates the schedules for a selected course.
-  useEffect(() => {
-    const selectedCourses = getCheckedCourses(courses)
+  const fetchAndSetSchedules = () => {
     let schedules = []
     for (let i = 0; i < selectedCourses.length; i++) {
       getSchedule(selectedCourses[i]).then((schedule) => {
         schedules.push(schedule)
       })
     }
-
     setSelected(schedules)
-  }, [courses])
+  }
 
-  useEffect(() => {
+  const preserveSelected = () => {
     const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
       return value !== undefined ? value.option : null
     }
 
     let schedules = []
-    const selectedCourses = getCheckedCourses(courses)
     for (let i = 0; i < selectedCourses.length; i++) {
       const option = findPreviousEntry(selected, selectedCourses[i])
       getSchedule(selectedCourses[i], option).then((schedule) => {
-        console.log(schedule)
         schedules.push(schedule)
       })
     }
 
     setSelected(schedules)
+  }
+
+  const [major, setMajor] = useMajor()
+  const [courses, setCourses] = useCourses()
+  const [showGrid, setShowGrid] = useShowGrid()
+  const [majors, setMajors] = useState<Major[]>([])
+  const selectedCourses = getCheckedCourses(courses)
+  const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
+
+  const [classesT, setClassesT] = useState<boolean>(true)
+  const [classesTP, setClassesTP] = useState<boolean>(true)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
+
+  // Fetch and set majors once the component is ready
+  useEffect(() => {
+    fetchAndSetMajors()
+  }, [])
+
+  // Fetch course units if none are available when the major value is set
+  useEffect(() => {
+    const empty = courses?.length === 0
+    const checks: boolean[] = courses.flat().map((course: CheckedCourse) => course.checked)
+
+    if (empty || !checks.includes(true)) {
+      fetchAndSetCourses()
+    }
+  }, [major])
+
+  // Updates the schedules for a selected course.
+  useEffect(() => {
+    fetchAndSetSchedules()
+    preserveSelected()
   }, [courses])
 
   return (

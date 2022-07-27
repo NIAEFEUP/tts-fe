@@ -1,33 +1,49 @@
 import { CheckedCourse, Major } from '../@types'
-import { majorsData, coursesData, schedulesData, extraCoursesData } from '../utils/data'
-//import fetch from 'node-fetch';
+import { extraCoursesData } from '../utils/data'
+import { getSemester } from '../utils'
 
-let backendUrl: string = 'http://localhost:8000'
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'
+const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()[0]
 
-const getResponse = async (url: string) => {
-  console.log(url)
-  const response = await fetch(`${url}`)
+/**
+ * Make a request to the backend server.
+ * @param route: route to be appended to backend url
+ * @returns response from the backend
+ */
+const apiRequest = async (route: string) => {
+  const slash = route[0] === '/' ? '' : '/'
+  const url = BACKEND_URL + slash + route
+
+  const response = await fetch(url)
     .then((response) => {
       return response.json()
     })
     .catch((error) => console.error(error))
-  console.log(response)
+
   return response
 }
 
+/**
+ * Retrieves all UPorto majors.
+ * @returns all majors from the backend
+ */
 const getMajors = async () => {
-  return await getResponse(`${backendUrl}/course/`)
+  return await apiRequest(`/course`)
 }
 
+/**
+ * Retrieves all course units for a major in a given semester
+ * @param major: major to get course units from
+ * @returns course units array
+ */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  // TODO: store the env variable in a dotenv
-  return await getResponse(`${backendUrl}/course_units/${major.id}/1/`)
+  return await apiRequest(`/course_units/${major.id}/${SEMESTER}`)
 }
 
 const getCourseSchedule = async (course: CheckedCourse) => {
   if (course === null) return []
-  return await getResponse(`${backendUrl}/schedule/${course.info.id}/`)
+  return await apiRequest(`/schedule/${course.info.id}`)
 }
 
 const getExtraCourses = (major: Major) => {
@@ -35,4 +51,11 @@ const getExtraCourses = (major: Major) => {
   return extraCoursesData
 }
 
-export { getMajors, getCourses, getCourseSchedule, getExtraCourses }
+const api = {
+  getMajors,
+  getCourses,
+  getCourseSchedule,
+  getExtraCourses,
+}
+
+export default api

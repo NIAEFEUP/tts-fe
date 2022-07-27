@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
+import { CheckedMajorCourses } from '../@types'
 
 const useLocalStorage = (key: string, initialValue?: any) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key)
+      console.log(JSON.parse(item))
       return item ? JSON.parse(item) : initialValue
     } catch (error) {
       console.warn(error)
@@ -23,10 +25,11 @@ const useLocalStorage = (key: string, initialValue?: any) => {
 }
 
 const useCourses = () => {
-  const [courses, setCourses] = useLocalStorage('niaefeup-tts.courses', null)
+  const key = 'niaefeup-tts.courses'
+  const [courses, setCourses] = useLocalStorage(key, [])
 
   useEffect(() => {
-    // add some logic here
+    window.localStorage.setItem(key, JSON.stringify(courses))
   }, [courses])
 
   return [courses, setCourses]

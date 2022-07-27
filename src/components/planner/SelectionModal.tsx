@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import * as backendAPI from '../../backend'
+import BackendAPI from '../../backend'
 import Alert, { AlertType } from './Alert'
 import CreditsBanner from './CreditsBanner'
 import { Link } from 'react-router-dom'
@@ -18,7 +18,6 @@ import {
 } from '@heroicons/react/solid'
 import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { getSchoolYear, getSemester } from '../../utils'
-import { useCourses } from '../../hooks'
 
 type Props = {
   majors: Major[]
@@ -31,7 +30,6 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [, setCoursesLS] = useCourses()
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
@@ -58,7 +56,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
   const filteredMajors = filterMajors()
 
-  const extraCourses = useMemo(() => backendAPI.getExtraCourses(major), [major])
+  const extraCourses = useMemo(() => BackendAPI.getExtraCourses(major), [major])
   const filteredExtraCourses =
     extraCoursesQuery === ''
       ? extraCourses
@@ -92,7 +90,6 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
     setCourses([...courses])
-    setCoursesLS([...courses])
 
     let some = courses[year].some((course) => course.checked)
     let every = courses[year].every((course) => course.checked)
@@ -119,7 +116,6 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     })
     courses[year] = newGroupEntry
     setCourses([...courses])
-    setCoursesLS([...courses])
   }
 
   return (
@@ -369,7 +365,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                             </div>
 
                             {/* Children checkboxes */}
-                            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-6 gap-x-3 gap-y-1.5 p-1">
+                            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-3 gap-y-1.5 p-1">
                               {year.map((course: CheckedCourse, courseIdx: number) => (
                                 <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center transition">
                                   <input

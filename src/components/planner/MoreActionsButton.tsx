@@ -8,7 +8,7 @@ type Props = {
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-export default function Example({ schedule, showGridHook }: Props) {
+const MoreActionsButton = ({ schedule, showGridHook }: Props) => {
   const [showGrid, setShowGrid] = showGridHook
 
   const importJSON = () => {}
@@ -83,3 +83,5 @@ export default function Example({ schedule, showGridHook }: Props) {
     </>
   )
 }
+
+export default MoreActionsButton

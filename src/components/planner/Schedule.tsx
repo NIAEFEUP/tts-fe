@@ -85,7 +85,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
       }
       if (i === lessons.length - 1) conflictsAcc.push(acc)
     }
-    console.log(conflictsAcc)
     return conflictsAcc
   }, [lessons])
 
