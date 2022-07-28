@@ -165,7 +165,13 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
                 {lessons.map((lesson: Lesson, lessonIdx: number) =>
                   lesson.schedule.lesson_type === 'T'
-                    ? activeClassesT
+                    ? activeClassesT && (
+                        <ResponsiveLessonBox
+                          key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
+                          lesson={lesson}
+                          conflict={false}
+                        />
+                      )
                     : activeClassesTP && (
                         <ResponsiveLessonBox
                           key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}

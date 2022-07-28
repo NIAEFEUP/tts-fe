@@ -89,7 +89,7 @@ const ScheduleColorLabels = () => {
                   <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                     <header className="flex items-center justify-between">
                       <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-secondary">
-                        Claim Identity
+                        Tipos de aulas
                       </Dialog.Title>
 
                       <button
