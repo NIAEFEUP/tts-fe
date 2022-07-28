@@ -17,7 +17,7 @@ const navigation = [
   { title: 'Exchange', location: '/exchange', icon: <SwitchHorizontalIcon className="h-5 w-5" />, wip: true },
   { title: 'Profile', location: '/profile', icon: <UserCircleIcon className="h-5 w-5" />, wip: true },
   { title: 'About', location: '/about', icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
-  { title: 'FAQs', location: '/faqs', icon: <QuestionMarkCircleIcon className="h-5 w-5" />, wip: false },
+  { title: 'FAQs', location: '/faqs', icon: <QuestionMarkCircleIcon className="h-5 w-5" />, wip: true },
 ]
 
 type Props = {

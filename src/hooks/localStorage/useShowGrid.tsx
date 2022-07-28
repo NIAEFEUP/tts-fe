@@ -22,7 +22,7 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   return [storedValue, setValue]
 }
 
-const useShowGrid = () => {
+const useShowGrid = (): [boolean, React.Dispatch<React.SetStateAction<boolean>>] => {
   const key = 'niaefeup-tts.show-grid'
   const [showGrid, setShowGrid] = useLocalStorage(key, true)
 

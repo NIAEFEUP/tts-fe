@@ -61,8 +61,9 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
 }
 
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
-  const className = option.composed_class_name !== null ? option.composed_class_name : option.class_name
-  return [className, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+  // prioritize single class name
+  const classTitle = option.class_name !== null ? option.class_name : option.composed_class_name
+  return [classTitle, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
 }
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {

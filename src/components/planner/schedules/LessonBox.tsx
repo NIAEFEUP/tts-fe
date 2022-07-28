@@ -20,10 +20,12 @@ type Props = {
 }
 
 const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
-  const type = lesson.schedule.lesson_type
+  const classTitle = lesson.schedule.class_name
+  const compClassTitle = lesson.schedule.composed_class_name
+  const lessonType = lesson.schedule.lesson_type
   const timeSpan = getLessonBoxTime(lesson.schedule)
   const lessonBoxRef: LessonBoxRef = {
-    type: type,
+    type: lessonType,
     id: lesson.course.course_unit_id,
     acronym: lesson.course.acronym,
   }
@@ -43,27 +45,39 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
           style={getLessonBoxStyles(lesson, maxHour, minHour)}
           className={classNames(
             'schedule-class group',
-            getClassTypeClassName(type),
+            getClassTypeClassName(lessonType),
             getLessonBoxName(lessonBoxRef),
             conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none'
           )}
         >
           {parseFloat(lesson.schedule.duration) > 1 ? (
             <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-[0.8rem]">
+              {/* Top */}
               <div className="flex w-full items-center justify-between">
                 <span>{timeSpan}</span>
-                <strong title={getLessonTypeLongName(type)} className="hidden group-hover:inline-flex">
-                  {type}
+                <strong title={getLessonTypeLongName(lessonType)} className="hidden group-hover:inline-flex">
+                  {lessonType}
                 </strong>
               </div>
 
+              {/* Middle */}
               <div className="flex w-full items-center justify-between">
                 <span className="font-semibold">{lesson.course.acronym}</span>
-                <span>
-                  {lesson.schedule.class_name ? lesson.schedule.class_name : lesson.schedule.composed_class_name}
-                </span>
+                {
+                  // prioritize composed class name when loading theoretical lessons
+                  <span>
+                    {lessonType === 'T'
+                      ? compClassTitle
+                        ? compClassTitle
+                        : classTitle
+                      : classTitle
+                      ? classTitle
+                      : compClassTitle}
+                  </span>
+                }
               </div>
 
+              {/* Bottom */}
               <div className="flex w-full items-center justify-between">
                 <span>{lesson.schedule.location}</span>
                 <span>{lesson.schedule.teacher_acronym}</span>
@@ -78,11 +92,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
 
               <div className="flex w-full items-center justify-between">
                 <span>{lesson.schedule.location}</span>
-                <span>
-                  {lesson.schedule.composed_class_name
-                    ? lesson.schedule.composed_class_name
-                    : lesson.schedule.class_name}
-                </span>
+                <span>{compClassTitle ? compClassTitle : classTitle}</span>
                 <span>{lesson.schedule.teacher_acronym}</span>
               </div>
             </div>
