@@ -52,6 +52,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
       .replace(/\p{Diacritic}/gu, '')
       .replace(/\s+/g, '')
       .replace('.', '')
+      .replace(':', '')
       .includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
 
   const filteredMajors =
@@ -201,7 +202,11 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     <div className="relative">
                       <div className="relative w-full rounded text-left">
                         <Combobox.Input
-                          placeholder="Digite ou escolha o seu ciclo de estudos"
+                          placeholder={
+                            window.matchMedia('(max-width: 1024px)').matches === true
+                              ? 'Pesquise o seu curso pelo nome ou sigla'
+                              : 'Escolha e/ou digite o nome ou sigla do seu ciclo de estudos'
+                          }
                           className={classNames(
                             selected !== null ? 'font-semibold' : '',
                             'w-full rounded border-2 py-3 pl-4 pr-8 text-xs leading-5 md:text-sm',
@@ -418,11 +423,12 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         <span className="flex md:hidden">Contactar</span>
                       </a>
                       <Link
-                        to="/"
+                        to="/about"
                         className={classNames(
                           'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
                           'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
                           'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
+                          // major === null ? 'hidden' : ''
                         )}
                       >
                         <HomeIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />

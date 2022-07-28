@@ -9,7 +9,7 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-// import { useCourses, useMajor, useShowGrid } from '../hooks'
+import { useCourses, useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
   /**
@@ -29,10 +29,8 @@ const TimeTableSchedulerPage = () => {
    * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year.
    * @param yearCourses All the courses in a major.
    * @returns The courses grouped by year.
-   * Example input:
-   * [{ course: 1, year: 1}, { course: 3, year: 1 }, { course: 2, year: 2}]
-   * Returns:
-   * [[{ course: 1, year: 1}, { course: 3, year: 1}], [{ course: 2, year: 2}]]
+   * @example input: [{ course: 1, year: 1}, { course: 3, year: 1 }, { course: 2, year: 2 }]
+   * @example output: [[{ course: 1, year: 1}, { course: 3, year: 1}], [{ course: 2, year: 2 }]]
    */
   const groupMajorCoursesByYear = (yearCourses: Course[]): Course[][] => {
     let majorCourses: Course[][] = []
@@ -56,7 +54,7 @@ const TimeTableSchedulerPage = () => {
       schedules: schedulesRes,
     }))
 
-  const [major, setMajor] = useState<Major>(null) // the picked major
+  const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
   const [showGrid, setShowGrid] = useState(true)
