@@ -23,9 +23,9 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       if (isStorageValid(key, 7)) {
-        const major: CheckedCourse[][] = JSON.parse(localStorage.getItem(key))
-        writeStorage(key, major)
-        return major
+        const courses: CheckedCourse[][] = JSON.parse(localStorage.getItem(key))
+        writeStorage(key, courses)
+        return courses
       } else {
         writeStorageInvalid(key)
         return initialValue
@@ -47,7 +47,7 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   return [storedValue, setValue]
 }
 
-const useCourses = () => {
+const useCourses = (): [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>] => {
   const key = 'niaefeup-tts.courses'
   const [courses, setCourses] = useLocalStorage(key, [])
 
