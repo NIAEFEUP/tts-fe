@@ -111,7 +111,7 @@ const TimeTableSchedulerPage = () => {
   }
 
   const [major, setMajor] = useMajor()
-  const [courses, setCourses] = useCourses()
+  const [courses, setCourses] = useState<CheckedCourse[][]>([])
   const [showGrid, setShowGrid] = useShowGrid()
   const [majors, setMajors] = useState<Major[]>([])
   const selectedCourses = getCheckedCourses(courses)
@@ -147,12 +147,12 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
-          <Schedule
+          {/* <Schedule
             showGrid={showGrid}
             courseOptions={selected}
             activeClassesT={classesT}
             activeClassesTP={classesTP}
-          />
+          /> */}
         </div>
       </div>
 
