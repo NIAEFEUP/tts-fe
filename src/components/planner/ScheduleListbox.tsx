@@ -1,12 +1,12 @@
 import { useState, useEffect, Fragment, useMemo } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { CourseOption, CourseOptions, CourseSchedule, LessonBoxRef } from '../../@types'
+import { CourseOption, CourseSchedule, LessonBoxRef } from '../../@types'
 import { getLessonBoxName, getScheduleOptionDisplayText, lessonTypes } from '../../utils'
 
 type Props = {
   courseOption: CourseOption
-  selectedHook: [CourseOptions, React.Dispatch<React.SetStateAction<CourseOptions>>]
+  selectedHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
 }
 
 const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
@@ -95,7 +95,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   }, [courseOption])
 
   useEffect(() => {
-    const resolveSelected = (prevSelected: CourseOptions) => {
+    const resolveSelected = (prevSelected: CourseOption[]) => {
       let newSelected = prevSelected
       prevSelected.forEach((option, optionIdx) => {
         if (option === courseOption) {

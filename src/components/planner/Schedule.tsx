@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { useMemo } from 'react'
-import { Lesson, CourseOptions } from '../../@types'
+import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
 import '../../styles/schedule.css'
@@ -9,7 +9,7 @@ type Props = {
   showGrid: boolean
   activeClassesT: boolean
   activeClassesTP: boolean
-  courseOptions: CourseOptions
+  courseOptions: CourseOption[]
 }
 
 const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {

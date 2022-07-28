@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CheckedMajorCourses } from '../@types'
+import { CheckedCourse } from '../@types'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const storedVideos = JSON.parse(localStorage.getItem(key))
@@ -9,7 +9,7 @@ const isStorageValid = (key: string, daysElapsed: number) => {
   return storedVideos !== null && storedSavedTime !== null && !expiredStorage
 }
 
-const writeStorage = (key: string, courses: CheckedMajorCourses) => {
+const writeStorage = (key: string, courses: CheckedCourse[][]) => {
   localStorage.setItem(key, JSON.stringify(courses))
   localStorage.setItem(key + '.fetch-date', JSON.stringify(new Date()))
 }
@@ -23,7 +23,7 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       if (isStorageValid(key, 7)) {
-        const major: CheckedMajorCourses = JSON.parse(localStorage.getItem(key))
+        const major: CheckedCourse[][] = JSON.parse(localStorage.getItem(key))
         writeStorage(key, major)
         return major
       } else {

@@ -1,16 +1,7 @@
 import BackendAPI from '../backend'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useCourses, useMajor, useShowGrid } from '../hooks'
-import {
-  CheckedCourse,
-  CheckedMajorCourses,
-  Course,
-  CourseOptions,
-  CourseSchedules,
-  Major,
-  MajorCourses,
-  YearCourses,
-} from '../@types'
+import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
   SelectionModal,
@@ -18,16 +9,16 @@ import {
   ClassesTypeCheckboxes,
   MoreActionsButton,
 } from '../components/planner'
-import { ScheduleColorLabels } from '../components/planner/schedules'
+import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
 
 const TimeTableSchedulerPage = () => {
   /**
    * Adds the checked and info property to the major courses.
    * @param majorCourses Courses in a major grouped by year.
-   * @returns MajorCourses with the checked and info properties.
+   * @returns Course[][] with the checked and info properties.
    */
-  const majorCoursesToCheckedMajor = (majorCourses: MajorCourses): CheckedMajorCourses => {
-    return majorCourses.map((year: YearCourses) =>
+  const majorCoursesToCheckedMajor = (majorCourses: Course[][]): CheckedCourse[][] => {
+    return majorCourses.map((year: Course[]) =>
       year.map((item: Course) => ({
         checked: false,
         info: item,
@@ -44,8 +35,8 @@ const TimeTableSchedulerPage = () => {
    * Returns:
    * [[{ course: 1, year: 1}, { course: 3, year: 1}], [{ course: 2, year: 2}]]
    */
-  const groupMajorCoursesByYear = (yearCourses: YearCourses): MajorCourses => {
-    let majorCourses: MajorCourses = []
+  const groupMajorCoursesByYear = (yearCourses: Course[]): Course[][] => {
+    let majorCourses: Course[][] = []
     let currYear = 0
     for (let i = 0; i < yearCourses.length; i++) {
       if (yearCourses[i].course_year !== currYear) {
@@ -58,11 +49,11 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
-  const getCheckedCourses = (courses: CheckedMajorCourses): CheckedCourse[] => {
+  const getCheckedCourses = (courses: CheckedCourse[][]): CheckedCourse[] => {
     return courses.flat().filter((course) => course.checked)
   }
 
-  const initializeSelected = (): CourseOptions => {
+  const initializeSelected = (): CourseOption[] => {
     return selectedCourses.map((course: CheckedCourse) => ({
       course: course,
       option: null,
@@ -71,7 +62,7 @@ const TimeTableSchedulerPage = () => {
   }
 
   const getSchedule = async (checkedCourse: CheckedCourse, options = null) => {
-    return await BackendAPI.getCourseSchedule(checkedCourse).then((response: CourseSchedules) => ({
+    return await BackendAPI.getCourseSchedule(checkedCourse).then((response: CourseSchedule[]) => ({
       course: checkedCourse,
       option: options,
       schedules: response,
@@ -85,9 +76,9 @@ const TimeTableSchedulerPage = () => {
   }
 
   const fetchAndSetCourses = () => {
-    BackendAPI.getCourses(major).then((courses: YearCourses) => {
-      const majorCourses: MajorCourses = groupMajorCoursesByYear(courses)
-      const checkedMajorCourses: CheckedMajorCourses = majorCoursesToCheckedMajor(majorCourses)
+    BackendAPI.getCourses(major).then((courses: Course[]) => {
+      const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
+      const checkedMajorCourses: CheckedCourse[][] = majorCoursesToCheckedMajor(majorCourses)
       setCourses(checkedMajorCourses)
     })
   }
@@ -103,7 +94,7 @@ const TimeTableSchedulerPage = () => {
   }
 
   const preserveSelected = () => {
-    const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
+    const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
       return value !== undefined ? value.option : null
     }
@@ -124,7 +115,7 @@ const TimeTableSchedulerPage = () => {
   const [showGrid, setShowGrid] = useShowGrid()
   const [majors, setMajors] = useState<Major[]>([])
   const selectedCourses = getCheckedCourses(courses)
-  const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
+  const [selected, setSelected] = useState<CourseOption[]>(() => initializeSelected())
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)

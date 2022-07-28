@@ -1,4 +1,4 @@
-import { Major, Course, MajorCourses, CourseSchedules } from '../@types'
+import { Major, Course, CourseSchedule } from '../@types'
 
 export const majorsData: Major[] = [
   {
@@ -135,7 +135,7 @@ export const majorsData: Major[] = [
   },
 ]
 
-export const coursesData: MajorCourses = [
+export const coursesData: Course[][] = [
   [
     {
       id: 1,
@@ -354,7 +354,7 @@ export const coursesData: MajorCourses = [
   ],
 ]
 
-export const schedulesData: CourseSchedules[] = [
+export const schedulesData: CourseSchedule[][] = [
   [
     {
       day: 1,

@@ -4,7 +4,7 @@ import Alert, { AlertType } from './Alert'
 // import CreditsBanner from './CreditsBanner'
 import { Link } from 'react-router-dom'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses, Course } from '../../@types'
+import { Major, CheckedCourse, Course } from '../../@types'
 import {
   AcademicCapIcon,
   CheckIcon,
@@ -23,7 +23,7 @@ type Props = {
   majors: Major[]
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
-  coursesHook: [CheckedMajorCourses, React.Dispatch<React.SetStateAction<CheckedMajorCourses>>]
+  coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
 }
 
 const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
@@ -109,7 +109,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   }
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
-    let newGroupEntry: CheckedYearCourses = []
+    let newGroupEntry: CheckedCourse[] = []
     courses[year].forEach((course: CheckedCourse) => {
       course.checked = event.target.checked
       newGroupEntry.push(course)
@@ -343,7 +343,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   {/* Courses checkboxes */}
                   <div className="checkboxes">
                     {major
-                      ? courses.map((year: CheckedYearCourses, yearIdx: number) => (
+                      ? courses.map((year: CheckedCourse[], yearIdx: number) => (
                           <div key={`year-${yearIdx}`}>
                             {/* Parent checkbox */}
                             <div className="flex items-center transition">

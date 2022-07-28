@@ -1,10 +1,10 @@
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { DotsHorizontalIcon, DownloadIcon, SparklesIcon, UploadIcon } from '@heroicons/react/outline'
-import { CourseOptions } from '../../@types'
+import { CourseOption } from '../../@types'
 
 type Props = {
-  schedule: CourseOptions
+  schedule: CourseOption[]
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
