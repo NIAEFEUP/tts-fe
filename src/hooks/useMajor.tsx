@@ -47,7 +47,7 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   return [storedValue, setValue]
 }
 
-const useMajor = () => {
+const useMajor = (): [Major | null, React.Dispatch<React.SetStateAction<Major | null>>] => {
   const key = 'niaefeup-tts.major'
   const [major, setMajor] = useLocalStorage(key, null)
 
