@@ -27,5 +27,16 @@ const useArray = (defaultValue: any[]) => {
     setArray([])
   }
 
-  return { array, set: setArray, push, pop, filter, update, remove, clear }
+  const operations = {
+    push,
+    pop,
+    filter,
+    update,
+    remove,
+    clear,
+  }
+
+  return { array, setArray, arrayOperations: operations }
 }
+
+export default useArray

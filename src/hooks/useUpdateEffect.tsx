@@ -11,3 +11,5 @@ const useUpdateEffect = (callback: Function, dependencies: any[]) => {
     callback()
   }, dependencies)
 }
+
+export default useUpdateEffect
