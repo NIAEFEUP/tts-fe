@@ -37,24 +37,34 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
 
-  // SETUP =========================================================================================
-  // While the backend information is not loaded, set empty structures.
+  const match = (str: string, query: string) =>
+    str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .replace(/\s+/g, '')
+      .includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
 
-  const filterMajors = () => {
-    // The list of majors must be retrieved from the backend.
-    if (majors !== null && majors?.length !== 0 && Array.isArray(majors)) {
-      return majorQuery === ''
+  const matchAlt = (str: string, query: string) =>
+    str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .replace(/\s+/g, '')
+      .replace('.', '')
+      .includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
+
+  const filteredMajors =
+    majors !== null && majors?.length !== 0 && Array.isArray(majors)
+      ? majorQuery === ''
         ? majors
-        : majors.filter((major: Major) =>
-            major?.name.toLowerCase().replace(/\s+/g, '').includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
+        : majors.filter(
+            (major: Major) =>
+              match(major?.name, majorQuery) ||
+              match(major?.acronym, majorQuery) ||
+              matchAlt(major?.acronym, majorQuery)
           )
-    } else {
-      // Didn't retrieve information from backend yet.
-      return []
-    }
-  }
-
-  const filteredMajors = filterMajors()
+      : []
 
   const extraCourses = useMemo(() => BackendAPI.getExtraCourses(major), [major])
   const filteredExtraCourses =

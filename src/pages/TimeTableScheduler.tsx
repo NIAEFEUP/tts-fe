@@ -69,20 +69,6 @@ const TimeTableSchedulerPage = () => {
     }))
   }
 
-  const fetchAndSetMajors = () => {
-    BackendAPI.getMajors().then((majors: Major[]) => {
-      setMajors(majors)
-    })
-  }
-
-  const fetchAndSetCourses = () => {
-    BackendAPI.getCourses(major).then((courses: Course[]) => {
-      const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
-      const checkedMajorCourses: CheckedCourse[][] = majorCoursesToCheckedMajor(majorCourses)
-      setCourses(checkedMajorCourses)
-    })
-  }
-
   const fetchAndSetSchedules = () => {
     let schedules = []
     for (let i = 0; i < selectedCourses.length; i++) {
@@ -110,49 +96,56 @@ const TimeTableSchedulerPage = () => {
     setSelected(schedules)
   }
 
-  const [major, setMajor] = useMajor()
-  const [courses, setCourses] = useState<CheckedCourse[][]>([])
-  const [showGrid, setShowGrid] = useShowGrid()
-  const [majors, setMajors] = useState<Major[]>([])
-  const selectedCourses = getCheckedCourses(courses)
+  const [major, setMajor] = useState<Major>(null) // the picked major
+  const [majors, setMajors] = useState<Major[]>([]) // all the majors
+  const [courses, setCourses] = useState<Course[][]>([]) // courses for the major with frontend properties
+  const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
+  const selectedCourses = getCheckedCourses(checkedCourses) // only the picked courses
+  const [showGrid, setShowGrid] = useState(true)
   const [selected, setSelected] = useState<CourseOption[]>(() => initializeSelected())
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
 
-  // Fetch and set majors once the component is ready
   useEffect(() => {
-    fetchAndSetMajors()
+    BackendAPI.getMajors().then((majors: Major[]) => {
+      setMajors(majors)
+    })
   }, [])
 
-  // Fetch course units if none are available when the major value is set
   useEffect(() => {
-    const empty = courses?.length === 0
-    const checks: boolean[] = courses.flat().map((course: CheckedCourse) => course.checked)
+    BackendAPI.getCourses(major).then((courses: Course[]) => {
+      const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
+      setCourses(majorCourses)
 
-    if (empty || !checks.includes(true)) {
-      fetchAndSetCourses()
-    }
+      const empty = checkedCourses?.length === 0
+      const checks: boolean[] = checkedCourses.flat().map((course: CheckedCourse) => course.checked)
+
+      if (empty || !checks.includes(true)) {
+        const checkedMajorCourses: CheckedCourse[][] = majorCoursesToCheckedMajor(majorCourses)
+        setCheckedCourses(checkedMajorCourses)
+      }
+    })
   }, [major])
 
   // Updates the schedules for a selected course.
   useEffect(() => {
     fetchAndSetSchedules()
     preserveSelected()
-  }, [courses])
+  }, [checkedCourses])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
       {/* Schedule Preview */}
       <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
-          {/* <Schedule
+          <Schedule
             showGrid={showGrid}
             courseOptions={selected}
             activeClassesT={classesT}
             activeClassesTP={classesTP}
-          /> */}
+          />
         </div>
       </div>
 
@@ -167,7 +160,7 @@ const TimeTableSchedulerPage = () => {
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
-              coursesHook={[courses, setCourses]}
+              coursesHook={[checkedCourses, setCheckedCourses]}
             />
             <MoreActionsButton schedule={selected} showGridHook={[showGrid, setShowGrid]} />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
