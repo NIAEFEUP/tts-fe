@@ -114,14 +114,14 @@ const TimeTableSchedulerPage = () => {
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
       setCourses(majorCourses)
+      setCheckedCourses((prev) => {
+        const empty = prev?.length === 0
+        const checks: boolean[] = prev.flat().map((course: CheckedCourse) => course.checked)
 
-      const empty = checkedCourses?.length === 0
-      const checks: boolean[] = checkedCourses.flat().map((course: CheckedCourse) => course.checked)
-
-      if (empty || !checks.includes(true)) {
-        const checkedMajorCourses: CheckedCourse[][] = majorCoursesToCheckedMajor(majorCourses)
-        setCheckedCourses(checkedMajorCourses)
-      }
+        if (empty || !checks.includes(true)) {
+          return majorCoursesToCheckedMajor(majorCourses)
+        }
+      })
     })
   }, [major])
 
