@@ -49,25 +49,15 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
-  const getCheckedCourses = (courses: CheckedCourse[][]): CheckedCourse[] => {
-    return courses.flat().filter((course) => course.checked)
-  }
+  const getCheckedCourses = (courses: CheckedCourse[][]): CheckedCourse[] =>
+    courses.flat().filter((course) => course.checked)
 
-  const initializeSelected = (): CourseOption[] => {
-    return selectedCourses.map((course: CheckedCourse) => ({
-      course: course,
-      option: null,
-      schedules: [],
-    }))
-  }
-
-  const getSchedule = async (checkedCourse: CheckedCourse, options = null) => {
-    return await BackendAPI.getCourseSchedule(checkedCourse).then((response: CourseSchedule[]) => ({
+  const getSchedule = async (checkedCourse: CheckedCourse, options = null) =>
+    await BackendAPI.getCourseSchedule(checkedCourse).then((response: CourseSchedule[]) => ({
       course: checkedCourse,
       option: options,
       schedules: response,
     }))
-  }
 
   const fetchAndSetSchedules = () => {
     let schedules = []
@@ -76,7 +66,7 @@ const TimeTableSchedulerPage = () => {
         schedules.push(schedule)
       })
     }
-    setSelected(schedules)
+    setCourseOptions(schedules)
   }
 
   const preserveSelected = () => {
@@ -87,13 +77,13 @@ const TimeTableSchedulerPage = () => {
 
     let schedules = []
     for (let i = 0; i < selectedCourses.length; i++) {
-      const option = findPreviousEntry(selected, selectedCourses[i])
+      const option = findPreviousEntry(courseOptions, selectedCourses[i])
       getSchedule(selectedCourses[i], option).then((schedule) => {
         schedules.push(schedule)
       })
     }
 
-    setSelected(schedules)
+    setCourseOptions(schedules)
   }
 
   const [major, setMajor] = useState<Major>(null) // the picked major
@@ -102,11 +92,17 @@ const TimeTableSchedulerPage = () => {
   const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
   const selectedCourses = getCheckedCourses(checkedCourses) // only the picked courses
   const [showGrid, setShowGrid] = useState(true)
-  const [selected, setSelected] = useState<CourseOption[]>(() => initializeSelected())
+  const [courseOptions, setCourseOptions] = useState<CourseOption[]>(() =>
+    selectedCourses.map((course: CheckedCourse) => ({
+      course: course,
+      option: null,
+      schedules: [],
+    }))
+  )
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || courseOptions.length === 0)
 
   useEffect(() => {
     BackendAPI.getMajors().then((majors: Major[]) => {
@@ -142,7 +138,7 @@ const TimeTableSchedulerPage = () => {
         <div className="h-full w-full">
           <Schedule
             showGrid={showGrid}
-            courseOptions={selected}
+            courseOptions={courseOptions}
             activeClassesT={classesT}
             activeClassesTP={classesTP}
           />
@@ -162,15 +158,15 @@ const TimeTableSchedulerPage = () => {
               majorHook={[major, setMajor]}
               coursesHook={[checkedCourses, setCheckedCourses]}
             />
-            <MoreActionsButton schedule={selected} showGridHook={[showGrid, setShowGrid]} />
+            <MoreActionsButton schedule={courseOptions} showGridHook={[showGrid, setShowGrid]} />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
           <div className="flex flex-col gap-4 py-2 px-0">
-            {selected.length > 0 &&
-              selected.map((courseOption, courseOptionIdx) => (
+            {courseOptions.length > 0 &&
+              courseOptions.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
-                  selectedHook={[selected, setSelected]}
+                  selectedHook={[courseOptions, setCourseOptions]}
                   key={`course-schedule-listbox-${courseOptionIdx}`}
                 />
               ))}
