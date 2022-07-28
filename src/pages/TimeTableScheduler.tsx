@@ -17,14 +17,13 @@ const TimeTableSchedulerPage = () => {
    * @param majorCourses Courses in a major grouped by year.
    * @returns Course[][] with the checked and info properties.
    */
-  const majorCoursesToCheckedMajor = (majorCourses: Course[][]): CheckedCourse[][] => {
-    return majorCourses.map((year: Course[]) =>
+  const majorCoursesToCheckedMajor = (majorCourses: Course[][]): CheckedCourse[][] =>
+    majorCourses.map((year: Course[]) =>
       year.map((item: Course) => ({
         checked: false,
         info: item,
       }))
     )
-  }
 
   /**
    * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year.
@@ -59,41 +58,13 @@ const TimeTableSchedulerPage = () => {
       schedules: response,
     }))
 
-  const fetchAndSetSchedules = () => {
-    let schedules = []
-    for (let i = 0; i < selectedCourses.length; i++) {
-      getSchedule(selectedCourses[i]).then((schedule) => {
-        schedules.push(schedule)
-      })
-    }
-    setCourseOptions(schedules)
-  }
-
-  const preserveSelected = () => {
-    const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
-      const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value !== undefined ? value.option : null
-    }
-
-    let schedules = []
-    for (let i = 0; i < selectedCourses.length; i++) {
-      const option = findPreviousEntry(courseOptions, selectedCourses[i])
-      getSchedule(selectedCourses[i], option).then((schedule) => {
-        schedules.push(schedule)
-      })
-    }
-
-    setCourseOptions(schedules)
-  }
-
   const [major, setMajor] = useState<Major>(null) // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [courses, setCourses] = useState<Course[][]>([]) // courses for the major with frontend properties
   const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
-  const selectedCourses = getCheckedCourses(checkedCourses) // only the picked courses
   const [showGrid, setShowGrid] = useState(true)
   const [courseOptions, setCourseOptions] = useState<CourseOption[]>(() =>
-    selectedCourses.map((course: CheckedCourse) => ({
+    getCheckedCourses(checkedCourses).map((course: CheckedCourse) => ({
       course: course,
       option: null,
       schedules: [],
@@ -104,12 +75,14 @@ const TimeTableSchedulerPage = () => {
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || courseOptions.length === 0)
 
+  // fetch majors
   useEffect(() => {
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
   }, [])
 
+  // fetch courses for the major (once one has been picked)
   useEffect(() => {
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
@@ -125,10 +98,26 @@ const TimeTableSchedulerPage = () => {
     })
   }, [major])
 
-  // Updates the schedules for a selected course.
+  // fetch schedules for the courses (once courses have been picked)
   useEffect(() => {
-    fetchAndSetSchedules()
-    preserveSelected()
+    const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
+      const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
+      return value !== undefined ? value.option : null
+    }
+
+    setCourseOptions((prev) => {
+      let newCourseOptions = []
+      const onlyPickedCourses = getCheckedCourses(checkedCourses)
+
+      for (let i = 0; i < onlyPickedCourses.length; i++) {
+        const option = findPreviousEntry(prev, onlyPickedCourses[i])
+        getSchedule(onlyPickedCourses[i], option).then((schedule) => {
+          newCourseOptions.push(schedule)
+        })
+      }
+
+      return newCourseOptions
+    })
   }, [checkedCourses])
 
   return (
