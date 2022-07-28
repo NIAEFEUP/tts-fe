@@ -9,6 +9,7 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
+// eslint-disable-next-line
 import { useCourses, useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
@@ -46,7 +47,7 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
-  const getCheckedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
+  const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
   const getSchedule = async (checkedCourse: CheckedCourse, prevOption: CourseSchedule = null): Promise<CourseOption> =>
     await BackendAPI.getCourseSchedule(checkedCourse).then((schedulesRes: CourseSchedule[]) => ({
       course: checkedCourse,
@@ -56,15 +57,9 @@ const TimeTableSchedulerPage = () => {
 
   const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
+  const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
+  const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
   const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
-  const [showGrid, setShowGrid] = useState(true)
-  const [courseOptions, setCourseOptions] = useState<CourseOption[]>(() =>
-    getCheckedCourses(checkedCourses).map((course: CheckedCourse) => ({
-      course: course,
-      option: null,
-      schedules: [],
-    }))
-  )
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
@@ -101,11 +96,14 @@ const TimeTableSchedulerPage = () => {
 
     setCourseOptions((prev) => {
       let newCourseOptions = []
-      const onlyPickedCourses = getCheckedCourses(checkedCourses)
+      const pickedCourses = getPickedCourses(checkedCourses)
+      if (pickedCourses.length === 0) return []
 
-      for (let i = 0; i < onlyPickedCourses.length; i++) {
-        const option = findPreviousEntry(prev, onlyPickedCourses[i])
-        getSchedule(onlyPickedCourses[i], option).then((schedule) => {
+      // get schedule should not happen here
+      // when major is picked fetch all schedules for the courses
+      for (let i = 0; i < pickedCourses.length; i++) {
+        const option = findPreviousEntry(prev, pickedCourses[i])
+        getSchedule(pickedCourses[i], option).then((schedule) => {
           newCourseOptions.push(schedule)
         })
       }
@@ -113,6 +111,11 @@ const TimeTableSchedulerPage = () => {
       return newCourseOptions
     })
   }, [checkedCourses])
+
+  useEffect(() => {
+    if (courseOptions.length === 0) return
+    console.log(courseOptions)
+  }, [courseOptions])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
