@@ -3,24 +3,22 @@ import { extraCoursesData } from '../utils/data'
 import { getSemester } from '../utils'
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'
-const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()[0]
+const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
  * Make a request to the backend server.
- * @param route: route to be appended to backend url
+ * @param route route to be appended to backend url
  * @returns response from the backend
  */
 const apiRequest = async (route: string) => {
   const slash = route[0] === '/' ? '' : '/'
   const url = BACKEND_URL + slash + route
 
-  const response = await fetch(url)
-    .then((response) => {
-      return response.json()
-    })
+  const data = await fetch(url)
+    .then((response) => response.json())
     .catch((error) => console.error(error))
 
-  return response
+  return data
 }
 
 /**
@@ -33,7 +31,7 @@ const getMajors = async () => {
 
 /**
  * Retrieves all course units for a major in a given semester
- * @param major: major to get course units from
+ * @param major major to get course units from
  * @returns course units array
  */
 const getCourses = async (major: Major) => {
@@ -41,13 +39,23 @@ const getCourses = async (major: Major) => {
   return await apiRequest(`/course_units/${major.id}/${SEMESTER}`)
 }
 
+/**
+ * Retrieves all schedule options for a given course unit
+ * @param course course of which to retrieve schedule
+ * @returns array of schedule options
+ */
 const getCourseSchedule = async (course: CheckedCourse) => {
   if (course === null) return []
   return await apiRequest(`/schedule/${course.info.id}`)
 }
 
+/**
+ * Retrieves all course units outside of a given major
+ * @param major major to exclude course units from
+ * @returns array of course units
+ */
 const getExtraCourses = (major: Major) => {
-  // TODO: get courses data from all majors other than major
+  // TODO: implement
   return extraCoursesData
 }
 

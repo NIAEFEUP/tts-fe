@@ -18,7 +18,7 @@ const getSemester = () => {
   const date = new Date()
   const month = date.getMonth()
 
-  return month >= 0 && month <= 6 ? '2ºS' : '1ºS'
+  return month >= 0 && month <= 6 ? 2 : 1
 }
 
 const getSchoolYear = () => {

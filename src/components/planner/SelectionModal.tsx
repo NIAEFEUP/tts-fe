@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import BackendAPI from '../../backend'
 import Alert, { AlertType } from './Alert'
-import CreditsBanner from './CreditsBanner'
+// import CreditsBanner from './CreditsBanner'
 import { Link } from 'react-router-dom'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { Major, CheckedCourse, CheckedYearCourses, CheckedMajorCourses, Course } from '../../@types'
@@ -160,7 +160,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         title="Semestre"
                         className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
                       >
-                        {getSemester()}
+                        {`${getSemester()}ºS`}
                       </span>
                       <span
                         title="Ano Letivo"

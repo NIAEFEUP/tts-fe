@@ -114,8 +114,12 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
     >
       <div className="relative text-sm">
         {/* Header */}
-        <h4 className="mb-0.5 text-xs">
+        <h4 className="mb-0.5 flex text-xs lg:hidden xl:flex">
           {courseOption.course.info.name} (<strong>{courseOption.course.info.acronym}</strong>)
+        </h4>
+
+        <h4 className="mb-0.5 hidden text-xs lg:flex xl:hidden">
+          <strong>{courseOption.course.info.acronym}</strong>
         </h4>
 
         {/* Button */}

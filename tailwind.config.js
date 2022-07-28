@@ -44,8 +44,8 @@ module.exports = {
         '9xl': '96rem',
       },
       gridTemplateRows: {
-        '7': 'repeat(7, minmax(0, 1fr))',
-        '8': 'repeat(8, minmax(0, 1fr))',
+        7: 'repeat(7, minmax(0, 1fr))',
+        8: 'repeat(8, minmax(0, 1fr))',
       },
       fontSize: {
         xxs: '0.6rem',
