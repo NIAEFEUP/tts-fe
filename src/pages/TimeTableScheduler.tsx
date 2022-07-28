@@ -1,6 +1,5 @@
 import BackendAPI from '../backend'
 import { useState, useEffect } from 'react'
-import { useCourses, useMajor, useShowGrid } from '../hooks'
 import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
@@ -10,6 +9,7 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
+// import { useCourses, useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
   /**
@@ -48,19 +48,16 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
-  const getCheckedCourses = (courses: CheckedCourse[][]): CheckedCourse[] =>
-    courses.flat().filter((course) => course.checked)
-
-  const getSchedule = async (checkedCourse: CheckedCourse, options = null) =>
-    await BackendAPI.getCourseSchedule(checkedCourse).then((response: CourseSchedule[]) => ({
+  const getCheckedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
+  const getSchedule = async (checkedCourse: CheckedCourse, prevOption: CourseSchedule = null): Promise<CourseOption> =>
+    await BackendAPI.getCourseSchedule(checkedCourse).then((schedulesRes: CourseSchedule[]) => ({
       course: checkedCourse,
-      option: options,
-      schedules: response,
+      option: prevOption,
+      schedules: schedulesRes,
     }))
 
   const [major, setMajor] = useState<Major>(null) // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
-  const [courses, setCourses] = useState<Course[][]>([]) // courses for the major with frontend properties
   const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
   const [showGrid, setShowGrid] = useState(true)
   const [courseOptions, setCourseOptions] = useState<CourseOption[]>(() =>
@@ -86,7 +83,6 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
-      setCourses(majorCourses)
       setCheckedCourses((prev) => {
         const empty = prev?.length === 0
         const checks: boolean[] = prev.flat().map((course: CheckedCourse) => course.checked)

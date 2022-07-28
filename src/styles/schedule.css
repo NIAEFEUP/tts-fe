@@ -137,6 +137,10 @@
   @apply border-schedule-ot bg-schedule-ot/80 hover:bg-schedule-ot dark:bg-schedule-ot/80 dark:hover:bg-schedule-ot;
 }
 
+.schedule-class-s {
+  @apply border-schedule-ot bg-schedule-ot/80 hover:bg-schedule-ot dark:bg-schedule-ot/80 dark:hover:bg-schedule-ot;
+}
+
 .schedule-class-default {
   @apply border-schedule-default bg-schedule-default/80 hover:bg-schedule-default dark:bg-schedule-default/80 dark:hover:bg-schedule-default;
 }

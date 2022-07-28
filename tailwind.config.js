@@ -23,10 +23,11 @@ module.exports = {
         schedule: {
           lunch: '#BE123C',
           t: '#A8A199',
-          tp: '#69656A',
-          pl: '#115E59',
+          tp: '#115E59',
+          pl: '#b66046',
           ot: '#075985',
-          default: '#115E59',
+          s: '#934a6b',
+          default: '#69656A',
         },
       },
       spacing: {
