@@ -12,15 +12,21 @@ type Props = {
 const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props) => {
   const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
-  // const [courseOptions, setCourseOptions] = courseOptionsHook
+  const [, setCourseOptions] = courseOptionsHook
+
+  const isScheduleValid = (scheduleJson: any) => {
+    // TODO: implement
+    return false
+  }
 
   const importJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader()
     fileReader.readAsText(e.target.files[0], 'UTF-8')
     fileReader.onload = (e) => {
       const scheduleJson = JSON.parse(fileReader.result as string) as CourseOption[]
+      console.log(scheduleJson)
+      if (isScheduleValid(scheduleJson)) setCourseOptions(scheduleJson)
       buttonRef.current.click() // close menu
-      // setCourseOptions(scheduleJson)
     }
   }
 
