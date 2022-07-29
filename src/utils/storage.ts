@@ -22,7 +22,7 @@ const writeStorageInvalid = (key: string, initialValue?: any) => {
   localStorage.setItem(key + '.fetch-date', null)
 }
 
-const getCoursesStorage = () => {
+const getCoursesStorage = (): CheckedCourse[][] => {
   const key = 'niaefeup-tts.courses'
   const initialValue = []
   try {
@@ -39,12 +39,12 @@ const getCoursesStorage = () => {
   }
 }
 
-const setCoursesStorage = (courses: CheckedCourse[][]) => {
+const setCoursesStorage = (courses: CheckedCourse[][]): void => {
   const key = 'niaefeup-tts.courses'
   writeStorage(key, courses)
 }
 
-const getCourseOptionsStorage = () => {
+const getCourseOptionsStorage = (): CourseOption[] => {
   const key = 'niaefeup-tts.options'
   const initialValue = []
   try {
@@ -61,7 +61,7 @@ const getCourseOptionsStorage = () => {
   }
 }
 
-const setCourseOptionsStorage = (courseOptions: CourseOption[]) => {
+const setCourseOptionsStorage = (courseOptions: CourseOption[]): void => {
   const key = 'niaefeup-tts.options'
   writeStorage(key, courseOptions)
 }
