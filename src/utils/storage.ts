@@ -18,7 +18,7 @@ const writeStorage = (key: string, value: any) => {
 }
 
 const writeStorageInvalid = (key: string, initialValue?: any) => {
-  localStorage.setItem(key, initialValue)
+  localStorage.setItem(key, JSON.stringify(initialValue))
   localStorage.setItem(key + '.fetch-date', null)
 }
 
