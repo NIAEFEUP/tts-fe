@@ -1,4 +1,5 @@
 import BackendAPI from '../backend'
+import StorageAPI from '../utils/storage'
 import { useState, useEffect } from 'react'
 import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
@@ -9,7 +10,7 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-import { useCourses, useMajor, useShowGrid } from '../hooks'
+import { useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
   const [major, setMajor] = useMajor() // the picked major
@@ -17,7 +18,6 @@ const TimeTableSchedulerPage = () => {
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
   const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
-  // const [checkedCoursesLS, setCheckedCoursesLS] = useCourses() // local storage support for courses
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
@@ -72,17 +72,22 @@ const TimeTableSchedulerPage = () => {
 
   // fetch courses for the major (once one has been picked)
   useEffect(() => {
-    BackendAPI.getCourses(major).then((courses: Course[]) => {
-      const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
-      setCheckedCourses((prev) => {
-        const empty = prev?.length === 0
-        const checks: boolean[] = prev.flat().map((course: CheckedCourse) => course.checked)
+    const coursesStorage = StorageAPI.getCoursesStorage()
+    if (coursesStorage.length > 0) {
+      setCheckedCourses(coursesStorage)
+    } else {
+      BackendAPI.getCourses(major).then((courses: Course[]) => {
+        const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
+        setCheckedCourses((prev) => {
+          const empty = prev?.length === 0
+          const checks: boolean[] = prev.flat().map((course: CheckedCourse) => course.checked)
 
-        if (empty || !checks.includes(true)) {
-          return majorCoursesToCheckedMajor(majorCourses)
-        }
+          if (empty || !checks.includes(true)) {
+            return majorCoursesToCheckedMajor(majorCourses)
+          }
+        })
       })
-    })
+    }
   }, [major])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
@@ -92,6 +97,7 @@ const TimeTableSchedulerPage = () => {
       return value !== undefined ? value.option : null
     }
 
+    StorageAPI.setCoursesStorage(checkedCourses)
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) setCourseOptions([])
     else {
