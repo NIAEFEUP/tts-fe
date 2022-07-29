@@ -138,7 +138,11 @@ const TimeTableSchedulerPage = () => {
               majorHook={[major, setMajor]}
               coursesHook={[checkedCourses, setCheckedCourses]}
             />
-            <MoreActionsButton schedule={courseOptions} showGridHook={[showGrid, setShowGrid]} />
+            <MoreActionsButton
+              schedule={courseOptions}
+              showGridHook={[showGrid, setShowGrid]}
+              courseOptionsHook={[courseOptions, setCourseOptions]}
+            />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
           <div className="flex flex-col gap-4 py-2 px-0">
