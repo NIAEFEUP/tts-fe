@@ -75,8 +75,9 @@ const TimeTableSchedulerPage = () => {
     const coursesStorage = StorageAPI.getCoursesStorage()
     if (coursesStorage.length > 0) {
       setCheckedCourses(coursesStorage)
-      // setIsModalOpen(false)
+      setIsModalOpen(false)
     } else {
+      setIsModalOpen(true)
       BackendAPI.getCourses(major).then((courses: Course[]) => {
         const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
         setCheckedCourses((prev) => {
@@ -124,10 +125,6 @@ const TimeTableSchedulerPage = () => {
     }
   }, [checkedCourses])
 
-  useEffect(() => {
-    console.log(courseOptions)
-  }, [courseOptions])
-
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
       {/* Schedule Preview */}
@@ -167,6 +164,7 @@ const TimeTableSchedulerPage = () => {
               courseOptions.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
+                  courseOptionIdx={courseOptionIdx}
                   courseOptionsHook={[courseOptions, setCourseOptions]}
                   key={`course-schedule-listbox-${courseOptionIdx}`}
                 />

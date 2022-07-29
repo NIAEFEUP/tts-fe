@@ -7,12 +7,13 @@ import StorageAPI from '../../utils/storage'
 
 type Props = {
   courseOption: CourseOption
+  courseOptionIdx: number
   courseOptionsHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
 }
 
-const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
+const ScheduleListbox = ({ courseOption, courseOptionIdx, courseOptionsHook }: Props) => {
   const firstRenderRef = useRef(true)
-  const [, setCourseOptions] = courseOptionsHook
+  const [courseOptions, setCourseOptions] = courseOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(true)
   const [showPractical, setShowPractical] = useState<boolean>(true)
@@ -97,6 +98,7 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
       firstRenderRef.current = false
       return
     }
+
     const resolveCourseOptions = (prevSelected: CourseOption[]) => {
       let newSelected = prevSelected
       prevSelected.forEach((option, optionIdx) => {
@@ -113,6 +115,11 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
       return newCourseOptions
     })
   }, [selectedOption, courseOption, setCourseOptions])
+
+  useEffect(() => {
+    if (courseOptions.length === 0) return
+    setSelectedOption(courseOptions[courseOptionIdx].option)
+  }, [courseOptions])
 
   return (
     adaptedSchedules && (
