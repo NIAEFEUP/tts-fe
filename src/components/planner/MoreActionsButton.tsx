@@ -15,7 +15,8 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
   const [, setCourseOptions] = courseOptionsHook
 
   const isScheduleValid = (scheduleJson: any) => {
-    // TODO: implement
+    // TODO: implement this
+    // TODO: make sure setCourseOptions works property
     return false
   }
 
@@ -81,24 +82,23 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
             )}
           </Menu.Item>
 
-          <>
-            <label
-              htmlFor="schedule-upload"
-              className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900
-                hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <UploadIcon className="h-5 w-5 text-primary group-hover:text-white" />
-              <span>Importar Horário</span>
-              <input
-                type="file"
-                accept=".json"
-                className="sr-only"
-                id="schedule-upload"
-                name="schedule-upload"
-                onChange={(e) => importJSON(e)}
-              />
-            </label>
-          </>
+          {/* <Menu.Item> is not used here since it prevents input from being triggered */}
+          <label
+            htmlFor="schedule-upload"
+            className="group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm
+            text-gray-900 hover:bg-primary hover:text-white"
+          >
+            <UploadIcon className="h-5 w-5 text-primary group-hover:text-white" />
+            <span>Importar Horário</span>
+            <input
+              type="file"
+              accept=".json"
+              className="sr-only"
+              id="schedule-upload"
+              name="schedule-upload"
+              onChange={(e) => importJSON(e)}
+            />
+          </label>
 
           <Menu.Item>
             {({ active, disabled }) => (
