@@ -12,6 +12,16 @@ import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@
 import { useCourses, useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
+  const [major, setMajor] = useMajor() // the picked major
+  const [majors, setMajors] = useState<Major[]>([]) // all the majors
+  const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
+  const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
+  const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
+
+  const [classesT, setClassesT] = useState<boolean>(true)
+  const [classesTP, setClassesTP] = useState<boolean>(true)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || courseOptions.length === 0)
+
   /**
    * Adds the checked and info property to the major courses.
    * @param majorCourses Courses in a major grouped by year.
@@ -46,19 +56,11 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
+  // extract only the course with checked: true
   const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
 
+  // fetch all schedules for the picked courses
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
-
-  const [major, setMajor] = useMajor() // the picked major
-  const [majors, setMajors] = useState<Major[]>([]) // all the majors
-  const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
-  const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
-  const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
-
-  const [classesT, setClassesT] = useState<boolean>(true)
-  const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || courseOptions.length === 0)
 
   // fetch majors
   useEffect(() => {
@@ -82,7 +84,7 @@ const TimeTableSchedulerPage = () => {
     })
   }, [major])
 
-  // fetch schedules for the courses (once courses have been picked)
+  // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
     const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)

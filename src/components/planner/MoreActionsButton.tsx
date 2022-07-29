@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { DotsHorizontalIcon, DownloadIcon, SparklesIcon, UploadIcon } from '@heroicons/react/outline'
+import { DotsHorizontalIcon, DownloadIcon, SparklesIcon, TableIcon, UploadIcon } from '@heroicons/react/outline'
 import { CourseOption } from '../../@types'
 
 type Props = {
@@ -23,6 +23,8 @@ const MoreActionsButton = ({ schedule, showGridHook }: Props) => {
     a.click()
     URL.revokeObjectURL(url)
   }
+
+  const exportCSV = () => {}
 
   return (
     <>
@@ -51,30 +53,42 @@ const MoreActionsButton = ({ schedule, showGridHook }: Props) => {
               <button
                 onClick={() => setShowGrid(!showGrid)}
                 className="group flex w-full items-center space-x-2 rounded-md px-2 py-2 
-                text-sm text-gray-900 hover:bg-primary hover:text-white"
+                text-sm text-gray-900 hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <SparklesIcon className="h-5 w-5 text-primary group-hover:text-white" />
-                <span>Ver grelha</span>
-              </button>
-            </Menu.Item>
-            <Menu.Item disabled>
-              <button
-                onClick={() => importJSON()}
-                className="group flex w-full items-center space-x-2 rounded-md px-2 py-2 
-                text-sm text-gray-900 hover:bg-primary hover:text-white"
-              >
-                <UploadIcon className="h-5 w-5 text-primary group-hover:text-white" />
-                <span>Importar Horário</span>
+                <span>{showGrid ? 'Esconder' : 'Mostrar'} grelha</span>
               </button>
             </Menu.Item>
             <Menu.Item>
               <button
                 onClick={() => exportJSON()}
                 className="group flex w-full items-center space-x-2 rounded-md px-2 py-2 
-                text-sm text-gray-900 hover:bg-primary hover:text-white"
+                text-sm text-gray-900 hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <DownloadIcon className="h-5 w-5 text-primary group-hover:text-white" />
                 <span>Exportar Horário</span>
+              </button>
+            </Menu.Item>
+            <Menu.Item>
+              <button
+                disabled
+                onClick={() => importJSON()}
+                className="group flex w-full items-center space-x-2 rounded-md px-2 py-2 
+                text-sm text-gray-900 hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <UploadIcon className="h-5 w-5 text-primary group-hover:text-white" />
+                <span>Carregar Horário</span>
+              </button>
+            </Menu.Item>
+            <Menu.Item>
+              <button
+                disabled
+                onClick={() => exportCSV()}
+                className="group flex w-full items-center space-x-2 rounded-md px-2 py-2 
+                text-sm text-gray-900 hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <TableIcon className="h-5 w-5 text-primary group-hover:text-white" />
+                <span>Exportar Opções (CSV)</span>
               </button>
             </Menu.Item>
           </Menu.Items>
