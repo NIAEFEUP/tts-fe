@@ -56,9 +56,9 @@ const TimeTableSchedulerPage = () => {
       schedules: schedulesRes,
     }))
 
-  const fetchSchedules = async (checks: CheckedCourse[][]) => {
-    await BackendAPI.getCoursesSchedules(checks)
-  }
+  const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
+
+  const fetchAllSchedules = async (checks: CheckedCourse[][]) => await BackendAPI.getMajorCoursesSchedules(checks)
 
   const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
@@ -99,22 +99,24 @@ const TimeTableSchedulerPage = () => {
       return value !== undefined ? value.option : null
     }
 
-    setCourseOptions((prev) => {
-      let newCourseOptions = []
-      const pickedCourses = getPickedCourses(checkedCourses)
-      if (pickedCourses.length === 0) return []
-
-      // get schedule should not happen here
-      // when major is picked fetch all schedules for the courses
-      for (let i = 0; i < pickedCourses.length; i++) {
-        const option = findPreviousEntry(prev, pickedCourses[i])
-        getSchedule(pickedCourses[i], option).then((schedule) => {
-          newCourseOptions.push(schedule)
+    const pickedCourses = getPickedCourses(checkedCourses)
+    if (pickedCourses.length === 0) setCourseOptions([])
+    else {
+      fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
+        setCourseOptions((prev) => {
+          let newCourseOptions = []
+          for (let i = 0; i < pickedCourses.length; i++) {
+            const option = findPreviousEntry(prev, pickedCourses[i])
+            newCourseOptions.push({
+              course: pickedCourses[i],
+              option: option,
+              schedules: schedules[i],
+            })
+          }
+          return newCourseOptions
         })
-      }
-
-      return newCourseOptions
-    })
+      })
+    }
   }, [checkedCourses])
 
   useEffect(() => {

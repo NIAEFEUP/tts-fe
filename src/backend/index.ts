@@ -54,7 +54,24 @@ const getCourseSchedule = async (course: CheckedCourse) => {
  * @param courses course of which to retrieve schedule
  * @returns array of schedule options
  */
-const getCoursesSchedules = async (courses: CheckedCourse[][]) => {
+const getCoursesSchedules = async (courses: CheckedCourse[]) => {
+  if (!courses || courses.length === 0) return []
+
+  let schedules = []
+  for (let course of courses) {
+    const schedule = await getCourseSchedule(course)
+    schedules.push(schedule)
+  }
+
+  return schedules
+}
+
+/**
+ * Retrieves all schedule options for a given course unit
+ * @param courses course of which to retrieve schedule
+ * @returns array of schedule options
+ */
+const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
   if (!courses || courses.length === 0) return []
 
   let schedules = []
@@ -85,6 +102,7 @@ const api = {
   getCourses,
   getCourseSchedule,
   getCoursesSchedules,
+  getMajorCoursesSchedules,
   getExtraCourses,
 }
 
