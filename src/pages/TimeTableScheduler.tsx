@@ -75,7 +75,7 @@ const TimeTableSchedulerPage = () => {
     const coursesStorage = StorageAPI.getCoursesStorage()
     if (coursesStorage.length > 0) {
       setCheckedCourses(coursesStorage)
-      setIsModalOpen(false)
+      // setIsModalOpen(false)
     } else {
       BackendAPI.getCourses(major).then((courses: Course[]) => {
         const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
@@ -100,8 +100,12 @@ const TimeTableSchedulerPage = () => {
 
     StorageAPI.setCoursesStorage(checkedCourses)
     const pickedCourses = getPickedCourses(checkedCourses)
-    if (pickedCourses.length === 0) setCourseOptions([])
-    else {
+    if (pickedCourses.length === 0) return
+
+    const courseOptionsStorage = StorageAPI.getCourseOptionsStorage()
+    if (courseOptionsStorage.length > 0) {
+      setCourseOptions(courseOptionsStorage)
+    } else {
       fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
         setCourseOptions((prev) => {
           let newCourseOptions = []
@@ -113,11 +117,18 @@ const TimeTableSchedulerPage = () => {
               schedules: schedules[i],
             })
           }
+          StorageAPI.setCourseOptionsStorage(newCourseOptions)
           return newCourseOptions
         })
       })
     }
   }, [checkedCourses])
+
+  useEffect(() => {
+    if (courseOptions.length === 0) return
+    console.log('course options useEffect')
+    console.log(courseOptions)
+  }, [courseOptions])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
