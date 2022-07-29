@@ -17,6 +17,7 @@ const TimeTableSchedulerPage = () => {
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
   const [checkedCourses, setCheckedCourses] = useState<CheckedCourse[][]>([]) // courses for the major with frontend properties
+  // const [checkedCoursesLS, setCheckedCoursesLS] = useCourses() // local storage support for courses
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
