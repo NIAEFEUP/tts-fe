@@ -33,7 +33,29 @@ const ScheduleListbox = ({ courseOption, courseOptionIdx, courseOptionsHook }: P
   }
 
   const updateHiddenLessons = (type: string, courseOption: CourseOption) => {
-    if (courseOption.option) {
+    if (!courseOption.option) return
+    const lessonBoxRef: LessonBoxRef = {
+      type: type,
+      id: courseOption.course.info.course_unit_id,
+      acronym: courseOption.course.info.acronym,
+    }
+
+    const lessonBoxClassName =
+      window.matchMedia('(max-width: 1024px)').matches === true
+        ? getLessonBoxName(lessonBoxRef, 'responsive')
+        : getLessonBoxName(lessonBoxRef)
+
+    const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
+    for (let i = 0; i < lessonBoxes.length; i++) {
+      const lessonBox = lessonBoxes[i] as HTMLElement
+      if (lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+      else lessonBox.classList.add('hidden')
+    }
+  }
+
+  const refreshHiddenLessons = () => {
+    if (courseOption.option === null) return
+    lessonTypes.forEach((type) => {
       const lessonBoxRef: LessonBoxRef = {
         type: type,
         id: courseOption.course.info.course_unit_id,
@@ -48,39 +70,15 @@ const ScheduleListbox = ({ courseOption, courseOptionIdx, courseOptionsHook }: P
       const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
       for (let i = 0; i < lessonBoxes.length; i++) {
         const lessonBox = lessonBoxes[i] as HTMLElement
-        if (lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
-        else lessonBox.classList.add('hidden')
+        if (type === 'T') {
+          if (!showTheoretical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
+          else if (showTheoretical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+        } else {
+          if (!showPractical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
+          else if (showPractical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+        }
       }
-    }
-  }
-
-  const refreshHiddenLessons = () => {
-    if (courseOption.option !== null) {
-      lessonTypes.forEach((type) => {
-        const lessonBoxRef: LessonBoxRef = {
-          type: type,
-          id: courseOption.course.info.course_unit_id,
-          acronym: courseOption.course.info.acronym,
-        }
-
-        const lessonBoxClassName =
-          window.matchMedia('(max-width: 1024px)').matches === true
-            ? getLessonBoxName(lessonBoxRef, 'responsive')
-            : getLessonBoxName(lessonBoxRef)
-
-        const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
-        for (let i = 0; i < lessonBoxes.length; i++) {
-          const lessonBox = lessonBoxes[i] as HTMLElement
-          if (type === 'T') {
-            if (!showTheoretical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
-            else if (showTheoretical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
-          } else {
-            if (!showPractical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
-            else if (showPractical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
-          }
-        }
-      })
-    }
+    })
   }
 
   const updateShown = (value: boolean, type: string, courseOption?: CourseOption): void => {

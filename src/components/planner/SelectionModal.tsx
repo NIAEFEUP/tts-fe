@@ -80,10 +80,24 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
             .includes(extraCoursesQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
-  useEffect(() => {
-    if (major?.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
-    else setAlertLevel(AlertType.info)
-  }, [major, courses, atLeastOneCourse])
+  const resolveParentCheck = (year: number) => {
+    let some = courses[year].some((course) => course.checked)
+    let every = courses[year].every((course) => course.checked)
+
+    //@ts-ignore
+    let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
+
+    if (every) {
+      checkbox.checked = true
+      checkbox.indeterminate = false
+    } else if (some) {
+      checkbox.checked = false
+      checkbox.indeterminate = true
+    } else {
+      checkbox.checked = false
+      checkbox.indeterminate = false
+    }
+  }
 
   const closeModal = () => {
     if (major?.name !== '' && atLeastOneCourse) setIsOpen(false)
@@ -101,22 +115,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
     setCourses([...courses])
-
-    let some = courses[year].some((course) => course.checked)
-    let every = courses[year].every((course) => course.checked)
-
-    //@ts-ignore
-    let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
-    if (every) {
-      checkbox.checked = true
-      checkbox.indeterminate = false
-    } else if (some) {
-      checkbox.checked = false
-      checkbox.indeterminate = true
-    } else {
-      checkbox.checked = false
-      checkbox.indeterminate = false
-    }
+    resolveParentCheck(year)
   }
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
@@ -128,6 +127,17 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     courses[year] = newGroupEntry
     setCourses([...courses])
   }
+
+  useEffect(() => {
+    if (major?.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
+    else setAlertLevel(AlertType.info)
+  }, [major, courses, atLeastOneCourse])
+
+  useEffect(() => {
+    for (let year = 0; year < courses.length; year++) {
+      resolveParentCheck(year)
+    }
+  }, [courses])
 
   return (
     <>
