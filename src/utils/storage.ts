@@ -1,4 +1,4 @@
-import { CheckedCourse } from '../@types'
+import { CheckedCourse, CourseOption } from '../@types'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
@@ -12,12 +12,13 @@ const isStorageValid = (key: string, daysElapsed: number) => {
   return stored !== null && savedTime !== null && !expiredStorage
 }
 
-const writeStorage = (key: string, courses: CheckedCourse[][]) => {
-  localStorage.setItem(key, JSON.stringify(courses))
+const writeStorage = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value))
   localStorage.setItem(key + '.fetch-date', JSON.stringify(new Date()))
 }
 
-const writeStorageInvalid = (key: string) => {
+const writeStorageInvalid = (key: string, initialValue?: any) => {
+  localStorage.setItem(key, initialValue)
   localStorage.setItem(key + '.fetch-date', null)
 }
 
@@ -29,7 +30,8 @@ const getCoursesStorage = () => {
       const courses: CheckedCourse[][] = JSON.parse(localStorage.getItem(key))
       return courses
     } else {
-      return []
+      writeStorageInvalid(key, initialValue)
+      return initialValue
     }
   } catch (error) {
     console.warn(error)
@@ -42,9 +44,33 @@ const setCoursesStorage = (courses: CheckedCourse[][]) => {
   writeStorage(key, courses)
 }
 
+const getCourseOptionsStorage = () => {
+  const key = 'niaefeup-tts.options'
+  const initialValue = []
+  try {
+    if (isStorageValid(key, 7)) {
+      const courses: CheckedCourse[][] = JSON.parse(localStorage.getItem(key))
+      return courses
+    } else {
+      writeStorageInvalid(key, initialValue)
+      return initialValue
+    }
+  } catch (error) {
+    console.warn(error)
+    return initialValue
+  }
+}
+
+const setCourseOptionsStorage = (courseOptions: CourseOption[]) => {
+  const key = 'niaefeup-tts.options'
+  writeStorage(key, courseOptions)
+}
+
 const StorageAPI = {
   getCoursesStorage,
   setCoursesStorage,
+  getCourseOptionsStorage,
+  setCourseOptionsStorage,
 }
 
 export default StorageAPI

@@ -21,7 +21,7 @@ const TimeTableSchedulerPage = () => {
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || courseOptions.length === 0)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || checkedCourses.length === 0)
 
   /**
    * Adds the checked and info property to the major courses.
@@ -63,18 +63,19 @@ const TimeTableSchedulerPage = () => {
   // fetch all schedules for the picked courses
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
 
-  // fetch majors
+  // fetch majors when component is ready
   useEffect(() => {
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
   }, [])
 
-  // fetch courses for the major (once one has been picked)
+  // once a major has been picked => local storage or fetch courses for the major
   useEffect(() => {
     const coursesStorage = StorageAPI.getCoursesStorage()
     if (coursesStorage.length > 0) {
       setCheckedCourses(coursesStorage)
+      setIsModalOpen(false)
     } else {
       BackendAPI.getCourses(major).then((courses: Course[]) => {
         const majorCourses: Course[][] = groupMajorCoursesByYear(courses)

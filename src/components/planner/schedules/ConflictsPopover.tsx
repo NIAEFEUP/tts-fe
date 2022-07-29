@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { Lesson } from '../../../@types'
 import { Dialog, Transition } from '@headlessui/react'
+import Alert, { AlertType } from '../Alert'
 import ResponsiveLessonBox from './ResponsiveLessonBox'
 
 type Props = {
@@ -46,13 +47,15 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                 bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <Dialog.Title as="header">
-                  <h3 className="mb-2 text-lg font-medium leading-none text-gray-700">
+                  <h3 className="mb-3 text-lg font-medium leading-none text-gray-700">
                     Inspeção de Conflitos de Horários
                   </h3>
-                  <h4 className="text-sm text-rose-800">
-                    Um horário com colisões de <strong>aulas teóricas</strong> é geralmente permitido na maioria dos
-                    casos. O mesmo <strong>não</strong> se verifica para <strong>aulas práticas</strong>.
-                  </h4>
+                  <Alert type={AlertType.warning}>
+                    <p>
+                      Um horário com colisões de <strong>aulas teóricas</strong> é geralmente permitido na maioria dos
+                      casos. O mesmo <strong>não</strong> se verifica para <strong>aulas práticas</strong>.
+                    </p>
+                  </Alert>
                 </Dialog.Title>
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
@@ -70,10 +73,10 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="rounded border-2 border-transparent bg-teal-700 px-4 py-2 text-sm font-medium 
+                    className="rounded border-2 border-transparent bg-secondary px-4 py-2 text-sm font-medium 
                     text-white transition hover:opacity-80 focus:outline-none"
                   >
-                    Entendido
+                    Ok, Entendido!
                   </button>
                 </footer>
               </Dialog.Panel>
