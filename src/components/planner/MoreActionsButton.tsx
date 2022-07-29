@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { DotsHorizontalIcon, DownloadIcon, SparklesIcon, TableIcon, UploadIcon } from '@heroicons/react/outline'
 import { CourseOption } from '../../@types'
@@ -10,6 +10,7 @@ type Props = {
 }
 
 const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props) => {
+  const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
   // const [courseOptions, setCourseOptions] = courseOptionsHook
 
@@ -17,8 +18,8 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
     const fileReader = new FileReader()
     fileReader.readAsText(e.target.files[0], 'UTF-8')
     fileReader.onload = (e) => {
-      const scheduleJson: CourseOption[] = JSON.parse(fileReader.result as string)
-      console.log(scheduleJson)
+      const scheduleJson = JSON.parse(fileReader.result as string) as CourseOption[]
+      buttonRef.current.click() // close menu
       // setCourseOptions(scheduleJson)
     }
   }
@@ -39,8 +40,9 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
   return (
     <Menu as="div" className="relative inline-block w-full text-left xl:w-min">
       <Menu.Button
+        ref={buttonRef}
         className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 
-          py-3 text-xs font-medium text-white transition hover:opacity-80 xl:w-min xl:space-x-0 xl:px-4 xl:text-sm"
+        py-3 text-xs font-medium text-white transition hover:opacity-80 xl:w-min xl:space-x-0 xl:px-4 xl:text-sm"
       >
         <span className="flex xl:hidden">Opções</span>
         <DotsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
@@ -73,7 +75,6 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
             )}
           </Menu.Item>
 
-          {/* FIXME: Menu.Item prevents the input from triggering. Menu wont close without <Menu.Item> */}
           <>
             <label
               htmlFor="schedule-upload"
