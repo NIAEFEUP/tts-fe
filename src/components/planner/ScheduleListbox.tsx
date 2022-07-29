@@ -3,15 +3,13 @@ import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CourseOption, CourseSchedule, LessonBoxRef } from '../../@types'
 import { getLessonBoxName, getScheduleOptionDisplayText, lessonTypes } from '../../utils'
-import StorageAPI from '../../utils/storage'
 
 type Props = {
   courseOption: CourseOption
-  courseOptionIdx: number
   courseOptionsHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
 }
 
-const ScheduleListbox = ({ courseOption, courseOptionIdx, courseOptionsHook }: Props) => {
+const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
   const firstRenderRef = useRef(true)
   const [courseOptions, setCourseOptions] = courseOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
@@ -109,14 +107,13 @@ const ScheduleListbox = ({ courseOption, courseOptionIdx, courseOptionsHook }: P
 
     setCourseOptions((prevCourseOptions) => {
       const newCourseOptions = resolveCourseOptions(prevCourseOptions)
-      // StorageAPI.setCourseOptionsStorage(newCourseOptions)
       return [...newCourseOptions]
     })
   }, [selectedOption, courseOption, setCourseOptions])
 
   useEffect(() => {
     if (courseOptions.length === 0) return
-    setSelectedOption(courseOptions[courseOptionIdx].option)
+    setSelectedOption(courseOption.option)
   }, [courseOptions])
 
   return (

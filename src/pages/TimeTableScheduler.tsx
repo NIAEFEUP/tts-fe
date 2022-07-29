@@ -1,6 +1,6 @@
 import BackendAPI from '../backend'
 import StorageAPI from '../utils/storage'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
@@ -13,6 +13,7 @@ import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@
 import { useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
+  const firstRenderRef = useRef(true)
   const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
@@ -72,6 +73,13 @@ const TimeTableSchedulerPage = () => {
 
   // once a major has been picked => local storage or fetch courses for the major
   useEffect(() => {
+    if (firstRenderRef.current === true) {
+      firstRenderRef.current = false
+    } else {
+      StorageAPI.setCoursesStorage([])
+      StorageAPI.setCourseOptionsStorage([])
+    }
+
     const coursesStorage = StorageAPI.getCoursesStorage()
     if (coursesStorage.length > 0) {
       setCheckedCourses(coursesStorage)
@@ -102,27 +110,46 @@ const TimeTableSchedulerPage = () => {
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
 
-    const courseOptionsStorage = [] //StorageAPI.getCourseOptionsStorage()
-    if (courseOptionsStorage.length > 0) {
+    const courseOptionsStorage = StorageAPI.getCourseOptionsStorage()
+    const notNulls = courseOptionsStorage.filter((item) => item.option !== null)
+
+    if (notNulls.length > 0) {
       setCourseOptions(courseOptionsStorage)
     } else {
       fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
         setCourseOptions((prev) => {
           let newCourseOptions = []
-          for (let i = 0; i < pickedCourses.length; i++) {
-            const option = findPreviousEntry(prev, pickedCourses[i])
-            newCourseOptions.push({
-              course: pickedCourses[i],
-              option: option,
-              schedules: schedules[i],
-            })
+          const notNulls = prev.filter((item) => item.option !== null)
+          if (notNulls.length > 0) {
+            for (let i = 0; i < pickedCourses.length; i++) {
+              const option = findPreviousEntry(prev, pickedCourses[i])
+              newCourseOptions.push({
+                course: pickedCourses[i],
+                option: option,
+                schedules: schedules[i],
+              })
+            }
+          } else {
+            for (let i = 0; i < pickedCourses.length; i++) {
+              newCourseOptions.push({
+                course: pickedCourses[i],
+                option: null,
+                schedules: schedules[i],
+              })
+            }
           }
-          // StorageAPI.setCourseOptionsStorage(newCourseOptions)
-          return newCourseOptions
+
+          return [...newCourseOptions]
         })
       })
     }
   }, [checkedCourses])
+
+  useEffect(() => {
+    const notNulls = courseOptions.filter((item) => item.option !== null)
+    if (notNulls.length === 0) return
+    StorageAPI.setCourseOptionsStorage(courseOptions)
+  }, [courseOptions])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
@@ -163,7 +190,6 @@ const TimeTableSchedulerPage = () => {
               courseOptions.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
-                  courseOptionIdx={courseOptionIdx}
                   courseOptionsHook={[courseOptions, setCourseOptions]}
                   key={`course-schedule-listbox-${courseOptionIdx}`}
                 />
