@@ -6,11 +6,11 @@ import { getLessonBoxName, getScheduleOptionDisplayText, lessonTypes } from '../
 
 type Props = {
   courseOption: CourseOption
-  selectedHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
+  courseOptionsHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
 }
 
-const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
-  const [, setSelected] = selectedHook
+const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
+  const [, setCourseOptions] = courseOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(true)
   const [showPractical, setShowPractical] = useState<boolean>(true)
@@ -91,7 +91,7 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
   })
 
   useEffect(() => {
-    const resolveSelected = (prevSelected: CourseOption[]) => {
+    const resolveCourseOptions = (prevSelected: CourseOption[]) => {
       let newSelected = prevSelected
       prevSelected.forEach((option, optionIdx) => {
         if (option === courseOption) {
@@ -100,8 +100,8 @@ const ScheduleListbox = ({ courseOption, selectedHook }: Props) => {
       })
       return newSelected
     }
-    setSelected((prevSelected) => [...resolveSelected(prevSelected)])
-  }, [selectedOption, courseOption, setSelected])
+    setCourseOptions((prevSelected) => [...resolveCourseOptions(prevSelected)])
+  }, [selectedOption, courseOption, setCourseOptions])
 
   return (
     adaptedSchedules && (

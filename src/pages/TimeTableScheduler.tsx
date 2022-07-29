@@ -169,7 +169,7 @@ const TimeTableSchedulerPage = () => {
               courseOptions.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
-                  selectedHook={[courseOptions, setCourseOptions]}
+                  courseOptionsHook={[courseOptions, setCourseOptions]}
                   key={`course-schedule-listbox-${courseOptionIdx}`}
                 />
               ))}
