@@ -48,12 +48,17 @@ const TimeTableSchedulerPage = () => {
   }
 
   const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
+
   const getSchedule = async (checkedCourse: CheckedCourse, prevOption: CourseSchedule = null): Promise<CourseOption> =>
     await BackendAPI.getCourseSchedule(checkedCourse).then((schedulesRes: CourseSchedule[]) => ({
       course: checkedCourse,
       option: prevOption,
       schedules: schedulesRes,
     }))
+
+  const fetchSchedules = async (checks: CheckedCourse[][]) => {
+    await BackendAPI.getCoursesSchedules(checks)
+  }
 
   const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
