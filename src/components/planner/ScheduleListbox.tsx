@@ -110,9 +110,9 @@ const ScheduleListbox = ({ courseOption, courseOptionIdx, courseOptionsHook }: P
     }
 
     setCourseOptions((prevCourseOptions) => {
-      const newCourseOptions = [...resolveCourseOptions(prevCourseOptions)]
-      StorageAPI.setCourseOptionsStorage(newCourseOptions)
-      return newCourseOptions
+      const newCourseOptions = resolveCourseOptions(prevCourseOptions)
+      // StorageAPI.setCourseOptionsStorage(newCourseOptions)
+      return [...newCourseOptions]
     })
   }, [selectedOption, courseOption, setCourseOptions])
 

@@ -75,9 +75,8 @@ const TimeTableSchedulerPage = () => {
     const coursesStorage = StorageAPI.getCoursesStorage()
     if (coursesStorage.length > 0) {
       setCheckedCourses(coursesStorage)
-      setIsModalOpen(false)
+      // setIsModalOpen(false) // FIXME: decide if we want to show the modal or not here
     } else {
-      setIsModalOpen(true)
       BackendAPI.getCourses(major).then((courses: Course[]) => {
         const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
         setCheckedCourses((prev) => {
@@ -103,7 +102,7 @@ const TimeTableSchedulerPage = () => {
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
 
-    const courseOptionsStorage = StorageAPI.getCourseOptionsStorage()
+    const courseOptionsStorage = [] //StorageAPI.getCourseOptionsStorage()
     if (courseOptionsStorage.length > 0) {
       setCourseOptions(courseOptionsStorage)
     } else {
@@ -118,7 +117,7 @@ const TimeTableSchedulerPage = () => {
               schedules: schedules[i],
             })
           }
-          StorageAPI.setCourseOptionsStorage(newCourseOptions)
+          // StorageAPI.setCourseOptionsStorage(newCourseOptions)
           return newCourseOptions
         })
       })

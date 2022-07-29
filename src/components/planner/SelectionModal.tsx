@@ -280,7 +280,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     <Combobox
                       value={null}
                       onChange={(value) => {
-                        // FIXME: add new extra course to selected courses
+                        // TODO: add new extra course to selected courses
                       }}
                     >
                       <div className="relative">
