@@ -9,7 +9,6 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-// eslint-disable-next-line
 import { useCourses, useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
@@ -30,8 +29,8 @@ const TimeTableSchedulerPage = () => {
    * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year.
    * @param yearCourses All the courses in a major.
    * @returns The courses grouped by year.
-   * @example input: [{ course: 1, year: 1}, { course: 3, year: 1 }, { course: 2, year: 2 }]
-   * @example output: [[{ course: 1, year: 1}, { course: 3, year: 1}], [{ course: 2, year: 2 }]]
+   * @example input: [{ course: 1, year: 1 }, { course: 3, year: 1 }, { course: 2, year: 2 }]
+   * @example output: [[{ course: 1, year: 1 }, { course: 3, year: 1 }], [{ course: 2, year: 2 }]]
    */
   const groupMajorCoursesByYear = (yearCourses: Course[]): Course[][] => {
     let majorCourses: Course[][] = []
@@ -49,16 +48,7 @@ const TimeTableSchedulerPage = () => {
 
   const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
 
-  const getSchedule = async (checkedCourse: CheckedCourse, prevOption: CourseSchedule = null): Promise<CourseOption> =>
-    await BackendAPI.getCourseSchedule(checkedCourse).then((schedulesRes: CourseSchedule[]) => ({
-      course: checkedCourse,
-      option: prevOption,
-      schedules: schedulesRes,
-    }))
-
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
-
-  const fetchAllSchedules = async (checks: CheckedCourse[][]) => await BackendAPI.getMajorCoursesSchedules(checks)
 
   const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
@@ -118,11 +108,6 @@ const TimeTableSchedulerPage = () => {
       })
     }
   }, [checkedCourses])
-
-  useEffect(() => {
-    if (courseOptions.length === 0) return
-    console.log(courseOptions)
-  }, [courseOptions])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
