@@ -1,8 +1,9 @@
-import { useState, useEffect, Fragment, useMemo } from 'react'
+import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
 import { CourseOption, CourseSchedule, LessonBoxRef } from '../../@types'
 import { getLessonBoxName, getScheduleOptionDisplayText, lessonTypes } from '../../utils'
+import StorageAPI from '../../utils/storage'
 
 type Props = {
   courseOption: CourseOption
@@ -10,6 +11,7 @@ type Props = {
 }
 
 const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
+  const firstRenderRef = useRef(true)
   const [, setCourseOptions] = courseOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(true)
@@ -91,6 +93,10 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
   })
 
   useEffect(() => {
+    if (firstRenderRef.current === true) {
+      firstRenderRef.current = false
+      return
+    }
     const resolveCourseOptions = (prevSelected: CourseOption[]) => {
       let newSelected = prevSelected
       prevSelected.forEach((option, optionIdx) => {
@@ -100,7 +106,12 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
       })
       return newSelected
     }
-    setCourseOptions((prevSelected) => [...resolveCourseOptions(prevSelected)])
+
+    setCourseOptions((prevCourseOptions) => {
+      const newCourseOptions = [...resolveCourseOptions(prevCourseOptions)]
+      StorageAPI.setCourseOptionsStorage(newCourseOptions)
+      return newCourseOptions
+    })
   }, [selectedOption, courseOption, setCourseOptions])
 
   return (
@@ -136,7 +147,10 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
 
           {/* Dropdown */}
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-            <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-lightish py-1 text-sm tracking-tight dark:bg-darkish lg:max-h-72 xl:text-base">
+            <Listbox.Options
+              className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
+            bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
+            >
               {adaptedSchedules.map((option, personIdx) => (
                 <Listbox.Option
                   key={personIdx}

@@ -49,8 +49,8 @@ const getCourseOptionsStorage = () => {
   const initialValue = []
   try {
     if (isStorageValid(key, 7)) {
-      const courses: CheckedCourse[][] = JSON.parse(localStorage.getItem(key))
-      return courses
+      const courseOptions: CourseOption[] = JSON.parse(localStorage.getItem(key))
+      return courseOptions
     } else {
       writeStorageInvalid(key, initialValue)
       return initialValue

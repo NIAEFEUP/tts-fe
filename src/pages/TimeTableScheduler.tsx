@@ -125,8 +125,6 @@ const TimeTableSchedulerPage = () => {
   }, [checkedCourses])
 
   useEffect(() => {
-    if (courseOptions.length === 0) return
-    console.log('course options useEffect')
     console.log(courseOptions)
   }, [courseOptions])
 
