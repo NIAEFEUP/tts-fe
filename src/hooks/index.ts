@@ -1,9 +1,6 @@
-import useArray from './useArray'
 import useDarkMode from './useDarkMode'
-import useFirstEffect from './useFirstEffect'
-import useUpdateEffect from './useUpdateEffect'
-import useMajor from './localStorage/useMajor'
-import useCourses from './localStorage/useCourses'
-import useShowGrid from './localStorage/useShowGrid'
+import useMajor from './useMajor'
+import useCourses from './useCourses'
+import useShowGrid from './useShowGrid'
 
-export { useCourses, useMajor, useShowGrid, useDarkMode, useArray, useFirstEffect, useUpdateEffect }
+export { useCourses, useMajor, useShowGrid, useDarkMode }

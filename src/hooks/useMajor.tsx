@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Major } from '../../@types'
+import { Major } from '../@types'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const storedVideos = JSON.parse(localStorage.getItem(key))
