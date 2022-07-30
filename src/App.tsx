@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { HomePage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage } from './pages'
 import './app.css'
 import FeupExchangeFaqs from './pages/FeupExchangeFaqs'
+import NotFoundPage from './pages/NotFound'
 
 const pages = [
   { path: '/about', location: 'About', element: HomePage, liquid: true },
@@ -10,6 +11,7 @@ const pages = [
   { path: '/planner', location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
   { path: '/exchange', location: 'Exchange', element: FeupExchangePage, liquid: true },
   { path: '/faqs', location: 'FAQs', element: FeupExchangeFaqs, liquid: true },
+  { path: '/*', location: 'NotFound', element: NotFoundPage, liquid: true }, 
 ]
 
 const redirects = [
