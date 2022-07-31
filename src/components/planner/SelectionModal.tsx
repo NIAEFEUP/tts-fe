@@ -1,23 +1,22 @@
 import classNames from 'classnames'
-import BackendAPI from '../../backend'
-import Alert, { AlertType } from './Alert'
-// import CreditsBanner from './CreditsBanner'
-import { Link } from 'react-router-dom'
+import BackendAPI from '../../api/backend'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Major, CheckedCourse, Course } from '../../@types'
+import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
+import Alert, { AlertType } from './Alert'
+import { Link } from 'react-router-dom'
+import { CheckedCourse, Course, Major } from '../../@types'
+import { getSchoolYear, getSemester } from '../../utils'
 import {
   AcademicCapIcon,
-  CheckIcon,
-  SelectorIcon,
-  PencilAltIcon,
-  PlusCircleIcon,
-  MinusCircleIcon,
   CheckCircleIcon,
+  CheckIcon,
   HomeIcon,
   InboxInIcon,
+  MinusCircleIcon,
+  PencilAltIcon,
+  PlusCircleIcon,
+  SelectorIcon,
 } from '@heroicons/react/solid'
-import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { getSchoolYear, getSemester } from '../../utils'
 
 type Props = {
   majors: Major[]
@@ -43,7 +42,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
       .normalize('NFD')
       .replace(/\p{Diacritic}/gu, '')
       .replace(/\s+/g, '')
-      .includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
+      .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   const matchAlt = (str: string, query: string) =>
     str
@@ -53,7 +52,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
       .replace(/\s+/g, '')
       .replace('.', '')
       .replace(':', '')
-      .includes(majorQuery.toLowerCase().replace(/\s+/g, ''))
+      .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   const filteredMajors =
     majors !== null && majors?.length !== 0 && Array.isArray(majors)

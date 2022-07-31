@@ -1,6 +1,5 @@
-import BackendAPI from '../backend'
-import StorageAPI from '../utils/storage'
-import { useState, useEffect, useRef } from 'react'
+import BackendAPI from '../api/backend'
+import { useState, useEffect } from 'react'
 import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
@@ -13,7 +12,6 @@ import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@
 import { useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
-  const firstRenderRef = useRef(true)
   const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
@@ -73,30 +71,19 @@ const TimeTableSchedulerPage = () => {
 
   // once a major has been picked => local storage or fetch courses for the major
   useEffect(() => {
-    if (firstRenderRef.current === true) {
-      firstRenderRef.current = false
-    } else {
-      StorageAPI.setCoursesStorage([])
-      StorageAPI.setCourseOptionsStorage([])
-    }
+    if (major === null) return
 
-    const coursesStorage = StorageAPI.getCoursesStorage()
-    if (coursesStorage.length > 0) {
-      setCheckedCourses(coursesStorage)
-      // setIsModalOpen(false) // FIXME: decide if we want to show the modal or not here
-    } else {
-      BackendAPI.getCourses(major).then((courses: Course[]) => {
-        const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
-        setCheckedCourses((prev) => {
-          const empty = prev?.length === 0
-          const checks: boolean[] = prev.flat().map((course: CheckedCourse) => course.checked)
+    BackendAPI.getCourses(major).then((courses: Course[]) => {
+      const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
+      setCheckedCourses((prev) => {
+        const empty = prev?.length === 0
+        const checks: boolean[] = prev.flat().map((course: CheckedCourse) => course.checked)
 
-          if (empty || !checks.includes(true)) {
-            return majorCoursesToCheckedMajor(majorCourses)
-          }
-        })
+        if (empty || !checks.includes(true)) {
+          return majorCoursesToCheckedMajor(majorCourses)
+        }
       })
-    }
+    })
   }, [major])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
@@ -106,50 +93,40 @@ const TimeTableSchedulerPage = () => {
       return value !== undefined ? value.option : null
     }
 
-    StorageAPI.setCoursesStorage(checkedCourses)
     const pickedCourses = getPickedCourses(checkedCourses)
-    if (pickedCourses.length === 0) return
 
-    const courseOptionsStorage = StorageAPI.getCourseOptionsStorage()
-    const notNulls = courseOptionsStorage.filter((item) => item.option !== null)
-
-    if (notNulls.length > 0) {
-      setCourseOptions(courseOptionsStorage)
-    } else {
-      fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
-        setCourseOptions((prev) => {
-          let newCourseOptions = []
-          const notNulls = prev.filter((item) => item.option !== null)
-          if (notNulls.length > 0) {
-            for (let i = 0; i < pickedCourses.length; i++) {
-              const option = findPreviousEntry(prev, pickedCourses[i])
-              newCourseOptions.push({
-                course: pickedCourses[i],
-                option: option,
-                schedules: schedules[i],
-              })
-            }
-          } else {
-            for (let i = 0; i < pickedCourses.length; i++) {
-              newCourseOptions.push({
-                course: pickedCourses[i],
-                option: null,
-                schedules: schedules[i],
-              })
-            }
-          }
-
-          return [...newCourseOptions]
-        })
-      })
+    if (pickedCourses.length === 0) {
+      setCourseOptions([])
+      return
     }
-  }, [checkedCourses])
 
-  useEffect(() => {
-    const notNulls = courseOptions.filter((item) => item.option !== null)
-    if (notNulls.length === 0) return
-    StorageAPI.setCourseOptionsStorage(courseOptions)
-  }, [courseOptions])
+    fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
+      setCourseOptions((prev) => {
+        let newCourseOptions = []
+        const notNulls = prev.filter((item) => item.option !== null)
+        if (notNulls.length > 0) {
+          for (let i = 0; i < pickedCourses.length; i++) {
+            const option = findPreviousEntry(prev, pickedCourses[i])
+            newCourseOptions.push({
+              course: pickedCourses[i],
+              option: option,
+              schedules: schedules[i],
+            })
+          }
+        } else {
+          for (let i = 0; i < pickedCourses.length; i++) {
+            newCourseOptions.push({
+              course: pickedCourses[i],
+              option: null,
+              schedules: schedules[i],
+            })
+          }
+        }
+
+        return [...newCourseOptions]
+      })
+    })
+  }, [checkedCourses])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
