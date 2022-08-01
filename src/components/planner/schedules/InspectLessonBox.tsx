@@ -10,10 +10,9 @@ import {
 
 type Props = {
   lesson: Lesson
-  conflict?: boolean
 }
 
-const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
+const InspectLessonBox = ({ lesson }: Props) => {
   const lessonType = lesson.schedule.lesson_type
   const lessonBoxRef: LessonBoxRef = {
     type: lessonType,
@@ -26,13 +25,13 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
       className={classNames(
         'schedule-class-responsive group',
         getClassTypeClassName(lessonType),
-        getLessonBoxName(lessonBoxRef, 'responsive'),
-        conflict ? 'schedule-class-conflict' : ''
+        getLessonBoxName(lessonBoxRef, 'responsive')
       )}
     >
       <div
         className={classNames(
-          'p-2 text-sm leading-none tracking-tighter text-white',
+          'p-2 py-4 pl-4 pr-6 text-sm',
+          'leading-none tracking-tighter text-white',
           'flex h-full w-full flex-col items-center justify-between gap-6'
         )}
       >
@@ -45,7 +44,12 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
         </div>
 
         <div className="flex w-full flex-col items-start gap-2">
-          <strong title="Sigla da Unidade Curricular">{lesson.course.acronym}</strong>
+          <div className="flex w-full items-center justify-between gap-4">
+            <strong title="Sigla da Unidade Curricular">{lesson.course.acronym}</strong>
+            <span title="Nome da Unidade Curricular" className="whitespace-nowrap">
+              {lesson.course.name}
+            </span>
+          </div>
           <span title="Nome da Turma">
             {lesson.schedule.composed_class_name ? lesson.schedule.composed_class_name : lesson.schedule.class_name}
           </span>
@@ -62,4 +66,4 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
   )
 }
 
-export default ResponsiveLessonBox
+export default InspectLessonBox

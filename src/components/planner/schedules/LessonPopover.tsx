@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Lesson } from '../../../@types'
 import { Dialog, Transition } from '@headlessui/react'
 import Alert, { AlertType } from '../Alert'
-import ResponsiveLessonBox from './ResponsiveLessonBox'
+import InspectLessonBox from './InspectLessonBox'
 
 type Props = {
   lesson: Lesson
@@ -54,7 +54,7 @@ const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
                 </Dialog.Title>
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
-                  <ResponsiveLessonBox lesson={lesson} conflict={false} specialClassnames="py-4 pl-4 pr-6" />
+                  <InspectLessonBox lesson={lesson} />
                 </div>
 
                 <footer className="flex justify-end">

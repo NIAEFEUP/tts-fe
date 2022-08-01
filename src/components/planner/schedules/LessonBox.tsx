@@ -62,19 +62,17 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-[0.8rem]">
               {/* Top */}
               <div className="flex w-full items-center justify-between">
-                <span>{timeSpan}</span>
-                <strong title={getLessonTypeLongName(lessonType)}>
-                  {/*className="hidden group-hover:inline-flex"*/}
-                  {lessonType}
-                </strong>
+                <span title="Duração">{timeSpan}</span>
+                <strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>
               </div>
 
               {/* Middle */}
               <div className="flex w-full items-center justify-between gap-1">
-                <span className="font-semibold">{lesson.course.acronym}</span>
+                <span title={`${lesson.course.name} (${lesson.course.acronym})`} className="font-semibold">
+                  {lesson.course.acronym}
+                </span>
                 {
-                  // prioritize composed class name when loading theoretical lessons
-                  <span className="truncate">
+                  <span title="Nome da turma" className="truncate">
                     {lessonType === 'T'
                       ? compClassTitle
                         ? compClassTitle
@@ -88,21 +86,29 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
 
               {/* Bottom */}
               <div className="flex w-full items-center justify-between gap-1">
-                <span>{lesson.schedule.location}</span>
-                <span className="truncate">{lesson.schedule.teacher_acronym}</span>
+                <span title="Sala">{lesson.schedule.location}</span>
+                <span title="Professor(es)" className="truncate">
+                  {lesson.schedule.teacher_acronym}
+                </span>
               </div>
             </div>
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
               <div className="flex w-full items-center justify-between">
-                <span>{timeSpan}</span>
-                <span className="font-semibold">{lesson.course.acronym}</span>
+                <span title="Duração">
+                  {timeSpan} (<strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>)
+                </span>
+                <span title={`${lesson.course.name} (${lesson.course.acronym})`} className="font-semibold">
+                  {lesson.course.acronym}
+                </span>
               </div>
 
               <div className="flex w-full items-center justify-between">
-                <span>{lesson.schedule.location}</span>
-                <span>{compClassTitle ? compClassTitle : classTitle}</span>
-                <span className="truncate">{lesson.schedule.teacher_acronym}</span>
+                <span title="Sala">{lesson.schedule.location}</span>
+                <span title="Turma">{compClassTitle ? compClassTitle : classTitle}</span>
+                <span title="Professor(es)" className="truncate">
+                  {lesson.schedule.teacher_acronym}
+                </span>
               </div>
             </div>
           )}

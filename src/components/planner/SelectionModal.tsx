@@ -59,9 +59,10 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
         ? majors
         : majors.filter(
             (major: Major) =>
-              match(major?.name, majorQuery) ||
-              match(major?.acronym, majorQuery) ||
-              match(major?.acronym, majorQuery, true)
+              match(major?.name, majorQuery, true) ||
+              match(major?.name, majorQuery, false) ||
+              match(major?.acronym, majorQuery, true) ||
+              match(major?.acronym, majorQuery, false)
           )
       : []
 
