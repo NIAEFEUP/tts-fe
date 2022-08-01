@@ -91,6 +91,7 @@ const TimeTableSchedulerPage = () => {
       setCourseOptions((prev) => {
         let newCourseOptions = []
         const notNulls = prev.filter((item) => item.option !== null)
+
         if (notNulls.length > 0) {
           for (let i = 0; i < pickedCourses.length; i++) {
             const option = findPreviousEntry(prev, pickedCourses[i])
@@ -109,7 +110,6 @@ const TimeTableSchedulerPage = () => {
             })
           }
         }
-
         return [...newCourseOptions]
       })
     })
@@ -155,7 +155,7 @@ const TimeTableSchedulerPage = () => {
                 <ScheduleListbox
                   courseOption={courseOption}
                   courseOptionsHook={[courseOptions, setCourseOptions]}
-                  key={`course-schedule-listbox-${courseOptionIdx}`}
+                  key={`course-schedule-listbox-${courseOption.course.info.id}`}
                 />
               ))}
           </div>
