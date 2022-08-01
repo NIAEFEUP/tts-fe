@@ -97,12 +97,16 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
 
     const resolveCourseOptions = (prevSelected: CourseOption[]) => {
       let newSelected = prevSelected
-      prevSelected.forEach((option, optionIdx) => {
-        if (option === courseOption) {
-          newSelected[optionIdx].option = selectedOption
+
+      for (let i = 0; i < prevSelected.length; i++) {
+        const option = prevSelected[i]
+        if (option.course.info.id === courseOption.course.info.id) {
+          console.log('changing')
+          newSelected[i].option = selectedOption
         }
-      })
-      return newSelected
+      }
+
+      return [...newSelected]
     }
 
     setCourseOptions((prevCourseOptions) => {
@@ -110,11 +114,6 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
       return [...newCourseOptions]
     })
   }, [selectedOption, courseOption, setCourseOptions])
-
-  useEffect(() => {
-    if (courseOptions.length === 0) return
-    setSelectedOption(courseOption.option)
-  }, [courseOptions])
 
   return (
     adaptedSchedules && (

@@ -9,10 +9,10 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-import { useMajor, useShowGrid } from '../hooks'
+import { useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
-  const [major, setMajor] = useMajor() // the picked major
+  const [major, setMajor] = useState<Major>(null) // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
@@ -69,20 +69,11 @@ const TimeTableSchedulerPage = () => {
     })
   }, [])
 
-  // once a major has been picked => local storage or fetch courses for the major
+  // once a major has been picked => fetch courses for the major
   useEffect(() => {
-    if (major === null) return
-
     BackendAPI.getCourses(major).then((courses: Course[]) => {
-      const majorCourses: Course[][] = groupMajorCoursesByYear(courses)
-      setCheckedCourses((prev) => {
-        const empty = prev?.length === 0
-        const checks: boolean[] = prev.flat().map((course: CheckedCourse) => course.checked)
-
-        if (empty || !checks.includes(true)) {
-          return majorCoursesToCheckedMajor(majorCourses)
-        }
-      })
+      const majorCourses = groupMajorCoursesByYear(courses)
+      setCheckedCourses(majorCoursesToCheckedMajor(majorCourses))
     })
   }, [major])
 
@@ -90,15 +81,10 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value !== undefined ? value.option : null
+      return value ? value.option : null
     }
 
     const pickedCourses = getPickedCourses(checkedCourses)
-
-    if (pickedCourses.length === 0) {
-      setCourseOptions([])
-      return
-    }
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
       setCourseOptions((prev) => {
