@@ -25,7 +25,6 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
     fileReader.readAsText(e.target.files[0], 'UTF-8')
     fileReader.onload = (e) => {
       const scheduleJson = JSON.parse(fileReader.result as string) as CourseOption[]
-      console.log(scheduleJson)
       if (isScheduleValid(scheduleJson)) setCourseOptions(scheduleJson)
       buttonRef.current.click() // close menu
     }

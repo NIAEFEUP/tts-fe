@@ -73,7 +73,8 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
-      setCheckedCourses(majorCoursesToCheckedMajor(majorCourses))
+      const newCheckedCourses = majorCoursesToCheckedMajor(majorCourses)
+      setCheckedCourses([...newCheckedCourses])
     })
   }, [major])
 

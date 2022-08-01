@@ -96,7 +96,6 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
       for (let i = 0; i < prevSelected.length; i++) {
         const option = prevSelected[i]
         if (option.course.info.id === courseOption.course.info.id) {
-          console.log('changing')
           newSelected[i].option = selectedOption
         }
       }
