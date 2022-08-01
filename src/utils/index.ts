@@ -131,15 +131,17 @@ const getClassTypeClassName = (type: string) => {
     case 'TP':
       return 'schedule-class-tp'
 
-    case 'L':
     case 'S':
-    case 'TC':
+      return 'schedule-class-s'
+
+    case 'L':
     case 'PL':
       return 'schedule-class-pl'
 
     case 'OT':
       return 'schedule-class-ot'
 
+    case 'TC':
     default:
       return 'schedule-class-default'
   }

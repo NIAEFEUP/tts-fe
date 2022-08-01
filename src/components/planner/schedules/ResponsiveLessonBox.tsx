@@ -15,9 +15,9 @@ type Props = {
 }
 
 const ResponsiveLessonBox = ({ lesson, conflict, specialClassnames }: Props) => {
-  const type = lesson.schedule.lesson_type
+  const lessonType = lesson.schedule.lesson_type
   const lessonBoxRef: LessonBoxRef = {
-    type: type,
+    type: lessonType,
     id: lesson.course.course_unit_id,
     acronym: lesson.course.acronym,
   }
@@ -26,7 +26,7 @@ const ResponsiveLessonBox = ({ lesson, conflict, specialClassnames }: Props) => 
     <div
       className={classNames(
         'schedule-class-responsive group',
-        getClassTypeClassName(type),
+        getClassTypeClassName(lessonType),
         getLessonBoxName(lessonBoxRef, 'responsive'),
         conflict ? 'schedule-class-conflict' : ''
       )}
@@ -42,10 +42,11 @@ const ResponsiveLessonBox = ({ lesson, conflict, specialClassnames }: Props) => 
           <span className="flex w-full items-center justify-between">
             <strong>{convertWeekdayLong(lesson.schedule.day)}</strong>
             {specialClassnames ? (
-              <strong title={getLessonTypeLongName(type)}>{type}</strong>
+              <strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>
             ) : (
-              <strong title={getLessonTypeLongName(type)} className="hidden group-hover:inline-flex">
-                {type}
+              <strong title={getLessonTypeLongName(lessonType)}>
+                {/*className="hidden group-hover:inline-flex"*/}
+                {lessonType}
               </strong>
             )}
           </span>

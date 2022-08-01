@@ -79,25 +79,6 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
             .includes(extraCoursesQuery.toLowerCase().replace(/\s+/g, ''))
         )
 
-  const resolveParentCheck = (year: number) => {
-    let some = courses[year].some((course) => course.checked)
-    let every = courses[year].every((course) => course.checked)
-
-    //@ts-ignore
-    let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
-
-    if (every) {
-      checkbox.checked = true
-      checkbox.indeterminate = false
-    } else if (some) {
-      checkbox.checked = false
-      checkbox.indeterminate = true
-    } else {
-      checkbox.checked = false
-      checkbox.indeterminate = false
-    }
-  }
-
   const closeModal = () => {
     if (major?.name !== '' && atLeastOneCourse) setIsOpen(false)
     else setAlertLevel(AlertType.warning)
@@ -114,7 +95,23 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year][courseIdx].checked = event.target.checked
     setCourses([...courses])
-    resolveParentCheck(year)
+    let some = courses[year].some((course) => course.checked)
+    let every = courses[year].every((course) => course.checked)
+
+    //@ts-ignore
+    let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
+    if (!checkbox) return
+
+    if (every) {
+      checkbox.checked = true
+      checkbox.indeterminate = false
+    } else if (some) {
+      checkbox.checked = false
+      checkbox.indeterminate = true
+    } else {
+      checkbox.checked = false
+      checkbox.indeterminate = false
+    }
   }
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
@@ -134,7 +131,23 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
   useEffect(() => {
     for (let year = 0; year < courses.length; year++) {
-      resolveParentCheck(year)
+      let some = courses[year].some((course) => course.checked)
+      let every = courses[year].every((course) => course.checked)
+
+      //@ts-ignore
+      let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
+      if (!checkbox) return
+
+      if (every) {
+        checkbox.checked = true
+        checkbox.indeterminate = false
+      } else if (some) {
+        checkbox.checked = false
+        checkbox.indeterminate = true
+      } else {
+        checkbox.checked = false
+        checkbox.indeterminate = false
+      }
     }
   }, [courses])
 

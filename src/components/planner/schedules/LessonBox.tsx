@@ -55,17 +55,18 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               {/* Top */}
               <div className="flex w-full items-center justify-between">
                 <span>{timeSpan}</span>
-                <strong title={getLessonTypeLongName(lessonType)} className="hidden group-hover:inline-flex">
+                <strong title={getLessonTypeLongName(lessonType)}>
+                  {/*className="hidden group-hover:inline-flex"*/}
                   {lessonType}
                 </strong>
               </div>
 
               {/* Middle */}
-              <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center justify-between gap-1">
                 <span className="font-semibold">{lesson.course.acronym}</span>
                 {
                   // prioritize composed class name when loading theoretical lessons
-                  <span>
+                  <span className="truncate">
                     {lessonType === 'T'
                       ? compClassTitle
                         ? compClassTitle
@@ -78,9 +79,9 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               </div>
 
               {/* Bottom */}
-              <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center justify-between gap-1">
                 <span>{lesson.schedule.location}</span>
-                <span>{lesson.schedule.teacher_acronym}</span>
+                <span className="truncate">{lesson.schedule.teacher_acronym}</span>
               </div>
             </div>
           ) : (
@@ -93,7 +94,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               <div className="flex w-full items-center justify-between">
                 <span>{lesson.schedule.location}</span>
                 <span>{compClassTitle ? compClassTitle : classTitle}</span>
-                <span>{lesson.schedule.teacher_acronym}</span>
+                <span className="truncate">{lesson.schedule.teacher_acronym}</span>
               </div>
             </div>
           )}
