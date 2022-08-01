@@ -16,8 +16,8 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
 
   const isScheduleValid = (scheduleJson: any) => {
     // TODO: implement this
-    // TODO: make sure setCourseOptions works property
-    return false
+    // TODO: make sure setCourseOptions works properly
+    return true
   }
 
   const importJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
       <Menu.Button
         ref={buttonRef}
         className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 
-        py-3 text-xs font-medium text-white transition hover:opacity-80 xl:w-min xl:space-x-0 xl:px-4 lg:text-sm"
+        py-3 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:w-min xl:space-x-0 xl:px-4"
       >
         <span className="flex xl:hidden">Mais Opções</span>
         <DotsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
@@ -64,8 +64,8 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items
-          className="absolute right-0 z-20 mt-2 xl:w-56 w-full origin-top-right divide-y divide-gray-100 rounded-md 
-          bg-white px-1 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="absolute right-0 z-20 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white 
+          px-1 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none xl:w-56"
         >
           <Menu.Item>
             {({ active, disabled }) => (

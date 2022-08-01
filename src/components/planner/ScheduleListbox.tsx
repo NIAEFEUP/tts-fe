@@ -11,7 +11,7 @@ type Props = {
 
 const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
   const firstRenderRef = useRef(true)
-  const [courseOptions, setCourseOptions] = courseOptionsHook
+  const [, setCourseOptions] = courseOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(true)
   const [showPractical, setShowPractical] = useState<boolean>(true)
@@ -19,16 +19,14 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
       .flat()
-      .filter((option: CourseSchedule | null) => option?.lesson_type !== 'T')
       .filter(
-        (option: CourseSchedule | null) => null || option?.class_name !== null || option?.composed_class_name !== null
+        (option: CourseSchedule | null) =>
+          option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
       )
   }, [courseOption])
 
-  const getOptionDisplayText = (option: CourseSchedule | null) => {
-    if (option === null || !option.course_unit_id) return <>&nbsp;</>
-    return getScheduleOptionDisplayText(option)
-  }
+  const getOptionDisplayText = (option: CourseSchedule | null) =>
+    option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)
 
   const updateHiddenLessons = (type: string, courseOption: CourseOption) => {
     if (!courseOption.option) return
@@ -51,7 +49,14 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
     }
   }
 
-  const refreshHiddenLessons = () => {
+  const updateShown = (value: boolean, type: string, courseOption?: CourseOption): void => {
+    if (type === 'T') setShowTheoretical(value)
+    else if (type === 'TP') setShowPractical(value)
+    updateHiddenLessons(type, courseOption)
+  }
+
+  useEffect(() => {
+    // refresh hidden lessons
     if (courseOption.option === null) return
     lessonTypes.forEach((type) => {
       const lessonBoxRef: LessonBoxRef = {
@@ -77,16 +82,6 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
         }
       }
     })
-  }
-
-  const updateShown = (value: boolean, type: string, courseOption?: CourseOption): void => {
-    if (type === 'T') setShowTheoretical(value)
-    else if (type === 'TP') setShowPractical(value)
-    updateHiddenLessons(type, courseOption)
-  }
-
-  useEffect(() => {
-    refreshHiddenLessons()
   })
 
   useEffect(() => {
