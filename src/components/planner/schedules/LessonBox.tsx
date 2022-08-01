@@ -10,6 +10,7 @@ import {
   maxHour,
   minHour,
 } from '../../../utils'
+import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 
 type Props = {
@@ -24,33 +25,40 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
   const compClassTitle = lesson.schedule.composed_class_name
   const lessonType = lesson.schedule.lesson_type
   const timeSpan = getLessonBoxTime(lesson.schedule)
+  const longLesson = parseFloat(lesson.schedule.duration) > 1
   const lessonBoxRef: LessonBoxRef = {
     type: lessonType,
     id: lesson.course.course_unit_id,
     acronym: lesson.course.acronym,
   }
 
+  const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false)
+
   const showConflicts = () => {
-    if (!conflict) return
     setConflictsShown(true)
+  }
+
+  const inspectLesson = () => {
+    setInspectShown(true)
   }
 
   return (
     <>
+      {inspectShown && <LessonPopover lesson={lesson} isOpenHook={[inspectShown, setInspectShown]} />}
       {conflict && <ConflictsPopover lessons={conflicts} isOpenHook={[conflictsShown, setConflictsShown]} />}
       {active && (
         <button
-          onClick={showConflicts}
+          onClick={conflict ? showConflicts : inspectLesson}
           style={getLessonBoxStyles(lesson, maxHour, minHour)}
           className={classNames(
             'schedule-class group',
             getClassTypeClassName(lessonType),
             getLessonBoxName(lessonBoxRef),
-            conflict ? 'schedule-class-conflict' : 'schedule-class-conflict-none'
+            conflict ? 'schedule-class-conflict' : ''
           )}
         >
-          {parseFloat(lesson.schedule.duration) > 1 ? (
+          {longLesson ? (
             <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-[0.8rem]">
               {/* Top */}
               <div className="flex w-full items-center justify-between">

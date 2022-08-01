@@ -59,6 +59,6 @@ button {
 }
 
 .checkboxes {
-  @apply mx-auto flex max-w-2xl flex-wrap items-center justify-center space-x-4 md:flex-row md:items-start md:space-x-8;
+  @apply mx-auto flex flex-wrap items-center justify-center gap-y-4 gap-x-4 md:flex-row md:items-start md:gap-y-6 md:gap-x-12;
   margin-top: 1.5rem !important;
 }

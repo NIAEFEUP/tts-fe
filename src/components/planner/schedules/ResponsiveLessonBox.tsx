@@ -35,10 +35,10 @@ const ResponsiveLessonBox = ({ lesson, conflict, specialClassnames }: Props) => 
         className={classNames(
           specialClassnames ? specialClassnames : 'text-sm',
           'p-2 leading-none tracking-tighter text-white',
-          'flex h-full w-full flex-col items-center justify-between space-y-4'
+          'flex h-full w-full flex-col items-center justify-between gap-6'
         )}
       >
-        <div className="flex w-full flex-col justify-between gap-0.5">
+        <div className="flex w-full flex-col justify-between gap-2">
           <span className="flex w-full items-center justify-between">
             <strong>{convertWeekdayLong(lesson.schedule.day)}</strong>
             {specialClassnames ? (
@@ -53,14 +53,14 @@ const ResponsiveLessonBox = ({ lesson, conflict, specialClassnames }: Props) => 
           <span>{getLessonBoxTime(lesson.schedule)}</span>
         </div>
 
-        <div className="flex w-full flex-col items-start gap-1">
+        <div className="flex w-full flex-col items-start gap-2">
           <strong>{lesson.course.acronym}</strong>
           <span>
             {lesson.schedule.composed_class_name ? lesson.schedule.composed_class_name : lesson.schedule.class_name}
           </span>
         </div>
 
-        <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex w-full items-center justify-between gap-3">
           <span>{lesson.schedule.location}</span>
           <span className="whitespace-nowrap">{lesson.schedule.teacher_acronym}</span>
         </div>

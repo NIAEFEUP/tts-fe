@@ -153,8 +153,8 @@
   @apply z-20 border-2 border-red-600 opacity-50 ring-red-600 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
-.schedule-class-conflict-none {
-  @apply z-20 hover:cursor-default;
+.schedule-class-no-focus {
+  @apply hover:cursor-default;
 }
 
 .show-grid-yes {
