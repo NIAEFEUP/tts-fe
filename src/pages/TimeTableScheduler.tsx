@@ -9,7 +9,7 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-import { useMajor, useCourses, useShowGrid } from '../hooks'
+import { useShowGrid, useMajor, useCourses, useOptions } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
   // add check property to courses
