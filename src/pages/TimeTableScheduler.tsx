@@ -9,7 +9,7 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-import { useShowGrid, useMajor, useCourses, useOptions } from '../hooks'
+import { useShowGrid, useMajor, useCourses } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
   // add check property to courses
@@ -77,7 +77,7 @@ const TimeTableSchedulerPage = () => {
       majorChangedRef.current = false
       setCheckedCourses([...newCheckedCourses])
     })
-  }, [major, checkedCourses, setCheckedCourses])
+  }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {

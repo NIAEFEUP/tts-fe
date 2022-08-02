@@ -36,14 +36,9 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
 
-  const match = (str: string, query: string, friendly?: boolean) =>
-    friendly
-      ? str
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/\p{Diacritic}/gu, '')
-          .replace(/\s+/g, '')
-          .includes(query.toLowerCase().replace(/\s+/g, ''))
+  const match = (str: string, query: string, simple?: boolean) =>
+    simple
+      ? str.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
       : str
           .toLowerCase()
           .normalize('NFD')
