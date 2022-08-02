@@ -6,7 +6,8 @@ const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
 // FIXME: backend has to replace unwanted types (basically the ones not in this list)
-const lessonTypes = ['T', 'TP', 'PL', 'OT', 'L', 'P', 'TC', 'S']
+// FIXME: perhaps a list of types of classes would be helpful
+const lessonTypes = ['T', 'TP', 'PL', 'OT', 'P', 'TC', 'S', 'O']
 
 const getDisplayDate = () => {
   const date = new Date()
@@ -102,9 +103,6 @@ const getLessonTypeLongName = (type: string) => {
     case 'TP':
       return 'Aula Teórico-Prática'
 
-    case 'L':
-      return 'Aula de Laboratório'
-
     case 'S':
       return 'Seminário'
 
@@ -118,7 +116,7 @@ const getLessonTypeLongName = (type: string) => {
       return 'Aula de Orientação'
 
     default:
-      return 'Aula'
+      return 'Aula Desconhecida'
   }
 }
 
@@ -128,13 +126,14 @@ const getClassTypeClassName = (type: string) => {
       return 'schedule-class-t'
 
     case 'P':
+      return 'schedule-class-p'
+
     case 'TP':
       return 'schedule-class-tp'
 
     case 'S':
       return 'schedule-class-s'
 
-    case 'L':
     case 'PL':
       return 'schedule-class-pl'
 
@@ -142,8 +141,10 @@ const getClassTypeClassName = (type: string) => {
       return 'schedule-class-ot'
 
     case 'TC':
+      return 'schedule-class-tc'
+
     default:
-      return 'schedule-class-default'
+      return 'schedule-class-other'
   }
 }
 

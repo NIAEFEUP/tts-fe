@@ -130,7 +130,7 @@
 }
 
 .schedule-class-pl {
-  @apply border-schedule-pl bg-schedule-pl/80 hover:bg-schedule-pl dark:bg-schedule-pl/80 dark:hover:bg-schedule-pl;
+  @apply border-schedule-pl bg-schedule-pl/90 hover:bg-schedule-pl dark:bg-schedule-pl/90 dark:hover:bg-schedule-pl;
 }
 
 .schedule-class-ot {
@@ -138,11 +138,19 @@
 }
 
 .schedule-class-s {
-  @apply border-schedule-ot bg-schedule-ot/80 hover:bg-schedule-ot dark:bg-schedule-ot/80 dark:hover:bg-schedule-ot;
+  @apply border-schedule-s bg-schedule-s/80 hover:bg-schedule-s dark:bg-schedule-s/80 dark:hover:bg-schedule-s;
 }
 
-.schedule-class-default {
-  @apply border-schedule-default bg-schedule-default/80 hover:bg-schedule-default dark:bg-schedule-default/80 dark:hover:bg-schedule-default;
+.schedule-class-p {
+  @apply border-schedule-p bg-schedule-p/80 hover:bg-schedule-p dark:bg-schedule-p/80 dark:hover:bg-schedule-p;
+}
+
+.schedule-class-tc {
+  @apply border-schedule-tc bg-schedule-tc/80 hover:bg-schedule-tc dark:bg-schedule-tc/80 dark:hover:bg-schedule-tc;
+}
+
+.schedule-class-other {
+  @apply border-schedule-other bg-schedule-other/80 hover:bg-schedule-other dark:bg-schedule-other/80 dark:hover:bg-schedule-other;
 }
 
 .schedule-class-schedule-lunch {
@@ -151,10 +159,6 @@
 
 .schedule-class-conflict {
   @apply z-20 border-2 border-red-600 opacity-50 ring-red-600 hover:z-30 hover:opacity-100 hover:ring-1;
-}
-
-.schedule-class-no-focus {
-  @apply hover:cursor-default;
 }
 
 .show-grid-yes {
