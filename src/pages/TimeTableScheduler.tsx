@@ -48,6 +48,9 @@ const TimeTableSchedulerPage = () => {
   // fetch all schedules for the picked courses
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
 
+  // modal initial value
+  const getModalIsOpenValue = (easy?: boolean) => (easy ? !major || getPickedCourses(checkedCourses).length < 3 : true)
+
   const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
@@ -55,7 +58,7 @@ const TimeTableSchedulerPage = () => {
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || getPickedCourses(checkedCourses).length === 0)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
 
   // fetch majors when component is ready
   useEffect(() => {
