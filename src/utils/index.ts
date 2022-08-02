@@ -5,10 +5,6 @@ const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-// FIXME: backend has to replace unwanted types (basically the ones not in this list)
-// FIXME: perhaps a list of types of classes would be helpful
-const lessonTypes = ['T', 'TP', 'PL', 'OT', 'P', 'TC', 'S', 'O']
-
 const getDisplayDate = () => {
   const date = new Date()
   return `${dayNames[date.getDay()]}, ${date.getDate() + 1} ${monthNames[date.getMonth()]}`
@@ -151,7 +147,6 @@ const getClassTypeClassName = (type: string) => {
 export {
   minHour,
   maxHour,
-  lessonTypes,
   dayNames,
   monthNames,
   getDisplayDate,
