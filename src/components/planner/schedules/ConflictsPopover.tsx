@@ -28,7 +28,7 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-black/50 dark:bg-black/50" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -44,10 +44,10 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
             >
               <Dialog.Panel
                 className="w-full max-w-5xl transform space-y-4 overflow-hidden rounded-2xl 
-                bg-white p-6 text-left align-middle shadow-xl transition-all"
+                bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-dark"
               >
                 <Dialog.Title as="header">
-                  <h3 className="mb-3 text-lg font-medium leading-none text-gray-700">
+                  <h3 className="mb-3 text-lg font-medium leading-none text-gray-700 dark:text-white">
                     Inspeção de Conflitos de Horários
                   </h3>
                   <Alert type={AlertType.warning}>
@@ -60,7 +60,7 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
                   {lessons.map((lesson: Lesson, lessonIdx: number) => (
-                    <InspectLessonBox key={`responsive-lesson-box-${lessonIdx}`} lesson={lesson} />
+                    <InspectLessonBox key={`responsive-lesson-box-${lessonIdx}`} lesson={lesson} conflict={true} />
                   ))}
                 </div>
 

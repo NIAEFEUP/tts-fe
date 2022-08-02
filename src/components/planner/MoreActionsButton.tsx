@@ -47,6 +47,7 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
     <Menu as="div" className="relative inline-block w-full text-left xl:w-min">
       <Menu.Button
         ref={buttonRef}
+        title="Mais opções"
         className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 
         py-3 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:w-min xl:space-x-0 xl:px-4"
       >

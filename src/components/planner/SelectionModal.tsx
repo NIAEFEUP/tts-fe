@@ -137,6 +137,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
         <button
           type="button"
           onClick={openModal}
+          title="Editar Unidades Curriculares"
           className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary px-2
           py-3 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:space-x-2 xl:px-4"
         >
@@ -362,7 +363,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                       courses.map((year: CheckedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
-                          <div className="flex items-center transition">
+                          <div title={`${major?.acronym} ${yearIdx + 1}º ano`} className="flex items-center transition">
                             <input
                               type="checkbox"
                               className="checkbox"
@@ -381,7 +382,11 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           {/* Children checkboxes */}
                           <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-3 gap-y-1.5 p-1">
                             {year.map((course: CheckedCourse, courseIdx: number) => (
-                              <div key={`checkbox-${yearIdx}-${courseIdx}`} className="flex items-center transition">
+                              <div
+                                title={course?.info.name}
+                                key={`checkbox-${yearIdx}-${courseIdx}`}
+                                className="flex items-center transition"
+                              >
                                 <input
                                   type="checkbox"
                                   className="checkbox"
@@ -495,7 +500,7 @@ const OuterMask = () => (
     leaveFrom="opacity-100"
     leaveTo="opacity-0"
   >
-    <div className="fixed inset-0 bg-darkest bg-opacity-25 dark:bg-light dark:bg-opacity-[30%]" />
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/50" />
   </Transition.Child>
 )
 

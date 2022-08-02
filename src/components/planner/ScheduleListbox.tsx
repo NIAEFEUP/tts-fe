@@ -142,6 +142,7 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
 
           {/* Button */}
           <Listbox.Button
+            title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
             className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1.5 pl-2 pr-9 text-left 
             text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-2 2xl:pl-3 2xl:pr-10 2xl:text-sm"
           >
@@ -192,7 +193,10 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
 
           {/* Show/Hide Checkboxes */}
           <div className="mt-1 flex items-center justify-start space-x-4">
-            <div className="flex items-center justify-center space-x-1">
+            <div
+              title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
+              className="flex items-center justify-center space-x-1"
+            >
               <input
                 type="checkbox"
                 checked={showTheoretical}
@@ -208,7 +212,10 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
                 <span>Teóricas</span>
               </label>
             </div>
-            <div className="flex items-center justify-center space-x-1">
+            <div
+              title={`${showPractical ? 'Esconder' : 'Mostrar'} Aulas Práticas de ${courseOption.course.info.name}`}
+              className="flex items-center justify-center space-x-1"
+            >
               <input
                 type="checkbox"
                 checked={showPractical}

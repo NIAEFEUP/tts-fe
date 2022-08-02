@@ -28,7 +28,7 @@ const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-black/50 dark:bg-black/50" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -43,13 +43,15 @@ const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className="w-full max-w-2xl transform space-y-4 overflow-hidden rounded-2xl 
-                bg-white p-6 text-left align-middle shadow-xl transition-all"
+                className="w-full max-w-xl transform space-y-4 overflow-hidden rounded-2xl 
+                bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-dark"
               >
                 <Dialog.Title as="header">
-                  <h3 className="mb-3 text-lg font-medium leading-none text-gray-700">Inspeção de horário</h3>
+                  <h3 className="mb-3 text-lg font-medium leading-none text-gray-700 dark:text-white">
+                    Inspeção de horário
+                  </h3>
                   <Alert type={AlertType.success}>
-                    <p>Aula sem conflitos.</p>
+                    <p className="whitespace-nowrap">Aula sem conflitos.</p>
                   </Alert>
                 </Dialog.Title>
 
@@ -61,7 +63,7 @@ const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="rounded border-2 border-transparent bg-secondary px-4 py-2 text-sm font-medium 
+                    className="w-full rounded border-2 border-transparent bg-secondary px-4 py-2 text-sm font-medium 
                     text-white transition hover:opacity-80 focus:outline-none"
                   >
                     Fechar

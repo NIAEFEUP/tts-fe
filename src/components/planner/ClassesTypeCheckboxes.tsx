@@ -9,7 +9,10 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
 
   return (
     <div className="flex items-center justify-center space-x-4 space-y-0 xl:flex-col xl:space-y-1 xl:space-x-0">
-      <div className="flex items-center justify-center space-x-2">
+      <div
+        title={`${classesT ? 'Esconder' : 'Mostrar'} Aulas Teóricas`}
+        className="flex items-center justify-center space-x-2"
+      >
         <input
           type="checkbox"
           id="checkbox-classesT"
@@ -21,7 +24,10 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
           <span>Teóricas</span>
         </label>
       </div>
-      <div className="flex items-center justify-center space-x-2">
+      <div
+        title={`${classesTP ? 'Esconder' : 'Mostrar'} Aulas Práticas`}
+        className="flex items-center justify-center space-x-2"
+      >
         <input
           type="checkbox"
           id="checkbox-classesTP"
