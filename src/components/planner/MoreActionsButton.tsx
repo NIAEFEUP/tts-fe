@@ -41,7 +41,28 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
     URL.revokeObjectURL(url)
   }
 
-  const exportCSV = () => {}
+  const exportCSV = () => {
+    const header = ['Index']
+    const lines = []
+
+    const mock = Array(10).fill(schedule) // FIXME: remove mock
+    for (let i = 0; i < mock.length; i++) {
+      if (i === 0) for (let j = 0; j < mock[0].length; j++) header.push(mock[0][j].course.info.acronym)
+      const line = [`${i}`]
+      const scheduleOption = mock[i]
+      for (let j = 0; j < scheduleOption.length; j++) line.push(scheduleOption[j].option?.class_name || '')
+      lines.push(line.join(';'))
+    }
+
+    const csv = [header.join(';'), lines.flat().join('\n')].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'schedule.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <Menu as="div" className="relative inline-block w-full text-left xl:w-min">
@@ -114,10 +135,9 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
             )}
           </Menu.Item>
 
-          <Menu.Item disabled>
+          <Menu.Item>
             {({ active, disabled }) => (
               <button
-                disabled={disabled}
                 onClick={() => exportCSV()}
                 className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900
                 hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
