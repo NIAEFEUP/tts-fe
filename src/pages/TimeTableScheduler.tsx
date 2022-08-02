@@ -9,10 +9,10 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-import { useShowGrid } from '../hooks'
+import { useMajor, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
-  const [major, setMajor] = useState<Major>(null) // the picked major
+  const [major, setMajor] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
