@@ -1,5 +1,5 @@
 import BackendAPI from '../api/backend'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
@@ -9,23 +9,11 @@ import {
   MoreActionsButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
-import { useMajor, useShowGrid } from '../hooks'
-import useCourses from '../hooks/useCourses'
+import { useMajor, useCourses, useShowGrid } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
-  const [major, setMajor] = useMajor() // the picked major
-  const [majors, setMajors] = useState<Major[]>([]) // all the majors
-  const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
-  const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
-  const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
-  const pickedCourses = useMemo(() => checkedCourses.flat().filter((course) => course.checked), [checkedCourses])
-
-  /**
-   * Adds the checked and info property to the major courses.
-   * @param majorCourses Courses in a major grouped by year.
-   * @returns Course[][] with the checked and info properties.
-   */
-  const majorCoursesToCheckedMajor = (majorCourses: Course[][]): CheckedCourse[][] =>
+  // add check property to courses
+  const courseToCheckedCourse = (majorCourses: Course[][]): CheckedCourse[][] =>
     majorCourses.map((year: Course[]) =>
       year.map((item: Course) => ({
         checked: false,
@@ -54,12 +42,20 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
+  // extract only the course with checked: true
+  const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
+
   // fetch all schedules for the picked courses
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
 
+  const [major, setMajor] = useMajor() // the picked major
+  const [majors, setMajors] = useState<Major[]>([]) // all the majors
+  const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
+  const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
+  const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || pickedCourses.length === 0)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || getPickedCourses(checkedCourses).length === 0)
 
   // fetch majors when component is ready
   useEffect(() => {
@@ -70,14 +66,17 @@ const TimeTableSchedulerPage = () => {
 
   // once a major has been picked => fetch courses for the major
   useEffect(() => {
-    if (pickedCourses.length === 0) {
-      BackendAPI.getCourses(major).then((courses: Course[]) => {
-        const majorCourses = groupMajorCoursesByYear(courses)
-        const newCheckedCourses = majorCoursesToCheckedMajor(majorCourses)
-        setCheckedCourses([...newCheckedCourses])
-      })
-    }
-  }, [major])
+    if (checkedCourses.length > 0) return
+
+    const pickedCourses = getPickedCourses(checkedCourses)
+    if (pickedCourses.length > 0) return
+
+    BackendAPI.getCourses(major).then((courses: Course[]) => {
+      const majorCourses = groupMajorCoursesByYear(courses)
+      const newCheckedCourses = courseToCheckedCourse(majorCourses)
+      setCheckedCourses([...newCheckedCourses])
+    })
+  }, [major, checkedCourses, setCheckedCourses])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
@@ -85,6 +84,8 @@ const TimeTableSchedulerPage = () => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
       return value ? value.option : null
     }
+
+    const pickedCourses = getPickedCourses(checkedCourses)
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
       setCourseOptions((prev) => {
