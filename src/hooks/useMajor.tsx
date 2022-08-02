@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Major } from '../@types'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
@@ -50,15 +50,25 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   return [storedValue, setValue]
 }
 
-const useMajor = (): [Major | null, React.Dispatch<React.SetStateAction<Major | null>>] => {
+// prettier-ignore
+const useMajor = (): [Major | null, React.Dispatch<React.SetStateAction<Major | null>>, React.MutableRefObject<boolean>] => {
   const key = 'niaefeup-tts.major'
+  const firstRenderRef = useRef(true)
+  const changedMajorRef = useRef(false)
   const [major, setMajor] = useLocalStorage(key, null)
 
   useEffect(() => {
     writeStorage(key, major)
+
+    if (firstRenderRef.current === true) {
+      firstRenderRef.current = false
+      return
+    }
+    
+    changedMajorRef.current = true
   }, [major])
 
-  return [major, setMajor]
+  return [major, setMajor, changedMajorRef]
 }
 
 export default useMajor

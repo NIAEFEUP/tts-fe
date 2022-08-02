@@ -51,7 +51,7 @@ const TimeTableSchedulerPage = () => {
   // modal initial value
   const getModalIsOpenValue = (easy?: boolean) => (easy ? !major || getPickedCourses(checkedCourses).length < 3 : true)
 
-  const [major, setMajor] = useMajor() // the picked major
+  const [major, setMajor, majorChangedRef] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
@@ -69,14 +69,12 @@ const TimeTableSchedulerPage = () => {
 
   // once a major has been picked => fetch courses for the major
   useEffect(() => {
-    if (checkedCourses.length > 0) return
-
-    const pickedCourses = getPickedCourses(checkedCourses)
-    if (pickedCourses.length > 0) return
+    if (majorChangedRef.current === false && checkedCourses.length > 0) return
 
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
+      majorChangedRef.current = false
       setCheckedCourses([...newCheckedCourses])
     })
   }, [major, checkedCourses, setCheckedCourses])
