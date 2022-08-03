@@ -13,7 +13,7 @@ type Props = {
   conflict?: boolean
 }
 
-const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
+const InspectLessonBox = ({ lesson, conflict }: Props) => {
   const lessonType = lesson.schedule.lesson_type
   const lessonBoxRef: LessonBoxRef = {
     type: lessonType,
@@ -25,17 +25,12 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
     <div
       className={classNames(
         'schedule-class-responsive group',
+        conflict ? '' : 'w-full',
         getClassTypeClassName(lessonType),
-        getLessonBoxName(lessonBoxRef, 'responsive'),
-        conflict ? 'schedule-class-conflict' : ''
+        getLessonBoxName(lessonBoxRef, 'responsive')
       )}
     >
-      <div
-        className={classNames(
-          'p-2 text-sm leading-none tracking-tighter text-white',
-          'flex h-full w-full flex-col items-center justify-between gap-6'
-        )}
-      >
+      <div className="flex h-full w-full flex-col items-center justify-between gap-8 p-4 leading-none tracking-tighter text-white">
         <div className="flex w-full flex-col justify-between gap-2">
           <span className="flex w-full items-center justify-between">
             <strong title="Dia">{convertWeekdayLong(lesson.schedule.day)}</strong>
@@ -45,13 +40,18 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
         </div>
 
         <div className="flex w-full flex-col items-start gap-2">
-          <strong title="Sigla da Unidade Curricular">{lesson.course.acronym}</strong>
+          <div className="flex w-full items-center justify-between gap-4">
+            <strong title="Sigla da Unidade Curricular">{lesson.course.acronym}</strong>
+            <span title="Nome da Unidade Curricular" className={classNames(conflict ? 'whitespace-nowrap' : '')}>
+              {lesson.course.name}
+            </span>
+          </div>
           <span title="Nome da Turma">
             {lesson.schedule.composed_class_name ? lesson.schedule.composed_class_name : lesson.schedule.class_name}
           </span>
         </div>
 
-        <div className="flex w-full items-center justify-between gap-3">
+        <div className="flex w-full items-center justify-between gap-2">
           <span title="Sala">{lesson.schedule.location}</span>
           <span title="Professor(es)" className="whitespace-nowrap">
             {lesson.schedule.teacher_acronym}
@@ -62,4 +62,4 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
   )
 }
 
-export default ResponsiveLessonBox
+export default InspectLessonBox

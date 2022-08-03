@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react'
-import { Major } from '../@types'
+import { useEffect, useState } from 'react'
+import { CourseOption } from '../@types'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
@@ -13,8 +13,8 @@ const isStorageValid = (key: string, daysElapsed: number) => {
   return stored !== null && savedTime !== null && !expiredStorage
 }
 
-const writeStorage = (key: string, major: Major) => {
-  localStorage.setItem(key, JSON.stringify(major))
+const writeStorage = (key: string, options: CourseOption[]) => {
+  localStorage.setItem(key, JSON.stringify(options))
   localStorage.setItem(key + '.fetch-date', JSON.stringify(new Date()))
 }
 
@@ -26,9 +26,9 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       if (isStorageValid(key, 7)) {
-        const major: Major = JSON.parse(localStorage.getItem(key))
-        writeStorage(key, major)
-        return major
+        const options: CourseOption[] = JSON.parse(localStorage.getItem(key))
+        writeStorage(key, options)
+        return options
       } else {
         writeStorageInvalid(key)
         return initialValue
@@ -50,25 +50,15 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   return [storedValue, setValue]
 }
 
-// prettier-ignore
-const useMajor = (): [Major | null, React.Dispatch<React.SetStateAction<Major | null>>, React.MutableRefObject<boolean>] => {
-  const key = 'niaefeup-tts.major'
-  const firstRenderRef = useRef(true)
-  const changedMajorRef = useRef(false)
-  const [major, setMajor] = useLocalStorage(key, null)
+const useOptions = (): [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>] => {
+  const key = 'niaefeup-tts.options'
+  const [options, setOptions] = useLocalStorage(key, [])
 
   useEffect(() => {
-    writeStorage(key, major)
+    writeStorage(key, options)
+  }, [options])
 
-    if (firstRenderRef.current === true) {
-      firstRenderRef.current = false
-      return
-    }
-    
-    changedMajorRef.current = true
-  }, [major])
-
-  return [major, setMajor, changedMajorRef]
+  return [options, setOptions]
 }
 
-export default useMajor
+export default useOptions

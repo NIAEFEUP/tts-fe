@@ -5,9 +5,6 @@ const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-// FIXME: backend has to replace unwanted types (basically the ones not in this list)
-const lessonTypes = ['T', 'TP', 'PL', 'OT', 'L', 'P', 'TC', 'S']
-
 const getDisplayDate = () => {
   const date = new Date()
   return `${dayNames[date.getDay()]}, ${date.getDate() + 1} ${monthNames[date.getMonth()]}`
@@ -18,7 +15,7 @@ const getSemester = () => {
   const date = new Date()
   const month = date.getMonth()
 
-  return month >= 0 && month <= 6 ? '2ºS' : '1ºS'
+  return month >= 0 && month <= 6 ? 2 : 1
 }
 
 const getSchoolYear = () => {
@@ -61,15 +58,16 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
 }
 
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
-  const className = option.composed_class_name !== null ? option.composed_class_name : option.class_name
-  return [className, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+  // prioritize single class name
+  const classTitle = option.class_name !== null ? option.class_name : option.composed_class_name
+  return [classTitle, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
 }
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {
   return [convertHour(schedule.start_time), convertHour(addHour(schedule.start_time, schedule.duration))].join('-')
 }
 
-const addHour = (hour1: string, hour2: string) : string => {
+const addHour = (hour1: string, hour2: string): string => {
   return (parseFloat(hour1) + parseFloat(hour2)).toString()
 }
 
@@ -80,7 +78,7 @@ const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) =>
 
   return {
     top: `${(top * 100) / step}%`,
-    left: `${((lesson.schedule.day) * 100) / 6}%`,
+    left: `${(lesson.schedule.day * 100) / 6}%`,
     height: `${length * (100 / step)}%`,
   }
 }
@@ -101,9 +99,6 @@ const getLessonTypeLongName = (type: string) => {
     case 'TP':
       return 'Aula Teórico-Prática'
 
-    case 'L':
-      return 'Aula de Laboratório'
-
     case 'S':
       return 'Seminário'
 
@@ -117,7 +112,7 @@ const getLessonTypeLongName = (type: string) => {
       return 'Aula de Orientação'
 
     default:
-      return 'Aula'
+      return 'Aula Desconhecida'
   }
 }
 
@@ -127,27 +122,31 @@ const getClassTypeClassName = (type: string) => {
       return 'schedule-class-t'
 
     case 'P':
+      return 'schedule-class-p'
+
     case 'TP':
       return 'schedule-class-tp'
 
-    case 'L':
     case 'S':
-    case 'TC':
+      return 'schedule-class-s'
+
     case 'PL':
       return 'schedule-class-pl'
 
     case 'OT':
       return 'schedule-class-ot'
 
+    case 'TC':
+      return 'schedule-class-tc'
+
     default:
-      return 'schedule-class-default'
+      return 'schedule-class-other'
   }
 }
 
 export {
   minHour,
   maxHour,
-  lessonTypes,
   dayNames,
   monthNames,
   getDisplayDate,

@@ -1,6 +1,7 @@
+import useDarkMode from './useDarkMode'
+import useShowGrid from './useShowGrid'
 import useMajor from './useMajor'
 import useCourses from './useCourses'
-import useShowGrid from './useShowGrid'
-import useDarkMode from './useDarkMode'
+import useOptions from './useOptions'
 
-export { useCourses, useMajor, useShowGrid, useDarkMode }
+export { useDarkMode, useShowGrid, useMajor, useCourses, useOptions }

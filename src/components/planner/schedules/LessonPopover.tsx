@@ -5,11 +5,11 @@ import Alert, { AlertType } from '../Alert'
 import InspectLessonBox from './InspectLessonBox'
 
 type Props = {
-  lessons: Lesson[]
+  lesson: Lesson
   isOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
+const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
   const [isOpen, setIsOpen] = isOpenHook
 
   const closeModal = () => {
@@ -43,35 +43,30 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className="w-full max-w-5xl transform space-y-4 overflow-hidden rounded-2xl 
+                className="w-full max-w-xl transform space-y-4 overflow-hidden rounded-2xl 
                 bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-dark"
               >
                 <Dialog.Title as="header">
                   <h3 className="mb-3 text-lg font-medium leading-none text-gray-700 dark:text-white">
-                    Inspeção de Conflitos de Horários
+                    Inspeção de horário
                   </h3>
-                  <Alert type={AlertType.warning}>
-                    <p>
-                      Um horário com colisões de <strong>aulas teóricas</strong> é geralmente permitido na maioria dos
-                      casos. O mesmo <strong>não</strong> se verifica para <strong>aulas práticas</strong>.
-                    </p>
+                  <Alert type={AlertType.success}>
+                    <p className="whitespace-nowrap">Aula sem conflitos.</p>
                   </Alert>
                 </Dialog.Title>
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
-                  {lessons.map((lesson: Lesson, lessonIdx: number) => (
-                    <InspectLessonBox key={`responsive-lesson-box-${lessonIdx}`} lesson={lesson} conflict={true} />
-                  ))}
+                  <InspectLessonBox lesson={lesson} />
                 </div>
 
                 <footer className="flex justify-end">
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="rounded border-2 border-transparent bg-secondary px-4 py-2 text-sm font-medium 
+                    className="w-full rounded border-2 border-transparent bg-secondary px-4 py-2 text-sm font-medium 
                     text-white transition hover:opacity-80 focus:outline-none"
                   >
-                    Ok, Entendido!
+                    Fechar
                   </button>
                 </footer>
               </Dialog.Panel>

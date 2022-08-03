@@ -23,10 +23,13 @@ module.exports = {
         schedule: {
           lunch: '#BE123C',
           t: '#A8A199',
-          tp: '#69656A',
-          pl: '#115E59',
-          ot: '#075985',
-          default: '#115E59',
+          tp: '#115E59',
+          pl: '#003d7a',
+          ot: '#5c8fc2',
+          s: '#7d3179',
+          p: '#b66046',
+          tc: '#733C3C',
+          other: '#69656A',
         },
       },
       spacing: {
@@ -42,6 +45,10 @@ module.exports = {
       maxWidth: {
         '8xl': '88rem',
         '9xl': '96rem',
+      },
+      gridTemplateRows: {
+        7: 'repeat(7, minmax(0, 1fr))',
+        8: 'repeat(8, minmax(0, 1fr))',
       },
       fontSize: {
         xxs: '0.6rem',
