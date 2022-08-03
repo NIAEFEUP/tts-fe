@@ -12,7 +12,7 @@ type Props = {
 const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
   const firstRenderRef = useRef(true)
   const [, setCourseOptions] = courseOptionsHook
-  const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(null)
+  const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(true)
   const [showPractical, setShowPractical] = useState<boolean>(true)
 
