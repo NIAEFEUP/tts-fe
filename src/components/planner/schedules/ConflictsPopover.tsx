@@ -11,7 +11,7 @@ type Props = {
 
 const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
   const [isOpen, setIsOpen] = isOpenHook
-  const severity = useMemo(() => lessons.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [lessons])
+  const severe = useMemo(() => lessons.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [lessons])
 
   const closeModal = () => {
     setIsOpen(false)
@@ -51,7 +51,7 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                   <h3 className="mb-3 text-lg font-medium leading-none text-gray-700 dark:text-white">
                     Inspeção de Conflitos de Horários
                   </h3>
-                  <Alert type={severity ? AlertType.error : AlertType.warning}>
+                  <Alert type={severe ? AlertType.error : AlertType.warning}>
                     <p>
                       Um horário com colisões de <strong>aulas teóricas</strong> é geralmente permitido na maioria dos
                       casos. O mesmo <strong>não</strong> se verifica para <strong>aulas práticas</strong>.

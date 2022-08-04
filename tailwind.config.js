@@ -70,9 +70,18 @@ module.exports = {
           '75%': { transform: 'rotate(0.5deg)' },
           '100%': { transform: 'rotate(0)' },
         },
+        fade: {
+          '0%': { opacity: '100%' },
+          '25%': { opacity: '50%' },
+          '50%': { opacity: '10%' },
+          '75%': { opacity: '50%' },
+          '100%': { opacity: '100%' },
+        },
       },
       animation: {
+        fade: 'fade 1000ms ease-in-out infinite',
         wiggle: 'wiggle 700ms ease-in-out',
+        'wiggle-infinity': 'wiggle 700ms infinite ease-in-out',
       },
       backgroundSize: {
         'size-200': '200% 200%',
