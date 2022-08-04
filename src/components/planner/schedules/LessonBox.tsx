@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Lesson, LessonBoxRef } from '../../../@types'
 import {
   getClassTypeClassName,
@@ -34,6 +34,8 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
 
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false)
+  const severity = useMemo(() => conflicts?.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [conflicts])
+  console.log(severity)
 
   const showConflicts = () => {
     setConflictsShown(true)
@@ -55,7 +57,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             'schedule-class group',
             getClassTypeClassName(lessonType),
             getLessonBoxName(lessonBoxRef),
-            conflict ? 'schedule-class-conflict' : ''
+            conflict ? (severity ? 'schedule-class-conflict' : 'schedule-class-conflict-warn') : ''
           )}
         >
           {longLesson ? (

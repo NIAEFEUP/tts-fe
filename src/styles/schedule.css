@@ -158,7 +158,11 @@
 }
 
 .schedule-class-conflict {
-  @apply z-20 border-2 border-red-600 opacity-50 ring-red-600 hover:z-30 hover:opacity-100 hover:ring-1;
+  @apply z-20 border-2 border-red-600 opacity-75 ring-red-600 hover:z-30 hover:opacity-100 hover:ring-1;
+}
+
+.schedule-class-conflict-warn {
+  @apply z-20 border-2 border-amber-500 opacity-75 ring-amber-500 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
 .show-grid-yes {
