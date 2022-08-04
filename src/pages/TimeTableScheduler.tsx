@@ -7,7 +7,7 @@ import {
   ScheduleListbox,
   ClassesTypeCheckboxes,
   MoreActionsButton,
-  OptionsController
+  OptionsController,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'

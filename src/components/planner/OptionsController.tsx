@@ -28,7 +28,7 @@ const OptionsController = ({ optionIndexHook }: Props) => {
         <Menu.Button
           title="Escolher uma opção de horário"
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-3 text-xs 
-          font-medium text-white transition hover:opacity-80 dark:bg-secondary/10 lg:text-sm"
+          font-medium text-white transition hover:opacity-80 dark:bg-secondary lg:text-sm"
         >
           <span>Horário #{optionIndex + 1}</span>
         </Menu.Button>
@@ -41,15 +41,24 @@ const OptionsController = ({ optionIndexHook }: Props) => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 z-20 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white p-2 shadow-lg">
+          <Menu.Items
+            className="absolute right-0 z-20 mt-2 flex w-full origin-top-right flex-col gap-1
+            divide-y divide-gray-100 rounded-md bg-white p-1.5 shadow-lg"
+          >
             {scheduleOptions.map((scheduleOption: number) => (
-              <Menu.Item>
-                <button
-                  className="group relative flex w-full cursor-default select-none items-center rounded 
-                  px-2 py-2 text-sm text-gray-900 hover:bg-secondary/75 hover:text-white hover:dark:bg-secondary/75"
-                >
-                  Horário {scheduleOption + 1}
-                </button>
+              <Menu.Item key={`schedule-option-${scheduleOption}`}>
+                {({ active }) => (
+                  <button
+                    onClick={() => setOptionIndex(scheduleOption)}
+                    className={`
+                      ${active ? 'bg-secondary text-white' : ''}
+                      ${scheduleOption === optionIndex ? 'bg-secondary text-white' : !active && 'text-gray-900'}
+                      group relative flex w-full cursor-pointer select-none items-center rounded px-2 py-2 text-sm 
+                    `}
+                  >
+                    Horário {scheduleOption + 1}
+                  </button>
+                )}
               </Menu.Item>
             ))}
           </Menu.Items>
