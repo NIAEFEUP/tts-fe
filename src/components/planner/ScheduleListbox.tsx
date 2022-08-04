@@ -1,8 +1,8 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { CourseOption, CourseSchedule, LessonBoxRef } from '../../@types'
-import { getLessonBoxName, getScheduleOptionDisplayText } from '../../utils'
+import { CourseOption, CourseSchedule } from '../../@types'
+import { getScheduleOptionDisplayText } from '../../utils'
 
 type Props = {
   courseOption: CourseOption
@@ -24,18 +24,6 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
           option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
       )
   }, [courseOption])
-
-  const getLessonTypes = () => {
-    const lessonTypes = []
-    for (let i = 0; i < courseOption.schedules.length; i++) {
-      const schedule = courseOption.schedules[i]
-      if (!lessonTypes.find((type) => type === schedule.lesson_type)) {
-        lessonTypes.push(schedule.lesson_type)
-      }
-    }
-
-    return lessonTypes
-  }
 
   const getOptionDisplayText = (option: CourseSchedule | null) =>
     option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)

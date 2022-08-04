@@ -76,9 +76,3 @@ export type Lesson = {
   course: Course
   schedule: CourseSchedule
 }
-
-export type LessonBoxRef = {
-  id: number
-  type: string
-  acronym: string
-}
