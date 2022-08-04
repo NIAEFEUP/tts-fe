@@ -7,6 +7,7 @@ import {
   ScheduleListbox,
   ClassesTypeCheckboxes,
   MoreActionsButton,
+  OptionsController
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
@@ -59,6 +60,7 @@ const TimeTableSchedulerPage = () => {
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
+  const [optionIndex, setOptionIndex] = useState<number>(0)
 
   // fetch majors when component is ready
   useEffect(() => {
@@ -147,6 +149,7 @@ const TimeTableSchedulerPage = () => {
       >
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
+            <OptionsController optionIndexHook={[optionIndex, setOptionIndex]} />
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
