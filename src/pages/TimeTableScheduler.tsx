@@ -89,15 +89,19 @@ const TimeTableSchedulerPage = () => {
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
 
-    fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
+    fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
       setCourseOptions((prev) => {
-        let newCourseOptions = []
+        let newCourseOptions: CourseOption[] = []
         const notNulls = prev.filter((item) => item.option !== null)
 
         if (notNulls.length > 0) {
           for (let i = 0; i < pickedCourses.length; i++) {
             const option = findPreviousEntry(prev, pickedCourses[i])
             newCourseOptions.push({
+              shown: {
+                T: true,
+                TP: true,
+              },
               course: pickedCourses[i],
               option: option,
               schedules: schedules[i],
@@ -106,12 +110,17 @@ const TimeTableSchedulerPage = () => {
         } else {
           for (let i = 0; i < pickedCourses.length; i++) {
             newCourseOptions.push({
+              shown: {
+                T: true,
+                TP: true,
+              },
               course: pickedCourses[i],
               option: null,
               schedules: schedules[i],
             })
           }
         }
+
         return [...newCourseOptions]
       })
     })

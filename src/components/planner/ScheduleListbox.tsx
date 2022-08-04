@@ -40,62 +40,37 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
   const getOptionDisplayText = (option: CourseSchedule | null) =>
     option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)
 
-  const updateHiddenLessons = (type: string, courseOption: CourseOption) => {
-    if (!courseOption.option) return
-    const lessonBoxRef: LessonBoxRef = {
-      type: type,
-      id: courseOption.course.info.course_unit_id,
-      acronym: courseOption.course.info.acronym,
-    }
+  const updateShown = (value: boolean, type: string, courseOption: CourseOption): void => {
+    if (type === 'T') {
+      setShowTheoretical(value)
+      setCourseOptions((prev) => {
+        let newCourseOptions = prev
 
-    const lessonBoxClassName =
-      window.matchMedia('(max-width: 1024px)').matches === true
-        ? getLessonBoxName(lessonBoxRef, 'responsive')
-        : getLessonBoxName(lessonBoxRef)
-
-    const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
-    for (let i = 0; i < lessonBoxes.length; i++) {
-      const lessonBox = lessonBoxes[i] as HTMLElement
-      if (lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
-      else lessonBox.classList.add('hidden')
-    }
-  }
-
-  const updateShown = (value: boolean, type: string, courseOption?: CourseOption): void => {
-    if (type === 'T') setShowTheoretical(value)
-    else if (type === 'TP') setShowPractical(value)
-    updateHiddenLessons(type, courseOption)
-  }
-
-  useEffect(() => {
-    // refresh hidden lessons
-    if (courseOption.option === null) return
-
-    getLessonTypes().forEach((type) => {
-      const lessonBoxRef: LessonBoxRef = {
-        type: type,
-        id: courseOption.course.info.course_unit_id,
-        acronym: courseOption.course.info.acronym,
-      }
-
-      const lessonBoxClassName =
-        window.matchMedia('(max-width: 1024px)').matches === true
-          ? getLessonBoxName(lessonBoxRef, 'responsive')
-          : getLessonBoxName(lessonBoxRef)
-
-      const lessonBoxes = document.getElementsByClassName(lessonBoxClassName)
-      for (let i = 0; i < lessonBoxes.length; i++) {
-        const lessonBox = lessonBoxes[i] as HTMLElement
-        if (type === 'T') {
-          if (!showTheoretical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
-          else if (showTheoretical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
-        } else {
-          if (!showPractical && !lessonBox.classList.contains('hidden')) lessonBox.classList.add('hidden')
-          else if (showPractical && lessonBox.classList.contains('hidden')) lessonBox.classList.remove('hidden')
+        for (let i = 0; i < prev.length; i++) {
+          const option = prev[i]
+          if (option.course.info.id === courseOption.course.info.id) {
+            newCourseOptions[i].shown.T = value
+          }
         }
-      }
-    })
-  })
+
+        return [...newCourseOptions]
+      })
+    } else if (type === 'TP') {
+      setShowPractical(value)
+      setCourseOptions((prev) => {
+        let newCourseOptions = prev
+
+        for (let i = 0; i < prev.length; i++) {
+          const option = prev[i]
+          if (option.course.info.id === courseOption.course.info.id) {
+            newCourseOptions[i].shown.TP = value
+          }
+        }
+
+        return [...newCourseOptions]
+      })
+    }
+  }
 
   useEffect(() => {
     if (firstRenderRef.current === true) {
@@ -103,23 +78,20 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
       return
     }
 
-    const resolveCourseOptions = (prevSelected: CourseOption[]) => {
-      let newSelected = prevSelected
+    const resolveCourseOptions = (prev: CourseOption[]) => {
+      let newCourseOptions = prev
 
-      for (let i = 0; i < prevSelected.length; i++) {
-        const option = prevSelected[i]
+      for (let i = 0; i < prev.length; i++) {
+        const option = prev[i]
         if (option.course.info.id === courseOption.course.info.id) {
-          newSelected[i].option = selectedOption
+          newCourseOptions[i].option = selectedOption
         }
       }
 
-      return [...newSelected]
+      return [...newCourseOptions]
     }
 
-    setCourseOptions((prevCourseOptions) => {
-      const newCourseOptions = resolveCourseOptions(prevCourseOptions)
-      return [...newCourseOptions]
-    })
+    setCourseOptions((prevCourseOptions) => [...resolveCourseOptions(prevCourseOptions)])
   }, [selectedOption, courseOption, setCourseOptions])
 
   return (

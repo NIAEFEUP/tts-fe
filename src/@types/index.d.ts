@@ -57,6 +57,10 @@ export type CourseSchedule = {
 
 /* Options */
 export type CourseOption = {
+  shown?: {
+    T: boolean
+    TP: boolean
+  }
   course: CheckedCourse
   option: CourseSchedule | null
   schedules: CourseSchedule[]

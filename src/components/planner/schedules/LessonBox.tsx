@@ -95,7 +95,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             </div>
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
-              <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center justify-between gap-2">
                 <span title="Duração">
                   {timeSpan} (<strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>)
                 </span>
@@ -104,7 +104,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
                 </span>
               </div>
 
-              <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center justify-between gap-2">
                 <span title="Sala">{lesson.schedule.location}</span>
                 <span title="Turma">{compClassTitle ? compClassTitle : classTitle}</span>
                 <span title="Professor(es)" className="truncate">

@@ -15,9 +15,11 @@ type Props = {
 const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
+
   const subjects = useMemo(() => {
     const classes = courseOptions.filter((item) => item.option !== null)
     return classes.map((subject, subjectIdx) => ({
+      shown: subject.shown,
       course: subject.course.info,
       practicalLesson: subject.option,
       theoreticalLessons: classes.map((item) =>
@@ -30,8 +32,13 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     let lessonsAcc: Lesson[] = []
 
     subjects.forEach((subject) => {
-      lessonsAcc.push({ course: subject.course, schedule: subject.practicalLesson })
-      subject.theoreticalLessons.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
+      if (subject.shown.T) {
+        subject.theoreticalLessons.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
+      }
+
+      if (subject.shown.TP) {
+        lessonsAcc.push({ course: subject.course, schedule: subject.practicalLesson })
+      }
     })
 
     lessonsAcc.sort((first, second) => {
@@ -46,14 +53,15 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
    * Find conflicts among classes between classes.
    * Consider that the classes are ordered in ascending order by the start_time.
    * The final result is a matrix o schedules, where conflictuos classes are grouped together.
+   *
    * Example:
-   * => AMAT:   9h~11h
-   * => RC:     11h~12h
-   * => TC:     11~13h
+   * => AMAT:   09h00 ~ 11h00
+   * => RC:     11h00 ~ 12h00
+   * => TC:     11h00 ~ 13h00
    *
    * 1st iteraction: acc = [AMAT]
    * 2nd iteraction: acc = [RC], conflictsAcc = [[AMAT]]
-   * 2rd iteraction: acc = [RC, TC], conflictsAcc = [[AMAT], [RC, TC]]
+   * 3rd iteraction: acc = [RC, TC], conflictsAcc = [[AMAT], [RC, TC]]
    */
   const conflicts = useMemo(() => {
     let acc = []
