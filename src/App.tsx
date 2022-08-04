@@ -11,7 +11,7 @@ const pages = [
   { path: '/planner', location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
   { path: '/exchange', location: 'Exchange', element: FeupExchangePage, liquid: true },
   { path: '/faqs', location: 'FAQs', element: FeupExchangeFaqs, liquid: true },
-  { path: '/*', location: 'NotFound', element: NotFoundPage, liquid: true }, 
+  { path: '/*', location: 'NotFound', element: NotFoundPage, liquid: true },
 ]
 
 const redirects = [
