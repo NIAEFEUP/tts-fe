@@ -9,10 +9,10 @@ type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook: courseOptionsHook }: Props) => {
+const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Props) => {
   const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
-  const [, setMultipleOptions] = courseOptionsHook
+  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
   const isScheduleValid = (scheduleJson: any) => {
     // TODO: implement this
@@ -29,7 +29,7 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook: course
         setMultipleOptions((prev) => ({
           index: prev.index,
           selected: scheduleJson,
-          options: prev.options, // FIXME:
+          options: prev.options.map((item, index) => (prev.index === index ? scheduleJson : item)),
         }))
       }
       buttonRef.current.click() // close menu
@@ -51,11 +51,10 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook: course
     const header = ['Index']
     const lines = []
 
-    const mock = Array(10).fill(schedule) // FIXME: remove mock
-    for (let i = 0; i < mock.length; i++) {
-      if (i === 0) for (let j = 0; j < mock[0].length; j++) header.push(mock[0][j].course.info.acronym)
+    for (let i = 0; i < multipleOptions.options.length; i++) {
+      if (i === 0) for (let j = 0; j < schedule.length; j++) header.push(schedule[j].course.info.acronym)
       const line = [`${i}`]
-      const scheduleOption = mock[i]
+      const scheduleOption = multipleOptions.options[i]
       for (let j = 0; j < scheduleOption.length; j++) line.push(scheduleOption[j].option?.class_name || '')
       lines.push(line.join(';'))
     }
