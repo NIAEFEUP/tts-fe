@@ -245,7 +245,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           ) : (
                             filteredMajors.map((major: Major, majorIdx: number) => (
                               <Combobox.Option
-                                key={majorIdx}
+                                key={`major-${majorIdx}`}
                                 className={({ active }) =>
                                   `relative cursor-pointer select-none py-2 px-3 ${
                                     major?.name !== '' ? 'pl-10' : 'pl-4'
@@ -324,7 +324,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                             ) : (
                               filteredExtraCourses.map((extraCourse: Course, extraCourseIdx: number) => (
                                 <Combobox.Option
-                                  key={extraCourseIdx}
+                                  key={`extra-course-${extraCourseIdx}`}
                                   className={({ active }) =>
                                     `relative cursor-pointer select-none py-2 px-3 ${
                                       extraCourse?.name !== '' ? 'pl-10' : 'pl-4'

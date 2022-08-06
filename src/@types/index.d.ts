@@ -76,3 +76,9 @@ export type Lesson = {
   course: Course
   schedule: CourseSchedule
 }
+
+export type MultipleOptions = {
+  index: number
+  selected: CourseOption[]
+  options: CourseOption[][]
+}

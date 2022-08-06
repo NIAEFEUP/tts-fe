@@ -61,7 +61,7 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
                   {lessons.map((lesson: Lesson, lessonIdx: number) => (
-                    <InspectLessonBox key={`responsive-lesson-box-${lessonIdx}`} lesson={lesson} conflict={true} />
+                    <InspectLessonBox key={`conflict-inspect-lesson-box-${lessonIdx}`} lesson={lesson} conflict={true} />
                   ))}
                 </div>
 

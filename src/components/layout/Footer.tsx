@@ -54,7 +54,7 @@ const Footer = () => {
       <div className="flex flex-col items-center justify-between space-y-4 lg:flex-row lg:space-y-0">
         <ul className="mt-4 flex items-center justify-center space-x-4 sm:mt-0">
           {socials.map((social, socialIdx) => (
-            <li key={`social-${socialIdx}`}>
+            <li key={`footer-social-${socialIdx}`}>
               <a
                 className="inline-flex items-center justify-center text-sm transition hover:opacity-80"
                 href={social.url}

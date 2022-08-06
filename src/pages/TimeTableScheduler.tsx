@@ -9,7 +9,7 @@ import {
   MoreActionsButton,
   OptionsController,
 } from '../components/planner'
-import { CheckedCourse, Course, CourseOption, CourseSchedule, Major } from '../@types'
+import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
@@ -43,6 +43,18 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
+  const getEmptyCourseOption = (course: CheckedCourse, schedules: CourseSchedule[]): CourseOption => {
+    return {
+      shown: {
+        T: true,
+        TP: true,
+      },
+      course: course,
+      option: null,
+      schedules: schedules,
+    }
+  }
+
   // extract only the course with checked: true
   const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
 
@@ -55,12 +67,17 @@ const TimeTableSchedulerPage = () => {
   const [major, setMajor, majorChangedRef] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
-  const [courseOptions, setCourseOptions] = useState<CourseOption[]>([]) // the course options selected on the sidebar
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
-  const [optionIndex, setOptionIndex] = useState<number>(0)
+  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] })
+
+  useEffect(() => {
+    if (multipleOptions.options.length === 0) return
+    console.log(multipleOptions.options[9].filter((co) => co.option === null).flat().length)
+    // FIXME: somehow multiple options is leaking values from "selected" to "options"
+  }, [multipleOptions])
 
   // fetch majors when component is ready
   useEffect(() => {
@@ -92,13 +109,13 @@ const TimeTableSchedulerPage = () => {
     if (pickedCourses.length === 0) return
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
-      setCourseOptions((prev) => {
+      setMultipleOptions((prev) => {
         let newCourseOptions: CourseOption[] = []
-        const notNulls = prev.filter((item) => item.option !== null)
+        const notNulls = prev.selected.filter((item) => item.option !== null)
 
         if (notNulls.length > 0) {
           for (let i = 0; i < pickedCourses.length; i++) {
-            const option = findPreviousEntry(prev, pickedCourses[i])
+            const option = findPreviousEntry(prev.selected, pickedCourses[i])
             newCourseOptions.push({
               shown: {
                 T: true,
@@ -111,19 +128,24 @@ const TimeTableSchedulerPage = () => {
           }
         } else {
           for (let i = 0; i < pickedCourses.length; i++) {
-            newCourseOptions.push({
-              shown: {
-                T: true,
-                TP: true,
-              },
-              course: pickedCourses[i],
-              option: null,
-              schedules: schedules[i],
-            })
+            newCourseOptions.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
           }
         }
 
-        return [...newCourseOptions]
+        let filler: CourseOption[] = []
+        for (let i = 0; i < pickedCourses.length; i++) filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
+
+        let result: CourseOption[][] = []
+        for (let i = 0; i < 10; i++) {
+          if (i === prev.index) result.push(newCourseOptions)
+          else result.push(JSON.parse(JSON.stringify(filler))) // deep copy
+        }
+
+        return {
+          index: prev.index,
+          selected: newCourseOptions,
+          options: result,
+        }
       })
     })
   }, [checkedCourses])
@@ -135,7 +157,7 @@ const TimeTableSchedulerPage = () => {
         <div className="h-full w-full">
           <Schedule
             showGrid={showGrid}
-            courseOptions={courseOptions}
+            courseOptions={multipleOptions.selected}
             activeClassesT={classesT}
             activeClassesTP={classesTP}
           />
@@ -143,13 +165,10 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div
-        className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between 
-        rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4"
-      >
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
-            <OptionsController optionIndexHook={[optionIndex, setOptionIndex]} />
+            <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
@@ -157,19 +176,19 @@ const TimeTableSchedulerPage = () => {
               coursesHook={[checkedCourses, setCheckedCourses]}
             />
             <MoreActionsButton
-              schedule={courseOptions}
+              schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
-              courseOptionsHook={[courseOptions, setCourseOptions]}
+              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
           <div className="flex flex-col gap-4 py-2 px-0">
-            {courseOptions.length > 0 &&
-              courseOptions.map((courseOption, courseOptionIdx) => (
+            {multipleOptions.selected.length > 0 &&
+              multipleOptions.selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
-                  courseOptionsHook={[courseOptions, setCourseOptions]}
-                  key={`course-schedule-listbox-${courseOption.course.info.id}`}
+                  multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+                  key={`course-schedule-listbox-${multipleOptions.index}-${courseOption.course.info.id}`}
                 />
               ))}
           </div>

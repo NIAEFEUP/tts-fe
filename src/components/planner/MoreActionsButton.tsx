@@ -1,18 +1,18 @@
 import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { DotsHorizontalIcon, DownloadIcon, SparklesIcon, TableIcon, UploadIcon } from '@heroicons/react/outline'
-import { CourseOption } from '../../@types'
+import { CourseOption, MultipleOptions } from '../../@types'
 
 type Props = {
   schedule: CourseOption[]
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  courseOptionsHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
+  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props) => {
+const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook: courseOptionsHook }: Props) => {
   const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
-  const [, setCourseOptions] = courseOptionsHook
+  const [, setMultipleOptions] = courseOptionsHook
 
   const isScheduleValid = (scheduleJson: any) => {
     // TODO: implement this
@@ -26,7 +26,11 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
     fileReader.onload = (e) => {
       const scheduleJson = JSON.parse(fileReader.result as string) as CourseOption[]
       if (isScheduleValid(scheduleJson)) {
-        setCourseOptions(scheduleJson)
+        setMultipleOptions((prev) => ({
+          index: prev.index,
+          selected: scheduleJson,
+          options: prev.options, // FIXME:
+        }))
       }
       buttonRef.current.click() // close menu
     }

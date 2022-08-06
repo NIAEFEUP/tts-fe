@@ -1,21 +1,48 @@
 import { Fragment } from 'react'
 import { Transition, Menu } from '@headlessui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
+import { MultipleOptions } from '../../@types'
 
 type Props = {
-  optionIndexHook: [number, React.Dispatch<React.SetStateAction<number>>]
+  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const OptionsController = ({ optionIndexHook }: Props) => {
-  const [optionIndex, setOptionIndex] = optionIndexHook
-  const scheduleOptions = Array.from({ length: 10 }, (_, i) => i)
-  const setNextOptionIndex = () => setOptionIndex((idx) => idx + 1)
-  const setPreviousOptionIndex = () => setOptionIndex((idx) => idx - 1)
+const OptionsController = ({ multipleOptionsHook }: Props) => {
+  const [options, setOptions] = multipleOptionsHook
+  const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
+
+  const setNextOptionIndex = () => {
+    setOptions((prev) => {
+      const value = {
+        index: prev.index + 1,
+        selected: prev.options[prev.index + 1],
+        options: [...prev.options],
+      }
+
+      return value
+    })
+  }
+
+  const setPreviousOptionIndex = () => {
+    setOptions((prev) => ({
+      index: prev.index - 1,
+      selected: prev.options[prev.index - 1],
+      options: [...prev.options],
+    }))
+  }
+
+  const setOptionIndex = (newIndex: number) => {
+    setOptions((prev) => ({
+      index: newIndex,
+      selected: prev.options[newIndex],
+      options: [...prev.options],
+    }))
+  }
 
   return (
     <div className="flex w-full rounded">
       <button
-        disabled={optionIndex === 0}
+        disabled={options.index === 0}
         onClick={setPreviousOptionIndex}
         title="Ver opção de horário anterior"
         className="w-min items-center justify-center gap-1.5 rounded-l border-2 border-transparent bg-secondary px-3 py-2
@@ -30,7 +57,7 @@ const OptionsController = ({ optionIndexHook }: Props) => {
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-3 text-xs 
           font-medium text-white transition hover:opacity-80 dark:bg-secondary lg:text-sm"
         >
-          <span>Horário #{optionIndex + 1}</span>
+          <span>Horário #{options.index + 1}</span>
         </Menu.Button>
         <Transition
           as={Fragment}
@@ -45,18 +72,18 @@ const OptionsController = ({ optionIndexHook }: Props) => {
             className="absolute right-0 z-20 mt-2 flex w-full origin-top-right flex-col gap-1
             divide-y divide-gray-100 rounded-md bg-white p-1.5 shadow-lg"
           >
-            {scheduleOptions.map((scheduleOption: number) => (
-              <Menu.Item key={`schedule-option-${scheduleOption}`}>
+            {optionIndexes.map((index: number) => (
+              <Menu.Item key={`schedule-option-${index}`}>
                 {({ active }) => (
                   <button
-                    onClick={() => setOptionIndex(scheduleOption)}
+                    onClick={() => setOptionIndex(index)}
                     className={`
                       ${active ? 'bg-secondary text-white' : ''}
-                      ${scheduleOption === optionIndex ? 'bg-secondary text-white' : !active && 'text-gray-900'}
+                      ${index === options.index ? 'bg-secondary text-white' : !active && 'text-gray-900'}
                       group relative flex w-full cursor-pointer select-none items-center rounded px-2 py-2 text-sm 
                     `}
                   >
-                    Horário {scheduleOption + 1}
+                    Horário {index + 1}
                   </button>
                 )}
               </Menu.Item>
@@ -66,7 +93,7 @@ const OptionsController = ({ optionIndexHook }: Props) => {
       </Menu>
 
       <button
-        disabled={optionIndex === 9}
+        disabled={options.index === 9}
         onClick={setNextOptionIndex}
         title="Ver opção de horário seguinte"
         className="w-min items-center justify-center gap-1.5 rounded-r border-2 border-transparent bg-secondary px-3 py-2
