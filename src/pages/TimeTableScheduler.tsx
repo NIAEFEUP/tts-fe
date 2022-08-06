@@ -68,16 +68,11 @@ const TimeTableSchedulerPage = () => {
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
+  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
+
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
-  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] })
-
-  useEffect(() => {
-    if (multipleOptions.options.length === 0) return
-    console.log(multipleOptions.options[9].filter((co) => co.option === null).flat().length)
-    // FIXME: somehow multiple options is leaking values from "selected" to "options"
-  }, [multipleOptions])
 
   // fetch majors when component is ready
   useEffect(() => {
