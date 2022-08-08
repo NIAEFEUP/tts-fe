@@ -2,8 +2,8 @@ import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, DotsHorizontalIcon, SupportIcon, XIcon } from '@heroicons/react/outline'
 
-const FinisherInfoModal = () => {
-  let [isOpen, setIsOpen] = useState(false)
+const HelpModal = () => {
+  const [isOpen, setIsOpen] = useState(false)
 
   function closeModal() {
     setIsOpen(true)
@@ -74,11 +74,14 @@ const FinisherInfoModal = () => {
                     <p className="mt-3">Caso de uso mais comum:</p>
                     <ol className="mt-1 ml-5 list-decimal">
                       <li className="font-bold">
-                        <span className="font-normal">Escolher o <strong>ciclo de estudos</strong> (curso) que frequenta.</span>
+                        <span className="font-normal">
+                          Escolher o <strong>ciclo de estudos</strong> (curso) que frequenta.
+                        </span>
                       </li>
                       <li className="font-bold">
                         <span className="font-normal">
-                          Selecionar as <strong>unidades curriculares</strong> que pretende realizar no semestre e confirmar.
+                          Selecionar as <strong>unidades curriculares</strong> que pretende realizar no semestre e
+                          confirmar.
                         </span>
                       </li>
                       <li className="font-bold">
@@ -144,4 +147,4 @@ const FinisherInfoModal = () => {
   )
 }
 
-export default FinisherInfoModal
+export default HelpModal
