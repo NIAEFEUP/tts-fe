@@ -1,3 +1,5 @@
+import StorageAPI from '../../api/storage'
+import HelpModal from './HelpModal'
 import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import {
@@ -9,7 +11,6 @@ import {
   UploadIcon,
 } from '@heroicons/react/outline'
 import { CourseOption, MultipleOptions } from '../../@types'
-import StorageAPI from '../../api/storage'
 
 type Props = {
   schedule: CourseOption[]
@@ -180,6 +181,10 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
           </div>
 
           <div className="p-1">
+            <Menu.Item>
+              <HelpModal />
+            </Menu.Item>
+
             <Menu.Item>
               {({ active, disabled }) => (
                 <button
