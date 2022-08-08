@@ -82,7 +82,7 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     if (totalSelected.length === 0) return
     StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions])
+  }, [multipleOptions, totalSelected])
 
   // fetch majors when component is ready
   useEffect(() => {
