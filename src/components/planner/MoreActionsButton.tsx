@@ -181,9 +181,7 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
           </div>
 
           <div className="p-1">
-            <Menu.Item>
-              <HelpModal />
-            </Menu.Item>
+            <HelpModal />
 
             <Menu.Item>
               {({ active, disabled }) => (
