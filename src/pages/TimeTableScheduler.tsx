@@ -1,5 +1,6 @@
 import BackendAPI from '../api/backend'
-import { useState, useEffect } from 'react'
+import StorageAPI from '../api/storage'
+import { useState, useEffect, useMemo } from 'react'
 import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
@@ -69,10 +70,19 @@ const TimeTableSchedulerPage = () => {
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
+  const totalSelected = useMemo(
+    () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
+    [multipleOptions]
+  )
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
+
+  useEffect(() => {
+    if (totalSelected.length === 0) return
+    StorageAPI.setOptionsStorage(multipleOptions)
+  }, [multipleOptions])
 
   // fetch majors when component is ready
   useEffect(() => {
@@ -95,13 +105,29 @@ const TimeTableSchedulerPage = () => {
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
+    const pickedCourses = getPickedCourses(checkedCourses)
+    if (pickedCourses.length === 0) return
+
+    const storedOptions = StorageAPI.getOptionsStorage()
+    const storedOptionsNotNulls = storedOptions.options
+      .map((co: CourseOption[]) => co.filter((item) => item.option !== null))
+      .flat()
+
+    const correctCourses =
+      pickedCourses.map((item) => item.info.id).join('-') ===
+      (storedOptions.options[0] !== undefined
+        ? storedOptions.options[0].map((item) => item.course.info.id).join('-')
+        : '')
+
+    if (storedOptionsNotNulls.length > 0 && correctCourses) {
+      setMultipleOptions(JSON.parse(JSON.stringify(storedOptions)))
+      return
+    }
+
     const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
       return value ? value.option : null
     }
-
-    const pickedCourses = getPickedCourses(checkedCourses)
-    if (pickedCourses.length === 0) return
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
       setMultipleOptions((prev) => {

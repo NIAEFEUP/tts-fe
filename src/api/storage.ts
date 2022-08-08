@@ -1,4 +1,4 @@
-import { CheckedCourse, CourseOption } from '../@types'
+import { MultipleOptions } from '../@types'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
@@ -22,34 +22,12 @@ const writeStorageInvalid = (key: string, initialValue?: any) => {
   localStorage.setItem(key + '.fetch-date', null)
 }
 
-const getCoursesStorage = (): CheckedCourse[][] => {
-  const key = 'niaefeup-tts.courses'
-  const initialValue = []
-  try {
-    if (isStorageValid(key, 7)) {
-      const courses: CheckedCourse[][] = JSON.parse(localStorage.getItem(key))
-      return courses
-    } else {
-      writeStorageInvalid(key, initialValue)
-      return initialValue
-    }
-  } catch (error) {
-    console.warn(error)
-    return initialValue
-  }
-}
-
-const setCoursesStorage = (courses: CheckedCourse[][]): void => {
-  const key = 'niaefeup-tts.courses'
-  writeStorage(key, courses)
-}
-
-const getCourseOptionsStorage = (): CourseOption[] => {
+const getOptionsStorage = (): MultipleOptions => {
   const key = 'niaefeup-tts.options'
-  const initialValue = []
+  const initialValue = { index: 0, selected: [], options: [] }
   try {
     if (isStorageValid(key, 7)) {
-      const courseOptions: CourseOption[] = JSON.parse(localStorage.getItem(key))
+      const courseOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
       return courseOptions
     } else {
       writeStorageInvalid(key, initialValue)
@@ -61,16 +39,14 @@ const getCourseOptionsStorage = (): CourseOption[] => {
   }
 }
 
-const setCourseOptionsStorage = (courseOptions: CourseOption[]): void => {
+const setOptionsStorage = (courseOptions: MultipleOptions): void => {
   const key = 'niaefeup-tts.options'
   writeStorage(key, courseOptions)
 }
 
 const StorageAPI = {
-  getCoursesStorage,
-  setCoursesStorage,
-  getCourseOptionsStorage,
-  setCourseOptionsStorage,
+  getOptionsStorage,
+  setOptionsStorage,
 }
 
 export default StorageAPI

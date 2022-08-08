@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Transition, Menu } from '@headlessui/react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
+import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
 import { MultipleOptions } from '../../@types'
 
 type Props = {
@@ -12,15 +12,11 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
 
   const setNextOptionIndex = () => {
-    setOptions((prev) => {
-      const value = {
-        index: prev.index + 1,
-        selected: prev.options[prev.index + 1],
-        options: [...prev.options],
-      }
-
-      return value
-    })
+    setOptions((prev) => ({
+      index: prev.index + 1,
+      selected: prev.options[prev.index + 1],
+      options: [...prev.options],
+    }))
   }
 
   const setPreviousOptionIndex = () => {
@@ -69,8 +65,8 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           leaveTo="transform opacity-0 scale-95"
         >
           <Menu.Items
-            className="absolute right-0 z-20 mt-2 flex w-full origin-top-right flex-col gap-1
-            divide-y divide-gray-100 rounded-md bg-white p-1.5 shadow-lg"
+            className="absolute right-0 z-20 mt-2 flex w-full origin-top-right flex-col gap-1 rounded
+            border-2 border-lightish bg-lightest p-1.5 shadow-xl dark:border-transparent dark:bg-darkest xl:gap-2"
           >
             {optionIndexes.map((index: number) => (
               <Menu.Item key={`schedule-option-${index}`}>
@@ -79,11 +75,12 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                     onClick={() => setOptionIndex(index)}
                     className={`
                       ${active ? 'bg-secondary text-white' : ''}
-                      ${index === options.index ? 'bg-secondary text-white' : !active && 'text-gray-900'}
-                      group relative flex w-full cursor-pointer select-none items-center rounded px-2 py-2 text-sm 
+                      ${index === options.index ? 'bg-secondary text-white hover:opacity-90' : !active && ''}
+                      group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 text-sm transition-all
                     `}
                   >
-                    Horário {index + 1}
+                    <span>Horário {index + 1}</span>
+                    {index === options.index && <CheckIcon className="h-5 w-5" />}
                   </button>
                 )}
               </Menu.Item>
