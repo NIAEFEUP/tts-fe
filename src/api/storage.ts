@@ -44,9 +44,16 @@ const setOptionsStorage = (courseOptions: MultipleOptions): void => {
   writeStorage(key, courseOptions)
 }
 
+const deleteOptionsStorage = (): void => {
+  const key = 'niaefeup-tts.options'
+  const initialValue = { index: 0, selected: [], options: [] }
+  writeStorageInvalid(key, initialValue)
+}
+
 const StorageAPI = {
   getOptionsStorage,
   setOptionsStorage,
+  deleteOptionsStorage,
 }
 
 export default StorageAPI
