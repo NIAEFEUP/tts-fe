@@ -197,6 +197,7 @@ const TimeTableSchedulerPage = () => {
               coursesHook={[checkedCourses, setCheckedCourses]}
             />
             <MoreActionsButton
+              majorHook={[major, setMajor]}
               schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
               multipleOptionsHook={[multipleOptions, setMultipleOptions]}
