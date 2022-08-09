@@ -97,7 +97,7 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value ? value : null
+      return value ? { shown: value.shown, option: value.option } : { shown: { T: true, TP: true }, option: null }
     }
 
     const pickedCourses = getPickedCourses(checkedCourses)
@@ -112,10 +112,7 @@ const TimeTableSchedulerPage = () => {
           for (let i = 0; i < pickedCourses.length; i++) {
             const co = findPreviousEntry(prev.selected, pickedCourses[i])
             newCourseOptions.push({
-              shown: {
-                T: co !== null ? co.shown.T : true,
-                TP: co !== null ? co.shown.TP : true,
-              },
+              shown: co.shown,
               course: pickedCourses[i],
               option: co.option,
               schedules: schedules[i],
