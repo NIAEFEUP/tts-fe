@@ -1,12 +1,6 @@
 import classNames from 'classnames'
-import { Lesson, LessonBoxRef } from '../../../@types'
-import {
-  convertWeekdayLong,
-  getClassTypeClassName,
-  getLessonBoxName,
-  getLessonBoxTime,
-  getLessonTypeLongName,
-} from '../../../utils'
+import { Lesson } from '../../../@types'
+import { convertWeekdayLong, getClassTypeClassName, getLessonBoxTime, getLessonTypeLongName } from '../../../utils'
 
 type Props = {
   lesson: Lesson
@@ -15,19 +9,13 @@ type Props = {
 
 const InspectLessonBox = ({ lesson, conflict }: Props) => {
   const lessonType = lesson.schedule.lesson_type
-  const lessonBoxRef: LessonBoxRef = {
-    type: lessonType,
-    id: lesson.course.course_unit_id,
-    acronym: lesson.course.acronym,
-  }
 
   return (
     <div
       className={classNames(
         'schedule-class-responsive group',
         conflict ? '' : 'w-full',
-        getClassTypeClassName(lessonType),
-        getLessonBoxName(lessonBoxRef, 'responsive')
+        getClassTypeClassName(lessonType)
       )}
     >
       <div className="flex h-full w-full flex-col items-center justify-between gap-8 p-4 leading-none tracking-tighter text-white">

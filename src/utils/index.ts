@@ -1,4 +1,4 @@
-import { CourseSchedule, Lesson, LessonBoxRef } from '../@types'
+import { CourseSchedule, Lesson } from '../@types'
 
 const minHour = 8
 const maxHour = 23
@@ -83,11 +83,6 @@ const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) =>
   }
 }
 
-const getLessonBoxName = (lessonBoxRef: LessonBoxRef, prefix?: string): string => {
-  const tokens: string[] = ['lesson', lessonBoxRef.type, lessonBoxRef.acronym, lessonBoxRef.id.toString()]
-  return prefix ? [prefix, tokens].flat().join('-') : tokens.join('-')
-}
-
 const getLessonTypeLongName = (type: string) => {
   switch (type) {
     case 'T':
@@ -159,7 +154,6 @@ export {
   getScheduleOptionDisplayText,
   getLessonBoxTime,
   getLessonBoxStyles,
-  getLessonBoxName,
   getClassTypeClassName,
   getLessonTypeLongName,
 }

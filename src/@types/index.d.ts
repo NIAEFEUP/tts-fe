@@ -57,6 +57,10 @@ export type CourseSchedule = {
 
 /* Options */
 export type CourseOption = {
+  shown?: {
+    T: boolean
+    TP: boolean
+  }
   course: CheckedCourse
   option: CourseSchedule | null
   schedules: CourseSchedule[]
@@ -71,10 +75,4 @@ export type Subject = {
 export type Lesson = {
   course: Course
   schedule: CourseSchedule
-}
-
-export type LessonBoxRef = {
-  id: number
-  type: string
-  acronym: string
 }

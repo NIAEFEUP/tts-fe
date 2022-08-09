@@ -1,10 +1,9 @@
 import classNames from 'classnames'
-import { useState } from 'react'
-import { Lesson, LessonBoxRef } from '../../../@types'
+import { useState, useMemo } from 'react'
+import { Lesson } from '../../../@types'
 import {
   getClassTypeClassName,
   getLessonTypeLongName,
-  getLessonBoxName,
   getLessonBoxStyles,
   getLessonBoxTime,
   maxHour,
@@ -26,14 +25,10 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
   const lessonType = lesson.schedule.lesson_type
   const timeSpan = getLessonBoxTime(lesson.schedule)
   const longLesson = parseFloat(lesson.schedule.duration) > 1
-  const lessonBoxRef: LessonBoxRef = {
-    type: lessonType,
-    id: lesson.course.course_unit_id,
-    acronym: lesson.course.acronym,
-  }
 
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false)
+  const severe = useMemo(() => conflicts?.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [conflicts])
 
   const showConflicts = () => {
     setConflictsShown(true)
@@ -54,8 +49,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
           className={classNames(
             'schedule-class group',
             getClassTypeClassName(lessonType),
-            getLessonBoxName(lessonBoxRef),
-            conflict ? 'schedule-class-conflict' : ''
+            conflict ? (severe ? 'schedule-class-conflict' : 'schedule-class-conflict-warn') : ''
           )}
         >
           {longLesson ? (
@@ -94,7 +88,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             </div>
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
-              <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center justify-between gap-2">
                 <span title="Duração">
                   {timeSpan} (<strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>)
                 </span>
@@ -103,7 +97,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
                 </span>
               </div>
 
-              <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center justify-between gap-2">
                 <span title="Sala">{lesson.schedule.location}</span>
                 <span title="Turma">{compClassTitle ? compClassTitle : classTitle}</span>
                 <span title="Professor(es)" className="truncate">
