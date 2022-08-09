@@ -113,8 +113,8 @@ const TimeTableSchedulerPage = () => {
             const co = findPreviousEntry(prev.selected, pickedCourses[i])
             newCourseOptions.push({
               shown: {
-                T: co.shown.T,
-                TP: co.shown.TP,
+                T: co !== null ? co.shown.T : true,
+                TP: co !== null ? co.shown.TP : true,
               },
               course: pickedCourses[i],
               option: co.option,
