@@ -127,16 +127,34 @@ const TimeTableSchedulerPage = () => {
         let filler: CourseOption[] = []
         for (let i = 0; i < pickedCourses.length; i++) filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
 
-        let result: CourseOption[][] = []
+        let newOptions: CourseOption[][] = []
         for (let i = 0; i < 10; i++) {
-          if (i === prev.index) result.push(newCourseOptions)
-          else result.push(JSON.parse(JSON.stringify(filler))) // deep copy
+          if (i === prev.index) newOptions.push(newCourseOptions)
+          else {
+            if (prev.options.length === 0) newOptions.push(JSON.parse(JSON.stringify(filler))) // deep copy
+            else {
+              const innerNotNulls = prev.options[i].filter((item) => item.option !== null)
+              if (innerNotNulls.length > 0) {
+                let extraCourseOptions: CourseOption[] = []
+                for (let j = 0; j < pickedCourses.length; j++) {
+                  const co = findPreviousEntry(prev.options[i], pickedCourses[j])
+                  extraCourseOptions.push({
+                    shown: co.shown,
+                    course: pickedCourses[j],
+                    option: co.option,
+                    schedules: schedules[j],
+                  })
+                }
+                newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
+              } else newOptions.push(JSON.parse(JSON.stringify(filler)))
+            }
+          }
         }
 
         return {
           index: prev.index,
           selected: newCourseOptions,
-          options: result,
+          options: newOptions,
         }
       })
     })
