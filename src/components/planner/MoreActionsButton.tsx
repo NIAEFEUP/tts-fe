@@ -10,16 +10,18 @@ import {
   TrashIcon,
   UploadIcon,
 } from '@heroicons/react/outline'
-import { CourseOption, MultipleOptions } from '../../@types'
+import { CourseOption, MultipleOptions, Major, ExportJSON } from '../../@types'
 
 type Props = {
+  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   schedule: CourseOption[]
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Props) => {
+const MoreActionsButton = ({majorHook, schedule, showGridHook, multipleOptionsHook }: Props) => {
   const buttonRef = useRef(null)
+  const [major, setMajor] = majorHook
   const [showGrid, setShowGrid] = showGridHook
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
@@ -33,12 +35,16 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
     const fileReader = new FileReader()
     fileReader.readAsText(e.target.files[0], 'UTF-8')
     fileReader.onload = (e) => {
-      const scheduleJson = JSON.parse(fileReader.result as string) as CourseOption[]
+      const scheduleJson = JSON.parse(fileReader.result as string) as ExportJSON
       if (isScheduleValid(scheduleJson)) {
+        console.log(scheduleJson)
+        setMajor(scheduleJson.major)
+        
+        
         setMultipleOptions((prev) => ({
           index: prev.index,
-          selected: scheduleJson,
-          options: prev.options.map((item, index) => (prev.index === index ? scheduleJson : item)),
+          selected: scheduleJson.selected,
+          options: prev.options.map((item, index) => (prev.index === index ? scheduleJson.selected : item)),
         }))
       }
       buttonRef.current.click() // close menu
@@ -46,7 +52,11 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
   }
 
   const exportJSON = () => {
-    const data = JSON.stringify(schedule)
+    const exportjson = {
+      "major": major,
+      "selected": schedule
+    }
+    const data = JSON.stringify(exportjson)
     const blob = new Blob([data], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
