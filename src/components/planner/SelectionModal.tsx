@@ -195,7 +195,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
                   {/* Select major dropdown */}
                   <Combobox
-                    value={selected}
+                    value={major}
                     onChange={(value) => {
                       setMajor(value)
                       setSelected(value)

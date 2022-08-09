@@ -1,6 +1,6 @@
 import StorageAPI from '../../api/storage'
 import HelpModal from './HelpModal'
-import { Fragment, useRef } from 'react'
+import { Fragment, useRef, useEffect } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import {
   DotsHorizontalIcon,
@@ -39,7 +39,7 @@ const MoreActionsButton = ({majorHook, schedule, showGridHook, multipleOptionsHo
       if (isScheduleValid(scheduleJson)) {
         console.log(scheduleJson)
         setMajor(scheduleJson.major)
-        
+
         
         setMultipleOptions((prev) => ({
           index: prev.index,
@@ -50,6 +50,10 @@ const MoreActionsButton = ({majorHook, schedule, showGridHook, multipleOptionsHo
       buttonRef.current.click() // close menu
     }
   }
+
+  useEffect(() => {
+    console.log('major', major);
+  }, [major])
 
   const exportJSON = () => {
     const exportjson = {
