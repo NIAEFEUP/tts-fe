@@ -69,7 +69,7 @@ const TimeTableSchedulerPage = () => {
 
   // once a major has been picked => fetch courses for the major
   useEffect(() => {
-    if (majorChangedRef.current === false && checkedCourses.length > 0) return
+    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
 
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
@@ -87,6 +87,7 @@ const TimeTableSchedulerPage = () => {
     }
 
     const pickedCourses = getPickedCourses(checkedCourses)
+    if (pickedCourses.length === 0) return
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[]) => {
       setCourseOptions((prev) => {
