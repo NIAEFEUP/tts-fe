@@ -23,7 +23,7 @@ const HeroExchange = () => (
     <div>
       <h2 className="mb-2 text-center text-3xl font-bold uppercase text-primary">FEUP Exchange (Coming Soon)</h2>
       <h5 className="mb-2 text-center text-xl font-medium">
-        The only place you can swap your FEUP Schedule and get on the classes with your buddies.
+        O único lugar onde podes trocar o teu horário FEUP e ficar com os teus colegas!
       </h5>
     </div>
     <div className="w-full grow rounded py-4 px-6">
