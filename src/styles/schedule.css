@@ -114,7 +114,7 @@
 
 /* Classes */
 .schedule-class {
-  @apply absolute z-10 w-1/6 border-0 text-white transition-all hover:ring-0;
+  @apply absolute z-10 w-1/6 border-0 text-white transition-none hover:ring-0;
 }
 
 .schedule-class-responsive {
