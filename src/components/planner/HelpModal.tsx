@@ -6,7 +6,7 @@ const HelpModal = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   function closeModal() {
-    setIsOpen(true)
+    setIsOpen(false)
   }
 
   function openModal() {
@@ -18,11 +18,11 @@ const HelpModal = () => {
       <button
         onClick={openModal}
         title="Limpar memória de opções de horário"
-        className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900
-        hover:bg-teal-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex w-full items-center justify-center gap-1.5 rounded bg-tertiary p-2 text-center 
+          text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <SupportIcon className="h-5 w-5 text-teal-800 group-hover:text-white" />
         <span className="truncate">Preciso de ajuda</span>
+        <SupportIcon className="h-5 w-5" />
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>
@@ -52,14 +52,14 @@ const HelpModal = () => {
               >
                 <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <header className="flex items-center justify-between">
-                    <Dialog.Title as="h3" className="text-2xl font-semibold leading-6 text-secondary">
+                    <Dialog.Title as="h3" className="text-2xl font-semibold leading-6 text-tertiary">
                       Como utilizar o planeador de horário?
                     </Dialog.Title>
 
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="rounded p-1 text-secondary transition hover:bg-secondary hover:text-white"
+                      className="rounded p-1 text-tertiary transition hover:bg-tertiary hover:text-white"
                     >
                       <XIcon className="h-6 w-6" />
                     </button>
@@ -115,7 +115,7 @@ const HelpModal = () => {
                         Bugs e outros problemas com a plataforma podem e devem ser reportados por email para o endereço{' '}
                         <strong>
                           <a
-                            className="text-secondary transition-all hover:underline hover:opacity-80"
+                            className="text-tertiary transition-all hover:underline hover:opacity-80"
                             href="mailto:projetos.niaefeup@gmail.com"
                           >
                             projetos.niaefeup@gmail.com
@@ -129,7 +129,7 @@ const HelpModal = () => {
                   <div className="mt-8">
                     <button
                       type="button"
-                      className="flex items-center space-x-2 rounded bg-secondary px-3 py-2 text-center text-sm font-medium text-white 
+                      className="flex items-center space-x-2 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                       transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={closeModal}
                     >

@@ -5,5 +5,17 @@ import ScheduleListbox from './ScheduleListbox'
 import ClassesTypeCheckboxes from './ClassesTypeCheckboxes'
 import MoreActionsButton from './MoreActionsButton'
 import OptionsController from './OptionsController'
+import LessonTypesModal from './LessonTypesModal'
+import HelpModal from './HelpModal'
 
-export { Schedule, SelectionModal, ScheduleListbox, ClassesTypeCheckboxes, Alert, MoreActionsButton, OptionsController }
+export {
+  Schedule,
+  SelectionModal,
+  ScheduleListbox,
+  ClassesTypeCheckboxes,
+  Alert,
+  MoreActionsButton,
+  OptionsController,
+  LessonTypesModal,
+  HelpModal,
+}
