@@ -1,3 +1,3 @@
-import UseCaseSection from './UseCaseSection'
+import Sidebar from './Sidebar'
 
-export { UseCaseSection }
+export { Sidebar }

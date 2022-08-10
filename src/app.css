@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply scroll-smooth;
+}
+
 body {
   @apply bg-light font-prose text-gray-800 dark:bg-darkest dark:text-white;
 }
