@@ -91,6 +91,22 @@ const TimeTableSchedulerPage = () => {
     })
   }, [])
 
+
+  const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
+    for (let i = 0; i < newCheckedCourses.length; i++) {
+      for (let j = 0; j < newCheckedCourses[i].length; j++) {
+        
+        for (let k = 0; k < importedCourses.length; k++) {
+          if (importedCourses[k].course.info.course_unit_id === newCheckedCourses[i][j].info.course_unit_id) {
+            newCheckedCourses[i][j].checked = true
+            break
+          }
+        }
+      }
+    }
+    return newCheckedCourses
+  }
+
   // once a major has been picked => fetch courses for the major
   useEffect(() => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
@@ -98,9 +114,11 @@ const TimeTableSchedulerPage = () => {
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
+      let uCC = updateCheckedCourses(newCheckedCourses, multipleOptions.selected)
       majorChangedRef.current = false
-      setCheckedCourses([...newCheckedCourses])
+      setCheckedCourses([...uCC])
     })
+    console.log("useEffect triggered!!!!")
   }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
@@ -213,6 +231,7 @@ const TimeTableSchedulerPage = () => {
             />
             <MoreActionsButton
               majorHook={[major, setMajor]}
+              coursesHook={[checkedCourses, setCheckedCourses]}
               schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
               multipleOptionsHook={[multipleOptions, setMultipleOptions]}

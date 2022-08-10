@@ -10,18 +10,20 @@ import {
   TrashIcon,
   UploadIcon,
 } from '@heroicons/react/outline'
-import { CourseOption, MultipleOptions, Major, ExportJSON } from '../../@types'
+import { CourseOption, MultipleOptions, CheckedCourse, Major, ExportJSON } from '../../@types'
 
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
+  coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   schedule: CourseOption[]
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const MoreActionsButton = ({majorHook, schedule, showGridHook, multipleOptionsHook }: Props) => {
+const MoreActionsButton = ({majorHook, coursesHook, schedule, showGridHook, multipleOptionsHook }: Props) => {
   const buttonRef = useRef(null)
   const [major, setMajor] = majorHook
+  const [checkedCourses, setCheckedCourses] = coursesHook
   const [showGrid, setShowGrid] = showGridHook
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
@@ -37,10 +39,9 @@ const MoreActionsButton = ({majorHook, schedule, showGridHook, multipleOptionsHo
     fileReader.onload = (e) => {
       const scheduleJson = JSON.parse(fileReader.result as string) as ExportJSON
       if (isScheduleValid(scheduleJson)) {
-        console.log(scheduleJson)
         setMajor(scheduleJson.major)
+        //setCheckedCourses(updateCheckedCourses(scheduleJson.selected))
 
-        
         setMultipleOptions((prev) => ({
           index: prev.index,
           selected: scheduleJson.selected,
@@ -51,9 +52,6 @@ const MoreActionsButton = ({majorHook, schedule, showGridHook, multipleOptionsHo
     }
   }
 
-  useEffect(() => {
-    console.log('major', major);
-  }, [major])
 
   const exportJSON = () => {
     const exportjson = {
