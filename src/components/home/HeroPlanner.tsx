@@ -11,14 +11,14 @@ const Hero = () => (
     </div>
     <div>
       <CardFeature
-        title="O que é o tts?"
+        title="O que é o TTS?"
         subtitle="O teu melhor amigo para escolher e cuidar do horário na FEUP"
         text="TTS, ou Time Table Selector, é uma ferramenta desenvolvida pelo NIAEFEUP para ajudar os estudantes a construir o seu próprio horário. Se é o teu primeiro ano na FEUP não poderás mudar o teu horário, a FEUP irá atribuir-te um horário e poderás apenas trocar de horário com alguém que tenha interesse. No entanto, a partir do 2º Semestre até ao último Semestre na FEUP terás de construir o teu horário. No entanto, a ferramenta que a Faculdade disponibiliza poderá não ser tão intuitiva e fácil de usar. E para isso nós decidimos criar o TTS, com o intuito de ajudar-te, com uma ferramenta de fácil acesso e com uma interface limpa e simples de modo que não tenhas complicações a construir e gerir o teu horário!"
         image={ScheduleDarkImage}
         reverse={false}
       />
       <CardFeature
-        title="Porquê usar o tts?"
+        title="Porquê usar o TTS?"
         subtitle="Porque é a ferramenta ideal que precisas"
         text="O TTS é uma ferramenta criada para ajudar os estudantes a criar, planear e partilhar os horários antes das inscrições de turmas de forma prática. Assim, podes começar a planear o teu semestre com antecedência, e, algo ainda melhor: Graças às novas features adicionadas, podes fazer o download ou dar upload de qualquer horário. Então tornou-se mais fácil do que nunca conseguires criar um horário e enviar para que os teus amigos fiquem com o mesmo horário que tu e nas mesmas turmas! Para além disso, o TTS tem um algoritmo de colisão de turmas, portanto não precisas de preocupar-te em verificar se existe algum problema, o TTS irá advertir-te!"
         image={HomePageAltImage}
