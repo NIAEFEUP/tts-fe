@@ -1,20 +1,20 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
-import { CourseOption, CourseSchedule } from '../../@types'
 import { getScheduleOptionDisplayText } from '../../utils'
+import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
 
 type Props = {
   courseOption: CourseOption
-  courseOptionsHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
+  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
+const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
   const firstRenderRef = useRef(true)
-  const [, setCourseOptions] = courseOptionsHook
+  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
-  const [showTheoretical, setShowTheoretical] = useState<boolean>(true)
-  const [showPractical, setShowPractical] = useState<boolean>(true)
+  const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
+  const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -31,31 +31,39 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
   const updateShown = (value: boolean, type: string, courseOption: CourseOption): void => {
     if (type === 'T') {
       setShowTheoretical(value)
-      setCourseOptions((prev) => {
-        let newCourseOptions = prev
+      setMultipleOptions((prev) => {
+        let newCourseOptions = prev.selected
 
-        for (let i = 0; i < prev.length; i++) {
-          const option = prev[i]
+        for (let i = 0; i < prev.selected.length; i++) {
+          const option = prev.selected[i]
           if (option.course.info.id === courseOption.course.info.id) {
             newCourseOptions[i].shown.T = value
           }
         }
 
-        return [...newCourseOptions]
+        return {
+          index: prev.index,
+          selected: [...newCourseOptions],
+          options: prev.options,
+        }
       })
     } else if (type === 'TP') {
       setShowPractical(value)
-      setCourseOptions((prev) => {
-        let newCourseOptions = prev
+      setMultipleOptions((prev) => {
+        let newCourseOptions = prev.selected
 
-        for (let i = 0; i < prev.length; i++) {
-          const option = prev[i]
+        for (let i = 0; i < prev.selected.length; i++) {
+          const option = prev.selected[i]
           if (option.course.info.id === courseOption.course.info.id) {
             newCourseOptions[i].shown.TP = value
           }
         }
 
-        return [...newCourseOptions]
+        return {
+          index: prev.index,
+          selected: [...newCourseOptions],
+          options: prev.options,
+        }
       })
     }
   }
@@ -79,8 +87,16 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
       return [...newCourseOptions]
     }
 
-    setCourseOptions((prevCourseOptions) => [...resolveCourseOptions(prevCourseOptions)])
-  }, [selectedOption, courseOption, setCourseOptions])
+    setMultipleOptions((prevMultipleOptions) => {
+      const value = {
+        index: prevMultipleOptions.index,
+        selected: [...resolveCourseOptions(prevMultipleOptions.selected)],
+        options: prevMultipleOptions.options,
+      }
+
+      return value
+    })
+  }, [selectedOption, courseOption, setMultipleOptions])
 
   return (
     adaptedSchedules && (
@@ -120,9 +136,9 @@ const ScheduleListbox = ({ courseOption, courseOptionsHook }: Props) => {
               className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
             bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
             >
-              {adaptedSchedules.map((option, personIdx) => (
+              {adaptedSchedules.map((option, optionIdx) => (
                 <Listbox.Option
-                  key={personIdx}
+                  key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
                   value={option === null ? <>&nbsp;</> : option}
                   className={({ active }) =>
                     `group relative cursor-default select-none py-2 text-sm ${

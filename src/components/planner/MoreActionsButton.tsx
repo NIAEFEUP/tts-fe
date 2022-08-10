@@ -1,18 +1,18 @@
 import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { DotsHorizontalIcon, DownloadIcon, SparklesIcon, TableIcon, UploadIcon } from '@heroicons/react/outline'
-import { CourseOption } from '../../@types'
+import { CourseOption, MultipleOptions } from '../../@types'
 
 type Props = {
   schedule: CourseOption[]
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  courseOptionsHook: [CourseOption[], React.Dispatch<React.SetStateAction<CourseOption[]>>]
+  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props) => {
+const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Props) => {
   const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
-  const [, setCourseOptions] = courseOptionsHook
+  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
   const isScheduleValid = (scheduleJson: any) => {
     // TODO: implement this
@@ -26,7 +26,11 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
     fileReader.onload = (e) => {
       const scheduleJson = JSON.parse(fileReader.result as string) as CourseOption[]
       if (isScheduleValid(scheduleJson)) {
-        setCourseOptions(scheduleJson)
+        setMultipleOptions((prev) => ({
+          index: prev.index,
+          selected: scheduleJson,
+          options: prev.options.map((item, index) => (prev.index === index ? scheduleJson : item)),
+        }))
       }
       buttonRef.current.click() // close menu
     }
@@ -47,11 +51,10 @@ const MoreActionsButton = ({ schedule, showGridHook, courseOptionsHook }: Props)
     const header = ['Index']
     const lines = []
 
-    const mock = Array(10).fill(schedule) // FIXME: remove mock
-    for (let i = 0; i < mock.length; i++) {
-      if (i === 0) for (let j = 0; j < mock[0].length; j++) header.push(mock[0][j].course.info.acronym)
+    for (let i = 0; i < multipleOptions.options.length; i++) {
+      if (i === 0) for (let j = 0; j < schedule.length; j++) header.push(schedule[j].course.info.acronym)
       const line = [`${i}`]
-      const scheduleOption = mock[i]
+      const scheduleOption = multipleOptions.options[i]
       for (let j = 0; j < scheduleOption.length; j++) line.push(scheduleOption[j].option?.class_name || '')
       lines.push(line.join(';'))
     }

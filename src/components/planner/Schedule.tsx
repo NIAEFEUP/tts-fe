@@ -150,7 +150,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
                   : conflicts.map((lessons: Lesson[]) =>
                       lessons.map((lesson: Lesson, lessonIdx: number) => (
                         <LessonBox
-                          key={`lesson-box-${lessonIdx}`}
+                          key={`conflict-lesson-box-${lessonIdx}`}
                           lesson={lesson}
                           conflict={lessons.length > 1 ? true : false}
                           conflicts={lessons.length > 1 ? lessons : undefined}

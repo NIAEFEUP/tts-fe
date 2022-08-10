@@ -22,7 +22,7 @@ module.exports = {
         feup: '#7D221E',
         schedule: {
           lunch: '#BE123C',
-          t: '#A8A199',
+          t: '#91897F',
           tp: '#115E59',
           pl: '#003d7a',
           ot: '#5c8fc2',
