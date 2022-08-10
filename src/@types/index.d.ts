@@ -21,15 +21,11 @@ export type Course = {
   schedule_url: string
   last_updated: string
 }
-export type YearCourses = Course[]
-export type MajorCourses = YearCourses[]
 
 export type CheckedCourse = {
   checked: boolean
   info: Course
 }
-export type CheckedYearCourses = CheckedCourse[]
-export type CheckedMajorCourses = CheckedYearCourses[]
 
 /* Majors */
 export type Major = {
@@ -59,16 +55,16 @@ export type CourseSchedule = {
   composed_class_name: string // e.g. COMP752
 }
 
-export type CourseSchedules = CourseSchedule[]
-export type Schedules = CourseSchedules[]
-
 /* Options */
 export type CourseOption = {
+  shown?: {
+    T: boolean
+    TP: boolean
+  }
   course: CheckedCourse
   option: CourseSchedule | null
-  schedules: CourseSchedules
+  schedules: CourseSchedule[]
 }
-export type CourseOptions = CourseOption[]
 
 export type Subject = {
   course: Course
@@ -81,8 +77,8 @@ export type Lesson = {
   schedule: CourseSchedule
 }
 
-export type LessonBoxRef = {
-  id: number
-  type: string
-  acronym: string
+export type MultipleOptions = {
+  index: number
+  selected: CourseOption[]
+  options: CourseOption[][]
 }

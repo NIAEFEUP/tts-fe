@@ -1,49 +1,42 @@
-import * as backendAPI from '../backend'
+import BackendAPI from '../api/backend'
+import StorageAPI from '../api/storage'
 import { useState, useEffect, useMemo } from 'react'
-import { useCourses, useMajor, useShowGrid } from '../hooks'
-import { CheckedCourse, CheckedMajorCourses, Course, CourseOptions, Major, MajorCourses, YearCourses } from '../@types'
+import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
   SelectionModal,
   ScheduleListbox,
   ClassesTypeCheckboxes,
   MoreActionsButton,
+  OptionsController,
 } from '../components/planner'
-import { ScheduleColorLabels } from '../components/planner/schedules'
-//import classNames from 'classnames'
+import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
+import { useShowGrid, useMajor, useCourses } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
-
-  /**
-   * Adds the checked and info property to the major courses.
-   * @param majorCourses Courses in a major grouped by year. 
-   * @returns MajorCourses with the checked and info properties. 
-   */
-  const majorCourses2CheckedMajor = (majorCourses: MajorCourses): CheckedMajorCourses => {
-    return majorCourses.map((year: YearCourses) =>
+  // add check property to courses
+  const courseToCheckedCourse = (majorCourses: Course[][]): CheckedCourse[][] =>
+    majorCourses.map((year: Course[]) =>
       year.map((item: Course) => ({
         checked: false,
         info: item,
       }))
     )
-  }
 
   /**
-   * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year. 
-   * @param yearCourses All the courses in a major. 
-   * @returns The courses grouped by year. 
-   * For examples: 
-   * [{course:1, year:1}, {course:3, year:1 }, {course:2, year:2}]
-   * Returns:
-   * [[{course:1, year:1}, {course:3, year:1}], [{course:2, year:2}]]
+   * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year.
+   * @param yearCourses All the courses in a major.
+   * @returns The courses grouped by year.
+   * @example input: [{ course: 1, year: 1 }, { course: 3, year: 1 }, { course: 2, year: 2 }]
+   * @example output: [[{ course: 1, year: 1 }, { course: 3, year: 1 }], [{ course: 2, year: 2 }]]
    */
-  const groupMajorCoursesByYear = (yearCourses: YearCourses): MajorCourses => {
-    let majorCourses: MajorCourses = [];
-    let currYear = 0;
+  const groupMajorCoursesByYear = (yearCourses: Course[]): Course[][] => {
+    let majorCourses: Course[][] = []
+    let currYear = 0
     for (let i = 0; i < yearCourses.length; i++) {
       if (yearCourses[i].course_year !== currYear) {
-        currYear += 1;
-        majorCourses.push([yearCourses[i]]);
+        currYear += 1
+        majorCourses.push([yearCourses[i]])
       } else {
         majorCourses[currYear - 1].push(yearCourses[i])
       }
@@ -51,89 +44,147 @@ const TimeTableSchedulerPage = () => {
     return majorCourses
   }
 
-
-  const getCheckedCourses = (courses: CheckedMajorCourses): CheckedCourse[] => {
-    return courses.flat().filter((course) => course.checked)
-  }
-
-
-  const initializeSelected = (): CourseOptions => {
-    const selectedCourses = getCheckedCourses(courses)
-    return selectedCourses.map((course: CheckedCourse) => ({
+  const getEmptyCourseOption = (course: CheckedCourse, schedules: CourseSchedule[]): CourseOption => {
+    return {
+      shown: {
+        T: true,
+        TP: true,
+      },
       course: course,
       option: null,
-      schedules: [],
-    }))
+      schedules: schedules,
+    }
   }
 
+  // extract only the course with checked: true
+  const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
 
-  // FIXME: Possible overhaul: split all data variables from UI variables. Data variables would be wrapped in useMemo.
-  const [majorLS, setMajorLS] = useMajor()
-  const [showGrid, setShowGrid] = useShowGrid()
-  const [major, setMajor] = useState<Major>(null)
-  const [courses, setCourses] = useState<CheckedMajorCourses>([])
+  // fetch all schedules for the picked courses
+  const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
+
+  // modal initial value
+  const getModalIsOpenValue = (easy?: boolean) => (easy ? !major || getPickedCourses(checkedCourses).length < 3 : true)
+
+  const [major, setMajor, majorChangedRef] = useMajor() // the picked major
+  const [majors, setMajors] = useState<Major[]>([]) // all the majors
+  const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
+  const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
+  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
+  const totalSelected = useMemo(
+    () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
+    [multipleOptions]
+  )
+
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [selected, setSelected] = useState<CourseOptions>(() => initializeSelected())
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => !major || selected.length === 0)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
 
-  // UPDATING INTERNAL STATE =================================================== 
-  const getSchedule = async (checkedCourse: CheckedCourse, options = null) => {
-    return await backendAPI.getCourseSchedule(checkedCourse).then((response) => {
-      return {
-        course: checkedCourse,
-        option: options,
-        schedules: response
-      }
-    });
-  }
-
-
-  // Updates the selected Major. 
   useEffect(() => {
-    backendAPI.getMajors().then(function (result) {
-      setMajorLS(result)
-    });
-  }, []);
+    if (totalSelected.length === 0) return
+    StorageAPI.setOptionsStorage(multipleOptions)
+  }, [multipleOptions, totalSelected])
 
-  // Updates the courses (course units). 
+  // fetch majors when component is ready
   useEffect(() => {
-    backendAPI.getCourses(major).then(function (courses) {
-      const majorCourses: MajorCourses = groupMajorCoursesByYear(courses);
-      const checkedMajorCourses: CheckedMajorCourses = majorCourses2CheckedMajor(majorCourses)
-      setCourses(checkedMajorCourses)
+    BackendAPI.getMajors().then((majors: Major[]) => {
+      setMajors(majors)
     })
-  }, [major]);
+  }, [])
 
-
-  // Updates the schedules for a selected course. 
+  // once a major has been picked => fetch courses for the major
   useEffect(() => {
-    const selectedCourses = getCheckedCourses(courses);
-    let schedules = [];
-    for (let i = 0; i < selectedCourses.length; i++) {
-      getSchedule(selectedCourses[i]).then((schedule) => { schedules.push(schedule) });
+    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
+
+    BackendAPI.getCourses(major).then((courses: Course[]) => {
+      const majorCourses = groupMajorCoursesByYear(courses)
+      const newCheckedCourses = courseToCheckedCourse(majorCourses)
+      majorChangedRef.current = false
+      setCheckedCourses([...newCheckedCourses])
+    })
+  }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
+
+  // fetch schedules for the courses and preserve course options (once courses have been picked)
+  useEffect(() => {
+    const pickedCourses = getPickedCourses(checkedCourses)
+    if (pickedCourses.length === 0) return
+
+    const storedOptions = StorageAPI.getOptionsStorage()
+    const storedOptionsNotNulls = storedOptions.options
+      .map((co: CourseOption[]) => co.filter((item) => item.option !== null))
+      .flat()
+
+    const correctCourses =
+      pickedCourses.map((item) => item.info.id).join('-') ===
+      (storedOptions.options[0] !== undefined
+        ? storedOptions.options[0].map((item) => item.course.info.id).join('-')
+        : '')
+
+    if (storedOptionsNotNulls.length > 0 && correctCourses) {
+      setMultipleOptions(JSON.parse(JSON.stringify(storedOptions)))
+      return
     }
 
-    setSelected(schedules);
-  }, [courses]);
-
-
-
-  useEffect(() => {
-    const findPreviousEntry = (prevSelected: CourseOptions, course: CheckedCourse) => {
+    const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value !== undefined ? value.option : null
+      return value ? { shown: value.shown, option: value.option } : { shown: { T: true, TP: true }, option: null }
     }
 
-    let schedules = [];
-    const selectedCourses = getCheckedCourses(courses);
-    for (let i = 0; i < selectedCourses.length; i++) {
-      const option = findPreviousEntry(selected, selectedCourses[i]);
-      getSchedule(selectedCourses[i], option).then((schedule) => { console.log(schedule);   schedules.push(schedule) });
-    }
+    fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
+      setMultipleOptions((prev) => {
+        let newCourseOptions: CourseOption[] = []
+        const notNulls = prev.selected.filter((item) => item.option !== null)
 
-    setSelected(schedules);
-  }, [courses])
+        if (notNulls.length > 0) {
+          for (let i = 0; i < pickedCourses.length; i++) {
+            const co = findPreviousEntry(prev.selected, pickedCourses[i])
+            newCourseOptions.push({
+              shown: co.shown,
+              course: pickedCourses[i],
+              option: co.option,
+              schedules: schedules[i],
+            })
+          }
+        } else {
+          for (let i = 0; i < pickedCourses.length; i++) {
+            newCourseOptions.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
+          }
+        }
+
+        let filler: CourseOption[] = []
+        for (let i = 0; i < pickedCourses.length; i++) filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
+
+        let newOptions: CourseOption[][] = []
+        for (let i = 0; i < 10; i++) {
+          if (i === prev.index) newOptions.push(newCourseOptions)
+          else {
+            if (prev.options.length === 0) newOptions.push(JSON.parse(JSON.stringify(filler))) // deep copy
+            else {
+              const innerNotNulls = prev.options[i].filter((item) => item.option !== null)
+              if (innerNotNulls.length > 0) {
+                let extraCourseOptions: CourseOption[] = []
+                for (let j = 0; j < pickedCourses.length; j++) {
+                  const co = findPreviousEntry(prev.options[i], pickedCourses[j])
+                  extraCourseOptions.push({
+                    shown: co.shown,
+                    course: pickedCourses[j],
+                    option: co.option,
+                    schedules: schedules[j],
+                  })
+                }
+                newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
+              } else newOptions.push(JSON.parse(JSON.stringify(filler)))
+            }
+          }
+        }
+
+        return {
+          index: prev.index,
+          selected: newCourseOptions,
+          options: newOptions,
+        }
+      })
+    })
+  }, [checkedCourses])
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
@@ -142,7 +193,7 @@ const TimeTableSchedulerPage = () => {
         <div className="h-full w-full">
           <Schedule
             showGrid={showGrid}
-            courseOptions={selected}
+            courseOptions={multipleOptions.selected}
             activeClassesT={classesT}
             activeClassesTP={classesTP}
           />
@@ -150,28 +201,30 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div
-        className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between 
-        rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4"
-      >
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
+            <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
             <SelectionModal
-              majors={majorLS}
+              majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
-              coursesHook={[courses, setCourses]}
+              coursesHook={[checkedCourses, setCheckedCourses]}
             />
-            <MoreActionsButton schedule={selected} showGridHook={[showGrid, setShowGrid]} />
+            <MoreActionsButton
+              schedule={multipleOptions.selected}
+              showGridHook={[showGrid, setShowGrid]}
+              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+            />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
-          <div className="flex flex-col space-y-4 py-2 px-0">
-            {selected.length > 0 &&
-              selected.map((courseOption, courseOptionIdx) => (
+          <div className="flex flex-col gap-4 py-2 px-0">
+            {multipleOptions.selected.length > 0 &&
+              multipleOptions.selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
-                  selectedHook={[selected, setSelected]}
-                  key={`course-schedule-listbox-${courseOptionIdx}`}
+                  multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+                  key={`course-schedule-listbox-${multipleOptions.index}-${courseOption.course.info.id}`}
                 />
               ))}
           </div>

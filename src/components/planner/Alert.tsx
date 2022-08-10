@@ -40,10 +40,12 @@ const Alert = ({ children, type }: Props) => {
       )}
     >
       <div className="inline-flex items-center justify-center space-x-2">
-        {type === AlertType.info ? <InformationCircleIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
-        {type === AlertType.warning ? <ExclamationIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
-        {type === AlertType.error ? <ExclamationCircleIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
-        {type === AlertType.success ? <CheckCircleIcon className="h-6 w-6 md:h-5 md:w-5" /> : null}
+        <span>
+          {type === AlertType.info && <InformationCircleIcon className="h-6 w-6 md:h-5 md:w-5" />}
+          {type === AlertType.warning && <ExclamationIcon className="h-6 w-6 md:h-5 md:w-5" />}
+          {type === AlertType.error && <ExclamationCircleIcon className="h-6 w-6 md:h-5 md:w-5" />}
+          {type === AlertType.success && <CheckCircleIcon className="h-6 w-6 md:h-5 md:w-5" />}
+        </span>
         <strong className="text-xs font-medium md:text-sm">{children}</strong>
       </div>
     </div>
