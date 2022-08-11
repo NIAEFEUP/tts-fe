@@ -78,7 +78,7 @@ const TimeTableSchedulerPage = () => {
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
 
   useEffect(() => {
     if (totalSelected.length === 0) return

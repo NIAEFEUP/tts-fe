@@ -7,6 +7,7 @@ import LogoFEDarkImage from './logo-dark.png'
 import LogoFELightImage from './logo-light.png'
 import LogoNIAEFEUPImage from './logo-ni.png'
 import LogoNIAEFEUPAltImage from './logo-ni2.png'
+import ScheduleLightImage from './schedule-light.png'
 import ScheduleDarkImage from './schedule-dark.png'
 
 export {
@@ -19,5 +20,6 @@ export {
   LogoFELightImage,
   LogoNIAEFEUPImage,
   LogoNIAEFEUPAltImage,
+  ScheduleLightImage,
   ScheduleDarkImage,
 }

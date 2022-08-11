@@ -62,7 +62,7 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
 
     for (let i = 0; i < multipleOptions.options.length; i++) {
       if (i === 0) for (let j = 0; j < schedule.length; j++) header.push(schedule[j].course.info.acronym)
-      const line = [`${i}`]
+      const line = [`${i + 1}`]
       const scheduleOption = multipleOptions.options[i]
       for (let j = 0; j < scheduleOption.length; j++) line.push(scheduleOption[j].option?.class_name || '')
       lines.push(line.join(';'))

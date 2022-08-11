@@ -14,51 +14,51 @@ const ExchangeFaqs = (props) => {
         </span>
       ),
       answer: (
-        <span>
+        <p>
           Não! Basta cada aluno indicar as suas preferências a cada cadeira, e o algoritmo irá automaticamente encontrar
           alguém que faça a troca com o mesmo
-        </span>
+        </p>
       ),
     },
     {
       question: <span>Posso fazer alterações às minhas preferências, ou desistir de a utilizar?</span>,
       answer: (
-        <span>
+        <p>
           Sim, mas apenas antes da data limite. A data limite será apresentada na página principal do FEUPExchange. Até
           esse limite, os estudantes podem alterá-las, ou até desistir de utilizar a plataforma. Depois desse limite, as
           preferências ficam bloqueadas, e o algoritmo é executado.
-        </span>
+        </p>
       ),
     },
     {
       question: <span>Quando é que posso ver o meu novo horário?</span>,
       answer: (
-        <span>
+        <p>
           Após chegar a data limite e após o algoritmo ser executado, a platforma irá enviar um email a cada estudante,
           que irá conter o seu novo horário! Esses horários são depois enviados para a secretaria da FEUP, e pouco
           depois o novo horário ficará visível no SIGARRA!
-        </span>
+        </p>
       ),
     },
     {
       question: <span>E se eu fico com um horário que não gosto?</span>,
       answer: (
-        <span>
+        <p>
           O algoritmo do FEUPExchange não irá gerar, para nenhum estudante, um horário cujas cadeiras não sejam
           especificadas nas suas indicações (quer seja nas preferências, nos give-ins ou nos buddies). Tendo isto em
           conta, o FEUPExchange não se responsabiliza caso o estudante prefira o seu horário antigo, face ao novo
           horário gerado.
-        </span>
+        </p>
       ),
     },
     {
       question: <span>Quanto tempo demora até as alterações serem visíveis no SIGARRA?</span>,
       answer: (
-        <span>
+        <p>
           Após correr o algoritmo, todos os novos horários serão enviados para secretaria da FEUP passado alguns
           minutos. Depois cabe à secretaria processar as alterações de horário para cada estudante. É previsto que as
           mudanças sejam visíveis no SIGARRA dentro de 1 a 2 dias úteis.
-        </span>
+        </p>
       ),
     },
   ]
@@ -76,8 +76,8 @@ const ExchangeFaqs = (props) => {
       </div>
 
       <div className="mx-auto flex w-full flex-col gap-4 rounded-2xl bg-white p-4 dark:bg-dark">
-        {data.map((item, index) => (
-          <Disclosure defaultOpen={index === 0} as="div">
+        {data.map((faq, faqIdx) => (
+          <Disclosure defaultOpen={faqIdx === 0} as="div" key={`exchange-faq-${faqIdx}`}>
             {({ open }) => (
               <>
                 <Disclosure.Button
@@ -85,7 +85,7 @@ const ExchangeFaqs = (props) => {
                   py-2 text-left font-medium text-secondary transition hover:bg-secondary 
                   hover:text-white dark:bg-secondary/50 dark:text-white dark:hover:bg-secondary/90"
                 >
-                  {item.question}
+                  {faq.question}
                   <ChevronUpIcon
                     className={classNames(
                       'ml-4 h-6 w-6 transition group-hover:text-white',
@@ -104,7 +104,7 @@ const ExchangeFaqs = (props) => {
                   leaveTo="transform scale-95 opacity-0"
                 >
                   <Disclosure.Panel className="w-full px-2 py-3 text-gray-700 dark:text-white">
-                    {item.answer}
+                    {faq.answer}
                   </Disclosure.Panel>
                 </Transition>
               </>
