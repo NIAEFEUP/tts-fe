@@ -68,5 +68,5 @@ button {
 }
 
 .quote {
-  @apply border-l-4 border-secondary bg-lightish py-1 pl-4 dark:bg-darkish;
+  @apply border-l-4 border-slate-700 bg-lightish py-1 pl-4 dark:border-white dark:bg-darkish;
 }

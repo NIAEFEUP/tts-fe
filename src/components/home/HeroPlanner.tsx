@@ -1,6 +1,8 @@
 import classNames from 'classnames'
-import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
+import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
 
 type Card = {
   id: string
@@ -45,36 +47,56 @@ const HeroPlanner = () => {
     {
       id: 'why',
       title: <span>Porquê usar o TTS?</span>,
-      subtitle: <span>Porque é a ferramenta ideal que precisas</span>,
+      subtitle: <span>Porque é a ferramenta ideal para teres o melhor horário possível.</span>,
       image: HomePageAltImage,
       reverse: true,
       content: (
-        <p>
-          O TTS é uma ferramenta criada para ajudar os estudantes a criar, planear e partilhar os horários antes das
-          inscrições de turmas de forma prática. Assim, podes começar a planear o teu semestre com antecedência, e, algo
-          ainda melhor: Graças às novas features adicionadas, podes fazer o download ou dar upload de qualquer horário.
-          Então tornou-se mais fácil do que nunca conseguires criar um horário e enviar para que os teus amigos fiquem
-          com o mesmo horário que tu e nas mesmas turmas! Para além disso, o TTS tem um algoritmo de colisão de turmas,
-          portanto não precisas de preocupar-te em verificar se existe algum problema, o TTS irá advertir-te!
-        </p>
+        <div className="space-y-3">
+          <p>
+            O TTS permite aos estudantes <strong>criar</strong>, <strong>planear</strong> e <strong>partilhar</strong>{' '}
+            os horários antes das inscrições nas turmas de forma flexível e prática. Podes planear o teu semestre com
+            antecedência e ter uma visão abrangente das opções que tens e quais os horários a que queres dar prioridade.
+          </p>
+          <p>
+            Com a nova versão do TTS podes delinear até 10 opções de horário, tal como na submissão das preferências no
+            SIGARRA, que se aplica a alguns cursos da UPorto. Mais opções de horário dão-te melhor chance de ficar com
+            um horário desejado, evitando alocações automáticas indesejadas.
+          </p>
+        </div>
       ),
     },
     {
       id: 'news',
-      title: <span>Novas features do TTS e futuras atualizações</span>,
-      subtitle: <span>Temos algumas novidades nesta nova versão do TTS</span>,
+      title: <span>O que há de novo na nova versão do TTS?</span>,
+      subtitle: <span>Temos muitas novas funcionalidades do TTS e planos para futuras atualizações.</span>,
       image: HomePageImage,
       reverse: false,
       content: (
-        <p>
-          Desde o Dark Mode até ao download/upload dos horários, temos algumas novidades nesta release. Como já foi
-          apresentado, criamos um método que permite que faças o teu horário e o descarregues de modo que o possas ter
-          no teu computador e que consigas enviar a qualquer amigo ou até dar upload para quando voltares ao TTS. Podes
-          também exportar o horário para CSV para poderes preencher no Sigarra! Adicionamos também o Dark Mode para
-          aumentar a acessibilidade dos estudantes. Por fim, criamos opções de horários de modo que possas planear e
-          testar vários horários em simultâneo! Pretendemos num futuro breve lançar também o FEUPExchange, que será
-          ainda melhor para te ajudar a trocar de turma. Vemo-nos em breve!
-        </p>
+        <div className="space-y-3">
+          <p>
+            No seguimento do fim dos mestrados integrados foram precisas várias mudanças ao nosso sistema. Em vez de
+            adaptar continuamente, o TTS foi reinventado e reimaginado.
+          </p>
+          <p>
+            Das novas funcionalidade da nova versão destacam-se a capacidade de inspecionar conflitos de aula, exportar
+            e importar horários, escolher múltiplas opções de horário, progresso guardado automaticamente e também
+            capacidade de transferir um ficheiro CSV com as opções prontas a submeter no SIGARRA. Este novo lançamento,
+            contempla também grandes melhoramentos a nível de acessibilidade e usabilidade, começando pelo adição do
+            tema claro ou escuro. Para mais informação detalhada sobre novas funcionalidades, consulta a secção do{' '}
+            <Link
+              to="/faqs#planner"
+              className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+            >
+              TTS na página de FAQs
+            </Link>
+            .
+          </p>
+          <p>
+            Relativamente a planos futuros, temos o <strong>FEUP Exchange</strong> (nome sujeito a mudança) em
+            desenvolvimento, um serviço que permitirá a estudantes da FEUP alterar o seu horário após a atribuição
+            inicial feita pelos departamentos.
+          </p>
+        </div>
       ),
     },
     {
@@ -97,29 +119,58 @@ const HeroPlanner = () => {
           é constituído inteiramente por alunos do curso de Engenharia Informática e Computação (L.EIC/M.EIC). A nossa
           principal motivação é ganhar experiência e competências essenciais para o mundo do trabalho assim como
           cultivar nos nossos colegas a vontade de aprender linguagens e novas tecnologias. Fruto dessa motivação surgem
-          projetos úteis para a comunidade, como o TTS.
+          projetos úteis para a comunidade, como esta plataforma. Entre outros projetos destacamos o{' '}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://ni.fe.up.pt/nijobs"
+            className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+          >
+            NiJobs
+          </a>
+          , uma plataforma dedicada a ajudar estudantes a encontrar oportunidades de emprego e/ou estágios.
         </p>
       ),
     },
   ]
 
+  const id = 'planner'
+  const scrollToComponentTop = () => document.getElementById(id).scrollIntoView()
+  const scrollToComponentSection = (id: string) => document.getElementById(id).scrollIntoView()
+
+  useEffect(() => {
+    if (window.location.toString().split('#')[1] === id) scrollToComponentTop()
+  }, [])
+
   return (
-    <div id="planner" className="flex flex-col items-center justify-center space-y-3">
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="mb-2 text-center text-2xl font-bold uppercase text-primary xl:text-3xl">Time Table Selector</h2>
-        <p className="mb-2 text-center text-base font-normal xl:text-lg">
+    <div id={id} className="flex flex-col items-center justify-center pt-12 xl:pt-16">
+      <div className="flex flex-col items-center justify-center space-y-1">
+        <button
+          onClick={scrollToComponentTop}
+          className="relative text-center font-headings text-3xl font-bold capitalize text-primary transition 
+          before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
+        >
+          Time Table Selector
+        </button>
+        <p className="text-center text-base font-normal xl:text-lg">
           A melhor ferramenta para escolheres e gerires o teu horário FEUP!
         </p>
       </div>
 
-      <div className="flex flex-col gap-12 px-4 py-4 xl:px-6 xl:py-6">
+      <div className="flex flex-col px-2 xl:px-4">
         {data.map((item, itemIdx) => (
-          <div id={item.id} key={`planner-card-feature-${itemIdx}`}>
+          <div id={item.id} key={`planner-card-feature-${itemIdx}`} className="pt-8 lg:pt-16">
             {/* Desktop */}
             <div className="hidden items-start justify-between xl:flex">
               <div className={classNames('container grow', item.reverse ? 'order-2 ml-8' : 'mr-8')}>
-                <h3 className="text-xl font-semibold">{item.title}</h3>
-                <h5 className="mb-3 text-lg font-medium tracking-tight text-primary">{item.subtitle}</h5>
+                <button
+                  onClick={() => scrollToComponentSection(item.id)}
+                  className="relative text-xl font-semibold transition 
+                  before:absolute before:-left-5 hover:opacity-80 hover:before:content-['#']"
+                >
+                  {item.title}
+                </button>
+                <p className="mb-3 text-lg font-medium tracking-tight text-primary">{item.subtitle}</p>
                 <div className="prose text-justify text-sm 2xl:text-base">{item.content}</div>
               </div>
               <img className="max-w-lg rounded shadow 2xl:max-w-xl" src={item.image} alt="card" />
@@ -136,6 +187,19 @@ const HeroPlanner = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-4 flex w-full items-center justify-end">
+        <div className="relative mr-4">
+          <Link
+            to="/planner"
+            className="group inline-flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 text-center 
+            font-normal text-lg text-white uppercase tracking-wider transition-all hover:opacity-90"
+          >
+            <span>Experimentar</span>
+            <ArrowNarrowRightIcon className="h-5 w-5 group-hover:ml-2 transition-all" />
+          </Link>
+        </div>
       </div>
     </div>
   )

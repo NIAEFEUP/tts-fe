@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { useEffect } from 'react'
 import { Transition, Disclosure } from '@headlessui/react'
 import { ChevronUpIcon, DotsHorizontalIcon } from '@heroicons/react/outline'
 
@@ -163,27 +164,42 @@ const PlannerFaqs = () => {
     },
   ]
 
+  const id = 'planner'
+  const scrollToComponentTop = () => document.getElementById(id).scrollIntoView()
+
+  useEffect(() => {
+    if (window.location.toString().split('#')[1] === id) scrollToComponentTop()
+  }, [])
+
   return (
-    <div className="mx-auto flex flex-col items-center justify-center gap-6">
-      <div>
-        <h2 className="mb-2 text-center text-3xl font-bold uppercase text-secondary dark:text-white">
+    <div id={id} className="mx-auto flex flex-col items-center justify-center gap-6 pt-20">
+      <div className="flex flex-col items-center justify-center">
+        <button
+          onClick={scrollToComponentTop}
+          className="relative mb-2 text-center text-3xl font-bold capitalize text-slate-700 transition 
+          before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
+        >
           Time Table Selector
-        </h2>
+        </button>
         <p className="w-full text-lg">
           Nesta secção podes ver as questão relacionadas com o{' '}
-          <strong className="text-secondary dark:text-white">planeamento de horário</strong>.
+          <strong className="text-slate-700 dark:text-white">planeamento de horário</strong>.
         </p>
       </div>
 
-      <div className="mx-auto flex w-full flex-col gap-4 rounded-2xl bg-white p-4 dark:bg-dark">
+      <div className="mx-auto flex w-full flex-col gap-8">
         {data.map((faq, faqIdx) => (
-          <Disclosure defaultOpen={false} as="div" key={`planner-faq-${faqIdx}`}>
+          <Disclosure
+            as="div"
+            defaultOpen={true}
+            key={`planner-faq-${faqIdx}`}
+            className="rounded-2xl bg-white p-3 dark:bg-dark"
+          >
             {({ open }) => (
               <>
                 <Disclosure.Button
-                  className="group flex w-full justify-between rounded-lg bg-[#eef6ff] px-4 
-                  py-2 text-left font-medium tracking-tight text-secondary transition hover:bg-secondary
-                  hover:text-white dark:bg-secondary/50 dark:text-white dark:hover:bg-secondary/90"
+                  className="group flex w-full justify-between rounded-lg bg-slate-200 px-4 py-2 font-medium tracking-tight 
+                  text-slate-800 transition hover:bg-slate-700 hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60"
                 >
                   {faq.question}
                   <ChevronUpIcon
