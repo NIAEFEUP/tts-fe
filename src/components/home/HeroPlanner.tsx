@@ -88,6 +88,7 @@ const HeroPlanner = () => {
           O Núcleo de Informática da Associação de Estudantes da Faculdade de Engenharia da Universidade do Porto, ou{' '}
           <a
             target="_blank"
+            rel="noreferrer"
             href="https://ni.fe.up.pt"
             className="font-medium text-primary transition-all hover:underline hover:opacity-80"
           >

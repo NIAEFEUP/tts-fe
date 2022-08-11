@@ -1,5 +1,4 @@
 import StorageAPI from '../../api/storage'
-import HelpModal from './HelpModal'
 import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import {
