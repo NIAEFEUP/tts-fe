@@ -108,9 +108,11 @@ const TimeTableSchedulerPage = () => {
   }
 
   // once a major has been picked => fetch courses for the major
-  useEffect(() => {
-    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
 
+  useEffect(() => {
+    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) {
+      return
+    }
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
@@ -118,8 +120,9 @@ const TimeTableSchedulerPage = () => {
       majorChangedRef.current = false
       setCheckedCourses([...uCC])
     })
+    console.log("horario in use effect", multipleOptions)
     console.log("useEffect triggered!!!!")
-  }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
+  }, [major, majorChangedRef, checkedCourses, setCheckedCourses, multipleOptions])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {

@@ -28,25 +28,32 @@ const MoreActionsButton = ({majorHook, coursesHook, schedule, showGridHook, mult
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
   const isScheduleValid = (scheduleJson: any) => {
-    // TODO: implement this
-    // TODO: make sure setCourseOptions works properly
+    
+
     return true
   }
+
+ 
 
   const importJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileReader = new FileReader()
     fileReader.readAsText(e.target.files[0], 'UTF-8')
     fileReader.onload = (e) => {
-      const scheduleJson = JSON.parse(fileReader.result as string) as ExportJSON
+      let scheduleJson = JSON.parse(fileReader.result as string) 
       if (isScheduleValid(scheduleJson)) {
-        setMajor(scheduleJson.major)
-        //setCheckedCourses(updateCheckedCourses(scheduleJson.selected))
-
+        
+        console.log("imported json", JSON.parse(fileReader.result as string) )
         setMultipleOptions((prev) => ({
           index: prev.index,
-          selected: scheduleJson.selected,
-          options: prev.options.map((item, index) => (prev.index === index ? scheduleJson.selected : item)),
+          selected: (JSON.parse(fileReader.result as string)).selected,
+          options: prev.options.map((item, index) => (prev.index === index ? (JSON.parse(fileReader.result as string)).selected : item)),
         }))
+
+       
+        setMajor(scheduleJson.major)
+          
+        console.log("horario", multipleOptions)
+        
       }
       buttonRef.current.click() // close menu
     }
@@ -58,6 +65,7 @@ const MoreActionsButton = ({majorHook, coursesHook, schedule, showGridHook, mult
       "major": major,
       "selected": schedule
     }
+    console.log("export", exportjson)
     const data = JSON.stringify(exportjson)
     const blob = new Blob([data], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
