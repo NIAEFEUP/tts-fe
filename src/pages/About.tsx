@@ -1,6 +1,6 @@
 import { HeroExchange, HeroPlanner } from '../components/home'
 
-const HomePage = () => (
+const AboutPage = () => (
   <div className="container mx-auto w-full space-y-12 py-6 px-4 md:py-10 md:px-6">
     <HeroPlanner />
     <hr />
@@ -8,4 +8,4 @@ const HomePage = () => (
   </div>
 )
 
-export default HomePage
+export default AboutPage

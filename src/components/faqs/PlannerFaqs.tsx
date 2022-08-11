@@ -166,12 +166,12 @@ const PlannerFaqs = () => {
   return (
     <div className="mx-auto flex flex-col items-center justify-center gap-6">
       <div>
-        <h2 className="mb-2 text-center text-2xl font-bold uppercase text-primary dark:text-white">
+        <h2 className="mb-2 text-center text-3xl font-bold uppercase text-secondary dark:text-white">
           Time Table Selector
         </h2>
-        <p className="w-full text-base">
+        <p className="w-full text-lg">
           Nesta secção podes ver as questão relacionadas com o{' '}
-          <span className="text-primary">planeamento de horário</span>.
+          <strong className="text-secondary dark:text-white">planeamento de horário</strong>.
         </p>
       </div>
 
@@ -181,7 +181,7 @@ const PlannerFaqs = () => {
             {({ open }) => (
               <>
                 <Disclosure.Button
-                  className="group flex w-full justify-between rounded-lg bg-[#e7edf0] px-4 
+                  className="group flex w-full justify-between rounded-lg bg-[#eef6ff] px-4 
                   py-2 text-left font-medium tracking-tight text-secondary transition hover:bg-secondary
                   hover:text-white dark:bg-secondary/50 dark:text-white dark:hover:bg-secondary/90"
                 >
