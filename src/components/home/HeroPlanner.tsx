@@ -17,7 +17,7 @@ const HeroPlanner = () => {
       id: 'intro',
       reverse: false,
       title: 'O que é o TTS?',
-      subtitle: 'O teu melhor amigo para escolher e gerir o teu horário na Universidade do Porto.',
+      subtitle: 'O teu melhor amigo para escolher e gerir o teu horário na UPorto.',
       image: ScheduleDarkImage,
       content: (
         <div className="space-y-3">
@@ -104,34 +104,34 @@ const HeroPlanner = () => {
   ]
 
   return (
-    <div id="tts" className="flex flex-col items-center justify-center space-y-6">
-      <div>
-        <h2 className="mb-2 text-center text-3xl font-bold uppercase text-primary">Time Table Selector</h2>
-        <h5 className="mb-2 text-center text-xl font-medium">
+    <div id="planner" className="flex flex-col items-center justify-center space-y-3">
+      <div className="flex flex-col items-center justify-center">
+        <h2 className="mb-2 text-center text-2xl font-bold uppercase text-primary xl:text-3xl">Time Table Selector</h2>
+        <p className="mb-2 text-center text-base font-normal xl:text-lg">
           A melhor ferramenta para escolheres e gerires o teu horário FEUP!
-        </h5>
+        </p>
       </div>
 
-      <div>
+      <div className="flex flex-col gap-12 px-4 py-4 xl:px-6 xl:py-6">
         {data.map((item, itemIdx) => (
-          <div id={item.id} className="px-8 py-8" key={`planner-card-feature-${itemIdx}`}>
+          <div id={item.id} key={`planner-card-feature-${itemIdx}`}>
             {/* Desktop */}
-            <div className="hidden items-start justify-between md:flex">
+            <div className="hidden items-start justify-between xl:flex">
               <div className={classNames('container grow', item.reverse ? 'order-2 ml-8' : 'mr-8')}>
                 <h3 className="text-xl font-semibold">{item.title}</h3>
-                <h5 className="mb-3 text-base font-medium tracking-tight text-primary">{item.subtitle}</h5>
-                <div className="prose text-justify">{item.content}</div>
+                <h5 className="mb-3 text-lg font-medium tracking-tight text-primary">{item.subtitle}</h5>
+                <div className="prose text-justify text-sm 2xl:text-base">{item.content}</div>
               </div>
-              <img className="max-w-xl rounded shadow" src={item.image} alt="card" />
+              <img className="max-w-lg rounded shadow 2xl:max-w-xl" src={item.image} alt="card" />
             </div>
 
             {/* Mobile */}
-            <div className="flex flex-col items-start justify-between gap-y-4 md:hidden">
+            <div className="flex flex-col items-start justify-between gap-y-4 xl:hidden">
               <img className="w-full rounded shadow" src={item.image} alt="card" />
               <div className="container grow">
                 <h3 className="text-center text-xl font-semibold">{item.title}</h3>
                 <h5 className="mb-3 text-center text-base font-medium tracking-tight text-primary">{item.subtitle}</h5>
-                <div className="prose text-justify text-sm">{item.content}</div>
+                <div className="prose text-justify text-sm leading-relaxed">{item.content}</div>
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ import InstagramIcon from './Instagram'
 import GithubIcon from './Github'
 import LinkedinIcon from './Linkedin'
 import TidyIcon from './fancy/Tidy'
-import SubmitIcon from './fancy/Submit'
+import ConsultIcon from './fancy/Consult'
 import SelectIcon from './fancy/Select'
 
 export {
@@ -16,6 +16,6 @@ export {
   GithubIcon,
   LinkedinIcon,
   TidyIcon,
-  SubmitIcon,
+  ConsultIcon,
   SelectIcon,
 }

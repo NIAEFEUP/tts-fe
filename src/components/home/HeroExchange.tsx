@@ -1,9 +1,9 @@
 import { NoticeOldScheduleImage, SelectNewScheduleImage, WaitNewScheduleImage } from '../../images'
-import { SelectIcon, SubmitIcon, TidyIcon } from '../svgs'
+import { SelectIcon, ConsultIcon, TidyIcon } from '../svgs'
 
 const data = [
   {
-    icon: SubmitIcon,
+    icon: ConsultIcon,
     image: NoticeOldScheduleImage,
     headline: 'Horário Inicial',
     text: 'Consultar horário inicial atribuído pelo departamento do curso após processo de alocação a turmas estar concluído',
@@ -23,18 +23,20 @@ const data = [
 ]
 
 const HeroExchange = () => (
-  <div id="exchange" className="flex flex-col items-center justify-center space-y-6">
-    <div>
-      <h2 className="mb-2 text-center text-3xl font-bold uppercase text-primary">FEUP Exchange (Coming Soon)</h2>
-      <h5 className="mb-2 text-center text-lg md:text-xl">
-        O único lugar onde podes trocar o teu horário FEUP e ficar com os teus colegas!
-      </h5>
+  <div id="exchange" className="flex flex-col items-center justify-center space-y-3">
+    <div className="flex flex-col items-center justify-center">
+      <h2 className="mb-2 text-center text-2xl font-bold uppercase text-primary xl:text-3xl">
+        FEUP Exchange (Coming Soon)
+      </h2>
+      <p className="mb-2 text-center text-base font-normal xl:text-lg">
+        O único lugar onde podes trocar o teu horário na <strong>FEUP</strong> e ficar com os teus colegas!
+      </p>
     </div>
 
     <ul className="grid w-full grid-cols-1 gap-8 rounded p-4 lg:grid-cols-3">
       {data.map((item, itemIdx) => (
         <li key={`item-${itemIdx}`} className="flex flex-col gap-4 xl:gap-6">
-          <img className="object-cover h-72 md:h-80 rounded shadow" src={item.image} alt="card" />
+          <img className="h-64 rounded object-cover shadow md:h-72" src={item.image} alt="card" />
           <div className="flex text-base">
             <item.icon />
             <div className="ml-4">

@@ -4,9 +4,9 @@ const SelectIcon = () => {
       className="h-11 w-11 shrink-0 transform-cpu rounded-lg shadow-md shadow-primary/[.12]"
       viewBox="0 0 40 40"
       fill="none"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <path
         d="M.75 8A7.25 7.25 0 018 .75h24A7.25 7.25 0 0139.25 8v24A7.25 7.25 0 0132 39.25H8A7.25 7.25 0 01.75 32V8z"

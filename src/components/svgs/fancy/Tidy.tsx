@@ -9,9 +9,9 @@ const TidyIcon = () => {
           width="50"
           height="50"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorinterpolationfilters-filters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
@@ -33,14 +33,14 @@ const TidyIcon = () => {
         <path
           d="M2.75 10A7.25 7.25 0 0 1 10 2.75h24A7.25 7.25 0 0 1 41.25 10v24A7.25 7.25 0 0 1 34 41.25H10A7.25 7.25 0 0 1 2.75 34V10Z"
           stroke="#b33636"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
       </g>
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M23 35.25c.69 0 1.25-.56 1.25-1.25A3.75 3.75 0 0 1 28 30.25a1.25 1.25 0 1 0 0-2.5A3.75 3.75 0 0 1 24.25 24a1.25 1.25 0 1 0-2.5 0A3.75 3.75 0 0 1 18 27.75a1.25 1.25 0 0 0 0 2.5A3.75 3.75 0 0 1 21.75 34c0 .69.56 1.25 1.25 1.25Z"
         fill="#fff"
       ></path>
@@ -49,8 +49,8 @@ const TidyIcon = () => {
         fill="#b33636"
       ></path>
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M13 27.25c.69 0 1.25-.56 1.25-1.25 0-.966.784-1.75 1.75-1.75a1.25 1.25 0 1 0 0-2.5A1.75 1.75 0 0 1 14.25 20a1.25 1.25 0 1 0-2.5 0A1.75 1.75 0 0 1 10 21.75a1.25 1.25 0 0 0 0 2.5c.966 0 1.75.784 1.75 1.75 0 .69.56 1.25 1.25 1.25Z"
         fill="#fff"
       ></path>
@@ -62,9 +62,9 @@ const TidyIcon = () => {
         opacity=".4"
         d="M29.75 35.25h2.5a3 3 0 0 0 3-3v-20.5a3 3 0 0 0-3-3h-20.5a3 3 0 0 0-3 3v5.5M12.75 14.25h18.5"
         stroke="#b33636"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       ></path>
     </svg>
   )
