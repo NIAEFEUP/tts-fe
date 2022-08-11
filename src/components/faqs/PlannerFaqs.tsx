@@ -168,7 +168,7 @@ const PlannerFaqs = () => {
   const scrollToComponentTop = () => document.getElementById(id).scrollIntoView()
 
   useEffect(() => {
-    if (window.location.toString().split('#')[1] === id) scrollToComponentTop()
+    if (window.location.href.split('#')[1] === id) scrollToComponentTop()
   }, [])
 
   return (

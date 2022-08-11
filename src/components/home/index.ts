@@ -1,5 +1,6 @@
-import HeroExchange from './HeroExchange'
-import HeroPlanner from './HeroPlanner'
 import Divider from './Divider'
+import BackToTop from './BackToTop'
+import HeroPlanner from './HeroPlanner'
+import HeroExchange from './HeroExchange'
 
-export { HeroExchange, HeroPlanner, Divider }
+export { HeroExchange, HeroPlanner, Divider, BackToTop }

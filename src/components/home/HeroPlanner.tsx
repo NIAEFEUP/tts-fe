@@ -136,10 +136,13 @@ const HeroPlanner = () => {
 
   const id = 'planner'
   const scrollToComponentTop = () => document.getElementById(id).scrollIntoView()
-  const scrollToComponentSection = (id: string) => document.getElementById(id).scrollIntoView()
+  const scrollToComponentSection = (id: string) => {
+    document.getElementById(id).scrollIntoView()
+    window.location.href = window.location.href.split('#')[0] + '#' + id
+  }
 
   useEffect(() => {
-    if (window.location.toString().split('#')[1] === id) scrollToComponentTop()
+    if (window.location.href.split('#')[1] === id) scrollToComponentTop()
   }, [])
 
   return (
@@ -194,10 +197,10 @@ const HeroPlanner = () => {
           <Link
             to="/planner"
             className="group inline-flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 text-center 
-            font-normal text-lg text-white uppercase tracking-wider transition-all hover:opacity-90"
+            text-lg font-normal uppercase tracking-wider text-white transition-all hover:opacity-90"
           >
             <span>Experimentar</span>
-            <ArrowNarrowRightIcon className="h-5 w-5 group-hover:ml-2 transition-all" />
+            <ArrowNarrowRightIcon className="h-5 w-5 transition-all group-hover:ml-2" />
           </Link>
         </div>
       </div>

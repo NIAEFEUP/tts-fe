@@ -87,6 +87,7 @@ const TimeTableSchedulerPage = () => {
 
   // fetch majors when component is ready
   useEffect(() => {
+    document.getElementById('layout').scrollIntoView()
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
