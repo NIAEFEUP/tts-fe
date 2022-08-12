@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, DotsHorizontalIcon, SupportIcon, XIcon } from '@heroicons/react/outline'
+import { Link } from 'react-router-dom'
 
 const HelpModal = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -50,22 +51,25 @@ const HelpModal = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel
+                  className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6
+                  text-left align-middle text-gray-700 shadow-xl transition-all dark:bg-dark dark:text-white"
+                >
                   <header className="flex items-center justify-between">
-                    <Dialog.Title as="h3" className="text-2xl font-semibold leading-6 text-tertiary">
+                    <Dialog.Title as="h3" className="text-2xl font-semibold leading-6">
                       Como utilizar o planeador de horário?
                     </Dialog.Title>
 
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="rounded p-1 text-tertiary transition hover:bg-tertiary hover:text-white"
+                      className="rounded p-1 text-rose-700 transition hover:bg-rose-700 hover:text-white"
                     >
                       <XIcon className="h-6 w-6" />
                     </button>
                   </header>
 
-                  <div className="mt-3 flex flex-col text-gray-700">
+                  <div className="mt-3 flex flex-col">
                     <p>
                       O <strong>planeador do horário</strong> permite aos{' '}
                       <strong>estudantes da Universidade do Porto</strong> selecionar várias opções de horário para as
@@ -104,7 +108,7 @@ const HelpModal = () => {
                     <p className="mt-3">
                       Outras <strong>notas importantes</strong> para o utilizador:
                     </p>
-                    <ul className="mt-1 ml-4 list-disc">
+                    <ul className="mt-1 ml-4 list-disc space-y-1">
                       <li>
                         O planeador memoriza as opções feitas pelo utilizador e permite-lhe voltar ao mesmo estado, caso
                         use o mesmo browser. Ao sair da página, os dados de <strong>curso</strong>,{' '}
@@ -113,15 +117,23 @@ const HelpModal = () => {
                       </li>
                       <li>
                         Bugs e outros problemas com a plataforma podem e devem ser reportados por email para o endereço{' '}
-                        <strong>
-                          <a
-                            className="text-tertiary transition-all hover:underline hover:opacity-80"
-                            href="mailto:projetos.niaefeup@gmail.com"
-                          >
-                            projetos.niaefeup@gmail.com
-                          </a>
-                        </strong>
+                        <a
+                          className="font-bold text-tertiary transition-all hover:underline hover:opacity-80"
+                          href="mailto:projetos.niaefeup@gmail.com"
+                        >
+                          projetos.niaefeup@gmail.com
+                        </a>
                         .
+                      </li>
+                      <li>
+                        Se persistirem dúvidas sobre como funciona o Time Table Selector, a{' '}
+                        <Link
+                          className="font-bold text-tertiary transition-all hover:underline hover:opacity-80"
+                          to="/faqs#planner"
+                        >
+                          página de FAQs
+                        </Link>{' '}
+                        responde às perguntas mais comuns.
                       </li>
                     </ul>
                   </div>
