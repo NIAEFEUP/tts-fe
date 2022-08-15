@@ -13,7 +13,7 @@ const pages = [
 ]
 
 const redirects = [
-  { from: '/', to: '/tts/planner' },
+  { from: '/tts', to: '/tts/planner' },
   { from: '/tts/home', to: '/tts/about' },
 ]
 
