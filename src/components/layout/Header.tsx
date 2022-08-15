@@ -13,11 +13,11 @@ import {
 } from '@heroicons/react/outline'
 
 const navigation = [
-  { title: 'Planner', location: '/planner', icon: <CollectionIcon className="h-5 w-5" />, wip: false },
-  { title: 'Exchange', location: '/exchange', icon: <SwitchHorizontalIcon className="h-5 w-5" />, wip: true },
-  { title: 'Profile', location: '/profile', icon: <UserCircleIcon className="h-5 w-5" />, wip: true },
-  { title: 'About', location: '/about', icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
-  { title: 'FAQs', location: '/faqs', icon: <QuestionMarkCircleIcon className="h-5 w-5" />, wip: false },
+  { title: 'Planner', location: '/tts/planner', icon: <CollectionIcon className="h-5 w-5" />, wip: false },
+  { title: 'Exchange', location: '/tts/exchange', icon: <SwitchHorizontalIcon className="h-5 w-5" />, wip: true },
+  { title: 'Profile', location: '/tts/profile', icon: <UserCircleIcon className="h-5 w-5" />, wip: true },
+  { title: 'About', location: '/tts/about', icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
+  { title: 'FAQs', location: '/tts/faqs', icon: <QuestionMarkCircleIcon className="h-5 w-5" />, wip: false },
 ]
 
 type Props = {
