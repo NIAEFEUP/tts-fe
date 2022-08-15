@@ -2,7 +2,7 @@ import { CheckedCourse, Major } from '../@types'
 import { extraCoursesData } from '../utils/data'
 import { getSemester } from '../utils'
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080'
 const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
