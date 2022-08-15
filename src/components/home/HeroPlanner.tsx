@@ -1,45 +1,211 @@
+import classNames from 'classnames'
+import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
 import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
-import CardFeature from './CardFeature'
+import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
 
-const Hero = () => (
-  <div id="tts" className="flex flex-col items-center justify-center space-y-6">
-    <div>
-      <h2 className="mb-2 text-center text-3xl font-bold uppercase text-primary">Time Table Selector</h2>
-      <h5 className="mb-2 text-center text-xl font-medium">
-        A melhor ferramenta para escolheres e gerires o teu horário FEUP!
-      </h5>
-    </div>
-    <div>
-      <CardFeature
-        title="O que é o TTS?"
-        subtitle="O teu melhor amigo para escolher e cuidar do horário na FEUP"
-        text="TTS, ou Time Table Selector, é uma ferramenta desenvolvida pelo NIAEFEUP para ajudar os estudantes a construir o seu próprio horário. Se é o teu primeiro ano na FEUP não poderás mudar o teu horário, a FEUP irá atribuir-te um horário e poderás apenas trocar de horário com alguém que tenha interesse. No entanto, a partir do 2º Semestre até ao último Semestre na FEUP terás de construir o teu horário. No entanto, a ferramenta que a Faculdade disponibiliza poderá não ser tão intuitiva e fácil de usar. E para isso nós decidimos criar o TTS, com o intuito de ajudar-te, com uma ferramenta de fácil acesso e com uma interface limpa e simples de modo que não tenhas complicações a construir e gerir o teu horário!"
-        image={ScheduleDarkImage}
-        reverse={false}
-      />
-      <CardFeature
-        title="Porquê usar o TTS?"
-        subtitle="Porque é a ferramenta ideal que precisas"
-        text="O TTS é uma ferramenta criada para ajudar os estudantes a criar, planear e partilhar os horários antes das inscrições de turmas de forma prática. Assim, podes começar a planear o teu semestre com antecedência, e, algo ainda melhor: Graças às novas features adicionadas, podes fazer o download ou dar upload de qualquer horário. Então tornou-se mais fácil do que nunca conseguires criar um horário e enviar para que os teus amigos fiquem com o mesmo horário que tu e nas mesmas turmas! Para além disso, o TTS tem um algoritmo de colisão de turmas, portanto não precisas de preocupar-te em verificar se existe algum problema, o TTS irá advertir-te!"
-        image={HomePageAltImage}
-        reverse={true}
-      /> 
-      <CardFeature
-        title="Novas features do TTS e futuras atualizações"
-        subtitle="Temos algumas novidades nesta nova versão do TTS"
-        text="Desde o Dark Mode até ao download/upload dos horários, temos algumas novidades nesta release. Como já foi apresentado, criamos um método que permite que faças o teu horário e o descarregues de modo que o possas ter no teu computador e que consigas enviar a qualquer amigo ou até dar upload para quando voltares ao TTS. Podes também exportar o horário para CSV para poderes preencher no Sigarra! Adicionamos também o Dark Mode para aumentar a acessibilidade dos estudantes. Por fim, criamos opções de horários de modo que possas planear e testar vários horários em simultâneo! Pretendemos num futuro breve lançar também o FEUPExchange, que será ainda melhor para te ajudar a trocar de turma. Vemo-nos em breve!"
-        image={HomePageImage}
-        reverse={false}
-      />
-      <CardFeature
-        title="Quem somos nós?"
-        subtitle="NIAEFEUP"
-        text="O Núcleo de Informática da Associação de Estudantes da Faculdade de Engenharia da Universidade do Porto ou NIAEFEUP é constituído inteiramente por alunos do curso de Engenharia Informática e Computação (L.EIC/M.EIC). A nossa principal motivação é ganhar experiência e competências essenciais para o mundo do trabalho assim como cultivar nos nossos colegas a vontade de aprender linguagens e novas tecnologias."
-        image={LogoNIAEFEUPAltImage}
-        reverse={true}
-      />
-    </div>
-  </div>
-)
+type Card = {
+  id: string
+  image: string
+  reverse?: boolean
+  title: JSX.Element | string
+  subtitle: JSX.Element | string
+  content: JSX.Element
+}
 
-export default Hero
+const HeroPlanner = () => {
+  const data: Card[] = [
+    {
+      id: 'intro',
+      reverse: false,
+      title: 'O que é o TTS?',
+      subtitle: 'O teu melhor amigo para escolher e gerir o teu horário na UPorto.',
+      image: ScheduleDarkImage,
+      content: (
+        <div className="space-y-3">
+          <p>
+            TTS, ou <strong>Time Table Selector</strong>, é uma plataforma desenvolvida pelo <strong>NIAEFEUP</strong>{' '}
+            para ajudar os estudantes da Universidade do Porto a planear e elaborar o seu horário para um semestre.
+            Geralmente, no 1º semestre de faculdade o horário é <strong>atribuído automaticamente</strong>, não sendo
+            possível efetuar trocas. A partir do 2º Semestre até ao fim do(s) curso(s) o aluno tem a oportunidade de{' '}
+            <strong>submeter preferências</strong> para o horário, no início de cada semestre.
+          </p>
+          <p>
+            No entanto, o sistema de informação das faculdades (SIGARRA) geralmente não permite ou não facilita delinear
+            opções de horário atempadamente. Para resolver este problema e ajudar a comunidade da{' '}
+            <strong>Universidade do Porto</strong>, o <strong>NIAEFEUP</strong> desenvolveu o TTS, uma ferramenta de uso
+            fácil, com uma interface simples e polida, que permite aos estudantes preparar as suas opções de horário.
+            Tens dúvidas sobre a plataforma? A{' '}
+            <Link className="font-medium text-primary transition-all hover:underline hover:opacity-80" to="/faqs">
+              página das FAQs
+            </Link>{' '}
+            esclarece as dúvidas mais comuns.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 'why',
+      title: <span>Porquê usar o TTS?</span>,
+      subtitle: <span>Porque é a ferramenta ideal para teres o melhor horário possível.</span>,
+      image: HomePageAltImage,
+      reverse: true,
+      content: (
+        <div className="space-y-3">
+          <p>
+            O TTS permite aos estudantes <strong>criar</strong>, <strong>planear</strong> e <strong>partilhar</strong>{' '}
+            os horários antes das inscrições nas turmas de forma flexível e prática. Podes planear o teu semestre com
+            antecedência e ter uma visão abrangente das opções que tens e quais os horários a que queres dar prioridade.
+          </p>
+          <p>
+            Com a nova versão do TTS podes delinear até 10 opções de horário, tal como na submissão das preferências no
+            SIGARRA, que se aplica a alguns cursos da UPorto. Mais opções de horário dão-te melhor chance de ficar com
+            um horário desejado, evitando alocações automáticas indesejadas.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 'news',
+      title: <span>O que há de novo na nova versão do TTS?</span>,
+      subtitle: <span>Temos muitas novas funcionalidades do TTS e planos para futuras atualizações.</span>,
+      image: HomePageImage,
+      reverse: false,
+      content: (
+        <div className="space-y-3">
+          <p>
+            No seguimento do fim dos mestrados integrados foram precisas várias mudanças ao nosso sistema. Em vez de
+            adaptar continuamente, o TTS foi reinventado e reimaginado.
+          </p>
+          <p>
+            Das novas funcionalidade da nova versão destacam-se a capacidade de inspecionar conflitos de aula, exportar
+            e importar horários, escolher múltiplas opções de horário, progresso guardado automaticamente e também
+            capacidade de transferir um ficheiro CSV com as opções prontas a submeter no SIGARRA. Este novo lançamento,
+            contempla também grandes melhoramentos a nível de acessibilidade e usabilidade, começando pelo adição do
+            tema claro ou escuro. Para mais informação detalhada sobre novas funcionalidades, consulta a secção do{' '}
+            <Link
+              to="/faqs#planner"
+              className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+            >
+              TTS na página de FAQs
+            </Link>
+            .
+          </p>
+          <p>
+            Relativamente a planos futuros, temos o <strong>FEUP Exchange</strong> (nome sujeito a mudança) em
+            desenvolvimento, um serviço que permitirá a estudantes da FEUP alterar o seu horário após a atribuição
+            inicial feita pelos departamentos.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 'identity',
+      title: <span>Quem somos nós?</span>,
+      subtitle: <span>NIAEFEUP: Núcleo de Informática da AEFEUP</span>,
+      image: LogoNIAEFEUPAltImage,
+      reverse: true,
+      content: (
+        <p>
+          O Núcleo de Informática da Associação de Estudantes da Faculdade de Engenharia da Universidade do Porto, ou{' '}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://ni.fe.up.pt"
+            className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+          >
+            NIAEFEUP
+          </a>{' '}
+          é constituído inteiramente por alunos do curso de Engenharia Informática e Computação (L.EIC/M.EIC). A nossa
+          principal motivação é ganhar experiência e competências essenciais para o mundo do trabalho assim como
+          cultivar nos nossos colegas a vontade de aprender linguagens e novas tecnologias. Fruto dessa motivação surgem
+          projetos úteis para a comunidade, como esta plataforma. Entre outros projetos destacamos o{' '}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://ni.fe.up.pt/nijobs"
+            className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+          >
+            NiJobs
+          </a>
+          , uma plataforma dedicada a ajudar estudantes a encontrar oportunidades de emprego e/ou estágios.
+        </p>
+      ),
+    },
+  ]
+
+  const id = 'planner'
+  const scrollToComponentTop = () => document.getElementById(id).scrollIntoView()
+  const scrollToComponentSection = (id: string) => {
+    document.getElementById(id).scrollIntoView()
+    window.location.href = window.location.href.split('#')[0] + '#' + id
+  }
+
+  useEffect(() => {
+    if (window.location.href.split('#')[1] === id) scrollToComponentTop()
+  }, [])
+
+  return (
+    <div id={id} className="flex flex-col items-center justify-center pt-12 xl:pt-16">
+      <div className="flex flex-col items-center justify-center space-y-1">
+        <button
+          onClick={scrollToComponentTop}
+          className="relative text-center font-headings text-3xl font-bold capitalize text-primary transition 
+          before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
+        >
+          Time Table Selector
+        </button>
+        <p className="text-center text-base font-normal xl:text-lg">
+          A melhor ferramenta para escolheres e gerires o teu horário FEUP!
+        </p>
+      </div>
+
+      <div className="flex flex-col px-2 xl:px-4">
+        {data.map((item, itemIdx) => (
+          <div id={item.id} key={`planner-card-feature-${itemIdx}`} className="pt-8 lg:pt-16">
+            {/* Desktop */}
+            <div className="hidden items-start justify-between xl:flex">
+              <div className={classNames('container grow', item.reverse ? 'order-2 ml-8' : 'mr-8')}>
+                <button
+                  onClick={() => scrollToComponentSection(item.id)}
+                  className="relative text-xl font-semibold transition 
+                  before:absolute before:-left-5 hover:opacity-80 hover:before:content-['#']"
+                >
+                  {item.title}
+                </button>
+                <p className="mb-3 text-lg font-medium tracking-tight text-primary">{item.subtitle}</p>
+                <div className="prose text-justify text-sm 2xl:text-base">{item.content}</div>
+              </div>
+              <img className="max-w-lg rounded shadow 2xl:max-w-xl" src={item.image} alt="card" />
+            </div>
+
+            {/* Mobile */}
+            <div className="flex flex-col items-start justify-between gap-y-4 xl:hidden">
+              <img className="w-full rounded shadow" src={item.image} alt="card" />
+              <div className="container grow">
+                <h3 className="text-center text-xl font-semibold">{item.title}</h3>
+                <h5 className="mb-3 text-center text-base font-medium tracking-tight text-primary">{item.subtitle}</h5>
+                <div className="prose text-justify text-sm leading-relaxed">{item.content}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 flex w-full items-center justify-end">
+        <div className="relative mr-4">
+          <Link
+            to="/planner"
+            className="group inline-flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 text-center 
+            text-lg font-normal uppercase tracking-wider text-white transition-all hover:opacity-90"
+          >
+            <span>Experimentar</span>
+            <ArrowNarrowRightIcon className="h-5 w-5 transition-all group-hover:ml-2" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default HeroPlanner

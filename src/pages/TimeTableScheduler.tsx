@@ -1,7 +1,6 @@
 import BackendAPI from '../api/backend'
 import StorageAPI from '../api/storage'
 import { useState, useEffect, useMemo } from 'react'
-import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
   SelectionModal,
@@ -9,6 +8,8 @@ import {
   ClassesTypeCheckboxes,
   MoreActionsButton,
   OptionsController,
+  LessonTypesModal,
+  HelpModal,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
@@ -77,7 +78,7 @@ const TimeTableSchedulerPage = () => {
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
 
   useEffect(() => {
     if (totalSelected.length === 0) return
@@ -86,6 +87,7 @@ const TimeTableSchedulerPage = () => {
 
   // fetch majors when component is ready
   useEffect(() => {
+    document.getElementById('layout').scrollIntoView()
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
@@ -229,7 +231,10 @@ const TimeTableSchedulerPage = () => {
               ))}
           </div>
         </div>
-        <ScheduleColorLabels />
+        <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
+          <HelpModal />
+          <LessonTypesModal />
+        </div>
       </div>
     </div>
   )

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply scroll-smooth;
+}
+
 body {
   @apply bg-light font-prose text-gray-800 dark:bg-darkest dark:text-white;
 }
@@ -61,4 +65,8 @@ button {
 .checkboxes {
   @apply mx-auto flex flex-wrap items-center justify-center gap-y-4 gap-x-4 md:flex-row md:items-start md:gap-y-6 md:gap-x-12;
   margin-top: 1.5rem !important;
+}
+
+.quote {
+  @apply border-l-4 border-slate-700 bg-lightish py-1 pl-4 dark:border-white dark:bg-darkish;
 }

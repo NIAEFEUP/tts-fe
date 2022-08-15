@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XIcon, LightBulbIcon } from '@heroicons/react/outline'
 import { Fragment, useState } from 'react'
 
-const ScheduleColorLabels = () => {
+const LessonTypesModal = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   function closeModal() {
@@ -14,15 +14,15 @@ const ScheduleColorLabels = () => {
   }
 
   return (
-    <div className="mt-4">
+    <>
       <div className="w-full">
         <button
           type="button"
           onClick={openModal}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded bg-secondary p-2 text-center text-sm font-normal text-white 
-            transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded bg-secondary p-2 text-center 
+          text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <span>Ver tipos de aulas</span>
+          <span>Tipos de aula</span>
           <LightBulbIcon className="h-5 w-5" />
         </button>
       </div>
@@ -127,8 +127,8 @@ const ScheduleColorLabels = () => {
           </div>
         </Dialog>
       </Transition>
-    </div>
+    </>
   )
 }
 
-export default ScheduleColorLabels
+export default LessonTypesModal
