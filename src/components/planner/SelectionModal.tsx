@@ -425,7 +425,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         <span className="flex md:hidden">Contactar</span>
                       </a>
                       <Link
-                        to="/about"
+                        to="/tts/about"
                         className={classNames(
                           'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
                           'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
