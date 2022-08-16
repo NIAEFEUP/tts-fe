@@ -1,9 +1,19 @@
 import { CourseSchedule, Lesson } from '../@types'
-
+import config from '../config/default.json';
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+/**
+ * Get's the complete for a page. 
+ * @param simplePath Path withot a prefix.
+ * @returns The complete path with the prefix. 
+ */
+const getPath = (simplePath: string) => {
+  return config.pathPrefix + simplePath
+}
+
 
 const getDisplayDate = () => {
   const date = new Date()
@@ -140,6 +150,8 @@ const getClassTypeClassName = (type: string) => {
 }
 
 export {
+  config, 
+  getPath,
   minHour,
   maxHour,
   dayNames,
