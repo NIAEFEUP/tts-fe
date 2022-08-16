@@ -1,8 +1,8 @@
 import { CheckedCourse, Major } from '../@types'
 import { extraCoursesData } from '../utils/data'
-import { getSemester } from '../utils'
+import { getSemester, config } from '../utils'
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3200'
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `http://${config.api.host}:${config.api.port}`
 const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
