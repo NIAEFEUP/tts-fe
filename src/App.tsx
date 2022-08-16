@@ -16,6 +16,7 @@ const pages = [
 
 const redirects = [
   { from: config.pathPrefix, to: getPath(config.paths.planner) },
+  { from: config.pathPrefix.slice(0,-1) , to: getPath(config.paths.planner) },
   { from: getPath(config.paths.home), to: getPath(config.paths.about) },
 ]
 
