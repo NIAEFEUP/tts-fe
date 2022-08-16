@@ -10,7 +10,7 @@
         "home": "home"
     }, 
     "api": {
-        "port": 3200,
+        "port": 8080,
         "host": "localhost"
     }
 }
