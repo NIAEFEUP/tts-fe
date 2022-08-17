@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
 import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
 import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
+import { getPath, config } from '../../utils'
 
 type Card = {
   id: string
@@ -36,7 +37,7 @@ const HeroPlanner = () => {
             <strong>Universidade do Porto</strong>, o <strong>NIAEFEUP</strong> desenvolveu o TTS, uma ferramenta de uso
             fácil, com uma interface simples e polida, que permite aos estudantes preparar as suas opções de horário.
             Tens dúvidas sobre a plataforma? A{' '}
-            <Link className="font-medium text-primary transition-all hover:underline hover:opacity-80" to="/faqs">
+            <Link className="font-medium text-primary transition-all hover:underline hover:opacity-80" to={getPath(config.paths.faqs)}>
               página das FAQs
             </Link>{' '}
             esclarece as dúvidas mais comuns.
@@ -84,7 +85,7 @@ const HeroPlanner = () => {
             contempla também grandes melhoramentos a nível de acessibilidade e usabilidade, começando pelo adição do
             tema claro ou escuro. Para mais informação detalhada sobre novas funcionalidades, consulta a secção do{' '}
             <Link
-              to="/faqs#planner"
+              to={getPath(config.paths.faqs) + "#planner"}
               className="font-medium text-primary transition-all hover:underline hover:opacity-80"
             >
               TTS na página de FAQs
@@ -195,7 +196,7 @@ const HeroPlanner = () => {
       <div className="mt-4 flex w-full items-center justify-end">
         <div className="relative mr-4">
           <Link
-            to="/planner"
+            to={config.pathPrefix}
             className="group inline-flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 text-center 
             text-lg font-normal uppercase tracking-wider text-white transition-all hover:opacity-90"
           >
