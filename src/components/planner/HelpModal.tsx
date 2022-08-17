@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, DotsHorizontalIcon, SupportIcon, XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
+import { config, getPath } from '../../utils'
 
 const HelpModal = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -129,7 +130,7 @@ const HelpModal = () => {
                         Se persistirem dúvidas sobre como funciona o Time Table Selector, a{' '}
                         <Link
                           className="font-bold text-tertiary transition-all hover:underline hover:opacity-80"
-                          to="/faqs#planner"
+                          to={getPath(config.paths.faqs) + "#planner"}
                         >
                           página de FAQs
                         </Link>{' '}

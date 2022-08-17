@@ -39,7 +39,7 @@ const Header = ({ siteTitle, location }: Props) => {
               <Hamburger open={open} />
               <div className="flex flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
-                  <Link to="/" className="flex items-center space-x-2">
+                  <Link to={config.pathPrefix} className="flex items-center space-x-2">
                     <img
                       src={LogoNIAEFEUPImage}
                       alt="Time Table Selector"
@@ -104,7 +104,7 @@ const Hamburger = ({ open }: HamburgerProps) => (
         : 'flex w-full items-center justify-between'
       }`}
   >
-    <Link to="/">
+    <Link to={config.pathPrefix}>
       {open ? (
         <img
           className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
