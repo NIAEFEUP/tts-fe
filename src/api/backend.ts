@@ -26,7 +26,7 @@ const apiRequest = async (route: string) => {
  * @returns all majors from the backend
  */
 const getMajors = async () => {
-  return await apiRequest(`/course/`)
+  return await apiRequest(`/course/${config.api.year}`)
 }
 
 /**
@@ -36,7 +36,7 @@ const getMajors = async () => {
  */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  return await apiRequest(`/course_units/${major.id}/${SEMESTER}/`)
+  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`)
 }
 
 /**
