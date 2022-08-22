@@ -39,7 +39,7 @@ const getSchoolYear = () => {
 }
 
 const convertWeekday = (dayNumber: number) => {
-  if (dayNumber < 1 || dayNumber > 8) return null
+  if (dayNumber < 0 || dayNumber > 7) return null
 
   const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sab', 'Dom']
   return weekdays[dayNumber]
