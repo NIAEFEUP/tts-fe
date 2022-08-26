@@ -31,11 +31,10 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
         item.schedules.filter((elem) => elem.lesson_type === 'T' && elem.class_name === subject.option.class_name)
       )[subjectIdx],
     }))
-    console.log(chosenSubjects);
     return chosenSubjects;
   }, [courseOptions])
 
-  
+
   const lessons = useMemo(() => {
     let lessonsAcc: Lesson[] = []
 
