@@ -76,7 +76,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
 
     const resolveCourseOptions = (prev: CourseOption[]) => {
       let newCourseOptions = prev
-
+      console.log(prev)
       for (let i = 0; i < prev.length; i++) {
         const option = prev[i]
         if (option.course.info.id === courseOption.course.info.id) {
