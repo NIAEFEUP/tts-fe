@@ -24,7 +24,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
       course: subject.course.info,
       // A course schedule, may have more than one practical class.
       practicalLesson: classes.map((item) => 
-        item.schedules.filter((elem) => elem.lesson_type === 'TP' && elem.class_name === subject.option.class_name)
+        item.schedules.filter((elem) => elem.lesson_type !== 'T' && elem.class_name === subject.option.class_name)
       )[subjectIdx],
       // A course schedule, may have more than one theoretical class. 
       theoreticalLessons: classes.map((item) =>
