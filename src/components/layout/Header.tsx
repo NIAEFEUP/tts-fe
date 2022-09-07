@@ -14,11 +14,31 @@ import {
 } from '@heroicons/react/outline'
 
 const navigation = [
-  { title: 'Planner', location: getPath(config.paths.planner), icon: <CollectionIcon className="h-5 w-5" />, wip: false },
-  { title: 'Exchange', location: getPath(config.paths.exchange), icon: <SwitchHorizontalIcon className="h-5 w-5" />, wip: true },
-  { title: 'Profile', location: getPath(config.paths.profile), icon: <UserCircleIcon className="h-5 w-5" />, wip: true },
+  {
+    title: 'Planner',
+    location: getPath(config.paths.planner),
+    icon: <CollectionIcon className="h-5 w-5" />,
+    wip: false,
+  },
+  {
+    title: 'Exchange',
+    location: getPath(config.paths.exchange),
+    icon: <SwitchHorizontalIcon className="h-5 w-5" />,
+    wip: true,
+  },
+  {
+    title: 'Profile',
+    location: getPath(config.paths.profile),
+    icon: <UserCircleIcon className="h-5 w-5" />,
+    wip: true,
+  },
   { title: 'About', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
-  { title: 'FAQs', location: getPath(config.paths.faqs), icon: <QuestionMarkCircleIcon className="h-5 w-5" />, wip: false },
+  {
+    title: 'FAQs',
+    location: getPath(config.paths.faqs),
+    icon: <QuestionMarkCircleIcon className="h-5 w-5" />,
+    wip: false,
+  },
 ]
 
 type Props = {
@@ -61,10 +81,11 @@ const Header = ({ siteTitle, location }: Props) => {
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button
                           type="button"
-                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
+                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
+                            location === link.title
                               ? 'text-primary dark:text-white'
                               : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
-                            }`}
+                          }`}
                         >
                           <span className="flex items-center justify-center space-x-1.5">
                             <span>{link.icon}</span>
@@ -99,10 +120,11 @@ type HamburgerProps = {
 
 const Hamburger = ({ open }: HamburgerProps) => (
   <div
-    className={`z-50 md:hidden ${open
+    className={`z-50 md:hidden ${
+      open
         ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
         : 'flex w-full items-center justify-between'
-      }`}
+    }`}
   >
     <Link to={config.pathPrefix}>
       {open ? (
@@ -152,10 +174,11 @@ const Mobile = ({ location }: MobileProps) => (
         <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
           <button
             type="button"
-            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
+            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
+              location === link.title
                 ? 'text-primary dark:text-white'
                 : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
-              }`}
+            }`}
           >
             <span className="flex items-center justify-center space-x-2">
               <span>{link.icon}</span>

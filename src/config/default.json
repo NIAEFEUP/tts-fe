@@ -1,17 +1,17 @@
 {
-    "pathPrefix": "/tts/",
-    "paths": {
-        "about": "about",
-        "profile": "profile",
-        "planner": "planner",
-        "exchange": "exchange",
-        "faqs": "faqs",
-        "notfound": "*",
-        "home": "home"
-    }, 
-    "api": {
-        "port": 8080,
-        "host": "localhost",
-        "year": 2022
-    }
+  "pathPrefix": "/tts/",
+  "paths": {
+    "about": "about",
+    "profile": "profile",
+    "planner": "planner",
+    "exchange": "exchange",
+    "faqs": "faqs",
+    "notfound": "*",
+    "home": "home"
+  },
+  "api": {
+    "port": 8080,
+    "host": "localhost",
+    "year": 2022
+  }
 }

@@ -4,7 +4,7 @@ import { AboutPage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage, NotFo
 import { getPath, config } from './utils'
 import './app.css'
 
-// Configures the path for pages. 
+// Configures the path for pages.
 const pages = [
   { path: getPath(config.paths.about), location: 'About', element: AboutPage, liquid: true },
   { path: getPath(config.paths.profile), location: 'Profile', element: ProfilePage, liquid: true },
@@ -16,10 +16,9 @@ const pages = [
 
 const redirects = [
   { from: config.pathPrefix, to: getPath(config.paths.planner) },
-  { from: config.pathPrefix.slice(0,-1) , to: getPath(config.paths.planner) },
+  { from: config.pathPrefix.slice(0, -1), to: getPath(config.paths.planner) },
   { from: getPath(config.paths.home), to: getPath(config.paths.about) },
 ]
-
 
 const App = () => (
   <BrowserRouter>

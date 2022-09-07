@@ -37,7 +37,10 @@ const HeroPlanner = () => {
             <strong>Universidade do Porto</strong>, o <strong>NIAEFEUP</strong> desenvolveu o TTS, uma ferramenta de uso
             fácil, com uma interface simples e polida, que permite aos estudantes preparar as suas opções de horário.
             Tens dúvidas sobre a plataforma? A{' '}
-            <Link className="font-medium text-primary transition-all hover:underline hover:opacity-80" to={getPath(config.paths.faqs)}>
+            <Link
+              className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+              to={getPath(config.paths.faqs)}
+            >
               página das FAQs
             </Link>{' '}
             esclarece as dúvidas mais comuns.
@@ -85,7 +88,7 @@ const HeroPlanner = () => {
             contempla também grandes melhoramentos a nível de acessibilidade e usabilidade, começando pelo adição do
             tema claro ou escuro. Para mais informação detalhada sobre novas funcionalidades, consulta a secção do{' '}
             <Link
-              to={getPath(config.paths.faqs) + "#planner"}
+              to={getPath(config.paths.faqs) + '#planner'}
               className="font-medium text-primary transition-all hover:underline hover:opacity-80"
             >
               TTS na página de FAQs
