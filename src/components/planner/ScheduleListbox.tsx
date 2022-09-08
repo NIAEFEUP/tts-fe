@@ -76,7 +76,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
 
     const resolveCourseOptions = (prev: CourseOption[]) => {
       let newCourseOptions = prev
-      console.log(prev)
       for (let i = 0; i < prev.length; i++) {
         const option = prev[i]
         if (option.course.info.id === courseOption.course.info.id) {
@@ -107,9 +106,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
         <div className="relative text-sm">
           {/* Header */}
           <p className="mb-0.5 flex text-xs lg:hidden xl:flex">
-            <span>
-              {courseOption.course.info.name} (<strong>{courseOption.course.info.acronym}</strong>)
-            </span>
+            <strong>{courseOption.course.info.acronym}</strong>
+            <span>&nbsp;&middot;&nbsp;</span>
+            <span className="tracking-tighter truncate">{courseOption.course.info.name}&nbsp;</span>
           </p>
 
           <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
@@ -119,14 +118,14 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
           {/* Button */}
           <Listbox.Button
             title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
-            className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1.5 pl-2 pr-9 text-left 
-            text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-2 2xl:pl-3 2xl:pr-10 2xl:text-sm"
+            className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
+            text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
           >
             <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
               {getOptionDisplayText(selectedOption)}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
-              <SelectorIcon className="h-5 w-5 transition" aria-hidden="true" />
+              <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
             </span>
           </Listbox.Button>
 
@@ -182,7 +181,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                 onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
               />
               <label
-                className="cursor-pointer text-xs font-medium capitalize tracking-tight"
+                className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
                 htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
               >
                 <span>Teóricas</span>
@@ -201,7 +200,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                 onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
               />
               <label
-                className="cursor-pointer text-xs font-medium capitalize tracking-tight"
+                className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
                 htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
               >
                 <span>Práticas</span>

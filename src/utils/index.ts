@@ -1,5 +1,5 @@
-import { CourseSchedule, Lesson } from '../@types'
 import config from '../config/default.json'
+import { CourseSchedule, Lesson } from '../@types'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']

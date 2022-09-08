@@ -50,7 +50,7 @@ const Header = ({ siteTitle, location }: Props) => {
   return (
     <Disclosure
       as="nav"
-      className="sticky top-0 z-20 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
+      className="sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
     >
       {({ open }) => {
         return (
