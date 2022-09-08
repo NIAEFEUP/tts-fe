@@ -24,7 +24,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
   const compClassTitle = lesson.schedule.composed_class_name
   const lessonType = lesson.schedule.lesson_type
   const timeSpan = getLessonBoxTime(lesson.schedule)
-  const longLesson = parseFloat(lesson.schedule.duration) > 1
+  const longLesson = parseFloat(lesson.schedule.duration) > 1.5
 
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false)
@@ -53,7 +53,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
           )}
         >
           {longLesson ? (
-            <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-[0.8rem]">
+            <div className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs">
               {/* Top */}
               <div className="flex w-full items-center justify-between">
                 <span title="Duração">{timeSpan}</span>
@@ -87,7 +87,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               </div>
             </div>
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-xs">
+            <div className="flex h-full w-full flex-col items-center justify-between p-0.5 text-[0.5rem] tracking-tighter xl:text-xxs 2xl:p-1 2xl:text-[0.65rem]">
               <div className="flex w-full items-center justify-between gap-2">
                 <span title="Duração">
                   {timeSpan} (<strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>)
