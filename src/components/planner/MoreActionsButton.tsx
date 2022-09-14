@@ -58,18 +58,29 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
   }
 
   const exportCSV = () => {
-    const header = ['Index']
+    const header = ['Ano', 'Nome', 'Sigla']
     const lines = []
+    const columns = []
 
     for (let i = 0; i < multipleOptions.options.length; i++) {
-      if (i === 0) for (let j = 0; j < schedule.length; j++) header.push(schedule[j].course.info.acronym)
-      const line = [`${i + 1}`]
+      if (i === 0) for (let j = 0; j < schedule.length; j++) header.push(`Option ${j}`)
       const scheduleOption = multipleOptions.options[i]
-      for (let j = 0; j < scheduleOption.length; j++) line.push(scheduleOption[j].option?.class_name || '')
-      lines.push(line.join(';'))
+      const column = []
+      for (let j = 0; j < scheduleOption.length; j++) column.push(scheduleOption[j].option?.class_name || '')
     }
 
-    const csv = [header.join(';'), lines.flat().join('\n')].join('\n')
+    for (let i = 0; i < columns[0].length; i++) {
+      const column = columns[i]
+      const info = multipleOptions.options[0][i].course.info
+      const line = [info.course_year, info.name, info.acronym]
+
+      for (let j = 0; j < column.length; j++) {
+        line.push(column[j])
+      }
+      lines.push(line.join(','))
+    }
+
+    const csv = [header.join(','), lines.flat().join('\n')].join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
