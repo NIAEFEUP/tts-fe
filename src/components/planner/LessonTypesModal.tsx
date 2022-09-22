@@ -19,8 +19,8 @@ const LessonTypesModal = () => {
         <button
           type="button"
           onClick={openModal}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded bg-secondary p-2 text-center 
-          text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-secondary p-2 
+          text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <span>Tipos de aula</span>
           <LightBulbIcon className="h-5 w-5" />

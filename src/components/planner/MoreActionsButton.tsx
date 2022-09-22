@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import StorageAPI from '../../api/storage'
 import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
@@ -18,6 +19,7 @@ type Props = {
 }
 
 const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Props) => {
+  const importDisabled = true
   const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
@@ -90,10 +92,10 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
         ref={buttonRef}
         title="Mais opções"
         className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 
-        py-3 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:w-min xl:space-x-0 xl:px-4"
+        py-2 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:w-min xl:space-x-0 xl:px-3"
       >
         <span className="flex xl:hidden">Mais Opções</span>
-        <DotsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
+        <DotsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
       </Menu.Button>
 
       <Transition
@@ -131,11 +133,15 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
             {/* <Menu.Item> is not used here since it prevents input from being triggered */}
             <label
               htmlFor="schedule-upload"
-              title="Importar horário individual JSON (previamente exportado pela platforma)"
-              className="group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm
-            text-gray-900 hover:bg-secondary hover:text-white"
+              title="Importar horário JSON (previamente exportado pela platforma)"
+              className={classNames(
+                'group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900',
+                importDisabled ? 'opacity-50 hover:cursor-not-allowed' : 'hover:bg-secondary hover:text-white'
+              )}
             >
-              <UploadIcon className="h-5 w-5 text-secondary group-hover:text-white" />
+              <UploadIcon
+                className={classNames('h-5 w-5 text-secondary', importDisabled ? '' : 'group-hover:text-white')}
+              />
               <span>Importar Horário</span>
               <input
                 type="file"
@@ -143,6 +149,7 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
                 className="sr-only"
                 id="schedule-upload"
                 name="schedule-upload"
+                disabled={importDisabled}
                 onChange={(e) => importJSON(e)}
               />
             </label>
@@ -150,13 +157,17 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
             <Menu.Item>
               {({ active, disabled }) => (
                 <button
-                  disabled={disabled}
+                  disabled={importDisabled}
                   onClick={() => exportJSON()}
-                  title="Exportar horário individual JSON (pode ser importado futuramente)"
-                  className="group flex w-full items-center gap-2 rounded-md px-2 py-2 
-                  text-sm text-gray-900 hover:bg-secondary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  title="Exportar horário JSON (pode ser importado futuramente)"
+                  className={classNames(
+                    'group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900',
+                    importDisabled ? 'opacity-50 hover:cursor-not-allowed' : 'hover:bg-secondary hover:text-white'
+                  )}
                 >
-                  <DownloadIcon className="h-5 w-5 text-secondary group-hover:text-white" />
+                  <DownloadIcon
+                    className={classNames('h-5 w-5 text-secondary', importDisabled ? '' : 'group-hover:text-white')}
+                  />
                   <span>Exportar Horário</span>
                 </button>
               )}

@@ -16,11 +16,11 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
         <input
           type="checkbox"
           id="checkbox-classesT"
-          className="checkbox"
+          className="checkbox-small"
           checked={classesT}
           onChange={(event) => setClassesT(event.target.checked)}
         />
-        <label className="cursor-pointer text-sm font-medium capitalize tracking-tight" htmlFor="checkbox-classesT">
+        <label className="cursor-pointer text-xs font-medium capitalize tracking-tight" htmlFor="checkbox-classesT">
           <span>Teóricas</span>
         </label>
       </div>
@@ -31,11 +31,11 @@ const ClassesTypeCheckboxes = ({ classesTHook, classesTPHook }: Props) => {
         <input
           type="checkbox"
           id="checkbox-classesTP"
-          className="checkbox"
+          className="checkbox-small"
           checked={classesTP}
           onChange={(event) => setClassesTP(event.target.checked)}
         />
-        <label className="cursor-pointer text-sm font-medium capitalize tracking-tight" htmlFor="checkbox-classesTP">
+        <label className="cursor-pointer text-xs font-medium capitalize tracking-tight" htmlFor="checkbox-classesTP">
           <span>Práticas</span>
         </label>
       </div>

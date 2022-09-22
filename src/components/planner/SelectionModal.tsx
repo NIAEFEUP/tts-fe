@@ -5,7 +5,7 @@ import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
 import Alert, { AlertType } from './Alert'
 import { Link } from 'react-router-dom'
 import { CheckedCourse, Course, Major } from '../../@types'
-import { getSchoolYear, getSemester, config, getPath } from '../../utils' 
+import { getSchoolYear, getSemester, config, getPath } from '../../utils'
 import {
   AcademicCapIcon,
   CheckCircleIcon,
@@ -139,10 +139,10 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           onClick={openModal}
           title="Editar Unidades Curriculares"
           className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary px-2
-          py-3 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:space-x-2 xl:px-4"
+          py-2 text-xs font-medium text-white transition hover:opacity-80 xl:space-x-2 xl:px-3"
         >
           <span className="flex">Editar</span>
-          <PencilAltIcon className="h-4 w-4 text-white xl:h-5 xl:w-5" />
+          <PencilAltIcon className="h-4 w-4 text-white" />
         </button>
       </div>
 
@@ -154,18 +154,23 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
               <InnerCustomTransition>
                 <Dialog.Panel
                   className={classNames(
-                    'w-full max-w-6xl transform space-y-3 rounded-2xl p-4 text-left lg:p-8',
+                    'w-full max-w-6xl transform space-y-2 rounded-2xl p-4 text-left lg:space-y-3 lg:p-6',
                     'bg-lightest align-middle shadow-xl transition-all dark:bg-dark'
                   )}
                 >
                   {/* Header */}
                   <Dialog.Title
                     as="header"
-                    className="mb-5 flex w-full items-center justify-between space-x-2 text-center font-medium"
+                    className="mb-2 flex w-full items-center justify-between space-x-2 text-center font-medium lg:mb-3"
                   >
                     <div className="flex items-center justify-start space-x-1">
                       <AcademicCapIcon className="h-6 w-6 text-feup" aria-hidden="true" />
-                      <h3 className="text-xl font-semibold leading-6 tracking-tight dark:text-white">Escolha de UCs</h3>
+                      <h3 className="flex text-xl font-semibold leading-6 tracking-tight dark:text-white lg:hidden">
+                        UCs
+                      </h3>
+                      <h3 className="hidden text-xl font-semibold leading-6 tracking-tight dark:text-white lg:flex">
+                        Escolha de UCs
+                      </h3>
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
@@ -408,9 +413,9 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   </div>
 
                   {/* Bottom action buttons */}
-                  <footer className="mt-8 flex flex-col items-center justify-between space-y-2 space-x-0 lg:flex-row lg:space-y-0 lg:space-x-2">
+                  <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
                     {/* Left side buttons */}
-                    <div className="flex w-full flex-col space-x-0 space-y-2 lg:flex-row lg:space-x-3 lg:space-y-0">
+                    <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
                       <a
                         type="button"
                         className={classNames(
@@ -439,7 +444,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                     </div>
 
                     {/* Right side buttons */}
-                    <div className="flex w-full flex-col items-center justify-between space-x-0 space-y-2 lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
+                    <div className="order-first flex w-full flex-col items-center justify-center space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
                       <button
                         type="button"
                         title="Coming soon"

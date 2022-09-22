@@ -205,7 +205,7 @@ const TimeTableSchedulerPage = () => {
       {/* Sidebar */}
       <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
-          <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
+          <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
             <SelectionModal
               majors={majors}
@@ -220,7 +220,7 @@ const TimeTableSchedulerPage = () => {
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
-          <div className="flex flex-col gap-4 py-2 px-0">
+          <div className="flex flex-col gap-4 py-1 px-0">
             {multipleOptions.selected.length > 0 &&
               multipleOptions.selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox

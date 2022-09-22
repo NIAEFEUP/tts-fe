@@ -36,22 +36,22 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   }
 
   return (
-    <div className="flex w-full rounded">
+    <div className="flex w-full rounded text-xs">
       <button
         disabled={options.index === 0}
         onClick={setPreviousOptionIndex}
         title="Ver opção de horário anterior"
-        className="w-min items-center justify-center gap-1.5 rounded-l border-2 border-transparent bg-secondary px-3 py-2
-        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-min items-center justify-center gap-1.5 rounded-l border-2 border-transparent bg-secondary px-2 py-2
+        text-center font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <ChevronLeftIcon className="h-5 w-5" />
+        <ChevronLeftIcon className="h-4 w-4" />
       </button>
 
       <Menu as="div" className="relative inline-block w-full text-left">
         <Menu.Button
           title="Escolher uma opção de horário"
-          className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-3 text-xs 
-          font-medium text-white transition hover:opacity-80 dark:bg-secondary lg:text-sm"
+          className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
+          font-medium text-white transition hover:opacity-80 dark:bg-secondary"
         >
           <span>Horário #{options.index + 1}</span>
         </Menu.Button>
@@ -76,11 +76,11 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                     className={`
                       ${active ? 'bg-secondary text-white' : ''}
                       ${index === options.index ? 'bg-secondary text-white hover:opacity-90' : !active && ''}
-                      group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 text-sm transition-all
+                      group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 transition-all
                     `}
                   >
                     <span>Horário {index + 1}</span>
-                    {index === options.index && <CheckIcon className="h-5 w-5" />}
+                    {index === options.index && <CheckIcon className="h-4 w-4" />}
                   </button>
                 )}
               </Menu.Item>
@@ -93,10 +93,10 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
         disabled={options.index === 9}
         onClick={setNextOptionIndex}
         title="Ver opção de horário seguinte"
-        className="w-min items-center justify-center gap-1.5 rounded-r border-2 border-transparent bg-secondary px-3 py-2
-        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-min items-center justify-center gap-1.5 rounded-r border-2 border-transparent bg-secondary px-2 py-2
+        text-center font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <ChevronRightIcon className="h-5 w-5" />
+        <ChevronRightIcon className="h-4 w-4" />
       </button>
     </div>
   )

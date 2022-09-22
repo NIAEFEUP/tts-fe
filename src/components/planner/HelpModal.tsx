@@ -20,15 +20,15 @@ const HelpModal = () => {
       <button
         onClick={openModal}
         title="Limpar memória de opções de horário"
-        className="inline-flex w-full items-center justify-center gap-1.5 rounded bg-tertiary p-2 text-center 
-          text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
+        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="truncate">Preciso de ajuda</span>
         <SupportIcon className="h-5 w-5" />
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10 text-sm" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -130,7 +130,7 @@ const HelpModal = () => {
                         Se persistirem dúvidas sobre como funciona o Time Table Selector, a{' '}
                         <Link
                           className="font-bold text-tertiary transition-all hover:underline hover:opacity-80"
-                          to={getPath(config.paths.faqs) + "#planner"}
+                          to={getPath(config.paths.faqs) + '#planner'}
                         >
                           página de FAQs
                         </Link>{' '}
