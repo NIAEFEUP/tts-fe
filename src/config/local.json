@@ -1,0 +1,17 @@
+{
+  "pathPrefix": "/tts/",
+  "paths": {
+    "about": "about",
+    "profile": "profile",
+    "planner": "planner",
+    "exchange": "exchange",
+    "faqs": "faqs",
+    "notfound": "*",
+    "home": "home"
+  },
+  "api": {
+    "port": 8000,
+    "host": "localhost",
+    "year": 2021
+  }
+}
