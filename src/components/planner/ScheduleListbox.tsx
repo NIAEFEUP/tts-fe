@@ -15,6 +15,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
+  const [lastSelected, setLastSelected] = useState(selectedOption);
+  const [previewing, setPreviewing] = useState(false);
+
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -24,6 +27,23 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
           option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
       )
   }, [courseOption])
+
+  const handleListBoxSelection = (option) => {
+    setLastSelected(option);
+    setSelectedOption(option);
+  }
+
+  const showPreview = (option) => {
+    if (!previewing) {
+      setPreviewing(true)
+    }
+    setSelectedOption(option);
+  }
+
+  const removePreview = () => {
+    setPreviewing(false);
+    setSelectedOption(lastSelected);
+  }
 
   const getOptionDisplayText = (option: CourseSchedule | null) =>
     option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)
@@ -101,7 +121,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
     adaptedSchedules && (
       <Listbox
         value={selectedOption}
-        onChange={(value) => (value.course_unit_id ? setSelectedOption(value) : setSelectedOption(null))}
+        onChange={(value) => (value.course_unit_id ? handleListBoxSelection(value) : handleListBoxSelection(null))}
       >
         <div className="relative text-sm">
           {/* Header */}
@@ -137,6 +157,8 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
             >
               {adaptedSchedules.map((option, optionIdx) => (
                 <Listbox.Option
+                  onMouseEnter={() => showPreview(option)}
+                  onMouseLeave={() => removePreview()}
                   key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
                   value={option === null ? <>&nbsp;</> : option}
                   className={({ active }) =>
