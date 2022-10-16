@@ -1,8 +1,8 @@
 import { CheckedCourse, Major } from '../@types'
 import { extraCoursesData } from '../utils/data'
-import { getSemester } from '../utils'
+import { getSemester, config } from '../utils'
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `http://${config.api.host}:${config.api.port}`
 const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
@@ -26,7 +26,7 @@ const apiRequest = async (route: string) => {
  * @returns all majors from the backend
  */
 const getMajors = async () => {
-  return await apiRequest(`/course`)
+  return await apiRequest(`/course/${config.api.year}`)
 }
 
 /**
@@ -36,7 +36,7 @@ const getMajors = async () => {
  */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  return await apiRequest(`/course_units/${major.id}/${SEMESTER}`)
+  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`)
 }
 
 /**
@@ -46,7 +46,7 @@ const getCourses = async (major: Major) => {
  */
 const getCourseSchedule = async (course: CheckedCourse) => {
   if (course === null) return []
-  return await apiRequest(`/schedule/${course.info.id}`)
+  return await apiRequest(`/schedule/${course.info.id}/`)
 }
 
 /**

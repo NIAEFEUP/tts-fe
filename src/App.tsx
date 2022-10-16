@@ -1,22 +1,23 @@
 import Layout from './components/layout'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { HomePage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage } from './pages'
+import { AboutPage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pages'
+import { getPath, config } from './utils'
 import './app.css'
-import FeupExchangeFaqs from './pages/FeupExchangeFaqs'
-import NotFoundPage from './pages/NotFound'
 
+// Configures the path for pages.
 const pages = [
-  { path: '/about', location: 'About', element: HomePage, liquid: true },
-  { path: '/profile', location: 'Profile', element: ProfilePage, liquid: true },
-  { path: '/planner', location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
-  { path: '/exchange', location: 'Exchange', element: FeupExchangePage, liquid: true },
-  { path: '/faqs', location: 'FAQs', element: FeupExchangeFaqs, liquid: true },
-  { path: '/*', location: 'NotFound', element: NotFoundPage, liquid: true },
+  { path: getPath(config.paths.about), location: 'About', element: AboutPage, liquid: true },
+  { path: getPath(config.paths.profile), location: 'Profile', element: ProfilePage, liquid: true },
+  { path: getPath(config.paths.planner), location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
+  { path: getPath(config.paths.exchange), location: 'Exchange', element: FeupExchangePage, liquid: true },
+  { path: getPath(config.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
+  { path: getPath(config.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
 ]
 
 const redirects = [
-  { from: '/', to: '/planner' },
-  { from: '/home', to: '/about' },
+  { from: config.pathPrefix, to: getPath(config.paths.planner) },
+  { from: config.pathPrefix.slice(0, -1), to: getPath(config.paths.planner) },
+  { from: getPath(config.paths.home), to: getPath(config.paths.about) },
 ]
 
 const App = () => (

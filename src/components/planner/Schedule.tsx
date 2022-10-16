@@ -18,14 +18,20 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
 
   const subjects = useMemo(() => {
     const classes = courseOptions.filter((item) => item.option !== null)
-    return classes.map((subject, subjectIdx) => ({
+
+    const chosenSubjects = classes.map((subject, subjectIdx) => ({
       shown: subject.shown,
       course: subject.course.info,
-      practicalLesson: subject.option,
+      // A course schedule, may have more than one practical class.
+      practicalLesson: classes.map((item) =>
+        item.schedules.filter((elem) => elem.lesson_type !== 'T' && elem.class_name === subject.option.class_name)
+      )[subjectIdx],
+      // A course schedule, may have more than one theoretical class.
       theoreticalLessons: classes.map((item) =>
         item.schedules.filter((elem) => elem.lesson_type === 'T' && elem.class_name === subject.option.class_name)
       )[subjectIdx],
     }))
+    return chosenSubjects
   }, [courseOptions])
 
   const lessons = useMemo(() => {
@@ -37,7 +43,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
       }
 
       if (subject.shown.TP) {
-        lessonsAcc.push({ course: subject.course, schedule: subject.practicalLesson })
+        subject.practicalLesson.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
       }
     })
 

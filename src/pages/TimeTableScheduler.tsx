@@ -1,7 +1,6 @@
 import BackendAPI from '../api/backend'
 import StorageAPI from '../api/storage'
 import { useState, useEffect, useMemo } from 'react'
-import { ScheduleColorLabels } from '../components/planner/schedules'
 import {
   Schedule,
   SelectionModal,
@@ -9,6 +8,8 @@ import {
   ClassesTypeCheckboxes,
   MoreActionsButton,
   OptionsController,
+  LessonTypesModal,
+  HelpModal,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
@@ -77,7 +78,7 @@ const TimeTableSchedulerPage = () => {
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(false))
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
 
   useEffect(() => {
     if (totalSelected.length === 0) return
@@ -86,6 +87,7 @@ const TimeTableSchedulerPage = () => {
 
   // fetch majors when component is ready
   useEffect(() => {
+    document.getElementById('layout').scrollIntoView()
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
@@ -224,7 +226,7 @@ const TimeTableSchedulerPage = () => {
       {/* Sidebar */}
       <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
-          <div className="flex flex-col flex-wrap items-center justify-start gap-3 xl:flex-row">
+          <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
             <SelectionModal
               majors={majors}
@@ -241,7 +243,7 @@ const TimeTableSchedulerPage = () => {
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>
-          <div className="flex flex-col gap-4 py-2 px-0">
+          <div className="flex flex-col gap-4 py-1 px-0">
             {multipleOptions.selected.length > 0 &&
               multipleOptions.selected.map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
@@ -252,7 +254,10 @@ const TimeTableSchedulerPage = () => {
               ))}
           </div>
         </div>
-        <ScheduleColorLabels />
+        <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
+          <HelpModal />
+          <LessonTypesModal />
+        </div>
       </div>
     </div>
   )

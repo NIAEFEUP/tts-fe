@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
 import { LogoNIAEFEUPImage } from '../../images'
+import { config, getPath } from '../../utils'
 import {
   MenuIcon,
   XIcon,
@@ -13,11 +14,31 @@ import {
 } from '@heroicons/react/outline'
 
 const navigation = [
-  { title: 'Planner', location: '/planner', icon: <CollectionIcon className="h-5 w-5" />, wip: false },
-  { title: 'Exchange', location: '/exchange', icon: <SwitchHorizontalIcon className="h-5 w-5" />, wip: true },
-  { title: 'Profile', location: '/profile', icon: <UserCircleIcon className="h-5 w-5" />, wip: true },
-  { title: 'About', location: '/about', icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
-  { title: 'FAQs', location: '/faqs', icon: <QuestionMarkCircleIcon className="h-5 w-5" />, wip: true },
+  {
+    title: 'Planner',
+    location: getPath(config.paths.planner),
+    icon: <CollectionIcon className="h-5 w-5" />,
+    wip: false,
+  },
+  {
+    title: 'Exchange',
+    location: getPath(config.paths.exchange),
+    icon: <SwitchHorizontalIcon className="h-5 w-5" />,
+    wip: true,
+  },
+  {
+    title: 'Profile',
+    location: getPath(config.paths.profile),
+    icon: <UserCircleIcon className="h-5 w-5" />,
+    wip: true,
+  },
+  { title: 'About', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
+  {
+    title: 'FAQs',
+    location: getPath(config.paths.faqs),
+    icon: <QuestionMarkCircleIcon className="h-5 w-5" />,
+    wip: false,
+  },
 ]
 
 type Props = {
@@ -29,7 +50,7 @@ const Header = ({ siteTitle, location }: Props) => {
   return (
     <Disclosure
       as="nav"
-      className="sticky top-0 z-20 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
+      className="sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
     >
       {({ open }) => {
         return (
@@ -38,7 +59,7 @@ const Header = ({ siteTitle, location }: Props) => {
               <Hamburger open={open} />
               <div className="flex flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
-                  <Link to="/" className="flex items-center space-x-2">
+                  <Link to={config.pathPrefix} className="flex items-center space-x-2">
                     <img
                       src={LogoNIAEFEUPImage}
                       alt="Time Table Selector"
@@ -105,7 +126,7 @@ const Hamburger = ({ open }: HamburgerProps) => (
         : 'flex w-full items-center justify-between'
     }`}
   >
-    <Link to="/">
+    <Link to={config.pathPrefix}>
       {open ? (
         <img
           className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"

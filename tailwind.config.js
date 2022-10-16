@@ -18,7 +18,7 @@ module.exports = {
         lightest: '#fbfbfb',
         primary: '#b33636',
         secondary: '#0C4A6E',
-        tertiary: '#115E59',
+        tertiary: '#357672',
         feup: '#7D221E',
         schedule: {
           lunch: '#BE123C',

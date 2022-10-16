@@ -1,5 +1,6 @@
-import CardFeature from './CardFeature'
-import HeroExchange from './HeroExchange'
+import Divider from './Divider'
+import BackToTop from './BackToTop'
 import HeroPlanner from './HeroPlanner'
+import HeroExchange from './HeroExchange'
 
-export { CardFeature, HeroExchange, HeroPlanner }
+export { HeroExchange, HeroPlanner, Divider, BackToTop }

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { config } from '../utils'
 
 const NotFoundPage = () => (
   <>
@@ -7,7 +8,7 @@ const NotFoundPage = () => (
       <h1 className="text-center text-4xl font-semibold">404</h1>
       <h2 className="mb-2 text-center text-3xl font-medium">PAGE NOT FOUND</h2>
       <Link
-        to="/"
+        to={config.pathPrefix}
         className="flex h-auto w-fit items-center justify-center rounded border-2 border-primary 
         bg-primary px-3 py-2 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:px-4"
       >
@@ -19,7 +20,7 @@ const NotFoundPage = () => (
       <h1 className="text-center text-4xl font-semibold">404</h1>
       <h2 className="mb-2 text-center text-3xl font-medium">PAGE NOT FOUND</h2>
       <Link
-        to="/"
+        to={config.pathPrefix}
         className="flex h-auto w-fit items-center justify-center rounded border-2 border-primary 
         bg-primary px-3 py-2 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:px-4"
       >
