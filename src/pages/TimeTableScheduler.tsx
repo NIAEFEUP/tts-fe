@@ -10,6 +10,7 @@ import {
   OptionsController,
   LessonTypesModal,
   HelpModal,
+  ShareButtons,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
@@ -253,6 +254,9 @@ const TimeTableSchedulerPage = () => {
                 />
               ))}
           </div>
+          <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
+          <ShareButtons />
+        </div>
         </div>
         <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
           <HelpModal />

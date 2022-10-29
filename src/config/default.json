@@ -12,6 +12,6 @@
   "api": {
     "port": 8080,
     "host": "localhost",
-    "year": 2022
+    "year": 2021
   }
 }
