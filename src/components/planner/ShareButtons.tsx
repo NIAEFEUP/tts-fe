@@ -18,7 +18,20 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
     const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
     const scheduleToString = (major : Major, schedule : CourseOption[]) => {
-        return major.name + ";" + schedule.length
+        //TODO
+        var copySchedule : string = (major.id).toString();
+        console.log(schedule)
+        for (let i = 0; i < schedule.length ; i++){
+            copySchedule += ";" + schedule[i].course.info.course_unit_id + "#";
+            if (schedule[i].option == null){
+                copySchedule += "null";
+            }
+            else{
+                copySchedule += schedule[i].option.class_name;
+
+            }
+        }
+        return copySchedule;
     }
     
     const copySchedule = () => {
@@ -30,12 +43,22 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
         navigator.clipboard.writeText(scheduleToString(scheduleToCopy.major, scheduleToCopy.selected));
     }
 
+    const importSchedule = () => {
+        //TODO
+        var input = document.getElementById("schedule-input") as HTMLInputElement;
+        console.log(input.value)
+    }
+
     return (
     <>  
         <input id='schedule-input' className='inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
             text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50'></input>
 
-        <button title="Importar"
+        <button 
+            onClick={() => importSchedule()}
+
+            id='ImportButton'
+            title="Importar"
             className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
             text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
             >
