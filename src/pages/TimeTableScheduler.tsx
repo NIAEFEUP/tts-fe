@@ -255,7 +255,12 @@ const TimeTableSchedulerPage = () => {
               ))}
           </div>
           <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
-          <ShareButtons />
+          <ShareButtons 
+            majorHook={[major, setMajor]}
+            coursesHook={[checkedCourses, setCheckedCourses]}
+            schedule={multipleOptions.selected}
+            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+          />
         </div>
         </div>
         <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">

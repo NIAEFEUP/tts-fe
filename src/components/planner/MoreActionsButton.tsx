@@ -10,7 +10,7 @@ import {
   TrashIcon,
   UploadIcon,
 } from '@heroicons/react/outline'
-import { CourseOption, MultipleOptions, CheckedCourse, Major, ExportJSON } from '../../@types'
+import { CourseOption, MultipleOptions, CheckedCourse, Major } from '../../@types'
 
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
@@ -28,11 +28,10 @@ const MoreActionsButton = ({majorHook, coursesHook, schedule, showGridHook, mult
   const [showGrid, setShowGrid] = showGridHook
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
-  const isScheduleValid = (scheduleJson: any) => {
-    
-
-    return true
+  const isScheduleValid = (e: string) => {
+    return true;
   }
+
 
  
 
