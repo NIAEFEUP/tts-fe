@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import {DocumentDuplicateIcon, UploadIcon } from '@heroicons/react/outline'
+import { DocumentDuplicateIcon, UploadIcon } from '@heroicons/react/outline'
 import { CourseOption, MultipleOptions, CheckedCourse, Major } from '../../@types'
 
 type Props = {
@@ -17,6 +17,12 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
     const [checkedCourses, setCheckedCourses] = coursesHook
     const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
+    /**
+     * Function that converts schedule to string
+     * @param major selected major
+     * @param schedule current schedule
+     * @returns stringified schedule
+     */
     const scheduleToString = (major : Major, schedule : CourseOption[]) => {
         //TODO
         var copySchedule : string = (major.id).toString();
@@ -50,30 +56,33 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
     }
 
     return (
-    <>  
-        <input id='schedule-input' className='inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
-            text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50'></input>
+    <>  <div className='grid grid-rows-3 grid-flow-col gap-2 w-full'>
+            <input placeholder='Insere o link do horário...' id='schedule-input' className='col-span-2 inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
+                text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50'></input>
+            <div className='col-span-2 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row'>
+                <button 
+                    onClick={() => importSchedule()}
 
-        <button 
-            onClick={() => importSchedule()}
+                    id='ImportButton'
+                    title="Importar o link inserido"
+                    className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
+                    text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                    <text>Importar</text><UploadIcon className="h-5 w-5" />
 
-            id='ImportButton'
-            title="Importar"
-            className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
-            text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-            <UploadIcon className="h-5 w-5" />
+                </button>
+                
+                <button
+                    onClick={() => copySchedule()}
+                    title="Copiar o link do horário"
+                    className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
+                    text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                    <text>Copiar</text><DocumentDuplicateIcon className="h-5 w-5" />
 
-        </button>
-        
-        <button
-            onClick={() => copySchedule()}
-            title="CopiarHorario"
-            className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
-            text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-            <DocumentDuplicateIcon className="h-5 w-5" />
-        </button>
+                </button>
+            </div>
+        </div>
     </>
     )
 }
