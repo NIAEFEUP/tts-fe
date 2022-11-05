@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { DocumentDuplicateIcon, UploadIcon } from '@heroicons/react/outline'
 import { CourseOption, MultipleOptions, CheckedCourse, Major } from '../../@types'
+import getMajors from '../../api/backend'
 
 type Props = {
     majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
@@ -49,10 +50,26 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
         navigator.clipboard.writeText(scheduleToString(scheduleToCopy.major, scheduleToCopy.selected));
     }
 
-    const importSchedule = () => {
-        //TODO
+    const importSchedule = async () => {
         var input = document.getElementById("schedule-input") as HTMLInputElement;
-        console.log(input.value)
+        let value : string = input.value;
+        //120;477603#null;477604#null;477606#null;477605#null;477607#null;477602#null
+        var tokens : string[] = value.split(";")
+    
+        var major_id = tokens[0];
+        var major : Major;
+        var majors = await getMajors.getMajors();
+        for (let i = 0; i < majors.length ; i++){
+            if(majors[i]["id"] == major_id){
+                major = majors[i];
+                break;
+            }
+
+        }
+
+        console.log(major);
+
+        
     }
 
     return (
