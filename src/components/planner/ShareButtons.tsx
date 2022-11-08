@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { DocumentDuplicateIcon, UploadIcon } from '@heroicons/react/outline'
-import { CourseOption, MultipleOptions, CheckedCourse, Major } from '../../@types'
+import { CourseOption, MultipleOptions, CheckedCourse, Major, shown_classes } from '../../@types'
 import getMajors from '../../api/backend'
 
 type Props = {
@@ -55,8 +55,15 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
         let value : string = input.value;
         //120;477603#null;477604#null;477606#null;477605#null;477607#null;477602#null
         var tokens : string[] = value.split(";")
-    
         var major_id = tokens[0];
+        var courses_info : string[][] = [];
+
+        tokens.splice(0, 1);
+        for (let i = 0; i < tokens.length ; i++){
+            console.log(tokens[i])
+            courses_info.push(tokens[i].split("#"));
+        }
+
         var major : Major;
         var majors = await getMajors.getMajors();
         for (let i = 0; i < majors.length ; i++){
@@ -67,7 +74,53 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
 
         }
 
-        console.log(major);
+        var course_units = await getMajors.getCourses(major);
+        var imported_course_units : CourseOption[] = [];
+        for (let i = 0; i < courses_info.length; i++){
+            let course_option : CourseOption;
+            var checked_course : CheckedCourse 
+            for(let j = 0; j < course_units.length; j++){
+
+                if(course_units[j]["course_unit_id"] == courses_info[i][0]){
+                    console.log("Found pair for: ", i)
+                    checked_course = {
+                        checked: true,
+                        info: course_units[j],
+                    };
+                    break;
+                }
+            }
+            
+            //for loop to check schedule and option
+            let shown_var = {
+                T: true,
+                TP: true
+              };
+
+            course_option = {
+                shown: shown_var,
+                course: checked_course,
+                option: null,
+                schedules: [],
+            }
+            imported_course_units.push(course_option);
+        }
+
+        console.log("imported courses: ", imported_course_units);
+
+        let all_options = multipleOptions.options
+
+        all_options[multipleOptions.index] = imported_course_units;
+
+
+        setMultipleOptions((prev) => ({
+            index: prev.index,
+            selected: imported_course_units,
+            options: all_options,
+        }))
+
+            
+        setMajor(major)
 
         
     }
