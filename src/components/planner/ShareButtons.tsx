@@ -126,9 +126,8 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
     }
 
     return (
-    <>  <div className='grid grid-rows-3 grid-flow-col gap-2 w-full'>
-            <input placeholder='Insere o link do horário...' id='schedule-input' className='col-span-2 inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
-                text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50'></input>
+    <>  <div className='grid grid-rows-3 grid-flow-col gap-2 w-full mt-1'>
+           
             <div className='col-span-2 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row'>
                 <button 
                     onClick={() => importSchedule()}
@@ -152,6 +151,8 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
 
                 </button>
             </div>
+            <input placeholder='Insere o link do horário...' id='schedule-input' className='col-span-2 inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
+                text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50'></input>
         </div>
     </>
     )

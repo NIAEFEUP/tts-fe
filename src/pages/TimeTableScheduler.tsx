@@ -229,6 +229,15 @@ const TimeTableSchedulerPage = () => {
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
+            
+            <ShareButtons
+            majorHook={[major, setMajor]}
+            coursesHook={[checkedCourses, setCheckedCourses]}
+            schedule={multipleOptions.selected}
+            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+            />
+
+          
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
@@ -255,12 +264,12 @@ const TimeTableSchedulerPage = () => {
               ))}
           </div>
           <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
-          <ShareButtons 
+          {/* <ShareButtons 
             majorHook={[major, setMajor]}
             coursesHook={[checkedCourses, setCheckedCourses]}
             schedule={multipleOptions.selected}
             multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-          />
+          /> */}
         </div>
         </div>
         <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
