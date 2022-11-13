@@ -11,7 +11,7 @@ import {
   LessonTypesModal,
   HelpModal,
 } from '../components/planner'
-import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
+import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions, SelectedMajors } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
 
 const TimeTableSchedulerPage = () => {
@@ -68,6 +68,7 @@ const TimeTableSchedulerPage = () => {
 
   const [major, setMajor, majorChangedRef] = useMajor() // the picked major
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
+  const [selectedMajors, setSelectedMajors] = useState<SelectedMajors>({selected: new Map()}) // all the selectedMajors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
@@ -212,6 +213,7 @@ const TimeTableSchedulerPage = () => {
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
               coursesHook={[checkedCourses, setCheckedCourses]}
+              selectedMajorsHook={[selectedMajors, setSelectedMajors]}
             />
             <MoreActionsButton
               schedule={multipleOptions.selected}

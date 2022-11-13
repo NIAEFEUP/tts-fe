@@ -10,8 +10,9 @@ export type Student = {
 This state saves the major that has at least one selected course. 
 The key of the hashmap is the id of a major and the value is a list of couses;  
 */ 
-export type MajorList = {
-  [key: number]: CheckedCourse[]; 
+export type SelectedMajors = {
+  //[key: number]: CheckedCourse[][]
+  selected : Map<number, CheckedCourse[][]>
 }
 
 

@@ -4,7 +4,7 @@ import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
 import Alert, { AlertType } from './Alert'
 import { Link } from 'react-router-dom'
-import { CheckedCourse, Course, Major } from '../../@types'
+import { CheckedCourse, Course, Major, SelectedMajors } from '../../@types'
 import { getSchoolYear, getSemester, config, getPath } from '../../utils'
 import {
   AcademicCapIcon,
@@ -23,12 +23,14 @@ type Props = {
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
+  selectedMajorsHook: [SelectedMajors, React.Dispatch<React.SetStateAction<SelectedMajors>>]
 }
 
-const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => {
+const SelectionModal = ({ majors, openHook, majorHook, coursesHook, selectedMajorsHook }: Props) => {
   const [major, setMajor] = majorHook
   const [isOpen, setIsOpen] = openHook
   const [courses, setCourses] = coursesHook
+  const [selectedMajors, setSelectedMajors] = selectedMajorsHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
@@ -120,15 +122,26 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
       if (every) {
         checkbox.checked = true
         checkbox.indeterminate = false
+        //setSelectedMajors(new Map([...selectedMajors, ... new])) 
+        setSelectedMajors(prev => {
+          prev.selected.set(major.id, courses)
+          return prev
+        })
       } else if (some) {
         checkbox.checked = false
         checkbox.indeterminate = true
+        setSelectedMajors(prev => {
+          prev.selected.set(major.id, courses)
+          return prev
+        })
       } else {
         checkbox.checked = false
         checkbox.indeterminate = false
       }
     }
-  }, [courses])
+  }, [courses, major, setSelectedMajors])
+
+  console.log(selectedMajors.selected)
 
   return (
     <>
