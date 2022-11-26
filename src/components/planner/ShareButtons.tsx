@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { DocumentDuplicateIcon, UploadIcon } from '@heroicons/react/outline'
-import { CourseOption, MultipleOptions, CheckedCourse, Major, shown_classes } from '../../@types'
+import { CourseOption, MultipleOptions, CheckedCourse, Major } from '../../@types'
 import getMajors from '../../api/backend'
 
 type Props = {
