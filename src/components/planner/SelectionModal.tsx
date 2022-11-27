@@ -111,9 +111,14 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook, selectedMajo
   }, [major, courses, atLeastOneCourse])
 
   useEffect(() => {
+    let selectedCourses = []; let yearSelectedCourses = [];
     for (let year = 0; year < courses.length; year++) {
       let some = courses[year].some((course) => course.checked)
       let every = courses[year].every((course) => course.checked)
+
+      yearSelectedCourses = courses[year].filter(course => course.checked);
+
+      if(yearSelectedCourses.length > 0) selectedCourses.push(yearSelectedCourses)
 
       //@ts-ignore
       let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
@@ -124,14 +129,14 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook, selectedMajo
         checkbox.indeterminate = false
         //setSelectedMajors(new Map([...selectedMajors, ... new])) 
         setSelectedMajors(prev => {
-          prev.selected.set(major.id, courses)
+          prev.selected.set(major.id, selectedCourses)
           return prev
         })
       } else if (some) {
         checkbox.checked = false
         checkbox.indeterminate = true
         setSelectedMajors(prev => {
-          prev.selected.set(major.id, courses)
+          prev.selected.set(major.id, selectedCourses)
           return prev
         })
       } else {
