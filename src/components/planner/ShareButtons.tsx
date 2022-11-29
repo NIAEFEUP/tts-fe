@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { DocumentDuplicateIcon, UploadIcon } from '@heroicons/react/outline'
-import { CourseOption, MultipleOptions, CheckedCourse, Major } from '../../@types'
+import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule } from '../../@types'
 import getMajors from '../../api/backend'
 
 type Props = {
@@ -64,6 +64,8 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
             courses_info.push(tokens[i].split("#"));
         }
 
+
+        //get Major
         var major : Major;
         var majors = await getMajors.getMajors();
         for (let i = 0; i < majors.length ; i++){
@@ -74,6 +76,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
 
         }
 
+        //get courses
         var course_units = await getMajors.getCourses(major);
         var imported_course_units : CourseOption[] = [];
         for (let i = 0; i < courses_info.length; i++){
@@ -90,6 +93,20 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
                     break;
                 }
             }
+
+            let course_schedule = await getMajors.getCourseSchedule(checked_course);
+
+            let option : CourseSchedule | null = null;
+
+            if (courses_info[i][1] != "null"){
+                for (let j = 0; j < course_schedule.length ; j++){
+                    if (course_schedule[j].class_name == courses_info[i][1]){
+                        option = course_schedule[j];
+                        break;
+                    }
+                }
+            }
+
             
             //for loop to check schedule and option
             let shown_var = {
@@ -100,7 +117,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
             course_option = {
                 shown: shown_var,
                 course: checked_course,
-                option: null,
+                option: option,
                 schedules: [],
             }
             imported_course_units.push(course_option);
