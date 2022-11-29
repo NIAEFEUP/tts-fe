@@ -118,7 +118,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
                 shown: shown_var,
                 course: checked_course,
                 option: option,
-                schedules: [],
+                schedules: course_schedule,
             }
             imported_course_units.push(course_option);
         }
