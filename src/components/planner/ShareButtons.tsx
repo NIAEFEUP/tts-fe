@@ -126,36 +126,42 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
     }
 
     return (
-    <>  <div className='grid grid-rows-3 grid-flow-col gap-2 w-full mt-1'>
-           
-            <div className='col-span-2 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row'>
-                <button 
-                    onClick={() => importSchedule()}
-
-                    id='ImportButton'
-                    title="Importar o link inserido"
-                    className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
-                    text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                    <text>Importar</text><UploadIcon className="h-5 w-5" />
-
-                </button>
-                
-                <button
-                    onClick={() => copySchedule()}
-                    title="Copiar o link do horário"
-                    className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
-                    text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                    <text>Copiar</text><DocumentDuplicateIcon className="h-5 w-5" />
-
-                </button>
+        
+    <>  <div className='grid grid-flow-row grid-rows-1 grid-cols-7 gap-2 w-full mt-1'>
+        <div className="relative col-span-6">
+            <div className="absolute inset-y-0 left-0 col-span-6">
+            
             </div>
-            <input placeholder='Insere o link do horário...' id='schedule-input' className='col-span-2 inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
-                text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50'></input>
+            <input placeholder='Insere o link do horário...' id="schedule-input" className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
+                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50" required>
+            </input>
+            <button 
+                        onClick={() => importSchedule()}
+
+                        id='ImportButton'
+                        title="Importar o link inserido"
+                        className="absolute right-0.5 bottom-0.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
+                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                        <text></text><UploadIcon className="h-4 w-4" />
+
+            </button>
+            
+        </div>
+                <div className='col-span-1'>
+                    <button
+                        onClick={() => copySchedule()}
+                        title="Copiar o link do horário"
+                        className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
+                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                        <text></text><DocumentDuplicateIcon className="h-5 w-5" />
+                    </button>
+
+                </div>
+
         </div>
     </>
-    )
-}
-
+        )
+    }
 export default ShareButtons
