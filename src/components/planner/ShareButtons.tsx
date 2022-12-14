@@ -8,15 +8,16 @@ type Props = {
     coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
     schedule: CourseOption[]
     multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+    setIsImportedSchedule: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
 
-const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: Props) => {
-    const buttonRef = useRef(null)
+const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, setIsImportedSchedule }: Props) => {
     const [major, setMajor] = majorHook
     const [checkedCourses, setCheckedCourses] = coursesHook
     const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+
 
     /**
      * Function that converts schedule to string
@@ -51,9 +52,9 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
     }
 
     const importSchedule = async () => {
+        setIsImportedSchedule(true);
         var input = document.getElementById("schedule-input") as HTMLInputElement;
         let value : string = input.value;
-        //120;477603#null;477604#null;477606#null;477605#null;477607#null;477602#null
         var tokens : string[] = value.split(";")
         var major_id = tokens[0];
         var courses_info : string[][] = [];
@@ -66,18 +67,18 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
 
 
         //get Major
-        var major : Major;
+        var imported_major : Major;
         var majors = await getMajors.getMajors();
         for (let i = 0; i < majors.length ; i++){
             if(majors[i]["id"] == major_id){
-                major = majors[i];
+                imported_major = majors[i];
                 break;
             }
 
         }
 
         //get courses
-        var course_units = await getMajors.getCourses(major);
+        var course_units = await getMajors.getCourses(imported_major);
         var imported_course_units : CourseOption[] = [];
         for (let i = 0; i < courses_info.length; i++){
             let course_option : CourseOption;
@@ -129,6 +130,13 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
 
         all_options[multipleOptions.index] = imported_course_units;
 
+        if (imported_major.id != major.id){
+            setMajor(imported_major);
+        }
+        
+        //cheked courses
+
+        console.log("imported courses: ", imported_course_units);
 
         setMultipleOptions((prev) => ({
             index: prev.index,
@@ -137,7 +145,6 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
         }))
 
             
-        setMajor(major)
 
         
     }
@@ -154,7 +161,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
                     className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
                     text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                    <text>Importar</text><UploadIcon className="h-5 w-5" />
+                    <span className="flex">Importar</span><UploadIcon className="h-5 w-5" />
 
                 </button>
                 
@@ -164,7 +171,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
                     className="inline-flex w-full items-center justify-center gap-1.5 whitespace-nowrap rounded bg-tertiary p-2 
                     text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                    <text>Copiar</text><DocumentDuplicateIcon className="h-5 w-5" />
+                    <span className="flex">Copiar</span><DocumentDuplicateIcon className="h-5 w-5" />
 
                 </button>
             </div>

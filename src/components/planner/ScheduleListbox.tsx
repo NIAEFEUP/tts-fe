@@ -7,11 +7,13 @@ import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
 type Props = {
   courseOption: CourseOption
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  isImportedScheduleHook : [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
+const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedScheduleHook }: Props) => {
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  const [isImportedSchedule, setIsImportedSchedule] = isImportedScheduleHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
@@ -76,11 +78,22 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
 
     const resolveCourseOptions = (prev: CourseOption[]) => {
       let newCourseOptions = prev
+      console.log("prev", prev)
       for (let i = 0; i < prev.length; i++) {
         const option = prev[i]
         if (option.course.info.id === courseOption.course.info.id) {
-          newCourseOptions[i].option = selectedOption
+          if(!isImportedSchedule){
+            newCourseOptions[i].option = selectedOption
+
+          }else{
+            setSelectedOption(newCourseOptions[i].option)
+          }
         }
+        
+      }
+
+      if (isImportedSchedule) {
+        setIsImportedSchedule(false)
       }
 
       return [...newCourseOptions]
@@ -92,10 +105,13 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
         selected: [...resolveCourseOptions(prevMultipleOptions.selected)],
         options: prevMultipleOptions.options,
       }
+      console.log("value", value)
 
       return value
     })
   }, [selectedOption, courseOption, setMultipleOptions])
+
+
 
   return (
     adaptedSchedules && (

@@ -40,7 +40,6 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   })
 
   const setValue = (value: any) => {
-    console.log("Courses SetValue:", value)
     try {
       setStoredValue(value)
       writeStorage(key, value)

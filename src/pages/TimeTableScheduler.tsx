@@ -80,6 +80,8 @@ const TimeTableSchedulerPage = () => {
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
+  const [isImportedSchedule, setIsImportedSchedule] = useState<boolean>(false)
+
 
   useEffect(() => {
     if (totalSelected.length === 0) return
@@ -125,7 +127,7 @@ const TimeTableSchedulerPage = () => {
     })
     console.log("horario in use effect", multipleOptions)
     console.log("useEffect triggered!!!!")
-  }, [major, majorChangedRef, checkedCourses, setCheckedCourses, multipleOptions])
+  }, [major, majorChangedRef, checkedCourses, multipleOptions])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
@@ -235,6 +237,7 @@ const TimeTableSchedulerPage = () => {
             coursesHook={[checkedCourses, setCheckedCourses]}
             schedule={multipleOptions.selected}
             multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+            setIsImportedSchedule={setIsImportedSchedule}
             />
 
           
@@ -259,17 +262,12 @@ const TimeTableSchedulerPage = () => {
                 <ScheduleListbox
                   courseOption={courseOption}
                   multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+                  isImportedScheduleHook={[isImportedSchedule, setIsImportedSchedule]}
                   key={`course-schedule-listbox-${multipleOptions.index}-${courseOption.course.info.id}`}
                 />
               ))}
           </div>
           <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
-          {/* <ShareButtons 
-            majorHook={[major, setMajor]}
-            coursesHook={[checkedCourses, setCheckedCourses]}
-            schedule={multipleOptions.selected}
-            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-          /> */}
         </div>
         </div>
         <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
