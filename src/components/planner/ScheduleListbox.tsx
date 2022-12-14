@@ -7,11 +7,13 @@ import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
 type Props = {
   courseOption: CourseOption
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  isImportedScheduleHook : [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
+const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedScheduleHook}: Props) => {
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  const [isImportedSchedule, setIsImportedSchedule] = isImportedScheduleHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
@@ -78,9 +80,13 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       let newCourseOptions = prev
       for (let i = 0; i < prev.length; i++) {
         const option = prev[i]
-        if (option.course.info.id === courseOption.course.info.id) {
+        if (option.course.info.id === courseOption.course.info.id && !isImportedSchedule) {
           newCourseOptions[i].option = selectedOption
         }
+      }
+      if(!isImportedSchedule){
+        setIsImportedSchedule(false)
+
       }
 
       return [...newCourseOptions]
@@ -101,7 +107,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
     adaptedSchedules && (
       <Listbox
         value={selectedOption}
-        onChange={(value) => (value.course_unit_id ? setSelectedOption(value) : setSelectedOption(null))}
+        onChange={(value) =>  +-(value.course_unit_id ? setSelectedOption(value) : setSelectedOption(null))}
       >
         <div className="relative text-sm">
           {/* Header */}
