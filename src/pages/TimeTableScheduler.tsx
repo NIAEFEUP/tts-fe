@@ -80,14 +80,10 @@ const TimeTableSchedulerPage = () => {
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
-  const [isImportedSchedule, setIsImportedSchedule] = useState<boolean>(false)
-
 
   useEffect(() => {
     if (totalSelected.length === 0) return
     StorageAPI.setOptionsStorage(multipleOptions)
-    // console.log("horario in use effect 1", multipleOptions)
-
   }, [multipleOptions, totalSelected])
 
   // fetch majors when component is ready
@@ -96,8 +92,6 @@ const TimeTableSchedulerPage = () => {
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
-    // console.log("horario in use effect 2", multipleOptions)
-
   }, [])
 
 
@@ -117,13 +111,9 @@ const TimeTableSchedulerPage = () => {
   }
 
   // once a major has been picked => fetch courses for the major
-  useEffect(() => {
-    console.log("multipleOptions changed:", multipleOptions.selected)
-  }, [multipleOptions])
 
   useEffect(() => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) {
-      console.log("major is null or major has not changed")
       return
     }
     BackendAPI.getCourses(major).then((courses: Course[]) => {
@@ -132,13 +122,10 @@ const TimeTableSchedulerPage = () => {
       let uCC = updateCheckedCourses(newCheckedCourses, multipleOptions.selected)
       majorChangedRef.current = false
       setCheckedCourses([...uCC])
-      // const majorCourses = groupMajorCoursesByYear(courses)
-      // const newCheckedCourses = courseToCheckedCourse(majorCourses)
-      // majorChangedRef.current = false
-      // setCheckedCourses([...newCheckedCourses])
     })
-    // console.log("horario in use effect 3", multipleOptions)
-  }, [major, majorChangedRef, checkedCourses, multipleOptions])
+    console.log("horario in use effect", multipleOptions)
+    console.log("useEffect triggered!!!!")
+  }, [major, majorChangedRef, checkedCourses, setCheckedCourses, multipleOptions])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
@@ -221,8 +208,6 @@ const TimeTableSchedulerPage = () => {
         }
       })
     })
-    console.log("horario in use effect 4", multipleOptions)
-
   }, [checkedCourses])
 
   return (
@@ -250,7 +235,6 @@ const TimeTableSchedulerPage = () => {
             coursesHook={[checkedCourses, setCheckedCourses]}
             schedule={multipleOptions.selected}
             multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-            isImportedScheduleHook={[isImportedSchedule, setIsImportedSchedule]}
             />
 
           
@@ -275,7 +259,6 @@ const TimeTableSchedulerPage = () => {
                 <ScheduleListbox
                   courseOption={courseOption}
                   multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-                  isImportedScheduleHook={[isImportedSchedule, setIsImportedSchedule]}
                   key={`course-schedule-listbox-${multipleOptions.index}-${courseOption.course.info.id}`}
                 />
               ))}
