@@ -78,7 +78,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
 
     const resolveCourseOptions = (prev: CourseOption[]) => {
       let newCourseOptions = prev
-      console.log("prev", prev)
       for (let i = 0; i < prev.length; i++) {
         const option = prev[i]
         if (option.course.info.id === courseOption.course.info.id) {
@@ -105,7 +104,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
         selected: [...resolveCourseOptions(prevMultipleOptions.selected)],
         options: prevMultipleOptions.options,
       }
-      console.log("value", value)
 
       return value
     })

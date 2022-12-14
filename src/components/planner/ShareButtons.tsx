@@ -124,7 +124,6 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
             imported_course_units.push(course_option);
         }
 
-        console.log("imported courses: ", imported_course_units);
 
         let all_options = multipleOptions.options
 
@@ -136,13 +135,13 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
         
         //cheked courses
 
-        console.log("imported courses: ", imported_course_units);
 
         setMultipleOptions((prev) => ({
             index: prev.index,
             selected: imported_course_units,
             options: all_options,
         }))
+
 
             
 

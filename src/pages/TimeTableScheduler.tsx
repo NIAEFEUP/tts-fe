@@ -98,6 +98,7 @@ const TimeTableSchedulerPage = () => {
 
 
   const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
+    
     for (let i = 0; i < newCheckedCourses.length; i++) {
       for (let j = 0; j < newCheckedCourses[i].length; j++) {
         
@@ -109,13 +110,15 @@ const TimeTableSchedulerPage = () => {
         }
       }
     }
+    
+    
     return newCheckedCourses
   }
 
   // once a major has been picked => fetch courses for the major
 
   useEffect(() => {
-    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) {
+    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0 && !isImportedSchedule)) {
       return
     }
     BackendAPI.getCourses(major).then((courses: Course[]) => {
