@@ -128,8 +128,6 @@ const TimeTableSchedulerPage = () => {
       majorChangedRef.current = false
       setCheckedCourses([...uCC])
     })
-    console.log("horario in use effect", multipleOptions)
-    console.log("useEffect triggered!!!!")
   }, [major, majorChangedRef, checkedCourses, multipleOptions])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
@@ -237,7 +235,6 @@ const TimeTableSchedulerPage = () => {
             
             <ShareButtons
             majorHook={[major, setMajor]}
-            coursesHook={[checkedCourses, setCheckedCourses]}
             schedule={multipleOptions.selected}
             multipleOptionsHook={[multipleOptions, setMultipleOptions]}
             setIsImportedSchedule={setIsImportedSchedule}
@@ -251,11 +248,9 @@ const TimeTableSchedulerPage = () => {
               coursesHook={[checkedCourses, setCheckedCourses]}
             />
             <MoreActionsButton
-              majorHook={[major, setMajor]}
-              coursesHook={[checkedCourses, setCheckedCourses]}
               schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
-              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+              multipleOptions= {multipleOptions}
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
           </div>

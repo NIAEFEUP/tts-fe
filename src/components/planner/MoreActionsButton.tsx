@@ -1,80 +1,24 @@
-import classNames from 'classnames'
 import StorageAPI from '../../api/storage'
-import { Fragment, useRef, useEffect } from 'react'
+import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import {
   DotsHorizontalIcon,
-  DownloadIcon,
   SparklesIcon,
   TableIcon,
   TrashIcon,
-  UploadIcon,
 } from '@heroicons/react/outline'
-import { CourseOption, MultipleOptions, CheckedCourse, Major } from '../../@types'
+import { CourseOption, MultipleOptions } from '../../@types'
 
 type Props = {
-  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
-  coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   schedule: CourseOption[]
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  multipleOptions: MultipleOptions
 }
 
-const MoreActionsButton = ({majorHook, coursesHook, schedule, showGridHook, multipleOptionsHook }: Props) => {
-  const importDisabled = true
+const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) => {
   const buttonRef = useRef(null)
-  const [major, setMajor] = majorHook
-  const [checkedCourses, setCheckedCourses] = coursesHook
   const [showGrid, setShowGrid] = showGridHook
-  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
-  // const isScheduleValid = (e: string) => {
-  //   return true;
-  // }
-
-
- 
-
-  // const importJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const fileReader = new FileReader()
-  //   fileReader.readAsText(e.target.files[0], 'UTF-8')
-  //   fileReader.onload = (e) => {
-  //     let scheduleJson = JSON.parse(fileReader.result as string) 
-  //     if (isScheduleValid(scheduleJson)) {
-        
-  //       console.log("imported json", JSON.parse(fileReader.result as string) )
-  //       setMultipleOptions((prev) => ({
-  //         index: prev.index,
-  //         selected: (JSON.parse(fileReader.result as string)).selected,
-  //         options: prev.options.map((item, index) => (prev.index === index ? (JSON.parse(fileReader.result as string)).selected : item)),
-  //       }))
-
-       
-  //       setMajor(scheduleJson.major)
-          
-  //       console.log("horario", multipleOptions)
-        
-  //     }
-  //     buttonRef.current.click() // close menu
-  //   }
-  // }
-
-
-  // const exportJSON = () => {
-  //   const exportjson = {
-  //     "major": major,
-  //     "selected": schedule
-  //   }
-  //   console.log("export", exportjson)
-  //   const data = JSON.stringify(exportjson)
-  //   const blob = new Blob([data], { type: 'application/json' })
-  //   const url = URL.createObjectURL(blob)
-  //   const a = document.createElement('a')
-  //   a.href = url
-  //   a.download = 'schedule.json'
-  //   a.click()
-  //   URL.revokeObjectURL(url)
-  // }
 
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
@@ -158,49 +102,6 @@ const MoreActionsButton = ({majorHook, coursesHook, schedule, showGridHook, mult
               )}
             </Menu.Item>
           </div>
-          {/* <Menu.Item> is not used here since it prevents input from being triggered */}
-          {/* <div className="p-1">
-            <label
-              htmlFor="schedule-upload"
-              title="Importar horário JSON (previamente exportado pela platforma)"
-              className={classNames(
-                'group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900',
-                importDisabled ? 'opacity-50 hover:cursor-not-allowed' : 'hover:bg-secondary hover:text-white'
-              )}
-            >
-              <UploadIcon
-                className={classNames('h-5 w-5 text-secondary', importDisabled ? '' : 'group-hover:text-white')}
-              />
-              <span>Importar Horário</span>
-              <input
-                type="file"
-                accept=".json"
-                className="sr-only"
-                id="schedule-upload"
-                name="schedule-upload"
-                disabled={importDisabled}
-              />
-            </label>
-
-            <Menu.Item>
-              {({ active, disabled }) => (
-                <button
-                  disabled={importDisabled}
-                  onClick={() => exportJSON()}
-                  title="Exportar horário JSON (pode ser importado futuramente)"
-                  className={classNames(
-                    'group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900',
-                    importDisabled ? 'opacity-50 hover:cursor-not-allowed' : 'hover:bg-secondary hover:text-white'
-                  )}
-                >
-                  <DownloadIcon
-                    className={classNames('h-5 w-5 text-secondary', importDisabled ? '' : 'group-hover:text-white')}
-                  />
-                  <span>Exportar Horário</span>
-                </button>
-              )}
-            </Menu.Item>
-          </div> */}
 
           <div className="p-1">
             <Menu.Item>

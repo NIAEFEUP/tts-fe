@@ -1,21 +1,25 @@
-import { useRef } from 'react'
 import { DocumentDuplicateIcon, UploadIcon } from '@heroicons/react/outline'
 import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule } from '../../@types'
 import getMajors from '../../api/backend'
 
 type Props = {
     majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
-    coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
     schedule: CourseOption[]
     multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
     setIsImportedSchedule: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
-
-const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, setIsImportedSchedule }: Props) => {
+/**
+ * Component that contains the buttons to share and import schedules
+ * @param majorHook major hook
+ * @param schedule current schedule
+ * @param multipleOptionsHook multiple options hook
+ * @param setIsImportedSchedule function that sets if the schedule is imported
+ * @returns ShareButtons component
+ */
+const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSchedule }: Props) => {
     const [major, setMajor] = majorHook
-    const [checkedCourses, setCheckedCourses] = coursesHook
     const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
 
@@ -26,9 +30,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
      * @returns stringified schedule
      */
     const scheduleToString = (major : Major, schedule : CourseOption[]) => {
-        //TODO
         var copySchedule : string = (major.id).toString();
-        console.log(schedule)
         for (let i = 0; i < schedule.length ; i++){
             copySchedule += ";" + schedule[i].course.info.course_unit_id + "#";
             if (schedule[i].option == null){
@@ -42,6 +44,9 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
         return copySchedule;
     }
     
+    /**
+     * Function that copies schedule to clipboard
+    */
     const copySchedule = () => {
         const scheduleToCopy = {
             "major": major,
@@ -51,6 +56,9 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
         navigator.clipboard.writeText(scheduleToString(scheduleToCopy.major, scheduleToCopy.selected));
     }
 
+    /**
+     * Function that imports schedule from clipboard
+     */
     const importSchedule = async () => {
         setIsImportedSchedule(true);
         var input = document.getElementById("schedule-input") as HTMLInputElement;
@@ -61,7 +69,6 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
 
         tokens.splice(0, 1);
         for (let i = 0; i < tokens.length ; i++){
-            console.log(tokens[i])
             courses_info.push(tokens[i].split("#"));
         }
 
@@ -86,7 +93,6 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
             for(let j = 0; j < course_units.length; j++){
 
                 if(course_units[j]["course_unit_id"] == courses_info[i][0]){
-                    console.log("Found pair for: ", i)
                     checked_course = {
                         checked: true,
                         info: course_units[j],
@@ -96,9 +102,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
             }
 
             let course_schedule = await getMajors.getCourseSchedule(checked_course);
-
             let option : CourseSchedule | null = null;
-
             if (courses_info[i][1] != "null"){
                 for (let j = 0; j < course_schedule.length ; j++){
                     if (course_schedule[j].class_name == courses_info[i][1]){
@@ -107,9 +111,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
                     }
                 }
             }
-
-            
-            //for loop to check schedule and option
+    
             let shown_var = {
                 T: true,
                 TP: true
@@ -133,19 +135,11 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook, se
             setMajor(imported_major);
         }
         
-        //cheked courses
-
-
         setMultipleOptions((prev) => ({
             index: prev.index,
             selected: imported_course_units,
             options: all_options,
         }))
-
-
-            
-
-        
     }
 
     return (
