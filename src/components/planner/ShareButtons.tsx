@@ -16,9 +16,8 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
     const [checkedCourses, setCheckedCourses] = coursesHook
     const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
-    const [icon, setIcon] = useState(<DocumentDuplicateIcon className='w-6 h-5' />);
+    const [icon, setIcon] = useState(false);
     const [showDiv, setShowDiv] = useState(false);
-
 
     /**
      * Function that converts schedule to string
@@ -50,13 +49,12 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
         }
 
         navigator.clipboard.writeText(scheduleToString(scheduleToCopy.major, scheduleToCopy.selected));
-        setIcon(<CheckIcon className='w-6 h-5'/>);
+        setIcon(true);
         setShowDiv(true);
         setTimeout(() => {
-            setIcon(<DocumentDuplicateIcon className='w-6 h-5'/>)
+            setIcon(false)
             setShowDiv(false)
         }, 2000)
-     
     }
 
     const importSchedule = async () => {
@@ -132,18 +130,19 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
         setMajor(major)
     }
 
-    //const notif = (text: string) => toast(text);
     return (
     <>  
-    { showDiv ? <div id="toast-interactive" className="absolute m-auto left-0 right-0 bottom-5 w-1/5 flex place-items-center p-3 w-full text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-700" role="alert">
-                    <div className="inline-flex justify-center items-center w-6 h-6 text-secondary bg-blue-10 rounded-lg dark:bg-secondary dark:text-white">
+    { showDiv ? <div className="absolute m-auto left-0 right-0 bottom-5 w-1/5 flex place-items-center p-3 w-full text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-700" role="alert">
+                    <div className="inline-flex justify-center items-center w-6 h-6 text-white bg-secondary rounded-lg dark:bg-secondary dark:text-white">
                     <CheckIcon className="h-5 w-5" />
                     </div>
                     <div className="ml-5 text-sm font-normal">Horário Copiado Com Sucesso</div>
-                        <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white  items-center text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 
+                        <button 
+                            onClick={() => setShowDiv(false)}
+                            className="ml-auto -mx-1.5 -my-1.5 bg-white  items-center text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 
                                                 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 
                                                 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
-                        <span className="sr-only">Close</span>
+                            <span className="sr-only">Close</span>
                             <XIcon className="h-6 w-6" />
                         </button>
                 </div> : null }
@@ -176,7 +175,7 @@ const ShareButtons = ({majorHook, coursesHook, schedule, multipleOptionsHook }: 
                         className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                        <text></text>{icon}
+                        <text></text>{icon? <CheckIcon className='w-6 h-5'/> : <DocumentDuplicateIcon className='w-6 h-5' />}
                     </button>
 
                 </div>
