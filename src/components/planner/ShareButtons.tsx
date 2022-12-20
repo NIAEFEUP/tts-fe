@@ -77,7 +77,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         var imported_major : Major;
         var majors = await getMajors.getMajors();
         for (let i = 0; i < majors.length ; i++){
-            if(majors[i]["id"] === major_id){
+            if(majors[i]["id"] == major_id){
                 imported_major = majors[i];
                 break;
             }
@@ -92,7 +92,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             var checked_course : CheckedCourse 
             for(let j = 0; j < course_units.length; j++){
 
-                if(course_units[j]["course_unit_id"] === courses_info[i][0]){
+                if(course_units[j]["course_unit_id"] == courses_info[i][0]){
                     checked_course = {
                         checked: true,
                         info: course_units[j],
@@ -103,9 +103,9 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
             let course_schedule = await getMajors.getCourseSchedule(checked_course);
             let option : CourseSchedule | null = null;
-            if (courses_info[i][1] !== "null"){
+            if (courses_info[i][1] != "null"){
                 for (let j = 0; j < course_schedule.length ; j++){
-                    if (course_schedule[j].class_name === courses_info[i][1]){
+                    if (course_schedule[j].class_name == courses_info[i][1]){
                         option = course_schedule[j];
                         break;
                     }
@@ -131,7 +131,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         all_options[multipleOptions.index] = imported_course_units;
 
-        if (imported_major.id !== major.id){
+        if (imported_major.id != major.id){
             setMajor(imported_major);
         }
         
