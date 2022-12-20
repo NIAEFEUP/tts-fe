@@ -169,6 +169,9 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             selected: imported_course_units,
             options: all_options,
         }))
+        
+
+        input.value = "";
     }
 
     return (
