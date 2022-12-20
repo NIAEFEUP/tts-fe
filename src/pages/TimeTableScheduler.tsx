@@ -232,13 +232,6 @@ const TimeTableSchedulerPage = () => {
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
-            
-            <ShareButtons
-            majorHook={[major, setMajor]}
-            schedule={multipleOptions.selected}
-            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-            setIsImportedSchedule={setIsImportedSchedule}
-            />
 
           
             <SelectionModal
@@ -253,6 +246,12 @@ const TimeTableSchedulerPage = () => {
               multipleOptions= {multipleOptions}
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
+            <ShareButtons
+            majorHook={[major, setMajor]}
+            schedule={multipleOptions.selected}
+            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+            setIsImportedSchedule={setIsImportedSchedule}
+            />
           </div>
           <div className="flex flex-col gap-4 py-1 px-0">
             {multipleOptions.selected.length > 0 &&
