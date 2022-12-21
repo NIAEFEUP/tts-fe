@@ -128,49 +128,22 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 TP: true
               };
 
-            course_option = {
+              course_option = {
                 shown: shown_var,
                 course: checked_course,
                 option: option,
                 schedules: course_schedule,
             }
             imported_course_units.push(course_option);
-
-            let default_course_option = JSON.parse(JSON.stringify(course_option))
-            default_course_option.option = null;
-            default_imported_course_units.push(default_course_option);
         }
 
 
         let all_options = multipleOptions.options
 
-
-        all_options.forEach((option, i) => {
-            if (i === multipleOptions.index){
-                option = imported_course_units
-            }else{
-                let courses_to_add : CourseOption[] = [];
-                imported_course_units.forEach((course, j) => {
-                    if (course.course.info.course_unit_id in option.map((course) => course.course.info.course_unit_id)){
-                        option.forEach((option_course, k) => {
-                            if (option_course.course.info.course_unit_id == course.course.info.course_unit_id){
-                                courses_to_add.push(option_course);
-                            }
-                        });
-                    }else{
-                        courses_to_add.push(course)
-                    }
-                });
-                option = courses_to_add;
-            }
-        });
-
-        console.log(all_options)
-        // all_options[multipleOptions.index] = imported_course_units;
+        all_options[multipleOptions.index] = imported_course_units;
 
         if (imported_major.id != major.id){
             setMajor(imported_major);
-            
         }
         
         setMultipleOptions((prev) => ({
