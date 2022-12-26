@@ -10,6 +10,7 @@ type Props = {
 const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [options, setOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
+  const optionsNames = Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`)
 
   const setNextOptionIndex = () => {
     setOptions((prev) => ({
@@ -35,6 +36,10 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     }))
   }
 
+  const renameOption = () => {
+    optionsNames[options.index] = <input type="text" />
+  }
+
   return (
     <div className="flex w-full rounded text-xs">
       <button
@@ -53,7 +58,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
           font-medium text-white transition hover:opacity-80 dark:bg-secondary"
         >
-          <span>Horário #{options.index + 1}</span>
+          <span> {optionsNames[options.index]} </span>
         </Menu.Button>
         <Transition
           as={Fragment}
@@ -79,7 +84,8 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                       group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 transition-all
                     `}
                   >
-                    <span>Horário {index + 1}</span>
+                    <span>{optionsNames[index]}</span>
+                    <input type="text" className='h-4 w-1/2 text-black'/>
                     {index === options.index && <CheckIcon className="h-4 w-4" />}
                   </button>
                 )}
