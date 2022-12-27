@@ -1,7 +1,8 @@
-import { Fragment } from 'react'
+import { Fragment, useState, useRef } from 'react'
 import { Transition, Menu } from '@headlessui/react'
-import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
+import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react/outline'
 import { MultipleOptions } from '../../@types'
+import { isPropertySignature } from 'typescript'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -10,13 +11,14 @@ type Props = {
 const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [options, setOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
-  const optionsNames = Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`)
+  const [optionsNames, setOptionNames] = useState(Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`))
+  const [isEditingName, setIsEditingName] = useState(true)
 
   const setNextOptionIndex = () => {
     setOptions((prev) => ({
       index: prev.index + 1,
       selected: prev.options[prev.index + 1],
-      options: [...prev.options],
+      options: [...prev.options]
     }))
   }
 
@@ -24,7 +26,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     setOptions((prev) => ({
       index: prev.index - 1,
       selected: prev.options[prev.index - 1],
-      options: [...prev.options],
+      options: [...prev.options]
     }))
   }
 
@@ -32,12 +34,16 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     setOptions((prev) => ({
       index: newIndex,
       selected: prev.options[newIndex],
-      options: [...prev.options],
+      options: [...prev.options]
     }))
   }
 
-  const renameOption = () => {
-    optionsNames[options.index] = <input type="text" />
+  const renameOption = (newName: string) => {
+    const newNames = [...optionsNames]
+    newNames[options.index] = newName
+    console.log(newNames[options.index])
+    setOptionNames(newNames)
+    setIsEditingName(false)
   }
 
   return (
@@ -57,8 +63,13 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           title="Escolher uma opção de horário"
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
           font-medium text-white transition hover:opacity-80 dark:bg-secondary"
+          disabled={isEditingName}
         >
-          <span> {optionsNames[options.index]} </span>
+          {isEditingName ? <input type="text" value={optionsNames[options.index]} onChange={(event) => renameOption(event.target.value)}
+            className='h-4 w-3/4 text-xs text-black items-center justify-center gap-1.5 rounded-l border-2 bg-gray-200 px-2 py-2
+            text-center font-medium' autoFocus />
+            : <span>{optionsNames[options.index]}</span>
+          }   
         </Menu.Button>
         <Transition
           as={Fragment}
@@ -85,7 +96,6 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                     `}
                   >
                     <span>{optionsNames[index]}</span>
-                    <input type="text" className='h-4 w-1/2 text-black'/>
                     {index === options.index && <CheckIcon className="h-4 w-4" />}
                   </button>
                 )}
