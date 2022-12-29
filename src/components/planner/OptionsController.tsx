@@ -11,8 +11,9 @@ type Props = {
 const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [options, setOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
-  const [optionsNames, setOptionNames] = useState(Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`))
-  const [isEditingName, setIsEditingName] = useState(true)
+  const [optionsNames, setOptionsNames] = useState(Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`))
+  const [isEditingName, setIsEditingName] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   const setNextOptionIndex = () => {
     setOptions((prev) => ({
@@ -41,8 +42,18 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const renameOption = (newName: string) => {
     const newNames = [...optionsNames]
     newNames[options.index] = newName
-    console.log(newNames[options.index])
-    setOptionNames(newNames)
+    setOptionsNames(newNames)
+    setIsEditingName(false)
+  }
+
+  const checkToEdit = () => {
+    if (menuButtonRef.current && menuButtonRef.current.getAttribute('aria-expanded') === 'false') {
+      setIsEditingName(true)
+    }
+  }
+
+  const chooseAndStopEditing = (index: number) => {
+    setOptionIndex(index)
     setIsEditingName(false)
   }
 
@@ -60,10 +71,12 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
 
       <Menu as="div" className="relative inline-block w-full text-left">
         <Menu.Button
-          title="Escolher uma opção de horário"
+          title="Escolher uma opção de horário" 
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
           font-medium text-white transition hover:opacity-80 dark:bg-secondary"
           disabled={isEditingName}
+          onClick={() => checkToEdit()}
+          ref = {menuButtonRef}
         >
           {isEditingName ? <input type="text" value={optionsNames[options.index]} onChange={(event) => renameOption(event.target.value)}
             className='h-4 w-3/4 text-xs text-black items-center justify-center gap-1.5 rounded-l border-2 bg-gray-200 px-2 py-2
@@ -88,7 +101,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
               <Menu.Item key={`schedule-option-${index}`}>
                 {({ active }) => (
                   <button
-                    onClick={() => setOptionIndex(index)}
+                    onClick ={() => chooseAndStopEditing(index)}
                     className={`
                       ${active ? 'bg-secondary text-white' : ''}
                       ${index === options.index ? 'bg-secondary text-white hover:opacity-90' : !active && ''}
