@@ -11,14 +11,14 @@ type Props = {
 const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [options, setOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
-  const [optionsNames, setOptionNames] = useState(Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`))
-  const [isEditingName, setIsEditingName] = useState(true)
+  const [isEditingName, setIsEditingName] = useState(false)
 
   const setNextOptionIndex = () => {
     setOptions((prev) => ({
       index: prev.index + 1,
       selected: prev.options[prev.index + 1],
-      options: [...prev.options]
+      options: [...prev.options],
+      names: prev.names
     }))
   }
 
@@ -26,7 +26,8 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     setOptions((prev) => ({
       index: prev.index - 1,
       selected: prev.options[prev.index - 1],
-      options: [...prev.options]
+      options: [...prev.options],
+      names: prev.names
     }))
   }
 
@@ -34,15 +35,20 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     setOptions((prev) => ({
       index: newIndex,
       selected: prev.options[newIndex],
-      options: [...prev.options]
+      options: [...prev.options],
+      names: prev.names
     }))
   }
 
   const renameOption = (newName: string) => {
-    const newNames = [...optionsNames]
+    const newNames = [...options.names]
     newNames[options.index] = newName
-    console.log(newNames[options.index])
-    setOptionNames(newNames)
+    setOptions((prev) => ({
+      index: prev.index,
+      selected: prev.options[prev.index],
+      options: [...prev.options],
+      names: newNames
+    }))
     setIsEditingName(false)
   }
 
@@ -63,12 +69,12 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           title="Escolher uma opção de horário"
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
           font-medium text-white transition hover:opacity-80 dark:bg-secondary"
-          disabled={isEditingName}
+          disabled={isEditingName} onDoubleClick={() => setIsEditingName(true)}
         >
-          {isEditingName ? <input type="text" value={optionsNames[options.index]} onChange={(event) => renameOption(event.target.value)}
+          {isEditingName ? <input type="text" value={'options.names[options.index]'} autoFocus onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
             className='h-4 w-3/4 text-xs text-black items-center justify-center gap-1.5 rounded-l border-2 bg-gray-200 px-2 py-2
-            text-center font-medium' autoFocus />
-            : <span>{optionsNames[options.index]}</span>
+            text-center font-medium'/>
+            : <span>{'options.names[options.index]'}</span>
           }   
         </Menu.Button>
         <Transition
@@ -95,7 +101,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                       group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 transition-all
                     `}
                   >
-                    <span>{optionsNames[index]}</span>
+                    <span>{'options.names[index]'}</span>
                     {index === options.index && <CheckIcon className="h-4 w-4" />}
                   </button>
                 )}
