@@ -20,7 +20,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       index: prev.index + 1,
       selected: prev.options[prev.index + 1],
       options: [...prev.options],
-      names: prev.names
+      name: ""
     }))
   }
 
@@ -29,7 +29,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       index: prev.index - 1,
       selected: prev.options[prev.index - 1],
       options: [...prev.options],
-      names: prev.names
+      name: ""
     }))
   }
 
@@ -38,18 +38,18 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       index: newIndex,
       selected: prev.options[newIndex],
       options: [...prev.options],
-      names: prev.names
+      name: ""
     }))
   }
 
   const renameOption = (newName: string) => {
-    const newNames = [...options.names]
+    const newNames = [...optionsNames]
     newNames[options.index] = newName
     setOptions((prev) => ({
       index: prev.index,
       selected: prev.options[prev.index],
       options: [...prev.options],
-      names: newNames
+      name: newName
     }))
     setOptionsNames(newNames)
     setIsEditingName(false)
@@ -87,10 +87,10 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           onClick={() => checkToEdit()}
           ref = {menuButtonRef}
         >
-          {isEditingName ? <input type="text" value={'options.names[options.index]'} autoFocus onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
+          {isEditingName ? <input type="text" value={optionsNames[options.index]} autoFocus onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
             className='h-4 w-3/4 text-xs text-black items-center justify-center gap-1.5 rounded-l border-2 bg-gray-200 px-2 py-2
             text-center font-medium'/>
-            : <span>{'options.names[options.index]'}</span>
+            : <span>{optionsNames[options.index]}</span>
           }   
         </Menu.Button>
         <Transition
@@ -117,7 +117,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                       group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 transition-all
                     `}
                   >
-                    <span>{'options.names[index]'}</span>
+                    <span>{optionsNames[index]}</span>
                     {index === options.index && <CheckIcon className="h-4 w-4" />}
                   </button>
                 )}
