@@ -40,7 +40,7 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
           index: prev.index,
           selected: scheduleJson,
           options: prev.options.map((item, index) => (prev.index === index ? scheduleJson : item)),
-          names: prev.names
+          name: ""
         }))
       }
       buttonRef.current.click() // close menu

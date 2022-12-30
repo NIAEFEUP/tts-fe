@@ -46,7 +46,7 @@ const setOptionsStorage = (courseOptions: MultipleOptions): void => {
 
 const deleteOptionsStorage = (): void => {
   const key = 'niaefeup-tts.options'
-  const initialValue = { index: 0, selected: [], options: [], names: new Array(10).fill('') }
+  const initialValue = { index: 0, selected: [], options: [], name: "" }
   writeStorageInvalid(key, initialValue)
 }
 
