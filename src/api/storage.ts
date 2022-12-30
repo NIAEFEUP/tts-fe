@@ -24,7 +24,7 @@ const writeStorageInvalid = (key: string, initialValue?: any) => {
 
 const getOptionsStorage = (): MultipleOptions => {
   const key = 'niaefeup-tts.options'
-  const initialValue = { index: 0, selected: [], options: [], names: new Array(10).fill('') }
+  const initialValue = { index: 0, selected: [], options: [], name: ''}
   try {
     if (isStorageValid(key, 7)) {
       const courseOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
