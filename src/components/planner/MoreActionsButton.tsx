@@ -40,7 +40,7 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
           index: prev.index,
           selected: scheduleJson,
           options: prev.options.map((item, index) => (prev.index === index ? scheduleJson : item)),
-          name: ""
+          names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`)
         }))
       }
       buttonRef.current.click() // close menu

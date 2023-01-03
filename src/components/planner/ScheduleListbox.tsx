@@ -45,7 +45,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
-          name: "",
+          names: prev.names,
         }
       })
     } else if (type === 'TP') {
@@ -64,7 +64,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
-          name: "",
+          names: prev.names
         }
       })
     }
@@ -93,7 +93,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
         index: prevMultipleOptions.index,
         selected: [...resolveCourseOptions(prevMultipleOptions.selected)],
         options: prevMultipleOptions.options,
-        name: "",
+        names: prevMultipleOptions.names,
       }
 
       return value

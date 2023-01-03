@@ -71,7 +71,7 @@ const TimeTableSchedulerPage = () => {
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
   const [multipleOptions,  setMultipleOptions] = useState<MultipleOptions>(
-    { index: 0, selected: [], options: [], name: '' }
+    { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
   ) // schedule options and selected schedule
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
@@ -112,8 +112,6 @@ const TimeTableSchedulerPage = () => {
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
 
-    StorageAPI.deleteOptionsStorage()
-    console.log(JSON.stringify(StorageAPI.getOptionsStorage()))
     const storedOptions = StorageAPI.getOptionsStorage()
     const storedOptionsNotNulls = storedOptions.options
       .map((co: CourseOption[]) => co.filter((item) => item.option !== null))
@@ -187,7 +185,7 @@ const TimeTableSchedulerPage = () => {
           index: prev.index,
           selected: newCourseOptions,
           options: newOptions,
-          name: ""
+          names: prev.names
         }
       })
     })
