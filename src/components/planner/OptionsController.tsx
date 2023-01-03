@@ -52,12 +52,6 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     setIsEditingName(false)
   }
 
-  const checkToEdit = () => {
-    if (menuButtonRef.current && menuButtonRef.current.getAttribute('aria-expanded') === 'false') {
-      setIsEditingName(true)
-    }
-  }
-
   const chooseAndStopEditing = (index: number) => {
     setOptionIndex(index)
     setIsEditingName(false)
@@ -94,7 +88,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
           font-medium text-white transition hover:opacity-80 dark:bg-secondary"
           disabled={isEditingName}
-          onClick={() => checkToEdit()}
+          onDoubleClick={() => setIsEditingName(true)}
           ref = {menuButtonRef}
         >
           {isEditingName ? <input type="text" value={options.names[options.index]} autoFocus onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}

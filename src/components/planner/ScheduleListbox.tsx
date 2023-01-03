@@ -64,7 +64,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
-          names: prev.names
+          names: prev.names,
         }
       })
     }
