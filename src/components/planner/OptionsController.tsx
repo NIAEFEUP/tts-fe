@@ -19,7 +19,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       index: prev.index + 1,
       selected: prev.options[prev.index + 1],
       options: [...prev.options],
-      name: prev.name
+      names: prev.names
     }))
   }
 
@@ -28,7 +28,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       index: prev.index - 1,
       selected: prev.options[prev.index - 1],
       options: [...prev.options],
-      name: prev.name
+      names: prev.names
     }))
   }
 
@@ -37,7 +37,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       index: newIndex,
       selected: prev.options[newIndex],
       options: [...prev.options],
-      name: prev.name
+      names: prev.names
     }))
   }
 
@@ -48,16 +48,10 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       index: prev.index,
       selected: prev.options[prev.index],
       options: [...prev.options],
-      name: newNames[options.index]
+      names: newNames
     }))
     setOptionsNames(newNames)
     setIsEditingName(false)
-  }
-
-  const checkToEdit = () => {
-    if (menuButtonRef.current && menuButtonRef.current.getAttribute('aria-expanded') === 'false') {
-      setIsEditingName(true)
-    }
   }
 
   const chooseAndStopEditing = (index: number) => {
@@ -96,13 +90,13 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
           font-medium text-white transition hover:opacity-80 dark:bg-secondary"
           disabled={isEditingName}
-          onClick={() => checkToEdit()}
+          onDoubleClick={() => setIsEditingName(true)}
           ref = {menuButtonRef}
         >
-          {isEditingName ? <input type="text" value={optionsNames[options.index]} autoFocus onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
+          {isEditingName ? <input type="text" value={options.names[options.index]} autoFocus onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
             className='h-4 w-3/4 text-xs text-black items-center justify-center gap-1.5 rounded-l border-2 bg-gray-200 px-2 py-2
             text-center font-medium'/>
-            : <span>{optionsNames[options.index]}</span>
+            : <span>{options.names[options.index]}</span>
           }   
         </Menu.Button>
         <Transition
@@ -129,7 +123,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                       group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 transition-all
                     `}
                   >
-                    <span>{optionsNames[index]}</span>
+                    <span>{options.names[index]}</span>
                     {index === options.index && <CheckIcon className="h-4 w-4" />}
                   </button>
                 )}

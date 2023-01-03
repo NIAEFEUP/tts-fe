@@ -81,5 +81,5 @@ export type MultipleOptions = {
   index: number
   selected: CourseOption[]
   options: CourseOption[][]
-  name: string
+  names: string[]
 }
