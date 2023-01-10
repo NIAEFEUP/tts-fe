@@ -95,8 +95,9 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         //get courses
         var course_units = await getMajors.getCourses(imported_major);
+        // var imported_course_units : CourseOption[] = multipleOptions.options[multipleOptions.index];
         var imported_course_units : CourseOption[] = [];
-        var default_imported_course_units : CourseOption[] = [];
+
 
         for (let i = 0; i < courses_info.length; i++){
             let course_option : CourseOption;
