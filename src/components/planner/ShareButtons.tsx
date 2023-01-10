@@ -1,5 +1,5 @@
-import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule } from '../../@types'
-import React, { useState } from 'react';
+import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule} from '../../@types'
+import React, {useState } from 'react';
 import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon} from '@heroicons/react/outline'
 import getMajors from '../../api/backend'
 
@@ -59,10 +59,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         navigator.clipboard.writeText(scheduleToString(scheduleToCopy.major, scheduleToCopy.selected));
         setIcon(true);
         setShowDiv(true);
-        setTimeout(() => {
-            setIcon(false)
-            setShowDiv(false)
-        }, 2000)
+
     }
 
     /**
