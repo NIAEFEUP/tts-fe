@@ -41,6 +41,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   }
 
   const renameOption = (newName: string) => {
+    if (newName == "") return
     const newNames = [...options.names]
     newNames[options.index] = newName
     setOptions((prev) => ({
