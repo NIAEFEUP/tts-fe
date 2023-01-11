@@ -1,10 +1,8 @@
-import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule} from '../../@types'
-import React, {Fragment, useState } from 'react';
-import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon, PencilAltIcon, PlusIcon} from '@heroicons/react/outline'
-import getMajors from '../../api/backend'
 import { Dialog, Transition } from '@headlessui/react'
-
-
+import { XIcon, CheckIcon, PencilAltIcon, PlusIcon} from '@heroicons/react/outline'
+import { Fragment, useState } from 'react'
+import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule} from '../../@types'
+import getMajors from '../../api/backend'
 
 type Props = {
     majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
@@ -13,18 +11,7 @@ type Props = {
     setIsImportedSchedule: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-
-/**
- * Component that contains the buttons to share and import schedules
- * @param majorHook major hook
- * @param schedule current schedule
- * @param multipleOptionsHook multiple options hook
- * @param setIsImportedSchedule function that sets if the schedule is imported
- * @returns ShareButtons component
- */
-const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSchedule }: Props) => {
-    const [major, setMajor] = majorHook
-    const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+const ShareBttnsModals = () => {
     const [isConfModalOpen, setIsConfModalOpen] = useState(false)
     const [isDecisionModalOpen, setIsDecisionModalOpen] = useState(false)
 
@@ -32,55 +19,18 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     function closeConfModal() {
         setIsConfModalOpen(false)
     }
+    function openConfModal(){
+        setIsConfModalOpen(true)
+    }
 
     function closeDecisionModal(){
         setIsDecisionModalOpen(false)
     }
-
-    const [icon, setIcon] = useState(false);
-    const [showDiv, setShowDiv] = useState(false);
-
-    /**
-     * Function that converts schedule to string
-     * @param major selected major
-     * @param schedule current schedule
-     * @returns stringified schedule
-     */
-    const scheduleToString = (major : Major, schedule : CourseOption[]) => {
-        var copySchedule : string = (major.id).toString();
-        for (let i = 0; i < schedule.length ; i++){
-            copySchedule += ";" + schedule[i].course.info.course_unit_id + "#";
-            if (schedule[i].option == null){
-                copySchedule += "null";
-            }
-            else{
-                copySchedule += schedule[i].option.class_name;
-
-            }
-        }
-        return copySchedule;
-    }
-    
-    /**
-     * Function that copies schedule to clipboard
-    */
-    const copySchedule = () => {
-        const scheduleToCopy = {
-            "major": major,
-            "selected": schedule
-        }
-
-        navigator.clipboard.writeText(scheduleToString(scheduleToCopy.major, scheduleToCopy.selected));
-        setIcon(true);
-        setShowDiv(true);
-
+    function openDecisionModal(){
+        setIsDecisionModalOpen(true)
     }
 
-    /**
-     * Function that imports schedule from clipboard
-     */
     const importSchedule = async (replaceExisting : boolean) => {
-        setIsImportedSchedule(true);
         var input = document.getElementById("schedule-input") as HTMLInputElement;
         let value : string = input.value;
         var tokens : string[] = value.split(";")
@@ -172,75 +122,10 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         input.value = "";
     }
-
-    const openDecisionModal = async () => {
-        var input = document.getElementById("schedule-input") as HTMLInputElement;
-        let value : string = input.value;
-        if (value == ""){
-            return;
-        }
-        var tokens : string[] = value.split(";")
-        var major_id = tokens[0];
-
-        if (Number(major_id) == major.id){
-            setIsDecisionModalOpen(true)
-        }else{
-            setIsConfModalOpen(true)
-        }
-    }
-
-    return (
-    <>  
-    { showDiv ? <div className="absolute m-auto left-0 right-0 bottom-5 w-1/5 flex place-items-center p-3 w-full text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-700" role="alert">
-                    <div className="inline-flex justify-center items-center w-6 h-6 text-white bg-secondary rounded-lg dark:bg-secondary dark:text-white">
-                    <CheckIcon className="h-5 w-5" />
-                    </div>
-                    <div className="ml-5 text-sm font-normal">Horário Copiado Com Sucesso</div>
-                        <button 
-                            onClick={() => setShowDiv(false)}
-                            className="ml-auto -mx-1.5 -my-1.5 bg-white  items-center text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 
-                                                hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 
-                                                dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
-                            <span className="sr-only">Close</span>
-                            <XIcon className="h-6 w-6" />
-                        </button>
-                </div> : null }
+    
   
-    <div className='grid grid-flow-row grid-rows-1 grid-cols-7 gap-2 w-full mt-1'>
-        <div className="relative col-span-6">
-            <div className="absolute inset-y-0 left-0 col-span-6">
-            
-            </div>
-            <input placeholder='Insere o link do horário...' id="schedule-input" className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
-                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50" required>
-            </input>
-            <button 
-                        onClick={() => openDecisionModal()}
-
-                        id='ImportButton'
-                        title="Importar o link inserido"
-                        className="absolute right-0.5 bottom-0.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
-                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                        <text></text><UploadIcon className="h-4 w-4" />
-
-            </button>
-            
-        </div>
-                <div className='col-span-1'>
-                    <button
-                        onClick={() => copySchedule()}
-                        title="Copiar o link do horário"
-                        className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
-                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                        <text></text>{icon? <CheckIcon className='w-6 h-5'/> : <DocumentDuplicateIcon className='w-6 h-5' />}
-                    </button>
-
-                </div>
-
-        </div>
-
+    return (
+    <>
         {/* ConfirmationModal */}
         <Transition appear show={isConfModalOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-10 text-sm" onClose={closeConfModal}>
@@ -305,7 +190,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {importSchedule(true); closeConfModal}}
+                            onClick={() => closeConfModal}
                             >
                             <span>SIM</span>
                             <CheckIcon className="h-5 w-5" />
@@ -373,7 +258,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto mr-3 rounded bg-primary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal; importSchedule(true);}}
+                            onClick={() => closeDecisionModal}
                             >
                             <span>SUBSTITUIR</span>
                             <PencilAltIcon className="h-5 w-5" />
@@ -382,7 +267,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal; importSchedule(false);}}
+                            onClick={() => closeDecisionModal}
                             >
                             <span>ADICIONAR</span>
                             <PlusIcon className="h-5 w-5" />
@@ -395,9 +280,10 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 </div>
                 </Dialog>
             </Transition>
-        
-
+            
     </>
-        )
-    }
-export default ShareButtons
+    )
+
+}
+
+export default ShareBttnsModals

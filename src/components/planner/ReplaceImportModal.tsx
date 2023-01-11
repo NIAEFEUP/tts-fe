@@ -2,8 +2,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XIcon, PencilAltIcon, PlusIcon} from '@heroicons/react/outline'
 import { Fragment, useState } from 'react'
 
-const ReplaceImportModal = (flag : boolean) => {
-    const [isOpen, setIsOpen] = useState(flag)
+const ReplaceImportModal = (importScheduleFunc : (replaceExisting : boolean) => void) => {
+    const [isOpen, setIsOpen] = useState(false)
   
     function closeModal() {
       setIsOpen(false)
@@ -65,7 +65,7 @@ const ReplaceImportModal = (flag : boolean) => {
                             type="button"
                             className="flex items-center space-x-2 mx-auto mr-3 rounded bg-primary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => closeModal}
+                            onClick={() => {closeModal; importScheduleFunc(true);}}
                             >
                             <span>SUBSTITUIR</span>
                             <PencilAltIcon className="h-5 w-5" />
@@ -74,7 +74,7 @@ const ReplaceImportModal = (flag : boolean) => {
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => closeModal}
+                            onClick={() => {closeModal; importScheduleFunc(false);}}
                             >
                             <span>ADICIONAR</span>
                             <PlusIcon className="h-5 w-5" />

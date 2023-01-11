@@ -2,8 +2,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XIcon, CheckIcon} from '@heroicons/react/outline'
 import { Fragment, useState } from 'react'
 
-const ImportModal = (flag : boolean) => {
-    const [isOpen, setIsOpen] = useState(flag)
+const ImportModal = () => {
+    const [isOpen, setIsOpen] = useState(false)
   
     function closeModal() {
       setIsOpen(false)
