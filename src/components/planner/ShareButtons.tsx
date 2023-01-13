@@ -141,6 +141,17 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                     }
                 }
             }
+
+            let course_already_exists = false;
+            for(let j = 0; j < imported_course_units.length; j++){
+                if(imported_course_units[j].course.info.course_unit_id == checked_course.info.course_unit_id){
+                    imported_course_units[j].option = option;
+                    course_already_exists = true;
+                    break;
+                }
+            }
+            if (course_already_exists)
+                continue;
     
             let shown_var = {
                 T: true,
@@ -159,6 +170,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 option: null,
                 schedules: course_schedule,
             }
+
 
 
             imported_course_units.push(course_option);
