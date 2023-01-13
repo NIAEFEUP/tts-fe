@@ -106,6 +106,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         //get courses
         var course_units = await getMajors.getCourses(imported_major);
+        var placeholder_imported_course_units : CourseOption[] = [];
         var imported_course_units : CourseOption[];
         if (replaceExisting){
             imported_course_units = [];
@@ -117,6 +118,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         for (let i = 0; i < courses_info.length; i++){
             let course_option : CourseOption;
+            let course_option_placeholder : CourseOption;
             var checked_course : CheckedCourse 
             for(let j = 0; j < course_units.length; j++){
 
@@ -145,13 +147,22 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 TP: true
               };
 
-              course_option = {
+            course_option = {
                 shown: shown_var,
                 course: checked_course,
                 option: option,
                 schedules: course_schedule,
             }
+            course_option_placeholder = {
+                shown: shown_var,
+                course: checked_course,
+                option: null,
+                schedules: course_schedule,
+            }
+
+
             imported_course_units.push(course_option);
+            placeholder_imported_course_units.push(course_option_placeholder);
         }
 
 
@@ -159,9 +170,16 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         all_options[multipleOptions.index] = imported_course_units;
 
+        for (let i = 0; i < all_options.length ; i++){
+            if (i != multipleOptions.index)
+                all_options[i] = placeholder_imported_course_units;
+        }
+
         if (imported_major.id != major.id){
             setMajor(imported_major);
+
         }
+
         
         setMultipleOptions((prev) => ({
             index: prev.index,
@@ -305,7 +323,9 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {importSchedule(true); closeConfModal}}
+                            onClick={() => {closeConfModal(); importSchedule(true)}}
+                            // onClick={closeConfModal}
+
                             >
                             <span>SIM</span>
                             <CheckIcon className="h-5 w-5" />
@@ -320,7 +340,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         {/* DecisionModal */}
         <Transition appear show={isDecisionModalOpen} as={Fragment}>
-                <Dialog as="div" className="relative z-10 text-sm" onClose={() => closeDecisionModal}>
+                <Dialog as="div" className="relative z-10 text-sm" onClose={closeDecisionModal}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -351,7 +371,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                         <div className="flex justify-end">  
                         <button
                             type="button"
-                            onClick={() => closeDecisionModal}
+                            onClick={closeDecisionModal}
                             className="float-right rounded text-rose-700 transition hover:bg-rose-700 hover:text-white"
                             >
                             <XIcon className="h-6 w-6" />
@@ -373,7 +393,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto mr-3 rounded bg-primary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal; importSchedule(true);}}
+                            onClick={() => {closeDecisionModal(); importSchedule(true);}}
                             >
                             <span>SUBSTITUIR</span>
                             <PencilAltIcon className="h-5 w-5" />
@@ -382,7 +402,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal; importSchedule(false);}}
+                            onClick={() => {closeDecisionModal(); importSchedule(false);}}
                             >
                             <span>ADICIONAR</span>
                             <PlusIcon className="h-5 w-5" />
