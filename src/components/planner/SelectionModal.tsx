@@ -16,6 +16,7 @@ import {
   PencilAltIcon,
   PlusCircleIcon,
   SelectorIcon,
+  PlusIcon,
 } from '@heroicons/react/solid'
 
 type Props = {
@@ -31,8 +32,8 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
   const [courses, setCourses] = coursesHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
-  const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
-  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
+  //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
+  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(true)
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item.some((course) => course.checked))
 
@@ -61,7 +62,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
           )
       : []
 
-  const extraCourses = useMemo(() => BackendAPI.getExtraCourses(major), [major])
+  /*const extraCourses = useMemo(() => BackendAPI.getExtraCourses(major), [major])
   const filteredExtraCourses =
     extraCoursesQuery === ''
       ? extraCourses
@@ -72,7 +73,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
             .replace(/\p{Diacritic}/gu, '')
             .replace(/\s+/g, '')
             .includes(extraCoursesQuery.toLowerCase().replace(/\s+/g, ''))
-        )
+        )*/
 
   const closeModal = () => {
     if (major?.name !== '' && atLeastOneCourse) setIsOpen(false)
@@ -101,6 +102,77 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
     })
     courses[year] = newGroupEntry
     setCourses([...courses])
+  }
+
+  /**
+   * Displays vertical list of the extra courses the user selected
+   */
+  const showUcsExtra = () => {
+    return (
+      <>
+        {/* Courses checkboxes */}
+        <div className="checkboxes col-span-6"> 
+          {/*major && courses.map((year: CheckedCourse[], yearIdx: number) => (*/}
+          <div key={`ucsextra`}>
+            {/* Parent checkbox */}
+            <div title={`ucsExtra`} className="flex items-center transition">
+              <input
+                type="checkbox"
+                className="checkbox"
+                id="1"
+              />
+              <label
+                className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
+                htmlFor="1"
+              >
+                <span>UCs Extra</span>
+              </label>
+            </div>
+
+            {/* Children checkboxes */}
+            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
+              {/*year.map((course: CheckedCourse, courseIdx: number) => (*/}
+              <div
+                title="mec"
+                key="2"
+                className="flex items-center transition"
+              >
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  id="2"
+                />
+                <label
+                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                  htmlFor="2"
+                >
+                  MEC
+                </label>
+              </div>
+              <div
+                title="mec"
+                key="2"
+                className="flex items-center transition"
+              >
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  id="2"
+                />
+                <label
+                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                  htmlFor="2"
+                >
+                  DT
+                </label>
+              </div>
+            {/*)) }*/}
+          </div>
+        </div>
+        {/*))}*/}
+      </div>
+      </>
+    );
   }
 
   useEffect(() => {
@@ -283,7 +355,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   </Combobox>
 
                   {/* Select extra courses */}
-                  {extraCoursesActive && (
+                  {/*extraCoursesActive && (
                     <Combobox
                       value={null}
                       onChange={(value) => {
@@ -360,10 +432,18 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         </Transition>
                       </div>
                     </Combobox>
-                  )}
+                  )*/}
+
+                <div className={classNames(extraCoursesActive ? "grid grid-cols-8 divide-x-2" : "")}>
+                  
+                  {extraCoursesActive
+                  ? <div className="col-span-2">
+                      {showUcsExtra()}
+                    </div>
+                  : <></>}
 
                   {/* Courses checkboxes */}
-                  <div className="checkboxes">
+                  <div className="checkboxes col-span-6"> 
                     {major &&
                       courses.map((year: CheckedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -385,7 +465,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           </div>
 
                           {/* Children checkboxes */}
-                          <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-3 gap-y-1.5 p-1">
+                          <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
                             {year.map((course: CheckedCourse, courseIdx: number) => (
                               <div
                                 title={course?.info.name}
@@ -411,11 +491,32 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         </div>
                       ))}
                   </div>
+                  
+                </div>
 
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
                     {/* Left side buttons */}
                     <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
+                      <button
+                        type="button"
+                        title="Edit extra ucs"
+                        className={classNames(
+                          'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
+                          'hover:text-white disabled:hidden disabled:cursor-not-allowed disabled:opacity-50',
+                          extraCoursesActive 
+                            ? 'border-red-800/70 bg-red-50 text-red-800 hover:bg-red-900'
+                            : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'
+                        )}
+                        onClick={() => {}}
+                      >
+                          { extraCoursesActive ? <PencilAltIcon className="h-4 w-4" />
+                          : <PlusIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" /> }
+                          <span className="hidden md:flex">
+                            UCs extra
+                          </span>
+                      </button>
+                      {/* Contact us link */}
                       <a
                         type="button"
                         className={classNames(
@@ -429,6 +530,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                         <span className="hidden md:flex">Contacte-nos</span>
                         <span className="flex md:hidden">Contactar</span>
                       </a>
+                      {/* Go back to about page button */}
                       <Link
                         to={getPath(config.paths.about)}
                         className={classNames(
@@ -445,27 +547,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
 
                     {/* Right side buttons */}
                     <div className="order-first flex w-full flex-col items-center justify-center space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
-                      <button
-                        type="button"
-                        title="Coming soon"
-                        disabled
-                        className={classNames(
-                          'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
-                          'hover:text-white disabled:hidden disabled:cursor-not-allowed disabled:opacity-50',
-                          extraCoursesActive
-                            ? 'border-rose-700/70 bg-rose-50 text-rose-700 hover:bg-rose-700'
-                            : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'
-                        )}
-                        onClick={() => setExtraCoursesActive(!extraCoursesActive)}
-                      >
-                        {extraCoursesActive ? (
-                          <MinusCircleIcon className="h-5 w-5" aria-hidden="true" />
-                        ) : (
-                          <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
-                        )}
-                        <span className="hidden md:flex">UCs&nbsp;fora&nbsp;do&nbsp;curso</span>
-                        <span className="flex md:hidden">Extra&nbsp;UCs</span>
-                      </button>
+                      {/* Confirm options button */}
                       <button
                         type="button"
                         title="Avançar para seleção de horários"
