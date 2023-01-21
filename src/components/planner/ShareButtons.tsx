@@ -73,7 +73,10 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         navigator.clipboard.writeText(scheduleToString(scheduleToCopy.major, scheduleToCopy.selected));
         setIcon(true);
         setShowDiv(true);
-
+        setTimeout(() => {
+            setIcon(false)
+            setShowDiv(false)
+        }, 2000)
     }
 
     /**
