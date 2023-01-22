@@ -34,7 +34,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
-  const [selectedTeachers, setSelectedTeachers] = useState(["All teachers"]);
+  const [selectedTeachers, setSelectedTeachers] = useState(praticalTeachers);
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
