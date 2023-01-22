@@ -241,6 +241,28 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         input.value = "";
     }
 
+    const checkIfSameCoursesImport = (import_tokens : string[]) => {
+        let current_schedule = multipleOptions.options[multipleOptions.index];
+        if (import_tokens.length != (current_schedule.length + 1)){
+            return false;
+        }
+
+        for (let i = 1; i < import_tokens.length; i++){
+            let found = false;
+            let import_course = import_tokens[i].split("#");
+            for (let j = 0; j < current_schedule.length; j++){
+                if (Number(import_course[0]) == current_schedule[j].course.info.course_unit_id){
+                    found = true;
+                    break;
+                }
+            }
+            if (!found){
+                return false;
+            }
+        }
+        return true;
+    }
+
     const openDecisionModal = async () => {
         var input = document.getElementById("schedule-input") as HTMLInputElement;
         let value : string = input.value;
@@ -248,6 +270,13 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             return;
         }
         var tokens : string[] = value.split(";")
+
+        //if the import has the same courses as the current schedule, no need to show any modal, just replace the current schedule
+        if (checkIfSameCoursesImport(tokens)){
+            importSchedule(false)
+            return;
+        }
+
         var major_id = tokens[0];
 
         if (Number(major_id) == major.id){
