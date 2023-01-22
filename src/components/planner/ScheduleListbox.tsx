@@ -10,7 +10,24 @@ type Props = {
 }
 
 const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
-  let teacherOptions = ["All teachers", ...courseOption.teachers]
+  
+  const getPraticalTeachers = (courseOption : CourseOption) => {
+    let teachersArray = []
+    courseOption.schedules.forEach(element => {
+      if (element.lesson_type !== 'T') {
+        if (!teachersArray.includes(element.teacher_acronym)) { // there should be a better way to do this
+          teachersArray.push(element.teacher_acronym)
+        }
+      }
+      
+    });
+    return teachersArray;
+  }
+
+  const praticalTeachers = useMemo(() => getPraticalTeachers(courseOption), [courseOption]);
+
+  let teacherOptions = ["All teachers", ...praticalTeachers]
+
 
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
@@ -28,7 +45,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       )
   }, [courseOption])
 
-  const getTeacherSelectionText = (selectedTeachers: Array<string>) => selectedTeachers.length === 1 ? "1 teacher selected" : selectedTeachers.length + " teachers selected"; // TODO: complete this with all teachers option
+  const getTeacherSelectionText = (selectedTeachers: Array<string>) => selectedTeachers.length === 1 ? "1 teacher selected" : selectedTeachers.length + " teachers selected";
 
   const getOptionDisplayText = (option: CourseSchedule | null) =>
     option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)
