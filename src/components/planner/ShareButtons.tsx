@@ -185,10 +185,45 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         all_options[multipleOptions.index] = imported_course_units;
 
-        for (let i = 0; i < all_options.length ; i++){
-            if (i != multipleOptions.index)
-                all_options[i] = placeholder_imported_course_units;
+        //purge all non imported courses
+        if(replaceExisting){
+            for (let i = 0; i < all_options.length ; i++){
+                if (i != multipleOptions.index){
+                    let new_option = [];
+                    for(let y = 0; y < all_options[i].length; y++){
+                        for(let x = 0; x < placeholder_imported_course_units.length; x++){
+                            if (placeholder_imported_course_units[x].course.info.course_unit_id == all_options[i][y].course.info.course_unit_id){
+                                new_option.push(all_options[i][y]);
+                                break;
+                            }
+                        }
+                    }
+                    all_options[i] = new_option;
+                    
+                }
+            }
         }
+
+        //add missing imported courses
+        for (let i = 0; i < all_options.length ; i++){
+            if (i != multipleOptions.index){
+                for(let x = 0; x < placeholder_imported_course_units.length; x++){
+                    let found = false;
+                    for(let y = 0; y < all_options[i].length; y++){
+                        if (placeholder_imported_course_units[x].course.info.course_unit_id == all_options[i][y].course.info.course_unit_id){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found){
+                        all_options[i].push(placeholder_imported_course_units[x]);
+                    }
+                }
+                
+            }
+        }
+
+
 
         if (imported_major.id != major.id){
             setMajor(imported_major);
