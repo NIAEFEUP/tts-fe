@@ -24,7 +24,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       .flat()
       .filter(
         (option: CourseSchedule | null) =>
-          option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)/* && courseOption.teachersFilter.includes(option?.teacher_acronym)*/
+          option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
       )
   }, [courseOption])
 
@@ -110,7 +110,22 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       }
     }
     setSelectedTeachers(selectedTeachers)
+    setSelectedOption(selectedTeachers.includes(selectedOption.teacher_acronym) ? selectedOption : null)
   })
+
+  const selectDropdownSchedules = () : Array<CourseSchedule> => {
+    let selectedSchedules = [];
+
+    if (selectedTeachers.includes("All teachers"))
+      return adaptedSchedules;
+
+    adaptedSchedules.forEach((schedule) => {
+      if (schedule === null || selectedTeachers.includes(schedule.teacher_acronym))
+        selectedSchedules.push(schedule);
+    })
+
+    return selectedSchedules;
+  }
 
   return (
     adaptedSchedules && (
@@ -154,7 +169,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                 className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
               bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
               >
-                {adaptedSchedules.map((option, optionIdx) => (
+                {selectDropdownSchedules().map((option, optionIdx) => (
                   <Listbox.Option
                     key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
                     value={option === null ? <>&nbsp;</> : option}
