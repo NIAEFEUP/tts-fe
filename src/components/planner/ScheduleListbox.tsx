@@ -124,7 +124,8 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       selectedTeachers = (selectedTeachers.length !== 1) ? [] : courseOption.teachers;
     }
     setSelectedTeachers(selectedTeachers)
-    setSelectedOption(selectedTeachers.includes(selectedOption.teacher_acronym) ? selectedOption : null)
+    if (selectedOption)
+      setSelectedOption(selectedTeachers.includes(selectedOption.teacher_acronym) ? selectedOption : null)
   })
 
   const selectDropdownSchedules = () : Array<CourseSchedule> => {
