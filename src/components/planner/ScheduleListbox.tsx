@@ -10,16 +10,14 @@ type Props = {
 }
 
 const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
+  let teacherOptions = ["All teachers", ...courseOption.teachers]
+
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
-  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.teachers);
-
-  for (let i = 0; i < courseOption.teachers.length; i++) {
-    console.log(courseOption.teachers[i])
-  }
+  const [selectedTeachers, setSelectedTeachers] = useState(["All teachers"]);
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -101,6 +99,18 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       return value
     })
   }, [selectedOption, courseOption, setMultipleOptions])
+
+  const updateTeachersShown = ((selectedTeachers: Array<string>) : void => {
+    if (selectedTeachers.includes("All teachers")) {
+      if (selectedTeachers[selectedTeachers.length - 1] === "All teachers") {
+        selectedTeachers = selectedTeachers.filter((value) => value === "All teachers")
+      }
+      else {
+        selectedTeachers = selectedTeachers.filter((value) => value !== "All teachers")
+      }
+    }
+    setSelectedTeachers(selectedTeachers)
+  })
 
   return (
     adaptedSchedules && (
@@ -224,9 +234,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
 
         {/* Teachers ListBox */}
         <Listbox
-        value={selectedTeachers}
-        onChange={setSelectedTeachers}
-        multiple= {true}
+        value = { selectedTeachers }
+        onChange = { updateTeachersShown }
+        multiple = { true }
         >
         {/* Button */}
         <Listbox.Button
@@ -246,14 +256,13 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                 className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
               bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
               >
-                {courseOption.teachers.map((option, optionIdx) => (
+                {teacherOptions.map((option, optionIdx) => (
                   <Listbox.Option
-                    key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
-                    value={option === null ? <>&nbsp;</> : option}
+                    key={option}
+                    value={option}
                     className={({ active }) =>
-                      `group relative cursor-default select-none py-2 text-sm ${
-                        selectedOption !== null ? 'pl-10' : 'pl-4'
-                      } pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
+                      `group relative cursor-default select-none py-2 text-sm pl-10
+                       pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                     }
                   >
                     {({ selected, active }) => (
