@@ -298,7 +298,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                     {({ selected, active }) => (
                       <>
                         <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
-                          {option === "All teachers" ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
+                          {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
                         </span>
                         {selected ? (
                           <span
