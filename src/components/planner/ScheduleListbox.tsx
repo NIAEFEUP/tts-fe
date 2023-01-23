@@ -121,7 +121,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
 
   const updateTeachersShown = ((selectedTeachers: Array<string>) : void => {
     if (selectedTeachers.includes("All teachers")) {
-      selectedTeachers = (selectedTeachers.length !== 1) ? [] : courseOption.teachers;
+      selectedTeachers = (selectedTeachers.length !== 1) ? [] : praticalTeachers;
     }
     setSelectedTeachers(selectedTeachers)
     if (selectedOption)
