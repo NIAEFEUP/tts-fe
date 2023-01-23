@@ -498,6 +498,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
                     {/* Left side buttons */}
                     <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
+                      {/* Add / edit extra ucs */}
                       <button
                         type="button"
                         title="Edit extra ucs"
@@ -513,7 +514,7 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                           { extraCoursesActive ? <PencilAltIcon className="h-4 w-4" />
                           : <PlusIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" /> }
                           <span className="hidden md:flex">
-                            UCs extra
+                            UCs de outros cursos
                           </span>
                       </button>
                       {/* Contact us link */}
