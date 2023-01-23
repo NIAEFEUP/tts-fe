@@ -59,7 +59,6 @@ const TimeTableSchedulerPage = () => {
       course: course,
       option: null,
       schedules: schedules,
-      teachersFilter: teachers,
       teachers: teachers,
     }
   }
@@ -160,7 +159,6 @@ const TimeTableSchedulerPage = () => {
               course: pickedCourses[i],
               option: co.option,
               schedules: schedules[i],
-              teachersFilter: teachers[i],
               teachers: teachers[i],
             })
           }
@@ -190,7 +188,6 @@ const TimeTableSchedulerPage = () => {
                     option: co.option,
                     schedules: schedules[j],
                     teachers: teachers[i],
-                    teachersFilter: teachers[i],
                   })
                 }
                 newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
