@@ -125,12 +125,12 @@ const SelectionModal = ({ majors, openHook, majorHook, coursesHook }: Props) => 
                 className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
                 htmlFor="1"
               >
-                <span>UCs Extra</span>
+                <span>UCs de outros cursos</span>
               </label>
             </div>
 
             {/* Children checkboxes */}
-            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
+            <div className="flex flex-wrap items-center justify-center mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
               {/*year.map((course: CheckedCourse, courseIdx: number) => (*/}
               <div
                 title="mec"
