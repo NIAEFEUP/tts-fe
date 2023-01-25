@@ -1,4 +1,4 @@
-import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule} from '../../@types'
+import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule, ImportedCourse} from '../../@types'
 import React, {Fragment, useState } from 'react';
 import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon, PencilAltIcon, PlusIcon} from '@heroicons/react/outline'
 import getMajors from '../../api/backend'
@@ -87,20 +87,28 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         var input = document.getElementById("schedule-input") as HTMLInputElement;
         let value : string = input.value;
         var tokens : string[] = value.split(";")
-        var major_id = tokens[0];
-        var courses_info : string[][] = [];
+        var major_id = Number(tokens[0]);
+        var courses_info : ImportedCourse[] = [];
 
         tokens.splice(0, 1);
         for (let i = 0; i < tokens.length ; i++){
-            courses_info.push(tokens[i].split("#"));
+            let split_tokens = tokens[i].split("#");
+            let imported_course : ImportedCourse = {
+                course_unit_id: Number(split_tokens[0]),
+                class_name: split_tokens[1]
+            }
+            courses_info.push(imported_course);
         }
 
 
         //get Major
         var imported_major : Major;
+        
         var majors = await getMajors.getMajors();
+        
+
         for (let i = 0; i < majors.length ; i++){
-            if(majors[i]["id"] == major_id){
+            if(majors[i]["id"] === major_id){
                 imported_major = majors[i];
                 break;
             }
@@ -108,7 +116,13 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         }
 
         //get courses
-        var course_units = await getMajors.getCourses(imported_major);
+        try{
+            var course_units = await getMajors.getCourses(imported_major);
+        }catch(e: any){
+            console.log(e);
+            setIsImportedSchedule(false);
+            return;
+        }
         var placeholder_imported_course_units : CourseOption[] = [];
         var imported_course_units : CourseOption[];
         if (replaceExisting){
@@ -125,7 +139,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             var checked_course : CheckedCourse 
             for(let j = 0; j < course_units.length; j++){
 
-                if(course_units[j]["course_unit_id"] == courses_info[i][0]){
+                if(course_units[j]["course_unit_id"] === courses_info[i].course_unit_id){
                     checked_course = {
                         checked: true,
                         info: course_units[j],
@@ -134,11 +148,18 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 }
             }
 
-            let course_schedule = await getMajors.getCourseSchedule(checked_course);
+            let course_schedule : CourseSchedule[];
+            try{
+                course_schedule = await getMajors.getCourseSchedule(checked_course);
+            }catch(e: any){
+                console.log(e);
+                setIsImportedSchedule(false);
+                return;
+            }
             let option : CourseSchedule | null = null;
-            if (courses_info[i][1] != "null"){
+            if (courses_info[i].class_name !== "null"){
                 for (let j = 0; j < course_schedule.length ; j++){
-                    if (course_schedule[j].lesson_type != "T" && course_schedule[j].class_name == courses_info[i][1]){
+                    if (course_schedule[j].lesson_type !== "T" && course_schedule[j].class_name === courses_info[i].class_name){
                         option = course_schedule[j];
                         break;
                     }
@@ -147,7 +168,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
             let course_already_exists = false;
             for(let j = 0; j < imported_course_units.length; j++){
-                if(imported_course_units[j].course.info.course_unit_id == checked_course.info.course_unit_id){
+                if(imported_course_units[j].course.info.course_unit_id === checked_course.info.course_unit_id){
                     imported_course_units[j].option = option;
                     course_already_exists = true;
                     break;
@@ -188,11 +209,11 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         //purge all non imported courses
         if(replaceExisting){
             for (let i = 0; i < all_options.length ; i++){
-                if (i != multipleOptions.index){
+                if (i !== multipleOptions.index){
                     let new_option = [];
                     for(let y = 0; y < all_options[i].length; y++){
                         for(let x = 0; x < placeholder_imported_course_units.length; x++){
-                            if (placeholder_imported_course_units[x].course.info.course_unit_id == all_options[i][y].course.info.course_unit_id){
+                            if (placeholder_imported_course_units[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
                                 new_option.push(all_options[i][y]);
                                 break;
                             }
@@ -206,11 +227,11 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         //add missing imported courses
         for (let i = 0; i < all_options.length ; i++){
-            if (i != multipleOptions.index){
+            if (i !== multipleOptions.index){
                 for(let x = 0; x < placeholder_imported_course_units.length; x++){
                     let found = false;
                     for(let y = 0; y < all_options[i].length; y++){
-                        if (placeholder_imported_course_units[x].course.info.course_unit_id == all_options[i][y].course.info.course_unit_id){
+                        if (placeholder_imported_course_units[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
                             found = true;
                             break;
                         }
@@ -225,7 +246,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
 
 
-        if (imported_major.id != major.id){
+        if (imported_major.id !== major.id){
             setMajor(imported_major);
 
         }
@@ -243,7 +264,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
     const checkIfSameCoursesImport = (import_tokens : string[]) => {
         let current_schedule = multipleOptions.options[multipleOptions.index];
-        if (import_tokens.length != (current_schedule.length + 1)){
+        if (import_tokens.length !== (current_schedule.length + 1)){
             return false;
         }
 
@@ -251,7 +272,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             let found = false;
             let import_course = import_tokens[i].split("#");
             for (let j = 0; j < current_schedule.length; j++){
-                if (Number(import_course[0]) == current_schedule[j].course.info.course_unit_id){
+                if (Number(import_course[0]) === current_schedule[j].course.info.course_unit_id){
                     found = true;
                     break;
                 }
@@ -266,7 +287,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     const openDecisionModal = async () => {
         var input = document.getElementById("schedule-input") as HTMLInputElement;
         let value : string = input.value;
-        if (value == ""){
+        if (value === ""){
             return;
         }
         var tokens : string[] = value.split(";")
@@ -279,7 +300,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         var major_id = tokens[0];
 
-        if (Number(major_id) == major.id){
+        if (Number(major_id) === major.id){
             setIsDecisionModalOpen(true)
         }else{
             setIsConfModalOpen(true)
@@ -319,7 +340,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                         className="absolute right-0.5 bottom-0.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                        <text></text><UploadIcon className="h-4 w-4" />
+                        <UploadIcon className="h-4 w-4" />
 
             </button>
             
@@ -331,7 +352,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                         className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                        <text></text>{icon? <CheckIcon className='w-6 h-5'/> : <DocumentDuplicateIcon className='w-6 h-5' />}
+                        {icon? <CheckIcon className='w-6 h-5'/> : <DocumentDuplicateIcon className='w-6 h-5' />}
                     </button>
 
                 </div>

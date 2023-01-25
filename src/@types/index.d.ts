@@ -83,7 +83,7 @@ export type MultipleOptions = {
   options: CourseOption[][]
 }
 
-export type ExportJSON = {
-  major: Major,
-  selected: CourseOption[]
+export type ImportedCourse = {
+  course_unit_id: number,
+  class_name: string
 }
