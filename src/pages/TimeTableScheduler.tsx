@@ -128,6 +128,9 @@ const TimeTableSchedulerPage = () => {
       majorChangedRef.current = false
       setCheckedCourses([...uCC])
     })
+
+    // this line is needed to since adding isImportedSchedule and SetCheckedCourses to the dependencies array would cause Import not to work
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [major, majorChangedRef, checkedCourses, multipleOptions])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)

@@ -107,6 +107,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
 
       return value
     })
+
+    //this line is needed since adding isImportedSchedule SetImportedSchedule to the dependency array causes an insconsistent ListBox behavior
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, courseOption, setMultipleOptions])
 
 
