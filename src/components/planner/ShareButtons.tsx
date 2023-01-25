@@ -138,7 +138,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             let option : CourseSchedule | null = null;
             if (courses_info[i][1] != "null"){
                 for (let j = 0; j < course_schedule.length ; j++){
-                    if (course_schedule[j].class_name == courses_info[i][1]){
+                    if (course_schedule[j].lesson_type != "T" && course_schedule[j].class_name == courses_info[i][1]){
                         option = course_schedule[j];
                         break;
                     }
