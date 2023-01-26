@@ -113,16 +113,6 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
 
-    /*
-    et newGroupEntry: CheckedCourse[] = []
-    courses[year].forEach((course: CheckedCourse) => {
-      course.checked = event.target.checked
-      newGroupEntry.push(course)
-    })
-    courses[year] = newGroupEntry
-    setCourses([...courses])
-    */
-
     if(event.target.checked) {
       trimExtraCourses()
 
@@ -131,16 +121,22 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
         course.checked = event.target.checked
       })
 
+      setCourses([...courses])
+
     } else {
+      let newGroupEntry: CheckedCourse[] = []
 
       courses[year].forEach((course: CheckedCourse) => {
         course.checked = event.target.checked
-        courses[0].splice(courses[0].findIndex(related_course => related_course.info.course_unit_id === course.info.course_unit_id), 1)
+        let index: number = courses[0].findIndex(related_course => related_course.info.course_unit_id === course.info.course_unit_id)
+
+        if(courses[0][index].info.course_unit_id !== course.info.course_unit_id)
+          newGroupEntry.push(course)
       })
 
+      courses[0] = newGroupEntry
+      setCourses([...courses])
     }
-    //courses[year] = newGroupEntry
-    setCourses([...courses])
   }
 
   useEffect(() => {

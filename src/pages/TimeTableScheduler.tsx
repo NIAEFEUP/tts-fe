@@ -87,21 +87,7 @@ const TimeTableSchedulerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (totalSelected.length === 0) return
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions, totalSelected])
-
-  // fetch majors when component is ready
-  useEffect(() => {
-    document.getElementById('layout').scrollIntoView()
-    BackendAPI.getMajors().then((majors: Major[]) => {
-      setMajors(majors)
-    })
-  }, [])
-
-  // once a major has been picked => fetch courses for the major
-  useEffect(() => {
+  const getCoursesForMajor = (major: Major, majorChangedRef) => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
 
     let finalNewCheckedCourses: CheckedCourse[][] = [checkedCourses[0]]
@@ -118,28 +104,34 @@ const TimeTableSchedulerPage = () => {
 
       setCheckedCourses([...finalNewCheckedCourses])
     })
-  }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
+  }
 
   useEffect(() => {
-    if (extraCoursesMajor === null || (extraCoursesMajorChangedRef.current === false && checkedCourses.length > 0)) return
+    if (totalSelected.length === 0) return
+    StorageAPI.setOptionsStorage(multipleOptions)
+  }, [multipleOptions, totalSelected])
 
-    let finalNewCheckedCourses: CheckedCourse[][] = [checkedCourses[0]]
-
-    BackendAPI.getCourses(extraCoursesMajor).then((courses: Course[]) => {
-      const majorCourses = groupMajorCoursesByYear(courses)
-      const newCheckedCourses = courseToCheckedCourse(majorCourses)
-      extraCoursesMajorChangedRef.current = false
-
-      for(let courses of newCheckedCourses) {
-        finalNewCheckedCourses.push(courses)
-      }
-
-      setCheckedCourses([...finalNewCheckedCourses])
+  // fetch majors when component is ready
+  useEffect(() => {
+    document.getElementById('layout').scrollIntoView()
+    BackendAPI.getMajors().then((majors: Major[]) => {
+      setMajors(majors)
     })
+  }, [])
+
+  // once a major has been picked => fetch courses for the major
+  useEffect(() => {
+      getCoursesForMajor(major, majorChangedRef)
+    }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
+
+  useEffect(() => {
+    getCoursesForMajor(extraCoursesMajor, extraCoursesMajorChangedRef)
   }, [extraCoursesMajor, extraCoursesMajorChangedRef, checkedCourses, setCheckedCourses])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
+
+    setMultipleOptions({ index: 0, selected: [], options: [] })
 
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
@@ -166,6 +158,7 @@ const TimeTableSchedulerPage = () => {
     }
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
+
       setMultipleOptions((prev) => {
         let newCourseOptions: CourseOption[] = []
         const notNulls = prev.selected.filter((item) => item.option !== null)
@@ -222,12 +215,18 @@ const TimeTableSchedulerPage = () => {
     })
   }, [checkedCourses])
 
+  const is_null_or_undefined = (course) => {
+    return course === undefined || course === null
+  }
+
   // assure correct value of extraCoursesActive when we see changes in checkedCourses
   useEffect(() => {
-    if(checkedCourses.length > 0) { 
-      checkedCourses[0] === undefined || checkedCourses[0] === null
-      ? setExtraCoursesActive(false) 
-      : setExtraCoursesActive(true)
+    if(checkedCourses.length > 0 && !is_null_or_undefined(checkedCourses[0])) {
+      let isExtraCoursesColumnSupposedToShow = checkedCourses[0].length > 0 && !is_null_or_undefined(checkedCourses[0])
+      
+      isExtraCoursesColumnSupposedToShow 
+        ? setExtraCoursesActive(true)
+        : setExtraCoursesActive(false)
     }
   }, [checkedCourses])
 
