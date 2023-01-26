@@ -10,31 +10,14 @@ type Props = {
 }
 
 const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
-
-  const getPraticalTeachers = (courseOption: CourseOption) => {
-    let teachersArray = []
-    courseOption.schedules.forEach(element => {
-      if (element.lesson_type !== 'T') {
-        if (!teachersArray.includes(element.teacher_acronym)) { // there should be a better way to do this
-          teachersArray.push(element.teacher_acronym)
-        }
-      }
-
-    });
-    return teachersArray;
-  }
-
-  const praticalTeachers = useMemo(() => getPraticalTeachers(courseOption), [courseOption]);
-
-  let teacherOptions = ["All teachers", ...praticalTeachers]
-
-
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
-  const [selectedTeachers, setSelectedTeachers] = useState(praticalTeachers);
+  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers);
+
+  let teacherOptions = ["All teachers", ...courseOption.teachers]
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -121,8 +104,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
 
   const updateTeachersShown = ((selectedTeachers: Array<string>): void => {
     if (selectedTeachers.includes("All teachers")) {
-      selectedTeachers = (selectedTeachers.length !== 1) ? [] : praticalTeachers;
+      selectedTeachers = (selectedTeachers.length !== 1) ? [] : courseOption.teachers;
     }
+    courseOption.filteredTeachers = [...selectedTeachers];
     setSelectedTeachers(selectedTeachers)
     if (selectedOption)
       setSelectedOption(selectedTeachers.includes(selectedOption.teacher_acronym) ? selectedOption : null)
