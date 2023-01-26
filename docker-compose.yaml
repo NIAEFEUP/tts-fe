@@ -12,6 +12,8 @@ services:
     environment:
       PORT: 3000
       CHOKIDAR_USEPOLLING: 'true'
+    env_file:
+      - .env
 
 networks:
   default:

@@ -1,4 +1,5 @@
-import config from '../config/default.json'
+import config from '../config/prod.json'
+import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
 const minHour = 8
 const maxHour = 23
@@ -11,6 +12,7 @@ const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set
  * @returns The complete path with the prefix.
  */
 const getPath = (simplePath: string) => {
+
   return config.pathPrefix + simplePath
 }
 
@@ -150,6 +152,7 @@ const getClassTypeClassName = (type: string) => {
 
 export {
   config,
+  dev_config,
   getPath,
   minHour,
   maxHour,
