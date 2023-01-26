@@ -17,8 +17,8 @@ import {
   PlusCircleIcon,
   SelectorIcon,
   PlusIcon,
+  XIcon,
 } from '@heroicons/react/solid'
-import SelectionExtraUCsModal from './SelectionExtraCoursesModal'
 
 type Props = {
   majors: Major[]
@@ -26,23 +26,17 @@ type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   restoreCoursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const SelectionModal = (
-  { majors, openHook, majorHook, coursesHook, extraCoursesActiveHook, extraCoursesModalOpenHook, restoreCoursesHook }: Props) => {
+const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, restoreCoursesHook }: Props) => {
   const [major, setMajor] = majorHook
-  const [isThisOpen, setIsThisOpen] = openHook
+  const [isThisOpen, setisThisOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [extraCoursesActive, setExtraCoursesActive] = extraCoursesActiveHook
-  const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = extraCoursesModalOpenHook
   const [storagedCheckedCourses, setStoragedCheckedCourses] = restoreCoursesHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
-  const [mainModalCourses, setMainModalCourses] = restoreCoursesHook
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
 
   const match = (str: string, query: string, simple?: boolean) =>
@@ -70,26 +64,17 @@ const SelectionModal = (
           )
       : []
 
-  /*const extraCourses = useMemo(() => BackendAPI.getExtraCourses(major), [major])
-  const filteredExtraCourses =
-    extraCoursesQuery === ''
-      ? extraCourses
-      : extraCourses.filter((course: Course) =>
-          course?.name
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/\p{Diacritic}/gu, '')
-            .replace(/\s+/g, '')
-            .includes(extraCoursesQuery.toLowerCase().replace(/\s+/g, ''))
-        )*/
-
   const closeModal = () => {
-    if (major?.name !== '' && atLeastOneCourse) setIsThisOpen(false)
-    else setAlertLevel(AlertType.warning)
+    if (major?.name === '' || !atLeastOneCourse)
+      setAlertLevel(AlertType.warning)
+    
+    setCourses([courses[0], ...storagedCheckedCourses])
+
+    setisThisOpen(false)
   }
 
   const openModal = () => {
-    setIsThisOpen(true)
+    setisThisOpen(true)
   }
 
   const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
@@ -97,139 +82,45 @@ const SelectionModal = (
   const getDisplayExtraCourseText = (course: Course) =>
     course === null ? '' : `${course?.name} (${course?.acronym}, ${course?.course})`
 
+  /**
+   * If the first index of the courses array is undefined or null, it puts an empty array instead
+   * This is useful because the index 0 of the courses checked course matrix is the extra courses the user selected
+   * besides their default major
+   */
+  const trimExtraCourses = () => {
+    if(courses[0] === undefined || courses[0] === null) {
+      courses[0] = []
+    } 
+  }
+
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year + 1][courseIdx].checked = event.target.checked
+
+    trimExtraCourses()
+    
+    if(event.target.checked) {
+      let course_to_add: CheckedCourse = courses[year + 1][courseIdx]
+
+      courses[0].push(course_to_add)
+    } else {
+      let course_to_remove: CheckedCourse = courses[year + 1][courseIdx]
+      let course_to_remove_index: number = courses[0].indexOf(course_to_remove, 1)
+
+      courses[0].splice(course_to_remove_index, 1)
+    }
+
     setCourses([...courses])
   }
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
-    let newGroupEntry: CheckedCourse[] = []
-    courses[year + 1].forEach((course: CheckedCourse) => {
+    trimExtraCourses()
+
+    courses[year].forEach((course: CheckedCourse) => {
+      courses[0].push(course)
       course.checked = event.target.checked
-      newGroupEntry.push(course)
     })
-    courses[year + 1] = newGroupEntry
+    //courses[year] = newGroupEntry
     setCourses([...courses])
-  }
-
-  const handleExtraCourseGroupCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    courses[0].map((courses: CheckedCourse) => {
-      courses.checked = event.target.checked
-    }) 
-    
-    setCourses([...courses])
-  }
-
-  const handleExtraCourseCheck = (event: React.ChangeEvent<HTMLInputElement>, courseIdx: number) => {
-    courses[0][courseIdx].checked = event.target.checked
-    setCourses([...courses])
-  }
-
-  const openExtraCoursesModal = () => {
-    setMainModalCourses([...courses.slice(1)])
-
-    //setIsThisOpen(false)
-    setIsExtraUcsModalOpen(true)
-  }
-
-  /**
-   * This method serves to go to a group of checkboxes and put the correct checked value on the group checkbox
-   */
-  const controlCoursesGroupCheckbox = (courses: CheckedCourse[], groupCheckboxId: string) => {
-    let some = courses.some((course) => course.checked)
-    let every = courses.every((course) => course.checked)
-
-    //@ts-ignore
-    let checkbox: HTMLInputElement = document.getElementById(groupCheckboxId)
-    if (!checkbox) return
-
-    if (every) {
-      checkbox.checked = true
-      checkbox.indeterminate = false
-    } else if (some) {
-      checkbox.checked = false
-      checkbox.indeterminate = true
-    } else {
-      checkbox.checked = false
-      checkbox.indeterminate = false
-    }
-  }
-
-  const extraCoursesButton = () => (
-    <button
-      type="button"
-      title="Edit extra ucs"
-      className={classNames(
-        'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
-        'hover:text-white disabled:hidden disabled:cursor-not-allowed disabled:opacity-50',
-        extraCoursesActive 
-          ? 'border-red-800/70 bg-red-50 text-red-800 hover:bg-red-900'
-          : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'
-      )}
-      onClick={() => {openExtraCoursesModal()}}
-    >
-      { extraCoursesActive ? <PencilAltIcon className="h-4 w-4" />
-        : <PlusIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" /> }
-      
-      <span className="hidden md:flex">
-        UCs de outros cursos
-      </span>
-    </button>
-  )
-
-  /**
-   * Displays vertical list of the extra courses the user selected
-   */
-  const showUcsExtra = () => {
-    return (
-      <>
-        {/* Courses checkboxes */}
-        <div className="checkboxes col-span-6"> 
-          <div key={`ucsextra`}>
-            {/* Parent checkbox */}
-            <div title={`ucsExtra`} className="flex items-center transition">
-              <input
-                type="checkbox"
-                className="checkbox"
-                id="extraCourseGroupCheckbox"
-                onChange={(event) => handleExtraCourseGroupCheck(event)}
-              />
-              <label
-                className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                htmlFor="extraCourseGroupCheckbox"
-              >
-                <span>UCs de outros cursos</span>
-              </label>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
-            {courses[0] !== null && courses[0] !== undefined 
-              ? courses[0].map((course: CheckedCourse, courseIdx: number) => (
-              <div
-                title={course?.info.name}
-                key={`checkbox-${course?.info.course_year}-${courseIdx}`}
-                className="flex items-center transition"
-              >
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={course.checked}
-                  id={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
-                  onChange={(event) => handleExtraCourseCheck(event, courseIdx)}
-                />
-                  <label
-                    className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                    htmlFor={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
-                  >
-                    {course.info.acronym}
-                  </label>
-                </div>
-              )): <></>}
-              </div>
-          </div>
-        </div>
-      </>
-    );
   }
 
   useEffect(() => {
@@ -238,34 +129,46 @@ const SelectionModal = (
   }, [major, courses, atLeastOneCourse])
 
   useEffect(() => {
-    // Regular courses
     for (let year = 1; year < courses.length; year++) {
-      controlCoursesGroupCheckbox(courses[year], `year-checkbox-${year - 1}`)
-    }
+      let some = courses[year].some((course) => course.checked)
+      let every = courses[year].every((course) => course.checked)
 
-    // Extra courses
-    if(courses[0] !== undefined && courses[0] !== null) {
-      controlCoursesGroupCheckbox(courses[0], "extraCourseGroupCheckbox")
-    }
+      //@ts-ignore
+      let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
+      if (!checkbox) return
 
+      if (every) {
+        checkbox.checked = true
+        checkbox.indeterminate = false
+      } else if (some) {
+        checkbox.checked = false
+        checkbox.indeterminate = true
+      } else {
+        checkbox.checked = false
+        checkbox.indeterminate = false
+      }
+    }
   }, [courses])
-  
+
+  const isExtraCourseSet = (course: CheckedCourse) => {
+
+    if(courses[0] === undefined || courses[0] === null)
+      return
+
+    let possible_course_index: number = courses[0].findIndex(
+        related_course => related_course.info.course_unit_id === course.info.course_unit_id
+      )
+
+
+    if(possible_course_index !== -1) {
+      return courses[0][possible_course_index].checked
+    }
+
+    return false
+  }
+
   return (
     <>
-      <div className="flex w-full grow items-center justify-center xl:w-min">
-        {/* Edit button */}
-        <button
-          type="button"
-          onClick={openModal}
-          title="Editar Unidades Curriculares"
-          className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary px-2
-          py-2 text-xs font-medium text-white transition hover:opacity-80 xl:space-x-2 xl:px-3"
-        >
-          <span className="flex">Editar</span>
-          <PencilAltIcon className="h-4 w-4 text-white" />
-        </button>
-      </div>
-
       <Transition appear show={isThisOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
@@ -289,7 +192,7 @@ const SelectionModal = (
                         UCs
                       </h3>
                       <h3 className="hidden text-xl font-semibold leading-6 tracking-tight dark:text-white lg:flex">
-                        Escolha de UCs
+                        Escolha de UCs de outros cursos
                       </h3>
                     </div>
 
@@ -314,8 +217,8 @@ const SelectionModal = (
 
                   {/* Alert banner */}
                   <Alert type={alertLevel}>
-                    Selecione o seu <strong>curso principal</strong>, seguido das <strong>Unidades Curriculares</strong>{' '}
-                    pretendidas.
+                    Selecione o seu outro <strong>curso</strong>, seguido das <strong>Unidades Curriculares</strong>{' '}
+                    pretendidas, como anteriormente.
                   </Alert>
 
                   {/* Select major dropdown */}
@@ -402,98 +305,10 @@ const SelectionModal = (
                     </div>
                   </Combobox>
 
-                  {/* Select extra courses */}
-                  {/*extraCoursesActive && (
-                    <Combobox
-                      value={null}
-                      onChange={(value) => {
-                        // TODO: add new extra course to selected courses
-                      }}
-                    >
-                      <div className="relative">
-                        <div className="relative w-full rounded text-left">
-                          <Combobox.Input
-                            placeholder="Procure uma unidade curricular usando sigla, nome ou código"
-                            className={classNames(
-                              'w-full rounded border-2 py-3 px-4 text-xs leading-5 md:text-sm',
-                              'border-gray-700/25 bg-gray-50 text-gray-800 focus:shadow focus:ring-0'
-                            )}
-                            displayValue={(extraCourse: Course) => getDisplayExtraCourseText(extraCourse)}
-                            onChange={(event: { target: { value: SetStateAction<string> } }) =>
-                              setExtraCoursesQuery(event.target.value)
-                            }
-                          />
-                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                            <SelectorIcon
-                              className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-sky-100 hover:text-primary"
-                              aria-hidden="true"
-                            />
-                          </Combobox.Button>
-                        </div>
-
-                        <Transition
-                          as={Fragment}
-                          leave="transition ease-in duration-100"
-                          leaveFrom="opacity-100"
-                          leaveTo="opacity-0"
-                          afterLeave={() => setExtraCoursesQuery('')}
-                        >
-                          <Combobox.Options
-                            className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
-                          border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
-                          >
-                            {filteredExtraCourses.length === 0 && extraCoursesQuery !== '' ? (
-                              <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
-                                Nenhuma unidade curricular encontrada.
-                              </div>
-                            ) : (
-                              filteredExtraCourses.map((extraCourse: Course, extraCourseIdx: number) => (
-                                <Combobox.Option
-                                  key={`extra-course-${extraCourseIdx}`}
-                                  className={({ active }) =>
-                                    `relative cursor-pointer select-none py-2 px-3 ${
-                                      extraCourse?.name !== '' ? 'pl-10' : 'pl-4'
-                                    } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
-                                  }
-                                  value={extraCourse}
-                                >
-                                  {({ selected, active }) => (
-                                    <>
-                                      <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
-                                        {getDisplayExtraCourseText(extraCourse)}
-                                      </span>
-                                      {selected && (
-                                        <span
-                                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                            active ? 'text-white' : 'text-primary'
-                                          }`}
-                                        >
-                                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                      )}
-                                    </>
-                                  )}
-                                </Combobox.Option>
-                              ))
-                            )}
-                          </Combobox.Options>
-                        </Transition>
-                      </div>
-                    </Combobox>
-                  )*/}
-
-                
-
-                <div className={classNames(extraCoursesActive ? "grid grid-cols-8 divide-x-2" : "")}>
-                  
-                  {extraCoursesActive
-                  ? <div className="col-span-2">
-                      {showUcsExtra()}
-                    </div>
-                  : <></>}
+        
 
                   {/* Courses checkboxes */}
-                  <div className="checkboxes col-span-6"> 
+                  <div className="checkboxes"> 
                     {major &&
                       courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -504,7 +319,7 @@ const SelectionModal = (
                               className="checkbox"
                               checked={courses[yearIdx + 1].every((course) => course.checked)}
                               id={`year-checkbox-${yearIdx}`}
-                              onChange={(event) => handleCheckGroup(event, yearIdx)}
+                              onChange={(event) => handleCheckGroup(event, yearIdx + 1)}
                             />
                             <label
                               className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
@@ -525,7 +340,7 @@ const SelectionModal = (
                                 <input
                                   type="checkbox"
                                   className="checkbox"
-                                  checked={courses[yearIdx + 1][courseIdx].checked}
+                                  checked={isExtraCourseSet(course) || courses[yearIdx + 1][courseIdx].checked}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
                                 />
@@ -541,16 +356,11 @@ const SelectionModal = (
                         </div>
                       ))}
                   </div>
-                  
-                </div>
 
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
                     {/* Left side buttons */}
                     <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
-                      {/* Add / edit extra ucs */}
-                      {major !== null ? extraCoursesButton()
-                                      : <></>}
                       {/* Contact us link */}
                       <a
                         type="button"
@@ -582,19 +392,16 @@ const SelectionModal = (
 
                     {/* Right side buttons */}
                     <div className="order-first flex w-full flex-col items-center justify-center space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
+                      {/* Go back to the main selection modal button */}
                       {/* Confirm options button */}
                       <button
                         type="button"
                         title="Avançar para seleção de horários"
                         className={classNames(
                           'flex w-full items-center justify-center space-x-1 rounded border-2 px-4 py-2 text-sm font-medium transition lg:w-auto',
-                          'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700',
-                          major?.name === '' || !atLeastOneCourse
-                            ? 'cursor-not-allowed opacity-50'
-                            : 'hover:bg-teal-700 hover:text-white'
+                          'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700 hover:bg-green-700 hover:text-white',
                         )}
                         onClick={closeModal}
-                        disabled={major?.name === '' || !atLeastOneCourse}
                       >
                         <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
                         <span>Confirmar</span>
@@ -642,4 +449,4 @@ const InnerCustomTransition = ({ children, ...props }: any) => (
   </Transition.Child>
 )
 
-export default SelectionModal
+export default SelectionExtraCoursesModal

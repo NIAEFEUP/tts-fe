@@ -57,7 +57,7 @@ const useCourses = (): [CheckedCourse[][], React.Dispatch<React.SetStateAction<C
   useEffect(() => {
     writeStorage(key, courses)
   }, [courses])
-
+  
   return [courses, setCourses]
 }
 

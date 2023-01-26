@@ -13,6 +13,8 @@ import {
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
+import { coursesData } from '../utils/data'
+import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 
 const TimeTableSchedulerPage = () => {
   // add check property to courses
@@ -58,7 +60,7 @@ const TimeTableSchedulerPage = () => {
   }
 
   // extract only the course with checked: true
-  const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
+  const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course?.checked)
 
   // fetch all schedules for the picked courses
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
@@ -70,7 +72,9 @@ const TimeTableSchedulerPage = () => {
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
+  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
+  const [mainModalCourses, setMainModalCourses] = useState<CheckedCourse[][]>([[]])
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
@@ -79,6 +83,7 @@ const TimeTableSchedulerPage = () => {
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
+  const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
 
   useEffect(() => {
     if (totalSelected.length === 0) return
@@ -97,16 +102,24 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
 
+    let finalNewCheckedCourses: CheckedCourse[][] = [checkedCourses[0]]
+
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
       majorChangedRef.current = false
-      setCheckedCourses([...newCheckedCourses])
+
+      for(let courses of newCheckedCourses) {
+        finalNewCheckedCourses.push(courses)
+      }
+
+      setCheckedCourses([...finalNewCheckedCourses])
     })
   }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
+
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
 
@@ -188,6 +201,15 @@ const TimeTableSchedulerPage = () => {
     })
   }, [checkedCourses])
 
+  // assure correct value of extraCoursesActive when we see changes in checkedCourses
+  useEffect(() => {
+    if(checkedCourses.length > 0) { 
+      checkedCourses[0] === undefined || checkedCourses[0] === null
+      ? setExtraCoursesActive(false) 
+      : setExtraCoursesActive(true)
+    }
+  }, [checkedCourses])
+
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
       {/* Schedule Preview */}
@@ -212,7 +234,19 @@ const TimeTableSchedulerPage = () => {
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
               coursesHook={[checkedCourses, setCheckedCourses]}
+              extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
+              extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
+              restoreCoursesHook={[mainModalCourses, setMainModalCourses]}
             />
+            {isExtraUcsModelOpen ?
+              <SelectionExtraCoursesModal
+                majors={majors}
+                openHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
+                majorHook={[major,  setMajor]}
+                coursesHook={[checkedCourses, setCheckedCourses]}
+                restoreCoursesHook={[mainModalCourses, setMainModalCourses]}
+              /> 
+              : <></>}
             <MoreActionsButton
               schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
