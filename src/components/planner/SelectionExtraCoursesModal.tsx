@@ -39,6 +39,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
+  const [extraCoursesAlreadyTaken, setExtraCoursesAlreadyTaken] = useState<boolean>(false)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
 
   const match = (str: string, query: string, simple?: boolean) =>
@@ -163,6 +164,20 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
         checkbox.indeterminate = false
       }
     }
+  }, [courses])
+
+  const alreadyInMainModal = (course: CheckedCourse[][]) => {
+    if(course[0] === undefined || course[0] === null) {
+      return false
+    }
+
+    return course[0][0].info.course_unit_id === destCourseBuffer[0][0].info.course_unit_id
+  }
+
+  useEffect(() => {
+    alreadyInMainModal(courses.slice(1)) 
+      ? setExtraCoursesAlreadyTaken(true)
+      : setExtraCoursesAlreadyTaken(false)
   }, [courses])
 
   const isExtraCourseSet = (course: CheckedCourse) => {
@@ -323,7 +338,8 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
         
 
                   {/* Courses checkboxes */}
-                  <div className="checkboxes"> 
+                  {extraCoursesAlreadyTaken ? <p className="text-center mt-4">Já tens este curso selecionado como principal!</p>
+                  : <div className="checkboxes"> 
                     {major &&
                       courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -371,6 +387,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                         </div>
                       ))}
                   </div>
+                  }
 
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
