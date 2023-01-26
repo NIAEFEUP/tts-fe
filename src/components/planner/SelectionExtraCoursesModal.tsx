@@ -103,9 +103,9 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
       courses[0].push(course_to_add)
     } else {
       let course_to_remove: CheckedCourse = courses[year + 1][courseIdx]
-      let course_to_remove_index: number = courses[0].indexOf(course_to_remove, 1)
+      let remove_index: number = courses[0].findIndex(course => course.info.course_unit_id === course_to_remove.info.course_unit_id)
 
-      courses[0].splice(course_to_remove_index, 1)
+      courses[0].splice(remove_index, 1)
     }
 
     setCourses([...courses])
@@ -124,17 +124,12 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
       setCourses([...courses])
 
     } else {
-      let newGroupEntry: CheckedCourse[] = []
-
       courses[year].forEach((course: CheckedCourse) => {
         course.checked = event.target.checked
-        let index: number = courses[0].findIndex(related_course => related_course.info.course_unit_id === course.info.course_unit_id)
+        courses[0].splice(courses[0].findIndex(related_course => related_course.info.course_unit_id === course.info.course_unit_id), 1)
 
-        if(courses[0][index].info.course_unit_id !== course.info.course_unit_id)
-          newGroupEntry.push(course)
       })
 
-      courses[0] = newGroupEntry
       setCourses([...courses])
     }
   }
