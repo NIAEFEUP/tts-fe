@@ -9,10 +9,8 @@ services:
       - ./public:/usr/src/tts-fe/public
     ports:
       - 3100:3000
-    environment:
-      - PORT=3000
-      - CHOKIDAR_USEPOLLING='true'
-      - PROD=1
+    env_file:
+      - .env
 
 networks:
   default:

@@ -2,7 +2,8 @@ import { CheckedCourse, Major } from '../@types'
 import { extraCoursesData } from '../utils/data'
 import { getSemester, config, dev_config } from '../utils'
 
-const prod_val = process.env.PROD
+
+const prod_val = process.env.REACT_APP_PROD
 const BE_CONFIG = prod_val ? config : dev_config
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
 const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
