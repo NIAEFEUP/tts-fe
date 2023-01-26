@@ -10,10 +10,9 @@ services:
     ports:
       - 3100:3000
     environment:
-      PORT: 3000
-      CHOKIDAR_USEPOLLING: 'true'
-    env_file:
-      - .env
+      - PORT=3000
+      - CHOKIDAR_USEPOLLING='true'
+      - PROD=1
 
 networks:
   default:
