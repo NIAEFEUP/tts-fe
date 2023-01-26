@@ -194,6 +194,7 @@ const SelectionModal = (
                 className="checkbox"
                 id="extraCourseGroupCheckbox"
                 onChange={(event) => handleExtraCourseGroupCheck(event)}
+                checked={courses[0]?.every((course) => course.checked)}
               />
               <label
                 className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
