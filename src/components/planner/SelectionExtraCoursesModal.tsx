@@ -25,16 +25,18 @@ type Props = {
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  restoreCoursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
+  sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
+  destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
 }
 
-const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, restoreCoursesHook }: Props) => {
+const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, sourceBufferHook, destBufferHook }: Props) => {
   const [major, setMajor] = majorHook
   const [isThisOpen, setisThisOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [storagedCheckedCourses, setStoragedCheckedCourses] = restoreCoursesHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
+  const [sourceCoursesBuffer, setSourceCoursesBuffer] = sourceBufferHook
+  const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
@@ -68,8 +70,8 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
     if (major?.name === '' || !atLeastOneCourse)
       setAlertLevel(AlertType.warning)
     
-    setCourses([courses[0], ...storagedCheckedCourses])
-    setStoragedCheckedCourses([...courses])
+    setSourceCoursesBuffer([...courses])
+    setCourses([courses[0], ...destCourseBuffer])
 
     setisThisOpen(false)
   }
@@ -110,12 +112,33 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   }
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
-    trimExtraCourses()
 
+    /*
+    et newGroupEntry: CheckedCourse[] = []
     courses[year].forEach((course: CheckedCourse) => {
-      courses[0].push(course)
       course.checked = event.target.checked
+      newGroupEntry.push(course)
     })
+    courses[year] = newGroupEntry
+    setCourses([...courses])
+    */
+
+    if(event.target.checked) {
+      trimExtraCourses()
+
+      courses[year].forEach((course: CheckedCourse) => {
+        courses[0].push(course)
+        course.checked = event.target.checked
+      })
+
+    } else {
+
+      courses[year].forEach((course: CheckedCourse) => {
+        course.checked = event.target.checked
+        courses[0].splice(courses[0].findIndex(related_course => related_course.info.course_unit_id === course.info.course_unit_id), 1)
+      })
+
+    }
     //courses[year] = newGroupEntry
     setCourses([...courses])
   }
@@ -167,8 +190,6 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
 
     return false
   }
-
-  console.log("Courses: ", courses)
 
   return (
     <>

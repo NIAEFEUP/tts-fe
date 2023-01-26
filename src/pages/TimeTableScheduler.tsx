@@ -70,12 +70,13 @@ const TimeTableSchedulerPage = () => {
 
   const [major, setMajor, majorChangedRef] = useMajor("niaefeup-tts.major") // the picked major
   const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor("niaefeup-tts.extra-major")
-  const [majors, setMajors] = useState<Major[]>([]) // all the majors
+  const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
-  const [mainModalCourses, setMainModalCourses] = useState<CheckedCourse[][]>([[]])
+  const [sourceCoursesBuffer, setSourceCoursesBuffer] = useState<CheckedCourse[][]>([[]])
+  const [destCoursesBuffer, setDestCoursesBuffer] = useState<CheckedCourse[][]>([[]])
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
@@ -110,7 +111,6 @@ const TimeTableSchedulerPage = () => {
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
       majorChangedRef.current = false
 
-      console.log("running")
 
       for(let courses of newCheckedCourses) {
         finalNewCheckedCourses.push(courses)
@@ -129,8 +129,6 @@ const TimeTableSchedulerPage = () => {
       const majorCourses = groupMajorCoursesByYear(courses)
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
       extraCoursesMajorChangedRef.current = false
-
-      console.log("running")
 
       for(let courses of newCheckedCourses) {
         finalNewCheckedCourses.push(courses)
@@ -259,7 +257,8 @@ const TimeTableSchedulerPage = () => {
               coursesHook={[checkedCourses, setCheckedCourses]}
               extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
               extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
-              restoreCoursesHook={[mainModalCourses, setMainModalCourses]}
+              sourceBufferHook={[sourceCoursesBuffer, setSourceCoursesBuffer]}
+              destBufferHook={[destCoursesBuffer, setDestCoursesBuffer]}
             />
             {isExtraUcsModelOpen ?
               <SelectionExtraCoursesModal
@@ -267,7 +266,8 @@ const TimeTableSchedulerPage = () => {
                 openHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
                 majorHook={[extraCoursesMajor, setExtraCoursesMajor]}
                 coursesHook={[checkedCourses, setCheckedCourses]}
-                restoreCoursesHook={[mainModalCourses, setMainModalCourses]}
+                sourceBufferHook={[destCoursesBuffer, setDestCoursesBuffer]}
+                destBufferHook={[sourceCoursesBuffer, setSourceCoursesBuffer]}
               /> 
               : <></>}
             <MoreActionsButton

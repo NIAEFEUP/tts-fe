@@ -25,23 +25,25 @@ type Props = {
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  restoreCoursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+  sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
+  destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
 }
 
 const SelectionModal = (
-  { majors, openHook, majorHook, coursesHook, extraCoursesActiveHook, extraCoursesModalOpenHook, restoreCoursesHook }: Props) => {
+  { majors, openHook, majorHook, coursesHook, extraCoursesActiveHook, extraCoursesModalOpenHook, sourceBufferHook, destBufferHook }: Props) => {
   const [major, setMajor] = majorHook
   const [isThisOpen, setIsThisOpen] = openHook
   const [courses, setCourses] = coursesHook
   const [extraCoursesActive, setExtraCoursesActive] = extraCoursesActiveHook
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = extraCoursesModalOpenHook
+  const [sourceCourseBuffer, setSourceCourseBuffer] = sourceBufferHook
+  const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
-  const [mainModalCourses, setMainModalCourses] = restoreCoursesHook
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
 
   const match = (str: string, query: string, simple?: boolean) =>
@@ -125,10 +127,8 @@ const SelectionModal = (
   }
 
   const openExtraCoursesModal = () => {
-    if(mainModalCourses.length == 1)
-      setMainModalCourses([...courses.slice(1)])
-    else
-      setCourses([...mainModalCourses])
+    setSourceCourseBuffer([...courses.slice(1)])
+    setCourses([...destCourseBuffer])
     
     setIsExtraUcsModalOpen(true)
   }
@@ -155,8 +155,6 @@ const SelectionModal = (
       checkbox.indeterminate = false
     }
   }
-
-  console.log("MMC: ", mainModalCourses)
 
   const extraCoursesButton = () => (
     <button
@@ -252,7 +250,7 @@ const SelectionModal = (
     }
 
   }, [courses])
-  
+
   return (
     <>
       <div className="flex w-full grow items-center justify-center xl:w-min">
