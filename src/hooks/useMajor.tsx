@@ -51,8 +51,7 @@ const useLocalStorage = (key: string, initialValue?: any) => {
 }
 
 // prettier-ignore
-const useMajor = (): [Major | null, React.Dispatch<React.SetStateAction<Major | null>>, React.MutableRefObject<boolean>] => {
-  const key = 'niaefeup-tts.major'
+const useMajor = (key: string): [Major | null, React.Dispatch<React.SetStateAction<Major | null>>, React.MutableRefObject<boolean>] => {
   const firstRenderRef = useRef(true)
   const changedMajorRef = useRef(false)
   const [major, setMajor] = useLocalStorage(key, null)

@@ -69,12 +69,9 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
       setAlertLevel(AlertType.warning)
     
     setCourses([courses[0], ...storagedCheckedCourses])
+    setStoragedCheckedCourses([...courses])
 
     setisThisOpen(false)
-  }
-
-  const openModal = () => {
-    setisThisOpen(true)
   }
 
   const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
@@ -124,6 +121,10 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   }
 
   useEffect(() => {
+    setMajorQuery((prev) => `${prev} `)
+  }, [])
+
+  useEffect(() => {
     if (major?.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
     else setAlertLevel(AlertType.info)
   }, [major, courses, atLeastOneCourse])
@@ -166,6 +167,8 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
 
     return false
   }
+
+  console.log("Courses: ", courses)
 
   return (
     <>

@@ -37,7 +37,6 @@ const SelectionModal = (
   const [courses, setCourses] = coursesHook
   const [extraCoursesActive, setExtraCoursesActive] = extraCoursesActiveHook
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = extraCoursesModalOpenHook
-  const [storagedCheckedCourses, setStoragedCheckedCourses] = restoreCoursesHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
@@ -126,9 +125,11 @@ const SelectionModal = (
   }
 
   const openExtraCoursesModal = () => {
-    setMainModalCourses([...courses.slice(1)])
-
-    //setIsThisOpen(false)
+    if(mainModalCourses.length == 1)
+      setMainModalCourses([...courses.slice(1)])
+    else
+      setCourses([...mainModalCourses])
+    
     setIsExtraUcsModalOpen(true)
   }
 
@@ -154,6 +155,8 @@ const SelectionModal = (
       checkbox.indeterminate = false
     }
   }
+
+  console.log("MMC: ", mainModalCourses)
 
   const extraCoursesButton = () => (
     <button

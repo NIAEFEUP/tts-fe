@@ -68,7 +68,8 @@ const TimeTableSchedulerPage = () => {
   // modal initial value
   const getModalIsOpenValue = (easy?: boolean) => (easy ? !major || getPickedCourses(checkedCourses).length < 3 : true)
 
-  const [major, setMajor, majorChangedRef] = useMajor() // the picked major
+  const [major, setMajor, majorChangedRef] = useMajor("niaefeup-tts.major") // the picked major
+  const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor("niaefeup-tts.extra-major")
   const [majors, setMajors] = useState<Major[]>([]) // all the majors
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
@@ -109,6 +110,8 @@ const TimeTableSchedulerPage = () => {
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
       majorChangedRef.current = false
 
+      console.log("running")
+
       for(let courses of newCheckedCourses) {
         finalNewCheckedCourses.push(courses)
       }
@@ -116,6 +119,26 @@ const TimeTableSchedulerPage = () => {
       setCheckedCourses([...finalNewCheckedCourses])
     })
   }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
+
+  useEffect(() => {
+    if (extraCoursesMajor === null || (extraCoursesMajorChangedRef.current === false && checkedCourses.length > 0)) return
+
+    let finalNewCheckedCourses: CheckedCourse[][] = [checkedCourses[0]]
+
+    BackendAPI.getCourses(extraCoursesMajor).then((courses: Course[]) => {
+      const majorCourses = groupMajorCoursesByYear(courses)
+      const newCheckedCourses = courseToCheckedCourse(majorCourses)
+      extraCoursesMajorChangedRef.current = false
+
+      console.log("running")
+
+      for(let courses of newCheckedCourses) {
+        finalNewCheckedCourses.push(courses)
+      }
+
+      setCheckedCourses([...finalNewCheckedCourses])
+    })
+  }, [extraCoursesMajor, extraCoursesMajorChangedRef, checkedCourses, setCheckedCourses])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
@@ -242,7 +265,7 @@ const TimeTableSchedulerPage = () => {
               <SelectionExtraCoursesModal
                 majors={majors}
                 openHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
-                majorHook={[major,  setMajor]}
+                majorHook={[extraCoursesMajor, setExtraCoursesMajor]}
                 coursesHook={[checkedCourses, setCheckedCourses]}
                 restoreCoursesHook={[mainModalCourses, setMainModalCourses]}
               /> 
