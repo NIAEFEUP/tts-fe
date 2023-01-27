@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
+import { SelectorIcon, CheckIcon, EyeIcon } from '@heroicons/react/solid'
 import { getScheduleOptionDisplayText } from '../../utils'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
 
@@ -38,6 +38,20 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       setPreviewing(true)
     }
     setSelectedOption(option);
+  }
+
+  const isLastSelected = (option: CourseSchedule) => { // Checks if the CourseSchedule is the lastSelected CourseSchedule
+    if (!lastSelected || !option) return false;
+    return option.day === lastSelected.day
+      && option.duration === lastSelected.duration
+      && option.start_time === lastSelected.start_time
+      && option.location === lastSelected.location
+      && option.lesson_type === lastSelected.lesson_type
+      && option.teacher_acronym === lastSelected.teacher_acronym
+      && option.course_unit_id === lastSelected.course_unit_id
+      && option.last_updated === lastSelected.last_updated
+      && option.class_name === lastSelected.class_name // e.g. 1MIEIC01
+      && option.composed_class_name === lastSelected.composed_class_name // e.g. COMP752
   }
 
   const removePreview = () => {
@@ -162,8 +176,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                   key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
                   value={option === null ? <>&nbsp;</> : option}
                   className={({ active }) =>
-                    `group relative cursor-default select-none py-2 text-sm ${
-                      selectedOption !== null ? 'pl-10' : 'pl-4'
+                    `group relative cursor-default select-none py-2 text-sm ${selectedOption !== null ? 'pl-10' : 'pl-4'
                     } pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                   }
                 >
@@ -172,15 +185,23 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                       <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
                         {getOptionDisplayText(option)}
                       </span>
-                      {selected ? (
+                      {option && lastSelected && isLastSelected(option) ? (
                         <span
-                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? 'text-white' : 'text-primary dark:text-white'
-                          }`}
+                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                            }`}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>
-                      ) : null}
+                      ) : (
+                        (selected ? (
+                          <span
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                              }`}
+                          >
+                            <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        ) : null)
+                      )}
                     </>
                   )}
                 </Listbox.Option>
