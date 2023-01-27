@@ -185,7 +185,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                       <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
                         {getOptionDisplayText(option)}
                       </span>
-                      {option && lastSelected && isLastSelected(option) ? (
+                      {isLastSelected(option) ? (
                         <span
                           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
                             }`}
