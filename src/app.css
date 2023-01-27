@@ -55,11 +55,25 @@ button {
   dark:focus:ring-transparent;
 }
 
+.extra-courses-checkbox {
+  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-secondary transition 
+  hover:bg-secondary/75 hover:text-secondary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+  dark:focus:ring-transparent indeterminate:text-secondary focus:text-secondary checked:text-secondary;
+}
+
 .checkbox-small {
   @apply h-3 w-3 cursor-pointer rounded border-2 border-transparent bg-lightish p-0 text-primary transition 
   hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
   dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
   dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
+}
+
+.extra-course-checkbox-small {
+  @apply h-3 w-3 cursor-pointer rounded border-2 border-transparent bg-lightish p-0 text-secondary transition 
+  hover:bg-secondary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+  dark:focus:ring-0 xl:h-3.5 xl:w-3.5 indeterminate:text-secondary focus:text-secondary checked:text-secondary/75;
 }
 
 .checkboxes {

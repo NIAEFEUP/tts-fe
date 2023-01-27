@@ -12,11 +12,10 @@ import {
   CheckIcon,
   HomeIcon,
   InboxInIcon,
-  MinusCircleIcon,
   PencilAltIcon,
-  PlusCircleIcon,
   SelectorIcon,
   PlusIcon,
+  XCircleIcon,
 } from '@heroicons/react/solid'
 import { removeDuplicatesFrom } from '../../pages/TimeTableScheduler'
 
@@ -42,6 +41,8 @@ const SelectionModal = (
   const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
+  const [coursesAlreadyTaken, setCoursesAlreadyTaken] = useState<boolean>(false)
+  const [extraCourseHovered, setExtraCourseHovered] = useState<boolean>(false)
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
@@ -117,19 +118,6 @@ const SelectionModal = (
     setCourses([...courses])
   }
 
-  const handleExtraCourseGroupCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    courses[0] = []
-    
-    setCourses([...courses])
-    setDestCourseBuffer([])
-    setExtraCoursesActive(false)
-  }
-
-  const handleExtraCourseCheck = (event: React.ChangeEvent<HTMLInputElement>, courseIdx: number) => {
-    courses[0].splice(courseIdx, 1)
-    setCourses([...courses])
-  }
-
   const openExtraCoursesModal = () => {
     setSourceCourseBuffer([...courses.slice(1)])
     setCourses([...destCourseBuffer])
@@ -182,6 +170,46 @@ const SelectionModal = (
     </button>
   )
 
+  const replaceExtraCourseCheckbox = (checkboxId: string, xiconId: string) => {
+    const checkbox: HTMLElement = document.getElementById(checkboxId)
+    const removalIcon: HTMLElement = document.getElementById(xiconId)
+
+    if(!checkbox || !removalIcon) return
+
+    checkbox.style.display = "none"
+    removalIcon.style.display = "block"
+
+  }
+
+  const recoverExtraCourseCheckbox = (checkboxId: string, xiconId: string) => {
+    const checkbox = document.getElementById(checkboxId)
+    const removalIcon: HTMLElement = document.getElementById(xiconId)
+
+    if(!checkbox || !removalIcon) return
+
+    checkbox.style.display = "block"
+    removalIcon.style.display = "none"
+  }
+
+  const removeFromExtraCourses = (courseIdx: number) => {
+    courses[0].splice(courseIdx, 1)
+    
+    if(courses[0].length === 0)
+      setDestCourseBuffer([])
+
+    setCourses([...courses])
+  }
+
+  const removeExtraCourses = () => {
+    courses[0] = []
+    
+    setCourses([...courses])
+    setDestCourseBuffer([])
+    setExtraCoursesActive(false)
+
+    setCourses([...courses])
+  }
+
 
   /**
    * Displays vertical list of the extra courses the user selected
@@ -196,12 +224,23 @@ const SelectionModal = (
         <div className="checkboxes col-span-6"> 
           <div key={`ucsextra`}>
             {/* Parent checkbox */}
-            <div title={`ucsExtra`} className="flex items-center transition">
+            <div title={`ucsExtra`} className="flex items-center transition"
+            onMouseEnter={() => { 
+              replaceExtraCourseCheckbox("extraCourseGroupCheckbox", "remove-extra-courses-icon")
+            }}
+            onMouseLeave={() => { 
+              recoverExtraCourseCheckbox("extraCourseGroupCheckbox", "remove-extra-courses-icon") 
+            }}
+            > 
+              <XCircleIcon
+                className="h-5 w-5 remove-extra-uc-icon hidden cursor-pointer text-primary"
+                id="remove-extra-courses-icon"
+                onClick={removeExtraCourses}
+              />
               <input
                 type="checkbox"
                 className="checkbox"
                 id="extraCourseGroupCheckbox"
-                onChange={(event) => handleExtraCourseGroupCheck(event)}
                 checked={true}
               />
               <label
@@ -219,20 +258,30 @@ const SelectionModal = (
                 title={course?.info.name}
                 key={`checkbox-${course?.info.course_year}-${courseIdx}`}
                 className="flex items-center transition"
+                onMouseEnter={() => { 
+                  replaceExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
+                }}
+                onMouseLeave={() => { 
+                  recoverExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`) 
+                }}
               >
+                <XCircleIcon
+                  className="h-5 w-5 remove-extra-uc-icon hidden cursor-pointer text-primary"
+                  id={`xicon-for-${course?.info.course_year}-${courseIdx}`}
+                  onClick={() => {removeFromExtraCourses(courseIdx)}}
+                />
                 <input
                   type="checkbox"
                   className="checkbox"
                   checked={course.checked}
                   id={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
-                  onChange={(event) => handleExtraCourseCheck(event, courseIdx)}
                 />
-                  <label
-                    className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                    htmlFor={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
-                  >
-                    {course.info.acronym}
-                  </label>
+                <label
+                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                  htmlFor={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
+                >
+                  {course.info.acronym}
+                </label>
                 </div>
               )): <></>}
               </div>
@@ -240,6 +289,14 @@ const SelectionModal = (
         </div>
       </>
     );
+  }
+
+  const alreadyInExtraCourses = (course: CheckedCourse[][]) => {
+    if(course[1] === undefined || course[1] === null) {
+      return false
+    }
+
+    return course[0][0].info.course_unit_id === course[1][0].info.course_unit_id
   }
 
   useEffect(() => {
@@ -258,6 +315,12 @@ const SelectionModal = (
       controlCoursesGroupCheckbox(courses[0], "extraCourseGroupCheckbox")
     }
 
+  }, [courses])
+
+  useEffect(() => {
+    alreadyInExtraCourses(courses.slice(1)) 
+      ? setCoursesAlreadyTaken(true)
+      : setCoursesAlreadyTaken(false)
   }, [courses])
 
   return (
@@ -504,7 +567,9 @@ const SelectionModal = (
 
                   {/* Courses checkboxes */}
                   <div className="checkboxes col-span-6"> 
-                    {major &&
+                  { coursesAlreadyTaken ? <></>
+                  :
+                    major &&
                       courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
                           {/* Parent checkbox */}
@@ -549,7 +614,8 @@ const SelectionModal = (
                             ))}
                           </div>
                         </div>
-                      ))}
+                      ))
+                      }
                   </div>
                   
                 </div>

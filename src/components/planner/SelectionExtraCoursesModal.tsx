@@ -8,16 +8,10 @@ import { CheckedCourse, Course, Major } from '../../@types'
 import { getSchoolYear, getSemester, config, getPath } from '../../utils'
 import {
   AcademicCapIcon,
-  CheckCircleIcon,
   CheckIcon,
   HomeIcon,
-  InboxInIcon,
-  MinusCircleIcon,
-  PencilAltIcon,
-  PlusCircleIcon,
   SelectorIcon,
-  PlusIcon,
-  XIcon,
+  ArrowCircleLeftIcon,
 } from '@heroicons/react/solid'
 
 type Props = {
@@ -213,25 +207,25 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                     className="mb-2 flex w-full items-center justify-between space-x-2 text-center font-medium lg:mb-3"
                   >
                     <div className="flex items-center justify-start space-x-1">
-                      <AcademicCapIcon className="h-6 w-6 text-feup" aria-hidden="true" />
+                      <AcademicCapIcon className="h-6 w-6 text-sky-700" aria-hidden="true" />
                       <h3 className="flex text-xl font-semibold leading-6 tracking-tight dark:text-white lg:hidden">
                         UCs
                       </h3>
                       <h3 className="hidden text-xl font-semibold leading-6 tracking-tight dark:text-white lg:flex">
-                        Escolha de UCs de outros cursos
+                        + Escolha de UCs de outros cursos
                       </h3>
                     </div>
 
                     <div className="flex items-center justify-start space-x-2">
                       <span
                         title="Semestre"
-                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="rounded bg-sky-700 px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {`${getSemester()}ºS`}
                       </span>
                       <span
                         title="Ano Letivo"
-                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="rounded bg-sky-700 px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {getSchoolYear()}
                       </span>
@@ -243,8 +237,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
 
                   {/* Alert banner */}
                   <Alert type={alertLevel}>
-                    Selecione o seu outro <strong>curso</strong>, seguido das <strong>Unidades Curriculares</strong>{' '}
-                    pretendidas, como anteriormente.
+                    Neste modal pode selecionar as suas <strong>Unidades Curriculares</strong> de um curso diferente do principal.
                   </Alert>
 
                   {/* Select major dropdown */}
@@ -343,7 +336,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                           <div title={`${major?.acronym} ${yearIdx + 1}º ano`} className="flex items-center transition">
                             <input
                               type="checkbox"
-                              className="checkbox"
+                              className="extra-courses-checkbox"
                               checked={courses[yearIdx + 1].every((course) => course.checked)}
                               id={`year-checkbox-${yearIdx}`}
                               onChange={(event) => handleCheckGroup(event, yearIdx + 1)}
@@ -366,7 +359,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                               >
                                 <input
                                   type="checkbox"
-                                  className="checkbox"
+                                  className="extra-courses-checkbox"
                                   checked={isExtraCourseSet(course) || (isExtraCourseSet(course) && courses[yearIdx + 1][courseIdx].checked)}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
@@ -389,20 +382,6 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
                     {/* Left side buttons */}
                     <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
-                      {/* Contact us link */}
-                      <a
-                        type="button"
-                        className={classNames(
-                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
-                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
-                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
-                        )}
-                        href="mailto:projetos.niaefeup@gmail.com"
-                      >
-                        <InboxInIcon className="h-5 w-5" aria-hidden="true" />
-                        <span className="hidden md:flex">Contacte-nos</span>
-                        <span className="flex md:hidden">Contactar</span>
-                      </a>
                       {/* Go back to about page button */}
                       <Link
                         to={getPath(config.paths.about)}
@@ -427,12 +406,12 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                         title="Avançar para seleção de horários"
                         className={classNames(
                           'flex w-full items-center justify-center space-x-1 rounded border-2 px-4 py-2 text-sm font-medium transition lg:w-auto',
-                          'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700 hover:bg-green-700 hover:text-white',
+                          'border-teal-700/50 bg-green-800 text-white dark:border-white-700 hover:bg-green-100 hover:text-teal-700',
                         )}
                         onClick={closeModal}
                       >
-                        <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                        <span>Confirmar</span>
+                        <ArrowCircleLeftIcon className="h-5 w-5" aria-hidden="true" />
+                        <span>Ir para o menu anterior</span>
                       </button>
                     </div>
                   </footer>
