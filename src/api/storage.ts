@@ -29,7 +29,7 @@ const getOptionsStorage = (): MultipleOptions => {
     if (isStorageValid(key, 7)) {
       const courseOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
       // For older files (which don't have the attribute 'names')
-      if (courseOptions.names == undefined) courseOptions.names = initialValue.names
+      if (courseOptions.names === undefined) courseOptions.names = initialValue.names
 
       return courseOptions
     } else {

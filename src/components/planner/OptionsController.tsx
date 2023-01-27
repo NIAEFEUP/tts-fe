@@ -92,11 +92,9 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           onDoubleClick={() => setIsEditingName(true)}
           ref = {menuButtonRef}
         >
-          {isEditingName ? <input type="text" value={options.names[options.index]} autoFocus onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
-            className='h-4 w-3/4 text-xs text-black items-center justify-center gap-1.5 rounded-l border-2 bg-gray-200 px-2 py-2
-            text-center font-medium'/>
-            : <span>{options.names[options.index]}</span>
-          }   
+          <input type="text" value={options.names[options.index]} onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
+            className='h-4 w-full items-center justify-center border-0 focus:border-transparent gap-1.5 px-2 py-2 text-white transition hover:opacity-80 dark:bg-secondary font-medium
+            text-center'/>
         </Menu.Button>
         <Transition
           as={Fragment}
