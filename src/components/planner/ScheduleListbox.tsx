@@ -176,8 +176,8 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                   key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
                   value={option === null ? <>&nbsp;</> : option}
                   className={({ active }) =>
-                    `group relative cursor-default select-none py-2 text-sm ${selectedOption !== null ? 'pl-10' : 'pl-4'
-                    } pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
+                    `group relative cursor-default select-none py-2 text-sm pl-10
+                     pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                   }
                 >
                   {({ selected, active }) => (
