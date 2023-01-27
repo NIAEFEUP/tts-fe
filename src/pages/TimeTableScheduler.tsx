@@ -16,6 +16,20 @@ import { useShowGrid, useMajor, useCourses } from '../hooks'
 import { coursesData } from '../utils/data'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 
+export const removeDuplicatesFrom = (courses: CheckedCourse[]) => {
+  let frequency: Map<number, number> = new Map()
+
+  for(let i = 0; i < courses.length; i++) {
+    let curr_course: CheckedCourse = courses[i]
+
+    if(frequency.get(curr_course.info.course_unit_id) === undefined) {
+      frequency.set(curr_course.info.course_unit_id, 1)
+    } else {
+      courses.splice(i, 1)
+    } 
+  }
+}
+
 const TimeTableSchedulerPage = () => {
   // add check property to courses
   const courseToCheckedCourse = (majorCourses: Course[][]): CheckedCourse[][] =>
@@ -135,6 +149,8 @@ const TimeTableSchedulerPage = () => {
 
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
+
+    removeDuplicatesFrom(pickedCourses)
 
     const storedOptions = StorageAPI.getOptionsStorage()
     const storedOptionsNotNulls = storedOptions.options

@@ -18,7 +18,7 @@ import {
   SelectorIcon,
   PlusIcon,
 } from '@heroicons/react/solid'
-import SelectionExtraUCsModal from './SelectionExtraCoursesModal'
+import { removeDuplicatesFrom } from '../../pages/TimeTableScheduler'
 
 type Props = {
   majors: Major[]
@@ -85,8 +85,12 @@ const SelectionModal = (
         )*/
 
   const closeModal = () => {
-    if (major?.name !== '' && atLeastOneCourse) setIsThisOpen(false)
-    else setAlertLevel(AlertType.warning)
+    if (major?.name !== '' && atLeastOneCourse) {
+       setIsThisOpen(false)
+    }
+    else { 
+      setAlertLevel(AlertType.warning)
+    }
   }
 
   const openModal = () => {
@@ -114,15 +118,15 @@ const SelectionModal = (
   }
 
   const handleExtraCourseGroupCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    courses[0].map((courses: CheckedCourse) => {
-      courses.checked = event.target.checked
-    }) 
+    courses[0] = []
     
     setCourses([...courses])
+    setDestCourseBuffer([])
+    setExtraCoursesActive(false)
   }
 
   const handleExtraCourseCheck = (event: React.ChangeEvent<HTMLInputElement>, courseIdx: number) => {
-    courses[0][courseIdx].checked = event.target.checked
+    courses[0].splice(courseIdx, 1)
     setCourses([...courses])
   }
 
@@ -178,10 +182,14 @@ const SelectionModal = (
     </button>
   )
 
+
   /**
    * Displays vertical list of the extra courses the user selected
    */
   const showUcsExtra = () => {
+
+    removeDuplicatesFrom(courses[0])
+
     return (
       <>
         {/* Courses checkboxes */}
@@ -194,7 +202,7 @@ const SelectionModal = (
                 className="checkbox"
                 id="extraCourseGroupCheckbox"
                 onChange={(event) => handleExtraCourseGroupCheck(event)}
-                checked={courses[0]?.every((course) => course.checked)}
+                checked={true}
               />
               <label
                 className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"

@@ -116,7 +116,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
 
     if(event.target.checked) {
       trimExtraCourses()
-
+      
       courses[year].forEach((course: CheckedCourse) => {
         courses[0].push(course)
         course.checked = event.target.checked
@@ -125,10 +125,9 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
       setCourses([...courses])
 
     } else {
-      courses[year].forEach((course: CheckedCourse) => {
+        courses[year].forEach((course: CheckedCourse) => {
         course.checked = event.target.checked
         courses[0].splice(courses[0].findIndex(related_course => related_course.info.course_unit_id === course.info.course_unit_id), 1)
-
       })
 
       setCourses([...courses])
@@ -181,14 +180,11 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   }, [courses])
 
   const isExtraCourseSet = (course: CheckedCourse) => {
-
-    if(courses[0] === undefined || courses[0] === null)
+    if(courses[0] === undefined || courses[0] === null || courses[0].length === 0)
       return
 
     let possible_course_index: number = courses[0].findIndex(
-        related_course => related_course.info.course_unit_id === course.info.course_unit_id
-      )
-
+        related_course => related_course.info.course_unit_id === course.info.course_unit_id)
 
     if(possible_course_index !== -1) {
       return courses[0][possible_course_index].checked
