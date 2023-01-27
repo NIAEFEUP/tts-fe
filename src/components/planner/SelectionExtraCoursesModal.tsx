@@ -367,7 +367,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                                 <input
                                   type="checkbox"
                                   className="checkbox"
-                                  checked={isExtraCourseSet(course) || courses[yearIdx + 1][courseIdx].checked}
+                                  checked={isExtraCourseSet(course) || (isExtraCourseSet(course) && courses[yearIdx + 1][courseIdx].checked)}
                                   id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
                                 />
