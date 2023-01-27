@@ -93,8 +93,8 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           ref = {menuButtonRef}
         >
           <input type="text" value={options.names[options.index]} onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
-            className='h-4 w-full items-center justify-center border-0 focus:border-transparent gap-1.5 px-2 py-2 text-white transition hover:opacity-80 dark:bg-secondary font-medium
-            text-center'/>
+            className='h-4 w-full text-xs items-center justify-center border-0 focus:border-transparent gap-1.5 px-2 py-2 text-white
+            transition hover:opacity-80 dark:bg-secondary font-medium text-center'/>
         </Menu.Button>
         <Transition
           as={Fragment}
