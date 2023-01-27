@@ -1,6 +1,6 @@
 import { Fragment, useState, useRef, useEffect } from 'react'
 import { Transition, Menu } from '@headlessui/react'
-import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react/outline'
+import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
 import { MultipleOptions } from '../../@types'
 
 type Props = {
@@ -22,6 +22,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     }))
   }
 
+
   const setPreviousOptionIndex = () => {
     setOptions((prev) => ({
       index: prev.index - 1,
@@ -41,7 +42,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   }
 
   const renameOption = (newName: string) => {
-    if (newName == "") return
+    if (newName === "") return
     const newNames = [...options.names]
     newNames[options.index] = newName
     setOptions((prev) => ({
