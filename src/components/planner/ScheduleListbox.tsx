@@ -7,11 +7,13 @@ import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
 type Props = {
   courseOption: CourseOption
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  isImportedScheduleHook : [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
+const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedScheduleHook }: Props) => {
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  const [isImportedSchedule, setIsImportedSchedule] = isImportedScheduleHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
@@ -81,8 +83,18 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       for (let i = 0; i < prev.length; i++) {
         const option = prev[i]
         if (option.course.info.id === courseOption.course.info.id) {
-          newCourseOptions[i].option = selectedOption
+          if(!isImportedSchedule){
+            newCourseOptions[i].option = selectedOption
+
+          }else{
+            setSelectedOption(newCourseOptions[i].option)
+          }
         }
+        
+      }
+
+      if (isImportedSchedule) {
+        setIsImportedSchedule(false)
       }
 
       return [...newCourseOptions]
@@ -98,7 +110,12 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
 
       return value
     })
+
+    //this line is needed since adding isImportedSchedule SetImportedSchedule to the dependency array causes an insconsistent ListBox behavior
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, courseOption, setMultipleOptions])
+
+
 
   return (
     adaptedSchedules && (

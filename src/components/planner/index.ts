@@ -7,6 +7,7 @@ import MoreActionsButton from './MoreActionsButton'
 import OptionsController from './OptionsController'
 import LessonTypesModal from './LessonTypesModal'
 import HelpModal from './HelpModal'
+import ShareButtons from './ShareButtons'
 
 export {
   Schedule,
@@ -18,4 +19,5 @@ export {
   OptionsController,
   LessonTypesModal,
   HelpModal,
+  ShareButtons,
 }
