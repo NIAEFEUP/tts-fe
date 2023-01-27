@@ -256,6 +256,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             index: prev.index,
             selected: imported_course_units,
             options: all_options,
+            names: prev.names
         }))
         
 

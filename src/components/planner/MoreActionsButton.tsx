@@ -19,7 +19,6 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
   const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
 
-
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
     const lines = []

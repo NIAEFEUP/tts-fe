@@ -24,10 +24,13 @@ const writeStorageInvalid = (key: string, initialValue?: any) => {
 
 const getOptionsStorage = (): MultipleOptions => {
   const key = 'niaefeup-tts.options'
-  const initialValue = { index: 0, selected: [], options: [] }
+  const initialValue = { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`)}
   try {
     if (isStorageValid(key, 7)) {
       const courseOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
+      // For older files (which don't have the attribute 'names')
+      if (courseOptions.names === undefined) courseOptions.names = initialValue.names
+
       return courseOptions
     } else {
       writeStorageInvalid(key, initialValue)
@@ -46,7 +49,7 @@ const setOptionsStorage = (courseOptions: MultipleOptions): void => {
 
 const deleteOptionsStorage = (): void => {
   const key = 'niaefeup-tts.options'
-  const initialValue = { index: 0, selected: [], options: [] }
+  const initialValue = { index: 0, selected: [], options: [], name: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
   writeStorageInvalid(key, initialValue)
 }
 
