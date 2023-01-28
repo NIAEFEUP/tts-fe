@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
+import { SelectorIcon, CheckIcon, EyeIcon } from '@heroicons/react/solid'
 import { getScheduleOptionDisplayText } from '../../utils'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
 
@@ -17,6 +17,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
+  const [lastSelected, setLastSelected] = useState(selectedOption);
+  const [previewing, setPreviewing] = useState(false);
+
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -26,6 +29,37 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
           option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
       )
   }, [courseOption])
+
+  const handleListBoxSelection = (option) => {
+    setLastSelected(option);
+    setSelectedOption(option);
+  }
+
+  const showPreview = (option) => {
+    if (!previewing) {
+      setPreviewing(true)
+    }
+    setSelectedOption(option);
+  }
+
+  const isLastSelected = (option: CourseSchedule) => { // Checks if the CourseSchedule is the lastSelected CourseSchedule
+    if (!lastSelected || !option) return false;
+    return option.day === lastSelected.day
+      && option.duration === lastSelected.duration
+      && option.start_time === lastSelected.start_time
+      && option.location === lastSelected.location
+      && option.lesson_type === lastSelected.lesson_type
+      && option.teacher_acronym === lastSelected.teacher_acronym
+      && option.course_unit_id === lastSelected.course_unit_id
+      && option.last_updated === lastSelected.last_updated
+      && option.class_name === lastSelected.class_name // e.g. 1MIEIC01
+      && option.composed_class_name === lastSelected.composed_class_name // e.g. COMP752
+  }
+
+  const removePreview = () => {
+    setPreviewing(false);
+    setSelectedOption(lastSelected);
+  }
 
   const getOptionDisplayText = (option: CourseSchedule | null) =>
     option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)
@@ -121,7 +155,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     adaptedSchedules && (
       <Listbox
         value={selectedOption}
-        onChange={(value) => (value.course_unit_id ? setSelectedOption(value) : setSelectedOption(null))}
+        onChange={(value) => (value.course_unit_id ? handleListBoxSelection(value) : handleListBoxSelection(null))}
       >
         <div className="relative text-sm">
           {/* Header */}
@@ -157,12 +191,13 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             >
               {adaptedSchedules.map((option, optionIdx) => (
                 <Listbox.Option
+                  onMouseEnter={() => showPreview(option)}
+                  onMouseLeave={() => removePreview()}
                   key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
                   value={option === null ? <>&nbsp;</> : option}
                   className={({ active }) =>
-                    `group relative cursor-default select-none py-2 text-sm ${
-                      selectedOption !== null ? 'pl-10' : 'pl-4'
-                    } pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
+                    `group relative cursor-default select-none py-2 text-sm pl-10
+                     pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                   }
                 >
                   {({ selected, active }) => (
@@ -170,15 +205,23 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                       <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
                         {getOptionDisplayText(option)}
                       </span>
-                      {selected ? (
+                      {isLastSelected(option) ? (
                         <span
-                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? 'text-white' : 'text-primary dark:text-white'
-                          }`}
+                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                            }`}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>
-                      ) : null}
+                      ) : (
+                        (selected ? (
+                          <span
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                              }`}
+                          >
+                            <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        ) : null)
+                      )}
                     </>
                   )}
                 </Listbox.Option>
