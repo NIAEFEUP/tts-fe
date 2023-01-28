@@ -10,8 +10,10 @@
     "home": "home"
   },
   "api": {
-    "port": 8080,
-    "host": "localhost",
+    "port": 443,
+    "protocol" : "https",
+    "host": "ni.fe.up.pt",
+    "pathPrefix" : "/tts/api",
     "year": 2022
   }
 }

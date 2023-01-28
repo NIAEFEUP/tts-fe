@@ -1,61 +1,24 @@
-import classNames from 'classnames'
 import StorageAPI from '../../api/storage'
 import { Fragment, useRef } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import {
   DotsHorizontalIcon,
-  DownloadIcon,
   SparklesIcon,
   TableIcon,
   TrashIcon,
-  UploadIcon,
 } from '@heroicons/react/outline'
 import { CourseOption, MultipleOptions } from '../../@types'
 
 type Props = {
   schedule: CourseOption[]
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  multipleOptions: MultipleOptions
 }
 
-const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Props) => {
-  const importDisabled = true
+const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) => {
   const buttonRef = useRef(null)
   const [showGrid, setShowGrid] = showGridHook
-  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
-  const isScheduleValid = (scheduleJson: any) => {
-    // TODO: implement this
-    // TODO: make sure setCourseOptions works properly
-    return true
-  }
-
-  const importJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileReader = new FileReader()
-    fileReader.readAsText(e.target.files[0], 'UTF-8')
-    fileReader.onload = (e) => {
-      const scheduleJson = JSON.parse(fileReader.result as string) as CourseOption[]
-      if (isScheduleValid(scheduleJson)) {
-        setMultipleOptions((prev) => ({
-          index: prev.index,
-          selected: scheduleJson,
-          options: prev.options.map((item, index) => (prev.index === index ? scheduleJson : item)),
-        }))
-      }
-      buttonRef.current.click() // close menu
-    }
-  }
-
-  const exportJSON = () => {
-    const data = JSON.stringify(schedule)
-    const blob = new Blob([data], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'schedule.json'
-    a.click()
-    URL.revokeObjectURL(url)
-  }
 
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
@@ -135,51 +98,6 @@ const MoreActionsButton = ({ schedule, showGridHook, multipleOptionsHook }: Prop
                 >
                   <SparklesIcon className="h-5 w-5 text-secondary group-hover:text-white" />
                   <span>{showGrid ? 'Ocultar' : 'Mostrar'} grelha</span>
-                </button>
-              )}
-            </Menu.Item>
-          </div>
-
-          <div className="p-1">
-            {/* <Menu.Item> is not used here since it prevents input from being triggered */}
-            <label
-              htmlFor="schedule-upload"
-              title="Importar horário JSON (previamente exportado pela platforma)"
-              className={classNames(
-                'group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900',
-                importDisabled ? 'opacity-50 hover:cursor-not-allowed' : 'hover:bg-secondary hover:text-white'
-              )}
-            >
-              <UploadIcon
-                className={classNames('h-5 w-5 text-secondary', importDisabled ? '' : 'group-hover:text-white')}
-              />
-              <span>Importar Horário</span>
-              <input
-                type="file"
-                accept=".json"
-                className="sr-only"
-                id="schedule-upload"
-                name="schedule-upload"
-                disabled={importDisabled}
-                onChange={(e) => importJSON(e)}
-              />
-            </label>
-
-            <Menu.Item>
-              {({ active, disabled }) => (
-                <button
-                  disabled={importDisabled}
-                  onClick={() => exportJSON()}
-                  title="Exportar horário JSON (pode ser importado futuramente)"
-                  className={classNames(
-                    'group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900',
-                    importDisabled ? 'opacity-50 hover:cursor-not-allowed' : 'hover:bg-secondary hover:text-white'
-                  )}
-                >
-                  <DownloadIcon
-                    className={classNames('h-5 w-5 text-secondary', importDisabled ? '' : 'group-hover:text-white')}
-                  />
-                  <span>Exportar Horário</span>
                 </button>
               )}
             </Menu.Item>

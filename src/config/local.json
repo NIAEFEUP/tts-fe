@@ -10,8 +10,10 @@
     "home": "home"
   },
   "api": {
-    "port": 8000,
+    "port": 8100,
+    "protocol" : "http",
+    "pathPrefix": "",
     "host": "localhost",
-    "year": 2021
+    "year": 2022
   }
 }
