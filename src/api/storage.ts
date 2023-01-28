@@ -36,20 +36,20 @@ const getOptionsStorage = (): MultipleOptions => {
 
       for (let i = 0; i < courseOptions.options.length; i++) {
         for (let j = 0; j < courseOptions.options[i].length; j++) {
-          if (courseOptions.options[i][j].teachers !== undefined) {
+          if (courseOptions.options[i][j].teachers === undefined) {
             courseOptions.options[i][j].teachers = getCourseTeachers(courseOptions.options[i][j])
           }
-          if (courseOptions.options[i][j].filteredTeachers !== undefined) {
+          if (courseOptions.options[i][j].filteredTeachers === undefined) {
             courseOptions.options[i][j].filteredTeachers = getCourseTeachers(courseOptions.options[i][j])
           }
         }
       }
 
       for (let i = 0; i < courseOptions.selected.length; i++) {
-          if (courseOptions.selected[i].teachers !== undefined) {
+          if (courseOptions.selected[i].teachers === undefined) {
             courseOptions.selected[i].teachers = getCourseTeachers(courseOptions.selected[i])
           }
-          if (courseOptions.selected[i].filteredTeachers !== undefined) {
+          if (courseOptions.selected[i].filteredTeachers === undefined) {
             courseOptions.selected[i].filteredTeachers = getCourseTeachers(courseOptions.selected[i])
           }
       }
