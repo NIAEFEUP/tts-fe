@@ -86,11 +86,11 @@ const TimeTableSchedulerPage = () => {
   const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor("niaefeup-tts.extra-major")
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
-  const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
+  const [checkedCourses, setCheckedCourses] = useCourses("niaefeup-tts.courses") // courses for the major with frontend properties
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
-  const [sourceCoursesBuffer, setSourceCoursesBuffer] = useState<CheckedCourse[][]>([[]])
-  const [destCoursesBuffer, setDestCoursesBuffer] = useState<CheckedCourse[][]>([[]])
+  const [sourceCoursesBuffer, setSourceCoursesBuffer] = useCourses("niaefeup-tts.courses1")
+  const [destCoursesBuffer, setDestCoursesBuffer] = useCourses("niaefeup-tts.courses2")
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
