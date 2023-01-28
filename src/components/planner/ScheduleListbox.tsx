@@ -132,6 +132,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       }
 
       if (isImportedSchedule) {
+        updateTeachersShown(courseOption.filteredTeachers)
         setIsImportedSchedule(false)
       }
 
@@ -274,7 +275,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                   text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
                 >
                   <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
-                  {getTeacherSelectionText(selectedTeachers)}
+                  {getTeacherSelectionText(selectedTeachers)} 
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
                     <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
