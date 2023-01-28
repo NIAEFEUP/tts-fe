@@ -91,6 +91,11 @@ const HelpModal = () => {
                       </li>
                       <li className="font-bold">
                         <span className="font-normal">
+                          Fazer duplo clique na caixa da atual <strong>opcão do horário</strong> para alterar o nome do mesmo.
+                        </span>
+                      </li>
+                      <li className="font-bold">
+                        <span className="font-normal">
                           Selecionar os <strong>horários pretendidos</strong> nas caixas associadas a cada curso.
                         </span>
                       </li>

@@ -83,4 +83,10 @@ export type MultipleOptions = {
   index: number
   selected: CourseOption[]
   options: CourseOption[][]
+  names: string[]
+}
+
+export type ImportedCourse = {
+  course_unit_id: number,
+  class_name: string
 }

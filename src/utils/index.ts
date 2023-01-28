@@ -1,5 +1,6 @@
-import config from '../config/default.json'
-import { CourseSchedule, Lesson } from '../@types'
+import config from '../config/prod.json'
+import dev_config from '../config/local.json'
+import { CourseOption, CourseSchedule, Lesson } from '../@types'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -11,6 +12,7 @@ const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set
  * @returns The complete path with the prefix.
  */
 const getPath = (simplePath: string) => {
+
   return config.pathPrefix + simplePath
 }
 
@@ -148,8 +150,19 @@ const getClassTypeClassName = (type: string) => {
   }
 }
 
+const getCourseTeachers = (courseOption: CourseOption) => {
+  let teachers = []
+    courseOption.schedules.forEach((schedule, idx) => {
+      if (schedule.lesson_type !== 'T' && !teachers.includes(schedule.teacher_acronym)) teachers.push(schedule.teacher_acronym)
+    })
+
+  return teachers
+}
+
+
 export {
   config,
+  dev_config,
   getPath,
   minHour,
   maxHour,
@@ -167,4 +180,5 @@ export {
   getLessonBoxStyles,
   getClassTypeClassName,
   getLessonTypeLongName,
+  getCourseTeachers,
 }

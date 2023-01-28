@@ -180,3 +180,8 @@
 .no-borders {
   border: 0 !important;
 }
+
+#schedule-input {
+  background-color: white;
+  color: black;
+}

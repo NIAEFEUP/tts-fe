@@ -1,23 +1,28 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { SelectorIcon, CheckIcon } from '@heroicons/react/solid'
+import { SelectorIcon, CheckIcon, EyeIcon } from '@heroicons/react/solid'
 import { getScheduleOptionDisplayText } from '../../utils'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
 
 type Props = {
   courseOption: CourseOption
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  isImportedScheduleHook : [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
+const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedScheduleHook }: Props) => {
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  const [isImportedSchedule, setIsImportedSchedule] = isImportedScheduleHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
   const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers);
 
   let teacherOptions = ["All teachers", ...courseOption.teachers]
+  const [lastSelected, setLastSelected] = useState(selectedOption);
+  const [previewing, setPreviewing] = useState(false);
+
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -29,6 +34,36 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
   }, [courseOption])
 
   const getTeacherSelectionText = (selectedTeachers: Array<string>) => selectedTeachers.length === 1 ? "1 teacher selected" : selectedTeachers.length + " teachers selected";
+  const handleListBoxSelection = (option) => {
+    setLastSelected(option);
+    setSelectedOption(option);
+  }
+
+  const showPreview = (option) => {
+    if (!previewing) {
+      setPreviewing(true)
+    }
+    setSelectedOption(option);
+  }
+
+  const isLastSelected = (option: CourseSchedule) => { // Checks if the CourseSchedule is the lastSelected CourseSchedule
+    if (!lastSelected || !option) return false;
+    return option.day === lastSelected.day
+      && option.duration === lastSelected.duration
+      && option.start_time === lastSelected.start_time
+      && option.location === lastSelected.location
+      && option.lesson_type === lastSelected.lesson_type
+      && option.teacher_acronym === lastSelected.teacher_acronym
+      && option.course_unit_id === lastSelected.course_unit_id
+      && option.last_updated === lastSelected.last_updated
+      && option.class_name === lastSelected.class_name // e.g. 1MIEIC01
+      && option.composed_class_name === lastSelected.composed_class_name // e.g. COMP752
+  }
+
+  const removePreview = () => {
+    setPreviewing(false);
+    setSelectedOption(lastSelected);
+  }
 
   const getOptionDisplayText = (option: CourseSchedule | null) =>
     option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)
@@ -50,6 +85,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
+          names: prev.names,
         }
       })
     } else if (type === 'TP') {
@@ -68,6 +104,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
+          names: prev.names,
         }
       })
     }
@@ -84,8 +121,18 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
       for (let i = 0; i < prev.length; i++) {
         const option = prev[i]
         if (option.course.info.id === courseOption.course.info.id) {
-          newCourseOptions[i].option = selectedOption
+          if(!isImportedSchedule){
+            newCourseOptions[i].option = selectedOption
+
+          }else{
+            setSelectedOption(newCourseOptions[i].option)
+          }
         }
+        
+      }
+
+      if (isImportedSchedule) {
+        setIsImportedSchedule(false)
       }
 
       return [...newCourseOptions]
@@ -96,10 +143,14 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
         index: prevMultipleOptions.index,
         selected: [...resolveCourseOptions(prevMultipleOptions.selected)],
         options: prevMultipleOptions.options,
+        names: prevMultipleOptions.names,
       }
 
       return value
     })
+
+    //this line is needed since adding isImportedSchedule SetImportedSchedule to the dependency array causes an insconsistent ListBox behavior
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, courseOption, setMultipleOptions])
 
   const updateTeachersShown = ((selectedTeachers: Array<string>): void => {
@@ -108,8 +159,10 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
     }
     courseOption.filteredTeachers = [...selectedTeachers];
     setSelectedTeachers(selectedTeachers)
-    if (selectedOption)
+    if (selectedOption) {
       setSelectedOption(selectedTeachers.includes(selectedOption.teacher_acronym) ? selectedOption : null)
+      setLastSelected(null)
+    }
   })
 
   const selectDropdownSchedules = (): Array<CourseSchedule> => {
@@ -126,21 +179,20 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
     return selectedSchedules;
   }
 
+
   return (
     adaptedSchedules && (
-      <div className="relative text-sm">
-        {/* Lectures ListBox */}
-        <Listbox
-          value={selectedOption}
-          onChange={(value) => (value.course_unit_id ? setSelectedOption(value) : setSelectedOption(null))}
-        >
-          <div className="relative text-sm">
-            {/* Header */}
-            <p className="mb-0.5 flex text-xs lg:hidden xl:flex">
-              <strong>{courseOption.course.info.acronym}</strong>
-              <span>&nbsp;&middot;&nbsp;</span>
-              <span className="tracking-tighter truncate">{courseOption.course.info.name}&nbsp;</span>
-            </p>
+      <Listbox
+        value={selectedOption}
+        onChange={(value) => (value.course_unit_id ? handleListBoxSelection(value) : handleListBoxSelection(null))}
+      >
+        <div className="relative text-sm">
+          {/* Header */}
+          <p className="mb-0.5 flex text-xs lg:hidden xl:flex">
+            <strong>{courseOption.course.info.acronym}</strong>
+            <span>&nbsp;&middot;&nbsp;</span>
+            <span className="tracking-tighter truncate">{courseOption.course.info.name}&nbsp;</span>
+          </p>
 
             <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
               <strong>{courseOption.course.info.acronym}</strong>
@@ -162,40 +214,52 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                 </span>
               </Listbox.Button>
 
-              {/* Dropdown */}
-              <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-                <Listbox.Options
-                  className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
-              bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
+          
+          {/* Dropdown */}
+          <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+            <Listbox.Options
+              className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
+            bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
+            >
+              {selectDropdownSchedules().map((option, optionIdx) => (
+                <Listbox.Option
+                  onMouseEnter={() => showPreview(option)}
+                  onMouseLeave={() => removePreview()}
+                  key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
+                  value={option === null ? <>&nbsp;</> : option}
+                  className={({ active }) =>
+                    `group relative cursor-default select-none py-2 text-sm pl-10
+                     pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
+                  }
                 >
-                  {selectDropdownSchedules().map((option, optionIdx) => (
-                    <Listbox.Option
-                      key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
-                      value={option === null ? <>&nbsp;</> : option}
-                      className={({ active }) =>
-                        `group relative cursor-default select-none py-2 text-sm ${selectedOption !== null ? 'pl-10' : 'pl-4'
-                        } pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
-                      }
-                    >
-                      {({ selected, active }) => (
-                        <>
-                          <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
-                            {getOptionDisplayText(option)}
+                  {({ selected, active }) => (
+                    <>
+                      <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
+                        {getOptionDisplayText(option)}
+                      </span>
+                      {isLastSelected(option) ? (
+                        <span
+                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                            }`}
+                        >
+                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                        </span>
+                      ) : (
+                        (selected ? (
+                          <span
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                              }`}
+                          >
+                            <EyeIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
-                          {selected ? (
-                            <span
-                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
-                                }`}
-                            >
-                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                          ) : null}
-                        </>
+                        ) : null)
                       )}
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </Transition>
+                    </>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Transition>
 
               {/* Teachers ListBox */}
               <Listbox
@@ -298,7 +362,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
             </div>
           </div>
         </Listbox>
-      </div>
+     
 
     )
   )
