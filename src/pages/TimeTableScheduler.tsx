@@ -17,17 +17,22 @@ import { coursesData } from '../utils/data'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 
 export const removeDuplicatesFrom = (courses: CheckedCourse[]) => {
+  
   let frequency: Map<number, number> = new Map()
 
   for(let i = 0; i < courses.length; i++) {
     let curr_course: CheckedCourse = courses[i]
 
-    if(frequency.get(curr_course.info.course_unit_id) === undefined) {
+    if(!frequency.has(curr_course.info.course_unit_id)) {
       frequency.set(curr_course.info.course_unit_id, 1)
     } else {
       courses.splice(i, 1)
     } 
   }
+}
+
+export const is_null_or_undefined = (course) => {
+  return course === undefined || course === null
 }
 
 const TimeTableSchedulerPage = () => {
@@ -89,8 +94,8 @@ const TimeTableSchedulerPage = () => {
   const [checkedCourses, setCheckedCourses] = useCourses("niaefeup-tts.courses") // courses for the major with frontend properties
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
-  const [sourceCoursesBuffer, setSourceCoursesBuffer] = useCourses("niaefeup-tts.courses1")
-  const [destCoursesBuffer, setDestCoursesBuffer] = useCourses("niaefeup-tts.courses2")
+  const [sourceCoursesBuffer, setSourceCoursesBuffer] = useCourses("niaefeup-tts.courses-buffer")
+  const [destCoursesBuffer, setDestCoursesBuffer] = useCourses("niaefeup-tts.extra-courses")
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
@@ -230,10 +235,6 @@ const TimeTableSchedulerPage = () => {
       })
     })
   }, [checkedCourses])
-
-  const is_null_or_undefined = (course) => {
-    return course === undefined || course === null
-  }
 
   // assure correct value of extraCoursesActive when we see changes in checkedCourses
   useEffect(() => {

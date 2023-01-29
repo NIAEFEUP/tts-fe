@@ -13,6 +13,7 @@ import {
   SelectorIcon,
   ArrowCircleLeftIcon,
 } from '@heroicons/react/solid'
+import { is_null_or_undefined } from '../../pages/TimeTableScheduler'
 
 type Props = {
   majors: Major[]
@@ -33,7 +34,6 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
-  const [extraCoursesAlreadyTaken, setExtraCoursesAlreadyTaken] = useState<boolean>(false)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
 
   const match = (str: string, query: string, simple?: boolean) =>
@@ -90,16 +90,18 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year + 1][courseIdx].checked = event.target.checked
 
-    trimExtraCourses()
-
     if (event.target.checked) {
       let course_to_add: CheckedCourse = courses[year + 1][courseIdx]
+      course_to_add.checked = true
 
-      courses[0].push(course_to_add)
+      is_null_or_undefined(courses[0])
+        ? courses[0] = [course_to_add]
+        : courses[0].push(course_to_add)
     } else {
       let course_to_remove: CheckedCourse = courses[year + 1][courseIdx]
       let remove_index: number = courses[0].findIndex(course => course.info.course_unit_id === course_to_remove.info.course_unit_id)
 
+      course_to_remove.checked = false
       courses[0].splice(remove_index, 1)
     }
 
@@ -116,16 +118,21 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
         course.checked = event.target.checked
       })
 
-      setCourses([...courses])
-
     } else {
       courses[year].forEach((course: CheckedCourse) => {
         course.checked = event.target.checked
+
         courses[0].splice(courses[0].findIndex(related_course => related_course.info.course_unit_id === course.info.course_unit_id), 1)
       })
-
-      setCourses([...courses])
     }
+
+    setCourses([...courses])
+  }
+
+  const isCourseChecked = (course: CheckedCourse, yearIdx: number, courseIdx: number) => {
+    let courses_have_valid_value: boolean = !(is_null_or_undefined(courses[0])) && courses[0].length > 0
+
+    return courses_have_valid_value && (isExtraCourseSet(course) || (isExtraCourseSet(course) && courses[yearIdx + 1][courseIdx].checked))
   }
 
   useEffect(() => {
@@ -159,22 +166,8 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
     }
   }, [courses])
 
-  const alreadyInMainModal = (course: CheckedCourse[][]) => {
-    if (course[0] === undefined || course[0] === null || sourceCoursesBuffer.length === 0) {
-      return false
-    }
-
-    return course[0][0].info.course_unit_id === destCourseBuffer[0][0].info.course_unit_id
-  }
-
-  useEffect(() => {
-    alreadyInMainModal(courses.slice(1))
-      ? setExtraCoursesAlreadyTaken(true)
-      : setExtraCoursesAlreadyTaken(false)
-  }, [courses])
-
   const isExtraCourseSet = (course: CheckedCourse) => {
-    if (courses[0] === undefined || courses[0] === null || courses[0].length === 0)
+    if (is_null_or_undefined(courses[0]) || courses[0].length === 0)
       return
 
     let possible_course_index: number = courses[0].findIndex(
@@ -325,8 +318,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
 
 
                   {/* Courses checkboxes */}
-                  {extraCoursesAlreadyTaken ? <p className="text-center mt-4">Já tens este curso selecionado como principal!</p>
-                    : <div className="checkboxes">
+                    <div className="checkboxes">
                       {major &&
                         courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
                           <div key={`year-${yearIdx}`}>
@@ -358,7 +350,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                                   <input
                                     type="checkbox"
                                     className="extra-courses-checkbox"
-                                    checked={isExtraCourseSet(course) || (isExtraCourseSet(course) && courses[yearIdx + 1][courseIdx].checked)}
+                                    checked={isCourseChecked(course, yearIdx, courseIdx)}
                                     id={`course-checkbox-${yearIdx}-${courseIdx}`}
                                     onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
                                   />
@@ -374,7 +366,6 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                           </div>
                         ))}
                     </div>
-                  }
 
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">

@@ -241,7 +241,7 @@ const SelectionModal = (
                 type="checkbox"
                 className="checkbox"
                 id="extraCourseGroupCheckbox"
-                checked={true}
+                defaultChecked={true}
               />
               <label
                 className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
@@ -273,7 +273,7 @@ const SelectionModal = (
                 <input
                   type="checkbox"
                   className="checkbox"
-                  checked={course.checked}
+                  defaultChecked={course.checked}
                   id={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
                 />
                 <label
