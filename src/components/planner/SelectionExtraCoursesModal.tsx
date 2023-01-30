@@ -24,6 +24,9 @@ type Props = {
   destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
 }
 
+/**
+ * Modal where the user will be able to select courses from a different major than its main one
+ */
 const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, sourceBufferHook, destBufferHook }: Props) => {
   const [major, setMajor] = majorHook
   const [isThisOpen, setisThisOpen] = openHook
@@ -87,6 +90,10 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
     }
   }
 
+  /**
+   * If the user checked a single course, if the user checked it to true, it adds to the index 0 of the courses array
+   * Otherwise it removes it
+   */
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     courses[year + 1][courseIdx].checked = event.target.checked
 
@@ -144,6 +151,10 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
     else setAlertLevel(AlertType.info)
   }, [major, courses, atLeastOneCourse])
 
+  /**
+   * Will put the correct checked value on the group checkbox of the modal depending on how many 
+   * courses are checked
+   */
   useEffect(() => {
     for (let year = 1; year < courses.length; year++) {
       let some = courses[year].some((course) => course.checked)
@@ -166,6 +177,9 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
     }
   }, [courses])
 
+  /**
+   * If there is a least an extra course (course inside courses[0]) checked, it returns true
+   */
   const isExtraCourseSet = (course: CheckedCourse) => {
     if (is_null_or_undefined(courses[0]) || courses[0].length === 0)
       return
@@ -318,74 +332,57 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
 
 
                   {/* Courses checkboxes */}
-                    <div className="checkboxes">
-                      {major &&
-                        courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
-                          <div key={`year-${yearIdx}`}>
-                            {/* Parent checkbox */}
-                            <div title={`${major?.acronym} ${yearIdx + 1}º ano`} className="flex items-center transition">
-                              <input
-                                type="checkbox"
-                                className="extra-courses-checkbox"
-                                checked={courses[yearIdx + 1].every((course) => course.checked)}
-                                id={`year-checkbox-${yearIdx}`}
-                                onChange={(event) => handleCheckGroup(event, yearIdx + 1)}
-                              />
-                              <label
-                                className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                                htmlFor={`year-checkbox-${yearIdx}`}
-                              >
-                                <span>{yearIdx + 1}º Ano</span>
-                              </label>
-                            </div>
-
-                            {/* Children checkboxes */}
-                            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
-                              {year.map((course: CheckedCourse, courseIdx: number) => (
-                                <div
-                                  title={course?.info.name}
-                                  key={`checkbox-${yearIdx}-${courseIdx}`}
-                                  className="flex items-center transition"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    className="extra-courses-checkbox"
-                                    checked={isCourseChecked(course, yearIdx, courseIdx)}
-                                    id={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                    onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
-                                  />
-                                  <label
-                                    className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                                    htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                  >
-                                    {course.info.acronym}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
+                  <div className="checkboxes">
+                    {major &&
+                      courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
+                        <div key={`year-${yearIdx}`}>
+                          {/* Parent checkbox */}
+                          <div title={`${major?.acronym} ${yearIdx + 1}º ano`} className="flex items-center transition">
+                            <input
+                              type="checkbox"
+                              className="extra-courses-checkbox"
+                              checked={courses[yearIdx + 1].every((course) => course.checked)}
+                              id={`year-checkbox-${yearIdx}`}
+                              onChange={(event) => handleCheckGroup(event, yearIdx + 1)}
+                            />
+                            <label
+                              className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
+                              htmlFor={`year-checkbox-${yearIdx}`}
+                            >
+                              <span>{yearIdx + 1}º Ano</span>
+                            </label>
                           </div>
-                        ))}
-                    </div>
+
+                          {/* Children checkboxes */}
+                          <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
+                            {year.map((course: CheckedCourse, courseIdx: number) => (
+                              <div
+                                title={course?.info.name}
+                                key={`checkbox-${yearIdx}-${courseIdx}`}
+                                className="flex items-center transition"
+                              >
+                                <input
+                                  type="checkbox"
+                                  className="extra-courses-checkbox"
+                                  checked={isCourseChecked(course, yearIdx, courseIdx)}
+                                  id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                  onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
+                                />
+                                <label
+                                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                                  htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                >
+                                  {course.info.acronym}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
 
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
-                    {/* Left side buttons */}
-                    <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
-                      {/* Go back to about page button */}
-                      <Link
-                        to={getPath(config.paths.about)}
-                        className={classNames(
-                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
-                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
-                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
-                          // major === null ? 'hidden' : ''
-                        )}
-                      >
-                        <HomeIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
-                        <span>Voltar</span>
-                      </Link>
-                    </div>
-
                     {/* Right side buttons */}
                     <div className="order-first flex w-full flex-col items-center justify-center space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
                       {/* Go back to the main selection modal button */}

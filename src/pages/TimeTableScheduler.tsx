@@ -16,19 +16,18 @@ import { useShowGrid, useMajor, useCourses } from '../hooks'
 import { coursesData } from '../utils/data'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 
-export const removeDuplicatesFrom = (courses: CheckedCourse[]) => {
-  
+export const removeDuplicatesFromCourseOption = (courses: CourseOption[]) => {
   let frequency: Map<number, number> = new Map()
+  let newCourseOptions: CourseOption[] = []
 
-  for(let i = 0; i < courses.length; i++) {
-    let curr_course: CheckedCourse = courses[i]
-
-    if(!frequency.has(curr_course.info.course_unit_id)) {
-      frequency.set(curr_course.info.course_unit_id, 1)
-    } else {
-      courses.splice(i, 1)
-    } 
+  for(let courseOption of courses) {
+    if(!frequency.has(courseOption.course.info.id)) {
+      newCourseOptions.push(courseOption)
+      frequency.set(courseOption.course.info.id, 1)
+    }
   }
+
+  return newCourseOptions
 }
 
 export const is_null_or_undefined = (course) => {
@@ -84,8 +83,17 @@ const TimeTableSchedulerPage = () => {
   // fetch all schedules for the picked courses
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
 
-  // modal initial value
-  const getModalIsOpenValue = (easy?: boolean) => (easy ? !major || getPickedCourses(checkedCourses).length < 3 : true)
+  /**
+   * 
+   * @param courses The array of checked courses whose index 0 possibly contain the extra courses
+   * @returns true if it ontains extra couruses, false otherwise
+   */
+  const hasExtraCourses = (courses: CheckedCourse[][]): boolean => {
+    if(is_null_or_undefined(checkedCourses[0]))
+      return false
+
+    return checkedCourses[0].length > 0
+  }
 
   const [major, setMajor, majorChangedRef] = useMajor("niaefeup-tts.major") // the picked major
   const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor("niaefeup-tts.extra-major")
@@ -100,6 +108,18 @@ const TimeTableSchedulerPage = () => {
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
   )
+
+  
+  /**
+   * If there are chosen courses, the SelectionModal will be open and closed otherwise
+   */
+  const getModalIsOpenValue = (easy?: boolean) => {
+    if(easy) {
+      return (!major || getPickedCourses(checkedCourses).length < 3) && !hasExtraCourses(checkedCourses)
+    }
+
+    return true
+  }
 
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
@@ -124,7 +144,7 @@ const TimeTableSchedulerPage = () => {
       setCheckedCourses([...finalNewCheckedCourses])
     })
   }
-
+  
   useEffect(() => {
     if (totalSelected.length === 0) return
     StorageAPI.setOptionsStorage(multipleOptions)
@@ -154,8 +174,6 @@ const TimeTableSchedulerPage = () => {
 
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
-
-    removeDuplicatesFrom(pickedCourses)
 
     const storedOptions = StorageAPI.getOptionsStorage()
     const storedOptionsNotNulls = storedOptions.options
@@ -295,7 +313,7 @@ const TimeTableSchedulerPage = () => {
           </div>
           <div className="flex flex-col gap-4 py-1 px-0">
             {multipleOptions.selected.length > 0 &&
-              multipleOptions.selected.map((courseOption, courseOptionIdx) => (
+              removeDuplicatesFromCourseOption(multipleOptions.selected).map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
                   multipleOptionsHook={[multipleOptions, setMultipleOptions]}

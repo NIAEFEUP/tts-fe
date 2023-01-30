@@ -140,8 +140,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                   key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
                   value={option === null ? <>&nbsp;</> : option}
                   className={({ active }) =>
-                    `group relative cursor-default select-none py-2 text-sm ${
-                      selectedOption !== null ? 'pl-10' : 'pl-4'
+                    `group relative cursor-default select-none py-2 text-sm ${selectedOption !== null ? 'pl-10' : 'pl-4'
                     } pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                   }
                 >
@@ -152,9 +151,8 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook }: Props) => {
                       </span>
                       {selected ? (
                         <span
-                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? 'text-white' : 'text-primary dark:text-white'
-                          }`}
+                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                            }`}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>

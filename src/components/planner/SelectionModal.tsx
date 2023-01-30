@@ -17,7 +17,7 @@ import {
   PlusIcon,
   XCircleIcon,
 } from '@heroicons/react/solid'
-import { removeDuplicatesFrom } from '../../pages/TimeTableScheduler'
+import { is_null_or_undefined } from '../../pages/TimeTableScheduler'
 
 type Props = {
   majors: Major[]
@@ -30,6 +30,9 @@ type Props = {
   destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
 }
 
+/**
+ * Main modal where a user can select the courses for their main major
+ */
 const SelectionModal = (
   { majors, openHook, majorHook, coursesHook, extraCoursesActiveHook, extraCoursesModalOpenHook, sourceBufferHook, destBufferHook }: Props) => {
   const [major, setMajor] = majorHook
@@ -42,7 +45,6 @@ const SelectionModal = (
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [coursesAlreadyTaken, setCoursesAlreadyTaken] = useState<boolean>(false)
-  const [extraCourseHovered, setExtraCourseHovered] = useState<boolean>(false)
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
@@ -51,25 +53,25 @@ const SelectionModal = (
     simple
       ? str.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
       : str
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/\p{Diacritic}/gu, '')
-          .replace(/\s+/g, '')
-          .replace('.', '')
-          .replace(':', '')
-          .includes(query.toLowerCase().replace(/\s+/g, ''))
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(':', '')
+        .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   const filteredMajors =
     majors !== null && majors?.length !== 0 && Array.isArray(majors)
       ? majorQuery === ''
         ? majors
         : majors.filter(
-            (major: Major) =>
-              match(major?.name, majorQuery, true) ||
-              match(major?.name, majorQuery, false) ||
-              match(major?.acronym, majorQuery, true) ||
-              match(major?.acronym, majorQuery, false)
-          )
+          (major: Major) =>
+            match(major?.name, majorQuery, true) ||
+            match(major?.name, majorQuery, false) ||
+            match(major?.acronym, majorQuery, true) ||
+            match(major?.acronym, majorQuery, false)
+        )
       : []
 
   /*const extraCourses = useMemo(() => BackendAPI.getExtraCourses(major), [major])
@@ -87,9 +89,9 @@ const SelectionModal = (
 
   const closeModal = () => {
     if (major?.name !== '' && atLeastOneCourse) {
-       setIsThisOpen(false)
+      setIsThisOpen(false)
     }
-    else { 
+    else {
       setAlertLevel(AlertType.warning)
     }
   }
@@ -104,24 +106,32 @@ const SelectionModal = (
     course === null ? '' : `${course?.name} (${course?.acronym}, ${course?.course})`
 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
+    if (is_null_or_undefined(year)) return
+
     courses[year + 1][courseIdx].checked = event.target.checked
     setCourses([...courses])
+
+    setSourceCourseBuffer([...courses])
   }
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
+    if (is_null_or_undefined(year)) return
+
     let newGroupEntry: CheckedCourse[] = []
     courses[year + 1].forEach((course: CheckedCourse) => {
       course.checked = event.target.checked
       newGroupEntry.push(course)
     })
     courses[year + 1] = newGroupEntry
+
     setCourses([...courses])
+    setSourceCourseBuffer([...courses])
   }
 
   const openExtraCoursesModal = () => {
     setSourceCourseBuffer([...courses.slice(1)])
     setCourses([...destCourseBuffer])
-    
+
     setIsExtraUcsModalOpen(true)
   }
 
@@ -155,15 +165,15 @@ const SelectionModal = (
       className={classNames(
         'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
         'hover:text-white disabled:hidden disabled:cursor-not-allowed disabled:opacity-50',
-        extraCoursesActive 
+        extraCoursesActive
           ? 'border-red-800/70 bg-red-50 text-red-800 hover:bg-red-900'
           : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'
       )}
-      onClick={() => {openExtraCoursesModal()}}
+      onClick={() => { openExtraCoursesModal() }}
     >
-      { extraCoursesActive ? <PencilAltIcon className="h-4 w-4" />
-        : <PlusIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" /> }
-      
+      {extraCoursesActive ? <PencilAltIcon className="h-4 w-4" />
+        : <PlusIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />}
+
       <span className="hidden md:flex">
         UCs de outros cursos
       </span>
@@ -174,7 +184,7 @@ const SelectionModal = (
     const checkbox: HTMLElement = document.getElementById(checkboxId)
     const removalIcon: HTMLElement = document.getElementById(xiconId)
 
-    if(!checkbox || !removalIcon) return
+    if (!checkbox || !removalIcon) return
 
     checkbox.style.display = "none"
     removalIcon.style.display = "block"
@@ -185,16 +195,16 @@ const SelectionModal = (
     const checkbox = document.getElementById(checkboxId)
     const removalIcon: HTMLElement = document.getElementById(xiconId)
 
-    if(!checkbox || !removalIcon) return
+    if (!checkbox || !removalIcon) return
 
     checkbox.style.display = "block"
     removalIcon.style.display = "none"
   }
 
-  const removeFromExtraCourses = (courseIdx: number) => {
+  const removeCourseFromExtraCourses = (courseIdx: number) => {
     courses[0].splice(courseIdx, 1)
-    
-    if(courses[0].length === 0)
+
+    if (courses[0].length === 0)
       setDestCourseBuffer([])
 
     setCourses([...courses])
@@ -202,7 +212,7 @@ const SelectionModal = (
 
   const removeExtraCourses = () => {
     courses[0] = []
-    
+
     setCourses([...courses])
     setDestCourseBuffer([])
     setExtraCoursesActive(false)
@@ -216,22 +226,22 @@ const SelectionModal = (
    */
   const showUcsExtra = () => {
 
-    removeDuplicatesFrom(courses[0])
+    //removeDuplicatesFrom(courses[0])
 
     return (
       <>
         {/* Courses checkboxes */}
-        <div className="checkboxes col-span-6"> 
+        <div className="checkboxes col-span-6">
           <div key={`ucsextra`}>
             {/* Parent checkbox */}
             <div title={`ucsExtra`} className="flex items-center transition"
-            onMouseEnter={() => { 
-              replaceExtraCourseCheckbox("extraCourseGroupCheckbox", "remove-extra-courses-icon")
-            }}
-            onMouseLeave={() => { 
-              recoverExtraCourseCheckbox("extraCourseGroupCheckbox", "remove-extra-courses-icon") 
-            }}
-            > 
+              onMouseEnter={() => {
+                replaceExtraCourseCheckbox("extraCourseGroupCheckbox", "remove-extra-courses-icon")
+              }}
+              onMouseLeave={() => {
+                recoverExtraCourseCheckbox("extraCourseGroupCheckbox", "remove-extra-courses-icon")
+              }}
+            >
               <XCircleIcon
                 className="h-5 w-5 remove-extra-uc-icon hidden cursor-pointer text-primary"
                 id="remove-extra-courses-icon"
@@ -252,39 +262,39 @@ const SelectionModal = (
             </div>
 
             <div className="flex flex-wrap items-center justify-center mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
-            {courses[0] !== null && courses[0] !== undefined 
-              ? courses[0].map((course: CheckedCourse, courseIdx: number) => (
-              <div
-                title={course?.info.name}
-                key={`checkbox-${course?.info.course_year}-${courseIdx}`}
-                className="flex items-center transition"
-                onMouseEnter={() => { 
-                  replaceExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
-                }}
-                onMouseLeave={() => { 
-                  recoverExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`) 
-                }}
-              >
-                <XCircleIcon
-                  className="h-5 w-5 remove-extra-uc-icon hidden cursor-pointer text-primary"
-                  id={`xicon-for-${course?.info.course_year}-${courseIdx}`}
-                  onClick={() => {removeFromExtraCourses(courseIdx)}}
-                />
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  defaultChecked={course.checked}
-                  id={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
-                />
-                <label
-                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                  htmlFor={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
-                >
-                  {course.info.acronym}
-                </label>
-                </div>
-              )): <></>}
-              </div>
+              {courses[0] !== null && courses[0] !== undefined
+                ? courses[0].map((course: CheckedCourse, courseIdx: number) => (
+                  <div
+                    title={course?.info.name}
+                    key={`checkbox-${course?.info.course_year}-${courseIdx}`}
+                    className="flex items-center transition"
+                    onMouseEnter={() => {
+                      replaceExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
+                    }}
+                    onMouseLeave={() => {
+                      recoverExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
+                    }}
+                  >
+                    <XCircleIcon
+                      className="h-5 w-5 remove-extra-uc-icon hidden cursor-pointer text-primary"
+                      id={`xicon-for-${course?.info.course_year}-${courseIdx}`}
+                      onClick={() => { removeCourseFromExtraCourses(courseIdx) }}
+                    />
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      defaultChecked={course.checked}
+                      id={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
+                    />
+                    <label
+                      className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                      htmlFor={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
+                    >
+                      {course.info.acronym}
+                    </label>
+                  </div>
+                )) : <></>}
+            </div>
           </div>
         </div>
       </>
@@ -292,11 +302,12 @@ const SelectionModal = (
   }
 
   const alreadyInExtraCourses = (course: CheckedCourse[][]) => {
-    if(course[1] === undefined || course[1] === null) {
+    if (is_null_or_undefined(course[1]) || is_null_or_undefined(course[0])
+      || is_null_or_undefined(course[0][0]) || is_null_or_undefined(course[1][0])) {
       return false
     }
 
-    return course[0][0].info.course_unit_id === course[1][0].info.course_unit_id
+    return course[0][0]?.info.course_unit_id === course[1][0]?.info.course_unit_id
   }
 
   useEffect(() => {
@@ -311,14 +322,14 @@ const SelectionModal = (
     }
 
     // Extra courses
-    if(courses[0] !== undefined && courses[0] !== null) {
+    if (courses[0] !== undefined && courses[0] !== null) {
       controlCoursesGroupCheckbox(courses[0], "extraCourseGroupCheckbox")
     }
 
   }, [courses])
 
   useEffect(() => {
-    alreadyInExtraCourses(courses.slice(1)) 
+    alreadyInExtraCourses(courses.slice(1))
       ? setCoursesAlreadyTaken(true)
       : setCoursesAlreadyTaken(false)
   }, [courses])
@@ -445,8 +456,7 @@ const SelectionModal = (
                               <Combobox.Option
                                 key={`major-${majorIdx}`}
                                 className={({ active }) =>
-                                  `relative cursor-pointer select-none py-2 px-3 ${
-                                    major?.name !== '' ? 'pl-10' : 'pl-4'
+                                  `relative cursor-pointer select-none py-2 px-3 ${major?.name !== '' ? 'pl-10' : 'pl-4'
                                   } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
                                 }
                                 value={major}
@@ -458,9 +468,8 @@ const SelectionModal = (
                                     </span>
                                     {selected && (
                                       <span
-                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                          active ? 'text-white' : 'text-primary'
-                                        }`}
+                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary'
+                                          }`}
                                       >
                                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                                       </span>
@@ -555,70 +564,70 @@ const SelectionModal = (
                     </Combobox>
                   )*/}
 
-                
 
-                <div className={classNames(extraCoursesActive ? "grid grid-cols-8 divide-x-2" : "")}>
-                  
-                  {extraCoursesActive
-                  ? <div className="col-span-2">
-                      {showUcsExtra()}
-                    </div>
-                  : <></>}
 
-                  {/* Courses checkboxes */}
-                  <div className="checkboxes col-span-6"> 
-                  { coursesAlreadyTaken ? <></>
-                  :
-                    major &&
-                      courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
-                        <div key={`year-${yearIdx}`}>
-                          {/* Parent checkbox */}
-                          <div title={`${major?.acronym} ${yearIdx + 1}º ano`} className="flex items-center transition">
-                            <input
-                              type="checkbox"
-                              className="checkbox"
-                              checked={courses[yearIdx + 1].every((course) => course.checked)}
-                              id={`year-checkbox-${yearIdx}`}
-                              onChange={(event) => handleCheckGroup(event, yearIdx)}
-                            />
-                            <label
-                              className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                              htmlFor={`year-checkbox-${yearIdx}`}
-                            >
-                              <span>{yearIdx + 1}º Ano</span>
-                            </label>
-                          </div>
+                  <div className={classNames(extraCoursesActive ? "grid grid-cols-8 divide-x-2" : "")}>
 
-                          {/* Children checkboxes */}
-                          <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
-                            {year.map((course: CheckedCourse, courseIdx: number) => (
-                              <div
-                                title={course?.info.name}
-                                key={`checkbox-${yearIdx}-${courseIdx}`}
-                                className="flex items-center transition"
+                    {extraCoursesActive
+                      ? <div className="col-span-2">
+                        {showUcsExtra()}
+                      </div>
+                      : <></>}
+
+                    {/* Courses checkboxes */}
+                    <div className="checkboxes col-span-6">
+                      {coursesAlreadyTaken ? <></>
+                        :
+                        major &&
+                        courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
+                          <div key={`year-${yearIdx}`}>
+                            {/* Parent checkbox */}
+                            <div title={`${major?.acronym} ${yearIdx + 1}º ano`} className="flex items-center transition">
+                              <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={courses[yearIdx + 1]?.every((course) => course.checked)}
+                                id={`year-checkbox-${yearIdx}`}
+                                onChange={(event) => handleCheckGroup(event, yearIdx)}
+                              />
+                              <label
+                                className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
+                                htmlFor={`year-checkbox-${yearIdx}`}
                               >
-                                <input
-                                  type="checkbox"
-                                  className="checkbox"
-                                  checked={courses[yearIdx + 1][courseIdx].checked}
-                                  id={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                  onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
-                                />
-                                <label
-                                  className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                                  htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                <span>{yearIdx + 1}º Ano</span>
+                              </label>
+                            </div>
+
+                            {/* Children checkboxes */}
+                            <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
+                              {year.map((course: CheckedCourse, courseIdx: number) => (
+                                <div
+                                  title={course?.info.name}
+                                  key={`checkbox-${yearIdx}-${courseIdx}`}
+                                  className="flex items-center transition"
                                 >
-                                  {course.info.acronym}
-                                </label>
-                              </div>
-                            ))}
+                                  <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    checked={courses[yearIdx + 1][courseIdx].checked}
+                                    id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                    onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
+                                  />
+                                  <label
+                                    className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                                    htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                  >
+                                    {course.info.acronym}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        ))
                       }
+                    </div>
+
                   </div>
-                  
-                </div>
 
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
@@ -626,7 +635,7 @@ const SelectionModal = (
                     <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
                       {/* Add / edit extra ucs */}
                       {major !== null ? extraCoursesButton()
-                                      : <></>}
+                        : <></>}
                       {/* Contact us link */}
                       <a
                         type="button"
