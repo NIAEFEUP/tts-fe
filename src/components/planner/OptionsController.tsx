@@ -8,23 +8,31 @@ type Props = {
 }
 
 const OptionsController = ({ multipleOptionsHook }: Props) => {
-  const [options, setOptions] = multipleOptionsHook
+  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
   const [isEditingName, setIsEditingName] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
+  useEffect(() => {
+    console.log([...multipleOptions.options])
+    
+  }, [multipleOptions, setMultipleOptions])
+
   const setNextOptionIndex = () => {
-    setOptions((prev) => ({
+    console.log([...multipleOptions.options])
+
+    setMultipleOptions((prev) => ({
       index: prev.index + 1,
       selected: prev.options[prev.index + 1],
       options: [...prev.options],
       names: prev.names
     }))
+    console.log([...multipleOptions.options])
   }
 
 
   const setPreviousOptionIndex = () => {
-    setOptions((prev) => ({
+    setMultipleOptions((prev) => ({
       index: prev.index - 1,
       selected: prev.options[prev.index - 1],
       options: [...prev.options],
@@ -33,7 +41,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   }
 
   const setOptionIndex = (newIndex: number) => {
-    setOptions((prev) => ({
+    setMultipleOptions((prev) => ({
       index: newIndex,
       selected: prev.options[newIndex],
       options: [...prev.options],
@@ -43,9 +51,9 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
 
   const renameOption = (newName: string) => {
     if (newName === "") return
-    const newNames = [...options.names]
-    newNames[options.index] = newName
-    setOptions((prev) => ({
+    const newNames = [...multipleOptions.names]
+    newNames[multipleOptions.index] = newName
+    setMultipleOptions((prev) => ({
       index: prev.index,
       selected: prev.options[prev.index],
       options: [...prev.options],
@@ -75,7 +83,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   return (
     <div className="flex w-full rounded text-xs">
       <button
-        disabled={options.index === 0}
+        disabled={multipleOptions.index === 0}
         onClick={setPreviousOptionIndex}
         title="Ver opção de horário anterior"
         className="w-min items-center justify-center gap-1.5 rounded-l border-2 border-transparent bg-secondary px-2 py-2
@@ -93,7 +101,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           onDoubleClick={() => setIsEditingName(true)}
           ref = {menuButtonRef}
         >
-          <input type="text" value={options.names[options.index]} onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
+          <input type="text" value={multipleOptions.names[multipleOptions.index]} onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
             className='h-4 w-full text-xs items-center justify-center border-0 focus:border-transparent gap-1.5 px-2 py-2 text-white
             transition hover:opacity-80 bg-secondary font-medium text-center'/>
         </Menu.Button>
@@ -117,12 +125,12 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                     onClick ={() => chooseAndStopEditing(index)}    
                     className={`
                       ${active ? 'bg-secondary text-white' : ''}
-                      ${index === options.index ? 'bg-secondary text-white hover:opacity-90' : !active && ''}
+                      ${index === multipleOptions.index ? 'bg-secondary text-white hover:opacity-90' : !active && ''}
                       group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 transition-all
                     `}
                   >
-                    <span>{options.names[index]}</span>
-                    {index === options.index && <CheckIcon className="h-4 w-4" />}
+                    <span>{multipleOptions.names[index]}</span>
+                    {index === multipleOptions.index && <CheckIcon className="h-4 w-4" />}
                   </button>
                 )}
               </Menu.Item>
@@ -132,7 +140,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       </Menu>
 
       <button
-        disabled={options.index === 9}
+        disabled={multipleOptions.index === 9}
         onClick={setNextOptionIndex}
         title="Ver opção de horário seguinte"
         className="w-min items-center justify-center gap-1.5 rounded-r border-2 border-transparent bg-secondary px-2 py-2

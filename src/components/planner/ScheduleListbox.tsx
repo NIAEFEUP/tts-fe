@@ -121,18 +121,22 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             newCourseOptions[i].option = selectedOption
 
           }else{
-            setSelectedOption(newCourseOptions[i].option)
+            setLastSelected(newCourseOptions[i].option);
           }
+          setSelectedOption(newCourseOptions[i].option)
+          
         }
         
       }
 
-      if (isImportedSchedule) {
-        setIsImportedSchedule(false)
-      }
-
       return [...newCourseOptions]
     }
+
+    if (isImportedSchedule) {
+
+      setIsImportedSchedule(false)
+    }
+
 
     setMultipleOptions((prevMultipleOptions) => {
       const value = {
