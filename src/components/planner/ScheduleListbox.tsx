@@ -133,12 +133,15 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     }
 
     let resolvedCourseOptions = resolveCourseOptions(multipleOptions.selected)
+    let resolvedOptions = multipleOptions.options
+    resolvedOptions[multipleOptions.index] = resolvedCourseOptions
+
 
     setMultipleOptions((prevMultipleOptions) => {
       const value = {
         index: prevMultipleOptions.index,
         selected: resolvedCourseOptions,
-        options: prevMultipleOptions.options,
+        options: resolvedOptions,
         names: prevMultipleOptions.names,
       }
 
