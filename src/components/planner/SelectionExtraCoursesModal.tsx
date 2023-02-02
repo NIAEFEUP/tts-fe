@@ -1,15 +1,12 @@
 import classNames from 'classnames'
-import BackendAPI from '../../api/backend'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import Alert, { AlertType } from './Alert'
-import { Link } from 'react-router-dom'
 import { CheckedCourse, Course, Major } from '../../@types'
-import { getSchoolYear, getSemester, config, getPath } from '../../utils'
+import { getSchoolYear, getSemester } from '../../utils'
 import {
   AcademicCapIcon,
   CheckIcon,
-  HomeIcon,
   SelectorIcon,
   ArrowCircleLeftIcon,
 } from '@heroicons/react/solid'
@@ -31,7 +28,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const [major, setMajor] = majorHook
   const [isThisOpen, setisThisOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [selected, setSelected] = useState<Major>(major)
+  const [selected, setSelected] = useState<Major>(major) //selected Major
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [sourceCoursesBuffer, setSourceCoursesBuffer] = sourceBufferHook
   const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
@@ -75,9 +72,6 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   }
 
   const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
-
-  const getDisplayExtraCourseText = (course: Course) =>
-    course === null ? '' : `${course?.name} (${course?.acronym}, ${course?.course})`
 
   /**
    * If the first index of the courses array is undefined or null, it puts an empty array instead
@@ -342,12 +336,12 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                               type="checkbox"
                               className="extra-courses-checkbox"
                               checked={courses[yearIdx + 1].every((course) => course.checked)}
-                              id={`year-checkbox-${yearIdx}`}
+                              id={`extra-year-checkbox-${yearIdx}`}
                               onChange={(event) => handleCheckGroup(event, yearIdx + 1)}
                             />
                             <label
                               className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                              htmlFor={`year-checkbox-${yearIdx}`}
+                              htmlFor={`extra-year-checkbox-${yearIdx}`}
                             >
                               <span>{yearIdx + 1}º Ano</span>
                             </label>
@@ -365,12 +359,12 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
                                   type="checkbox"
                                   className="extra-courses-checkbox"
                                   checked={isCourseChecked(course, yearIdx, courseIdx)}
-                                  id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                  id={`extra-course-checkbox-${yearIdx}-${courseIdx}`}
                                   onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
                                 />
                                 <label
                                   className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                                  htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                  htmlFor={`extra-course-checkbox-${yearIdx}-${courseIdx}`}
                                 >
                                   {course.info.acronym}
                                 </label>

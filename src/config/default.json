@@ -10,7 +10,7 @@
     "home": "home"
   },
   "api": {
-    "port": 8080,
+    "port": 8100,
     "host": "localhost",
     "year": 2022
   }

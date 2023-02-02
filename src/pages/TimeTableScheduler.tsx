@@ -129,7 +129,13 @@ const TimeTableSchedulerPage = () => {
   const getCoursesForMajor = (major: Major, majorChangedRef) => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
 
-    let finalNewCheckedCourses: CheckedCourse[][] = [checkedCourses[0]]
+    let finalNewCheckedCourses: CheckedCourse[][]
+    
+    if (checkedCourses[0] === undefined) {
+      finalNewCheckedCourses = [[]]
+    }else{
+      finalNewCheckedCourses = [checkedCourses[0]]
+    }
 
     BackendAPI.getCourses(major).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
