@@ -204,22 +204,26 @@ const SelectionModal = (
   const removeCourseFromExtraCourses = (courseIdx: number) => {
     courses[0].splice(courseIdx, 1)
 
-    if (courses[0].length === 0)
-      setDestCourseBuffer([])
+    if (courses[0].length === 0) {
+      destCourseBuffer[0] = []
+      destCourseBuffer.forEach((courseArray: CheckedCourse[]) => {
+      courseArray.forEach(course => course.checked = false)
+      })
+    }
 
     setCourses([...courses])
   }
 
   const removeExtraCourses = () => {
     courses[0] = []
-
     setCourses([...courses])
-    setDestCourseBuffer([])
+    
+    destCourseBuffer[0] = []
+    destCourseBuffer.forEach((courseArray: CheckedCourse[]) => {
+      courseArray.forEach(course => course.checked = false)
+    })
     setExtraCoursesActive(false)
-
-    setCourses([...courses])
   }
-
 
   /**
    * Displays vertical list of the extra courses the user selected
@@ -265,13 +269,13 @@ const SelectionModal = (
                 ? courses[0].map((course: CheckedCourse, courseIdx: number) => (
                   <div
                     title={course?.info.name}
-                    key={`checkbox-${course?.info.course_year}-${courseIdx}`}
+                    key={`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`}
                     className="flex items-center transition"
                     onMouseEnter={() => {
-                      replaceExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
+                      replaceExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
                     }}
                     onMouseLeave={() => {
-                      recoverExtraCourseCheckbox(`course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
+                      recoverExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
                     }}
                   >
                     <XCircleIcon
@@ -283,11 +287,10 @@ const SelectionModal = (
                       type="checkbox"
                       className="checkbox"
                       defaultChecked={course.checked}
-                      id={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
+                      id={`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`}
                     />
                     <label
                       className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                      htmlFor={`course-checkbox-${course?.info.course_year}-${courseIdx}`}
                     >
                       {course.info.acronym}
                     </label>

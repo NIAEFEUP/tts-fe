@@ -74,17 +74,6 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
 
   /**
-   * If the first index of the courses array is undefined or null, it puts an empty array instead
-   * This is useful because the index 0 of the courses checked course matrix is the extra courses the user selected
-   * besides their default major
-   */
-  const trimExtraCourses = () => {
-    if (courses[0] === undefined || courses[0] === null) {
-      courses[0] = []
-    }
-  }
-
-  /**
    * If the user checked a single course, if the user checked it to true, it adds to the index 0 of the courses array
    * Otherwise it removes it
    */
@@ -112,10 +101,13 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
 
     if (event.target.checked) {
-      trimExtraCourses()
-
       courses[year].forEach((course: CheckedCourse) => {
-        courses[0].push(course)
+        let course_already_in_extra_subarray = 
+          courses[0].findIndex(extra_course => extra_course.info.course_unit_id === course.info.course_unit_id) == -1
+        
+        if(course_already_in_extra_subarray)
+          courses[0].push(course)
+
         course.checked = event.target.checked
       })
 
@@ -133,7 +125,8 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const isCourseChecked = (course: CheckedCourse, yearIdx: number, courseIdx: number) => {
     let courses_have_valid_value: boolean = !(is_null_or_undefined(courses[0])) && courses[0].length > 0
 
-    return courses_have_valid_value && (isExtraCourseSet(course) || (isExtraCourseSet(course) && courses[yearIdx + 1][courseIdx].checked))
+    return courses_have_valid_value 
+      && (isExtraCourseSet(course) || (isExtraCourseSet(course) && courses[yearIdx + 1][courseIdx].checked))
   }
 
   useEffect(() => {
@@ -174,9 +167,9 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   /**
    * If there is a least an extra course (course inside courses[0]) checked, it returns true
    */
-  const isExtraCourseSet = (course: CheckedCourse) => {
+  const isExtraCourseSet = (course: CheckedCourse): boolean => {
     if (is_null_or_undefined(courses[0]) || courses[0].length === 0)
-      return
+      return false
 
     let possible_course_index: number = courses[0].findIndex(
       related_course => related_course.info.course_unit_id === course.info.course_unit_id)
