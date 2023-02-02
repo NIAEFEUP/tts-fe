@@ -64,6 +64,8 @@ export type CourseOption = {
   course: CheckedCourse
   option: CourseSchedule | null
   schedules: CourseSchedule[]
+  teachers: string[]
+  filteredTeachers: string[]
 }
 
 export type Subject = {

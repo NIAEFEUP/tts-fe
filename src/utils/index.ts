@@ -1,6 +1,6 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
-import { CourseSchedule, Lesson } from '../@types'
+import { CourseOption, CourseSchedule, Lesson } from '../@types'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -150,6 +150,16 @@ const getClassTypeClassName = (type: string) => {
   }
 }
 
+const getCourseTeachers = (courseOption: CourseOption) => {
+  let teachers = []
+    courseOption.schedules.forEach((schedule, idx) => {
+      if (schedule.lesson_type !== 'T' && !teachers.includes(schedule.teacher_acronym)) teachers.push(schedule.teacher_acronym)
+    })
+
+  return teachers
+}
+
+
 export {
   config,
   dev_config,
@@ -170,4 +180,5 @@ export {
   getLessonBoxStyles,
   getClassTypeClassName,
   getLessonTypeLongName,
+  getCourseTeachers,
 }

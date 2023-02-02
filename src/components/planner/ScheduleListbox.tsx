@@ -17,6 +17,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
+  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers);
+
+  let teacherOptions = ["All teachers", ...courseOption.teachers]
   const [lastSelected, setLastSelected] = useState(selectedOption);
   const [previewing, setPreviewing] = useState(false);
 
@@ -30,6 +33,8 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       )
   }, [courseOption])
 
+  const getTeacherSelectionText = (selectedTeachers: Array<string>) => selectedTeachers.length === 1 ? "1 teacher selected" : selectedTeachers.length + " teachers selected";
+  
   const handleListBoxSelection = (option : CourseSchedule) => {
     setLastSelected(option);
     setSelectedOption(option);
@@ -149,6 +154,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     })
 
     if (isImportedSchedule) {
+      updateTeachersShown(courseOption.filteredTeachers)
       setIsImportedSchedule(false)
     }
 
@@ -156,6 +162,31 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, courseOption, setMultipleOptions])
 
+  const updateTeachersShown = ((selectedTeachers: Array<string>): void => {
+    if (selectedTeachers.includes("All teachers")) {
+      selectedTeachers = (selectedTeachers.length !== 1) ? [] : courseOption.teachers;
+    }
+    courseOption.filteredTeachers = [...selectedTeachers];
+    setSelectedTeachers(selectedTeachers)
+    if (selectedOption) {
+      setSelectedOption(selectedTeachers.includes(selectedOption.teacher_acronym) ? selectedOption : null)
+      setLastSelected(null)
+    }
+  })
+
+  const selectDropdownSchedules = (): Array<CourseSchedule> => {
+    let selectedSchedules = [];
+
+    if (selectedTeachers.includes("All teachers"))
+      return adaptedSchedules;
+
+    adaptedSchedules.forEach((schedule) => {
+      if (schedule === null || selectedTeachers.includes(schedule.teacher_acronym))
+        selectedSchedules.push(schedule);
+    })
+
+    return selectedSchedules;
+  }
 
 
   return (
@@ -172,31 +203,34 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             <span className="tracking-tighter truncate">{courseOption.course.info.name}&nbsp;</span>
           </p>
 
-          <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
-            <strong>{courseOption.course.info.acronym}</strong>
-          </p>
+            <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
+              <strong>{courseOption.course.info.acronym}</strong>
+            </p>
 
-          {/* Button */}
-          <Listbox.Button
-            title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
-            className="group relative w-full cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
-            text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
-          >
-            <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
-              {getOptionDisplayText(selectedOption)}
-            </span>
-            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
-              <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
-            </span>
-          </Listbox.Button>
+            <div className="flex flex-row gap-x-1">
 
+              {/* Button */}
+              <Listbox.Button
+                title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
+                className="group relative w-3/4 flex-shrink-0 cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
+              text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
+              >
+                <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
+                  {getOptionDisplayText(selectedOption)}
+                </span>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
+                  <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
+                </span>
+              </Listbox.Button>
+
+          
           {/* Dropdown */}
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
             <Listbox.Options
               className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
             bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
             >
-              {adaptedSchedules.map((option, optionIdx) => (
+              {selectDropdownSchedules().map((option, optionIdx) => (
                 <Listbox.Option
                   onMouseEnter={() => showPreview(option)}
                   onMouseLeave={() => removePreview()}
@@ -236,49 +270,109 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             </Listbox.Options>
           </Transition>
 
-          {/* Show/Hide Checkboxes */}
-          <div className="mt-1 flex items-center justify-start space-x-4">
-            <div
-              title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
-              className="flex items-center justify-center space-x-1"
-            >
-              <input
-                type="checkbox"
-                checked={showTheoretical}
-                id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-                className="checkbox-small disabled:hidden"
-                disabled={courseOption.option === null}
-                onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
-              />
-              <label
-                className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-                htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
+              {/* Teachers ListBox */}
+              <Listbox
+                value={selectedTeachers}
+                onChange={updateTeachersShown}
+                multiple={true}
               >
-                <span>Teóricas</span>
-              </label>
+                {/* Button */}
+                <Listbox.Button
+                  title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
+                  className="group relative w-1/4 whitespace-nowrap cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
+                  text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
+                >
+                  <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
+                  {getTeacherSelectionText(selectedTeachers)} 
+                  </span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
+                    <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
+                  </span>
+                </Listbox.Button>
+
+                {/* Dropdown */}
+                <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                  <Listbox.Options
+                    className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
+                    bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
+                  >
+                    {teacherOptions.map((option, optionIdx) => (
+                      <Listbox.Option
+                        key={option}
+                        value={option}
+                        className={({ active }) =>
+                          `group relative cursor-default select-none py-2 text-sm pl-10
+                            pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
+                        }
+                      >
+                        {({ selected, active }) => (
+                          <>
+                            <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
+                              {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
+                            </span>
+                            {selected ? (
+                              <span
+                                className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                                  }`}
+                              >
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </Listbox>
+
             </div>
-            <div
-              title={`${showPractical ? 'Esconder' : 'Mostrar'} Aulas Práticas de ${courseOption.course.info.name}`}
-              className="flex items-center justify-center space-x-1"
-            >
-              <input
-                type="checkbox"
-                checked={showPractical}
-                id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-                className="checkbox-small disabled:hidden"
-                disabled={courseOption.option === null}
-                onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
-              />
-              <label
-                className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-                htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
+
+            {/* Show/Hide Checkboxes */}
+            <div className="mt-1 flex items-center justify-start space-x-4">
+              <div
+                title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
+                className="flex items-center justify-center space-x-1"
               >
-                <span>Práticas</span>
-              </label>
+                <input
+                  type="checkbox"
+                  checked={showTheoretical}
+                  id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
+                  className="checkbox-small disabled:hidden"
+                  disabled={courseOption.option === null}
+                  onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
+                />
+                <label
+                  className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
+                  htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
+                >
+                  <span>Teóricas</span>
+                </label>
+              </div>
+              <div
+                title={`${showPractical ? 'Esconder' : 'Mostrar'} Aulas Práticas de ${courseOption.course.info.name}`}
+                className="flex items-center justify-center space-x-1"
+              >
+                <input
+                  type="checkbox"
+                  checked={showPractical}
+                  id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
+                  className="checkbox-small disabled:hidden"
+                  disabled={courseOption.option === null}
+                  onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
+                />
+                <label
+                  className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
+                  htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
+                >
+                  <span>Práticas</span>
+                </label>
+              </div>
             </div>
           </div>
-        </div>
-      </Listbox>
+        </Listbox>
+     
+
     )
   )
 }

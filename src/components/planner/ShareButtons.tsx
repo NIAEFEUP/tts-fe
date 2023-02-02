@@ -187,12 +187,16 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 course: checked_course,
                 option: option,
                 schedules: course_schedule,
+                teachers: [],
+                filteredTeachers: [],
             }
             course_option_placeholder = {
                 shown: shown_var,
                 course: checked_course,
                 option: null,
                 schedules: course_schedule,
+                teachers: [],
+                filteredTeachers: [],
             }
 
 

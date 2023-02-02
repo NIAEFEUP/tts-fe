@@ -47,6 +47,11 @@ const TimeTableSchedulerPage = () => {
   }
 
   const getEmptyCourseOption = (course: CheckedCourse, schedules: CourseSchedule[]): CourseOption => {
+    let teachers = []
+    schedules.forEach((schedule, idx) => {
+      if (schedule.lesson_type !== 'T' && !teachers.includes(schedule.teacher_acronym)) teachers.push(schedule.teacher_acronym)
+    })
+
     return {
       shown: {
         T: true,
@@ -55,6 +60,8 @@ const TimeTableSchedulerPage = () => {
       course: course,
       option: null,
       schedules: schedules,
+      teachers: teachers,
+      filteredTeachers: teachers
     }
   }
 
@@ -166,6 +173,15 @@ const TimeTableSchedulerPage = () => {
         let newCourseOptions: CourseOption[] = []
         const notNulls = prev.selected.filter((item) => item.option !== null)
 
+        let teachers = Array.apply(null, Array(schedules.length)).map(function () {
+          return []
+        })
+        schedules.forEach((schedule, idx) => {
+          schedule.forEach((classes) => {
+            if (classes.lesson_type !== 'T' && !teachers[idx].includes(classes.teacher_acronym)) teachers[idx].push(classes.teacher_acronym)
+          })
+        })
+
         if (notNulls.length > 0) {
           for (let i = 0; i < pickedCourses.length; i++) {
             const co = findPreviousEntry(prev.selected, pickedCourses[i])
@@ -174,6 +190,8 @@ const TimeTableSchedulerPage = () => {
               course: pickedCourses[i],
               option: co.option,
               schedules: schedules[i],
+              teachers: teachers[i],
+              filteredTeachers: teachers[i],
             })
           }
         } else {
@@ -201,6 +219,8 @@ const TimeTableSchedulerPage = () => {
                     course: pickedCourses[j],
                     option: co.option,
                     schedules: schedules[j],
+                    teachers: teachers[i],
+                    filteredTeachers: teachers[i],
                   })
                 }
                 newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
