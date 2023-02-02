@@ -10,6 +10,7 @@ import {
   OptionsController,
   LessonTypesModal,
   HelpModal,
+  ShareButtons,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
@@ -66,6 +67,11 @@ const TimeTableSchedulerPage = () => {
   }
 
   const getEmptyCourseOption = (course: CheckedCourse, schedules: CourseSchedule[]): CourseOption => {
+    let teachers = []
+    schedules.forEach((schedule, idx) => {
+      if (schedule.lesson_type !== 'T' && !teachers.includes(schedule.teacher_acronym)) teachers.push(schedule.teacher_acronym)
+    })
+
     return {
       shown: {
         T: true,
@@ -74,6 +80,8 @@ const TimeTableSchedulerPage = () => {
       course: course,
       option: null,
       schedules: schedules,
+      teachers: teachers,
+      filteredTeachers: teachers
     }
   }
 
@@ -101,9 +109,11 @@ const TimeTableSchedulerPage = () => {
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses("niaefeup-tts.courses") // courses for the major with frontend properties
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
-  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({ index: 0, selected: [], options: [] }) // schedule options and selected schedule
   const [sourceCoursesBuffer, setSourceCoursesBuffer] = useCourses("niaefeup-tts.courses-buffer")
   const [destCoursesBuffer, setDestCoursesBuffer] = useCourses("niaefeup-tts.extra-courses")
+  const [multipleOptions,  setMultipleOptions] = useState<MultipleOptions>(
+    { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
+  ) // schedule options and selected schedule
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
@@ -125,6 +135,8 @@ const TimeTableSchedulerPage = () => {
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
+  const [isImportedSchedule, setIsImportedSchedule] = useState<boolean>(false)
+
 
   const getCoursesForMajor = (major: Major, majorChangedRef) => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
@@ -173,10 +185,46 @@ const TimeTableSchedulerPage = () => {
     getCoursesForMajor(extraCoursesMajor, extraCoursesMajorChangedRef)
   }, [extraCoursesMajor, extraCoursesMajorChangedRef, checkedCourses, setCheckedCourses])
 
+  const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
+    
+    for (let i = 0; i < newCheckedCourses.length; i++) {
+      for (let j = 0; j < newCheckedCourses[i].length; j++) {
+        
+        for (let k = 0; k < importedCourses.length; k++) {
+          if (importedCourses[k].course.info.course_unit_id === newCheckedCourses[i][j].info.course_unit_id) {
+            newCheckedCourses[i][j].checked = true
+            break
+          }
+        }
+      }
+    }
+    
+    
+    return newCheckedCourses
+  }
+
+  // once a major has been picked => fetch courses for the major
+
+  useEffect(() => {
+    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0 && !isImportedSchedule)) {
+      return
+    }
+    BackendAPI.getCourses(major).then((courses: Course[]) => {
+      const majorCourses = groupMajorCoursesByYear(courses)
+      const newCheckedCourses = courseToCheckedCourse(majorCourses)
+      let uCC = updateCheckedCourses(newCheckedCourses, multipleOptions.selected)
+      majorChangedRef.current = false
+      setCheckedCourses([checkedCourses[0], ...uCC])
+    })
+
+    // this line is needed to since adding isImportedSchedule and SetCheckedCourses to the dependencies array would cause Import not to work
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [major, majorChangedRef, checkedCourses, multipleOptions])
+
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
 
-    setMultipleOptions({ index: 0, selected: [], options: [] })
+    // setMultipleOptions({ index: 0, selected: [], options: [] })
 
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
@@ -208,6 +256,15 @@ const TimeTableSchedulerPage = () => {
         let newCourseOptions: CourseOption[] = []
         const notNulls = prev.selected.filter((item) => item.option !== null)
 
+        let teachers = Array.apply(null, Array(schedules.length)).map(function () {
+          return []
+        })
+        schedules.forEach((schedule, idx) => {
+          schedule.forEach((classes) => {
+            if (classes.lesson_type !== 'T' && !teachers[idx].includes(classes.teacher_acronym)) teachers[idx].push(classes.teacher_acronym)
+          })
+        })
+
         if (notNulls.length > 0) {
           for (let i = 0; i < pickedCourses.length; i++) {
             const co = findPreviousEntry(prev.selected, pickedCourses[i])
@@ -216,6 +273,8 @@ const TimeTableSchedulerPage = () => {
               course: pickedCourses[i],
               option: co.option,
               schedules: schedules[i],
+              teachers: teachers[i],
+              filteredTeachers: teachers[i],
             })
           }
         } else {
@@ -243,6 +302,8 @@ const TimeTableSchedulerPage = () => {
                     course: pickedCourses[j],
                     option: co.option,
                     schedules: schedules[j],
+                    teachers: teachers[i],
+                    filteredTeachers: teachers[i],
                   })
                 }
                 newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
@@ -255,6 +316,7 @@ const TimeTableSchedulerPage = () => {
           index: prev.index,
           selected: newCourseOptions,
           options: newOptions,
+          names: prev.names
         }
       })
     })
@@ -290,6 +352,8 @@ const TimeTableSchedulerPage = () => {
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
+
+          
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
@@ -313,9 +377,15 @@ const TimeTableSchedulerPage = () => {
             <MoreActionsButton
               schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
-              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+              multipleOptions= {multipleOptions}
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
+            <ShareButtons
+            majorHook={[major, setMajor]}
+            schedule={multipleOptions.selected}
+            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+            setIsImportedSchedule={setIsImportedSchedule}
+            />
           </div>
           <div className="flex flex-col gap-4 py-1 px-0">
             {multipleOptions.selected.length > 0 &&
@@ -323,10 +393,13 @@ const TimeTableSchedulerPage = () => {
                 <ScheduleListbox
                   courseOption={courseOption}
                   multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+                  isImportedScheduleHook={[isImportedSchedule, setIsImportedSchedule]}
                   key={`course-schedule-listbox-${multipleOptions.index}-${courseOption.course.info.id}`}
                 />
               ))}
           </div>
+          <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
+        </div>
         </div>
         <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
           <HelpModal />
