@@ -255,9 +255,8 @@ const SelectionModal = (
               />
               <label
                 className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                htmlFor="extraCourseGroupCheckbox"
               >
-                <span>UCs de outros cursos</span>
+                UCs de outros cursos
               </label>
             </div>
 
