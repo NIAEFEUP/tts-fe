@@ -13,12 +13,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [isEditingName, setIsEditingName] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
-  useEffect(() => {
-    
-  }, [multipleOptions, setMultipleOptions])
-
   const setNextOptionIndex = () => {
-    console.log([...multipleOptions.options])
 
     setMultipleOptions((prev) => ({
       index: prev.index + 1,
@@ -26,7 +21,6 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       options: [...prev.options],
       names: prev.names
     }))
-    console.log([...multipleOptions.options])
   }
 
 
