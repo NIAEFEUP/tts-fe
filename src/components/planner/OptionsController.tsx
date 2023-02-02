@@ -14,7 +14,6 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    console.log([...multipleOptions.options])
     
   }, [multipleOptions, setMultipleOptions])
 
@@ -84,7 +83,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     <div className="flex w-full rounded text-xs">
       <button
         disabled={multipleOptions.index === 0}
-        onClick={setPreviousOptionIndex}
+        onClick={() => setPreviousOptionIndex()}
         title="Ver opção de horário anterior"
         className="w-min items-center justify-center gap-1.5 rounded-l border-2 border-transparent bg-secondary px-2 py-2
         text-center font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
@@ -141,7 +140,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
 
       <button
         disabled={multipleOptions.index === 9}
-        onClick={setNextOptionIndex}
+        onClick={() => setNextOptionIndex()}
         title="Ver opção de horário seguinte"
         className="w-min items-center justify-center gap-1.5 rounded-r border-2 border-transparent bg-secondary px-2 py-2
         text-center font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"

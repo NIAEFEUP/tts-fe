@@ -30,12 +30,12 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       )
   }, [courseOption])
 
-  const handleListBoxSelection = (option) => {
+  const handleListBoxSelection = (option : CourseSchedule) => {
     setLastSelected(option);
     setSelectedOption(option);
   }
 
-  const showPreview = (option) => {
+  const showPreview = (option: CourseSchedule) => {
     if (!previewing) {
       setPreviewing(true)
     }
@@ -124,7 +124,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             setLastSelected(newCourseOptions[i].option);
           }
           setSelectedOption(newCourseOptions[i].option)
-          
+          break;
         }
         
       }
@@ -132,22 +132,22 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       return [...newCourseOptions]
     }
 
-    if (isImportedSchedule) {
-
-      setIsImportedSchedule(false)
-    }
-
+    let resolvedCourseOptions = resolveCourseOptions(multipleOptions.selected)
 
     setMultipleOptions((prevMultipleOptions) => {
       const value = {
         index: prevMultipleOptions.index,
-        selected: [...resolveCourseOptions(prevMultipleOptions.selected)],
+        selected: resolvedCourseOptions,
         options: prevMultipleOptions.options,
         names: prevMultipleOptions.names,
       }
 
       return value
     })
+
+    if (isImportedSchedule) {
+      setIsImportedSchedule(false)
+    }
 
     //this line is needed since adding isImportedSchedule SetImportedSchedule to the dependency array causes an insconsistent ListBox behavior
     // eslint-disable-next-line react-hooks/exhaustive-deps
