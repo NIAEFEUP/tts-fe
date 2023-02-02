@@ -262,6 +262,8 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             options: all_options,
             names: prev.names
         }))
+
+        
         
 
         input.value = "";
