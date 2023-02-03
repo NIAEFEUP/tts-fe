@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import Alert, { AlertType } from './Alert'
-import { CheckedCourse, Course, Major } from '../../@types'
+import { CheckedCourse, Course, Major, MultipleOptions } from '../../@types'
 import { getSchoolYear, getSemester } from '../../utils'
 import {
   AcademicCapIcon,
@@ -19,12 +19,14 @@ type Props = {
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
+  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
 /**
  * Modal where the user will be able to select courses from a different major than its main one
  */
-const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, sourceBufferHook, destBufferHook }: Props) => {
+const SelectionExtraCoursesModal = 
+  ({ majors, openHook, majorHook, coursesHook, sourceBufferHook, destBufferHook, multipleOptionsHook }: Props) => {
   const [major, setMajor] = majorHook
   const [isThisOpen, setisThisOpen] = openHook
   const [courses, setCourses] = coursesHook
@@ -32,6 +34,7 @@ const SelectionExtraCoursesModal = ({ majors, openHook, majorHook, coursesHook, 
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [sourceCoursesBuffer, setSourceCoursesBuffer] = sourceBufferHook
   const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
+  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
