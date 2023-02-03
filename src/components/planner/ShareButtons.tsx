@@ -47,16 +47,39 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
      * @returns stringified schedule
      */
     const scheduleToString = (major : Major, schedule : CourseOption[]) => {
-        var copySchedule : string = (major.id).toString();
+        let copySchedule : string = (major.id).toString();
+        let extraUCsStrs : { [id: string] : string ; } = {};
         for (let i = 0; i < schedule.length ; i++){
-            copySchedule += ";" + schedule[i].course.info.course_unit_id + "#";
-            if (schedule[i].option == null){
-                copySchedule += "null";
+            let uc_course_id = schedule[i].course.info.course_id;
+            let uc_course_unit_id = schedule[i].course.info.course_unit_id;
+            if (uc_course_id == major.id){
+                copySchedule += ";" + uc_course_unit_id + "#";
+                if (schedule[i].option == null){
+                    copySchedule += "null";
+                }
+                else{
+                    copySchedule += schedule[i].option.class_name;
+
+                }
             }
             else{
-                copySchedule += schedule[i].option.class_name;
-
+                if (extraUCsStrs[uc_course_id] == null){
+                    extraUCsStrs[uc_course_id] = uc_course_id + "";
+                }
+                
+                extraUCsStrs[uc_course_id] += ";" + uc_course_unit_id + "#";
+                if (schedule[i].option == null){
+                    extraUCsStrs[uc_course_id] += "null";
+                }
+                else{
+                    extraUCsStrs[uc_course_id] += schedule[i].option.class_name;
+                }
+                
             }
+        }
+
+        for (let key in extraUCsStrs){
+            copySchedule += "-" + extraUCsStrs[key];
         }
         return copySchedule;
     }
