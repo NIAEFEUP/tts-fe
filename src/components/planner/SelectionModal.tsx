@@ -40,8 +40,8 @@ const SelectionModal = (
   const [courses, setCourses] = coursesHook
   const [extraCoursesActive, setExtraCoursesActive] = extraCoursesActiveHook
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = extraCoursesModalOpenHook
-  const [sourceCourseBuffer, setSourceCourseBuffer] = sourceBufferHook
-  const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
+  const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = sourceBufferHook
+  const [extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer] = destBufferHook
   const [selected, setSelected] = useState<Major>(major)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [coursesAlreadyTaken, setCoursesAlreadyTaken] = useState<boolean>(false)
@@ -111,7 +111,7 @@ const SelectionModal = (
     courses[year + 1][courseIdx].checked = event.target.checked
     setCourses([...courses])
 
-    setSourceCourseBuffer([...courses])
+    setSelectionModalCoursesBuffer([...courses])
   }
 
   const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
@@ -125,12 +125,12 @@ const SelectionModal = (
     courses[year + 1] = newGroupEntry
 
     setCourses([...courses])
-    setSourceCourseBuffer([...courses])
+    setSelectionModalCoursesBuffer([...courses])
   }
 
   const openExtraCoursesModal = () => {
-    setSourceCourseBuffer([...courses.slice(1)])
-    setCourses([...destCourseBuffer])
+    setSelectionModalCoursesBuffer([...courses.slice(1)])
+    setCourses([...extraCourseModalCoursesBuffer])
 
     setIsExtraUcsModalOpen(true)
   }
@@ -205,8 +205,8 @@ const SelectionModal = (
     courses[0].splice(courseIdx, 1)
 
     if (courses[0].length === 0) {
-      destCourseBuffer[0] = []
-      destCourseBuffer.forEach((courseArray: CheckedCourse[]) => {
+      extraCourseModalCoursesBuffer[0] = []
+      extraCourseModalCoursesBuffer.forEach((courseArray: CheckedCourse[]) => {
       courseArray.forEach(course => course.checked = false)
       })
     }
@@ -218,8 +218,8 @@ const SelectionModal = (
     courses[0] = []
     setCourses([...courses])
     
-    destCourseBuffer[0] = []
-    destCourseBuffer.forEach((courseArray: CheckedCourse[]) => {
+    extraCourseModalCoursesBuffer[0] = []
+    extraCourseModalCoursesBuffer.forEach((courseArray: CheckedCourse[]) => {
       courseArray.forEach(course => course.checked = false)
     })
     setExtraCoursesActive(false)

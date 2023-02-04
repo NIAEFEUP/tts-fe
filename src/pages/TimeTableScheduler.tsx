@@ -109,8 +109,8 @@ const TimeTableSchedulerPage = () => {
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses("niaefeup-tts.courses") // courses for the major with frontend properties
   const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
-  const [sourceCoursesBuffer, setSourceCoursesBuffer] = useCourses("niaefeup-tts.courses-buffer")
-  const [destCoursesBuffer, setDestCoursesBuffer] = useCourses("niaefeup-tts.extra-courses")
+  const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = useCourses("niaefeup-tts.courses-buffer")
+  const [extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer] = useCourses("niaefeup-tts.extra-courses")
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>(
     { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
   ) // schedule options and selected schedule
@@ -248,9 +248,9 @@ const TimeTableSchedulerPage = () => {
       return value ? { shown: value.shown, option: value.option } : { shown: { T: true, TP: true }, option: null }
     }
 
-    pickedCourses = isExtraUcsModelOpen
-      ? pickedCourses.concat(sourceCoursesBuffer.flat().filter(course => course.checked))
-      : pickedCourses.concat(destCoursesBuffer.flat().filter(course => course.checked))
+    if(isExtraUcsModelOpen) {
+      pickedCourses = pickedCourses.concat(selectionModalCoursesBuffer.flat().filter(course => course.checked))
+    }
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
 
@@ -363,8 +363,8 @@ const TimeTableSchedulerPage = () => {
               coursesHook={[checkedCourses, setCheckedCourses]}
               extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
               extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
-              sourceBufferHook={[sourceCoursesBuffer, setSourceCoursesBuffer]}
-              destBufferHook={[destCoursesBuffer, setDestCoursesBuffer]}
+              sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
+              destBufferHook={[extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer]}
             />
             {isExtraUcsModelOpen ?
               <SelectionExtraCoursesModal
@@ -372,8 +372,8 @@ const TimeTableSchedulerPage = () => {
                 openHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
                 majorHook={[extraCoursesMajor, setExtraCoursesMajor]}
                 coursesHook={[checkedCourses, setCheckedCourses]}
-                sourceBufferHook={[destCoursesBuffer, setDestCoursesBuffer]}
-                destBufferHook={[sourceCoursesBuffer, setSourceCoursesBuffer]}
+                sourceBufferHook={[extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer]}
+                destBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
                 multipleOptionsHook={[multipleOptions, setMultipleOptions]}
               />
               : <></>}

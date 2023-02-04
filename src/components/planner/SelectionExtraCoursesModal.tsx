@@ -32,8 +32,8 @@ const SelectionExtraCoursesModal =
   const [courses, setCourses] = coursesHook
   const [selected, setSelected] = useState<Major>(major) //selected Major
   const [majorQuery, setMajorQuery] = useState<string>('')
-  const [sourceCoursesBuffer, setSourceCoursesBuffer] = sourceBufferHook
-  const [destCourseBuffer, setDestCourseBuffer] = destBufferHook
+  const [extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer] = sourceBufferHook
+  const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = destBufferHook
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
@@ -68,8 +68,8 @@ const SelectionExtraCoursesModal =
     if (major?.name === '' || !atLeastOneCourse)
       setAlertLevel(AlertType.warning)
 
-    setSourceCoursesBuffer([...courses])
-    setCourses([courses[0], ...destCourseBuffer])
+    setExtraCourseModalCoursesBuffer([...courses])
+    setCourses([courses[0], ...selectionModalCoursesBuffer])
 
     setisThisOpen(false)
   }
