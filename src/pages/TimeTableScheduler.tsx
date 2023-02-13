@@ -17,7 +17,7 @@ import { useShowGrid, useMajor, useCourses } from '../hooks'
 import { coursesData } from '../utils/data'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 
-export const removeDuplicatesFromCourseOption = (courses: CourseOption[]) => {
+export const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
   let frequency: Map<number, number> = new Map()
   let newCourseOptions: CourseOption[] = []
 
@@ -31,8 +31,45 @@ export const removeDuplicatesFromCourseOption = (courses: CourseOption[]) => {
   return newCourseOptions
 }
 
-export const is_null_or_undefined = (course) => {
-  return course === undefined || course === null
+export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
+  let frequency: Map<number, number> = new Map()
+  let newCourses: CheckedCourse[] = []
+
+  for (let course of courses) {
+    if (!frequency.has(course.info.id)) {
+      newCourses.push(course)
+      frequency.set(course.info.id, 1)
+    }
+  }
+
+  return newCourses
+}
+
+export const is_null_or_undefined = (element) => {
+  return element === undefined || element === null
+}
+
+/**
+   * This method serves to go to a group of checkboxes and put the correct checked value on the group checkbox
+   */
+ export const controlCoursesGroupCheckbox = (courses: CheckedCourse[], groupCheckboxId: string) => {
+  let some = courses.some((course) => course.checked)
+  let every = courses.every((course) => course.checked)
+
+  //@ts-ignore
+  let checkbox: HTMLInputElement = document.getElementById(groupCheckboxId)
+  if (!checkbox) return
+
+  if (every) {
+    checkbox.checked = true
+    checkbox.indeterminate = false
+  } else if (some) {
+    checkbox.checked = false
+    checkbox.indeterminate = true
+  } else {
+    checkbox.checked = false
+    checkbox.indeterminate = false
+  }
 }
 
 const TimeTableSchedulerPage = () => {
@@ -103,14 +140,16 @@ const TimeTableSchedulerPage = () => {
     return checkedCourses[0].length > 0
   }
 
-  const [major, setMajor, majorChangedRef] = useMajor("niaefeup-tts.major") // the picked major
+  const [mainMajor, setMainMajor, majorChangedRef] = useMajor("niaefeup-tts.major") // the picked major
   const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor("niaefeup-tts.extra-major")
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses("niaefeup-tts.courses") // courses for the major with frontend properties
-  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = useCourses("niaefeup-tts.courses-buffer")
-  const [extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer] = useCourses("niaefeup-tts.extra-courses")
+  const [extraCoursesModalBuffer, setExtraCoursesModalBuffer] = useCourses("niaefeup-tts.extra-courses-buffer")
+  const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
+  const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = useState<boolean>(false)
+  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>(
     { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
   ) // schedule options and selected schedule
@@ -125,7 +164,7 @@ const TimeTableSchedulerPage = () => {
    */
   const getModalIsOpenValue = (easy?: boolean) => {
     if (easy) {
-      return (!major || getPickedCourses(checkedCourses).length < 3) && !hasExtraCourses(checkedCourses)
+      return (!mainMajor || getPickedCourses(checkedCourses).length < 3) && !hasExtraCourses(checkedCourses)
     }
 
     return true
@@ -178,15 +217,42 @@ const TimeTableSchedulerPage = () => {
 
   // once a major has been picked => fetch courses for the major
   useEffect(() => {
-    getCoursesForMajor(major, majorChangedRef)
-  }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
+    if(is_null_or_undefined(mainMajor) || is_null_or_undefined(checkedCourses[0]) || isExtraUcsModelOpen) return
 
+    let flattenedMainCheckedCourses: CheckedCourse[] = checkedCourses.slice(1).flat()
+    let foundEqualCourse: boolean = false
+
+    for(let extraCourse of checkedCourses[0]) {
+      if(flattenedMainCheckedCourses.findIndex(course => course.info.course_unit_id === extraCourse.info.course_unit_id) !== -1) {
+        foundEqualCourse = true
+        break
+      }
+    }
+
+    if(foundEqualCourse !== chosenMajorMainModalEqualToExtra)
+      setChosenMajorMainModalEqualToExtra(foundEqualCourse)
+
+    getCoursesForMajor(mainMajor, majorChangedRef)
+  }, [mainMajor, majorChangedRef, checkedCourses, setCheckedCourses])
+
+  /**
+   * Checks if the current selected extra major is the same as the main major selected in the selectionModal
+   * If it is not, it will fetch the courses for the current major
+   */
   useEffect(() => {
-    getCoursesForMajor(extraCoursesMajor, extraCoursesMajorChangedRef)
+    if(is_null_or_undefined(extraCoursesMajor)) return
+
+    if(extraCoursesMajor.acronym === mainMajor.acronym && !chosenMajorMainModalEqualToExtra) {
+      setExtraMajorEqualToMainMajor(true)
+    } else {
+      getCoursesForMajor(extraCoursesMajor, extraCoursesMajorChangedRef)
+
+      if(extraMajorEqualToMainMajor) setExtraMajorEqualToMainMajor(false)
+    }
+    
   }, [extraCoursesMajor, extraCoursesMajorChangedRef, checkedCourses, setCheckedCourses])
 
   const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
-
     for (let i = 0; i < newCheckedCourses.length; i++) {
       for (let j = 0; j < newCheckedCourses[i].length; j++) {
 
@@ -199,17 +265,16 @@ const TimeTableSchedulerPage = () => {
       }
     }
 
-
     return newCheckedCourses
   }
 
   // once a major has been picked => fetch courses for the major
 
   useEffect(() => {
-    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0 && !isImportedSchedule)) {
+    if (mainMajor === null || (majorChangedRef.current === false && checkedCourses.length > 0 && !isImportedSchedule)) {
       return
     }
-    BackendAPI.getCourses(major).then((courses: Course[]) => {
+    BackendAPI.getCourses(mainMajor).then((courses: Course[]) => {
       const majorCourses = groupMajorCoursesByYear(courses)
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
       let uCC = updateCheckedCourses(newCheckedCourses, multipleOptions.selected)
@@ -219,7 +284,7 @@ const TimeTableSchedulerPage = () => {
 
     // this line is needed to since adding isImportedSchedule and SetCheckedCourses to the dependencies array would cause Import not to work
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [major, majorChangedRef, checkedCourses, multipleOptions])
+  }, [mainMajor, majorChangedRef, checkedCourses, multipleOptions])
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
@@ -250,6 +315,7 @@ const TimeTableSchedulerPage = () => {
 
     if(isExtraUcsModelOpen) {
       pickedCourses = pickedCourses.concat(selectionModalCoursesBuffer.flat().filter(course => course.checked))
+      pickedCourses = removeDuplicatesFromCourseArray(pickedCourses)
     }
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
@@ -355,28 +421,30 @@ const TimeTableSchedulerPage = () => {
           <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
 
-
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
-              majorHook={[major, setMajor]}
+              majorHook={[mainMajor, setMainMajor]}
               coursesHook={[checkedCourses, setCheckedCourses]}
               extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
               extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
               sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-              destBufferHook={[extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer]}
+              destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
+              repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
             />
+
             {isExtraUcsModelOpen ?
               <SelectionExtraCoursesModal
                 majors={majors}
                 openHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
                 majorHook={[extraCoursesMajor, setExtraCoursesMajor]}
                 coursesHook={[checkedCourses, setCheckedCourses]}
-                sourceBufferHook={[extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer]}
+                sourceBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
                 destBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
                 multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+                repeatedCourseControlHook={[extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor]}
               />
-              : <></>}
+              : <></> }
             <MoreActionsButton
               schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
@@ -384,7 +452,7 @@ const TimeTableSchedulerPage = () => {
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
             <ShareButtons
-              majorHook={[major, setMajor]}
+              majorHook={[mainMajor, setMainMajor]}
               schedule={multipleOptions.selected}
               multipleOptionsHook={[multipleOptions, setMultipleOptions]}
               setIsImportedSchedule={setIsImportedSchedule}
