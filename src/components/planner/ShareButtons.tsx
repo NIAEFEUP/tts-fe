@@ -120,7 +120,6 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         for (let i = 0; i < majorTokens.length; i++){
             try{
                 imported_course_units.push(...(await importSingleSchedule(majorTokens[i])))
-                let ret = 1;
             }catch(e: any){
                 console.log(e);
                 //show error modal/card
@@ -128,7 +127,6 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             }
         }
 
-        console.log([...imported_course_units])
 
         /**
 
