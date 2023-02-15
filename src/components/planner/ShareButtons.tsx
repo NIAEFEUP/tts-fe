@@ -52,7 +52,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         for (let i = 0; i < schedule.length ; i++){
             let uc_course_id = schedule[i].course.info.course_id;
             let uc_course_unit_id = schedule[i].course.info.course_unit_id;
-            if (uc_course_id == major.id){
+            if (uc_course_id === major.id){
                 copySchedule += ";" + uc_course_unit_id + "#";
                 if (schedule[i].option == null){
                     copySchedule += "null";
@@ -102,11 +102,175 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         }, 2000)
     }
 
+    const importAllSchedules = async (replaceExisting : boolean) => {
+        //setIsImportedSchedule(true)
+        var input = document.getElementById("schedule-input") as HTMLInputElement;
+        let majorTokens : string[] = input.value.split("-")
+        
+
+        let imported_course_units : CourseOption[] = []
+        // if (replaceExisting){
+        //     imported_course_units = [];
+        // }else{
+        //     imported_course_units = multipleOptions.options[multipleOptions.index];
+        // }
+
+        
+
+        for (let i = 0; i < majorTokens.length; i++){
+            try{
+                imported_course_units.push(...(await importSingleSchedule(majorTokens[i])))
+                let ret = 1;
+            }catch(e: any){
+                console.log(e);
+                //show error modal/card
+                return;
+            }
+        }
+
+        console.log([...imported_course_units])
+
+        /**
+
+        if (imported_major.id !== major.id){
+            setMajor(imported_major);
+
+        }
+
+        
+        setMultipleOptions((prev) => ({
+            index: prev.index,
+            selected: imported_course_units,
+            options: all_options,
+            names: prev.names
+        }))
+        */
+
+        
+        
+
+        return 1;
+
+
+    }
+
+    const importSingleSchedule = async (scheduleString : string) => {
+        var tokens : string[] = scheduleString.split(";")
+        var major_id = Number(tokens[0]);
+        var courses_info : ImportedCourse[] = [];
+
+        tokens.splice(0, 1);
+        for (let i = 0; i < tokens.length ; i++){
+            let split_tokens = tokens[i].split("#");
+            let imported_course : ImportedCourse = {
+                course_unit_id: Number(split_tokens[0]),
+                class_name: split_tokens[1]
+            }
+            courses_info.push(imported_course);
+        }
+
+
+        //get Major
+        var imported_major : Major;
+        
+        var majors = await getMajors.getMajors();
+        
+
+        for (let i = 0; i < majors.length ; i++){
+            if(majors[i]["id"] === major_id){
+                imported_major = majors[i];
+                break;
+            }
+
+        }
+
+        //get courses
+        try{
+            var course_units = await getMajors.getCourses(imported_major);
+        }catch(e: any){
+            console.log(e);
+            setIsImportedSchedule(false);
+            return;
+        }
+
+        var imported_course_units : CourseOption[] = [];
+        
+
+
+        for (let i = 0; i < courses_info.length; i++){
+            let course_option : CourseOption;
+            var checked_course : CheckedCourse 
+            for(let j = 0; j < course_units.length; j++){
+
+                if(course_units[j]["course_unit_id"] === courses_info[i].course_unit_id){
+                    checked_course = {
+                        checked: true,
+                        info: course_units[j],
+                    };
+                    break;
+                }
+            }
+
+            let course_schedule : CourseSchedule[];
+            try{
+                course_schedule = await getMajors.getCourseSchedule(checked_course);
+            }catch(e: any){
+                console.log(e);
+                setIsImportedSchedule(false);
+                return;
+            }
+            let option : CourseSchedule | null = null;
+            if (courses_info[i].class_name !== "null"){
+                for (let j = 0; j < course_schedule.length ; j++){
+                    if (course_schedule[j].lesson_type !== "T" && course_schedule[j].class_name === courses_info[i].class_name){
+                        option = course_schedule[j];
+                        break;
+                    }
+                }
+            }
+
+            let course_already_exists = false;
+            for(let j = 0; j < imported_course_units.length; j++){
+                if(imported_course_units[j].course.info.course_unit_id === checked_course.info.course_unit_id){
+                    imported_course_units[j].option = option;
+                    course_already_exists = true;
+                    break;
+                }
+            }
+            if (course_already_exists)
+                continue;
+    
+            let shown_var = {
+                T: true,
+                TP: true
+              };
+
+            course_option = {
+                shown: shown_var,
+                course: checked_course,
+                option: option,
+                schedules: course_schedule,
+                teachers: [],
+                filteredTeachers: [],
+            }
+            
+
+
+
+            imported_course_units.push(course_option);
+        }
+
+        return imported_course_units;
+
+
+    }
+
     /**
      * Function that imports schedule from clipboard
      */
     const importSchedule = async (replaceExisting : boolean) => {
         setIsImportedSchedule(true);
+        let ret = await importAllSchedules(replaceExisting);
         var input = document.getElementById("schedule-input") as HTMLInputElement;
         let value : string = input.value;
         var tokens : string[] = value.split(";")
@@ -313,6 +477,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         }
         return true;
     }
+
 
     const openDecisionModal = async () => {
         var input = document.getElementById("schedule-input") as HTMLInputElement;
