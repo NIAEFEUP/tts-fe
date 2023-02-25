@@ -103,32 +103,93 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     }
 
     const importAllSchedules = async (replaceExisting : boolean) => {
-        //setIsImportedSchedule(true)
+        setIsImportedSchedule(true)
         var input = document.getElementById("schedule-input") as HTMLInputElement;
         let majorTokens : string[] = input.value.split("-")
         
 
         let imported_course_units : CourseOption[] = []
-        // if (replaceExisting){
-        //     imported_course_units = [];
-        // }else{
-        //     imported_course_units = multipleOptions.options[multipleOptions.index];
-        // }
-
-        
 
         for (let i = 0; i < majorTokens.length; i++){
             try{
                 imported_course_units.push(...(await importSingleSchedule(majorTokens[i])))
             }catch(e: any){
                 console.log(e);
-                //show error modal/card
+                setIsImportedSchedule(false)
                 return;
             }
         }
 
+        let all_options = multipleOptions.options
 
-        /**
+        let placeholder_course_options: CourseOption[] = []
+
+        for (let i = 0; i < imported_course_units.length ; i++){
+            placeholder_course_options.push({
+                    shown: imported_course_units[i].shown,
+                    course: imported_course_units[i].course,
+                    option: null,
+                    schedules: imported_course_units[i].schedules,
+                    teachers: [],
+                    filteredTeachers: [],
+                })
+            
+        }
+
+        all_options[multipleOptions.index] = imported_course_units;
+
+        //purge all non imported courses
+        if(replaceExisting){
+            for (let i = 0; i < all_options.length ; i++){
+                if (i !== multipleOptions.index){
+                    let new_option = [];
+                    for(let y = 0; y < all_options[i].length; y++){
+                        for(let x = 0; x < placeholder_course_options.length; x++){
+                            if (placeholder_course_options[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
+                                new_option.push(all_options[i][y]);
+                                break;
+                            }
+                        }
+                    }
+                    all_options[i] = new_option;
+                    
+                }
+            }
+        }
+
+        //add missing imported courses
+        for (let i = 0; i < all_options.length ; i++){
+            if (i !== multipleOptions.index){
+                for(let x = 0; x < placeholder_course_options.length; x++){
+                    let found = false;
+                    for(let y = 0; y < all_options[i].length; y++){
+                        if (placeholder_course_options[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found){
+                        all_options[i].push(placeholder_course_options[x]);
+                    }
+                }
+                
+            }
+        }
+
+        
+        let imported_major : Major;
+        let major_id = Number(majorTokens[0].split(";")[0]);
+
+        let majors = await getMajors.getMajors();
+
+        for (let i = 0; i < majors.length ; i++){
+            if(majors[i]["id"] === major_id){
+                imported_major = majors[i];
+                break;
+            }
+
+        }
+
 
         if (imported_major.id !== major.id){
             setMajor(imported_major);
@@ -142,9 +203,9 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             options: all_options,
             names: prev.names
         }))
-        */
-
         
+
+        input.value = "";        
         
 
         return 1;
@@ -487,7 +548,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         //if the import has the same courses as the current schedule, no need to show any modal, just replace the current schedule
         if (checkIfSameCoursesImport(tokens)){
-            importSchedule(false)
+            importAllSchedules(false)
             return;
         }
 
@@ -616,7 +677,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeConfModal(); importSchedule(true)}}
+                            onClick={() => {closeConfModal(); importAllSchedules(true)}}
                             // onClick={closeConfModal}
 
                             >
@@ -686,7 +747,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto mr-3 rounded bg-primary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal(); importSchedule(true);}}
+                            onClick={() => {closeDecisionModal(); importAllSchedules(true);}}
                             >
                             <span>SUBSTITUIR</span>
                             <PencilAltIcon className="h-5 w-5" />
@@ -695,7 +756,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal(); importSchedule(false);}}
+                            onClick={() => {closeDecisionModal(); importAllSchedules(false);}}
                             >
                             <span>ADICIONAR</span>
                             <PlusIcon className="h-5 w-5" />
