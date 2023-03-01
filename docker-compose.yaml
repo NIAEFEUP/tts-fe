@@ -12,7 +12,3 @@ services:
     env_file:
       - .env
 
-networks:
-  default:
-    external:
-      name: tts_bridge
