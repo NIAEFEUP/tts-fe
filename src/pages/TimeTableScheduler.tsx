@@ -187,10 +187,29 @@ const TimeTableSchedulerPage = () => {
 
   const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
     
-    for (let i = 0; i < newCheckedCourses.length; i++) {
-      for (let j = 0; j < newCheckedCourses[i].length; j++) {
+    // for (let i = 0; i < newCheckedCourses.length; i++) {
+    //   for (let j = 0; j < newCheckedCourses[i].length; j++) {
         
-        for (let k = 0; k < importedCourses.length; k++) {
+    //     for (let k = 0; k < importedCourses.length; k++) {
+    //       if (importedCourses[k].course.info.course_unit_id === newCheckedCourses[i][j].info.course_unit_id) {
+    //         newCheckedCourses[i][j].checked = true
+    //         break
+    //       }
+    //     }
+    //   }
+    // }
+
+    let extraUCs : CheckedCourse[] = []
+
+    for (let k = 0; k < importedCourses.length; k++) {
+      if (importedCourses[k].course.info.course_id !== major.id) {
+        extraUCs.push(importedCourses[k].course)
+        continue
+      }
+
+      for (let i = 0; i < newCheckedCourses.length; i++) {
+        
+        for (let j = 0; j < newCheckedCourses[i].length; j++) {
           if (importedCourses[k].course.info.course_unit_id === newCheckedCourses[i][j].info.course_unit_id) {
             newCheckedCourses[i][j].checked = true
             break
@@ -198,6 +217,10 @@ const TimeTableSchedulerPage = () => {
         }
       }
     }
+    
+    newCheckedCourses = [extraUCs, ...newCheckedCourses]
+    
+
     
     
     return newCheckedCourses
@@ -214,7 +237,11 @@ const TimeTableSchedulerPage = () => {
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
       let uCC = updateCheckedCourses(newCheckedCourses, multipleOptions.selected)
       majorChangedRef.current = false
-      setCheckedCourses([checkedCourses[0], ...uCC])
+      if (isImportedSchedule)
+        setCheckedCourses([...uCC])
+      else
+        setCheckedCourses([checkedCourses[0], ...uCC.slice(1)])
+
     })
 
     // this line is needed to since adding isImportedSchedule and SetCheckedCourses to the dependencies array would cause Import not to work
