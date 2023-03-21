@@ -112,7 +112,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         for (let i = 0; i < majorTokens.length; i++){
             try{
-                imported_course_units.push(...(await importSingleSchedule(majorTokens[i])))
+                imported_course_units.unshift(...(await importSingleSchedule(majorTokens[i])))
             }catch(e: any){
                 console.log(e);
                 setIsImportedSchedule(false)

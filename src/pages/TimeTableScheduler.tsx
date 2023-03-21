@@ -186,18 +186,6 @@ const TimeTableSchedulerPage = () => {
   }, [extraCoursesMajor, extraCoursesMajorChangedRef, checkedCourses, setCheckedCourses])
 
   const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
-    
-    // for (let i = 0; i < newCheckedCourses.length; i++) {
-    //   for (let j = 0; j < newCheckedCourses[i].length; j++) {
-        
-    //     for (let k = 0; k < importedCourses.length; k++) {
-    //       if (importedCourses[k].course.info.course_unit_id === newCheckedCourses[i][j].info.course_unit_id) {
-    //         newCheckedCourses[i][j].checked = true
-    //         break
-    //       }
-    //     }
-    //   }
-    // }
 
     let extraUCs : CheckedCourse[] = []
 
