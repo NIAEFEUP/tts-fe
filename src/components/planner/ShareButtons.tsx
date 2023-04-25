@@ -3,6 +3,7 @@ import React, {Fragment, useState } from 'react';
 import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon, PencilAltIcon, PlusIcon} from '@heroicons/react/outline'
 import getMajors from '../../api/backend'
 import { Dialog, Transition } from '@headlessui/react'
+import { getCourseTeachers } from '../../utils/index'
 
 
 
@@ -125,13 +126,16 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         let placeholder_course_options: CourseOption[] = []
 
         for (let i = 0; i < imported_course_units.length ; i++){
+
+            let course_teachers = getCourseTeachers(imported_course_units[i])
+
             placeholder_course_options.push({
                     shown: imported_course_units[i].shown,
                     course: imported_course_units[i].course,
                     option: null,
                     schedules: imported_course_units[i].schedules,
-                    teachers: [],
-                    filteredTeachers: [],
+                    teachers: course_teachers,
+                    filteredTeachers: course_teachers,
                 })
             
         }
@@ -312,6 +316,12 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 teachers: [],
                 filteredTeachers: [],
             }
+
+            let course_teachers = getCourseTeachers(course_option)
+
+            course_option.teachers = course_teachers;
+            course_option.filteredTeachers = course_teachers;
+
             
 
 
