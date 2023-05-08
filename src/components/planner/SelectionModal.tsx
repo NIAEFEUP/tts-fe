@@ -269,25 +269,25 @@ const SelectionModal = (
                 ? courses[0].map((course: CheckedCourse, courseIdx: number) => (
                   <div
                     title={course?.info.name}
-                    key={`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`}
+                    key={`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`}
                     className="flex items-center transition"
                     onMouseEnter={() => {
-                      replaceExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
+                      replaceExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`, `xicon-for-${course?.info.course_unit_year}-${courseIdx}`)
                     }}
                     onMouseLeave={() => {
-                      recoverExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`, `xicon-for-${course?.info.course_year}-${courseIdx}`)
+                      recoverExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`, `xicon-for-${course?.info.course_unit_year}-${courseIdx}`)
                     }}
                   >
                     <XCircleIcon
                       className="h-5 w-5 remove-extra-uc-icon hidden cursor-pointer text-primary"
-                      id={`xicon-for-${course?.info.course_year}-${courseIdx}`}
+                      id={`xicon-for-${course?.info.course_unit_year}-${courseIdx}`}
                       onClick={() => { removeCourseFromExtraCourses(courseIdx) }}
                     />
                     <input
                       type="checkbox"
                       className="checkbox"
                       defaultChecked={course.checked}
-                      id={`added-extra-course-checkbox-${course?.info.course_year}-${courseIdx}`}
+                      id={`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`}
                     />
                     <label
                       className="ml-1.5 block cursor-pointer text-sm dark:text-white"
