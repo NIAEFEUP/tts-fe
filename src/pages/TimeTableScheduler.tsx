@@ -26,7 +26,7 @@ const TimeTableSchedulerPage = () => {
     )
 
   /**
-   * Considering that the yearCourses is sorted by the course_year field in ascending order, the function groups the major courses by year.
+   * Considering that the yearCourses is sorted by the course_unit_year field in ascending order, the function groups the major courses by year.
    * @param yearCourses All the courses in a major.
    * @returns The courses grouped by year.
    * @example input: [{ course: 1, year: 1 }, { course: 3, year: 1 }, { course: 2, year: 2 }]
@@ -36,7 +36,7 @@ const TimeTableSchedulerPage = () => {
     let majorCourses: Course[][] = []
     let currYear = 0
     for (let i = 0; i < yearCourses.length; i++) {
-      if (yearCourses[i].course_year !== currYear) {
+      if (yearCourses[i].course_unit_year !== currYear) {
         currYear += 1
         majorCourses.push([yearCourses[i]])
       } else {

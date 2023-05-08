@@ -15,7 +15,7 @@ export type Course = {
   name: string
   acronym: string
   url: string
-  course_year: number
+  course_unit_year: number
   semester: number
   year: number
   schedule_url: string
