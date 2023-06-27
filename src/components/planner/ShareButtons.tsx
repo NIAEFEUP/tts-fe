@@ -404,7 +404,12 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             </div>
             <input id='schedule-input' placeholder='Insere o link do horário...' className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-white
                         dark:bg-darkish dark:text-white dark:placeholder:text-white p-2.5 text-center text-sm font-normal text-black transition hover:opacity-80 disabled:cursor-not-allowed 
-                        disabled:opacity-50 border-2 border-gray-300 outline-none focus:border-tertiary dark:focus:border-gray-300 dark:border-tertiary" required>
+                        disabled:opacity-50 border-2 border-gray-300 outline-none focus:border-tertiary dark:focus:border-gray-300 dark:border-tertiary" required
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              openDecisionModal();
+                            }
+                          }}>
             </input>
             <button 
                         onClick={() => openDecisionModal()}

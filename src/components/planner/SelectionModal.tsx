@@ -347,7 +347,7 @@ const SelectionModal = (
           className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary px-2
           py-2 text-xs font-medium text-white transition hover:opacity-80 xl:space-x-2 xl:px-3"
         >
-          <span className="flex">Editar</span>
+          <span className="flex font-bold">Escolha de UCs</span>
           <PencilAltIcon className="h-4 w-4 text-white" />
         </button>
       </div>
