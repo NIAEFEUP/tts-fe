@@ -41,19 +41,7 @@ export type Major = {
   last_updated: string
 }
 
-/* Schedule */
-// export type CourseSchedule = {
-//   day: number
-//   duration: string
-//   start_time: string
-//   location: string
-//   lesson_type: string
-//   teacher_acronym: string
-//   course_unit_id: number
-//   last_updated: string
-//   class_name: string // e.g. 1MIEIC01
-//   composed_class_name: string // e.g. COMP752
-// }
+
 export type CourseSchedule = {
   day: number
   duration: string
