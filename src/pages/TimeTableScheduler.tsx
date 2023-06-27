@@ -14,7 +14,6 @@ import {
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
-import { coursesData } from '../utils/data'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 
 export const removeDuplicatesFromCourseOption = (courses: CourseOption[]) => {
@@ -69,8 +68,14 @@ const TimeTableSchedulerPage = () => {
   const getEmptyCourseOption = (course: CheckedCourse, schedules: CourseSchedule[]): CourseOption => {
     let teachers = []
     schedules.forEach((schedule, idx) => {
-      if (schedule.lesson_type !== 'T' && !teachers.includes(schedule.teacher_acronym)) teachers.push(schedule.teacher_acronym)
-    })
+      if (schedule.lesson_type !== 'T') {
+        schedule.professor_acronyms.forEach(acronym => {
+          if (!teachers.includes(acronym)) {
+            teachers.push(acronym);
+          }
+        });
+      }
+    });
 
     return {
       shown: {
@@ -276,8 +281,15 @@ const TimeTableSchedulerPage = () => {
         })
         schedules.forEach((schedule, idx) => {
           schedule.forEach((classes) => {
-            if (classes.lesson_type !== 'T' && !teachers[idx].includes(classes.teacher_acronym)) teachers[idx].push(classes.teacher_acronym)
+            if (classes.lesson_type !== 'T') {
+              classes.professor_acronyms.forEach(acronym => {
+                if (!teachers[idx].includes(acronym)) {
+                  teachers[idx].push(acronym);
+                }
+              });
+            }
           })
+          
         })
 
         if (notNulls.length > 0) {
