@@ -54,6 +54,12 @@ export type Major = {
 //   class_name: string // e.g. 1MIEIC01
 //   composed_class_name: string // e.g. COMP752
 // }
+
+export type ProfessorInformation = {
+  acronym: string
+  name: string
+}
+
 export type CourseSchedule = {
   day: number
   duration: string
@@ -65,8 +71,10 @@ export type CourseSchedule = {
   last_updated: string
   class_name: string // e.g. 1MIEIC01
   composed_class_name: string // e.g. COMP752
-  professor_sigarra_id: string
-  professor_acronyms: Array<string>
+  // professor_sigarra_id: string
+  // professor_acronyms: Array<string>                           // eliminar
+  professors_link: string
+  professor_information: Array<ProfessorInformation>          // new
 }
 
 /* Options */

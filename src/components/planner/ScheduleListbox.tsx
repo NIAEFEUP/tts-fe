@@ -169,7 +169,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     courseOption.filteredTeachers = [...selectedTeachers];
     setSelectedTeachers(selectedTeachers)
     if (selectedOption) {
-      setSelectedOption(selectedOption.professor_acronyms.some(element => selectedTeachers.includes(element)) ? selectedOption : null)
+      setSelectedOption(selectedOption.professor_information.some(element => selectedTeachers.includes(element.acronym)) ? selectedOption : null)
       setLastSelected(null)
     }
   })
@@ -182,7 +182,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
 
     adaptedSchedules.forEach((schedule) => {
     
-      if (schedule === null || schedule.professor_acronyms.some(element => selectedTeachers.includes(element)))
+      if (schedule === null || schedule.professor_information.some(element => selectedTeachers.includes(element.acronym)))
         selectedSchedules.push(schedule);
     })
 

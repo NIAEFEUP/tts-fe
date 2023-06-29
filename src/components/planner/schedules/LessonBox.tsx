@@ -88,7 +88,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               <div className="flex w-full items-center justify-between gap-1">
                 <span title="Sala">{lesson.schedule.location}</span>
                 <span title="Professor(es)" className="truncate">
-                  {lesson.schedule.professor_acronyms.join(', ')}
+                  {lesson.schedule.professor_information.map(prof_info => prof_info.acronym).join(', ')}
                 </span>
               </div>
             </div>
@@ -108,7 +108,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
                 <span title="Sala">{lesson.schedule.location}</span>
                 <span title="Turma">{compClassTitle ? compClassTitle : classTitle}</span>
                 <span title="Professor(es)" className="truncate">
-                  {lesson.schedule.professor_acronyms.join(', ')}
+                  {lesson.schedule.professor_information.map(prof_info => prof_info.acronym).join(', ')}
                 </span>
               </div>
             </div>
@@ -118,7 +118,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               <span title="Duração">{timeSpan}</span>
               <span title="Sala">{lesson.schedule.location}</span>
               <span title="Professor(es)" className="truncate">
-                {lesson.schedule.professor_acronyms.join(', ')}
+                {lesson.schedule.professor_information.map(prof_info => prof_info.acronym).join(', ')}
               </span>
             </div>
           )}
