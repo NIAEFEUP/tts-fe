@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon, EyeIcon } from '@heroicons/react/solid'
 import { getScheduleOptionDisplayText } from '../../utils'
-import { CourseOption, CourseSchedule, MultipleOptions } from '../../@types'
+import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../@types'
 
 type Props = {
   courseOption: CourseOption
@@ -17,12 +17,10 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
-  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers);
-
-  let teacherOptions = ["All teachers", ...courseOption.teachers]
+  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers)
+  let teacherOptions = [{ acronym: "All teachers", name: "" }, ...courseOption.teachers]
   const [lastSelected, setLastSelected] = useState(selectedOption);
   const [previewing, setPreviewing] = useState(false);
-
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -33,7 +31,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       )
   }, [courseOption])
 
-  const getTeacherSelectionText = (selectedTeachers: Array<string>) => selectedTeachers.length === 1 ? "1 teacher selected" : selectedTeachers.length + " teachers selected";
+  const getTeacherSelectionText = (selectedTeachers: Array<ProfessorInformation>) => selectedTeachers.length === 1 ? "1 teacher selected" : selectedTeachers.length + " teachers selected";
   
   const handleListBoxSelection = (option : CourseSchedule) => {
     setLastSelected(option);
@@ -162,14 +160,14 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, courseOption, setMultipleOptions])
 
-  const updateTeachersShown = ((selectedTeachers: Array<string>): void => {
-    if (selectedTeachers.includes("All teachers")) {
+  const updateTeachersShown = ((selectedTeachers: Array<ProfessorInformation>): void => {
+    if (selectedTeachers.some(other => other.acronym === "All teachers")) {
       selectedTeachers = (selectedTeachers.length !== 1) ? [] : courseOption.teachers;
     }
-    courseOption.filteredTeachers = [...selectedTeachers];
+    courseOption.filteredTeachers = selectedTeachers;
     setSelectedTeachers(selectedTeachers)
     if (selectedOption) {
-      setSelectedOption(selectedOption.professor_information.some(element => selectedTeachers.includes(element.acronym)) ? selectedOption : null)
+      setSelectedOption(selectedOption.professor_information.some(prof_info => selectedTeachers.includes(prof_info)) ? selectedOption : null)
       setLastSelected(null)
     }
   })
@@ -177,18 +175,29 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const selectDropdownSchedules = (): Array<CourseSchedule> => {
     let selectedSchedules = [];
 
-    if (selectedTeachers.includes("All teachers"))
+    if (selectedTeachers.some(other => other.acronym === "All teachers"))
       return adaptedSchedules;
 
     adaptedSchedules.forEach((schedule) => {
     
-      if (schedule === null || schedule.professor_information.some(element => selectedTeachers.includes(element.acronym)))
+      if (schedule === null || schedule.professor_information.some(element => selectedTeachers.includes(element)))
         selectedSchedules.push(schedule);
     })
 
     return selectedSchedules;
   }
 
+  const showName = (e, name) => {
+    if (name === "") return;
+    if (e.target.children.length !== 0)
+      e.target.children[0].innerText = name
+  };
+
+  const showAcronym = (e, acronym) => {
+    if (acronym === "All teachers") return;
+    if (e.target.children.length !== 0)
+      e.target.children[0].innerText = acronym 
+  };
 
   return (
     adaptedSchedules && (
@@ -299,8 +308,10 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                   >
                     {teacherOptions.map((option, optionIdx) => (
                       <Listbox.Option
-                        key={option}
+                        key={option.acronym}
                         value={option}
+                        onMouseOver={(e) => showName(e, option.name)} 
+                        onMouseOut={(e) => showAcronym(e, option.acronym)} 
                         className={({ active }) =>
                           `group relative cursor-default select-none py-2 text-sm pl-10
                             pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
@@ -308,13 +319,12 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                       >
                         {({ selected, active }) => (
                           <>
-                            <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
-                              {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
+                            <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'} pointer-events-none`}>
+                              {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option.acronym}
                             </span>
                             {selected ? (
                               <span
-                                className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
-                                  }`}
+                                className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'} pointer-events-none`}
                               >
                                 <CheckIcon className="h-5 w-5" aria-hidden="true" />
                               </span>

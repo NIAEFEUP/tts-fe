@@ -153,16 +153,15 @@ const getClassTypeClassName = (type: string) => {
 
 const getCourseTeachers = (courseOption: CourseOption) => {
   let teachers = []
-    courseOption.schedules.forEach((schedule, idx) => {
-      if (schedule.lesson_type !== 'T') {
-        schedule.professor_information.forEach(prof_info => {
-          const acronym = prof_info.acronym
-          if (!teachers.includes(acronym)) {
-            teachers.push(acronym);
-          }
-        });
-      }
-    })
+  courseOption.schedules.forEach((schedule, idx) => {
+    if (schedule.lesson_type !== 'T') {
+      schedule.professor_information.forEach(prof_info => {
+        if (!teachers.some(other => other.acronym === prof_info.acronym)) {
+          teachers.push(prof_info);
+        }
+      });
+    }
+  })
 
   return teachers
 }

@@ -51,9 +51,8 @@ const TimeTableSchedulerPage = () => {
     schedules.forEach((schedule, idx) => {
       if (schedule.lesson_type !== 'T') {
         schedule.professor_information.forEach(prof_info => {
-          const acronym = prof_info.acronym;
-          if (!teachers.includes(acronym)) {
-            teachers.push(acronym);
+          if (!teachers.some(other => other.acronym === prof_info.acronym)) {
+            teachers.push(prof_info);
           }
         });
       }
@@ -187,9 +186,8 @@ const TimeTableSchedulerPage = () => {
           schedule.forEach((classes) => {
             if (classes.lesson_type !== 'T') {
               classes.professor_information.forEach(prof_info => {
-                const acronym = prof_info.acronym;
-                if (!teachers[idx].includes(acronym)) {
-                  teachers[idx].push(acronym);
+                if (!teachers[idx].some(other => other.acronym === prof_info.acronym)) {
+                  teachers[idx].push(prof_info);
                 }
               });
             }
