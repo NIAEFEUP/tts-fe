@@ -9,7 +9,7 @@ type Props = {
 
 const InspectLessonBox = ({ lesson, conflict }: Props) => {
   const lessonType = lesson.schedule.lesson_type
-  console.log(lesson.schedule.professors_link)
+  const professorDescription = lesson.schedule.professor_information.map(prof_info => prof_info.name).join('\n')
   return (
     <div
       className={classNames(
@@ -42,7 +42,7 @@ const InspectLessonBox = ({ lesson, conflict }: Props) => {
         <div className="flex w-full items-center justify-between gap-2">
           <span title="Sala">{lesson.schedule.location}</span>
           <a href={lesson.schedule.professors_link} className="cursor-pointer hover:underline">
-            <span title="Professor(es)" className="whitespace-nowrap">
+            <span title={professorDescription} className="whitespace-nowrap">
               {lesson.schedule.professor_information.map(prof_info => prof_info.acronym).join(', ')}
             </span>
           </a>
