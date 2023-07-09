@@ -336,15 +336,16 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             <div className="absolute inset-y-0 left-0 col-span-6">
             
             </div>
-            <input placeholder='Insere o link do horário...' id="schedule-input" className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
-                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50" required>
+            <input id='schedule-input' placeholder='Insere o link do horário...' className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-white
+                        dark:bg-darkish dark:text-white dark:placeholder:text-white p-2.5 text-center text-sm font-normal text-black transition hover:opacity-80 disabled:cursor-not-allowed 
+                        disabled:opacity-50 border-2 border-gray-300 outline-none focus:border-tertiary dark:focus:border-gray-300 dark:border-tertiary" required>
             </input>
             <button 
                         onClick={() => openDecisionModal()}
 
                         id='ImportButton'
                         title="Importar o link inserido"
-                        className="absolute right-0.5 bottom-0.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
+                        className="absolute right-2 bottom-1.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                         <UploadIcon className="h-4 w-4" />
@@ -356,10 +357,10 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                     <button
                         onClick={() => copySchedule()}
                         title="Copiar o link do horário"
-                        className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
+                        className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2.5
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                        {icon? <CheckIcon className='w-6 h-5'/> : <DocumentDuplicateIcon className='w-6 h-5' />}
+                        {icon? <CheckIcon className='w-6 h-6'/> : <DocumentDuplicateIcon className='w-6 h-6' />}
                     </button>
 
                 </div>

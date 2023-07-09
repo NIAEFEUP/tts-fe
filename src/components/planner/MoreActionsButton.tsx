@@ -34,7 +34,7 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
     for (let i = 0; i < columns[0].length; i++) {
       const column = columns[i]
       const info = multipleOptions.options[0][i].course.info
-      const line = [info.course_year, info.name, info.acronym]
+      const line = [info.course_unit_year, info.name, info.acronym]
 
       for (let j = 0; j < column.length; j++) {
         line.push(column[j])

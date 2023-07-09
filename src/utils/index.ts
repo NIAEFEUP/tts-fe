@@ -71,7 +71,7 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
   // prioritize single class name
   const classTitle = option.class_name !== null ? option.class_name : option.composed_class_name
-  return [classTitle, option.teacher_acronym, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+  return [classTitle, option.professor_acronyms, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
 }
 
 const getLessonBoxTime = (schedule: CourseSchedule) => {
@@ -153,7 +153,13 @@ const getClassTypeClassName = (type: string) => {
 const getCourseTeachers = (courseOption: CourseOption) => {
   let teachers = []
     courseOption.schedules.forEach((schedule, idx) => {
-      if (schedule.lesson_type !== 'T' && !teachers.includes(schedule.teacher_acronym)) teachers.push(schedule.teacher_acronym)
+      if (schedule.lesson_type !== 'T') {
+        schedule.professor_acronyms.forEach(acronym => {
+          if (!teachers.includes(acronym)) {
+            teachers.push(acronym);
+          }
+        });
+      }
     })
 
   return teachers
