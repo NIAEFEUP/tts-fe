@@ -10,7 +10,7 @@ import {
   SelectorIcon,
   ArrowCircleLeftIcon,
 } from '@heroicons/react/solid'
-import { assignCorrectValueToCheckboxes, controlCoursesGroupCheckbox, is_null_or_undefined, majorAlreadyTakenMessage } from '../../pages/TimeTableScheduler'
+import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../pages/TimeTableScheduler'
 import { MajorSearchCombobox } from './MajorSearchCombobox'
 
 type Props = {

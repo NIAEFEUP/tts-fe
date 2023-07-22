@@ -14,7 +14,6 @@ import {
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
-import { coursesData } from '../utils/data'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 
 export const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
