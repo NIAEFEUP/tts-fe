@@ -155,7 +155,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     })
 
     if (isImportedSchedule) {
-      updateTeachersShown(courseOption.filteredTeachers)
+      //updateTeachersShown(courseOption.filteredTeachers)
       setIsImportedSchedule(false)
     }
 
