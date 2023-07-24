@@ -80,7 +80,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         }
 
         for (let key in extraUCsStrs){
-            copySchedule += "-" + extraUCsStrs[key];
+            copySchedule += "|" + extraUCsStrs[key];
         }
         return copySchedule;
     }
@@ -106,7 +106,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     const importAllSchedules = async (replaceExisting : boolean) => {
         setIsImportedSchedule(true)
         var input = document.getElementById("schedule-input") as HTMLInputElement;
-        let majorTokens : string[] = input.value.split("-")
+        let majorTokens : string[] = input.value.split("|")
         
 
         let imported_course_units : CourseOption[] = []

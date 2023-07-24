@@ -14,7 +14,7 @@ export type Course = {
   course: string
   name: string
   acronym: string
-  url: string
+  url: stringid
   course_unit_year: number
   semester: number
   year: number
@@ -31,7 +31,7 @@ export type CheckedCourse = {
 export type Major = {
   id: number
   name: string
-  course_id: number
+  sigarra_id: number
   faculty: number
   acronym: string
   course_type: string
@@ -39,6 +39,7 @@ export type Major = {
   url: string
   plan_url: string
   last_updated: string
+  
 }
 
 
