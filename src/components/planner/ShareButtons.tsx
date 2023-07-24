@@ -374,7 +374,8 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         var major_id = tokens[0];
 
         if (Number(major_id) === major.id){
-            setIsDecisionModalOpen(true)
+            //setIsDecisionModalOpen(true) //HAS A BUG CURRENTLY WHERE THE ADD OPTION SUBSTITUTES, NEEDS TO BE RESOLVED
+            setIsConfModalOpen(true) 
         }else{
             setIsConfModalOpen(true)
         }
