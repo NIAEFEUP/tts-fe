@@ -105,7 +105,7 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
           <div className="p-1">
             <Menu.Item>
               {({ active, disabled }) => (
-                <button
+                <button disabled
                   onClick={() => exportCSV()}
                   title="Exportar ficheiro com todas as opções nos 10 horários"
                   className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900

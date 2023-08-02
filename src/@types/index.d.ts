@@ -14,7 +14,7 @@ export type Course = {
   course: string
   name: string
   acronym: string
-  url: string
+  url: stringid
   course_unit_year: number
   semester: number
   year: number
@@ -31,7 +31,7 @@ export type CheckedCourse = {
 export type Major = {
   id: number
   name: string
-  course_id: number
+  sigarra_id: number
   faculty: number
   acronym: string
   course_type: string
@@ -39,21 +39,10 @@ export type Major = {
   url: string
   plan_url: string
   last_updated: string
+  
 }
 
-/* Schedule */
-// export type CourseSchedule = {
-//   day: number
-//   duration: string
-//   start_time: string
-//   location: string
-//   lesson_type: string
-//   teacher_acronym: string
-//   course_unit_id: number
-//   last_updated: string
-//   class_name: string // e.g. 1MIEIC01
-//   composed_class_name: string // e.g. COMP752
-// }
+
 export type CourseSchedule = {
   day: number
   duration: string

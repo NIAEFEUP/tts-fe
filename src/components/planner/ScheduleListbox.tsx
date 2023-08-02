@@ -118,9 +118,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     }
 
     const resolveCourseOptions = (prev: CourseOption[]) => {
-      let newCourseOptions = prev
-      for (let i = 0; i < prev.length; i++) {
-        const option = prev[i]
+      let newCourseOptions = [...prev]
+      for (let i = 0; i < newCourseOptions.length; i++) {
+        const option = newCourseOptions[i]
         if (option.course.info.id === courseOption.course.info.id) {
           if(!isImportedSchedule){
             newCourseOptions[i].option = selectedOption
@@ -139,6 +139,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
 
     let resolvedCourseOptions = resolveCourseOptions(multipleOptions.selected)
     let resolvedOptions = multipleOptions.options
+    console.log(selectedOption)
     resolvedOptions[multipleOptions.index] = resolvedCourseOptions
 
 
@@ -154,7 +155,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     })
 
     if (isImportedSchedule) {
-      updateTeachersShown(courseOption.filteredTeachers)
       setIsImportedSchedule(false)
     }
 
@@ -169,7 +169,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     courseOption.filteredTeachers = [...selectedTeachers];
     setSelectedTeachers(selectedTeachers)
     if (selectedOption) {
-      setSelectedOption(selectedOption.professor_acronyms.some(element => selectedTeachers.includes(element)) ? selectedOption : null)
+      if(!(selectedOption.professor_acronyms.some(element => selectedTeachers.includes(element)))){
+        setSelectedOption(null)
+      }
       setLastSelected(null)
     }
   })

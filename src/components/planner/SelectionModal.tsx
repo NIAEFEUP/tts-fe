@@ -204,25 +204,25 @@ const SelectionModal = (
                 ? courses[0].map((course: CheckedCourse, courseIdx: number) => (
                   <div
                     title={course?.info.name}
-                    key={`added-extra-course-checkbox-${course?.info.year}-${courseIdx}`}
+                    key={`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`}
                     className="flex items-center transition"
                     onMouseEnter={() => {
-                      replaceExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.year}-${courseIdx}`, `xicon-for-${course?.info.year}-${courseIdx}`)
+                      replaceExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`, `xicon-for-${course?.info.course_unit_year}-${courseIdx}`)
                     }}
                     onMouseLeave={() => {
-                      recoverExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.year}-${courseIdx}`, `xicon-for-${course?.info.year}-${courseIdx}`)
+                      recoverExtraCourseCheckbox(`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`, `xicon-for-${course?.info.course_unit_year}-${courseIdx}`)
                     }}
                   >
                     <XCircleIcon
                       className="h-5 w-5 remove-extra-uc-icon hidden cursor-pointer text-primary"
-                      id={`xicon-for-${course?.info.year}-${courseIdx}`}
+                      id={`xicon-for-${course?.info.course_unit_year}-${courseIdx}`}
                       onClick={() => { removeCourseFromExtraCourses(courseIdx) }}
                     />
                     <input
                       type="checkbox"
                       className="checkbox"
                       defaultChecked={course.checked}
-                      id={`added-extra-course-checkbox-${course?.info.year}-${courseIdx}`}
+                      id={`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`}
                     />
                     <label
                       className="ml-1.5 block cursor-pointer text-sm dark:text-white"
@@ -296,7 +296,7 @@ const SelectionModal = (
           className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-primary bg-primary px-2
           py-2 text-xs font-medium text-white transition hover:opacity-80 xl:space-x-2 xl:px-3"
         >
-          <span className="flex">Editar</span>
+          <span className="flex font-bold">Escolha de UCs</span>
           <PencilAltIcon className="h-4 w-4 text-white" />
         </button>
       </div>
