@@ -17,10 +17,14 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
-  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers)
   let teacherOptions = [{ acronym: "All teachers", name: "" }, ...courseOption.teachers]
   const [lastSelected, setLastSelected] = useState(selectedOption);
   const [previewing, setPreviewing] = useState(false);
+
+  // A filtered copy of courseOption.teachers is required for comparisons.
+  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.teachers.filter(prof_info1 =>
+    courseOption.filteredTeachers.some(prof_info2 => prof_info1.acronym === prof_info2.acronym))
+  );
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -52,7 +56,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       && option.start_time === lastSelected.start_time
       && option.location === lastSelected.location
       && option.lesson_type === lastSelected.lesson_type
-      //&& option.teacher_acronym === lastSelected.teacher_acronym
       && option.course_unit_id === lastSelected.course_unit_id
       && option.last_updated === lastSelected.last_updated
       && option.class_name === lastSelected.class_name // e.g. 1MIEIC01
@@ -108,6 +111,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       })
     }
   }
+
+  const hasCommonProfessorWith = (profs1, profs2) =>
+      profs1.some(prof_info1 => profs2.some(prof_info2 => prof_info1.acronym === prof_info2.acronym))
 
   useEffect(() => {
     if (firstRenderRef.current === true) {
@@ -167,7 +173,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     courseOption.filteredTeachers = selectedTeachers;
     setSelectedTeachers(selectedTeachers)
     if (selectedOption) {
-      setSelectedOption(selectedOption.professor_information.some(prof_info => selectedTeachers.includes(prof_info)) ? selectedOption : null)
+      setSelectedOption(hasCommonProfessorWith(selectedOption.professor_information, selectedTeachers) ? selectedOption : null)
       setLastSelected(null)
     }
   })
@@ -179,8 +185,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       return adaptedSchedules;
 
     adaptedSchedules.forEach((schedule) => {
-    
-      if (schedule === null || schedule.professor_information.some(element => selectedTeachers.includes(element)))
+      if (schedule === null || hasCommonProfessorWith(schedule.professor_information, selectedTeachers))
         selectedSchedules.push(schedule);
     })
 
