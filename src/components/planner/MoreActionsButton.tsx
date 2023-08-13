@@ -34,7 +34,7 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
     for (let i = 0; i < columns[0].length; i++) {
       const column = columns[i]
       const info = multipleOptions.options[0][i].course.info
-      const line = [info.course_year, info.name, info.acronym]
+      const line = [info.course_unit_year, info.name, info.acronym]
 
       for (let j = 0; j < column.length; j++) {
         line.push(column[j])
@@ -105,7 +105,7 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
           <div className="p-1">
             <Menu.Item>
               {({ active, disabled }) => (
-                <button
+                <button disabled
                   onClick={() => exportCSV()}
                   title="Exportar ficheiro com todas as opções nos 10 horários"
                   className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900

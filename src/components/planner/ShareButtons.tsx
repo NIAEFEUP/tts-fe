@@ -3,6 +3,7 @@ import React, {Fragment, useState } from 'react';
 import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon, PencilAltIcon, PlusIcon} from '@heroicons/react/outline'
 import getMajors from '../../api/backend'
 import { Dialog, Transition } from '@headlessui/react'
+import { getCourseTeachers } from '../../utils/index'
 
 
 
@@ -79,7 +80,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         }
 
         for (let key in extraUCsStrs){
-            copySchedule += "-" + extraUCsStrs[key];
+            copySchedule += "|" + extraUCsStrs[key];
         }
         return copySchedule;
     }
@@ -103,34 +104,96 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     }
 
     const importAllSchedules = async (replaceExisting : boolean) => {
-        //setIsImportedSchedule(true)
+        setIsImportedSchedule(true)
         var input = document.getElementById("schedule-input") as HTMLInputElement;
-        let majorTokens : string[] = input.value.split("-")
+        let majorTokens : string[] = input.value.split("|")
         
 
         let imported_course_units : CourseOption[] = []
-        // if (replaceExisting){
-        //     imported_course_units = [];
-        // }else{
-        //     imported_course_units = multipleOptions.options[multipleOptions.index];
-        // }
-
-        
 
         for (let i = 0; i < majorTokens.length; i++){
             try{
-                imported_course_units.push(...(await importSingleSchedule(majorTokens[i])))
-                let ret = 1;
+                imported_course_units.unshift(...(await importSingleSchedule(majorTokens[i])))
             }catch(e: any){
                 console.log(e);
-                //show error modal/card
+                setIsImportedSchedule(false)
                 return;
             }
         }
 
-        console.log([...imported_course_units])
+        let all_options = multipleOptions.options
 
-        /**
+        let placeholder_course_options: CourseOption[] = []
+
+        for (let i = 0; i < imported_course_units.length ; i++){
+
+            let course_teachers = getCourseTeachers(imported_course_units[i])
+
+            placeholder_course_options.push({
+                    shown: imported_course_units[i].shown,
+                    course: imported_course_units[i].course,
+                    option: null,
+                    schedules: imported_course_units[i].schedules,
+                    teachers: course_teachers,
+                    filteredTeachers: course_teachers,
+                })
+            
+        }
+
+        all_options[multipleOptions.index] = imported_course_units;
+
+        //purge all non imported courses
+        if(replaceExisting){
+            for (let i = 0; i < all_options.length ; i++){
+                if (i !== multipleOptions.index){
+                    let new_option = [];
+                    for(let y = 0; y < all_options[i].length; y++){
+                        for(let x = 0; x < placeholder_course_options.length; x++){
+                            if (placeholder_course_options[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
+                                new_option.push(all_options[i][y]);
+                                break;
+                            }
+                        }
+                    }
+                    all_options[i] = new_option;
+                    
+                }
+            }
+        }
+
+        //add missing imported courses
+        for (let i = 0; i < all_options.length ; i++){
+            if (i !== multipleOptions.index){
+                for(let x = 0; x < placeholder_course_options.length; x++){
+                    let found = false;
+                    for(let y = 0; y < all_options[i].length; y++){
+                        if (placeholder_course_options[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found){
+                        all_options[i].push(placeholder_course_options[x]);
+                    }
+                }
+                
+            }
+        }
+
+        
+        let imported_major : Major;
+        let major_id = Number(majorTokens[0].split(";")[0]);
+
+        let majors = await getMajors.getMajors();
+
+        for (let i = 0; i < majors.length ; i++){
+            if(majors[i]["id"] === major_id){
+                imported_major = majors[i];
+                break;
+            }
+
+        }
+
 
         if (imported_major.id !== major.id){
             setMajor(imported_major);
@@ -144,9 +207,9 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             options: all_options,
             names: prev.names
         }))
-        */
-
         
+
+        input.value = "";        
         
 
         return 1;
@@ -253,6 +316,12 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 teachers: [],
                 filteredTeachers: [],
             }
+
+            let course_teachers = getCourseTeachers(course_option)
+
+            course_option.teachers = course_teachers;
+            course_option.filteredTeachers = course_teachers;
+
             
 
 
@@ -263,197 +332,6 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         return imported_course_units;
 
 
-    }
-
-    /**
-     * Function that imports schedule from clipboard
-     */
-    const importSchedule = async (replaceExisting : boolean) => {
-        setIsImportedSchedule(true);
-        let ret = await importAllSchedules(replaceExisting);
-        var input = document.getElementById("schedule-input") as HTMLInputElement;
-        let value : string = input.value;
-        var tokens : string[] = value.split(";")
-        var major_id = Number(tokens[0]);
-        var courses_info : ImportedCourse[] = [];
-
-        tokens.splice(0, 1);
-        for (let i = 0; i < tokens.length ; i++){
-            let split_tokens = tokens[i].split("#");
-            let imported_course : ImportedCourse = {
-                course_unit_id: Number(split_tokens[0]),
-                class_name: split_tokens[1]
-            }
-            courses_info.push(imported_course);
-        }
-
-
-        //get Major
-        var imported_major : Major;
-        
-        var majors = await getMajors.getMajors();
-        
-
-        for (let i = 0; i < majors.length ; i++){
-            if(majors[i]["id"] === major_id){
-                imported_major = majors[i];
-                break;
-            }
-
-        }
-
-        //get courses
-        try{
-            var course_units = await getMajors.getCourses(imported_major);
-        }catch(e: any){
-            console.log(e);
-            setIsImportedSchedule(false);
-            return;
-        }
-        var placeholder_imported_course_units : CourseOption[] = [];
-        var imported_course_units : CourseOption[];
-        if (replaceExisting){
-            imported_course_units = [];
-        }
-        else{
-            imported_course_units = multipleOptions.options[multipleOptions.index];
-        }
-
-
-        for (let i = 0; i < courses_info.length; i++){
-            let course_option : CourseOption;
-            let course_option_placeholder : CourseOption;
-            var checked_course : CheckedCourse 
-            for(let j = 0; j < course_units.length; j++){
-
-                if(course_units[j]["course_unit_id"] === courses_info[i].course_unit_id){
-                    checked_course = {
-                        checked: true,
-                        info: course_units[j],
-                    };
-                    break;
-                }
-            }
-
-            let course_schedule : CourseSchedule[];
-            try{
-                course_schedule = await getMajors.getCourseSchedule(checked_course);
-            }catch(e: any){
-                console.log(e);
-                setIsImportedSchedule(false);
-                return;
-            }
-            let option : CourseSchedule | null = null;
-            if (courses_info[i].class_name !== "null"){
-                for (let j = 0; j < course_schedule.length ; j++){
-                    if (course_schedule[j].lesson_type !== "T" && course_schedule[j].class_name === courses_info[i].class_name){
-                        option = course_schedule[j];
-                        break;
-                    }
-                }
-            }
-
-            let course_already_exists = false;
-            for(let j = 0; j < imported_course_units.length; j++){
-                if(imported_course_units[j].course.info.course_unit_id === checked_course.info.course_unit_id){
-                    imported_course_units[j].option = option;
-                    course_already_exists = true;
-                    break;
-                }
-            }
-            if (course_already_exists)
-                continue;
-    
-            let shown_var = {
-                T: true,
-                TP: true
-              };
-
-            course_option = {
-                shown: shown_var,
-                course: checked_course,
-                option: option,
-                schedules: course_schedule,
-                teachers: [],
-                filteredTeachers: [],
-            }
-            course_option_placeholder = {
-                shown: shown_var,
-                course: checked_course,
-                option: null,
-                schedules: course_schedule,
-                teachers: [],
-                filteredTeachers: [],
-            }
-
-
-
-            imported_course_units.push(course_option);
-            placeholder_imported_course_units.push(course_option_placeholder);
-        }
-
-
-        let all_options = multipleOptions.options
-
-        all_options[multipleOptions.index] = imported_course_units;
-
-        //purge all non imported courses
-        if(replaceExisting){
-            for (let i = 0; i < all_options.length ; i++){
-                if (i !== multipleOptions.index){
-                    let new_option = [];
-                    for(let y = 0; y < all_options[i].length; y++){
-                        for(let x = 0; x < placeholder_imported_course_units.length; x++){
-                            if (placeholder_imported_course_units[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
-                                new_option.push(all_options[i][y]);
-                                break;
-                            }
-                        }
-                    }
-                    all_options[i] = new_option;
-                    
-                }
-            }
-        }
-
-        //add missing imported courses
-        for (let i = 0; i < all_options.length ; i++){
-            if (i !== multipleOptions.index){
-                for(let x = 0; x < placeholder_imported_course_units.length; x++){
-                    let found = false;
-                    for(let y = 0; y < all_options[i].length; y++){
-                        if (placeholder_imported_course_units[x].course.info.course_unit_id === all_options[i][y].course.info.course_unit_id){
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found){
-                        all_options[i].push(placeholder_imported_course_units[x]);
-                    }
-                }
-                
-            }
-        }
-
-
-
-        if (imported_major.id !== major.id){
-            setMajor(imported_major);
-
-        }
-
-        
-        setMultipleOptions((prev) => ({
-            index: prev.index,
-            selected: imported_course_units,
-            options: all_options,
-            names: prev.names
-        }))
-
-        
-        
-
-        input.value = "";
     }
 
     const checkIfSameCoursesImport = (import_tokens : string[]) => {
@@ -489,14 +367,15 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
         //if the import has the same courses as the current schedule, no need to show any modal, just replace the current schedule
         if (checkIfSameCoursesImport(tokens)){
-            importSchedule(false)
+            importAllSchedules(false)
             return;
         }
 
         var major_id = tokens[0];
 
         if (Number(major_id) === major.id){
-            setIsDecisionModalOpen(true)
+            //setIsDecisionModalOpen(true) //HAS A BUG CURRENTLY WHERE THE ADD OPTION SUBSTITUTES, NEEDS TO BE RESOLVED
+            setIsConfModalOpen(true) 
         }else{
             setIsConfModalOpen(true)
         }
@@ -524,15 +403,21 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             <div className="absolute inset-y-0 left-0 col-span-6">
             
             </div>
-            <input placeholder='Insere o link do horário...' id="schedule-input" className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
-                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50" required>
+            <input id='schedule-input' placeholder='Insere o link do horário...' className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-white
+                        dark:bg-darkish dark:text-white dark:placeholder:text-white p-2.5 text-center text-sm font-normal text-black transition hover:opacity-80 disabled:cursor-not-allowed 
+                        disabled:opacity-50 border-2 border-gray-300 outline-none focus:border-tertiary dark:focus:border-gray-300 dark:border-tertiary" required
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              openDecisionModal();
+                            }
+                          }}>
             </input>
             <button 
                         onClick={() => openDecisionModal()}
 
                         id='ImportButton'
                         title="Importar o link inserido"
-                        className="absolute right-0.5 bottom-0.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
+                        className="absolute right-2 bottom-1.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                         <UploadIcon className="h-4 w-4" />
@@ -544,10 +429,10 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                     <button
                         onClick={() => copySchedule()}
                         title="Copiar o link do horário"
-                        className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2 
+                        className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2.5
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                        {icon? <CheckIcon className='w-6 h-5'/> : <DocumentDuplicateIcon className='w-6 h-5' />}
+                        {icon? <CheckIcon className='w-6 h-6'/> : <DocumentDuplicateIcon className='w-6 h-6' />}
                     </button>
 
                 </div>
@@ -618,7 +503,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeConfModal(); importSchedule(true)}}
+                            onClick={() => {closeConfModal(); importAllSchedules(true)}}
                             // onClick={closeConfModal}
 
                             >
@@ -688,7 +573,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto mr-3 rounded bg-primary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal(); importSchedule(true);}}
+                            onClick={() => {closeDecisionModal(); importAllSchedules(true);}}
                             >
                             <span>SUBSTITUIR</span>
                             <PencilAltIcon className="h-5 w-5" />
@@ -697,7 +582,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                             type="button"
                             className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
                             transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                            onClick={() => {closeDecisionModal(); importSchedule(false);}}
+                            onClick={() => {closeDecisionModal(); importAllSchedules(false);}}
                             >
                             <span>ADICIONAR</span>
                             <PlusIcon className="h-5 w-5" />

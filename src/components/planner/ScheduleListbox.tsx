@@ -54,7 +54,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       && option.start_time === lastSelected.start_time
       && option.location === lastSelected.location
       && option.lesson_type === lastSelected.lesson_type
-      && option.teacher_acronym === lastSelected.teacher_acronym
+      //&& option.teacher_acronym === lastSelected.teacher_acronym
       && option.course_unit_id === lastSelected.course_unit_id
       && option.last_updated === lastSelected.last_updated
       && option.class_name === lastSelected.class_name // e.g. 1MIEIC01
@@ -118,9 +118,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     }
 
     const resolveCourseOptions = (prev: CourseOption[]) => {
-      let newCourseOptions = prev
-      for (let i = 0; i < prev.length; i++) {
-        const option = prev[i]
+      let newCourseOptions = [...prev]
+      for (let i = 0; i < newCourseOptions.length; i++) {
+        const option = newCourseOptions[i]
         if (option.course.info.id === courseOption.course.info.id) {
           if(!isImportedSchedule){
             newCourseOptions[i].option = selectedOption
@@ -139,6 +139,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
 
     let resolvedCourseOptions = resolveCourseOptions(multipleOptions.selected)
     let resolvedOptions = multipleOptions.options
+    console.log(selectedOption)
     resolvedOptions[multipleOptions.index] = resolvedCourseOptions
 
 
@@ -154,7 +155,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     })
 
     if (isImportedSchedule) {
-      updateTeachersShown(courseOption.filteredTeachers)
       setIsImportedSchedule(false)
     }
 
@@ -169,7 +169,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     courseOption.filteredTeachers = [...selectedTeachers];
     setSelectedTeachers(selectedTeachers)
     if (selectedOption) {
-      setSelectedOption(selectedTeachers.includes(selectedOption.teacher_acronym) ? selectedOption : null)
+      if(!(selectedOption.professor_acronyms.some(element => selectedTeachers.includes(element)))){
+        setSelectedOption(null)
+      }
       setLastSelected(null)
     }
   })
@@ -181,7 +183,8 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       return adaptedSchedules;
 
     adaptedSchedules.forEach((schedule) => {
-      if (schedule === null || selectedTeachers.includes(schedule.teacher_acronym))
+    
+      if (schedule === null || schedule.professor_acronyms.some(element => selectedTeachers.includes(element)))
         selectedSchedules.push(schedule);
     })
 
