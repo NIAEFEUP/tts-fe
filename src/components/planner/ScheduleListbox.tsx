@@ -139,7 +139,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
 
     let resolvedCourseOptions = resolveCourseOptions(multipleOptions.selected)
     let resolvedOptions = multipleOptions.options
-    console.log(selectedOption)
+    //console.log(selectedOption)
     resolvedOptions[multipleOptions.index] = resolvedCourseOptions
 
 

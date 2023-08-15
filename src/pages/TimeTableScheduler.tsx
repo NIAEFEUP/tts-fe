@@ -335,83 +335,90 @@ const TimeTableSchedulerPage = () => {
       pickedCourses = removeDuplicatesFromCourseArray(pickedCourses)
     }
 
+    let isNewerPromise = true;
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
+      
+      if (isNewerPromise) {
+        setMultipleOptions((prev) => {
+          let newCourseOptions: CourseOption[] = []
+          const notNulls = prev.selected.filter((item) => item.option !== null)
 
-      setMultipleOptions((prev) => {
-        let newCourseOptions: CourseOption[] = []
-        const notNulls = prev.selected.filter((item) => item.option !== null)
-
-        let teachers = Array.apply(null, Array(schedules.length)).map(function() {
-          return []
-        })
-        schedules.forEach((schedule, idx) => {
-          schedule.forEach((classes) => {
-            if (classes.lesson_type !== 'T') {
-              classes.professor_acronyms.forEach(acronym => {
-                if (!teachers[idx].includes(acronym)) {
-                  teachers[idx].push(acronym);
-                }
-              });
-            }
+          let teachers = Array.apply(null, Array(schedules.length)).map(function () {
+            return []
           })
-          
-        })
-
-        if (notNulls.length > 0) {
-          for (let i = 0; i < pickedCourses.length; i++) {
-            const co = findPreviousEntry(prev.selected, pickedCourses[i])
-            newCourseOptions.push({
-              shown: co.shown,
-              course: pickedCourses[i],
-              option: co.option,
-              schedules: schedules[i],
-              teachers: teachers[i],
-              filteredTeachers: teachers[i],
+          schedules.forEach((schedule, idx) => {
+            schedule.forEach((classes) => {
+              if (classes.lesson_type !== 'T') {
+                classes.professor_acronyms.forEach(acronym => {
+                  if (!teachers[idx].includes(acronym)) {
+                    teachers[idx].push(acronym);
+                  }
+                });
+              }
             })
-          }
-        } else {
-          for (let i = 0; i < pickedCourses.length; i++) {
-            newCourseOptions.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
-          }
-        }
 
-        let filler: CourseOption[] = []
-        for (let i = 0; i < pickedCourses.length; i++) filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
+          })
 
-        let newOptions: CourseOption[][] = []
-        for (let i = 0; i < 10; i++) {
-          if (i === prev.index) newOptions.push(newCourseOptions)
-          else {
-            if (prev.options.length === 0) newOptions.push(JSON.parse(JSON.stringify(filler))) // deep copy
-            else {
-              const innerNotNulls = prev.options[i].filter((item) => item.option !== null)
-              if (innerNotNulls.length > 0) {
-                let extraCourseOptions: CourseOption[] = []
-                for (let j = 0; j < pickedCourses.length; j++) {
-                  const co = findPreviousEntry(prev.options[i], pickedCourses[j])
-                  extraCourseOptions.push({
-                    shown: co.shown,
-                    course: pickedCourses[j],
-                    option: co.option,
-                    schedules: schedules[j],
-                    teachers: teachers[i],
-                    filteredTeachers: teachers[i],
-                  })
-                }
-                newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
-              } else newOptions.push(JSON.parse(JSON.stringify(filler)))
+          if (notNulls.length > 0) {
+            for (let i = 0; i < pickedCourses.length; i++) {
+              const co = findPreviousEntry(prev.selected, pickedCourses[i])
+              newCourseOptions.push({
+                shown: co.shown,
+                course: pickedCourses[i],
+                option: co.option,
+                schedules: schedules[i],
+                teachers: teachers[i],
+                filteredTeachers: teachers[i],
+              })
+            }
+          } else {
+            for (let i = 0; i < pickedCourses.length; i++) {
+              newCourseOptions.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
             }
           }
-        }
 
-        return {
-          index: prev.index,
-          selected: newCourseOptions,
-          options: newOptions,
-          names: prev.names
-        }
-      })
+          let filler: CourseOption[] = []
+          for (let i = 0; i < pickedCourses.length; i++) filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
+
+          let newOptions: CourseOption[][] = []
+          for (let i = 0; i < 10; i++) {
+            if (i === prev.index) newOptions.push(newCourseOptions)
+            else {
+              if (prev.options.length === 0) newOptions.push(JSON.parse(JSON.stringify(filler))) // deep copy
+              else {
+                const innerNotNulls = prev.options[i].filter((item) => item.option !== null)
+                if (innerNotNulls.length > 0) {
+                  let extraCourseOptions: CourseOption[] = []
+                  for (let j = 0; j < pickedCourses.length; j++) {
+                    const co = findPreviousEntry(prev.options[i], pickedCourses[j])
+                    extraCourseOptions.push({
+                      shown: co.shown,
+                      course: pickedCourses[j],
+                      option: co.option,
+                      schedules: schedules[j],
+                      teachers: teachers[i],
+                      filteredTeachers: teachers[i],
+                    })
+                  }
+                  newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
+                } else newOptions.push(JSON.parse(JSON.stringify(filler)))
+              }
+            }
+          }
+
+          return {
+            index: prev.index,
+            selected: newCourseOptions,
+            options: newOptions,
+            names: prev.names
+          }
+        })
+      }
     })
+
+    return () => {
+      isNewerPromise = false;
+    }
   }, [checkedCourses])
 
   // assure correct value of extraCoursesActive when we see changes in checkedCourses
