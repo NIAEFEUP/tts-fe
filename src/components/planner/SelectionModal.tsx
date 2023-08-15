@@ -1,10 +1,9 @@
 import classNames from 'classnames'
-import BackendAPI from '../../api/backend'
-import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Fragment, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { Fragment, useEffect, useState } from 'react'
 import Alert, { AlertType } from './Alert'
 import { Link } from 'react-router-dom'
-import { CheckedCourse, Course, Major } from '../../@types'
+import { CheckedCourse, Major } from '../../@types'
 import { getSchoolYear, getSemester, config, getPath } from '../../utils'
 import {
   AcademicCapIcon,
@@ -46,7 +45,6 @@ const SelectionModal = (
   const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = repeatedCourseControlHook
   const [coursesAlreadyTaken, setCoursesAlreadyTaken] = useState<boolean>(false)
   const [mainMajorAlreadyAnExtra, setMainMajorAlreadyAnExtra] = useState<boolean>(false)
-  //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
 
@@ -63,8 +61,6 @@ const SelectionModal = (
     setIsThisOpen(true)
   }
 
-  const getDisplayExtraCourseText = (course: Course) =>
-    course === null ? '' : `${course?.name} (${course?.acronym}, ${course?.course})`
 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
     if (is_null_or_undefined(year)) return

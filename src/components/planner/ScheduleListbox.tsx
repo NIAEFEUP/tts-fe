@@ -18,10 +18,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
   const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers);
-
-  let teacherOptions = ["All teachers", ...courseOption.teachers]
   const [lastSelected, setLastSelected] = useState(selectedOption);
   const [previewing, setPreviewing] = useState(false);
+  var teacherOptions = ["All teachers", ...courseOption.teachers];
 
 
   const adaptedSchedules = useMemo(() => {
