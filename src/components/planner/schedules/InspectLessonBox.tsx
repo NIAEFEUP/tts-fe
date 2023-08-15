@@ -9,7 +9,11 @@ type Props = {
 
 const InspectLessonBox = ({ lesson, conflict }: Props) => {
   const lessonType = lesson.schedule.lesson_type
-  const professorDescription = lesson.schedule.professor_information.map((prof_info) => prof_info.name).join('\n')
+  const professors = lesson.schedule.professor_information
+    .map((prof_info) => (lesson.schedule.professor_information.length > 1 ? '- ' : '') + prof_info.name)
+    .join('\n')
+  const professorDescription =
+    'Professor' + (lesson.schedule.professor_information.length > 1 ? 'es' : '') + ':\n' + professors
   return (
     <div
       className={classNames(
