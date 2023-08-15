@@ -50,14 +50,13 @@ const useLocalStorage = (key: string, initialValue?: any) => {
   return [storedValue, setValue]
 }
 
-const useCourses = (): [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>] => {
-  const key = 'niaefeup-tts.courses'
+const useCourses = (key: string): [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>] => {
   const [courses, setCourses] = useLocalStorage(key, [])
 
   useEffect(() => {
     writeStorage(key, courses)
   }, [courses])
-
+  
   return [courses, setCourses]
 }
 
