@@ -14,6 +14,25 @@ import {
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
+import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
+
+export const removeDuplicatesFromCourseOption = (courses: CourseOption[]) => {
+  let frequency: Map<number, number> = new Map()
+  let newCourseOptions: CourseOption[] = []
+
+  for (let courseOption of courses) {
+    if (!frequency.has(courseOption.course.info.id)) {
+      newCourseOptions.push(courseOption)
+      frequency.set(courseOption.course.info.id, 1)
+    }
+  }
+
+  return newCourseOptions
+}
+
+export const is_null_or_undefined = (course) => {
+  return course === undefined || course === null
+}
 
 const TimeTableSchedulerPage = () => {
   // add check property to courses
@@ -50,13 +69,13 @@ const TimeTableSchedulerPage = () => {
     let teachers = []
     schedules.forEach((schedule, idx) => {
       if (schedule.lesson_type !== 'T') {
-        schedule.professor_information.forEach(prof_info => {
-          if (!teachers.some(other => other.acronym === prof_info.acronym)) {
-            teachers.push(prof_info);
+        schedule.professor_information.forEach((prof_info) => {
+          if (!teachers.some((other) => other.acronym === prof_info.acronym)) {
+            teachers.push(prof_info)
           }
-        });
+        })
       }
-    });
+    })
 
     return {
       shown: {
@@ -67,36 +86,86 @@ const TimeTableSchedulerPage = () => {
       option: null,
       schedules: schedules,
       teachers: teachers,
-      filteredTeachers: teachers
+      filteredTeachers: teachers,
     }
   }
 
   // extract only the course with checked: true
-  const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course.checked)
+  const getPickedCourses = (courses: CheckedCourse[][]) => courses.flat().filter((course) => course?.checked)
 
   // fetch all schedules for the picked courses
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
 
-  // modal initial value
-  const getModalIsOpenValue = (easy?: boolean) => (easy ? !major || getPickedCourses(checkedCourses).length < 3 : true)
+  /**
+   *
+   * @param courses The array of checked courses whose index 0 possibly contain the extra courses
+   * @returns true if it ontains extra couruses, false otherwise
+   */
+  const hasExtraCourses = (courses: CheckedCourse[][]): boolean => {
+    if (is_null_or_undefined(checkedCourses[0])) return false
 
-  const [major, setMajor, majorChangedRef] = useMajor() // the picked major
-  const [majors, setMajors] = useState<Major[]>([]) // all the majors
+    return checkedCourses[0].length > 0
+  }
+
+  const [major, setMajor, majorChangedRef] = useMajor('niaefeup-tts.major') // the picked major
+  const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor('niaefeup-tts.extra-major')
+  const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
-  const [checkedCourses, setCheckedCourses] = useCourses() // courses for the major with frontend properties
-  const [multipleOptions,  setMultipleOptions] = useState<MultipleOptions>(
-    { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
-  ) // schedule options and selected schedule
+  const [checkedCourses, setCheckedCourses] = useCourses('niaefeup-tts.courses') // courses for the major with frontend properties
+  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
+  const [sourceCoursesBuffer, setSourceCoursesBuffer] = useCourses('niaefeup-tts.courses-buffer')
+  const [destCoursesBuffer, setDestCoursesBuffer] = useCourses('niaefeup-tts.extra-courses')
+  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({
+    index: 0,
+    selected: [],
+    options: [],
+    names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`),
+  }) // schedule options and selected schedule
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
   )
 
+  /**
+   * If there are chosen courses, the SelectionModal will be open and closed otherwise
+   */
+  const getModalIsOpenValue = (easy?: boolean) => {
+    if (easy) {
+      return (!major || getPickedCourses(checkedCourses).length < 3) && !hasExtraCourses(checkedCourses)
+    }
+
+    return true
+  }
+
   const [classesT, setClassesT] = useState<boolean>(true)
   const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
+  const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
   const [isImportedSchedule, setIsImportedSchedule] = useState<boolean>(false)
 
+  const getCoursesForMajor = (major: Major, majorChangedRef) => {
+    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
+
+    let finalNewCheckedCourses: CheckedCourse[][]
+
+    if (checkedCourses[0] === undefined) {
+      finalNewCheckedCourses = [[]]
+    } else {
+      finalNewCheckedCourses = [checkedCourses[0]]
+    }
+
+    BackendAPI.getCourses(major).then((courses: Course[]) => {
+      const majorCourses = groupMajorCoursesByYear(courses)
+      const newCheckedCourses = courseToCheckedCourse(majorCourses)
+      majorChangedRef.current = false
+
+      for (let courses of newCheckedCourses) {
+        finalNewCheckedCourses.push(courses)
+      }
+
+      setCheckedCourses([...finalNewCheckedCourses])
+    })
+  }
 
   useEffect(() => {
     if (totalSelected.length === 0) return
@@ -111,13 +180,26 @@ const TimeTableSchedulerPage = () => {
     })
   }, [])
 
+  // once a major has been picked => fetch courses for the major
+  useEffect(() => {
+    getCoursesForMajor(major, majorChangedRef)
+  }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
+
+  useEffect(() => {
+    getCoursesForMajor(extraCoursesMajor, extraCoursesMajorChangedRef)
+  }, [extraCoursesMajor, extraCoursesMajorChangedRef, checkedCourses, setCheckedCourses])
 
   const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
-    
-    for (let i = 0; i < newCheckedCourses.length; i++) {
-      for (let j = 0; j < newCheckedCourses[i].length; j++) {
-        
-        for (let k = 0; k < importedCourses.length; k++) {
+    let extraUCs: CheckedCourse[] = []
+
+    for (let k = 0; k < importedCourses.length; k++) {
+      if (importedCourses[k].course.info.course_id !== major.id) {
+        extraUCs.push(importedCourses[k].course)
+        continue
+      }
+
+      for (let i = 0; i < newCheckedCourses.length; i++) {
+        for (let j = 0; j < newCheckedCourses[i].length; j++) {
           if (importedCourses[k].course.info.course_unit_id === newCheckedCourses[i][j].info.course_unit_id) {
             newCheckedCourses[i][j].checked = true
             break
@@ -125,8 +207,9 @@ const TimeTableSchedulerPage = () => {
         }
       }
     }
-    
-    
+
+    newCheckedCourses = [extraUCs, ...newCheckedCourses]
+
     return newCheckedCourses
   }
 
@@ -141,7 +224,8 @@ const TimeTableSchedulerPage = () => {
       const newCheckedCourses = courseToCheckedCourse(majorCourses)
       let uCC = updateCheckedCourses(newCheckedCourses, multipleOptions.selected)
       majorChangedRef.current = false
-      setCheckedCourses([...uCC])
+      if (isImportedSchedule) setCheckedCourses([...uCC])
+      else setCheckedCourses([checkedCourses[0], ...uCC.slice(1)])
     })
 
     // this line is needed to since adding isImportedSchedule and SetCheckedCourses to the dependencies array would cause Import not to work
@@ -150,6 +234,8 @@ const TimeTableSchedulerPage = () => {
 
   // fetch schedules for the courses and preserve course options (once courses have been picked)
   useEffect(() => {
+    // setMultipleOptions({ index: 0, selected: [], options: [] })
+
     const pickedCourses = getPickedCourses(checkedCourses)
     if (pickedCourses.length === 0) return
 
@@ -174,82 +260,98 @@ const TimeTableSchedulerPage = () => {
       return value ? { shown: value.shown, option: value.option } : { shown: { T: true, TP: true }, option: null }
     }
 
+    let isNewerPromise = true
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
-      setMultipleOptions((prev) => {
-        let newCourseOptions: CourseOption[] = []
-        const notNulls = prev.selected.filter((item) => item.option !== null)
+      if (isNewerPromise) {
+        setMultipleOptions((prev) => {
+          let newCourseOptions: CourseOption[] = []
+          const notNulls = prev.selected.filter((item) => item.option !== null)
 
-        let teachers = Array.apply(null, Array(schedules.length)).map(function () {
-          return []
-        })
-        schedules.forEach((schedule, idx) => {
-          schedule.forEach((classes) => {
-            if (classes.lesson_type !== 'T') {
-              classes.professor_information.forEach(prof_info => {
-                if (!teachers[idx].some(other => other.acronym === prof_info.acronym)) {
-                  teachers[idx].push(prof_info);
-                }
-              });
-            }
+          let teachers = Array.apply(null, Array(schedules.length)).map(function () {
+            return []
           })
-          
-        })
-
-        if (notNulls.length > 0) {
-          for (let i = 0; i < pickedCourses.length; i++) {
-            const co = findPreviousEntry(prev.selected, pickedCourses[i])
-            newCourseOptions.push({
-              shown: co.shown,
-              course: pickedCourses[i],
-              option: co.option,
-              schedules: schedules[i],
-              teachers: teachers[i],
-              filteredTeachers: teachers[i],
+          schedules.forEach((schedule, idx) => {
+            schedule.forEach((classes) => {
+              if (classes.lesson_type !== 'T') {
+                classes.professor_information.forEach((prof_info) => {
+                  if (!teachers[idx].some((other) => other.acronym === prof_info.acronym)) {
+                    teachers[idx].push(prof_info)
+                  }
+                })
+              }
             })
-          }
-        } else {
-          for (let i = 0; i < pickedCourses.length; i++) {
-            newCourseOptions.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
-          }
-        }
+          })
 
-        let filler: CourseOption[] = []
-        for (let i = 0; i < pickedCourses.length; i++) filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
-
-        let newOptions: CourseOption[][] = []
-        for (let i = 0; i < 10; i++) {
-          if (i === prev.index) newOptions.push(newCourseOptions)
-          else {
-            if (prev.options.length === 0) newOptions.push(JSON.parse(JSON.stringify(filler))) // deep copy
-            else {
-              const innerNotNulls = prev.options[i].filter((item) => item.option !== null)
-              if (innerNotNulls.length > 0) {
-                let extraCourseOptions: CourseOption[] = []
-                for (let j = 0; j < pickedCourses.length; j++) {
-                  const co = findPreviousEntry(prev.options[i], pickedCourses[j])
-                  extraCourseOptions.push({
-                    shown: co.shown,
-                    course: pickedCourses[j],
-                    option: co.option,
-                    schedules: schedules[j],
-                    teachers: teachers[i],
-                    filteredTeachers: teachers[i],
-                  })
-                }
-                newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
-              } else newOptions.push(JSON.parse(JSON.stringify(filler)))
+          if (notNulls.length > 0) {
+            for (let i = 0; i < pickedCourses.length; i++) {
+              const co = findPreviousEntry(prev.selected, pickedCourses[i])
+              newCourseOptions.push({
+                shown: co.shown,
+                course: pickedCourses[i],
+                option: co.option,
+                schedules: schedules[i],
+                teachers: teachers[i],
+                filteredTeachers: teachers[i],
+              })
+            }
+          } else {
+            for (let i = 0; i < pickedCourses.length; i++) {
+              newCourseOptions.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
             }
           }
-        }
 
-        return {
-          index: prev.index,
-          selected: newCourseOptions,
-          options: newOptions,
-          names: prev.names
-        }
-      })
+          let filler: CourseOption[] = []
+          for (let i = 0; i < pickedCourses.length; i++)
+            filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
+
+          let newOptions: CourseOption[][] = []
+          for (let i = 0; i < 10; i++) {
+            if (i === prev.index) newOptions.push(newCourseOptions)
+            else {
+              if (prev.options.length === 0) newOptions.push(JSON.parse(JSON.stringify(filler))) // deep copy
+              else {
+                const innerNotNulls = prev.options[i].filter((item) => item.option !== null)
+                if (innerNotNulls.length > 0) {
+                  let extraCourseOptions: CourseOption[] = []
+                  for (let j = 0; j < pickedCourses.length; j++) {
+                    const co = findPreviousEntry(prev.options[i], pickedCourses[j])
+                    extraCourseOptions.push({
+                      shown: co.shown,
+                      course: pickedCourses[j],
+                      option: co.option,
+                      schedules: schedules[j],
+                      teachers: teachers[i],
+                      filteredTeachers: teachers[i],
+                    })
+                  }
+                  newOptions.push(JSON.parse(JSON.stringify(extraCourseOptions)))
+                } else newOptions.push(JSON.parse(JSON.stringify(filler)))
+              }
+            }
+          }
+
+          return {
+            index: prev.index,
+            selected: newCourseOptions,
+            options: newOptions,
+            names: prev.names,
+          }
+        })
+      }
     })
+
+    return () => {
+      isNewerPromise = false
+    }
+  }, [checkedCourses])
+
+  // assure correct value of extraCoursesActive when we see changes in checkedCourses
+  useEffect(() => {
+    if (checkedCourses.length > 0 && !is_null_or_undefined(checkedCourses[0])) {
+      let isExtraCoursesColumnSupposedToShow = checkedCourses[0].length > 0 && !is_null_or_undefined(checkedCourses[0])
+
+      isExtraCoursesColumnSupposedToShow ? setExtraCoursesActive(true) : setExtraCoursesActive(false)
+    }
   }, [checkedCourses])
 
   return (
@@ -272,29 +374,44 @@ const TimeTableSchedulerPage = () => {
           <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
 
-          
             <SelectionModal
               majors={majors}
               openHook={[isModalOpen, setIsModalOpen]}
               majorHook={[major, setMajor]}
               coursesHook={[checkedCourses, setCheckedCourses]}
+              extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
+              extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
+              sourceBufferHook={[sourceCoursesBuffer, setSourceCoursesBuffer]}
+              destBufferHook={[destCoursesBuffer, setDestCoursesBuffer]}
             />
+            {isExtraUcsModelOpen ? (
+              <SelectionExtraCoursesModal
+                majors={majors}
+                openHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
+                majorHook={[extraCoursesMajor, setExtraCoursesMajor]}
+                coursesHook={[checkedCourses, setCheckedCourses]}
+                sourceBufferHook={[destCoursesBuffer, setDestCoursesBuffer]}
+                destBufferHook={[sourceCoursesBuffer, setSourceCoursesBuffer]}
+              />
+            ) : (
+              <></>
+            )}
             <MoreActionsButton
               schedule={multipleOptions.selected}
               showGridHook={[showGrid, setShowGrid]}
-              multipleOptions= {multipleOptions}
+              multipleOptions={multipleOptions}
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
             <ShareButtons
-            majorHook={[major, setMajor]}
-            schedule={multipleOptions.selected}
-            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-            setIsImportedSchedule={setIsImportedSchedule}
+              majorHook={[major, setMajor]}
+              schedule={multipleOptions.selected}
+              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+              setIsImportedSchedule={setIsImportedSchedule}
             />
           </div>
           <div className="flex flex-col gap-4 py-1 px-0">
             {multipleOptions.selected.length > 0 &&
-              multipleOptions.selected.map((courseOption, courseOptionIdx) => (
+              removeDuplicatesFromCourseOption(multipleOptions.selected).map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
                   courseOption={courseOption}
                   multipleOptionsHook={[multipleOptions, setMultipleOptions]}
@@ -303,8 +420,7 @@ const TimeTableSchedulerPage = () => {
                 />
               ))}
           </div>
-          <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
-        </div>
+          <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row"></div>
         </div>
         <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
           <HelpModal />

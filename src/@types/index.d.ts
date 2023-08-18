@@ -14,7 +14,7 @@ export type Course = {
   course: string
   name: string
   acronym: string
-  url: string
+  url: stringid
   course_unit_year: number
   semester: number
   year: number
@@ -31,7 +31,7 @@ export type CheckedCourse = {
 export type Major = {
   id: number
   name: string
-  course_id: number
+  sigarra_id: number
   faculty: number
   acronym: string
   course_type: string
@@ -74,7 +74,7 @@ export type CourseSchedule = {
   // professor_sigarra_id: string
   // professor_acronyms: Array<string>                           // eliminar
   professors_link: string
-  professor_information: Array<ProfessorInformation>          // new
+  professor_information: Array<ProfessorInformation> // new
 }
 
 /* Options */
@@ -109,6 +109,6 @@ export type MultipleOptions = {
 }
 
 export type ImportedCourse = {
-  course_unit_id: number,
+  course_unit_id: number
   class_name: string
 }
