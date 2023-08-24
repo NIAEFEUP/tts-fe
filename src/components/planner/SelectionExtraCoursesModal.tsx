@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { Fragment, SetStateAction, useEffect, useState, useRef } from 'react'
+import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import Alert, { AlertType } from './Alert'
 import { CheckedCourse, Course, Major, MultipleOptions } from '../../@types'
 import { getSchoolYear, getSemester } from '../../utils'
@@ -10,8 +10,7 @@ import {
   SelectorIcon,
   ArrowCircleLeftIcon,
 } from '@heroicons/react/solid'
-import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../pages/TimeTableScheduler'
-import { MajorSearchCombobox } from './MajorSearchCombobox'
+import { is_null_or_undefined } from '../../pages/TimeTableScheduler'
 
 type Props = {
   majors: Major[]
@@ -21,36 +20,61 @@ type Props = {
   sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
-  repeatedCourseControlHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
 /**
  * Modal where the user will be able to select courses from a different major than its main one
  */
 const SelectionExtraCoursesModal = 
-  ({ majors, openHook, majorHook, coursesHook, sourceBufferHook, destBufferHook, multipleOptionsHook, repeatedCourseControlHook }: Props) => {
+  ({ majors, openHook, majorHook, coursesHook, sourceBufferHook, destBufferHook, multipleOptionsHook }: Props) => {
   const [major, setMajor] = majorHook
   const [isThisOpen, setisThisOpen] = openHook
   const [courses, setCourses] = coursesHook
-  const [extraCoursesModalBuffer, setExtraCoursesModalBuffer] = sourceBufferHook
+  const [selected, setSelected] = useState<Major>(major) //selected Major
+  const [majorQuery, setMajorQuery] = useState<string>('')
+  const [extraCourseModalCoursesBuffer, setExtraCourseModalCoursesBuffer] = sourceBufferHook
   const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = destBufferHook
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
-  const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = repeatedCourseControlHook
-
-  const [majorQuery, setMajorQuery] = useState<string>('')
   //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
+
+  const match = (str: string, query: string, simple?: boolean) =>
+    simple
+      ? str.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
+      : str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .replace(/\s+/g, '')
+        .replace('.', '')
+        .replace(':', '')
+        .includes(query.toLowerCase().replace(/\s+/g, ''))
+
+  const filteredMajors =
+    majors !== null && majors?.length !== 0 && Array.isArray(majors)
+      ? majorQuery === ''
+        ? majors
+        : majors.filter(
+          (major: Major) =>
+            match(major?.name, majorQuery, true) ||
+            match(major?.name, majorQuery, false) ||
+            match(major?.acronym, majorQuery, true) ||
+            match(major?.acronym, majorQuery, false)
+        )
+      : []
 
   const closeModal = () => {
     if (major?.name === '' || !atLeastOneCourse)
       setAlertLevel(AlertType.warning)
 
-    setExtraCoursesModalBuffer([...courses])
+    setExtraCourseModalCoursesBuffer([...courses])
     setCourses([courses[0], ...selectionModalCoursesBuffer])
 
     setisThisOpen(false)
   }
+
+  const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
 
   /**
    * If the user checked a single course, if the user checked it to true, it adds to the index 0 of the courses array
@@ -117,10 +141,29 @@ const SelectionExtraCoursesModal =
     else setAlertLevel(AlertType.info)
   }, [major, courses, atLeastOneCourse])
 
+  /**
+   * Will put the correct checked value on the group checkbox of the modal depending on how many 
+   * courses are checked
+   */
   useEffect(() => {
-    // Regular courses
     for (let year = 1; year < courses.length; year++) {
-      controlCoursesGroupCheckbox(courses[year], `year-checkbox-${year - 1}`)
+      let some = courses[year].some((course) => course.checked)
+      let every = courses[year].every((course) => course.checked)
+
+      //@ts-ignore
+      let checkbox: HTMLInputElement = document.getElementById(`year-checkbox-${year}`)
+      if (!checkbox) return
+
+      if (every) {
+        checkbox.checked = true
+        checkbox.indeterminate = false
+      } else if (some) {
+        checkbox.checked = false
+        checkbox.indeterminate = true
+      } else {
+        checkbox.checked = false
+        checkbox.indeterminate = false
+      }
     }
   }, [courses])
 
@@ -195,15 +238,91 @@ const SelectionExtraCoursesModal =
                   </Alert>
 
                   {/* Select major dropdown */}
-                  <MajorSearchCombobox 
-                    majors={majors}
-                    majorHook={[major, setMajor]}
-                  />
+                  <Combobox
+                    value={selected}
+                    onChange={(value) => {
+                      setMajor(value)
+                      setSelected(value)
+                    }}
+                  >
+                    <div className="relative">
+                      <div className="relative w-full rounded text-left">
+                        <Combobox.Input
+                          placeholder={
+                            window.matchMedia('(max-width: 1024px)').matches === true
+                              ? 'Pesquise o seu curso pelo nome ou sigla'
+                              : 'Escolha e/ou digite o nome ou sigla do seu ciclo de estudos'
+                          }
+                          className={classNames(
+                            selected !== null ? 'font-semibold' : '',
+                            'w-full rounded border-2 py-3 pl-4 pr-8 text-xs leading-5 md:text-sm',
+                            'border-gray-700/25 bg-gray-50 text-gray-700 focus:shadow focus:ring-0'
+                          )}
+                          displayValue={(major: Major) => getDisplayMajorText(major)}
+                          onChange={(event: { target: { value: SetStateAction<string> } }) =>
+                            setMajorQuery(event.target.value)
+                          }
+                        />
+                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                          <SelectorIcon
+                            className="h-7 w-7 rounded-full py-0.5 text-gray-500 transition hover:bg-gray-100 hover:text-primary"
+                            aria-hidden="true"
+                          />
+                        </Combobox.Button>
+                      </div>
 
-                  {extraMajorEqualToMainMajor
-                    ? <p className="text-center tracking-tight font-semibold">Já tens este curso selecionado no menu principal!</p>
-                    :
-                    <div className="checkboxes">
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                        afterLeave={() => setMajorQuery('')}
+                      >
+                        <Combobox.Options
+                          className="absolute z-50 mt-1.5 max-h-64 w-full overflow-auto rounded border
+                         border-gray-500 bg-lightest py-2 text-xs dark:bg-lighter sm:text-sm"
+                        >
+                          {filteredMajors.length === 0 && majorQuery !== '' ? (
+                            <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
+                              Nenhum curso encontrado com este nome.
+                            </div>
+                          ) : (
+                            filteredMajors.map((major: Major, majorIdx: number) => (
+                              <Combobox.Option
+                                key={`major-${majorIdx}`}
+                                className={({ active }) =>
+                                  `relative cursor-pointer select-none py-2 px-3 ${major?.name !== '' ? 'pl-10' : 'pl-4'
+                                  } ${active ? 'bg-primary text-white' : 'text-gray-900'}`
+                                }
+                                value={major}
+                              >
+                                {({ selected, active }) => (
+                                  <>
+                                    <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
+                                      {getDisplayMajorText(major)}
+                                    </span>
+                                    {selected && (
+                                      <span
+                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary'
+                                          }`}
+                                      >
+                                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </Combobox.Option>
+                            ))
+                          )}
+                        </Combobox.Options>
+                      </Transition>
+                    </div>
+                  </Combobox>
+
+
+
+                  {/* Courses checkboxes */}
+                  <div className="checkboxes">
                     {major &&
                       courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
                         <div key={`year-${yearIdx}`}>
@@ -250,7 +369,7 @@ const SelectionExtraCoursesModal =
                           </div>
                         </div>
                       ))}
-                  </div>}
+                  </div>
 
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
