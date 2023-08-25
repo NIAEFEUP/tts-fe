@@ -42,7 +42,7 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
         <div className="flex w-full items-center justify-between gap-3">
           <span title="Sala">{lesson.schedule.location}</span>
           <span title="Professor(es)" className="whitespace-nowrap">
-            {lesson.schedule.professor_acronyms.join(', ')}
+            {lesson.schedule.professor_information.map(prof_info => prof_info.acronym).join(', ')}
           </span>
         </div>
       </div>

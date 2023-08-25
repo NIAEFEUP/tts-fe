@@ -28,6 +28,11 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
   const smLesson = duration < 1
   const lgLesson = duration >= 2
   const mdLesson = !smLesson && !lgLesson
+  const professors = lesson.schedule.professor_information
+    .map((prof_info) => (lesson.schedule.professor_information.length > 1 ? '- ' : '') + prof_info.name)
+    .join('\n')
+  const professorDescription =
+    'Professor' + (lesson.schedule.professor_information.length > 1 ? 'es' : '') + ':\n' + professors
 
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false)
@@ -87,8 +92,8 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               {/* Bottom */}
               <div className="flex w-full items-center justify-between gap-1">
                 <span title="Sala">{lesson.schedule.location}</span>
-                <span title="Professor(es)" className="truncate">
-                  {lesson.schedule.professor_acronyms.join(', ')}
+                <span title={professorDescription} className="truncate">
+                  {lesson.schedule.professor_information.map((prof_info) => prof_info.acronym).join(', ')}
                 </span>
               </div>
             </div>
@@ -107,8 +112,8 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               <div className="flex w-full items-center justify-between gap-2">
                 <span title="Sala">{lesson.schedule.location}</span>
                 <span title="Turma">{compClassTitle ? compClassTitle : classTitle}</span>
-                <span title="Professor(es)" className="truncate">
-                  {lesson.schedule.professor_acronyms.join(', ')}
+                <span title={professorDescription} className="truncate">
+                  {lesson.schedule.professor_information.map((prof_info) => prof_info.acronym).join(', ')}
                 </span>
               </div>
             </div>
@@ -117,8 +122,8 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
             <div className="flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-[0.6rem]">
               <span title="Duração">{timeSpan}</span>
               <span title="Sala">{lesson.schedule.location}</span>
-              <span title="Professor(es)" className="truncate">
-                {lesson.schedule.professor_acronyms.join(', ')}
+              <span title={professorDescription} className="truncate">
+                {lesson.schedule.professor_information.map((prof_info) => prof_info.acronym).join(', ')}
               </span>
             </div>
           )}

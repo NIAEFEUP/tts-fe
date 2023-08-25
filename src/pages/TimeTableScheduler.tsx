@@ -106,13 +106,13 @@ const TimeTableSchedulerPage = () => {
     let teachers = []
     schedules.forEach((schedule, idx) => {
       if (schedule.lesson_type !== 'T') {
-        schedule.professor_acronyms.forEach(acronym => {
-          if (!teachers.includes(acronym)) {
-            teachers.push(acronym);
+        schedule.professor_information.forEach((prof_info) => {
+          if (!teachers.some((other) => other.acronym === prof_info.acronym)) {
+            teachers.push(prof_info)
           }
-        });
+        })
       }
-    });
+    })
 
     return {
       shown: {
@@ -123,7 +123,7 @@ const TimeTableSchedulerPage = () => {
       option: null,
       schedules: schedules,
       teachers: teachers,
-      filteredTeachers: teachers
+      filteredTeachers: teachers,
     }
   }
 
@@ -134,7 +134,7 @@ const TimeTableSchedulerPage = () => {
   const fetchPickedSchedules = async (picked: CheckedCourse[]) => await BackendAPI.getCoursesSchedules(picked)
 
   /**
-   * 
+   *
    * @param courses The array of checked courses whose index 0 possibly contain the extra courses
    * @returns true if it ontains extra couruses, false otherwise
    */
@@ -145,8 +145,8 @@ const TimeTableSchedulerPage = () => {
     return checkedCourses[0].length > 0
   }
 
-  const [major, setMajor, majorChangedRef] = useMajor("niaefeup-tts.major") // the picked major
-  const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor("niaefeup-tts.extra-major")
+  const [major, setMajor, majorChangedRef] = useMajor('niaefeup-tts.major') // the picked major
+  const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor('niaefeup-tts.extra-major')
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
   const [showGrid, setShowGrid] = useShowGrid() // show the schedule grid or not
   const [checkedCourses, setCheckedCourses] = useCourses("niaefeup-tts.courses") // courses for the major with frontend properties
@@ -162,7 +162,6 @@ const TimeTableSchedulerPage = () => {
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions]
   )
-
 
   /**
    * If there are chosen courses, the SelectionModal will be open and closed otherwise
@@ -181,9 +180,8 @@ const TimeTableSchedulerPage = () => {
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
   const [isImportedSchedule, setIsImportedSchedule] = useState<boolean>(false)
 
-
   const getCoursesForMajor = (major: Major, majorChangedRef) => {
- if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
+    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
 
     let finalNewCheckedCourses: CheckedCourse[][]
 
@@ -247,7 +245,6 @@ const TimeTableSchedulerPage = () => {
       }
 
       for (let i = 0; i < newCheckedCourses.length; i++) {
-        
         for (let j = 0; j < newCheckedCourses[i].length; j++) {
           if (importedCourses[k].course.info.course_unit_id === newCheckedCourses[i][j].info.course_unit_id) {
             newCheckedCourses[i][j].checked = true
@@ -300,7 +297,6 @@ const TimeTableSchedulerPage = () => {
     }
 
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
-      
       if (isNewerPromise) {
         setMultipleOptions((prev) => {
           let newCourseOptions: CourseOption[] = []
@@ -312,14 +308,13 @@ const TimeTableSchedulerPage = () => {
           schedules.forEach((schedule, idx) => {
             schedule.forEach((classes) => {
               if (classes.lesson_type !== 'T') {
-                classes.professor_acronyms.forEach(acronym => {
-                  if (!teachers[idx].includes(acronym)) {
-                    teachers[idx].push(acronym);
+                classes.professor_information.forEach((prof_info) => {
+                  if (!teachers[idx].some((other) => other.acronym === prof_info.acronym)) {
+                    teachers[idx].push(prof_info)
                   }
-                });
+                })
               }
             })
-
           })
 
           if (notNulls.length > 0) {
@@ -341,7 +336,8 @@ const TimeTableSchedulerPage = () => {
           }
 
           let filler: CourseOption[] = []
-          for (let i = 0; i < pickedCourses.length; i++) filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
+          for (let i = 0; i < pickedCourses.length; i++)
+            filler.push(getEmptyCourseOption(pickedCourses[i], schedules[i]))
 
           let newOptions: CourseOption[][] = []
           for (let i = 0; i < 10; i++) {
@@ -373,14 +369,14 @@ const TimeTableSchedulerPage = () => {
             index: prev.index,
             selected: newCourseOptions,
             options: newOptions,
-            names: prev.names
+            names: prev.names,
           }
         })
       }
     })
 
     return () => {
-      isNewerPromise = false;
+      isNewerPromise = false
     }
   }, [checkedCourses])
 
@@ -414,7 +410,6 @@ const TimeTableSchedulerPage = () => {
         <div className="space-y-2">
           <div className="flex flex-col flex-wrap items-center justify-start gap-x-2 gap-y-2 xl:flex-row">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
-
 
             <SelectionModal
               majors={majors}
