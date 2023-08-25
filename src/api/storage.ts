@@ -2,7 +2,7 @@ import { MultipleOptions } from '../@types'
 import { getCourseTeachers } from '../utils'
 
 
-const INITIAL_VALUE = { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`), teachers: [], filteredTeachers: [] }
+const INITIAL_VALUE = { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
