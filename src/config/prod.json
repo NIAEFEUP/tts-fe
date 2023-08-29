@@ -14,6 +14,6 @@
     "protocol" : "https",
     "host": "ni.fe.up.pt",
     "pathPrefix" : "/tts/api",
-    "year": 2022
+    "year": 2023
   }
 }

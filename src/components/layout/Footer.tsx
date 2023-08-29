@@ -69,7 +69,7 @@ const Footer = () => {
 
         <div className="flex flex-col items-center justify-center">
           <p className="text-base font-medium text-white dark:text-gray-300 sm:text-center">
-            © 2022{' '}
+            © 2023{' '}
             <a href="https://ni.fe.up.pt" className="hover:underline">
               NIAEFEUP
             </a>
