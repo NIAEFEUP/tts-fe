@@ -22,11 +22,12 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const [previewing, setPreviewing] = useState(false)
 
   // A filtered copy of courseOption.teachers is required for comparisons.
-  const [selectedTeachers, setSelectedTeachers] = useState(
-    courseOption.teachers.filter((prof_info1) =>
-      courseOption.filteredTeachers.some((prof_info2) => prof_info1.acronym === prof_info2.acronym)
-    )
-  )
+  // const [selectedTeachers, setSelectedTeachers] = useState(
+  //   courseOption.teachers.filter((prof_info1) =>
+  //     courseOption.filteredTeachers.some((prof_info2) => prof_info1.acronym === prof_info2.acronym)
+  //   )
+  // )
+  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers);
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -197,6 +198,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   }
 
   const showName = (e, name) => {
+    console.log([...selectedTeachers])
     if (name === '') return
     if (e.target.children.length !== 0) e.target.children[0].innerText = name
   }
@@ -291,7 +293,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             </Transition>
 
             {/* Teachers ListBox */}
-            <Listbox value={selectedTeachers} onChange={updateTeachersShown} multiple={true}>
+            <Listbox value={selectedTeachers} onChange={updateTeachersShown} multiple={true} by="acronym">
               {/* Button */}
               <Listbox.Button
                 title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
@@ -353,6 +355,30 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                         </>
                       )}
                     </Listbox.Option>
+                  //   <Listbox.Option
+                  //   key={option}
+                  //   value={option}
+                  //   className={({ active }) =>
+                  //     `group relative cursor-default select-none py-2 text-sm pl-10
+                  //       pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
+                  //   }
+                  // >
+                  //   {({ selected, active }) => (
+                  //     <>
+                  //       <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
+                  //         {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
+                  //       </span>
+                  //       {selected ? (
+                  //         <span
+                  //           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                  //             }`}
+                  //         >
+                  //           <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                  //         </span>
+                  //       ) : null}
+                  //     </>
+                  //   )}
+                  // </Listbox.Option>
                   ))}
                 </Listbox.Options>
               </Transition>
