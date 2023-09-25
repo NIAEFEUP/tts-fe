@@ -165,6 +165,12 @@
   @apply z-20 border-2 border-amber-500 opacity-75 ring-amber-500 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
+.schedule-class-conflict-info {
+  @apply z-20 border-4  border-rose-700 border-dashed opacity-75 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1;}
+
+.schedule-class-conflict-warn-info {
+  @apply z-20 border-4 border-amber-500 border-dashed opacity-75 ring-amber-500 hover:z-30 hover:opacity-100 hover:ring-1;}
+
 .schedule-class-conflict-highlight {
   opacity: 100% !important;
 }

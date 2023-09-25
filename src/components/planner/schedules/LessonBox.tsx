@@ -36,7 +36,48 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
 
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
   const severe = useMemo(() => conflicts?.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [conflicts])
+/*
+  const isOverlapping = useMemo(() => {
+    if (!conflicts) return false;
+    return conflicts.some((conflictLesson) => {
+      const conflictStartTime = getLessonBoxTime(conflictLesson.schedule);
+      const conflictEndTime = conflictLesson.schedule.start_time + conflictLesson.schedule.duration;
+      const lessonStartTime = getLessonBoxTime(lesson.schedule);
+      const lessonEndTime = lesson.schedule.start_time + conflictLesson.schedule.duration;
+      return (
+        (lessonStartTime >= conflictStartTime && lessonStartTime < conflictEndTime) ||
+        (lessonEndTime > conflictStartTime && lessonEndTime <= conflictEndTime) ||
+        (lessonStartTime <= conflictStartTime && lessonEndTime >= conflictEndTime)
+      );
+    });
+  }, [conflicts, lesson.schedule]);
+
+  const earliestStartTime = useMemo(() => {
+    if (!conflicts) return null;
+
+    return conflicts.reduce((earliestStart, conflictLesson) => {
+      const startTime = getLessonBoxTime(conflictLesson.schedule);
+      return startTime < String(earliestStart) ? startTime : earliestStart;
+    }, Number.POSITIVE_INFINITY);
+  }, [conflicts]);
+
+  const hasEarliestStartTime = useMemo(() => {
+    if (!conflicts) return false;
+    return getLessonBoxTime(lesson.schedule) === earliestStartTime;
+  }, [conflicts, earliestStartTime, lesson.schedule]);
+  */
+  const conflictTitle = conflict && isHovered ? 'HORÁRIOS SOBREPOSTOS' : '';
+  const conflictedLessonsInfo = useMemo(() => {
+    if (!conflicts) return [];
+
+    return conflicts.map((conflictLesson) => ({
+      name: conflictLesson.course.acronym,
+      type: conflictLesson.schedule.lesson_type,
+    }));
+  }, [conflicts]);
+
 
   const showConflicts = () => {
     setConflictsShown(true)
@@ -46,6 +87,8 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
     setInspectShown(true)
   }
 
+
+
   return (
     <>
       {inspectShown && <LessonPopover lesson={lesson} isOpenHook={[inspectShown, setInspectShown]} />}
@@ -53,13 +96,52 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
       {active && (
         <button
           onClick={conflict ? showConflicts : inspectLesson}
-          style={getLessonBoxStyles(lesson, maxHour, minHour)}
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)} 
+          style={{
+            ...getLessonBoxStyles(lesson, maxHour, minHour),
+            backgroundColor: conflict && isHovered ? 'rgb(200,200,200)' : '',
+          }}
           className={classNames(
             'schedule-class group',
             getClassTypeClassName(lessonType),
-            conflict ? (severe ? 'schedule-class-conflict' : 'schedule-class-conflict-warn') : ''
+            conflict ? (severe ? (isHovered? 'schedule-class-conflict-info' : 'schedule-class-conflict')
+                                  :(isHovered? 'schedule-class-conflict-warn-info' : 'schedule-class-conflict-warn')) : ''
           )}
+          
         >
+          <span>
+
+
+            {severe? (conflictTitle && (
+              <div className="absolute top-0 left-0 w-full text-red-700 text-center text-sm py-2 font-extrabold">
+                {conflictTitle} 
+                <div className="px-1 py-1 text-black text-left text-sm font-normal">
+                  <ul className="list-disc pl-5">
+                  {conflictedLessonsInfo.map((conflictInfo, index) => (
+                    <li key={index}>
+                      {`${conflictInfo.name} (${conflictInfo.type})`}
+                    </li>
+                  ))}
+                  </ul>
+                </div>
+              </div>
+              )): 
+              (conflictTitle && (
+                <div className="absolute top-0 left-0 w-full text-amber-700 text-center text-sm py-2 font-extrabold">
+                  {conflictTitle} 
+                  <div className="px-1 py-1 text-black text-left text-sm font-normal">
+                    <ul className="list-disc pl-5">
+                    {conflictedLessonsInfo.map((conflictInfo, index) => (
+                      <li key={index}>
+                        {`${conflictInfo.name} (${conflictInfo.type})`}
+                      </li>
+                    ))}
+                    </ul>
+                  </div>
+                </div>)
+
+            )}
           {lgLesson && (
             <div
               className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter 
@@ -127,6 +209,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               </span>
             </div>
           )}
+          </span>
         </button>
       )}
     </>
