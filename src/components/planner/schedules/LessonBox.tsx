@@ -38,36 +38,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
   const [conflictsShown, setConflictsShown] = useState(false)
   const [isHovered, setIsHovered] = useState(false);
   const severe = useMemo(() => conflicts?.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [conflicts])
-/*
-  const isOverlapping = useMemo(() => {
-    if (!conflicts) return false;
-    return conflicts.some((conflictLesson) => {
-      const conflictStartTime = getLessonBoxTime(conflictLesson.schedule);
-      const conflictEndTime = conflictLesson.schedule.start_time + conflictLesson.schedule.duration;
-      const lessonStartTime = getLessonBoxTime(lesson.schedule);
-      const lessonEndTime = lesson.schedule.start_time + conflictLesson.schedule.duration;
-      return (
-        (lessonStartTime >= conflictStartTime && lessonStartTime < conflictEndTime) ||
-        (lessonEndTime > conflictStartTime && lessonEndTime <= conflictEndTime) ||
-        (lessonStartTime <= conflictStartTime && lessonEndTime >= conflictEndTime)
-      );
-    });
-  }, [conflicts, lesson.schedule]);
 
-  const earliestStartTime = useMemo(() => {
-    if (!conflicts) return null;
-
-    return conflicts.reduce((earliestStart, conflictLesson) => {
-      const startTime = getLessonBoxTime(conflictLesson.schedule);
-      return startTime < String(earliestStart) ? startTime : earliestStart;
-    }, Number.POSITIVE_INFINITY);
-  }, [conflicts]);
-
-  const hasEarliestStartTime = useMemo(() => {
-    if (!conflicts) return false;
-    return getLessonBoxTime(lesson.schedule) === earliestStartTime;
-  }, [conflicts, earliestStartTime, lesson.schedule]);
-  */
   const conflictTitle = conflict && isHovered ? 'HORÁRIOS SOBREPOSTOS' : '';
   const conflictedLessonsInfo = useMemo(() => {
     if (!conflicts) return [];
