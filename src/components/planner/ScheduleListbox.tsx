@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { SelectorIcon, CheckIcon, EyeIcon } from '@heroicons/react/solid'
+import { SelectorIcon, CheckIcon, EyeIcon, ExclamationIcon } from '@heroicons/react/solid'
 import { getScheduleOptionDisplayText } from '../../utils'
 import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../@types'
 
@@ -262,7 +262,9 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                       `group relative cursor-default select-none py-2 pl-10 pr-4
                      text-sm ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                     }
+          
                   >
+                    
                     {({ selected, active }) => (
                       <>
                         <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
@@ -285,6 +287,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                             <EyeIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
+                        <ExclamationIcon className="h-5 w-5 text-rose-700" aria-hidden="true" />
                       </>
                     )}
                   </Listbox.Option>
