@@ -27,9 +27,6 @@ const HeroPlanner = () => {
           <p>
             TTS, ou <strong>Time Table Selector</strong>, é uma plataforma desenvolvida pelo <strong>NIAEFEUP</strong>{' '}
             para ajudar os estudantes da Universidade do Porto a planear e elaborar o seu horário para um semestre.
-            Geralmente, no 1º semestre de faculdade o horário é <strong>atribuído automaticamente</strong>, não sendo
-            possível efetuar trocas. A partir do 2º Semestre até ao fim do(s) curso(s) o aluno tem a oportunidade de{' '}
-            <strong>submeter preferências</strong> para o horário, no início de cada semestre.
           </p>
           <p>
             No entanto, o sistema de informação das faculdades (SIGARRA) geralmente não permite ou não facilita delinear
@@ -57,83 +54,12 @@ const HeroPlanner = () => {
       content: (
         <div className="space-y-3">
           <p>
-            O TTS permite aos estudantes <strong>criar</strong>, <strong>planear</strong> e <strong>partilhar</strong>{' '}
-            os horários antes das inscrições nas turmas de forma flexível e prática. Podes planear o teu semestre com
-            antecedência e ter uma visão abrangente das opções que tens e quais os horários a que queres dar prioridade.
-          </p>
-          <p>
-            Com a nova versão do TTS podes delinear até 10 opções de horário, tal como na submissão das preferências no
-            SIGARRA, que se aplica a alguns cursos da UPorto. Mais opções de horário dão-te melhor chance de ficar com
-            um horário desejado, evitando alocações automáticas indesejadas.
+            O TTS oferece aos estudantes a flexibilidade e praticidade de <strong>criar</strong>, <strong>planear</strong> e <strong>partilhar</strong>{' '} os horários com até 10 opções, 
+            semelhante à submissão de preferências no SIGARRA. Isso permite que os alunos planejem seus semestres com antecedência, 
+            tenham uma visão abrangente das opções disponíveis e aumentem suas chances de obter o horário desejado, evitando alocações automáticas 
+            indesejadas durante as inscrições nas turmas.
           </p>
         </div>
-      ),
-    },
-    {
-      id: 'news',
-      title: <span>O que há de novo na nova versão do TTS?</span>,
-      subtitle: <span>Temos muitas novas funcionalidades do TTS e planos para futuras atualizações.</span>,
-      image: HomePageImage,
-      reverse: false,
-      content: (
-        <div className="space-y-3">
-          <p>
-            No seguimento do fim dos mestrados integrados foram precisas várias mudanças ao nosso sistema. Em vez de
-            adaptar continuamente, o TTS foi reinventado e reimaginado.
-          </p>
-          <p>
-            Das novas funcionalidade da nova versão destacam-se a capacidade de inspecionar conflitos de aula, exportar
-            e importar horários, escolher múltiplas opções de horário, progresso guardado automaticamente e também
-            capacidade de transferir um ficheiro CSV com as opções prontas a submeter no SIGARRA. Este novo lançamento,
-            contempla também grandes melhoramentos a nível de acessibilidade e usabilidade, começando pelo adição do
-            tema claro ou escuro. Para mais informação detalhada sobre novas funcionalidades, consulta a secção do{' '}
-            <Link
-              to={getPath(config.paths.faqs) + '#planner'}
-              className="font-medium text-primary transition-all hover:underline hover:opacity-80"
-            >
-              TTS na página de FAQs
-            </Link>
-            .
-          </p>
-          <p>
-            Relativamente a planos futuros, temos o <strong>FEUP Exchange</strong> (nome sujeito a mudança) em
-            desenvolvimento, um serviço que permitirá a estudantes da FEUP alterar o seu horário após a atribuição
-            inicial feita pelos departamentos.
-          </p>
-        </div>
-      ),
-    },
-    {
-      id: 'identity',
-      title: <span>Quem somos nós?</span>,
-      subtitle: <span>NIAEFEUP: Núcleo de Informática da AEFEUP</span>,
-      image: LogoNIAEFEUPAltImage,
-      reverse: true,
-      content: (
-        <p>
-          O Núcleo de Informática da Associação de Estudantes da Faculdade de Engenharia da Universidade do Porto, ou{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://ni.fe.up.pt"
-            className="font-medium text-primary transition-all hover:underline hover:opacity-80"
-          >
-            NIAEFEUP
-          </a>{' '}
-          é constituído inteiramente por alunos do curso de Engenharia Informática e Computação (L.EIC/M.EIC). A nossa
-          principal motivação é ganhar experiência e competências essenciais para o mundo do trabalho assim como
-          cultivar nos nossos colegas a vontade de aprender linguagens e novas tecnologias. Fruto dessa motivação surgem
-          projetos úteis para a comunidade, como esta plataforma. Entre outros projetos destacamos o{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://ni.fe.up.pt/nijobs"
-            className="font-medium text-primary transition-all hover:underline hover:opacity-80"
-          >
-            NiJobs
-          </a>
-          , uma plataforma dedicada a ajudar estudantes a encontrar oportunidades de emprego e/ou estágios.
-        </p>
       ),
     },
   ]
