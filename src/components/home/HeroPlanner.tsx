@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
 import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
 import { getPath, config } from '../../utils'
+import { LogoNIAEFEUPImage } from '../../images'
+
 
 type Card = {
   id: string
@@ -25,14 +27,14 @@ const HeroPlanner = () => {
       content: (
         <div className="space-y-3">
           <p>
-            TTS, ou <strong>Time Table Selector</strong>, é uma plataforma desenvolvida pelo <strong>NIAEFEUP</strong>{' '}
-            para ajudar os estudantes da Universidade do Porto a planear e elaborar o seu horário para um semestre.
+            TTS, ou <strong>Time Table Selector</strong>, é uma plataforma desenvolvida pelo <strong>NIAEFEUP</strong>{', '}
+            como uma melhor alternativa à ferramenta de horários do SIGARRA, para ajudar os estudantes da Universidade do Porto a planear e elaborar o seu horário para um semestre.
           </p>
           <p>
-            No entanto, o sistema de informação das faculdades (SIGARRA) geralmente não permite ou não facilita delinear
-            opções de horário atempadamente. Para resolver este problema e ajudar a comunidade da{' '}
-            <strong>Universidade do Porto</strong>, o <strong>NIAEFEUP</strong> desenvolveu o TTS, uma ferramenta de uso
-            fácil, com uma interface simples e polida, que permite aos estudantes preparar as suas opções de horário.
+            O TTS oferece aos estudantes a flexibilidade e praticidade de <strong>criar</strong>, <strong>planear</strong> e <strong>partilhar</strong>{' '} os horários com até 10 opções.
+            Isso permite que os alunos planejem seus semestres com antecedência, 
+            tenham uma visão abrangente das opções disponíveis e aumentem suas chances de obter o horário desejado, evitando alocações automáticas 
+            indesejadas durante as inscrições nas turmas.
             Tens dúvidas sobre a plataforma? A{' '}
             <Link
               className="font-medium text-primary transition-all hover:underline hover:opacity-80"
@@ -47,8 +49,8 @@ const HeroPlanner = () => {
     },
     {
       id: 'why',
-      title: <span>Porquê usar o TTS?</span>,
-      subtitle: <span>Porque é a ferramenta ideal para teres o melhor horário possível.</span>,
+      title: <span>O que há de novo na nova versão do TTS?</span>,
+      subtitle: <span>Temos muitas novas funcionalidades do TTS e planos para futuras atualizações.</span>,
       image: HomePageAltImage,
       reverse: true,
       content: (
@@ -89,7 +91,19 @@ const HeroPlanner = () => {
           A melhor ferramenta para escolheres e gerires o teu horário FEUP!
         </p>
       </div>
-
+      <div className="mt-4 flex w-full items-center justify-center">
+        <div className="relative mr-4 ">
+          <Link
+            to={config.pathPrefix}
+            className="group inline-flex items-center justify-center gap-2 rounded bg-gray-100 px-6 py-3 text-center 
+            text-lg font-normal uppercase tracking-wider text-white transition-all hover:opacity-90 hover:opacity-90 border-4 border-dotted border-primary dark:border-whit"
+          >
+            <h4 className="text-2xl font-bold text-primary lg:text-xl">DEVELOPED BY </h4>
+            <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-8" />
+            
+          </Link>
+        </div>
+      </div>
       <div className="flex flex-col px-2 xl:px-4">
         {data.map((item, itemIdx) => (
           <div id={item.id} key={`planner-card-feature-${itemIdx}`} className="pt-8 lg:pt-16">
