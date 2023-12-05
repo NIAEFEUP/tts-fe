@@ -30,16 +30,16 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const [selected, setSelected] = useState(1);
   const [optionsList, setOptionsList] = useState([
-    { id: 1, name: "1" },
-    { id: 2, name: "2" },
-    { id: 3, name: "3" },
-    { id: 4, name: "4" },
-    { id: 5, name: "5" },
-    { id: 6, name: "6" },
-    { id: 7, name: "7" },
-    { id: 8, name: "8" },
-    { id: 9, name: "9" },
-    { id: 10, name: "10" },
+    { id: 1, name: "😊" },
+    { id: 2, name: "🌟" },
+    { id: 3, name: "🚀" },
+    { id: 4, name: "📚" },
+    { id: 5, name: "🎉" },
+    { id: 6, name: "💻" },
+    { id: 7, name: "🌈" },
+    { id: 8, name: "🍀" },
+    { id: 9, name: "🎓" },
+    { id: 10, name: "🤖" },
   ]);
 
   const setOptionIndex = (newIndex: number) => {
@@ -83,25 +83,28 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   }, [menuButtonRef, setIsEditingName])
 
   return (
-    <ReactSortable
-      className="flex flex-row justify-start gap-2 overflow-x-auto text-center p-2"
-      list={optionsList}
-      setList={setOptionsList}
-      group="groupName"
-      animation={200}
-      delay={2}
-      multiDrag
-  >
-  {optionsList.map((item) => (
-      <Option 
-          item={item}  
-          key={item.id}
-          selectedHook={[selected, setSelected]}
-          setOptionIndex={setOptionIndex}
-          multipleOptionsHook={multipleOptionsHook}
-      />
-  ))}
-  </ReactSortable>
+    <>
+      <b>{optionsList[selected - 1].name} PEQUENA DESCRIÇÃO</b>
+      <ReactSortable
+        className="flex flex-row justify-start gap-2 overflow-x-auto text-center p-3 m-y-2"
+        list={optionsList}
+        setList={setOptionsList}
+        group="groupName"
+        animation={200}
+        delay={2}
+        multiDrag
+      >
+      {optionsList.map((item) => (
+        <Option 
+            item={item}  
+            key={item.id}
+            selectedHook={[selected, setSelected]}
+            setOptionIndex={setOptionIndex}
+            multipleOptionsHook={multipleOptionsHook}
+        />
+      ))}
+      </ReactSortable>
+    </>
   );
 }
 
