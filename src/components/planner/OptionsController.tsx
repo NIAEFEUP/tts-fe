@@ -13,8 +13,8 @@ const Option = ({item, selectedHook, setOptionIndex, multipleOptionsHook}) => {
   return (
       <div 
           onClick={() => {
-              setSelected(item.id);
-              setOptionIndex(item.id);
+            setSelected(item.id);
+            setOptionIndex(item.id);
           }} 
           className={`box-border p-2 w-10 h-10 aspect-square rounded cursor-pointer border-2 border-transparent hover:border-primary/75 hover:dark:border-primary/50 dark:shadow transition-colors ease-in-out delay-150 ${selected === item.id ? "text-white bg-primary/75 dark:bg-primary/50" : "bg-lightish dark:bg-darkish"}`}
       >
@@ -41,6 +41,13 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     { id: 9, name: "🎓" },
     { id: 10, name: "🤖" },
   ]);
+
+  console.log(optionsList, selected);
+
+  const getOptionById = (id: number) => {
+    return optionsList.find((elem) => elem.id === id);
+  };
+  
 
   const setOptionIndex = (newIndex: number) => {
     setMultipleOptions((prev) => ({
@@ -84,7 +91,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
 
   return (
     <>
-      <b>{optionsList[selected - 1].name} PEQUENA DESCRIÇÃO</b>
+      <b>{getOptionById(selected).name} PEQUENA DESCRIÇÃO</b>
       <ReactSortable
         className="flex flex-row justify-start gap-2 overflow-x-auto text-center p-3 m-y-2"
         list={optionsList}
