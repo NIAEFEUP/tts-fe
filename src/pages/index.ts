@@ -4,6 +4,5 @@ import FeupExchangePage from './FeupExchange'
 import TimeTableSchedulerPage from './TimeTableScheduler'
 import NotFoundPage from './NotFound'
 import FaqsPage from './Faqs'
-import TestPage from './Test'
 
-export { AboutPage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage, NotFoundPage, FaqsPage, TestPage }
+export { AboutPage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage, NotFoundPage, FaqsPage }

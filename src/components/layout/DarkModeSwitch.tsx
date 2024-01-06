@@ -3,8 +3,6 @@ import { MoonIcon, SunIcon } from '@heroicons/react/solid'
 import { useContext } from 'react';
 import { ThemeContext } from '../../contexts/ThemeContext'
 
-// import { useDarkMode } from '../../hooks'
-
 export const DarkModeSwitch = () => {
   const {enabled, setEnabled} = useContext(ThemeContext)
   return (
