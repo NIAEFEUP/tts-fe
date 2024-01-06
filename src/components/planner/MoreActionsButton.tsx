@@ -29,6 +29,7 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
       const scheduleOption = multipleOptions.options[i]
       const column = []
       for (let j = 0; j < scheduleOption.length; j++) column.push(scheduleOption[j].option?.class_name || '')
+      columns.push(column)
     }
 
     for (let i = 0; i < columns[0].length; i++) {
@@ -64,11 +65,10 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
       <Menu.Button
         ref={buttonRef}
         title="Mais opções"
-        className="flex h-auto w-full items-center justify-center space-x-2 rounded border-2 border-transparent bg-primary px-2 
-        py-2 text-xs font-medium text-white transition hover:opacity-80 lg:text-sm xl:w-min xl:space-x-0 xl:px-3"
+        className="flex items-center justify-center w-full h-auto px-2 py-2 space-x-2 text-xs font-medium text-white transition border-2 border-transparent rounded bg-primary hover:opacity-80 lg:text-sm xl:w-min xl:space-x-0 xl:px-3"
       >
         <span className="flex xl:hidden">Mais Opções</span>
-        <DotsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
+        <DotsHorizontalIcon className="w-4 h-4" aria-hidden="true" />
       </Menu.Button>
 
       <Transition
@@ -81,8 +81,7 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items
-          className="absolute right-0 z-20 mt-2 w-full origin-top-right divide-y divide-gray-100 rounded-md bg-white 
-          px-1 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none xl:w-64"
+          className="absolute right-0 z-20 w-full px-1 py-1 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none xl:w-64"
         >
           <div className="p-1">
             <Menu.Item>
@@ -92,10 +91,9 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
                   disabled={disabled}
                   onClick={() => setShowGrid(!showGrid)}
                   title={showGrid ? 'Ocultar grelha da tabela' : 'Mostrar grelha da tabela'}
-                  className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900
-                  hover:bg-secondary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex items-center w-full gap-2 px-2 py-2 text-sm text-gray-900 rounded-md group hover:bg-secondary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <SparklesIcon className="h-5 w-5 text-secondary group-hover:text-white" />
+                  <SparklesIcon className="w-5 h-5 text-secondary group-hover:text-white" />
                   <span>{showGrid ? 'Ocultar' : 'Mostrar'} grelha</span>
                 </button>
               )}
@@ -105,13 +103,12 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
           <div className="p-1">
             <Menu.Item>
               {({ active, disabled }) => (
-                <button disabled
+                <button
                   onClick={() => exportCSV()}
                   title="Exportar ficheiro com todas as opções nos 10 horários"
-                  className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900
-                hover:bg-secondary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex items-center w-full gap-2 px-2 py-2 text-sm text-gray-900 rounded-md group hover:bg-secondary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <TableIcon className="h-5 w-5 text-secondary group-hover:text-white" />
+                  <TableIcon className="w-5 h-5 text-secondary group-hover:text-white" />
                   <span>Exportar Opções (CSV)</span>
                 </button>
               )}
@@ -129,10 +126,9 @@ const MoreActionsButton = ({schedule, showGridHook, multipleOptions }: Props) =>
                   }
                   onClick={clearOptions}
                   title="Limpar memória de opções de horário"
-                  className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900
-                hover:bg-rose-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex items-center w-full gap-2 px-2 py-2 text-sm text-gray-900 rounded-md group hover:bg-rose-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <TrashIcon className="h-5 w-5 text-rose-800 group-hover:text-white" />
+                  <TrashIcon className="w-5 h-5 text-rose-800 group-hover:text-white" />
                   <span className="truncate">Apagar Opções Guardadas</span>
                 </button>
               )}
