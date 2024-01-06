@@ -11,6 +11,7 @@ import {
   LessonTypesModal,
   HelpModal,
   ShareButtons,
+  FillButton,
 } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
@@ -119,6 +120,7 @@ const TimeTableSchedulerPage = () => {
         T: true,
         TP: true,
       },
+      locked: false,
       course: course,
       option: null,
       schedules: schedules,
@@ -285,7 +287,7 @@ const TimeTableSchedulerPage = () => {
 
     const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value ? { shown: value.shown, option: value.option } : { shown: { T: true, TP: true }, option: null }
+      return value ? { shown: value.shown, option: value.option, locked: value.locked } : { shown: { T: true, TP: true}, option: null, locked: false }
     }
 
     let isNewerPromise = true
@@ -322,6 +324,7 @@ const TimeTableSchedulerPage = () => {
               const co = findPreviousEntry(prev.selected, pickedCourses[i])
               newCourseOptions.push({
                 shown: co.shown,
+                locked: co.locked,
                 course: pickedCourses[i],
                 option: co.option,
                 schedules: schedules[i],
@@ -352,6 +355,7 @@ const TimeTableSchedulerPage = () => {
                     const co = findPreviousEntry(prev.options[i], pickedCourses[j])
                     extraCourseOptions.push({
                       shown: co.shown,
+                      locked: co.locked,
                       course: pickedCourses[j],
                       option: co.option,
                       schedules: schedules[j],
@@ -392,10 +396,10 @@ const TimeTableSchedulerPage = () => {
   }, [checkedCourses])
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 py-4 px-4">
+    <div className="grid w-full grid-cols-12 px-4 py-4 gap-x-4 gap-y-4">
       {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-        <div className="h-full w-full">
+      <div className="order-1 col-span-12 px-3 py-3 rounded lg:min-h-adjusted min-h-min bg-lightest dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+        <div className="w-full h-full">
           <Schedule
             showGrid={showGrid}
             courseOptions={multipleOptions.selected}
@@ -406,7 +410,7 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
+      <div className="flex flex-col justify-between order-2 col-span-12 px-3 py-3 rounded lg:min-h-adjusted min-h-min bg-lightest dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
           <div className="flex flex-row flex-wrap items-start justify-start gap-x-2 gap-y-2">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
@@ -441,14 +445,22 @@ const TimeTableSchedulerPage = () => {
               multipleOptions={multipleOptions}
             />
             <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
+            
             <ShareButtons
               majorHook={[major, setMajor]}
               schedule={multipleOptions.selected}
               multipleOptionsHook={[multipleOptions, setMultipleOptions]}
               setIsImportedSchedule={setIsImportedSchedule}
             />
+
+            <FillButton
+              // courseOptions={multipleOptions.selected}
+              courseOptions={removeDuplicatesFromCourseOption(multipleOptions.selected)}
+              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+            />
+
           </div>
-          <div className="flex flex-col gap-4 py-1 px-0">
+          <div className="flex flex-col gap-4 px-0 py-1">
             {multipleOptions.selected.length > 0 &&
               removeDuplicatesFromCourseOption(multipleOptions.selected).map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
@@ -459,10 +471,10 @@ const TimeTableSchedulerPage = () => {
                 />
               ))}
           </div>
-          <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
+          <div className="flex flex-col items-center justify-center w-full gap-2 mt-4 2xl:flex-row">
           </div>
         </div>
-        <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
+        <div className="flex flex-col items-center justify-center w-full gap-2 mt-4 2xl:flex-row">
           <HelpModal />
           <LessonTypesModal />
         </div>

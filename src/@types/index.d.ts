@@ -83,6 +83,7 @@ export type CourseOption = {
     T: boolean
     TP: boolean
   }
+  locked: boolean
   course: CheckedCourse
   option: CourseSchedule | null
   schedules: CourseSchedule[]

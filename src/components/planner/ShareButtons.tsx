@@ -23,7 +23,7 @@ type Props = {
  * @param setIsImportedSchedule function that sets if the schedule is imported
  * @returns ShareButtons component
  */
-const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSchedule }: Props) => {
+const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSchedule}: Props) => {
     const [major, setMajor] = majorHook
     const [multipleOptions, setMultipleOptions] = multipleOptionsHook
     const [isConfModalOpen, setIsConfModalOpen] = useState(false)
@@ -133,6 +133,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                     shown: imported_course_units[i].shown,
                     course: imported_course_units[i].course,
                     option: null,
+                    locked: false,
                     schedules: imported_course_units[i].schedules,
                     teachers: course_teachers,
                     filteredTeachers: course_teachers,
@@ -310,6 +311,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
             course_option = {
                 shown: shown_var,
+                locked: false,
                 course: checked_course,
                 option: option,
                 schedules: course_schedule,
@@ -383,9 +385,9 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
 
     return (
     <>  
-    { showDiv ? <div className="absolute m-auto left-0 right-0 bottom-5 w-1/5 flex place-items-center p-3 w-full text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-700" role="alert">
-                    <div className="inline-flex justify-center items-center w-6 h-6 text-white bg-secondary rounded-lg dark:bg-secondary dark:text-white">
-                    <CheckIcon className="h-5 w-5" />
+    { showDiv ? <div className="absolute left-0 right-0 flex w-1/5 w-full p-3 m-auto text-gray-500 bg-white rounded-lg shadow bottom-5 place-items-center dark:text-gray-400 dark:bg-gray-700" role="alert">
+                    <div className="inline-flex items-center justify-center w-6 h-6 text-white rounded-lg bg-secondary dark:bg-secondary dark:text-white">
+                    <CheckIcon className="w-5 h-5" />
                     </div>
                     <div className="ml-5 text-sm font-normal">Horário Copiado Com Sucesso</div>
                         <button 
@@ -394,48 +396,44 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                                                 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 
                                                 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
                             <span className="sr-only">Close</span>
-                            <XIcon className="h-6 w-6" />
+                            <XIcon className="w-6 h-6" />
                         </button>
                 </div> : null }
   
-    <div className='grid grid-flow-row grid-rows-1 grid-cols-7 gap-2 w-full mt-1'>
-        <div className="relative col-span-6">
-            <div className="absolute inset-y-0 left-0 col-span-6">
-            
+        <div className='grid w-full grid-flow-row grid-cols-7 grid-rows-1 gap-2 mt-1'>
+            <div className="relative col-span-6">
+                <input id='schedule-input' placeholder='Insere o link do horário...' className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-white
+                            dark:bg-darkish dark:text-white dark:placeholder:text-white p-2.5 text-center text-sm font-normal text-black transition hover:opacity-80 disabled:cursor-not-allowed 
+                            disabled:opacity-50 border-2 border-gray-300 outline-none focus:border-tertiary dark:focus:border-gray-300 dark:border-tertiary" required
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                openDecisionModal();
+                                }
+                            }}>
+                </input>
+                <button 
+                            onClick={() => openDecisionModal()}
+
+                            id='ImportButton'
+                            title="Importar o link inserido"
+                            className="absolute right-2 bottom-1.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
+                            text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                            <UploadIcon className="w-4 h-4" />
+
+                </button>
             </div>
-            <input id='schedule-input' placeholder='Insere o link do horário...' className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-white
-                        dark:bg-darkish dark:text-white dark:placeholder:text-white p-2.5 text-center text-sm font-normal text-black transition hover:opacity-80 disabled:cursor-not-allowed 
-                        disabled:opacity-50 border-2 border-gray-300 outline-none focus:border-tertiary dark:focus:border-gray-300 dark:border-tertiary" required
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter") {
-                              openDecisionModal();
-                            }
-                          }}>
-            </input>
-            <button 
-                        onClick={() => openDecisionModal()}
+            <div className='col-span-1'>
+                <button
+                    onClick={() => copySchedule()}
+                    title="Copiar o link do horário"
+                    className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2.5
+                    text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                    {icon? <CheckIcon className='w-6 h-6'/> : <DocumentDuplicateIcon className='w-6 h-6' />}
+                </button>
 
-                        id='ImportButton'
-                        title="Importar o link inserido"
-                        className="absolute right-2 bottom-1.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
-                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                        <UploadIcon className="h-4 w-4" />
-
-            </button>
-            
-        </div>
-                <div className='col-span-1'>
-                    <button
-                        onClick={() => copySchedule()}
-                        title="Copiar o link do horário"
-                        className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2.5
-                        text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                        {icon? <CheckIcon className='w-6 h-6'/> : <DocumentDuplicateIcon className='w-6 h-6' />}
-                    </button>
-
-                </div>
+            </div>
 
         </div>
 
@@ -455,7 +453,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto">
-                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                    <div className="flex items-center justify-center min-h-full p-4 text-center">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -466,49 +464,46 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                         leaveTo="opacity-0 scale-95"
                     >
                         <Dialog.Panel
-                        className="w-full w-1/4 h-50 transform overflow-hidden rounded-2xl bg-white p-6
-                        text-left align-middle text-gray-700 shadow-xl transition-all dark:bg-dark dark:text-white"
+                        className="w-1/4 w-full p-6 overflow-hidden text-left text-gray-700 align-middle transition-all transform bg-white shadow-xl h-50 rounded-2xl dark:bg-dark dark:text-white"
                         >
                         <div className="flex justify-end">  
                         <button
                             type="button"
                             onClick={closeConfModal}
-                            className="float-right rounded text-rose-700 transition hover:bg-rose-700 hover:text-white"
+                            className="float-right transition rounded text-rose-700 hover:bg-rose-700 hover:text-white"
                             >
-                            <XIcon className="h-6 w-6" />
+                            <XIcon className="w-6 h-6" />
                             </button> 
                         </div>    
                         <div className="flex justify-end">  
                             <div className="mx-auto">              
-                                <Dialog.Title as="h1" className="text-2xl rounded-ld font-semibold leading-6 mx-auto">
+                                <Dialog.Title as="h1" className="mx-auto text-2xl font-semibold leading-6 rounded-ld">
                                     IMPORTAR  
                                 </Dialog.Title>
                             </div>  
                         </div>   
-                        <div className="mt-3 flex flex-col text-center">
+                        <div className="flex flex-col mt-3 text-center">
                             <p>O seguinte processo irá apagar todo seu progresso, deseja prosseguir?</p>
                         </div>
 
                         <div className="flex mt-8">
                             <button
                             type="button"
-                            className="flex items-center space-x-2 mx-auto mr-3 rounded bg-rose-700 px-3 py-2 text-center text-sm font-medium text-white 
-                            transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex items-center px-3 py-2 mx-auto mr-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-rose-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                             onClick={closeConfModal}
                             >
                             <span>NÃO</span>
-                            <XIcon className="h-5 w-5" />
+                            <XIcon className="w-5 h-5" />
                             </button>
                             <button
                             type="button"
-                            className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
-                            transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex items-center px-3 py-2 mx-auto ml-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-tertiary hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                             onClick={() => {closeConfModal(); importAllSchedules(true)}}
                             // onClick={closeConfModal}
 
                             >
                             <span>SIM</span>
-                            <CheckIcon className="h-5 w-5" />
+                            <CheckIcon className="w-5 h-5" />
                             </button>
                         </div>
                         </Dialog.Panel>
@@ -534,7 +529,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto">
-                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                    <div className="flex items-center justify-center min-h-full p-4 text-center">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -545,47 +540,44 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
                         leaveTo="opacity-0 scale-95"
                     >
                         <Dialog.Panel
-                        className="w-full max-w-xl h-50 transform overflow-hidden rounded-2xl bg-white p-6
-                        text-left align-middle text-gray-700 shadow-xl transition-all dark:bg-dark dark:text-white"
+                        className="w-full max-w-xl p-6 overflow-hidden text-left text-gray-700 align-middle transition-all transform bg-white shadow-xl h-50 rounded-2xl dark:bg-dark dark:text-white"
                         >
                         <div className="flex justify-end">  
                         <button
                             type="button"
                             onClick={closeDecisionModal}
-                            className="float-right rounded text-rose-700 transition hover:bg-rose-700 hover:text-white"
+                            className="float-right transition rounded text-rose-700 hover:bg-rose-700 hover:text-white"
                             >
-                            <XIcon className="h-6 w-6" />
+                            <XIcon className="w-6 h-6" />
                             </button> 
                         </div>    
                         <div className="flex justify-end">  
                             <div className="mx-auto">              
-                                <Dialog.Title as="h1" className="text-2xl rounded-ld font-semibold leading-6 mx-auto">
+                                <Dialog.Title as="h1" className="mx-auto text-2xl font-semibold leading-6 rounded-ld">
                                     IMPORTAR  
                                 </Dialog.Title>
                             </div>  
                         </div>   
-                        <div className="mt-3 flex flex-col text-center">
+                        <div className="flex flex-col mt-3 text-center">
                             <p>O seguinte processo irá adicionar horários de unidades curriculares diferentes das selecionadas por si. Deseja adicionar ou substituir?</p>
                         </div>
 
                         <div className="flex mt-8">
                         <button
                             type="button"
-                            className="flex items-center space-x-2 mx-auto mr-3 rounded bg-primary px-3 py-2 text-center text-sm font-medium text-white 
-                            transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex items-center px-3 py-2 mx-auto mr-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-primary hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                             onClick={() => {closeDecisionModal(); importAllSchedules(true);}}
                             >
                             <span>SUBSTITUIR</span>
-                            <PencilAltIcon className="h-5 w-5" />
+                            <PencilAltIcon className="w-5 h-5" />
                         </button>
                             <button
                             type="button"
-                            className="flex items-center space-x-2 mx-auto ml-3 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
-                            transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex items-center px-3 py-2 mx-auto ml-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-tertiary hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                             onClick={() => {closeDecisionModal(); importAllSchedules(false);}}
                             >
                             <span>ADICIONAR</span>
-                            <PlusIcon className="h-5 w-5" />
+                            <PlusIcon className="w-5 h-5" />
                             </button>
                             
                         </div>
