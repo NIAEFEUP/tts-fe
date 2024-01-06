@@ -1,8 +1,10 @@
 import { Fragment, useState, useRef, useEffect } from 'react'
-import { Transition, Menu } from '@headlessui/react'
+import { Transition, Menu, Popover } from '@headlessui/react'
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
 import { MultipleOptions } from '../../@types'
 import { ReactSortable, Sortable } from "react-sortablejs"
+import EmojiPicker, { Theme } from 'emoji-picker-react';
+import { useDarkMode } from '../../hooks'
 import {
   PencilAltIcon,
 } from '@heroicons/react/solid'
@@ -36,33 +38,31 @@ const Option = ({item, selectedHook, setOptionIndex, multipleOptionsHook}) => {
 const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
-  const [isInputFocused, setIsInputFocused] = useState(false);
 
-  const [selected, setSelected] = useState(1);
+  const [enabled, setEnabled] = useDarkMode()
 
-  // Set default value of selected option
-  useEffect(() => {
+  console.log(enabled);
+
+  const [selected, setSelected] = useState(() => {
     const selectedOption = localStorage.getItem("niaefeup-tts.selected-option");
 
     if(!selectedOption) {
-      setSelected(1);
+      return 1;
     } else {
-      setSelected(parseInt(selectedOption));
+      return parseInt(selectedOption);
     }
-  }, [])
+  });
 
   // Update local storage value when user selects a new option
   useEffect(() => {
     localStorage.setItem("niaefeup-tts.selected-option", selected.toString())
   }, [selected])
 
-  const [optionsList, setOptionsList] = useState([]);
-
-  // Load options list from local storage or set default values
-  useEffect(() => {
+  const [optionsList, setOptionsList] = useState(() => {
     const optionsList: Array<Option> = JSON.parse(localStorage.getItem("niaefeup-tts.optionsList"));
+
     if(!optionsList) {
-      setOptionsList([
+      return [
         { id: 1, icon: "😊", name: "Horário 1" },
         { id: 2, icon: "🌟", name: "Horário 2" },
         { id: 3, icon: "🚀", name: "Horário 3" },
@@ -72,12 +72,12 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
         { id: 7, icon: "🌈", name: "Horário 7" },
         { id: 8, icon: "🍀", name: "Horário 8" },
         { id: 9, icon: "🎓", name: "Horário 9" },
-        { id: 10, icon: "🤖", name: "Horário 10" },
-      ])
+        { id: 10, icon: "🤖", name: "Horário 10" }
+      ]
     } else {
-      setOptionsList(optionsList)
+      return optionsList;
     }
-  }, [])
+  });
 
   // Update local storage value when user changes options list
   useEffect(() => {
@@ -108,12 +108,39 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     });
   };
 
+  const changeOptionIcon = (newIcon) => {
+    setOptionsList((prevOptionsList) => {
+      const updatedOptionsList = prevOptionsList.map((item) =>
+        item.id === selected ? { ...item, icon: newIcon } : item
+      );
+      localStorage.setItem("niaefeup-tts.optionsList", JSON.stringify(updatedOptionsList));
+      return updatedOptionsList;
+    });
+
+  }
+
   const option = getOptionById(selected)
 
   return (
     <>
       <div className="flex flex-row items-center gap-3 w-full">
-        <p className="text-xl">{option?.icon}</p>  
+        <Popover className="relative">
+          <>
+            <Popover.Button className="text-xl">{option?.icon}</Popover.Button>
+            <Popover.Panel v-slot="{ close }" className="absolute translate-y-1 z-10">
+              {({ close }) => (
+                <EmojiPicker 
+                  theme={enabled ? Theme.DARK : Theme.LIGHT}
+                  onEmojiClick={(emojiData, event) => {
+                    changeOptionIcon(emojiData.emoji);
+                    close();
+                  }}
+                />
+              )}
+            </Popover.Panel>
+          </>
+        </Popover>
+        
         <input 
           className="transition-all bg-inherit p-1 font-bold focus:font-normal w-full"
           maxLength={30}
@@ -121,7 +148,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           onChange={renameOption}
           onKeyDown={(e) => {
             if (e.key === 'Enter') 
-              e.target.blur();          
+              e.target.blur();
           }}
         />
         {/* <PencilAltIcon id={`${selected}-name-edit-icon`} className="h-5 w-5"></PencilAltIcon> */}
