@@ -1,10 +1,10 @@
 import { Switch } from '@headlessui/react'
 import { MoonIcon, SunIcon } from '@heroicons/react/solid'
-import { useDarkMode } from '../../hooks'
+import { useContext } from 'react';
+import { ThemeContext } from '../../contexts/ThemeContext'
 
 export const DarkModeSwitch = () => {
-  const [enabled, setEnabled] = useDarkMode()
-
+  const {enabled, setEnabled} = useContext(ThemeContext)
   return (
     <Switch.Group>
       <div className="flex items-center">

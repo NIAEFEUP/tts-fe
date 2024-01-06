@@ -1,148 +1,186 @@
 import { Fragment, useState, useRef, useEffect } from 'react'
-import { Transition, Menu } from '@headlessui/react'
+import { Transition, Menu, Popover } from '@headlessui/react'
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
 import { MultipleOptions } from '../../@types'
+import { ReactSortable, Sortable } from "react-sortablejs"
+import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react';
+import { ThemeContext } from '../../contexts/ThemeContext'
+import {
+  PencilAltIcon,
+} from '@heroicons/react/solid'
+
+import { useContext } from 'react';
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
+interface Option {
+  id: number;
+  icon: string;
+  name: string;
+}
+
+const Option = ({item, selectedHook, setOptionIndex, multipleOptionsHook}) => {
+  const [selected, setSelected] = selectedHook   
+  return (
+      <div 
+          onClick={() => {
+            setSelected(item.id);
+            setOptionIndex(item.id);
+          }} 
+          className={`box-border p-2 w-10 h-10 aspect-square rounded cursor-pointer border-2 border-transparent hover:border-primary/75 hover:dark:border-primary/50 dark:shadow transition-colors ease-in-out delay-150 ${selected === item.id ? "text-white bg-primary/75 dark:bg-primary/50" : "bg-lightish dark:bg-darkish"}`}
+      >
+          {item.icon}
+      </div>
+  )
+}
+
 const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
-  const [isEditingName, setIsEditingName] = useState(false)
-  const menuButtonRef = useRef<HTMLButtonElement>(null)
 
-  const setNextOptionIndex = () => {
+  const {enabled, setEnabled} = useContext(ThemeContext)
 
-    setMultipleOptions((prev) => ({
-      index: prev.index + 1,
-      selected: prev.options[prev.index + 1],
-      options: [...prev.options],
-      names: prev.names
-    }))
-  }
+  const [selected, setSelected] = useState(() => {
+    const selectedOption = localStorage.getItem("niaefeup-tts.selected-option");
 
+    if(!selectedOption) {
+      return 1;
+    } else {
+      return parseInt(selectedOption);
+    }
+  });
 
-  const setPreviousOptionIndex = () => {
-    setMultipleOptions((prev) => ({
-      index: prev.index - 1,
-      selected: prev.options[prev.index - 1],
-      options: [...prev.options],
-      names: prev.names
-    }))
-  }
+  // Update local storage value when user selects a new option
+  useEffect(() => {
+    localStorage.setItem("niaefeup-tts.selected-option", selected.toString())
+  }, [selected])
+
+  const [optionsList, setOptionsList] = useState(() => {
+    const optionsList: Array<Option> = JSON.parse(localStorage.getItem("niaefeup-tts.optionsList"));
+
+    if(!optionsList) {
+      return [
+        { id: 1, icon: "😊", name: "Horário 1" },
+        { id: 2, icon: "🌟", name: "Horário 2" },
+        { id: 3, icon: "🚀", name: "Horário 3" },
+        { id: 4, icon: "📚", name: "Horário 4" },
+        { id: 5, icon: "🎉", name: "Horário 5" },
+        { id: 6, icon: "💻", name: "Horário 6" },
+        { id: 7, icon: "🌈", name: "Horário 7" },
+        { id: 8, icon: "🍀", name: "Horário 8" },
+        { id: 9, icon: "🎓", name: "Horário 9" },
+        { id: 10, icon: "🤖", name: "Horário 10" }
+      ]
+    } else {
+      return optionsList;
+    }
+  });
+
+  // Update local storage value when user changes options list
+  useEffect(() => {
+    localStorage.setItem("niaefeup-tts.optionsList", JSON.stringify(optionsList));
+  }, [optionsList])
 
   const setOptionIndex = (newIndex: number) => {
     setMultipleOptions((prev) => ({
-      index: newIndex,
-      selected: prev.options[newIndex],
+      index: newIndex - 1,
+      selected: prev.options[newIndex - 1],
       options: [...prev.options],
       names: prev.names
     }))
   }
 
-  const renameOption = (newName: string) => {
-    if (newName === "") return
-    const newNames = [...multipleOptions.names]
-    newNames[multipleOptions.index] = newName
-    setMultipleOptions((prev) => ({
-      index: prev.index,
-      selected: prev.options[prev.index],
-      options: [...prev.options],
-      names: newNames
-    }))
-    setIsEditingName(false)
+  const getOptionById = (id: number) => {
+    return optionsList.find((elem) => elem.id === id);
+  };
+
+  const renameOption = (event) => {
+    const newName = event.target.value;
+    setOptionsList((prevOptionsList) => {
+      const updatedOptionsList = prevOptionsList.map((item) =>
+        item.id === selected ? { ...item, name: newName } : item
+      );
+      localStorage.setItem("niaefeup-tts.optionsList", JSON.stringify(updatedOptionsList));
+      return updatedOptionsList;
+    });
+  };
+
+  const changeOptionIcon = (newIcon) => {
+    setOptionsList((prevOptionsList) => {
+      const updatedOptionsList = prevOptionsList.map((item) =>
+        item.id === selected ? { ...item, icon: newIcon } : item
+      );
+      localStorage.setItem("niaefeup-tts.optionsList", JSON.stringify(updatedOptionsList));
+      return updatedOptionsList;
+    });
+
   }
 
-  const chooseAndStopEditing = (index: number) => {
-    setOptionIndex(index)
-    setIsEditingName(false)
-  }
-
-  useEffect(() => {
-    const handkeClick = (event: MouseEvent) => {
-      if (!menuButtonRef.current || !menuButtonRef.current.contains(event.target as Node)) {
-        setIsEditingName(false)
-      }
-    }
-  
-    document.addEventListener('click', handkeClick)
-    return () => {
-      document.removeEventListener('click', handkeClick)
-    }
-  }, [menuButtonRef, setIsEditingName])
+  const option = getOptionById(selected)
 
   return (
-    <div className="flex w-full rounded text-xs">
-      <button
-        disabled={multipleOptions.index === 0}
-        onClick={() => setPreviousOptionIndex()}
-        title="Ver opção de horário anterior"
-        className="w-min items-center justify-center gap-1.5 rounded-l border-2 border-transparent bg-secondary px-2 py-2
-        text-center font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+    <>
+      <div className="flex flex-row items-center gap-3 w-full">
+        <Popover id="option-header" className="relative">
+          <>
+            <Popover.Button 
+              className="w-10 h-10 aspect-square rounded bg-lightish dark:bg-darkish text-xl"
+              >
+              {option?.icon}
+            </Popover.Button>
+            <Popover.Panel className="absolute translate-y-1 z-10">
+              {({ close }) => (
+                <EmojiPicker 
+                  searchDisabled={true}
+                  previewConfig={{showPreview: false}}
+                  theme={enabled ? Theme.DARK : Theme.LIGHT}
+                  suggestedEmojisMode={SuggestionMode.RECENT}
+                  emojiStyle={EmojiStyle.NATIVE}
+                  onEmojiClick={(emojiData, event) => {
+                    changeOptionIcon(emojiData.emoji);
+                    close();
+                  }}
+                />
+              )}
+            </Popover.Panel>
+          </>
+        </Popover>
+        
+        <input 
+          className="transition-all bg-inherit p-1 font-bold focus:font-normal w-full"
+          maxLength={30}
+          value={option ? option.name : ""}
+          onChange={renameOption}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') 
+              e.target.blur();
+          }}
+        />
+        {/* <PencilAltIcon id={`${selected}-name-edit-icon`} className="h-5 w-5"></PencilAltIcon> */}
+      </div>
+      <ReactSortable
+        className="flex flex-row justify-start gap-2 overflow-x-auto text-center py-3 m-y-2"
+        list={optionsList}
+        setList={setOptionsList}
+        group="groupName"
+        animation={200}
+        delay={2}
+        multiDrag
       >
-        <ChevronLeftIcon className="h-4 w-4" />
-      </button>
-
-      <Menu as="div" className="relative inline-block w-full text-left">
-        <Menu.Button
-          title="Escolher uma opção de horário" 
-          className="flex h-auto w-full items-center justify-center space-x-2 border-2 border-secondary bg-secondary px-2 py-2 
-          font-medium text-white transition hover:opacity-80"
-          disabled={isEditingName}
-          onDoubleClick={() => setIsEditingName(true)}
-          ref = {menuButtonRef}
-        >
-          <input type="text" value={multipleOptions.names[multipleOptions.index]} onBlur={() => setIsEditingName(false)} onChange={(event) => renameOption(event.target.value)}
-            className='h-4 w-full text-xs items-center justify-center border-0 focus:border-transparent gap-1.5 px-2 py-2 text-white
-            transition hover:opacity-80 bg-secondary font-medium text-center'/>
-        </Menu.Button>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items
-            className="absolute right-0 z-20 mt-2 flex w-full origin-top-right flex-col gap-1 rounded
-            border-2 border-lightish bg-lightest p-1.5 shadow-xl dark:border-transparent dark:bg-darkest xl:gap-2"
-          >
-            {optionIndexes.map((index: number) => (
-              <Menu.Item key={`schedule-option-${index}`}>
-                {({ active }) => (
-                  <button
-                    onClick ={() => chooseAndStopEditing(index)}    
-                    className={`
-                      ${active ? 'bg-secondary text-white' : ''}
-                      ${index === multipleOptions.index ? 'bg-secondary text-white hover:opacity-90' : !active && ''}
-                      group relative flex w-full cursor-pointer select-none items-center gap-2 rounded py-2 px-3 transition-all
-                    `}
-                  >
-                    <span>{multipleOptions.names[index]}</span>
-                    {index === multipleOptions.index && <CheckIcon className="h-4 w-4" />}
-                  </button>
-                )}
-              </Menu.Item>
-            ))}
-          </Menu.Items>
-        </Transition>
-      </Menu>
-
-      <button
-        disabled={multipleOptions.index === 9}
-        onClick={() => setNextOptionIndex()}
-        title="Ver opção de horário seguinte"
-        className="w-min items-center justify-center gap-1.5 rounded-r border-2 border-transparent bg-secondary px-2 py-2
-        text-center font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        <ChevronRightIcon className="h-4 w-4" />
-      </button>
-    </div>
-  )
+      {optionsList.map((item) => (
+        <Option 
+            item={item}  
+            key={item.id}
+            selectedHook={[selected, setSelected]}
+            setOptionIndex={setOptionIndex}
+            multipleOptionsHook={multipleOptionsHook}
+        />
+      ))}
+      </ReactSortable>
+    </>
+  );
 }
 
 export default OptionsController
