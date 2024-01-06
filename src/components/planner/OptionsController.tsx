@@ -3,12 +3,13 @@ import { Transition, Menu, Popover } from '@headlessui/react'
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
 import { MultipleOptions } from '../../@types'
 import { ReactSortable, Sortable } from "react-sortablejs"
-import EmojiPicker, { Theme } from 'emoji-picker-react';
-import { useDarkMode } from '../../hooks'
+import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react';
+import { ThemeContext } from '../../contexts/ThemeContext'
 import {
   PencilAltIcon,
 } from '@heroicons/react/solid'
 
+import { useContext } from 'react';
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -39,9 +40,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const optionIndexes = Array.from({ length: 10 }, (_, i) => i)
 
-  const [enabled, setEnabled] = useDarkMode()
-
-  console.log(enabled);
+  const {enabled, setEnabled} = useContext(ThemeContext)
 
   const [selected, setSelected] = useState(() => {
     const selectedOption = localStorage.getItem("niaefeup-tts.selected-option");
@@ -124,13 +123,21 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   return (
     <>
       <div className="flex flex-row items-center gap-3 w-full">
-        <Popover className="relative">
+        <Popover id="option-header" className="relative">
           <>
-            <Popover.Button className="text-xl">{option?.icon}</Popover.Button>
-            <Popover.Panel v-slot="{ close }" className="absolute translate-y-1 z-10">
+            <Popover.Button 
+              className="w-10 h-10 aspect-square rounded bg-lightish dark:bg-darkish text-xl"
+              >
+              {option?.icon}
+            </Popover.Button>
+            <Popover.Panel className="absolute translate-y-1 z-10">
               {({ close }) => (
                 <EmojiPicker 
+                  searchDisabled={true}
+                  previewConfig={{showPreview: false}}
                   theme={enabled ? Theme.DARK : Theme.LIGHT}
+                  suggestedEmojisMode={SuggestionMode.RECENT}
+                  emojiStyle={EmojiStyle.NATIVE}
                   onEmojiClick={(emojiData, event) => {
                     changeOptionIcon(emojiData.emoji);
                     close();
@@ -154,7 +161,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
         {/* <PencilAltIcon id={`${selected}-name-edit-icon`} className="h-5 w-5"></PencilAltIcon> */}
       </div>
       <ReactSortable
-        className="flex flex-row justify-start gap-2 overflow-x-auto text-center p-3 m-y-2"
+        className="flex flex-row justify-start gap-2 overflow-x-auto text-center py-3 m-y-2"
         list={optionsList}
         setList={setOptionsList}
         group="groupName"

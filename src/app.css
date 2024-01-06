@@ -85,4 +85,13 @@ button {
   @apply border-l-4 border-slate-700 bg-lightish py-1 pl-4 dark:border-white dark:bg-darkish;
 }
 
+#option-header .EmojiPickerReact {
+  --epr-bg-color: rgb(242, 244, 247);
+  --epr-category-label-bg-color: rgb(242, 244, 247);
+}
+
+#option-header .EmojiPickerReact.epr-dark-theme {
+  --epr-bg-color: rgb(26, 28, 35);
+  --epr-category-label-bg-color: rgb(26, 28, 35);
+}
 
