@@ -2,7 +2,7 @@ import Layout from './components/layout'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AboutPage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pages'
 import { getPath, config } from './utils'
-import { createContext } from 'react';
+import { StrictMode, createContext } from 'react';
 import { useDarkMode } from './hooks';
 import { ThemeContext } from './contexts/ThemeContext'; 
 import './app.css'
@@ -27,26 +27,27 @@ const App = () => {
   const [enabled, setEnabled] = useDarkMode();
 
   return (
-  <BrowserRouter>
-    <ThemeContext.Provider value={{enabled, setEnabled}}>
-      <Routes>
-        {pages.map((page, pageIdx) => (
-          <Route
-            path={page.path}
-            key={`page-${pageIdx}`}
-            element={
-              <Layout location={page.location} title={page.location} liquid={page.liquid}>
-                <page.element />
-              </Layout>
-            }
-          />
-        ))}
-        {redirects.map((redirect, redirectIdx) => (
-          <Route path={redirect.from} key={`redirect-${redirectIdx}`} element={<Navigate replace to={redirect.to} />} />
-        ))}
-      </Routes>
-    </ThemeContext.Provider>
-  </BrowserRouter>
-);}
+    <BrowserRouter>
+      <ThemeContext.Provider value={{enabled, setEnabled}}>
+        <Routes>
+          {pages.map((page, pageIdx) => (
+            <Route
+              path={page.path}
+              key={`page-${pageIdx}`}
+              element={
+                <Layout location={page.location} title={page.location} liquid={page.liquid}>
+                  <page.element />
+                </Layout>
+              }
+            />
+          ))}
+          {redirects.map((redirect, redirectIdx) => (
+            <Route path={redirect.from} key={`redirect-${redirectIdx}`} element={<Navigate replace to={redirect.to} />} />
+          ))}
+        </Routes>
+      </ThemeContext.Provider>
+    </BrowserRouter>
+  );
+}
 
 export default App

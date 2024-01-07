@@ -411,10 +411,16 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
 
             {/* Lock Button */}
             <button 
+              title="Bloquear/Desbloquear Horário"
               className="w-1/12" 
               onClick={toggleLocked}
+              disabled={courseOption.option ? false : true}
               >
-              {courseOption.locked ? <LockClosedIcon className="w-6 h-6" /> : <LockOpenIcon className="w-6 h-6" />}
+              {
+                courseOption.locked 
+                ? <LockClosedIcon className="w-6 h-6" /> 
+                : <LockOpenIcon className="w-6 h-6" />
+              }
             </button>
 
           </div>
