@@ -31,7 +31,7 @@ const Option = ({item, selectedHook, setOptionIndex, multipleOptionsHook}) => {
           }} 
           className={`box-border p-2 w-10 h-10 aspect-square rounded cursor-pointer border-2 border-transparent hover:border-primary/75 hover:dark:border-primary/50 dark:shadow transition-colors ease-in-out delay-150 ${selected === item.id ? "text-white bg-primary/75 dark:bg-primary/50" : "bg-lightish dark:bg-darkish"}`}
       >
-          {item.icon}
+        <img src={item.icon} className="w-full h-full" />
       </div>
   )
 }
@@ -62,16 +62,16 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
 
     if(!optionsList) {
       return [
-        { id: 1, icon: "😊", name: "Horário 1" },
-        { id: 2, icon: "🌟", name: "Horário 2" },
-        { id: 3, icon: "🚀", name: "Horário 3" },
-        { id: 4, icon: "📚", name: "Horário 4" },
-        { id: 5, icon: "🎉", name: "Horário 5" },
-        { id: 6, icon: "💻", name: "Horário 6" },
-        { id: 7, icon: "🌈", name: "Horário 7" },
-        { id: 8, icon: "🍀", name: "Horário 8" },
-        { id: 9, icon: "🎓", name: "Horário 9" },
-        { id: 10, icon: "🤖", name: "Horário 10" }
+        { id: 1, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png", name: "Horário 1" },
+        { id: 2, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png", name: "Horário 2" },
+        { id: 3, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png", name: "Horário 3" },
+        { id: 4, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png", name: "Horário 4" },
+        { id: 5, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png", name: "Horário 5" },
+        { id: 6, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png", name: "Horário 6" },
+        { id: 7, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png", name: "Horário 7" },
+        { id: 8, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png", name: "Horário 8" },
+        { id: 9, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png", name: "Horário 9" },
+        { id: 10, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png", name: "Horário 10" }
       ]
     } else {
       return optionsList;
@@ -116,18 +116,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       return updatedOptionsList;
     });
 
-  }
-
-  const getBrowserEmojiStyle = () => {
-    if (window.navigator.userAgent.indexOf("Chrome") !== -1) {
-      return EmojiStyle.GOOGLE;
-    }
-    if (window.navigator.userAgent.indexOf("Safari") !== -1) {
-      return EmojiStyle.APPLE;
-    }
-    return EmojiStyle.NATIVE;
-  };
-  
+  }  
 
   const option = getOptionById(selected)
 
@@ -137,9 +126,9 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
         <Popover id="option-header" className="relative">
           <>
             <Popover.Button 
-              className="w-10 h-10 aspect-square rounded bg-lightish dark:bg-darkish text-xl"
+              className="w-10 h-10 p-1 aspect-square rounded hover:bg-lightish hover:dark:bg-darkish text-xl"
               >
-              {option?.icon}
+                <img src={option?.icon} className="w-full h-full" />
             </Popover.Button>
             <Popover.Panel className="absolute translate-y-1 z-10">
               {({ close }) => (
@@ -148,9 +137,9 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                   previewConfig={{showPreview: false}}
                   theme={enabled ? Theme.DARK : Theme.LIGHT}
                   suggestedEmojisMode={SuggestionMode.RECENT}
-                  emojiStyle={getBrowserEmojiStyle()}
+                  emojiStyle={EmojiStyle.APPLE}
                   onEmojiClick={(emojiData, event) => {
-                    changeOptionIcon(emojiData.emoji);
+                    changeOptionIcon(emojiData.imageUrl);
                     close();
                   }}
                 />
@@ -169,7 +158,6 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
               e.target.blur();
           }}
         />
-        {/* <PencilAltIcon id={`${selected}-name-edit-icon`} className="h-5 w-5"></PencilAltIcon> */}
       </div>
       <ReactSortable
         className="flex flex-row justify-start gap-2 overflow-x-auto text-center py-3 m-y-2"
