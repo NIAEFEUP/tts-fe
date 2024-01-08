@@ -3,7 +3,7 @@ import { Transition, Menu, Popover } from '@headlessui/react'
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
 import { MultipleOptions } from '../../@types'
 import { ReactSortable, Sortable } from "react-sortablejs"
-import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react';
+import EmojiPicker, { Theme, EmojiStyle, SuggestionMode, Emoji } from 'emoji-picker-react';
 import { ThemeContext } from '../../contexts/ThemeContext'
 import {
   PencilAltIcon,
@@ -118,6 +118,17 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
 
   }
 
+  const getBrowserEmojiStyle = () => {
+    if (window.navigator.userAgent.indexOf("Chrome") !== -1) {
+      return EmojiStyle.GOOGLE;
+    }
+    if (window.navigator.userAgent.indexOf("Safari") !== -1) {
+      return EmojiStyle.APPLE;
+    }
+    return EmojiStyle.NATIVE;
+  };
+  
+
   const option = getOptionById(selected)
 
   return (
@@ -137,7 +148,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                   previewConfig={{showPreview: false}}
                   theme={enabled ? Theme.DARK : Theme.LIGHT}
                   suggestedEmojisMode={SuggestionMode.RECENT}
-                  emojiStyle={EmojiStyle.NATIVE}
+                  emojiStyle={getBrowserEmojiStyle()}
                   onEmojiClick={(emojiData, event) => {
                     changeOptionIcon(emojiData.emoji);
                     close();
