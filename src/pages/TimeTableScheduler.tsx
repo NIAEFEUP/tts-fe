@@ -452,6 +452,7 @@ const TimeTableSchedulerPage = () => {
             {multipleOptions.selected.length > 0 &&
               removeDuplicatesFromCourseOption(multipleOptions.selected).map((courseOption, courseOptionIdx) => (
                 <ScheduleListbox
+                  courseOptions={multipleOptions.selected}
                   courseOption={courseOption}
                   multipleOptionsHook={[multipleOptions, setMultipleOptions]}
                   isImportedScheduleHook={[isImportedSchedule, setIsImportedSchedule]}

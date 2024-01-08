@@ -1,10 +1,11 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon, EyeIcon, ExclamationIcon } from '@heroicons/react/solid'
-import { getScheduleOptionDisplayText } from '../../utils'
-import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../@types'
+import { getScheduleOptionDisplayText, timesCollide } from '../../utils'
+import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation} from '../../@types'
 
 type Props = {
+  courseOptions: CourseOption[]
   courseOption: CourseOption
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   isImportedScheduleHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -193,12 +194,11 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       if (schedule === null || hasCommonProfessorWith(schedule.professor_information, selectedTeachers))
         selectedSchedules.push(schedule)
     })
-
+    
     return selectedSchedules
   }
 
   const showName = (e, name) => {
-    console.log([...selectedTeachers])
     if (name === '') return
     if (e.target.children.length !== 0) e.target.children[0].innerText = name
   }
@@ -208,6 +208,22 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     if (e.target.children.length !== 0) e.target.children[0].innerText = acronym
   }
 
+  const timesCollideWithSelected = (option: CourseSchedule) => {
+    if (option === null) return null;
+    const selectedOptions = multipleOptions.selected.map(co => co.option).filter(so => so !== null);
+    for (const selectedOption of selectedOptions) {
+      if (timesCollide(option, selectedOption) && (option.course_unit_id !== selectedOption.course_unit_id)) {
+        if (option.lesson_type === 'TP' && selectedOption.lesson_type === 'TP') {
+          return 'class-conflict';
+        } else {
+          return 'class-conflict-warn';
+        }
+      }
+    }
+    return null;
+  };
+
+  
   return (
     adaptedSchedules && (
       <Listbox
@@ -262,9 +278,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                       `group relative cursor-default select-none py-2 pl-10 pr-4
                      text-sm ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
                     }
-          
                   >
-                    
                     {({ selected, active }) => (
                       <>
                         <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
@@ -287,7 +301,19 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                             <EyeIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
-                        <ExclamationIcon className="h-5 w-5 text-rose-700" aria-hidden="true" />
+                        {(() => {
+                          const collisionType = timesCollideWithSelected(option);
+                          return collisionType ? (
+                            <span
+                              className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
+                                collisionType === 'class-conflict' ? 'text-rose-700' : 'text-amber-500'
+                              }`}
+                            >
+                              <ExclamationIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null;
+                        })()}
+
                       </>
                     )}
                   </Listbox.Option>
