@@ -3,7 +3,7 @@ import React, {Fragment, useState } from 'react';
 import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon, PencilAltIcon, PlusIcon} from '@heroicons/react/outline'
 import getMajors from '../../api/backend'
 import { Dialog, Transition } from '@headlessui/react'
-import { getCourseTeachers } from '../../utils/index'
+import { getCourseTeachers } from '../../utils/utils'
 
 
 

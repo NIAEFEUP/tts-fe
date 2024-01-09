@@ -1,5 +1,5 @@
 import { MultipleOptions } from '../@types'
-import { getCourseTeachers } from '../utils'
+import { getCourseTeachers } from '../utils/utils'
 
 
 const INITIAL_VALUE = { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }

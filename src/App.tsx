@@ -1,7 +1,7 @@
 import Layout from './components/layout'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AboutPage, ProfilePage, FeupExchangePage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pages'
-import { getPath, config } from './utils'
+import { getPath, config } from './utils/utils'
 import { createContext } from 'react';
 import { useDarkMode } from './hooks';
 import { ThemeContext } from './contexts/ThemeContext'; 

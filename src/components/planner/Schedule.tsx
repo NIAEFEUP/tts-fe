@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { useMemo } from 'react'
 import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
-import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
+import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
 import '../../styles/schedule.css'
 
 type Props = {

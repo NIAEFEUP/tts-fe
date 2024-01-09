@@ -1,15 +1,16 @@
-import { Fragment, useState, useRef, useEffect } from 'react'
-import { Transition, Menu, Popover } from '@headlessui/react'
-import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
+import { useState, useEffect } from 'react'
+import { Popover } from '@headlessui/react'
 import { MultipleOptions } from '../../@types'
-import { ReactSortable, Sortable } from "react-sortablejs"
-import EmojiPicker, { Theme, EmojiStyle, SuggestionMode, Emoji } from 'emoji-picker-react';
+import { ReactSortable } from "react-sortablejs"
+import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react';
 import { ThemeContext } from '../../contexts/ThemeContext'
-import {
-  PencilAltIcon,
-} from '@heroicons/react/solid'
-
 import { useContext } from 'react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip"
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -24,15 +25,26 @@ interface Option {
 const Option = ({item, selectedHook, setOptionIndex, multipleOptionsHook}) => {
   const [selected, setSelected] = selectedHook   
   return (
-      <div 
-          onClick={() => {
-            setSelected(item.id);
-            setOptionIndex(item.id);
-          }} 
-          className={`box-border p-2 w-10 h-10 aspect-square rounded cursor-pointer border-2 border-transparent hover:border-primary/75 hover:dark:border-primary/50 dark:shadow transition-colors ease-in-out delay-150 ${selected === item.id ? "text-white bg-primary/75 dark:bg-primary/50" : "bg-lightish dark:bg-darkish"}`}
-      >
-        <img src={item.icon} className="w-full h-full" />
-      </div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger          
+            onClick={() => {
+              setSelected(item.id);
+              setOptionIndex(item.id);
+            }} 
+            className={`
+              box-border p-2 w-10 h-10 aspect-square rounded cursor-pointer 
+              border-2 border-transparent hover:border-primary/75 hover:dark:border-primary/50 
+              dark:shadow transition-colors ease-in-out delay-150
+              ${selected === item.id ? "text-white bg-primary/75 dark:bg-primary/50" : "bg-lightish dark:bg-darkish"}`
+            }
+          >
+            <img src={item.icon} className="w-full h-full" /></TooltipTrigger>
+          <TooltipContent>
+            <p>{item.name}</p>
+          </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
@@ -45,7 +57,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [selected, setSelected] = useState(() => {
     const selectedOption = localStorage.getItem("niaefeup-tts.selected-option");
 
-    if(!selectedOption) {
+    if (!selectedOption) {
       return 1;
     } else {
       return parseInt(selectedOption);
@@ -68,7 +80,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
         { id: 4, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png", name: "Horário 4" },
         { id: 5, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png", name: "Horário 5" },
         { id: 6, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png", name: "Horário 6" },
-        { id: 7, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png", name: "Horário 7" },
+        { id: 7, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png", name: "Horário 7" },
         { id: 8, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png", name: "Horário 8" },
         { id: 9, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png", name: "Horário 9" },
         { id: 10, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png", name: "Horário 10" }

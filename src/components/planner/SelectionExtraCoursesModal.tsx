@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useState, useRef } from 'react'
 import Alert, { AlertType } from './Alert'
 import { CheckedCourse, Major, MultipleOptions } from '../../@types'
-import { getSchoolYear, getSemester } from '../../utils'
+import { getSchoolYear, getSemester } from '../../utils/utils'
 import {
   AcademicCapIcon,
   ArrowCircleLeftIcon,
