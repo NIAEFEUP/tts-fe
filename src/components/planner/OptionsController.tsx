@@ -109,6 +109,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   };
 
   const renameOption = (event) => {
+    console.log('coise');
     const newName = event.target.value;
     setOptionsList((prevOptionsList) => {
       const updatedOptionsList = prevOptionsList.map((item) =>
@@ -118,6 +119,18 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       return updatedOptionsList;
     });
   };
+
+  const trimOptionName = (event) => {
+    const newName = event.target.value.trim();
+    event.target.value = newName;
+    setOptionsList((prevOptionsList) => {
+      const updatedOptionsList = prevOptionsList.map((item) =>
+        item.id === selected ? { ...item, name: newName } : item
+      );
+      localStorage.setItem("niaefeup-tts.optionsList", JSON.stringify(updatedOptionsList));
+      return updatedOptionsList;
+    });
+  }
 
   const changeOptionIcon = (newIcon) => {
     setOptionsList((prevOptionsList) => {
@@ -165,9 +178,12 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           maxLength={30}
           value={option ? option.name : ""}
           onChange={renameOption}
+          onBlur={trimOptionName}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') 
+            if (e.key === 'Enter') {
+              trimOptionName(e);
               e.target.blur();
+            }
           }}
         />
       </div>
