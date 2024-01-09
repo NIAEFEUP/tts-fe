@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon, EyeIcon } from '@heroicons/react/solid'
-import { getScheduleOptionDisplayText } from '../../utils'
+import { getScheduleOptionDisplayText } from '../../utils/utils'
 import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../@types'
 
 type Props = {

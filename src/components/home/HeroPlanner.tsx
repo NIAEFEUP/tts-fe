@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
 import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
 import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
-import { getPath, config } from '../../utils'
+import { getPath, config } from '../../utils/utils'
 
 type Card = {
   id: string

@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, DotsHorizontalIcon, SupportIcon, XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
-import { config, getPath } from '../../utils'
+import { config, getPath } from '../../utils/utils'
 
 const HelpModal = () => {
   const [isOpen, setIsOpen] = useState(false)

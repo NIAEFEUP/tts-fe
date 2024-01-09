@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Lesson } from '../../../@types'
-import { convertWeekdayLong, getClassTypeClassName, getLessonBoxTime, getLessonTypeLongName } from '../../../utils'
+import { convertWeekdayLong, getClassTypeClassName, getLessonBoxTime, getLessonTypeLongName } from '../../../utils/utils'
 
 type Props = {
   lesson: Lesson

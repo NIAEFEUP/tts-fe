@@ -1,10 +1,16 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseOption, CourseSchedule, Lesson } from '../@types'
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 /**
  * Get's the complete for a page.
@@ -187,4 +193,5 @@ export {
   getClassTypeClassName,
   getLessonTypeLongName,
   getCourseTeachers,
+  cn,
 }

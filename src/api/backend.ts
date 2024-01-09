@@ -1,6 +1,6 @@
 import { CheckedCourse, Major } from '../@types'
 import { extraCoursesData } from '../utils/data'
-import { getSemester, config, dev_config } from '../utils'
+import { getSemester, config, dev_config } from '../utils/utils'
 
 
 const prod_val = process.env.REACT_APP_PROD

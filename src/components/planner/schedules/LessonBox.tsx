@@ -8,7 +8,7 @@ import {
   getLessonBoxTime,
   maxHour,
   minHour,
-} from '../../../utils'
+} from '../../../utils/utils'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 

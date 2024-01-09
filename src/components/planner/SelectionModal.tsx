@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState } from 'react'
 import Alert, { AlertType } from './Alert'
 import { Link } from 'react-router-dom'
 import { CheckedCourse, Course, Major } from '../../@types'
-import { getSchoolYear, getSemester, config, getPath } from '../../utils'
+import { getSchoolYear, getSemester, config, getPath } from '../../utils/utils'
 import {
   AcademicCapIcon,
   CheckCircleIcon,

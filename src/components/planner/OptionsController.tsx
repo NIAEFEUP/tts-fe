@@ -1,15 +1,16 @@
-import { Fragment, useState, useRef, useEffect } from 'react'
-import { Transition, Menu, Popover } from '@headlessui/react'
-import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'
+import { useState, useEffect } from 'react'
+import { Popover } from '@headlessui/react'
 import { MultipleOptions } from '../../@types'
-import { ReactSortable, Sortable } from "react-sortablejs"
+import { ReactSortable } from "react-sortablejs"
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react';
 import { ThemeContext } from '../../contexts/ThemeContext'
-import {
-  PencilAltIcon,
-} from '@heroicons/react/solid'
-
 import { useContext } from 'react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip"
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -24,15 +25,26 @@ interface Option {
 const Option = ({item, selectedHook, setOptionIndex, multipleOptionsHook}) => {
   const [selected, setSelected] = selectedHook   
   return (
-      <div 
-          onClick={() => {
-            setSelected(item.id);
-            setOptionIndex(item.id);
-          }} 
-          className={`box-border p-2 w-10 h-10 aspect-square rounded cursor-pointer border-2 border-transparent hover:border-primary/75 hover:dark:border-primary/50 dark:shadow transition-colors ease-in-out delay-150 ${selected === item.id ? "text-white bg-primary/75 dark:bg-primary/50" : "bg-lightish dark:bg-darkish"}`}
-      >
-          {item.icon}
-      </div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger          
+            onClick={() => {
+              setSelected(item.id);
+              setOptionIndex(item.id);
+            }} 
+            className={`
+              box-border p-2 w-10 h-10 aspect-square rounded cursor-pointer 
+              border-2 border-transparent hover:border-primary/75 hover:dark:border-primary/50 
+              dark:shadow transition-colors ease-in-out delay-150
+              ${selected === item.id ? "text-white bg-primary/75 dark:bg-primary/50" : "bg-lightish dark:bg-darkish"}`
+            }
+          >
+            <img src={item.icon} className="w-full h-full" /></TooltipTrigger>
+          <TooltipContent>
+            <p>{item.name}</p>
+          </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
@@ -45,7 +57,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const [selected, setSelected] = useState(() => {
     const selectedOption = localStorage.getItem("niaefeup-tts.selected-option");
 
-    if(!selectedOption) {
+    if (!selectedOption) {
       return 1;
     } else {
       return parseInt(selectedOption);
@@ -62,16 +74,16 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
 
     if(!optionsList) {
       return [
-        { id: 1, icon: "😊", name: "Horário 1" },
-        { id: 2, icon: "🌟", name: "Horário 2" },
-        { id: 3, icon: "🚀", name: "Horário 3" },
-        { id: 4, icon: "📚", name: "Horário 4" },
-        { id: 5, icon: "🎉", name: "Horário 5" },
-        { id: 6, icon: "💻", name: "Horário 6" },
-        { id: 7, icon: "🌈", name: "Horário 7" },
-        { id: 8, icon: "🍀", name: "Horário 8" },
-        { id: 9, icon: "🎓", name: "Horário 9" },
-        { id: 10, icon: "🤖", name: "Horário 10" }
+        { id: 1, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png", name: "Horário 1" },
+        { id: 2, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png", name: "Horário 2" },
+        { id: 3, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png", name: "Horário 3" },
+        { id: 4, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png", name: "Horário 4" },
+        { id: 5, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png", name: "Horário 5" },
+        { id: 6, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png", name: "Horário 6" },
+        { id: 7, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png", name: "Horário 7" },
+        { id: 8, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png", name: "Horário 8" },
+        { id: 9, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png", name: "Horário 9" },
+        { id: 10, icon: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png", name: "Horário 10" }
       ]
     } else {
       return optionsList;
@@ -97,6 +109,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   };
 
   const renameOption = (event) => {
+    console.log('coise');
     const newName = event.target.value;
     setOptionsList((prevOptionsList) => {
       const updatedOptionsList = prevOptionsList.map((item) =>
@@ -107,6 +120,18 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
     });
   };
 
+  const trimOptionName = (event) => {
+    const newName = event.target.value.trim();
+    event.target.value = newName;
+    setOptionsList((prevOptionsList) => {
+      const updatedOptionsList = prevOptionsList.map((item) =>
+        item.id === selected ? { ...item, name: newName } : item
+      );
+      localStorage.setItem("niaefeup-tts.optionsList", JSON.stringify(updatedOptionsList));
+      return updatedOptionsList;
+    });
+  }
+
   const changeOptionIcon = (newIcon) => {
     setOptionsList((prevOptionsList) => {
       const updatedOptionsList = prevOptionsList.map((item) =>
@@ -116,7 +141,7 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
       return updatedOptionsList;
     });
 
-  }
+  }  
 
   const option = getOptionById(selected)
 
@@ -126,9 +151,9 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
         <Popover id="option-header" className="relative">
           <>
             <Popover.Button 
-              className="w-10 h-10 aspect-square rounded bg-lightish dark:bg-darkish text-xl"
+              className="w-10 h-10 p-1 aspect-square rounded hover:bg-lightish hover:dark:bg-darkish text-xl"
               >
-              {option?.icon}
+                <img src={option?.icon} className="w-full h-full" />
             </Popover.Button>
             <Popover.Panel className="absolute translate-y-1 z-10">
               {({ close }) => (
@@ -137,9 +162,9 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
                   previewConfig={{showPreview: false}}
                   theme={enabled ? Theme.DARK : Theme.LIGHT}
                   suggestedEmojisMode={SuggestionMode.RECENT}
-                  emojiStyle={EmojiStyle.NATIVE}
+                  emojiStyle={EmojiStyle.APPLE}
                   onEmojiClick={(emojiData, event) => {
-                    changeOptionIcon(emojiData.emoji);
+                    changeOptionIcon(emojiData.imageUrl);
                     close();
                   }}
                 />
@@ -153,12 +178,14 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
           maxLength={30}
           value={option ? option.name : ""}
           onChange={renameOption}
+          onBlur={trimOptionName}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') 
+            if (e.key === 'Enter') {
+              trimOptionName(e);
               e.target.blur();
+            }
           }}
         />
-        {/* <PencilAltIcon id={`${selected}-name-edit-icon`} className="h-5 w-5"></PencilAltIcon> */}
       </div>
       <ReactSortable
         className="flex flex-row justify-start gap-2 overflow-x-auto text-center py-3 m-y-2"

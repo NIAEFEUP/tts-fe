@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { config } from '../utils'
+import { config } from '../utils/utils'
 
 const NotFoundPage = () => (
   <>
