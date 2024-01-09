@@ -4,26 +4,26 @@ import { DarkModeSwitch } from './DarkModeSwitch'
 import { LogoNIAEFEUPImage } from '../../images'
 import { config, getPath } from '../../utils/utils'
 import {
-  MenuIcon,
-  XIcon,
+  Bars3Icon,
+  XMarkIcon,
   AtSymbolIcon,
   UserCircleIcon,
-  CollectionIcon,
-  SwitchHorizontalIcon,
+  RectangleStackIcon,
+  ArrowsRightLeftIcon,
   QuestionMarkCircleIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 
 const navigation = [
   {
     title: 'Planner',
     location: getPath(config.paths.planner),
-    icon: <CollectionIcon className="h-5 w-5" />,
+    icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
   },
   {
     title: 'Exchange',
     location: getPath(config.paths.exchange),
-    icon: <SwitchHorizontalIcon className="h-5 w-5" />,
+    icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
     wip: true,
   },
   {
@@ -147,12 +147,12 @@ const Hamburger = ({ open }: HamburgerProps) => (
       <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
         <span className="sr-only">Open nav menu</span>
         {open ? (
-          <XIcon
+          <XMarkIcon
             className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
             aria-hidden="true"
           />
         ) : (
-          <MenuIcon
+          <Bars3Icon
             className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
             aria-hidden="true"
           />

@@ -1,6 +1,6 @@
 import { LogoNIAEFEUPImage, LogoAEFEUPImage, LogoFEUPImage } from '../../images'
 import { GithubIcon, FacebookIcon, TwitterIcon, InstagramIcon, LinkedinIcon } from '../svgs'
-import { GlobeAltIcon, InboxInIcon } from '@heroicons/react/outline'
+import { GlobeAltIcon, InboxArrowDownIcon } from '@heroicons/react/24/outline'
 
 type Social = {
   label: string
@@ -15,7 +15,7 @@ const socials: Social[] = [
   { label: 'Instagram', url: 'https://www.instagram.com/niaefeup', icon: InstagramIcon },
   { label: 'Linkedin', url: 'https://pt.linkedin.com/company/nifeup', icon: LinkedinIcon },
   { label: 'Website', url: 'https://ni.fe.up.pt/', icon: GlobeAltIcon },
-  { label: 'Email us', url: 'mailto:ni@aefeup.pt', icon: InboxInIcon },
+  { label: 'Email us', url: 'mailto:ni@aefeup.pt', icon: InboxArrowDownIcon },
 ]
 
 const Footer = () => {

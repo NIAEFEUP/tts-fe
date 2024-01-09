@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { SelectorIcon, CheckIcon, EyeIcon } from '@heroicons/react/solid'
+import { ChevronUpDownIcon, CheckIcon, EyeIcon } from '@heroicons//react/24/solid'
 import { getScheduleOptionDisplayText } from '../../utils/utils'
 import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../@types'
 
@@ -27,7 +27,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   //     courseOption.filteredTeachers.some((prof_info2) => prof_info1.acronym === prof_info2.acronym)
   //   )
   // )
-  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers);
+  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers)
 
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
@@ -237,7 +237,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                 {getOptionDisplayText(selectedOption)}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
-                <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
+                <ChevronUpDownIcon className="h-4 w-4 transition" aria-hidden="true" />
               </span>
             </Listbox.Button>
 
@@ -248,10 +248,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options
-                className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
-            bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
-              >
+              <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base">
                 {selectDropdownSchedules().map((option, optionIdx) => (
                   <Listbox.Option
                     onMouseEnter={() => showPreview(option)}
@@ -304,7 +301,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                   {getTeacherSelectionText(selectedTeachers)}
                 </span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
-                  <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
+                  <ChevronUpDownIcon className="h-4 w-4 transition" aria-hidden="true" />
                 </span>
               </Listbox.Button>
 
@@ -315,10 +312,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options
-                  className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border
-                    bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base"
-                >
+                <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base">
                   {teacherOptions.map((option, optionIdx) => (
                     <Listbox.Option
                       key={option.acronym}
@@ -355,30 +349,30 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                         </>
                       )}
                     </Listbox.Option>
-                  //   <Listbox.Option
-                  //   key={option}
-                  //   value={option}
-                  //   className={({ active }) =>
-                  //     `group relative cursor-default select-none py-2 text-sm pl-10
-                  //       pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
-                  //   }
-                  // >
-                  //   {({ selected, active }) => (
-                  //     <>
-                  //       <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
-                  //         {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
-                  //       </span>
-                  //       {selected ? (
-                  //         <span
-                  //           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
-                  //             }`}
-                  //         >
-                  //           <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                  //         </span>
-                  //       ) : null}
-                  //     </>
-                  //   )}
-                  // </Listbox.Option>
+                    //   <Listbox.Option
+                    //   key={option}
+                    //   value={option}
+                    //   className={({ active }) =>
+                    //     `group relative cursor-default select-none py-2 text-sm pl-10
+                    //       pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
+                    //   }
+                    // >
+                    //   {({ selected, active }) => (
+                    //     <>
+                    //       <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
+                    //         {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
+                    //       </span>
+                    //       {selected ? (
+                    //         <span
+                    //           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
+                    //             }`}
+                    //         >
+                    //           <CheckIcon className="w-5 h-5" aria-hidden="true" />
+                    //         </span>
+                    //       ) : null}
+                    //     </>
+                    //   )}
+                    // </Listbox.Option>
                   ))}
                 </Listbox.Options>
               </Transition>

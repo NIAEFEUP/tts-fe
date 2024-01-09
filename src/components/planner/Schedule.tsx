@@ -4,15 +4,17 @@ import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
 import '../../styles/schedule.css'
+import { ViewColumnsIcon, Bars4Icon } from '@heroicons/react/24/outline'
+import { Button } from '../ui/button'
+import { useShowGrid } from '../../hooks'
 
 type Props = {
-  showGrid: boolean
   activeClassesT: boolean
   activeClassesTP: boolean
   courseOptions: CourseOption[]
 }
 
-const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {
+const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
@@ -120,10 +122,16 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     return lessonsAcc
   }, [lessons])
 
+  const [showGrid, setShowGrid] = useShowGrid()
+
+  const takeScreenshot = () => {
+    console.log('coming soon')
+  }
+
   return (
     <>
       {/* Schedule Desktop */}
-      <div className="schedule-area">
+      <div className="schedule-area gap-2">
         <div className="schedule-top">
           <div className="schedule-top-empty">
             <span className="dummy">00:00</span>
@@ -166,6 +174,52 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
                     )}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* TODO: Create a component for this */}
+        <div className="flex justify-between">
+          <div className="flex gap-2 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-t/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Teórica</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-tp/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Teórico-Prática</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-pl/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Prática Laboratorial</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-ot/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Orientação Tutorial</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-s/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Seminário</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-p/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Prática</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-tc/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Teórica de Campo</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+              <span className="h-3.5 w-3.5 rounded bg-schedule-other/80 shadow 2xl:h-4 2xl:w-4" />
+              <span>Outros</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={() => setShowGrid(!showGrid)} title={showGrid ? 'Ocultar grelha' : 'Mostrar grelha'}>
+              <Bars4Icon className="h-5 w-5" />
+            </Button>
+            <Button onClick={takeScreenshot} title="Tirar foto" disabled>
+              <Bars4Icon className="h-5 w-5" />
+            </Button>
           </div>
         </div>
       </div>

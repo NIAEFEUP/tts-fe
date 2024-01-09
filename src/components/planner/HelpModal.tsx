@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon, DotsHorizontalIcon, SupportIcon, XIcon } from '@heroicons/react/outline'
+import { CheckIcon, EllipsisHorizontalIcon, LifebuoyIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { config, getPath } from '../../utils/utils'
 
@@ -24,7 +24,7 @@ const HelpModal = () => {
         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="truncate">Preciso de ajuda</span>
-        <SupportIcon className="h-5 w-5" />
+        <LifebuoyIcon className="h-5 w-5" />
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>
@@ -52,10 +52,7 @@ const HelpModal = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel
-                  className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6
-                  text-left align-middle text-gray-700 shadow-xl transition-all dark:bg-dark dark:text-white"
-                >
+                <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle text-gray-700 shadow-xl transition-all dark:bg-dark dark:text-white">
                   <header className="flex items-center justify-between">
                     <Dialog.Title as="h3" className="text-2xl font-semibold leading-6">
                       Como utilizar o planeador de horário?
@@ -66,7 +63,7 @@ const HelpModal = () => {
                       onClick={closeModal}
                       className="rounded p-1 text-rose-700 transition hover:bg-rose-700 hover:text-white"
                     >
-                      <XIcon className="h-6 w-6" />
+                      <XMarkIcon className="h-6 w-6" />
                     </button>
                   </header>
 
@@ -91,7 +88,8 @@ const HelpModal = () => {
                       </li>
                       <li className="font-bold">
                         <span className="font-normal">
-                          Fazer duplo clique na caixa da atual <strong>opcão do horário</strong> para alterar o nome do mesmo.
+                          Fazer duplo clique na caixa da atual <strong>opcão do horário</strong> para alterar o nome do
+                          mesmo.
                         </span>
                       </li>
                       <li className="font-bold">
@@ -106,7 +104,7 @@ const HelpModal = () => {
                       </li>
                       <li className="font-bold">
                         <span className="font-normal">
-                          No menu com opções extra <DotsHorizontalIcon className="mx-1 inline-flex h-5 w-5" />,{' '}
+                          No menu com opções extra <EllipsisHorizontalIcon className="mx-1 inline-flex h-5 w-5" />,{' '}
                           <strong>exportar as opções em CSV</strong> e usar esse ficheiro para preencher no SIGARRA.
                         </span>
                       </li>
@@ -147,8 +145,7 @@ const HelpModal = () => {
                   <div className="mt-8">
                     <button
                       type="button"
-                      className="flex items-center space-x-2 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white 
-                      transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex items-center space-x-2 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={closeModal}
                     >
                       <span>Ok, entendido!</span>
