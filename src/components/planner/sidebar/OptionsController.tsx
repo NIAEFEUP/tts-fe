@@ -35,13 +35,13 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
             setOptionIndex(item.id)
           }}
           className={`
-            box-border aspect-square h-10 w-10 cursor-pointer rounded border-2 
+            box-border aspect-square h-12 w-12 cursor-pointer rounded border-2 
             border-transparent p-2 transition-colors delay-150 
             ease-in-out hover:border-primary/75 dark:shadow hover:dark:border-primary/50
             ${selected === item.id ? 'bg-primary/75 text-white dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
             `}
         >
-          <img src={item.icon} className="h-full w-full" />
+          <img src={item.icon} className="h-auto w-auto" />
         </TooltipTrigger>
         <TooltipContent>
           <p>{item.name}</p>

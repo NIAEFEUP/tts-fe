@@ -7,7 +7,7 @@ import LinkedinIcon from './Linkedin'
 import TidyIcon from './fancy/Tidy'
 import ConsultIcon from './fancy/Consult'
 import SelectIcon from './fancy/Select'
-import NitSig from './NitSig'
+import NitSigIcon from './NitSigIcon'
 
 export {
   LinktreeIcon,
@@ -19,5 +19,5 @@ export {
   TidyIcon,
   ConsultIcon,
   SelectIcon,
-  NitSig,
+  NitSigIcon,
 }

@@ -1,6 +1,10 @@
 import React from 'react'
 
-const NitSig = () => (
+type Props = {
+  className?: string
+}
+
+const NitSigIcon = ({ className }: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="188.871"
@@ -8,6 +12,7 @@ const NitSig = () => (
     version="1.1"
     viewBox="0 0 49.972 70.034"
     xmlSpace="preserve"
+    className={className}
   >
     <g transform="translate(-21.698 -40.438)">
       <g stroke="none" strokeDasharray="none">
@@ -94,4 +99,4 @@ const NitSig = () => (
   </svg>
 )
 
-export default NitSig
+export default NitSigIcon

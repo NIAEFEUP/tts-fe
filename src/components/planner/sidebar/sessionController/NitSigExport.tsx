@@ -1,4 +1,4 @@
-import { NitSig } from '../../../svgs'
+import { NitSigIcon } from '../../../svgs'
 
 type Props = {}
 
@@ -12,7 +12,7 @@ const NitSigExport = () => {
       title="Exportar ficheiro com todas as opções nos 10 horários"
       className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-gray-900 hover:bg-secondary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
     >
-      <NitSig />
+      <NitSigIcon className="h-4 w-4" />
       <span>Exportar para o NitSig</span>
     </button>
   )

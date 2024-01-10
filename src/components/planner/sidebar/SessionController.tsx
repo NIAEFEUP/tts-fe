@@ -32,7 +32,7 @@ const SessionController = ({
   multipleOptions,
 }: Props) => {
   return (
-    <div className="flex justify-between">
+    <div className="flex w-full justify-between gap-10">
       <CoursePicker
         majors={majors}
         openHook={openHook}
@@ -44,7 +44,7 @@ const SessionController = ({
         destBufferHook={destBufferHook}
         repeatedCourseControlHook={repeatedCourseControlHook}
       />
-      <div>
+      <div className="flex gap-2">
         <CollaborativeSession />
         <Export schedule={schedule} multipleOptions={multipleOptions} />
       </div>

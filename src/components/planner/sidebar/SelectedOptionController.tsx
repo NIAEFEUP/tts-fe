@@ -1,7 +1,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
-import { useContext } from 'react'
+import { useState, useContext } from 'react'
 
 interface Option {
   id: number
@@ -21,6 +21,7 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook }: Props
   const { enabled, setEnabled } = useContext(ThemeContext)
   const [optionsList, setOptionsList] = optionsListHook
   const [selectedOption, setSelectedOption] = selectedOptionHook
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
   const getOptionById = (id: number) => {
     return optionsList.find((elem) => elem.id === id)
@@ -64,12 +65,14 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook }: Props
 
   return (
     <div className="flex w-full flex-row items-center gap-3">
-      <Popover>
+      <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
         <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
           <img src={option?.icon} className="h-full w-full" />
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent side="bottom" className="w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
           <EmojiPicker
+            // height={'100%'}
+            width={'100%'}
             searchDisabled={true}
             previewConfig={{ showPreview: false }}
             theme={enabled ? Theme.DARK : Theme.LIGHT}
@@ -77,8 +80,7 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook }: Props
             emojiStyle={EmojiStyle.APPLE}
             onEmojiClick={(emojiData, event) => {
               changeOptionIcon(emojiData.imageUrl)
-              console.log(event.target)
-              // blur()
+              setEmojiPickerOpen(false)
             }}
           />
         </PopoverContent>
