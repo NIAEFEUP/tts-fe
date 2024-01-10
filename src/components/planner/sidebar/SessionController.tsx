@@ -1,5 +1,7 @@
-import { Export, CollaborativeSession, CoursePicker } from './sessionController'
-import { CheckedCourse, Course, Major, CourseOption, MultipleOptions } from '../../../@types'
+import { CheckedCourse, Major, CourseOption, MultipleOptions } from '../../../@types'
+import CoursePicker from './sessionController/CoursePicker'
+import CollaborativeSession from './sessionController/CollaborativeSession'
+import Export from './sessionController/Export'
 
 type Props = {
   majors: Major[]
@@ -32,7 +34,7 @@ const SessionController = ({
   multipleOptions,
 }: Props) => {
   return (
-    <div className="flex w-full justify-between gap-10">
+    <div className="flex justify-between w-full gap-10">
       <CoursePicker
         majors={majors}
         openHook={openHook}

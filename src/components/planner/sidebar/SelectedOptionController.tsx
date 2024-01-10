@@ -2,8 +2,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext } from 'react'
-import { CopyOption, PasteOption, RandomFill } from './selectedOptionController'
 import { CourseOption, Major } from '../../../@types'
+import CopyOption from './selectedOptionController/CopyOption'
+import PasteOption from './selectedOptionController/PasteOption'
+import RandomFill from './selectedOptionController/RandomFill'
 
 interface Option {
   id: number
@@ -67,13 +69,13 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHo
   const option = getOptionById(selectedOption)
 
   return (
-    <div className="flex w-full content-between gap-5">
+    <div className="flex content-between w-full gap-5">
       <div className="flex gap-3">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
-            <img src={option?.icon} className="h-full w-full" />
+          <PopoverTrigger className="w-10 h-10 p-1 text-xl rounded aspect-square hover:bg-lightish hover:dark:bg-darkish">
+            <img src={option?.icon} className="w-full h-full" />
           </PopoverTrigger>
-          <PopoverContent side="bottom" className="w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
+          <PopoverContent side="bottom" className="p-0 rounded-full w-96 bg-lightish dark:bg-darkish">
             <EmojiPicker
               width={'100%'}
               searchDisabled={true}
@@ -90,7 +92,7 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHo
         </Popover>
 
         <input
-          className="w-full bg-inherit p-1 font-bold transition-all focus:font-normal"
+          className="w-full p-1 font-bold transition-all bg-inherit focus:font-normal"
           maxLength={25}
           value={option ? option.name : ''}
           onChange={renameOption}
