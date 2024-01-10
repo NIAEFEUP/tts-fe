@@ -4,7 +4,7 @@ import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
 import '../../styles/schedule.css'
-import { ViewColumnsIcon, Bars4Icon } from '@heroicons/react/24/outline'
+import { ViewColumnsIcon, CameraIcon } from '@heroicons/react/24/outline'
 import { Button } from '../ui/button'
 import { useShowGrid } from '../../hooks'
 
@@ -214,11 +214,22 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
             </div>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => setShowGrid(!showGrid)} title={showGrid ? 'Ocultar grelha' : 'Mostrar grelha'}>
-              <Bars4Icon className="h-5 w-5" />
+            <Button
+              variant="icon"
+              className="bg-lightish text-black"
+              onClick={() => setShowGrid(!showGrid)}
+              title={showGrid ? 'Ocultar grelha' : 'Mostrar grelha'}
+            >
+              <ViewColumnsIcon className="h-5 w-5" />
             </Button>
-            <Button onClick={takeScreenshot} title="Tirar foto" disabled>
-              <Bars4Icon className="h-5 w-5" />
+            <Button
+              variant="icon"
+              className="bg-lightish text-black"
+              onClick={takeScreenshot}
+              title="Tirar foto"
+              disabled
+            >
+              <CameraIcon className="h-5 w-5" />
             </Button>
           </div>
         </div>

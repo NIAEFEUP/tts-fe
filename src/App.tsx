@@ -4,6 +4,7 @@ import { AboutPage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pag
 import { getPath, config } from './utils/utils'
 import { useDarkMode } from './hooks'
 import { ThemeContext } from './contexts/ThemeContext'
+import { Toaster } from './components/ui/toaster'
 import './app.css'
 
 // Configures the path for pages.
@@ -33,7 +34,10 @@ const App = () => {
               key={`page-${pageIdx}`}
               element={
                 <Layout location={page.location} title={page.location} liquid={page.liquid}>
-                  <page.element />
+                  <div>
+                    <page.element />
+                    <Toaster />
+                  </div>
                 </Layout>
               }
             />

@@ -2,6 +2,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext } from 'react'
+import { CopyOption, PasteOption, RandomFill } from './selectedOptionController'
+import { CourseOption, Major } from '../../../@types'
 
 interface Option {
   id: number
@@ -12,12 +14,14 @@ interface Option {
 type Props = {
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
+  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
+  currentOption: CourseOption[]
 }
 
 /**
  * Interactions with the currently selected option
  */
-const SelectedOptionController = ({ optionsListHook, selectedOptionHook }: Props) => {
+const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHook, currentOption }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
   const [optionsList, setOptionsList] = optionsListHook
   const [selectedOption, setSelectedOption] = selectedOptionHook
@@ -28,7 +32,6 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook }: Props
   }
 
   const renameOption = (event) => {
-    console.log('coise')
     const newName = event.target.value
     setOptionsList((prevOptionsList) => {
       const updatedOptionsList = prevOptionsList.map((item) =>
@@ -64,41 +67,47 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook }: Props
   const option = getOptionById(selectedOption)
 
   return (
-    <div className="flex w-full flex-row items-center gap-3">
-      <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-        <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
-          <img src={option?.icon} className="h-full w-full" />
-        </PopoverTrigger>
-        <PopoverContent side="bottom" className="w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
-          <EmojiPicker
-            // height={'100%'}
-            width={'100%'}
-            searchDisabled={true}
-            previewConfig={{ showPreview: false }}
-            theme={enabled ? Theme.DARK : Theme.LIGHT}
-            suggestedEmojisMode={SuggestionMode.RECENT}
-            emojiStyle={EmojiStyle.APPLE}
-            onEmojiClick={(emojiData, event) => {
-              changeOptionIcon(emojiData.imageUrl)
-              setEmojiPickerOpen(false)
-            }}
-          />
-        </PopoverContent>
-      </Popover>
+    <div className="flex w-full content-between gap-5">
+      <div className="flex gap-3">
+        <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
+          <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
+            <img src={option?.icon} className="h-full w-full" />
+          </PopoverTrigger>
+          <PopoverContent side="bottom" className="w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
+            <EmojiPicker
+              width={'100%'}
+              searchDisabled={true}
+              previewConfig={{ showPreview: false }}
+              theme={enabled ? Theme.DARK : Theme.LIGHT}
+              suggestedEmojisMode={SuggestionMode.RECENT}
+              emojiStyle={EmojiStyle.APPLE}
+              onEmojiClick={(emojiData, event) => {
+                changeOptionIcon(emojiData.imageUrl)
+                setEmojiPickerOpen(false)
+              }}
+            />
+          </PopoverContent>
+        </Popover>
 
-      <input
-        className="w-full bg-inherit p-1 font-bold transition-all focus:font-normal"
-        maxLength={30}
-        value={option ? option.name : ''}
-        onChange={renameOption}
-        onBlur={trimOptionName}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            trimOptionName(e)
-            e.target.blur()
-          }
-        }}
-      />
+        <input
+          className="w-full bg-inherit p-1 font-bold transition-all focus:font-normal"
+          maxLength={25}
+          value={option ? option.name : ''}
+          onChange={renameOption}
+          onBlur={trimOptionName}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              trimOptionName(e)
+              e.target.blur()
+            }
+          }}
+        />
+      </div>
+      <div className="flex items-center gap-1">
+        <CopyOption majorHook={majorHook} currentOption={currentOption} />
+        <PasteOption />
+        <RandomFill />
+      </div>
     </div>
   )
 }
