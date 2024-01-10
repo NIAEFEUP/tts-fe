@@ -4,7 +4,6 @@ import SelectionModal from './SelectionModal'
 import ScheduleListbox from './ScheduleListbox'
 import ClassesTypeCheckboxes from './ClassesTypeCheckboxes'
 import MoreActionsButton from './MoreActionsButton'
-import OptionsController from './OptionsController'
 import LessonTypesModal from './LessonTypesModal'
 import HelpModal from './HelpModal'
 import ShareButtons from './ShareButtons'
@@ -17,7 +16,6 @@ export {
   ClassesTypeCheckboxes,
   Alert,
   MoreActionsButton,
-  OptionsController,
   LessonTypesModal,
   HelpModal,
   ShareButtons,

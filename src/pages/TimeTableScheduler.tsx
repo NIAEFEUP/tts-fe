@@ -7,7 +7,6 @@ import {
   ScheduleListbox,
   ClassesTypeCheckboxes,
   MoreActionsButton,
-  OptionsController,
   LessonTypesModal,
   HelpModal,
   ShareButtons,
@@ -414,65 +413,6 @@ const TimeTableSchedulerPage = () => {
         repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
         multipleOptionsHook={[multipleOptions, setMultipleOptions]}
       />
-
-      {/* <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
-        <div className="space-y-2">
-          <div className="flex flex-row flex-wrap items-start justify-start gap-x-2 gap-y-2">
-            <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
-
-            <SelectionModal
-              majors={majors}
-              openHook={[isModalOpen, setIsModalOpen]}
-              majorHook={[major, setMajor]}
-              coursesHook={[checkedCourses, setCheckedCourses]}
-              extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
-              extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
-              sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-              destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-              repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-            />
-
-            {isExtraUcsModelOpen ? (
-              <SelectionExtraCoursesModal
-                majors={majors}
-                openHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
-                majorHook={[extraCoursesMajor, setExtraCoursesMajor]}
-                coursesHook={[checkedCourses, setCheckedCourses]}
-                sourceBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-                destBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-                multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-                repeatedCourseControlHook={[extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor]}
-              />
-            ) : (
-              <></>
-            )}
-            <MoreActionsButton schedule={multipleOptions.selected} multipleOptions={multipleOptions} />
-            <ClassesTypeCheckboxes classesTPHook={[classesTP, setClassesTP]} classesTHook={[classesT, setClassesT]} />
-            <ShareButtons
-              majorHook={[major, setMajor]}
-              schedule={multipleOptions.selected}
-              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-              setIsImportedSchedule={setIsImportedSchedule}
-            />
-          </div>
-          <div className="flex flex-col gap-4 px-0 py-1">
-            {multipleOptions.selected.length > 0 &&
-              removeDuplicatesFromCourseOption(multipleOptions.selected).map((courseOption, courseOptionIdx) => (
-                <ScheduleListbox
-                  courseOption={courseOption}
-                  multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-                  isImportedScheduleHook={[isImportedSchedule, setIsImportedSchedule]}
-                  key={`course-schedule-listbox-${multipleOptions.index}-${courseOption.course.info.id}`}
-                />
-              ))}
-          </div>
-          <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row"></div>
-        </div>
-        <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 2xl:flex-row">
-          <HelpModal />
-          <LessonTypesModal />
-        </div>
-      </div> */}
     </div>
   )
 }

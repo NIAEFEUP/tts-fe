@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { CheckedCourse, Course, Major, MultipleOptions } from '../../@types'
 import SessionController from './sidebar/SessionController'
-import OptionsController from './OptionsController'
+import OptionsController from './sidebar/OptionsController'
 import SelectedOptionController from './sidebar/SelectedOptionController'
 import CoursesController from './sidebar/CoursesController'
 
@@ -108,7 +108,7 @@ const Sidebar = ({
   }, [selectedOption])
 
   return (
-    <div className="flex flex-col justify-between order-2 col-span-12 px-3 py-3 rounded lg:min-h-adjusted min-h-min bg-lightest dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
+    <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
       <div className="space-y-2">
         <div className="relative flex flex-row flex-wrap items-start justify-start gap-x-2 gap-y-2">
           <SessionController
@@ -126,6 +126,8 @@ const Sidebar = ({
           />
           <OptionsController
             multipleOptionsHook={multipleOptionsHook}
+            optionsListHook={[optionsList, setOptionsList]}
+            selectedOptionHook={[selectedOption, setSelectedOption]}
           />
           <SelectedOptionController
             optionsListHook={[optionsList, setOptionsList]}
