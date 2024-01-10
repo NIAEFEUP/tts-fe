@@ -110,7 +110,7 @@ const Sidebar = ({
   return (
     <div className="flex flex-col justify-between order-2 col-span-12 px-3 py-3 rounded lg:min-h-adjusted min-h-min bg-lightest dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
       <div className="space-y-2">
-        <div className="flex flex-row flex-wrap items-start justify-start gap-x-2 gap-y-2">
+        <div className="relative flex flex-row flex-wrap items-start justify-start gap-x-2 gap-y-2">
           <SessionController
             majors={majors}
             openHook={openHook}

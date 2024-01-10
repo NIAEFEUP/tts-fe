@@ -33,7 +33,7 @@ const Option = ({ item, selectedHook, setOptionIndex, multipleOptionsHook }) => 
               ease-in-out hover:border-primary/75 dark:shadow hover:dark:border-primary/50
               ${selected === item.id ? 'bg-primary/75 text-white dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
         >
-          <img src={item.icon} className="h-full w-full" />
+          <img src={item.icon} className="w-full h-full" />
         </TooltipTrigger>
         <TooltipContent>
           <p>{item.name}</p>
@@ -180,65 +180,25 @@ const OptionsController = ({ multipleOptionsHook }: Props) => {
   const option = getOptionById(selected)
 
   return (
-    <>
-      <div className="flex w-full flex-row items-center gap-3">
-        <Popover id="option-header" className="relative">
-          <>
-            <Popover.Button className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
-              <img src={option?.icon} className="h-full w-full" />
-            </Popover.Button>
-            <Popover.Panel className="absolute z-10 translate-y-1">
-              {({ close }) => (
-                <EmojiPicker
-                  searchDisabled={true}
-                  previewConfig={{ showPreview: false }}
-                  theme={enabled ? Theme.DARK : Theme.LIGHT}
-                  suggestedEmojisMode={SuggestionMode.RECENT}
-                  emojiStyle={EmojiStyle.APPLE}
-                  onEmojiClick={(emojiData, event) => {
-                    changeOptionIcon(emojiData.imageUrl)
-                    close()
-                  }}
-                />
-              )}
-            </Popover.Panel>
-          </>
-        </Popover>
-
-        <input
-          className="w-full bg-inherit p-1 font-bold transition-all focus:font-normal"
-          maxLength={30}
-          value={option ? option.name : ''}
-          onChange={renameOption}
-          onBlur={trimOptionName}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              trimOptionName(e)
-              e.target.blur()
-            }
-          }}
+    <ReactSortable
+      className="flex flex-row justify-start gap-2 py-3 overflow-x-auto text-center m-y-2"
+      list={optionsList}
+      setList={setOptionsList}
+      group="groupName"
+      animation={200}
+      delay={2}
+      multiDrag
+    >
+      {optionsList.map((item) => (
+        <Option
+          item={item}
+          key={item.id}
+          selectedHook={[selected, setSelected]}
+          setOptionIndex={setOptionIndex}
+          multipleOptionsHook={multipleOptionsHook}
         />
-      </div>
-      <ReactSortable
-        className="m-y-2 flex flex-row justify-start gap-2 overflow-x-auto py-3 text-center"
-        list={optionsList}
-        setList={setOptionsList}
-        group="groupName"
-        animation={200}
-        delay={2}
-        multiDrag
-      >
-        {optionsList.map((item) => (
-          <Option
-            item={item}
-            key={item.id}
-            selectedHook={[selected, setSelected]}
-            setOptionIndex={setOptionIndex}
-            multipleOptionsHook={multipleOptionsHook}
-          />
-        ))}
-      </ReactSortable>
-    </>
+      ))}
+    </ReactSortable>
   )
 }
 

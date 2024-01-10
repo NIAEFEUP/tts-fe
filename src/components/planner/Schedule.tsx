@@ -131,7 +131,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
   return (
     <>
       {/* Schedule Desktop */}
-      <div className="schedule-area gap-2">
+      <div className="gap-2 schedule-area">
         <div className="schedule-top">
           <div className="schedule-top-empty">
             <span className="dummy">00:00</span>
@@ -178,37 +178,37 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
         </div>
 
         {/* TODO: Create a component for this */}
-        <div className="flex justify-between">
-          <div className="flex gap-2 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+        <div className="flex justify-between gap-5 pl-16">
+          <div className="flex flex-wrap gap-4 text-sm text-gray-600 gap-y-1 dark:text-white 2xl:gap-y-2 2xl:text-base">
+            <div className="inline-flex items-center lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-t/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Teórica</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+            <div className="inline-flex items-center gap-1.5 lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-tp/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Teórico-Prática</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+            <div className="inline-flex items-center gap-1.5 lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-pl/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Prática Laboratorial</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+            <div className="inline-flex items-center gap-1.5 lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-ot/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Orientação Tutorial</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+            <div className="inline-flex items-center gap-1.5 lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-s/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Seminário</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+            <div className="inline-flex items-center gap-1.5 lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-p/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Prática</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+            <div className="inline-flex items-center gap-1.5 lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-tc/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Teórica de Campo</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-2">
+            <div className="inline-flex items-center gap-1.5 lg:gap-1">
               <span className="h-3.5 w-3.5 rounded bg-schedule-other/80 shadow 2xl:h-4 2xl:w-4" />
               <span>Outros</span>
             </div>
@@ -216,32 +216,32 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
           <div className="flex gap-2">
             <Button
               variant="icon"
-              className="bg-lightish text-black"
+              className="text-black bg-lightish"
               onClick={() => setShowGrid(!showGrid)}
               title={showGrid ? 'Ocultar grelha' : 'Mostrar grelha'}
             >
-              <ViewColumnsIcon className="h-5 w-5" />
+              <ViewColumnsIcon className="w-5 h-5" />
             </Button>
             <Button
               variant="icon"
-              className="bg-lightish text-black"
+              className="text-black bg-lightish"
               onClick={takeScreenshot}
               title="Tirar foto"
               disabled
             >
-              <CameraIcon className="h-5 w-5" />
+              <CameraIcon className="w-5 h-5" />
             </Button>
           </div>
         </div>
       </div>
 
       {/* Schedule Mobile */}
-      <div className="flex h-full w-full flex-col items-center justify-start space-y-2 lg:hidden">
+      <div className="flex flex-col items-center justify-start w-full h-full space-y-2 lg:hidden">
         {lessonsGroupedByDays.length > 0 ? (
           lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
-            <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
-              <div className="h-full w-1 rounded bg-primary" />
-              <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
+            <div className="flex items-center justify-start w-full gap-2" key={`responsive-lesson-row-${dayNumber}`}>
+              <div className="w-1 h-full rounded bg-primary" />
+              <div className="flex flex-row flex-wrap items-center justify-start w-full gap-2">
                 {lessons.map((lesson: Lesson, lessonIdx: number) =>
                   lesson.schedule.lesson_type === 'T'
                     ? activeClassesT && (
