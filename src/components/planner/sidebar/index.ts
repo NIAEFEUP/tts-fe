@@ -1,9 +1,11 @@
 import SessionController from './SessionController'
-import CourseOptionsController from './CourseOptionsController'
-import OptionsController from '../OptionsController'
+import OptionsController from './OptionsController'
+import SelectedOptionController from './SelectedOptionController'
+import CoursesController from './CoursesController'
 
 export {
     SessionController,
-    CourseOptionsController,
-    OptionsController
+    OptionsController,
+    SelectedOptionController,
+    CoursesController
 }

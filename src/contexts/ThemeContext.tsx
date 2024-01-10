@@ -1,8 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
-import { useDarkMode } from '../hooks';
+import React, { createContext } from 'react'
 
 export const ThemeContext = createContext({
-    enabled: false,
-    setEnabled: (enabled) => {}
-});
-
+  enabled: false,
+  setEnabled: (enabled: boolean) => {},
+})

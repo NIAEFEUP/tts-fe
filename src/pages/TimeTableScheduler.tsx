@@ -16,20 +16,21 @@ import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOpt
 import { useShowGrid, useMajor, useCourses } from '../hooks'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
 import { SparklesIcon } from '@heroicons/react/24/outline'
+import { Sidebar } from '../components/planner'
 
-export const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
-  let frequency: Map<number, number> = new Map()
-  let newCourseOptions: CourseOption[] = []
+// export const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
+//   let frequency: Map<number, number> = new Map()
+//   let newCourseOptions: CourseOption[] = []
 
-  for (let courseOption of courses) {
-    if (!frequency.has(courseOption.course.info.id)) {
-      newCourseOptions.push(courseOption)
-      frequency.set(courseOption.course.info.id, 1)
-    }
-  }
+//   for (let courseOption of courses) {
+//     if (!frequency.has(courseOption.course.info.id)) {
+//       newCourseOptions.push(courseOption)
+//       frequency.set(courseOption.course.info.id, 1)
+//     }
+//   }
 
-  return newCourseOptions
-}
+//   return newCourseOptions
+// }
 
 export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
   let frequency: Map<number, number> = new Map()
@@ -401,7 +402,20 @@ const TimeTableSchedulerPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
+      <Sidebar
+        majors={majors}
+        openHook={[isModalOpen, setIsModalOpen]}
+        majorHook={[major, setMajor]}
+        coursesHook={[checkedCourses, setCheckedCourses]}
+        extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
+        extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
+        sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
+        destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
+        repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
+        multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+      />
+
+      {/* <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="space-y-2">
           <div className="flex flex-row flex-wrap items-start justify-start gap-x-2 gap-y-2">
             <OptionsController multipleOptionsHook={[multipleOptions, setMultipleOptions]} />
@@ -458,7 +472,7 @@ const TimeTableSchedulerPage = () => {
           <HelpModal />
           <LessonTypesModal />
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
