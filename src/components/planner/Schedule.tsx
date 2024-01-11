@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
@@ -15,6 +15,17 @@ type Props = {
 }
 
 const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => {
+  const lessonTypesDic = {
+    T: 'Teórica',
+    TP: 'Teórico-Prática',
+    PL: 'Prática Laboratorial',
+    OT: 'Orientação Tutorial',
+    S: 'Seminário',
+    P: 'Prática',
+    TC: 'Teórica de Campo',
+    O: 'Outros'
+  }
+
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
@@ -40,6 +51,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
     let lessonsAcc: Lesson[] = []
 
     subjects.forEach((subject) => {
+
       if (subject.shown.T) {
         subject.theoreticalLessons.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
       }
@@ -56,6 +68,23 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
     })
     return lessonsAcc
   }, [subjects])
+
+  const lessonTypes = useMemo(() => {
+    let lessonTypesAcc = []
+
+    lessons.forEach((lesson) => {
+      if (!lessonTypesAcc.includes(lesson.schedule.lesson_type)) {
+        lessonTypesAcc.push(lesson.schedule.lesson_type)
+      }
+    })
+
+    // Same order every time
+    lessonTypesAcc.sort((first, second) => {
+      return Object.keys(lessonTypesDic).indexOf(first) > Object.keys(lessonTypesDic).indexOf(second) ? 1 : -1
+    })
+
+    return lessonTypesAcc
+  }, [lessons, lessonTypesDic])
 
   /**
    * Find conflicts among classes between classes.
@@ -180,38 +209,12 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
         {/* TODO: Create a component for this */}
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 text-sm text-gray-600 gap-y-1 dark:text-white 2xl:gap-y-2 2xl:text-base">
-            <div className="inline-flex items-center lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-t/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Teórica</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-tp/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Teórico-Prática</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-pl/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Prática Laboratorial</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-ot/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Orientação Tutorial</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-s/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Seminário</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-p/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Prática</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-tc/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Teórica de Campo</span>
-            </div>
-            <div className="inline-flex items-center gap-1.5 lg:gap-1">
-              <span className="h-3.5 w-3.5 rounded bg-schedule-other/80 shadow 2xl:h-4 2xl:w-4" />
-              <span>Outros</span>
-            </div>
+            {lessonTypes.map((lessonType: string) => (
+              <div className="inline-flex items-center gap-1.5 lg:gap-1" key={`lesson-type-${lessonType}`}>
+                <span className={`h-3.5 w-3.5 rounded shadow 2xl:h-4 2xl:w-4 ${'bg-schedule-' + lessonType.toLowerCase() + '/80'}`} />
+                <span>{lessonTypesDic[lessonType]}</span>
+              </div>
+            ))}
           </div>
           <div className="flex gap-2">
             <Button

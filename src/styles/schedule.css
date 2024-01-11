@@ -1,10 +1,10 @@
 .schedule-area {
-  @apply hidden h-full w-full flex-none lg:flex lg:flex-col;
+  @apply flex-none hidden w-full h-full lg:flex lg:flex-col;
 }
 
 /* Top */
 .schedule-top {
-  @apply mb-2 flex w-full space-x-3 xl:mb-1 xl:space-x-4;
+  @apply flex w-full mb-2 space-x-3 xl:mb-1 xl:space-x-4;
 }
 
 .schedule-top-empty {
@@ -16,7 +16,7 @@
 }
 
 .schedule-top-days {
-  @apply flex grow flex-row items-center justify-between;
+  @apply flex flex-row items-center justify-between grow;
 }
 
 .schedule-top-days > span {
@@ -25,11 +25,11 @@
 
 /* Main */
 .schedule-main {
-  @apply flex h-full w-full space-x-3 xl:space-x-4;
+  @apply flex w-full h-full space-x-3 xl:space-x-4;
 }
 
 .schedule-main-left {
-  @apply flex h-full flex-col justify-between space-y-0;
+  @apply flex flex-col justify-between h-full space-y-0;
 }
 
 .schedule-main-left > span {
@@ -37,25 +37,25 @@
 }
 
 .schedule-main-right {
-  @apply h-full w-full pt-0 xl:pt-1;
+  @apply w-full h-full pt-0 xl:pt-1;
 }
 
 /* Schedule Grid */
 .schedule-grid-wrapper {
-  @apply relative h-full w-full rounded;
+  @apply relative w-full h-full rounded;
 }
 
 .schedule-grid {
-  @apply absolute top-0 h-full w-full;
+  @apply absolute top-0 w-full h-full;
 }
 
 .schedule-classes {
-  @apply absolute top-0 h-full w-full;
+  @apply absolute top-0 w-full h-full;
 }
 
 /* Columns */
 .schedule-column {
-  @apply absolute top-0 h-full w-1/6;
+  @apply absolute top-0 w-1/6 h-full;
 }
 
 .schedule-column-0 {
@@ -114,7 +114,7 @@
 
 /* Classes */
 .schedule-class {
-  @apply absolute z-10 w-1/6 border-0 text-white transition-none hover:ring-0;
+  @apply absolute z-10 w-1/6 text-white transition-none border-0 hover:ring-0;
 }
 
 .schedule-class-responsive {
@@ -126,7 +126,7 @@
 }
 
 .schedule-class-tp {
-  @apply border-schedule-tp bg-schedule-tp/80 hover:bg-schedule-tp  dark:bg-schedule-tp/80 dark:hover:bg-schedule-tp;
+  @apply border-schedule-tp bg-schedule-tp/80 hover:bg-schedule-tp dark:bg-schedule-tp/80 dark:hover:bg-schedule-tp;
 }
 
 .schedule-class-pl {
@@ -134,7 +134,7 @@
 }
 
 .schedule-class-ot {
-  @apply border-schedule-ot bg-schedule-ot/80 hover:bg-schedule-ot dark:bg-schedule-ot/80 dark:hover:bg-schedule-ot;
+  @apply border-schedule-ot bg-schedule-o/80 hover:bg-schedule-o dark:bg-schedule-o/80 dark:hover:bg-schedule-o;
 }
 
 .schedule-class-s {
@@ -149,8 +149,8 @@
   @apply border-schedule-tc bg-schedule-tc/80 hover:bg-schedule-tc dark:bg-schedule-tc/80 dark:hover:bg-schedule-tc;
 }
 
-.schedule-class-other {
-  @apply border-schedule-other bg-schedule-other/80 hover:bg-schedule-other dark:bg-schedule-other/80 dark:hover:bg-schedule-other;
+.schedule-class-o {
+  @apply border-schedule-o bg-schedule-o/80 hover:bg-schedule-o dark:bg-schedule-o/80 dark:hover:bg-schedule-o;
 }
 
 .schedule-class-schedule-lunch {
@@ -158,11 +158,11 @@
 }
 
 .schedule-class-conflict {
-  @apply z-20 border-2 border-rose-700 opacity-75 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1;
+  @apply z-20 border-2 opacity-75 border-rose-700 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
 .schedule-class-conflict-warn {
-  @apply z-20 border-2 border-amber-500 opacity-75 ring-amber-500 hover:z-30 hover:opacity-100 hover:ring-1;
+  @apply z-20 border-2 opacity-75 border-amber-500 ring-amber-500 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
 .schedule-class-conflict-highlight {

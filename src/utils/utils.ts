@@ -153,7 +153,7 @@ const getClassTypeClassName = (type: string) => {
       return 'schedule-class-tc'
 
     default:
-      return 'schedule-class-other'
+      return 'schedule-class-o'
   }
 }
 

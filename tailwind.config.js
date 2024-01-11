@@ -29,7 +29,7 @@ module.exports = {
           s : '#7d3179',
           p : '#b66046',
           tc : '#733C3C',
-          other : '#69656A',
+          o : '#69656A',
         },
       },
       spacing : {
