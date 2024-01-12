@@ -11,6 +11,7 @@ export type Course = {
   id: number
   course_id: number
   course_unit_id: number
+  sigarra_id: number
   course: string
   name: string
   acronym: string
@@ -109,6 +110,6 @@ export type MultipleOptions = {
 }
 
 export type ImportedCourse = {
-  course_unit_id: number
+  sigarra_id: number
   class_name: string
 }

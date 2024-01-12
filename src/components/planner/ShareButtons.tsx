@@ -4,7 +4,7 @@ import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon, PencilAltIcon, Plu
 import getMajors from '../../api/backend'
 import { Dialog, Transition } from '@headlessui/react'
 import { getCourseTeachers } from '../../utils/utils'
-
+import { Buffer } from 'buffer';
 
 
 type Props = {
@@ -52,37 +52,33 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         let extraUCsStrs : { [id: string] : string ; } = {};
         for (let i = 0; i < schedule.length ; i++){
             let uc_course_id = schedule[i].course.info.course_id;
-            let uc_course_unit_id = schedule[i].course.info.course_unit_id;
-            if (uc_course_id === major.id){
+            let uc_course_unit_id = schedule[i].course.info.sigarra_id;
+            if (uc_course_id === major.id) {
                 copySchedule += ";" + uc_course_unit_id + "#";
-                if (schedule[i].option == null){
+                if (schedule[i].option == null) {
                     copySchedule += "null";
-                }
-                else{
+                } else {
                     copySchedule += schedule[i].option.class_name;
-
                 }
-            }
-            else{
-                if (extraUCsStrs[uc_course_id] == null){
+            } else {
+                if (extraUCsStrs[uc_course_id] == null) {
                     extraUCsStrs[uc_course_id] = uc_course_id + "";
                 }
-                
+
                 extraUCsStrs[uc_course_id] += ";" + uc_course_unit_id + "#";
-                if (schedule[i].option == null){
+                if (schedule[i].option == null) {
                     extraUCsStrs[uc_course_id] += "null";
-                }
-                else{
+                } else {
                     extraUCsStrs[uc_course_id] += schedule[i].option.class_name;
                 }
-                
             }
         }
 
         for (let key in extraUCsStrs){
             copySchedule += "|" + extraUCsStrs[key];
         }
-        return copySchedule;
+
+        return Buffer.from(copySchedule).toString("base64");
     }
     
     /**
@@ -106,7 +102,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     const importAllSchedules = async (replaceExisting : boolean) => {
         setIsImportedSchedule(true)
         var input = document.getElementById("schedule-input") as HTMLInputElement;
-        let majorTokens : string[] = input.value.split("|")
+        let majorTokens : string[] = Buffer.from(input.value, "base64").toString().split("|")
         
 
         let imported_course_units : CourseOption[] = []
@@ -226,7 +222,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
         for (let i = 0; i < tokens.length ; i++){
             let split_tokens = tokens[i].split("#");
             let imported_course : ImportedCourse = {
-                course_unit_id: Number(split_tokens[0]),
+                sigarra_id: Number(split_tokens[0]),
                 class_name: split_tokens[1]
             }
             courses_info.push(imported_course);
@@ -265,7 +261,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             var checked_course : CheckedCourse 
             for(let j = 0; j < course_units.length; j++){
 
-                if(course_units[j]["course_unit_id"] === courses_info[i].course_unit_id){
+                if(course_units[j]["sigarra_id"] === courses_info[i].sigarra_id){
                     checked_course = {
                         checked: true,
                         info: course_units[j],
