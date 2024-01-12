@@ -2,23 +2,26 @@ import { CourseOption, Major, MultipleOptions } from '../../../../@types'
 import { Button } from '../../../ui/button'
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'
+import React, { Fragment, useState } from 'react'
+import ConfirmationModal from './ConfirmationModal'
+
 
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>],
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const PasteOption = ({majorHook, multipleOptionsHook} : Props) => {
-  
+const PasteOption = ({ majorHook, multipleOptionsHook }: Props) => {
+
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [major, setMajor] = majorHook
+  const [modalOpen, setModalOpen] = useState(false)
   const { toast } = useToast()
-
 
   const importSchedule = async () => {
     const value = await navigator.clipboard.readText()
 
-    if(!isValidOption(value)){
+    if (!isValidOption(value)) {
       toast({
         title: 'Erro ao colar opção',
         description: 'O texto do clipboard não é uma opção válida',
@@ -31,11 +34,8 @@ const PasteOption = ({majorHook, multipleOptionsHook} : Props) => {
     var tokens: string[] = value.split(';')
     const major_id = Number(tokens.shift())
 
-    //if the import has the same courses as the current schedule, no need to show any modal, just replace the current schedule
-    if (major_id !== major.id){
-      //importAllSchedules(false)
-      //display modal for confirmation
-      //setIsDecisionModalOpen(true)
+    if (major_id !== major.id) {
+      setModalOpen(true)
       return
     }
 
@@ -53,14 +53,14 @@ const PasteOption = ({majorHook, multipleOptionsHook} : Props) => {
     })
 
     newOption.forEach((courseOption: CourseOption) => {
-      const optionId = courseOption.course.info.course_unit_id;
+      const courseUnitId = courseOption.course.info.course_unit_id;
 
-      const importedSchedule = importedCourses[optionId]
-      if(importedSchedule === undefined) return;
+      const importingScheduleClassName = importedCourses[courseUnitId]
+      if (importingScheduleClassName === undefined) return;
 
       //get the schedule with class_name === importedSchedule from courseOption.schedules
-      const newSchedule = courseOption.schedules.find((schedule) => schedule.class_name === importedSchedule)
-      if(newSchedule === undefined) return; //TODO and DISCUSS: need to fetch the course here or select it
+      const newSchedule = courseOption.schedules.find((schedule) => schedule.class_name === importingScheduleClassName)
+      if (newSchedule === undefined) return; //TODO and DISCUSS: need to fetch the course here or select it
 
       //replace the schedule
       courseOption.option = newSchedule
@@ -79,7 +79,7 @@ const PasteOption = ({majorHook, multipleOptionsHook} : Props) => {
       return value
     })
   }
-  
+
   const isValidOption = (options: string) => {
     const tokens = options.split(';')
     if (tokens.length < 2) return false //At leat a major and one course
@@ -98,10 +98,14 @@ const PasteOption = ({majorHook, multipleOptionsHook} : Props) => {
     return true
   }
 
+
   return (
-    <Button variant="icon" className="h-min w-min bg-primary xl:p-1">
-      <ClipboardDocumentIcon onClick={importSchedule} className="w-5 h-5" />
-    </Button>
+    <>
+      <Button variant="icon" className="h-min w-min bg-primary xl:p-1">
+        <ClipboardDocumentIcon onClick={importSchedule} className="w-5 h-5" />
+      </Button>
+      <ConfirmationModal isOpen={modalOpen} closeModal={() => {setModalOpen(false)}} confirmationAction={() => {console.log(123)}} />
+    </>
   )
 }
 
