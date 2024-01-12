@@ -2,7 +2,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext } from 'react'
-import { CourseOption, Major } from '../../../@types'
+import { CourseOption, Major, MultipleOptions } from '../../../@types'
 import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
 import RandomFill from './selectedOptionController/RandomFill'
@@ -17,13 +17,14 @@ type Props = {
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
-  currentOption: CourseOption[]
+  currentOption: CourseOption[],
+  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
 /**
  * Interactions with the currently selected option
  */
-const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHook, currentOption }: Props) => {
+const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHook, currentOption, multipleOptionsHook }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
   const [optionsList, setOptionsList] = optionsListHook
   const [selectedOption, setSelectedOption] = selectedOptionHook
@@ -107,7 +108,7 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHo
       </div>
       <div className="flex items-center gap-1">
         <CopyOption majorHook={majorHook} currentOption={currentOption} />
-        <PasteOption />
+        <PasteOption majorHook={majorHook} multipleOptionsHook={multipleOptionsHook} />
         <RandomFill />
       </div>
     </div>

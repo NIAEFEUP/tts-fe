@@ -6,7 +6,6 @@ import {
   SelectionModal,
   ScheduleListbox,
   ClassesTypeCheckboxes,
-  MoreActionsButton,
   LessonTypesModal,
   HelpModal,
   ShareButtons,
@@ -392,10 +391,10 @@ const TimeTableSchedulerPage = () => {
   }, [checkedCourses])
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+    <div className="grid w-full grid-cols-12 px-4 py-4 gap-x-4 gap-y-4">
       {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-        <div className="h-full w-full">
+      <div className="order-1 col-span-12 px-3 py-3 rounded lg:min-h-adjusted min-h-min bg-lightest dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+        <div className="w-full h-full">
           <Schedule courseOptions={multipleOptions.selected} activeClassesT={classesT} activeClassesTP={classesTP} />
         </div>
       </div>
