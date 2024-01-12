@@ -4,7 +4,7 @@ import { DocumentDuplicateIcon, UploadIcon, CheckIcon, XIcon, PencilAltIcon, Plu
 import getMajors from '../../api/backend'
 import { Dialog, Transition } from '@headlessui/react'
 import { getCourseTeachers } from '../../utils/utils'
-
+import { Buffer } from 'buffer';
 
 
 type Props = {
@@ -50,7 +50,6 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     const scheduleToString = (major : Major, schedule : CourseOption[]) => {
         let copySchedule : string = (major.id).toString();
         let extraUCsStrs : { [id: string] : string ; } = {};
-        console.log(schedule);
         for (let i = 0; i < schedule.length ; i++){
             let uc_course_id = schedule[i].course.info.course_id;
             let uc_course_unit_id = schedule[i].course.info.sigarra_id;
@@ -79,7 +78,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
             copySchedule += "|" + extraUCsStrs[key];
         }
 
-        return btoa(JSON.stringify(copySchedule));
+        return Buffer.from(copySchedule).toString("base64");
     }
     
     /**
@@ -103,7 +102,7 @@ const ShareButtons = ({majorHook, schedule, multipleOptionsHook, setIsImportedSc
     const importAllSchedules = async (replaceExisting : boolean) => {
         setIsImportedSchedule(true)
         var input = document.getElementById("schedule-input") as HTMLInputElement;
-        let majorTokens : string[] = atob(input.value).split("|")
+        let majorTokens : string[] = Buffer.from(input.value, "base64").toString().split("|")
         
 
         let imported_course_units : CourseOption[] = []
