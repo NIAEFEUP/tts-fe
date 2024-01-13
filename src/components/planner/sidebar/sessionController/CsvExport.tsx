@@ -36,9 +36,9 @@ const CsvExport = ({ schedule, multipleOptions }: Props) => {
     <button
       onClick={exportCSV}
       title="Exportar ficheiro com todas as opções nos 10 horários"
-      className="flex items-center w-full gap-2 px-2 py-2 text-sm text-gray-900 rounded-md group hover:bg-secondary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+      className="flex items-center w-full gap-2 p-1 text-sm text-gray-900 rounded-md group disabled:cursor-not-allowed disabled:opacity-50"
     >
-      <ArrowUpOnSquareIcon className="w-5 h-5 text-secondary group-hover:text-white" />
+      <ArrowUpOnSquareIcon className="w-5 h-5 text-secondary" />
       <span>Exportar Opções (CSV)</span>
     </button>
   )
