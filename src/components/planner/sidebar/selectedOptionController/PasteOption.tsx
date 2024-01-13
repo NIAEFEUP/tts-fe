@@ -4,22 +4,21 @@ import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'
 import React, { Fragment, useState } from 'react'
 import ConfirmationModal from './ConfirmationModal'
-
+import { Buffer } from 'buffer'
 
 type Props = {
-  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>],
+  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
 const PasteOption = ({ majorHook, multipleOptionsHook }: Props) => {
-
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [major, setMajor] = majorHook
   const [modalOpen, setModalOpen] = useState(false)
   const { toast } = useToast()
 
   const importSchedule = async () => {
-    const value = await navigator.clipboard.readText()
+    const value = Buffer.from(await navigator.clipboard.readText(), 'base64').toString()
 
     if (!isValidOption(value)) {
       toast({
@@ -53,18 +52,18 @@ const PasteOption = ({ majorHook, multipleOptionsHook }: Props) => {
     })
 
     newOption.forEach((courseOption: CourseOption) => {
-      const courseUnitId = courseOption.course.info.course_unit_id;
+      const courseUnitId = courseOption.course.info.course_unit_id
 
       const importingScheduleClassName = importedCourses[courseUnitId]
-      if (importingScheduleClassName === undefined) return;
+      if (importingScheduleClassName === undefined) return
 
       //get the schedule with class_name === importedSchedule from courseOption.schedules
       const newSchedule = courseOption.schedules.find((schedule) => schedule.class_name === importingScheduleClassName)
-      if (newSchedule === undefined) return; //TODO and DISCUSS: need to fetch the course here or select it
+      if (newSchedule === undefined) return //TODO and DISCUSS: need to fetch the course here or select it
 
       //replace the schedule
       courseOption.option = newSchedule
-    });
+    })
 
     setMultipleOptions((prevMultipleOptions) => {
       const newOptions = [...prevMultipleOptions.options]
@@ -98,13 +97,20 @@ const PasteOption = ({ majorHook, multipleOptionsHook }: Props) => {
     return true
   }
 
-
   return (
     <>
       <Button variant="icon" className="h-min w-min bg-primary xl:p-1">
-        <ClipboardDocumentIcon onClick={importSchedule} className="w-5 h-5" />
+        <ClipboardDocumentIcon onClick={importSchedule} className="h-5 w-5" />
       </Button>
-      <ConfirmationModal isOpen={modalOpen} closeModal={() => {setModalOpen(false)}} confirmationAction={() => {console.log(123)}} />
+      <ConfirmationModal
+        isOpen={modalOpen}
+        closeModal={() => {
+          setModalOpen(false)
+        }}
+        confirmationAction={() => {
+          console.log(123)
+        }}
+      />
     </>
   )
 }

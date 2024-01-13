@@ -11,6 +11,7 @@ import {
 import getMajors from '../../api/backend'
 import { Dialog, Transition } from '@headlessui/react'
 import { getCourseTeachers } from '../../utils/utils'
+import { Buffer } from 'buffer'
 
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
@@ -55,7 +56,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
     let extraUCsStrs: { [id: string]: string } = {}
     for (let i = 0; i < schedule.length; i++) {
       let uc_course_id = schedule[i].course.info.course_id
-      let uc_course_unit_id = schedule[i].course.info.course_unit_id
+      let uc_course_unit_id = schedule[i].course.info.sigarra_id
       if (uc_course_id === major.id) {
         copySchedule += ';' + uc_course_unit_id + '#'
         if (schedule[i].option == null) {
@@ -80,7 +81,8 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
     for (let key in extraUCsStrs) {
       copySchedule += '|' + extraUCsStrs[key]
     }
-    return copySchedule
+
+    return Buffer.from(copySchedule).toString('base64')
   }
 
   /**
@@ -104,7 +106,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
   const importAllSchedules = async (replaceExisting: boolean) => {
     setIsImportedSchedule(true)
     var input = document.getElementById('schedule-input') as HTMLInputElement
-    let majorTokens: string[] = input.value.split('|')
+    let majorTokens: string[] = Buffer.from(input.value, 'base64').toString().split('|')
 
     let imported_course_units: CourseOption[] = []
 
@@ -215,7 +217,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
     for (let i = 0; i < tokens.length; i++) {
       let split_tokens = tokens[i].split('#')
       let imported_course: ImportedCourse = {
-        course_unit_id: Number(split_tokens[0]),
+        sigarra_id: Number(split_tokens[0]),
         class_name: split_tokens[1],
       }
       courses_info.push(imported_course)
@@ -248,7 +250,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
       let course_option: CourseOption
       var checked_course: CheckedCourse
       for (let j = 0; j < course_units.length; j++) {
-        if (course_units[j]['course_unit_id'] === courses_info[i].course_unit_id) {
+        if (course_units[j]['sigarra_id'] === courses_info[i].sigarra_id) {
           checked_course = {
             checked: true,
             info: course_units[j],
@@ -360,11 +362,11 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
     <>
       {showDiv ? (
         <div
-          className="absolute left-0 right-0 flex w-1/5 w-full p-3 m-auto text-gray-500 bg-white rounded-lg shadow bottom-5 place-items-center dark:bg-gray-700 dark:text-gray-400"
+          className="absolute left-0 right-0 bottom-5 m-auto flex w-1/5 w-full place-items-center rounded-lg bg-white p-3 text-gray-500 shadow dark:bg-gray-700 dark:text-gray-400"
           role="alert"
         >
-          <div className="inline-flex items-center justify-center w-6 h-6 text-white rounded-lg bg-secondary dark:bg-secondary dark:text-white">
-            <CheckIcon className="w-5 h-5" />
+          <div className="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-white dark:bg-secondary dark:text-white">
+            <CheckIcon className="h-5 w-5" />
           </div>
           <div className="ml-5 text-sm font-normal">Horário Copiado Com Sucesso</div>
           <button
@@ -376,12 +378,12 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
             aria-label="Close"
           >
             <span className="sr-only">Close</span>
-            <XMarkIcon className="w-6 h-6" />
+            <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
       ) : null}
 
-      <div className="grid w-full grid-flow-row grid-cols-7 grid-rows-1 gap-2 mt-1">
+      <div className="mt-1 grid w-full grid-flow-row grid-cols-7 grid-rows-1 gap-2">
         <div className="relative col-span-6">
           <div className="absolute inset-y-0 left-0 col-span-6"></div>
           <input
@@ -404,7 +406,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
             className="absolute right-2 bottom-1.5 items-center justify-center  whitespace-nowrap rounded bg-tertiary p-2 
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <ArrowUpTrayIcon className="w-4 h-4" />
+            <ArrowUpTrayIcon className="h-4 w-4" />
           </button>
         </div>
         <div className="col-span-1">
@@ -414,7 +416,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
             className="inline-flex w-full items-center justify-center whitespace-nowrap rounded bg-tertiary p-2.5
                         text-center text-sm font-normal text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {icon ? <CheckIcon className="w-6 h-6" /> : <DocumentDuplicateIcon className="w-6 h-6" />}
+            {icon ? <CheckIcon className="h-6 w-6" /> : <DocumentDuplicateIcon className="h-6 w-6" />}
           </button>
         </div>
       </div>
@@ -435,7 +437,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-full p-4 text-center">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -445,41 +447,39 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel
-                  className="w-1/4 w-full p-6 overflow-hidden text-left text-gray-700 align-middle transition-all transform bg-white shadow-xl h-50 rounded-2xl dark:bg-dark dark:text-white"
-                >
+                <Dialog.Panel className="h-50 w-1/4 w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle text-gray-700 shadow-xl transition-all dark:bg-dark dark:text-white">
                   <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={closeConfModal}
-                      className="float-right transition rounded text-rose-700 hover:bg-rose-700 hover:text-white"
+                      className="float-right rounded text-rose-700 transition hover:bg-rose-700 hover:text-white"
                     >
-                      <XMarkIcon className="w-6 h-6" />
+                      <XMarkIcon className="h-6 w-6" />
                     </button>
                   </div>
                   <div className="flex justify-end">
                     <div className="mx-auto">
-                      <Dialog.Title as="h1" className="mx-auto text-2xl font-semibold leading-6 rounded-ld">
+                      <Dialog.Title as="h1" className="rounded-ld mx-auto text-2xl font-semibold leading-6">
                         IMPORTAR
                       </Dialog.Title>
                     </div>
                   </div>
-                  <div className="flex flex-col mt-3 text-center">
+                  <div className="mt-3 flex flex-col text-center">
                     <p>O seguinte processo irá apagar todo seu progresso, deseja prosseguir?</p>
                   </div>
 
-                  <div className="flex mt-8">
+                  <div className="mt-8 flex">
                     <button
                       type="button"
-                      className="flex items-center px-3 py-2 mx-auto mr-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-rose-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mx-auto mr-3 flex items-center space-x-2 rounded bg-rose-700 px-3 py-2 text-center text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={closeConfModal}
                     >
                       <span>NÃO</span>
-                      <XMarkIcon className="w-5 h-5" />
+                      <XMarkIcon className="h-5 w-5" />
                     </button>
                     <button
                       type="button"
-                      className="flex items-center px-3 py-2 mx-auto ml-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-tertiary hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mx-auto ml-3 flex items-center space-x-2 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={() => {
                         closeConfModal()
                         importAllSchedules(true)
@@ -487,7 +487,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
                       // onClick={closeConfModal}
                     >
                       <span>SIM</span>
-                      <CheckIcon className="w-5 h-5" />
+                      <CheckIcon className="h-5 w-5" />
                     </button>
                   </div>
                 </Dialog.Panel>
@@ -513,7 +513,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-full p-4 text-center">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -523,54 +523,52 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel
-                  className="w-full max-w-xl p-6 overflow-hidden text-left text-gray-700 align-middle transition-all transform bg-white shadow-xl h-50 rounded-2xl dark:bg-dark dark:text-white"
-                >
+                <Dialog.Panel className="h-50 w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle text-gray-700 shadow-xl transition-all dark:bg-dark dark:text-white">
                   <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={closeDecisionModal}
-                      className="float-right transition rounded text-rose-700 hover:bg-rose-700 hover:text-white"
+                      className="float-right rounded text-rose-700 transition hover:bg-rose-700 hover:text-white"
                     >
-                      <XMarkIcon className="w-6 h-6" />
+                      <XMarkIcon className="h-6 w-6" />
                     </button>
                   </div>
                   <div className="flex justify-end">
                     <div className="mx-auto">
-                      <Dialog.Title as="h1" className="mx-auto text-2xl font-semibold leading-6 rounded-ld">
+                      <Dialog.Title as="h1" className="rounded-ld mx-auto text-2xl font-semibold leading-6">
                         IMPORTAR
                       </Dialog.Title>
                     </div>
                   </div>
-                  <div className="flex flex-col mt-3 text-center">
+                  <div className="mt-3 flex flex-col text-center">
                     <p>
                       O seguinte processo irá adicionar horários de unidades curriculares diferentes das selecionadas
                       por si. Deseja adicionar ou substituir?
                     </p>
                   </div>
 
-                  <div className="flex mt-8">
+                  <div className="mt-8 flex">
                     <button
                       type="button"
-                      className="flex items-center px-3 py-2 mx-auto mr-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-primary hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mx-auto mr-3 flex items-center space-x-2 rounded bg-primary px-3 py-2 text-center text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={() => {
                         closeDecisionModal()
                         importAllSchedules(true)
                       }}
                     >
                       <span>SUBSTITUIR</span>
-                      <PencilSquareIcon className="w-5 h-5" />
+                      <PencilSquareIcon className="h-5 w-5" />
                     </button>
                     <button
                       type="button"
-                      className="flex items-center px-3 py-2 mx-auto ml-3 space-x-2 text-sm font-medium text-center text-white transition rounded bg-tertiary hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mx-auto ml-3 flex items-center space-x-2 rounded bg-tertiary px-3 py-2 text-center text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={() => {
                         closeDecisionModal()
                         importAllSchedules(false)
                       }}
                     >
                       <span>ADICIONAR</span>
-                      <PlusIcon className="w-5 h-5" />
+                      <PlusIcon className="h-5 w-5" />
                     </button>
                   </div>
                 </Dialog.Panel>

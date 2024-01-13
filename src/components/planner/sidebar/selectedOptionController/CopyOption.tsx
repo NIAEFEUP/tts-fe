@@ -3,6 +3,7 @@ import { Button } from '../../../ui/button'
 import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline'
 import { Major, CourseOption } from '../../../../@types'
 import { useToast } from '../../../ui/use-toast'
+import { Buffer } from 'buffer'
 
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
@@ -53,7 +54,7 @@ const CopyOption = ({ majorHook, currentOption }: Props) => {
     for (let key in extraUCsStrs) {
       copyOption += '|' + extraUCsStrs[key]
     }
-    return copyOption
+    return Buffer.from(copyOption).toString('base64')
   }
 
   const copyOption = () => {
@@ -67,7 +68,7 @@ const CopyOption = ({ majorHook, currentOption }: Props) => {
 
   return (
     <Button variant="icon" className="h-min w-min bg-primary xl:p-1" onClick={() => copyOption()}>
-      {icon ? <CheckIcon className="w-5 h-5" /> : <DocumentDuplicateIcon className="w-5 h-5" />}
+      {icon ? <CheckIcon className="h-5 w-5" /> : <DocumentDuplicateIcon className="h-5 w-5" />}
     </Button>
   )
 }

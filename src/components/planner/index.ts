@@ -5,7 +5,6 @@ import ScheduleListbox from './ScheduleListbox'
 import ClassesTypeCheckboxes from './ClassesTypeCheckboxes'
 import LessonTypesModal from './LessonTypesModal'
 import HelpModal from './HelpModal'
-import ShareButtons from './ShareButtons'
 import Sidebar from './Sidebar'
 
 export {
@@ -16,6 +15,5 @@ export {
   Alert,
   LessonTypesModal,
   HelpModal,
-  ShareButtons,
   Sidebar,
 }
