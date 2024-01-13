@@ -17,14 +17,20 @@ type Props = {
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
-  currentOption: CourseOption[],
+  currentOption: CourseOption[]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
 /**
  * Interactions with the currently selected option
  */
-const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHook, currentOption, multipleOptionsHook }: Props) => {
+const SelectedOptionController = ({
+  optionsListHook,
+  selectedOptionHook,
+  majorHook,
+  currentOption,
+  multipleOptionsHook,
+}: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
   const [optionsList, setOptionsList] = optionsListHook
   const [selectedOption, setSelectedOption] = selectedOptionHook
@@ -70,13 +76,13 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHo
   const option = getOptionById(selectedOption)
 
   return (
-    <div className="flex content-between w-full gap-5">
+    <div className="flex w-full content-between gap-5">
       <div className="flex gap-3">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="w-10 h-10 p-1 text-xl rounded aspect-square hover:bg-lightish hover:dark:bg-darkish">
-            <img src={option?.icon} className="w-full h-full" />
+          <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
+            <img src={option?.icon} className="h-full w-full" />
           </PopoverTrigger>
-          <PopoverContent side="bottom" className="p-0 rounded-full w-96 bg-lightish dark:bg-darkish">
+          <PopoverContent side="bottom" className="w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
             <EmojiPicker
               width={'100%'}
               searchDisabled={true}
@@ -93,7 +99,7 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHo
         </Popover>
 
         <input
-          className="w-full p-1 font-bold transition-all bg-inherit focus:font-normal"
+          className="w-full bg-inherit p-1 font-bold transition-all focus:font-normal"
           maxLength={25}
           value={option ? option.name : ''}
           onChange={renameOption}
@@ -109,7 +115,7 @@ const SelectedOptionController = ({ optionsListHook, selectedOptionHook, majorHo
       <div className="flex items-center gap-1">
         <CopyOption majorHook={majorHook} currentOption={currentOption} />
         <PasteOption majorHook={majorHook} multipleOptionsHook={multipleOptionsHook} />
-        <RandomFill />
+        <RandomFill multipleOptionsHook={multipleOptionsHook} />
       </div>
     </div>
   )

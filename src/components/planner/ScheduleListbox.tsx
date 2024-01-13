@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { ChevronUpDownIcon, CheckIcon, EyeIcon } from '@heroicons//react/24/solid'
+import { SelectorIcon, CheckIcon, EyeIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/solid'
 import { getScheduleOptionDisplayText } from '../../utils/utils'
 import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../@types'
 
@@ -119,6 +119,26 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     }
   }
 
+  const toggleLocked = () => {
+    setMultipleOptions((prev) => {
+      let newCourseOptions = prev.selected
+
+      for (let i = 0; i < prev.selected.length; i++) {
+        const option = prev.selected[i]
+        if (option.course.info.id === courseOption.course.info.id) {
+          newCourseOptions[i].locked = !newCourseOptions[i].locked
+        }
+      }
+
+      return {
+        index: prev.index,
+        selected: [...newCourseOptions],
+        options: prev.options,
+        names: prev.names,
+      }
+    })
+  }
+
   const hasCommonProfessorWith = (profs1, profs2) =>
     profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
 
@@ -213,13 +233,14 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
       <Listbox
         value={selectedOption}
         onChange={(value) => (value.course_unit_id ? handleListBoxSelection(value) : handleListBoxSelection(null))}
+        disabled={courseOption.locked}
       >
         <div className="relative text-sm">
           {/* Header */}
           <p className="mb-0.5 flex text-xs lg:hidden xl:flex">
             <strong>{courseOption.course.info.acronym}</strong>
             <span>&nbsp;&middot;&nbsp;</span>
-            <span className="tracking-tighter truncate">{courseOption.course.info.name}&nbsp;</span>
+            <span className="truncate tracking-tighter">{courseOption.course.info.name}&nbsp;</span>
           </p>
 
           <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
@@ -230,15 +251,17 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             {/* Button */}
             <Listbox.Button
               title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
-              className="group relative w-3/4 flex-shrink-0 cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
-              text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
+              className="group relative w-8/12 flex-shrink-0 cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
+              text-xs transition enabled:hover:bg-primary/75 dark:bg-darkish dark:shadow enabled:dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
             >
-              <span className="block font-medium text-gray-700 truncate group-hover:text-white dark:text-white">
+              <span className="block truncate font-medium text-gray-700 group-enabled:group-hover:text-white dark:text-white">
                 {getOptionDisplayText(selectedOption)}
               </span>
-              <span className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 pointer-events-none group-hover:text-white">
-                <ChevronUpDownIcon className="w-4 h-4 transition" aria-hidden="true" />
-              </span>
+              {!courseOption.locked && (
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
+                  <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />
+                </span>
+              )}
             </Listbox.Button>
 
             {/* Dropdown */}
@@ -248,7 +271,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-20 w-full py-1 mt-1 overflow-auto text-sm tracking-tight border rounded max-h-48 bg-light dark:bg-darkest lg:max-h-72 xl:text-base">
+              <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base">
                 {selectDropdownSchedules().map((option, optionIdx) => (
                   <Listbox.Option
                     onMouseEnter={() => showPreview(option)}
@@ -271,7 +294,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                               active ? 'text-white' : 'text-primary dark:text-white'
                             }`}
                           >
-                            <CheckIcon className="w-5 h-5" aria-hidden="true" />
+                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : selected ? (
                           <span
@@ -279,7 +302,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                               active ? 'text-white' : 'text-primary dark:text-white'
                             }`}
                           >
-                            <EyeIcon className="w-5 h-5" aria-hidden="true" />
+                            <EyeIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
                       </>
@@ -290,18 +313,24 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
             </Transition>
 
             {/* Teachers ListBox */}
-            <Listbox value={selectedTeachers} onChange={updateTeachersShown} multiple={true} by="acronym">
+            <Listbox
+              value={selectedTeachers}
+              onChange={updateTeachersShown}
+              multiple={true}
+              by="acronym"
+              disabled={courseOption.locked}
+            >
               {/* Button */}
               <Listbox.Button
                 title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
-                className="group relative w-1/4 cursor-pointer whitespace-nowrap rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
-                  text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
+                className="group relative w-3/12 flex-none cursor-pointer whitespace-nowrap rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
+                  text-xs transition enabled:hover:bg-primary/75 dark:bg-darkish dark:shadow enabled:dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
               >
-                <span className="block font-medium text-gray-700 truncate group-hover:text-white dark:text-white">
+                <span className="block truncate font-medium text-gray-700 group-enabled:group-hover:text-white dark:text-white">
                   {getTeacherSelectionText(selectedTeachers)}
                 </span>
-                <span className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 pointer-events-none group-hover:text-white">
-                  <ChevronUpDownIcon className="w-4 h-4 transition" aria-hidden="true" />
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
+                  {!courseOption.locked && <SelectorIcon className="h-4 w-4 transition" aria-hidden="true" />}
                 </span>
               </Listbox.Button>
 
@@ -312,7 +341,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute z-20 w-full py-1 mt-1 overflow-auto text-sm tracking-tight border rounded max-h-48 bg-light dark:bg-darkest lg:max-h-72 xl:text-base">
+                <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base">
                   {teacherOptions.map((option, optionIdx) => (
                     <Listbox.Option
                       key={option.acronym}
@@ -343,7 +372,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                                 active ? 'text-white' : 'text-primary dark:text-white'
                               } pointer-events-none`}
                             >
-                              <CheckIcon className="w-5 h-5" aria-hidden="true" />
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
                             </span>
                           ) : null}
                         </>
@@ -377,10 +406,20 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                 </Listbox.Options>
               </Transition>
             </Listbox>
+
+            {/* Lock Button */}
+            <button
+              title="Bloquear/Desbloquear Horário"
+              className="w-1/12"
+              onClick={toggleLocked}
+              disabled={courseOption.option ? false : true}
+            >
+              {courseOption.locked ? <LockClosedIcon className="h-6 w-6" /> : <LockOpenIcon className="h-6 w-6" />}
+            </button>
           </div>
 
           {/* Show/Hide Checkboxes */}
-          <div className="flex items-center justify-start mt-1 space-x-4">
+          <div className="mt-1 flex items-center justify-start space-x-4">
             <div
               title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
               className="flex items-center justify-center space-x-1"

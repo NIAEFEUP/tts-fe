@@ -118,6 +118,7 @@ const TimeTableSchedulerPage = () => {
         T: true,
         TP: true,
       },
+      locked: false,
       course: course,
       option: null,
       schedules: schedules,
@@ -285,7 +286,9 @@ const TimeTableSchedulerPage = () => {
 
     const findPreviousEntry = (prevSelected: CourseOption[], course: CheckedCourse) => {
       const value = prevSelected.find((item) => item.course.info.course_unit_id === course.info.course_unit_id)
-      return value ? { shown: value.shown, option: value.option } : { shown: { T: true, TP: true }, option: null }
+      return value
+        ? { shown: value.shown, option: value.option, locked: value.locked }
+        : { shown: { T: true, TP: true }, option: null, locked: false }
     }
 
     let isNewerPromise = true
@@ -322,6 +325,7 @@ const TimeTableSchedulerPage = () => {
               const co = findPreviousEntry(prev.selected, pickedCourses[i])
               newCourseOptions.push({
                 shown: co.shown,
+                locked: co.locked,
                 course: pickedCourses[i],
                 option: co.option,
                 schedules: schedules[i],
@@ -352,6 +356,7 @@ const TimeTableSchedulerPage = () => {
                     const co = findPreviousEntry(prev.options[i], pickedCourses[j])
                     extraCourseOptions.push({
                       shown: co.shown,
+                      locked: co.locked,
                       course: pickedCourses[j],
                       option: co.option,
                       schedules: schedules[j],

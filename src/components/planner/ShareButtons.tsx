@@ -131,6 +131,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
         shown: imported_course_units[i].shown,
         course: imported_course_units[i].course,
         option: null,
+        locked: false,
         schedules: imported_course_units[i].schedules,
         teachers: course_teachers,
         filteredTeachers: course_teachers,
@@ -294,6 +295,7 @@ const ShareButtons = ({ majorHook, schedule, multipleOptionsHook, setIsImportedS
 
       course_option = {
         shown: shown_var,
+        locked: false,
         course: checked_course,
         option: option,
         schedules: course_schedule,

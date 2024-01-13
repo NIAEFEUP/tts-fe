@@ -172,6 +172,21 @@ const getCourseTeachers = (courseOption: CourseOption) => {
   return teachers
 }
 
+
+const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
+  let frequency: Map<number, number> = new Map()
+  let newCourseOptions: CourseOption[] = []
+
+  for (let courseOption of courses) {
+    if (!frequency.has(courseOption.course.info.id)) {
+      newCourseOptions.push(courseOption)
+      frequency.set(courseOption.course.info.id, 1)
+    }
+  }
+
+  return newCourseOptions
+}
+
 export {
   config,
   dev_config,
@@ -194,4 +209,5 @@ export {
   getLessonTypeLongName,
   getCourseTeachers,
   cn,
+  removeDuplicatesFromCourseOption
 }
