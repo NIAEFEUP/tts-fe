@@ -4,8 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from '../../../ui/button'
 
 import { CourseOption, MultipleOptions } from '../../../../@types'
-import { ArrowDownTrayIcon } from '@heroicons/react/24/outline'
-import { useEffect, useState } from 'react'
+import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
 
 type Props = {
   schedule: CourseOption[]
@@ -16,30 +15,11 @@ type Props = {
  * Sidebar with all the main schedule interactions
  */
 const Export = ({ schedule, multipleOptions }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleHover = () => {
-    setIsOpen(true);
-  };
-
-  const handleLeave = () => {
-    setIsOpen(false);
-  };
-
-  useEffect(() => {
-    return () => {
-      setIsOpen(false); // Cleanup: Close the menu when the component unmounts
-    };
-  }, []);
-
   return (
-    <DropdownMenu
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      >
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="icon" className="bg-primary">
-          <ArrowDownTrayIcon className="w-4 h-4" />
+          <ArrowDownTrayIcon className="w-5 h-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent >

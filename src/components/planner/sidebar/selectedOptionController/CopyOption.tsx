@@ -68,7 +68,7 @@ const CopyOption = ({ majorHook, currentOption }: Props) => {
 
   return (
     <Button variant="icon" className="h-min w-min bg-primary xl:p-1" onClick={() => copyOption()}>
-      {icon ? <CheckIcon className="h-5 w-5" /> : <DocumentDuplicateIcon className="h-5 w-5" />}
+      {icon ? <CheckIcon className="w-5 h-5" /> : <DocumentDuplicateIcon className="w-5 h-5" />}
     </Button>
   )
 }

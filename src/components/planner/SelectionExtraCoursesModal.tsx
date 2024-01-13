@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState, useRef } from 'react'
 import Alert, { AlertType } from './Alert'
 import { CheckedCourse, Major, MultipleOptions } from '../../@types'
 import { getSchoolYear, getSemester } from '../../utils/utils'
-import { AcademicCapIcon, ArrowLeftCircleIcon } from '@heroicons//react/24/solid'
+import { AcademicCapIcon, ArrowLeftCircleIcon } from '@heroicons//react/24/outline'
 import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../pages/TimeTableScheduler'
 import { MajorSearchCombobox } from './MajorSearchCombobox'
 
@@ -149,7 +149,7 @@ const SelectionExtraCoursesModal = ({
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
           <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-12">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center min-h-full p-4 text-center">
               <InnerCustomTransition>
                 <Dialog.Panel
                   className={classNames(
@@ -160,10 +160,10 @@ const SelectionExtraCoursesModal = ({
                   {/* Header */}
                   <Dialog.Title
                     as="header"
-                    className="mb-2 flex w-full items-center justify-between space-x-2 text-center font-medium lg:mb-3"
+                    className="flex items-center justify-between w-full mb-2 space-x-2 font-medium text-center lg:mb-3"
                   >
                     <div className="flex items-center justify-start space-x-1">
-                      <AcademicCapIcon className="h-6 w-6 text-sky-700" aria-hidden="true" />
+                      <AcademicCapIcon className="w-6 h-6 text-sky-700" aria-hidden="true" />
                       <h3 className="flex text-xl font-semibold leading-6 tracking-tight dark:text-white lg:hidden">
                         UCs
                       </h3>
@@ -175,13 +175,13 @@ const SelectionExtraCoursesModal = ({
                     <div className="flex items-center justify-start space-x-2">
                       <span
                         title="Semestre"
-                        className="rounded bg-sky-700 px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="px-3 py-1 text-sm text-white transition-all duration-500 rounded bg-sky-700"
                       >
                         {`${getSemester()}ºS`}
                       </span>
                       <span
                         title="Ano Letivo"
-                        className="rounded bg-sky-700 px-3 py-1 text-sm text-white transition-all duration-500"
+                        className="px-3 py-1 text-sm text-white transition-all duration-500 rounded bg-sky-700"
                       >
                         {getSchoolYear()}
                       </span>
@@ -201,7 +201,7 @@ const SelectionExtraCoursesModal = ({
                   <MajorSearchCombobox majors={majors} majorHook={[major, setMajor]} />
 
                   {extraMajorEqualToMainMajor ? (
-                    <p className="text-center font-semibold tracking-tight">
+                    <p className="font-semibold tracking-tight text-center">
                       Já tens este curso selecionado no menu principal!
                     </p>
                   ) : (
@@ -222,7 +222,7 @@ const SelectionExtraCoursesModal = ({
                                 onChange={(event) => handleCheckGroup(event, yearIdx + 1)}
                               />
                               <label
-                                className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
+                                className="block ml-2 text-sm font-semibold cursor-pointer dark:text-white"
                                 htmlFor={`extra-year-checkbox-${yearIdx}`}
                               >
                                 <span>{yearIdx + 1}º Ano</span>
@@ -261,7 +261,7 @@ const SelectionExtraCoursesModal = ({
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
                     {/* Right side buttons */}
-                    <div className="order-first flex w-full flex-col items-center justify-center space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
+                    <div className="flex flex-col items-center justify-center order-first w-full space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
                       {/* Go back to the main selection modal button */}
                       {/* Confirm options button */}
                       <button
@@ -273,7 +273,7 @@ const SelectionExtraCoursesModal = ({
                         )}
                         onClick={closeModal}
                       >
-                        <ArrowLeftCircleIcon className="h-5 w-5" aria-hidden="true" />
+                        <ArrowLeftCircleIcon className="w-5 h-5" aria-hidden="true" />
                         <span>Ir para o menu anterior</span>
                       </button>
                     </div>

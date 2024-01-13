@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  @apply bg-light font-prose text-gray-800 dark:bg-darkest dark:text-white;
+  @apply text-gray-800 bg-light font-prose dark:bg-darkest dark:text-white;
 }
 
 ::-webkit-scrollbar {
@@ -15,7 +15,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded-full border-2 border-solid border-black/0 bg-black/40 bg-clip-padding md:border-4;
+  @apply border-2 border-solid rounded-full border-black/0 bg-black/40 bg-clip-padding md:border-4;
 }
 
 ::-webkit-scrollbar-track {
@@ -49,17 +49,11 @@ button {
 }
 
 .checkbox {
-  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-primary transition 
-  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
-  dark:focus:ring-transparent;
+  @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-primary hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent;
 }
 
 .extra-courses-checkbox {
-  @apply cursor-pointer rounded-md border-2 border-transparent bg-lightish p-2 text-secondary transition 
-  hover:bg-secondary/75 hover:text-secondary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
-  dark:focus:ring-transparent indeterminate:text-secondary focus:text-secondary checked:text-secondary;
+  @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-secondary hover:bg-secondary/75 hover:text-secondary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent indeterminate:text-secondary focus:text-secondary checked:text-secondary;
 }
 
 .checkbox-small {
@@ -82,7 +76,7 @@ button {
 }
 
 .quote {
-  @apply border-l-4 border-slate-700 bg-lightish py-1 pl-4 dark:border-white dark:bg-darkish;
+  @apply py-1 pl-4 border-l-4 border-slate-700 bg-lightish dark:border-white dark:bg-darkish;
 }
 
 #option-header .EmojiPickerReact {
@@ -95,3 +89,14 @@ button {
   --epr-category-label-bg-color: rgb(26, 28, 35);
 }
 
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

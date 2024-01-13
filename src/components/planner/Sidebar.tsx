@@ -89,6 +89,7 @@ const Sidebar = ({
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
+  //TODO/DISCUSS: optionsList should be derived from multipleOptions, and on change, update the localStorage
   const [optionsList, setOptionsList] = useState(
     () => JSON.parse(localStorage.getItem('niaefeup-tts.optionsList')) || defaultOptionsList
   )

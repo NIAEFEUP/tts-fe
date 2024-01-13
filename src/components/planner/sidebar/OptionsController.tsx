@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
 import { MultipleOptions } from '../../../@types'
 import { ReactSortable } from 'react-sortablejs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip'
+import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -35,13 +35,17 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
             setOptionIndex(item.id)
           }}
           className={`
-            box-border aspect-square h-12 w-12 cursor-pointer rounded border-2 
-            border-transparent p-2 transition-colors delay-150 
-            ease-in-out hover:border-primary/75 dark:shadow hover:dark:border-primary/50
+            group
+            box-border aspect-square h-14 w-14 cursor-pointer rounded border-2 
+            border-transparent p-2 flex flex-col justify-center items-center
+            ease-in-out  dark:shadow hover:dark:border-primary/50
             ${selected === item.id ? 'bg-primary/75 text-white dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
             `}
         >
-          <img src={item.icon} className="h-auto w-auto" />
+          <div className="hidden duration-600 group-hover:inline-flex">
+            <EllipsisHorizontalIcon className="w-5 h-5" />
+          </div>
+          <img src={item.icon} className="w-8 h-8" />
         </TooltipTrigger>
         <TooltipContent>
           <p>{item.name}</p>
@@ -61,7 +65,7 @@ const OptionsController = ({ multipleOptionsHook, optionsListHook, selectedOptio
 
   return (
     <ReactSortable
-      className="m-y-2 flex flex-row justify-start gap-2 overflow-x-auto py-3 text-center"
+      className="flex flex-row justify-start gap-2 py-2 overflow-x-auto text-center m-y-2 no-scrollbar"
       list={optionsList}
       setList={setOptionsList}
       group="groupName"
