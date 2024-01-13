@@ -1,11 +1,10 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { SelectorIcon, CheckIcon, EyeIcon, ExclamationIcon } from '@heroicons/react/solid'
-import { getScheduleOptionDisplayText, timesCollide } from '../../utils'
+import { getScheduleOptionDisplayText, schedulesConflict } from '../../utils'
 import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation} from '../../@types'
 
 type Props = {
-  courseOptions: CourseOption[]
   courseOption: CourseOption
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   isImportedScheduleHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -212,18 +211,13 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     if (option === null) return null;
     const selectedOptions = multipleOptions.selected.map(co => co.option).filter(so => so !== null);
     for (const selectedOption of selectedOptions) {
-      if (timesCollide(option, selectedOption) && (option.course_unit_id !== selectedOption.course_unit_id)) {
-        if (option.lesson_type === 'TP' && selectedOption.lesson_type === 'TP') {
-          return 'class-conflict';
-        } else {
-          return 'class-conflict-warn';
-        }
+      if (schedulesConflict(option, selectedOption) && (option.course_unit_id !== selectedOption.course_unit_id)) {
+        return 'class-conflict';
       }
     }
     return null;
   };
 
-  
   return (
     adaptedSchedules && (
       <Listbox
@@ -460,5 +454,4 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
     )
   )
 }
-
 export default ScheduleListbox

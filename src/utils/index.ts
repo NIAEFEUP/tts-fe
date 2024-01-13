@@ -68,6 +68,11 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   return parseFloat(second.start_time) < parseFloat(first.start_time) + parseFloat(first.duration)
 }
 
+const schedulesConflict = (first: CourseSchedule, second: CourseSchedule) => {
+  if (first.day !== second.day) return false
+  return (parseFloat(first.start_time) < (parseFloat(second.start_time) + parseFloat(second.duration))) && (parseFloat(first.start_time) >= (parseFloat(second.start_time))) 
+}
+
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
   // prioritize single class name
   const classTitle = option.class_name !== null ? option.class_name : option.composed_class_name
@@ -181,6 +186,7 @@ export {
   convertWeekdayLong,
   convertHour,
   timesCollide,
+  schedulesConflict,
   getScheduleOptionDisplayText,
   getLessonBoxTime,
   getLessonBoxStyles,
