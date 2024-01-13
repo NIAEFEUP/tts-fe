@@ -142,6 +142,10 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
   const hasCommonProfessorWith = (profs1, profs2) =>
     profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
 
+  // useEffect(() => {
+  //   setSelectedOption(courseOption.option)
+  // }, [multipleOptions])
+
   useEffect(() => {
     if (firstRenderRef.current === true) {
       firstRenderRef.current = false

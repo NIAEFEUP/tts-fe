@@ -1,8 +1,12 @@
-import { Button } from '../../../ui/button'
 import { BoltIcon } from '@heroicons/react/24/outline'
-import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../../../@types'
+import { CourseOption, CourseSchedule, MultipleOptions } from '../../../../@types'
 import { useEffect, useState } from 'react'
 import { removeDuplicatesFromCourseOption } from '../../../../utils/utils'
+import { Button } from '../../../ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
+import { ToggleGroup, ToggleGroupItem } from '../../../ui/toggle-group'
+import { Separator } from '../../../ui/separator'
+import { ScrollArea } from '../../../ui/scroll-area'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -151,14 +155,30 @@ const RandomFill = ({ multipleOptionsHook }) => {
   }
 
   return (
-    <Button
-      onClick={applyRandomSchedule}
-      title="Preencher horário aleatoriamente"
-      variant="icon"
-      className="h-min w-min bg-secondary xl:p-1"
-    >
-      <BoltIcon className="h-5 w-5" />
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button onClick={applyRandomSchedule} variant="icon" className="h-min w-min bg-secondary xl:p-1">
+            <BoltIcon className="h-5 w-5" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className='p-0 mx-5'>
+          <ScrollArea className="h-72 rounded-md border p-3">
+            <ToggleGroup type="multiple" className="flex-col" data-orientation="vertical">
+              {courseOptions[0]?.schedules
+                .filter((course) => course.lesson_type != 'T')
+                .map((course: CourseSchedule, index: number) => {
+                  return (
+                    <ToggleGroupItem value={course.class_name} key={course.class_name}>
+                      {course.class_name}
+                    </ToggleGroupItem>
+                  )
+                })}
+            </ToggleGroup>
+          </ScrollArea>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
