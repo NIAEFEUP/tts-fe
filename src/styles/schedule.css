@@ -134,7 +134,7 @@
 }
 
 .schedule-class-ot {
-  @apply border-schedule-ot bg-schedule-o/80 hover:bg-schedule-o dark:bg-schedule-o/80 dark:hover:bg-schedule-o;
+  @apply border-schedule-ot bg-schedule-ot/80 hover:bg-schedule-ot dark:bg-schedule-ot/80 dark:hover:bg-schedule-ot;
 }
 
 .schedule-class-s {

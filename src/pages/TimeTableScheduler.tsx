@@ -1,14 +1,7 @@
 import BackendAPI from '../api/backend'
 import StorageAPI from '../api/storage'
 import { useState, useEffect, useMemo } from 'react'
-import {
-  Schedule,
-  SelectionModal,
-  ScheduleListbox,
-  ClassesTypeCheckboxes,
-  LessonTypesModal,
-  HelpModal,
-} from '../components/planner'
+import { Schedule, SelectionModal, ClassesTypeCheckboxes, LessonTypesModal, HelpModal } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
 import { useShowGrid, useMajor, useCourses } from '../hooks'
 import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'

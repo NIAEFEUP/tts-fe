@@ -6,7 +6,7 @@ const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
   const [isImportedOption, setIsImportedOption] = isImportedOptionHook
 
   return (
-    <div className="flex flex-col w-full gap-4 px-0 py-2">
+    <div className="flex w-full flex-col gap-4 px-0 py-2">
       {multipleOptions.selected.length > 0 &&
         removeDuplicatesFromCourseOption(multipleOptions.selected).map((courseOption, courseOptionIdx) => (
           <ScheduleListbox

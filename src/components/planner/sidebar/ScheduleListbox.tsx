@@ -23,6 +23,12 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
 
   const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers)
 
+  useEffect(() => {
+    if (courseOption.option) {
+      setSelectedOption(courseOption.option)
+    }
+  }, [multipleOptions])
+
   const adaptedSchedules = useMemo(() => {
     return [null, courseOption.schedules]
       .flat()
@@ -328,7 +334,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
                 className="group relative w-3/12 cursor-pointer whitespace-nowrap rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
                   text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
               >
-                <span className="block truncate font-medium text-gray-700 group-enabled:group-hover:text-white dark:text-white">
+                <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
                   {getTeacherSelectionText(selectedTeachers)}
                 </span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
