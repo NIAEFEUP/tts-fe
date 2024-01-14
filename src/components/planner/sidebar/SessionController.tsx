@@ -13,8 +13,8 @@ type Props = {
   sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   repeatedCourseControlHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  schedule: CourseOption[]
-  multipleOptions: MultipleOptions
+  multipleOptions: MultipleOptions,
+  optionsList: any
 }
 
 /**
@@ -30,8 +30,8 @@ const SessionController = ({
   sourceBufferHook,
   destBufferHook,
   repeatedCourseControlHook,
-  schedule,
   multipleOptions,
+  optionsList,
 }: Props) => {
   return (
     <div className="flex justify-between w-full gap-10">
@@ -48,7 +48,7 @@ const SessionController = ({
       />
       <div className="flex gap-2">
         <CollaborativeSession />
-        <Export schedule={schedule} multipleOptions={multipleOptions} />
+        <Export multipleOptions={multipleOptions} optionsList={optionsList}/>
       </div>
     </div>
   )

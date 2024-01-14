@@ -23,7 +23,7 @@ const RandomFill = ({ multipleOptionsHook }: Props) => {
   const [randomClasses, setRandomClasses] = useState({})
 
   useEffect(() => {
-    if (Object.keys(randomClasses).length != 0) return
+    if (Object.keys(randomClasses).length !== 0) return
     const selected = multipleOptions.selected
 
     const classes = [
@@ -45,14 +45,14 @@ const RandomFill = ({ multipleOptionsHook }: Props) => {
     setRandomClasses(keyValue)
 
     // setRandomClasses(classes.map((class_name) => ({ class_name, state: 'checked' })))
-  }, [multipleOptionsHook])
+  }, [multipleOptions])
 
   useEffect(() => {
     const newLockedCourses = multipleOptions.selected
       .filter((course) => course.locked)
       .map((course) => course.course.info.acronym)
     // Only update if locked courses changed
-    if (newLockedCourses.join() != lockedCourses.join()) {
+    if (newLockedCourses.join() !== lockedCourses.join()) {
       setLockedCourses(newLockedCourses)
     }
   }, [multipleOptions])
@@ -187,13 +187,13 @@ const RandomFill = ({ multipleOptionsHook }: Props) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button onClick={applyRandomSchedule} variant="icon" className="h-min w-min bg-secondary xl:p-1">
-            <BoltIcon className="h-5 w-5" />
+            <BoltIcon className="w-5 h-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" asChild>
-          <ScrollArea className="mx-5 h-72 rounded px-3">
+          <ScrollArea className="px-3 mx-5 rounded h-72">
             {Object.keys(randomClasses).map((key) => (
-              <div key={key} className="flex items-center space-x-2 pt-1">
+              <div key={key} className="flex items-center pt-1 space-x-2">
                 <Checkbox id={key} checked={randomClasses[key]} onClick={toggleRandomClasses} />
                 <label
                   htmlFor={key}

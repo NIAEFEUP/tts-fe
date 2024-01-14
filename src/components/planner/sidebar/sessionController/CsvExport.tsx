@@ -2,23 +2,26 @@ import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
 import { CourseOption, MultipleOptions } from '../../../../@types'
 
 type Props = {
-  schedule: CourseOption[]
-  multipleOptions: MultipleOptions
+  multipleOptions: MultipleOptions,
+  optionsList: any
 }
 
 /**
  * Sidebar with all the main schedule interactions
  */
-const CsvExport = ({ schedule, multipleOptions }: Props) => {
+const CsvExport = ({ multipleOptions, optionsList }: Props) => {
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
-    multipleOptions.options.forEach((_, i) => header.push(`Opção ${i+1}`))
+    optionsList.forEach((option) => header.push(option.name))
     const lines = []
 
     multipleOptions.selected.forEach((uc, i) => {
       const info = uc.course.info
       const line = [info.course_unit_year, info.name, info.acronym]
-      multipleOptions.options.forEach((option) => line.push(option[i]?.option?.class_name || ''))
+      optionsList.forEach((option) => {
+        const fullOption = multipleOptions.options[option.id-1]
+        line.push(fullOption[i]?.option?.class_name || '')
+      })
       lines.push(line.join(','))
     })
 

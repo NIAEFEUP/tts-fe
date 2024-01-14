@@ -7,14 +7,14 @@ import { CourseOption, MultipleOptions } from '../../../../@types'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
 
 type Props = {
-  schedule: CourseOption[]
-  multipleOptions: MultipleOptions
+  multipleOptions: MultipleOptions,
+  optionsList: any
 }
 
 /**
  * Sidebar with all the main schedule interactions
  */
-const Export = ({ schedule, multipleOptions }: Props) => {
+const Export = ({ multipleOptions, optionsList}: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,7 +24,7 @@ const Export = ({ schedule, multipleOptions }: Props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent >
         <DropdownMenuItem>
-          <CsvExport schedule={schedule} multipleOptions={multipleOptions} />
+          <CsvExport multipleOptions={multipleOptions} optionsList={optionsList} />
         </DropdownMenuItem>
         <DropdownMenuItem>
           <NitSigExport />

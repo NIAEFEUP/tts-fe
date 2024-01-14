@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { CheckedCourse, Course, Major, MultipleOptions } from '../../@types'
+import { CheckedCourse, Major, MultipleOptions } from '../../@types'
 import SessionController from './sidebar/SessionController'
 import OptionsController from './sidebar/OptionsController'
 import SelectedOptionController from './sidebar/SelectedOptionController'
@@ -89,7 +89,7 @@ const Sidebar = ({
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
-  //TODO/DISCUSS: optionsList should be derived from multipleOptions, and on change, update the localStorage
+  //TODO: Type for optionsList
   const [optionsList, setOptionsList] = useState(
     () => JSON.parse(localStorage.getItem('niaefeup-tts.optionsList')) || defaultOptionsList
   )
@@ -122,8 +122,8 @@ const Sidebar = ({
             sourceBufferHook={sourceBufferHook}
             destBufferHook={destBufferHook}
             repeatedCourseControlHook={repeatedCourseControlHook}
-            schedule={multipleOptions.selected}
             multipleOptions={multipleOptions}
+            optionsList={optionsList}
           />
           <OptionsController
             multipleOptionsHook={multipleOptionsHook}
