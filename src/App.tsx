@@ -9,8 +9,8 @@ import './app.css'
 
 // Configures the path for pages.
 const pages = [
-  { path: getPath(config.paths.about), location: 'About', element: AboutPage, liquid: true },
-  { path: getPath(config.paths.planner), location: 'Planner', element: TimeTableSchedulerPage, liquid: true },
+  { path: getPath(config.paths.about), location: 'Sobre', element: AboutPage, liquid: true },
+  { path: getPath(config.paths.planner), location: 'Horários', element: TimeTableSchedulerPage, liquid: true },
   { path: getPath(config.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
   { path: getPath(config.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
 ]

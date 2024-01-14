@@ -15,24 +15,12 @@ import {
 
 const navigation = [
   {
-    title: 'Planner',
+    title: 'Horários',
     location: getPath(config.paths.planner),
     icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
   },
-  {
-    title: 'Exchange',
-    location: getPath(config.paths.exchange),
-    icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
-    wip: true,
-  },
-  {
-    title: 'Profile',
-    location: getPath(config.paths.profile),
-    icon: <UserCircleIcon className="h-5 w-5" />,
-    wip: true,
-  },
-  { title: 'About', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
+  { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
   {
     title: 'FAQs',
     location: getPath(config.paths.faqs),
@@ -63,12 +51,7 @@ const Header = ({ siteTitle, location }: Props) => {
                     <img
                       src={LogoNIAEFEUPImage}
                       alt="Time Table Selector"
-                      className="z-20 inline-flex h-6 w-auto rounded-full transition dark:hidden"
-                    />
-                    <img
-                      src={LogoNIAEFEUPImage}
-                      alt="Time Table Selector"
-                      className="z-20 hidden h-6 w-auto rounded-full transition dark:inline-flex"
+                      className="z-20 inline-flex h-6 w-auto rounded-full transition"
                     />
                     <h3 className="text-xs font-bold tracking-tighter duration-150 lg:text-base">{siteTitle}</h3>
                   </Link>
