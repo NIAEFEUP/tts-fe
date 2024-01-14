@@ -5,6 +5,8 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
+  selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface Option {
@@ -27,7 +29,7 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
   }
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger
           onClick={() => {
@@ -35,17 +37,20 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
             setOptionIndex(item.id)
           }}
           className={`
-            group
-            box-border aspect-square h-14 w-14 cursor-pointer rounded border-2 
-            border-transparent p-2 flex flex-col justify-center items-center
-            ease-in-out  dark:shadow hover:dark:border-primary/50
-            ${selected === item.id ? 'bg-primary/75 text-white dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
+            group relative box-border flex aspect-square h-14 w-14
+            cursor-pointer flex-col items-center justify-center rounded border-2
+            border-transparent p-2  dark:shadow hover:dark:border-primary/50
+            ${selected === item.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
             `}
         >
-          <div className="hidden duration-600 group-hover:inline-flex">
-            <EllipsisHorizontalIcon className="w-5 h-5" />
+          <div
+            className={`absolute inset-x-0 top-0 text-transparent transition-colors duration-300 dark:group-hover:text-white ${
+              selected === item.id ? 'group-hover:text-white' : 'group-hover:text-slate-700'
+            }`}
+          >
+            <EllipsisHorizontalIcon className="m-auto h-5 w-5" />
           </div>
-          <img src={item.icon} className="w-8 h-8" />
+          <img src={item.icon} className="h-8 w-8 transform duration-200 ease-in-out group-hover:mt-3" />
         </TooltipTrigger>
         <TooltipContent>
           <p>{item.name}</p>
@@ -59,13 +64,13 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
  * Sortable list of schedule options
  * Each option can be selected by clicking on it
  */
-const OptionsController = ({ multipleOptionsHook, optionsListHook, selectedOptionHook }) => {
+const OptionsController = ({ multipleOptionsHook, optionsListHook, selectedOptionHook }: Props) => {
   const [optionsList, setOptionsList] = optionsListHook
   const [selectedOption, setSelectedOption] = selectedOptionHook
 
   return (
     <ReactSortable
-      className="flex flex-row justify-start gap-2 py-2 overflow-x-auto text-center m-y-2 no-scrollbar"
+      className="m-y-2 flex flex-row justify-start gap-2 overflow-x-auto py-2 text-center"
       list={optionsList}
       setList={setOptionsList}
       group="groupName"
@@ -73,7 +78,7 @@ const OptionsController = ({ multipleOptionsHook, optionsListHook, selectedOptio
       delay={2}
       multiDrag
     >
-      {optionsList.map((item) => (
+      {optionsList.map((item: Option) => (
         <Option
           item={item}
           key={item.id}

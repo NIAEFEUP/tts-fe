@@ -248,6 +248,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
             <strong>{courseOption.course.info.acronym}</strong>
           </p>
 
+          {/* Classes ListBox */}
           <div className="flex flex-row gap-x-1">
             {/* Button */}
             <Listbox.Button
@@ -255,7 +256,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
               className="group relative w-8/12 flex-shrink-0 cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
               text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
             >
-              <span className="block truncate font-medium text-gray-700 group-enabled:group-hover:text-white dark:text-white">
+              <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
                 {getOptionDisplayText(selectedOption)}
               </span>
               {!courseOption.locked && (

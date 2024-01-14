@@ -1,8 +1,9 @@
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
-import { CourseOption, MultipleOptions } from '../../../../@types'
+import { MultipleOptions } from '../../../../@types'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 
 type Props = {
-  multipleOptions: MultipleOptions,
+  multipleOptions: MultipleOptions
   optionsList: any
 }
 
@@ -19,7 +20,7 @@ const CsvExport = ({ multipleOptions, optionsList }: Props) => {
       const info = uc.course.info
       const line = [info.course_unit_year, info.name, info.acronym]
       optionsList.forEach((option) => {
-        const fullOption = multipleOptions.options[option.id-1]
+        const fullOption = multipleOptions.options[option.id - 1]
         line.push(fullOption[i]?.option?.class_name || '')
       })
       lines.push(line.join(','))
@@ -38,10 +39,9 @@ const CsvExport = ({ multipleOptions, optionsList }: Props) => {
   return (
     <button
       onClick={exportCSV}
-      title="Exportar ficheiro com todas as opções nos 10 horários"
-      className="flex items-center w-full gap-2 p-1 text-sm text-gray-900 rounded-md group disabled:cursor-not-allowed disabled:opacity-50"
+      className="group flex w-full items-center gap-2 rounded-md p-1 text-sm text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
     >
-      <ArrowUpOnSquareIcon className="w-5 h-5 text-secondary" />
+      <ArrowUpOnSquareIcon className="h-5 w-5 text-secondary" />
       <span>Exportar Opções (CSV)</span>
     </button>
   )

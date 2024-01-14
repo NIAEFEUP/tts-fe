@@ -211,6 +211,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
             {lessonTypes.map((lessonType: string) => (
               <div className="inline-flex items-center gap-1.5 lg:gap-1" key={`lesson-type-${lessonType}`}>
                 <span
+                  // className={`h-3.5 w-3.5 rounded bg-schedule-tp/80 shadow 2xl:h-4 2xl:w-4`}
                   className={`h-3.5 w-3.5 rounded shadow 2xl:h-4 2xl:w-4 ${
                     'bg-schedule-' + lessonType.toLowerCase() + '/80'
                   }`}

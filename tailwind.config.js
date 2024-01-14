@@ -3,10 +3,11 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   darkMode : 'class',
-  content : ['./src/**/*.{js,jsx,ts,tsx}'],
+  content : ['./src/**/*.{js,jsx,ts,tsx}', './src/styles/safelist.txt'],
   theme : {
     extend : {
       colors : {
+        ...colors,
         navy : '#18222e',
         lightNavy : '#212a36',
         darkish : '#333640',
@@ -20,7 +21,7 @@ module.exports = {
         primary : '#b33636',
         secondary : '#0C4A6E',
         tertiary : '#357672',
-        feup : '#7D221E', ...colors,
+        feup : '#7D221E',
         schedule : {
           lunch : '#BE123C',
           t : '#91897F',

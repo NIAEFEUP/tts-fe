@@ -187,17 +187,20 @@ const RandomFill = ({ multipleOptionsHook }: Props) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button onClick={applyRandomSchedule} variant="icon" className="h-min w-min bg-secondary xl:p-1">
-            <BoltIcon className="w-5 h-5" />
+            <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" asChild>
-          <ScrollArea className="px-3 mx-5 rounded h-72">
+          <ScrollArea className="mx-5 h-72 rounded px-3">
             {Object.keys(randomClasses).map((key) => (
-              <div key={key} className="flex items-center pt-1 space-x-2">
+              <div
+                key={key}
+                className="mt-1 flex items-center space-x-2 rounded p-1 hover:cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-700"
+              >
                 <Checkbox id={key} checked={randomClasses[key]} onClick={toggleRandomClasses} />
                 <label
                   htmlFor={key}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
                   {key}
                 </label>

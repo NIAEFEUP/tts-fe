@@ -2,18 +2,9 @@ import classNames from 'classnames'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useState } from 'react'
 import Alert, { AlertType } from '../../Alert'
-import { Link } from 'react-router-dom'
 import { CheckedCourse, Course, Major } from '../../../../@types'
-import { getSchoolYear, getSemester, config, getPath } from '../../../../utils/utils'
-import {
-  AcademicCapIcon,
-  CheckCircleIcon,
-  HomeIcon,
-  InboxArrowDownIcon,
-  PencilSquareIcon,
-  PlusIcon,
-  XCircleIcon,
-} from '@heroicons//react/24/solid'
+import { getSchoolYear, getSemester } from '../../../../utils/utils'
+import { AcademicCapIcon, CheckCircleIcon, PencilSquareIcon, PlusIcon, XCircleIcon } from '@heroicons//react/24/solid'
 import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../../../pages/TimeTableScheduler'
 import { MajorSearchCombobox } from '../../MajorSearchCombobox'
 import { Button } from '../../../ui/button'
@@ -104,7 +95,7 @@ const SelectionModal = ({
     setIsExtraUcsModalOpen(true)
   }
 
-  const extraCoursesButton = () => (
+  const ExtraCoursesButton = () => (
     <button
       type="button"
       title="Edit extra ucs"
@@ -120,7 +111,7 @@ const SelectionModal = ({
       }}
     >
       {extraCoursesActive ? (
-        <PencilSquareIcon className="w-4 h-4" />
+        <PencilSquareIcon className="h-4 w-4" />
       ) : (
         <PlusIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
       )}
@@ -179,7 +170,7 @@ const SelectionModal = ({
     return (
       <>
         {/* Courses checkboxes */}
-        <div className="col-span-6 checkboxes">
+        <div className="checkboxes col-span-6">
           <div key={`ucsextra`}>
             {/* Parent checkbox */}
             <div
@@ -193,12 +184,12 @@ const SelectionModal = ({
               }}
             >
               <XCircleIcon
-                className="hidden w-5 h-5 cursor-pointer remove-extra-uc-icon text-primary"
+                className="remove-extra-uc-icon hidden h-5 w-5 cursor-pointer text-primary"
                 id="remove-extra-courses-icon"
                 onClick={removeExtraCourses}
               />
               <input type="checkbox" className="checkbox" id="extraCourseGroupCheckbox" defaultChecked={true} />
-              <label className="block ml-2 text-sm font-semibold cursor-pointer dark:text-white">
+              <label className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white">
                 UCs de outros cursos
               </label>
             </div>
@@ -224,7 +215,7 @@ const SelectionModal = ({
                     }}
                   >
                     <XCircleIcon
-                      className="hidden w-5 h-5 cursor-pointer remove-extra-uc-icon text-primary"
+                      className="remove-extra-uc-icon hidden h-5 w-5 cursor-pointer text-primary"
                       id={`XMarkIcon-for-${course?.info.course_unit_year}-${courseIdx}`}
                       onClick={() => {
                         removeCourseFromExtraCourses(courseIdx)
@@ -303,14 +294,14 @@ const SelectionModal = ({
       */}
       <Button variant="icon" className="gap-2 bg-primary" onClick={openModal} title="Editar Unidades Curriculares">
         <span className="">Escolher UCs</span>
-        <PencilSquareIcon className="w-5 h-5 text-white" />
+        <PencilSquareIcon className="h-5 w-5 text-white" />
       </Button>
 
       <Transition appear show={isThisOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
           <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-12">
-            <div className="flex items-center justify-center min-h-full p-4 text-center">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
               <InnerCustomTransition>
                 <Dialog.Panel
                   className={classNames(
@@ -321,10 +312,10 @@ const SelectionModal = ({
                   {/* Header */}
                   <Dialog.Title
                     as="header"
-                    className="flex items-center justify-between w-full mb-2 space-x-2 font-medium text-center lg:mb-3"
+                    className="mb-2 flex w-full items-center justify-between space-x-2 text-center font-medium lg:mb-3"
                   >
                     <div className="flex items-center justify-start space-x-1">
-                      <AcademicCapIcon className="w-6 h-6 text-feup" aria-hidden="true" />
+                      <AcademicCapIcon className="h-6 w-6 text-feup" aria-hidden="true" />
                       <h3 className="flex text-xl font-semibold leading-6 tracking-tight dark:text-white lg:hidden">
                         UCs
                       </h3>
@@ -336,13 +327,13 @@ const SelectionModal = ({
                     <div className="flex items-center justify-start space-x-2">
                       <span
                         title="Semestre"
-                        className="px-3 py-1 text-sm text-white transition-all duration-500 rounded bg-feup"
+                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {`${getSemester()}ºS`}
                       </span>
                       <span
                         title="Ano Letivo"
-                        className="px-3 py-1 text-sm text-white transition-all duration-500 rounded bg-feup"
+                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
                       >
                         {getSchoolYear()}
                       </span>
@@ -365,13 +356,13 @@ const SelectionModal = ({
                     {extraCoursesActive ? <div className="col-span-2">{showUcsExtra()}</div> : <></>}
 
                     {chosenMajorMainModalEqualToExtra ? (
-                      <div className="col-span-6 checkboxes">
-                        <p className="m-4 font-semibold text-center">
+                      <div className="checkboxes col-span-6">
+                        <p className="m-4 text-center font-semibold">
                           Já tens este curso selecionado no menu de seleção de outros cursos
                         </p>
                       </div>
                     ) : (
-                      <div className="col-span-6 checkboxes">
+                      <div className="checkboxes col-span-6">
                         {coursesAlreadyTaken ? (
                           <></>
                         ) : (
@@ -391,7 +382,7 @@ const SelectionModal = ({
                                   onChange={(event) => handleCheckGroup(event, yearIdx)}
                                 />
                                 <label
-                                  className="block ml-2 text-sm font-semibold cursor-pointer dark:text-white"
+                                  className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
                                   htmlFor={`year-checkbox-${yearIdx}`}
                                 >
                                   <span>{yearIdx + 1}º Ano</span>
@@ -432,40 +423,13 @@ const SelectionModal = ({
                   {/* Bottom action buttons */}
                   <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
                     {/* Left side buttons */}
-                    <div className="flex flex-col order-last w-full space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
+                    <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
                       {/* Add / edit extra ucs */}
-                      {major !== null ? extraCoursesButton() : <></>}
-                      {/* Contact us link */}
-                      <a
-                        type="button"
-                        className={classNames(
-                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
-                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
-                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
-                        )}
-                        href="mailto:projetos.niaefeup@gmail.com"
-                      >
-                        <InboxArrowDownIcon className="w-5 h-5" aria-hidden="true" />
-                        <span className="hidden md:flex">Contacte-nos</span>
-                        <span className="flex md:hidden">Contactar</span>
-                      </a>
-                      {/* Go back to about page button */}
-                      <Link
-                        to={getPath(config.paths.about)}
-                        className={classNames(
-                          'flex items-center justify-center space-x-1 rounded px-4 py-2 text-sm font-medium lg:space-x-2',
-                          'border-2 border-gray-700 text-gray-700 transition hover:bg-gray-700 hover:text-white',
-                          'dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-700'
-                          // major === null ? 'hidden' : ''
-                        )}
-                      >
-                        <HomeIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
-                        <span>Voltar</span>
-                      </Link>
+                      {major && <ExtraCoursesButton />}
                     </div>
 
                     {/* Right side buttons */}
-                    <div className="flex flex-col items-center justify-center order-first w-full space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
+                    <div className="order-first flex w-full flex-col items-center justify-center space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
                       {/* Confirm options button */}
                       <button
                         type="button"
@@ -480,7 +444,7 @@ const SelectionModal = ({
                         onClick={closeModal}
                         disabled={major?.name === '' || !atLeastOneCourse}
                       >
-                        <CheckCircleIcon className="w-5 h-5" aria-hidden="true" />
+                        <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
                         <span>Confirmar</span>
                       </button>
                     </div>
