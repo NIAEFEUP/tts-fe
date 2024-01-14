@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react'
 import { removeDuplicatesFromCourseOption } from '../../../../utils/utils'
 import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
-import { ToggleGroup, ToggleGroupItem } from '../../../ui/toggle-group'
-import { Separator } from '../../../ui/separator'
 import { ScrollArea } from '../../../ui/scroll-area'
+import { Checkbox } from '../../../ui/checkbox'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
 }
 
-const RandomFill = ({ multipleOptionsHook }) => {
+const RandomFill = ({ multipleOptionsHook }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
 
@@ -20,6 +19,33 @@ const RandomFill = ({ multipleOptionsHook }) => {
   const [lockedCourses, setLockedCourses] = useState(
     courseOptions.filter((course) => course.locked).map((course) => course.course.info.acronym)
   )
+
+  const [randomClasses, setRandomClasses] = useState({})
+
+  useEffect(() => {
+    if (Object.keys(randomClasses).length != 0) return
+    const selected = multipleOptions.selected
+
+    const classes = [
+      ...new Set(
+        selected
+          .map((course) =>
+            course.schedules.filter((schedule) => schedule.lesson_type != 'T').map((schedule) => schedule.class_name)
+          )
+          .flat()
+      ),
+    ]
+
+    const keyValue = {}
+    classes.forEach((class_name) => {
+      keyValue[class_name] = true
+    })
+
+    // const keyValue = classes.map((class_name) => ({ class_name, state: 'checked' }))
+    setRandomClasses(keyValue)
+
+    // setRandomClasses(classes.map((class_name) => ({ class_name, state: 'checked' })))
+  }, [multipleOptionsHook])
 
   useEffect(() => {
     const newLockedCourses = multipleOptions.selected
@@ -47,7 +73,6 @@ const RandomFill = ({ multipleOptionsHook }) => {
     for (const h of head) {
       for (const t of cartesianGenerator(...tail)) {
         if (!isValidSchedule([h, ...t])) continue
-
         yield [h, ...t]
       }
     }
@@ -58,7 +83,8 @@ const RandomFill = ({ multipleOptionsHook }) => {
       if (course.locked) {
         return [course.option]
       }
-      return course.schedules.filter((schedule) => schedule.lesson_type != 'T')
+      let aux = course.schedules.filter((schedule) => schedule.lesson_type != 'T' && randomClasses[schedule.class_name])
+      return aux
     })
 
     return cartesianGenerator(...allSchedules)
@@ -69,13 +95,12 @@ const RandomFill = ({ multipleOptionsHook }) => {
   useEffect(() => {
     setPermutations([])
     setGenerator(getSchedulesGenerator())
-  }, [lockedCourses])
+  }, [lockedCourses, randomClasses])
 
   /*
     Function to check if a schedule is valid (no overlapping classes)
   */
   const isValidSchedule = (courses: CourseSchedule[]) => {
-    //
     const schedules = courses
       .map((schedule) => {
         return {
@@ -116,10 +141,7 @@ const RandomFill = ({ multipleOptionsHook }) => {
     const STEP = 10000
     for (let i = 0; i < STEP; i++) {
       const permutation = generator.next().value
-      if (!permutation) {
-        console.log('No more permutations')
-        break
-      }
+      if (!permutation) break
       newPermutations.push(permutation)
     }
 
@@ -130,8 +152,6 @@ const RandomFill = ({ multipleOptionsHook }) => {
   }
 
   const applySchedule = (schedules: CourseSchedule[]) => {
-    //console.log of composed_class_name of each course
-    console.log(schedules.map((schedule) => schedule.composed_class_name))
     if (schedules.length <= 0) return
 
     setMultipleOptions((prevMultipleOptions) => {
@@ -154,6 +174,14 @@ const RandomFill = ({ multipleOptionsHook }) => {
     })
   }
 
+  const toggleRandomClasses = (event) => {
+    setRandomClasses((prevRandomClasses) => {
+      const newRandomClasses = { ...prevRandomClasses }
+      newRandomClasses[event.target.id] = !newRandomClasses[event.target.id]
+      return newRandomClasses
+    })
+  }
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -162,19 +190,19 @@ const RandomFill = ({ multipleOptionsHook }) => {
             <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" className='p-0 mx-5'>
-          <ScrollArea className="h-72 rounded-md border p-3">
-            <ToggleGroup type="multiple" className="flex-col" data-orientation="vertical">
-              {courseOptions[0]?.schedules
-                .filter((course) => course.lesson_type != 'T')
-                .map((course: CourseSchedule, index: number) => {
-                  return (
-                    <ToggleGroupItem value={course.class_name} key={course.class_name}>
-                      {course.class_name}
-                    </ToggleGroupItem>
-                  )
-                })}
-            </ToggleGroup>
+        <TooltipContent side="bottom" asChild>
+          <ScrollArea className="mx-5 h-72 rounded px-3">
+            {Object.keys(randomClasses).map((key) => (
+              <div key={key} className="flex items-center space-x-2 pt-1">
+                <Checkbox id={key} checked={randomClasses[key]} onClick={toggleRandomClasses} />
+                <label
+                  htmlFor={key}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {key}
+                </label>
+              </div>
+            ))}
           </ScrollArea>
         </TooltipContent>
       </Tooltip>

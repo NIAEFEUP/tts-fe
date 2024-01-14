@@ -36,6 +36,16 @@ const SelectedOptionController = ({
   const [selectedOption, setSelectedOption] = selectedOptionHook
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
+  const randomClassesDefault = currentOption.map((course) => ({
+    course: course.course.info.acronym,
+    classes: course.schedules
+      .filter((schedule) => schedule.lesson_type != 'T')
+      .map((schedule) => ({
+        class_name: schedule.class_name,
+        checked: true,
+      })),
+  }))
+
   const getOptionById = (id: number) => {
     return optionsList.find((elem) => elem.id === id)
   }
@@ -64,7 +74,6 @@ const SelectedOptionController = ({
   }
 
   const changeOptionIcon = (newIcon) => {
-    console.log(newIcon)
     setOptionsList((prevOptionsList) => {
       const updatedOptionsList = prevOptionsList.map((item) =>
         item.id === selectedOption ? { ...item, icon: newIcon } : item
@@ -77,13 +86,13 @@ const SelectedOptionController = ({
   const option = getOptionById(selectedOption)
 
   return (
-    <div className="flex content-between w-full gap-5">
+    <div className="flex w-full content-between gap-5">
       <div className="flex gap-3">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="w-10 h-10 p-1 text-xl rounded aspect-square hover:bg-lightish hover:dark:bg-darkish">
-            <img src={option?.icon} className="w-full h-full" />
+          <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
+            <img src={option?.icon} className="h-full w-full" />
           </PopoverTrigger>
-          <PopoverContent side="bottom" className="p-0 rounded-full w-96 bg-lightish dark:bg-darkish">
+          <PopoverContent side="bottom" className="w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
             <EmojiPicker
               width={'100%'}
               searchDisabled={true}
@@ -100,7 +109,7 @@ const SelectedOptionController = ({
         </Popover>
 
         <input
-          className="w-full p-1 font-bold transition-all bg-inherit focus:font-normal"
+          className="w-full bg-inherit p-1 font-bold transition-all focus:font-normal"
           maxLength={25}
           value={option ? option.name : ''}
           onChange={renameOption}

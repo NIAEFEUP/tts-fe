@@ -382,30 +382,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedSchedule
                         </>
                       )}
                     </Listbox.Option>
-                    //   <Listbox.Option
-                    //   key={option}
-                    //   value={option}
-                    //   className={({ active }) =>
-                    //     `group relative cursor-default select-none py-2 text-sm pl-10
-                    //       pr-4 ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
-                    //   }
-                    // >
-                    //   {({ selected, active }) => (
-                    //     <>
-                    //       <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
-                    //         {optionIdx === 0 ? (selectedTeachers.length === 0 ? "Select All" : "Erase all") : option}
-                    //       </span>
-                    //       {selected ? (
-                    //         <span
-                    //           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-primary dark:text-white'
-                    //             }`}
-                    //         >
-                    //           <CheckIcon className="w-5 h-5" aria-hidden="true" />
-                    //         </span>
-                    //       ) : null}
-                    //     </>
-                    //   )}
-                    // </Listbox.Option>
                   ))}
                 </Listbox.Options>
               </Transition>

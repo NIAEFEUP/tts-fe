@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const colors = require('tailwindcss/colors')
 
 module.exports = {
   darkMode : 'class',
@@ -19,7 +20,7 @@ module.exports = {
         primary : '#b33636',
         secondary : '#0C4A6E',
         tertiary : '#357672',
-        feup : '#7D221E',
+        feup : '#7D221E', ...colors,
         schedule : {
           lunch : '#BE123C',
           t : '#91897F',
