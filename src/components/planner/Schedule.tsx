@@ -1,12 +1,11 @@
+import '../../styles/schedule.css'
 import classNames from 'classnames'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
-import '../../styles/schedule.css'
-import { ViewColumnsIcon, CameraIcon } from '@heroicons/react/24/outline'
-import { Button } from '../ui/button'
 import { useShowGrid } from '../../hooks'
+import { PrintSchedule, ToggleScheduleGrid } from './schedule'
 
 type Props = {
   activeClassesT: boolean
@@ -15,6 +14,8 @@ type Props = {
 }
 
 const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => {
+  const scheduleRef = useRef(null)
+
   const lessonTypesDic = {
     T: 'Teórica',
     TP: 'Teórico-Prática',
@@ -159,7 +160,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
   return (
     <>
       {/* Schedule Desktop */}
-      <div className="schedule-area gap-2">
+      <div ref={scheduleRef} className="schedule-area gap-2">
         <div className="schedule-top">
           <div className="schedule-top-empty">
             <span className="dummy">00:00</span>
@@ -221,23 +222,8 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
             ))}
           </div>
           <div className="flex gap-2">
-            <Button
-              variant="icon"
-              className="bg-lightish text-black"
-              onClick={() => setShowGrid(!showGrid)}
-              title={showGrid ? 'Ocultar grelha' : 'Mostrar grelha'}
-            >
-              <ViewColumnsIcon className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="icon"
-              className="bg-lightish text-black"
-              onClick={takeScreenshot}
-              title="Tirar foto"
-              disabled
-            >
-              <CameraIcon className="h-5 w-5" />
-            </Button>
+            <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
+            <PrintSchedule component={scheduleRef} />
           </div>
         </div>
       </div>

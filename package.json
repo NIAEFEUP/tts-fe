@@ -27,6 +27,7 @@
     "classnames": "^2.3.1",
     "clsx": "^2.1.0",
     "emoji-picker-react": "^4.6.4",
+    "html-to-image": "^1.11.11",
     "lucide-react": "^0.307.0",
     "node-fetch": "^3.2.8",
     "nodemon": "^2.0.19",
