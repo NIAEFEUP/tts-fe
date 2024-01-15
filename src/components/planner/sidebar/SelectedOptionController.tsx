@@ -1,12 +1,11 @@
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
-import { useState, useContext, useRef, useEffect } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { CourseOption, Major, MultipleOptions } from '../../../@types'
 import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
 import RandomFill from './selectedOptionController/RandomFill'
-import { text } from 'stream/consumers'
 
 interface Option {
   id: number
@@ -73,18 +72,7 @@ const SelectedOptionController = ({
     return optionsList.find((elem) => elem.id === id)
   }
 
-  // const renameOption = (event) => {
-  //   const newName = event.target.value
-  //   setOptionsList((prevOptionsList) => {
-  //     const updatedOptionsList = prevOptionsList.map((item) =>
-  //       item.id === selectedOption ? { ...item, name: newName } : item
-  //     )
-  //     localStorage.setItem('niaefeup-tts.optionsList', JSON.stringify(updatedOptionsList))
-  //     return updatedOptionsList
-  //   })
-  // }
-
-  const trimOptionName = (event) => {
+  const renameOptionName = (event) => {
     const newName = event.target.value.trim()
     event.target.value = newName
     setOptionsList((prevOptionsList) => {
@@ -106,16 +94,14 @@ const SelectedOptionController = ({
     })
   }
 
-  const option = getOptionById(selectedOption)
-
   return (
-    <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between xl:gap-5">
-      <div className="order-2 flex flex-grow gap-3 sm:order-1 lg:order-2 xl:order-1">
+    <div className="flex flex-col w-full sm:flex-row lg:flex-col xl:flex-row xl:content-between xl:gap-5">
+      <div className="flex flex-grow order-2 gap-3 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
-            <img src={option?.icon} className="h-full w-full" />
+          <PopoverTrigger className="w-10 h-10 p-1 text-xl rounded aspect-square hover:bg-lightish hover:dark:bg-darkish">
+            <img src={getOptionById(selectedOption)?.icon} className="w-full h-full" />
           </PopoverTrigger>
-          <PopoverContent side="bottom" className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
+          <PopoverContent side="bottom" className="p-0 mx-5 rounded-full w-96 bg-lightish dark:bg-darkish">
             <EmojiPicker
               width={'100%'}
               searchDisabled={true}
@@ -132,6 +118,7 @@ const SelectedOptionController = ({
         </Popover>
 
         <textarea
+          key={selectedOption}
           id="option-name"
           spellCheck="false"
           ref={textarea}
@@ -139,13 +126,13 @@ const SelectedOptionController = ({
           cols={40}
           maxLength={40}
           wrap="off"
-          defaultValue={option ? option.name : ''}
-          className="w-full resize-none overflow-x-auto scroll-smooth rounded border-none bg-inherit p-1 font-bold transition-all focus:font-normal"
-          onBlur={trimOptionName}
+          defaultValue={getOptionById(selectedOption)?.name}
+          className="w-full p-1 overflow-x-auto font-bold transition-all border-none rounded resize-none scroll-smooth bg-inherit focus:font-normal"
+          onBlur={renameOptionName}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault()
-              trimOptionName(e)
+              renameOptionName(e)
               e.target.blur()
             }
           }}
@@ -154,7 +141,7 @@ const SelectedOptionController = ({
           onScroll={scroll}
         />
       </div>
-      <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
+      <div className="flex items-center order-1 gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption majorHook={majorHook} currentOption={currentOption} className="sm:py-0 xl:p-1" />
         <PasteOption majorHook={majorHook} multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
         <RandomFill multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
