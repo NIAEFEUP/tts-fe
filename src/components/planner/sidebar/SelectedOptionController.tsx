@@ -42,16 +42,19 @@ const SelectedOptionController = ({
   const textarea = useRef(null)
 
   const startScroll = () => {
+    if (document.activeElement === textarea.current) return
     isHovered = true
     textarea.current.scrollLeft += 5
   }
 
   const stopScroll = () => {
+    if (document.activeElement === textarea.current) return
     isHovered = false
     textarea.current.scrollLeft = 0
   }
 
   const scroll = () => {
+    if (document.activeElement === textarea.current) return
     if (isHovered) {
       if (isScrollingBack) {
         if (textarea.current.scrollLeft == 0) isScrollingBack = false
@@ -83,8 +86,6 @@ const SelectedOptionController = ({
 
   const trimOptionName = (event) => {
     const newName = event.target.value.trim()
-    console.log('newName: ', '|'.concat(newName.concat('|')))
-
     event.target.value = newName
     setOptionsList((prevOptionsList) => {
       const updatedOptionsList = prevOptionsList.map((item) =>
