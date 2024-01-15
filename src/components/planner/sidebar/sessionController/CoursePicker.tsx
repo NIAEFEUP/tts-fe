@@ -292,8 +292,13 @@ const SelectionModal = ({
       {/* Edit button 
         //TODO: Create and change to text variant
       */}
-      <Button variant="icon" className="gap-2 bg-primary" onClick={openModal} title="Editar Unidades Curriculares">
-        <span className="">Escolher UCs</span>
+      <Button
+        variant="icon"
+        className="flex-grow gap-2 bg-primary"
+        onClick={openModal}
+        title="Editar Unidades Curriculares"
+      >
+        <span className="hidden md:block lg:hidden xl:block">Escolher UCs</span>
         <PencilSquareIcon className="h-5 w-5 text-white" />
       </Button>
 

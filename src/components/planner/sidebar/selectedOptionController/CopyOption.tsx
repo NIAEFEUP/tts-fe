@@ -8,12 +8,13 @@ import { Buffer } from 'buffer'
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   currentOption: CourseOption[]
+  className?: string
 }
 
 /**
  * Copy currently selected option to clipboard
  */
-const CopyOption = ({ majorHook, currentOption }: Props) => {
+const CopyOption = ({ majorHook, currentOption, className }: Props) => {
   const { toast } = useToast()
   const [major, setMajor] = majorHook
   const [icon, setIcon] = useState(false)
@@ -67,8 +68,12 @@ const CopyOption = ({ majorHook, currentOption }: Props) => {
   }
 
   return (
-    <Button variant="icon" className="h-min w-min bg-primary xl:p-1" onClick={() => copyOption()}>
-      {icon ? <CheckIcon className="w-5 h-5" /> : <DocumentDuplicateIcon className="w-5 h-5" />}
+    <Button
+      variant="icon"
+      className={className.concat(' h-min w-min flex-grow bg-primary')}
+      onClick={() => copyOption()}
+    >
+      {icon ? <CheckIcon className="h-5 w-5" /> : <DocumentDuplicateIcon className="h-5 w-5" />}
     </Button>
   )
 }

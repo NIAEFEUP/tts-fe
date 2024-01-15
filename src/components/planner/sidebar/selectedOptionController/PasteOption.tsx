@@ -9,9 +9,10 @@ import { Buffer } from 'buffer'
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  className?: string
 }
 
-const PasteOption = ({ majorHook, multipleOptionsHook }: Props) => {
+const PasteOption = ({ majorHook, multipleOptionsHook, className }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [major, setMajor] = majorHook
   const [modalOpen, setModalOpen] = useState(false)
@@ -99,8 +100,8 @@ const PasteOption = ({ majorHook, multipleOptionsHook }: Props) => {
 
   return (
     <>
-      <Button variant="icon" className="h-min w-min bg-primary xl:p-1">
-        <ClipboardDocumentIcon onClick={importSchedule} className="w-5 h-5" />
+      <Button variant="icon" className={className.concat(' h-min w-min flex-grow bg-primary')}>
+        <ClipboardDocumentIcon onClick={importSchedule} className="h-5 w-5" />
       </Button>
       <ConfirmationModal
         isOpen={modalOpen}

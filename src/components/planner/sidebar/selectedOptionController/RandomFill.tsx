@@ -9,9 +9,10 @@ import { Checkbox } from '../../../ui/checkbox'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  className?: string
 }
 
-const RandomFill = ({ multipleOptionsHook }: Props) => {
+const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
 
@@ -186,7 +187,11 @@ const RandomFill = ({ multipleOptionsHook }: Props) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button onClick={applyRandomSchedule} variant="icon" className="h-min w-min bg-secondary xl:p-1">
+          <Button
+            onClick={applyRandomSchedule}
+            variant="icon"
+            className={className.concat(' h-min w-min flex-grow bg-secondary')}
+          >
             <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>

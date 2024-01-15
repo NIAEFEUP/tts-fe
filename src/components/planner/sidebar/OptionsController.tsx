@@ -37,9 +37,9 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
             setOptionIndex(item.id)
           }}
           className={`
-            group relative box-border flex aspect-square h-14 w-14
-            cursor-pointer flex-col items-center justify-center rounded border-2
-            border-transparent p-2  dark:shadow hover:dark:border-primary/50
+            group relative box-border flex aspect-square h-10 w-10 cursor-pointer flex-col
+            items-center justify-center rounded border-2 border-transparent p-2
+            dark:shadow hover:dark:border-primary/50 md:h-14 md:w-14 lg:h-10 lg:w-10 xl:h-14 xl:w-14
             ${selected === item.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
             `}
         >
@@ -52,9 +52,7 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
           </div>
           <img src={item.icon} className="h-8 w-8 transform duration-200 ease-in-out group-hover:mt-3" />
         </TooltipTrigger>
-        <TooltipContent>
-          <p>{item.name}</p>
-        </TooltipContent>
+        <TooltipContent className="w-32 truncate">{item.name}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )

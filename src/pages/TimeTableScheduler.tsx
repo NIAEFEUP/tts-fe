@@ -1,26 +1,9 @@
 import BackendAPI from '../api/backend'
 import StorageAPI from '../api/storage'
 import { useState, useEffect, useMemo } from 'react'
-import { Schedule, SelectionModal, ClassesTypeCheckboxes, LessonTypesModal, HelpModal } from '../components/planner'
+import { Schedule, Sidebar } from '../components/planner'
 import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
-import { useShowGrid, useMajor, useCourses } from '../hooks'
-import SelectionExtraCoursesModal from '../components/planner/SelectionExtraCoursesModal'
-import { SparklesIcon } from '@heroicons/react/24/outline'
-import { Sidebar } from '../components/planner'
-
-// export const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
-//   let frequency: Map<number, number> = new Map()
-//   let newCourseOptions: CourseOption[] = []
-
-//   for (let courseOption of courses) {
-//     if (!frequency.has(courseOption.course.info.id)) {
-//       newCourseOptions.push(courseOption)
-//       frequency.set(courseOption.course.info.id, 1)
-//     }
-//   }
-
-//   return newCourseOptions
-// }
+import { useMajor, useCourses } from '../hooks'
 
 export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
   let frequency: Map<number, number> = new Map()

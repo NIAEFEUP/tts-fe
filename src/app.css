@@ -88,3 +88,15 @@ button {
   --epr-bg-color: rgb(26, 28, 35);
   --epr-category-label-bg-color: rgb(26, 28, 35);
 }
+
+
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+#option-name::-webkit-scrollbar {
+ display: none;
+}
+
+/* For IE, Edge and Firefox */
+#option-name {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
