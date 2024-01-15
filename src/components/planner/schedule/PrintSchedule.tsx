@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { Button } from '../../ui/button'
 import { CameraIcon } from '@heroicons/react/24/outline'
 import { toPng } from 'html-to-image'
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
 
 const PrintSchedule = ({ component }) => {
   const takeScreenshot = useCallback(() => {
@@ -22,9 +23,16 @@ const PrintSchedule = ({ component }) => {
   }, [component])
 
   return (
-    <Button variant="icon" className="bg-lightish text-black" onClick={takeScreenshot} title="Guardar foto">
-      <CameraIcon className="h-5 w-5" />
-    </Button>
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="icon" className="bg-lightish text-black" onClick={takeScreenshot}>
+            <CameraIcon className="h-5 w-5" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Descarregar imagem do horário</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
