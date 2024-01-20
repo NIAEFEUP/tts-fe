@@ -20,6 +20,7 @@ export type Course = {
   semester: number
   year: number
   schedule_url: string
+  ects: number
   last_updated: string
 }
 

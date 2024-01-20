@@ -9,7 +9,7 @@ type Props = {
 const CreditsBanner = ({ courses }: Props) => {
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const credits = useMemo(() => {
-    return courses.length * 6
+    return courses.reduce((credits, courseUnit) => credits + courseUnit.info.ects, 0)
   }, [courses])
 
   useEffect(() => {
