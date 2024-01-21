@@ -42,10 +42,7 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
       keyValue[class_name] = true
     })
 
-    // const keyValue = classes.map((class_name) => ({ class_name, state: 'checked' }))
     setRandomClasses(keyValue)
-
-    // setRandomClasses(classes.map((class_name) => ({ class_name, state: 'checked' })))
   }, [multipleOptions])
 
   useEffect(() => {
@@ -70,6 +67,13 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
     }
 
     const [head, ...tail] = a
+
+    if (head.length === 0) {
+      for (const t of cartesianGenerator(...tail)) {
+        yield [null, ...t]
+      }
+      return
+    }
 
     for (const h of head) {
       for (const t of cartesianGenerator(...tail)) {
@@ -103,6 +107,7 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   */
   const isValidSchedule = (courses: CourseSchedule[]) => {
     const schedules = courses
+      .filter((schedule) => schedule !== null)
       .map((schedule) => {
         return {
           day: schedule.day,
@@ -160,7 +165,7 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
 
       const newSelected = selected.map((course, index) => {
         let newCourse = course
-        newCourse.option = schedules[index]
+        newCourse.option = schedules[index] ?? null
         return newCourse
       })
 
@@ -182,6 +187,8 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
       return newRandomClasses
     })
   }
+
+  console.log('multiple options: ', multipleOptions)
 
   return (
     <TooltipProvider>
