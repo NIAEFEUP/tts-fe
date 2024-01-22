@@ -152,8 +152,6 @@ const TimeTableSchedulerPage = () => {
     return true
   }
 
-  const [classesT, setClassesT] = useState<boolean>(true)
-  const [classesTP, setClassesTP] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
   const [isImportedSchedule, setIsImportedSchedule] = useState<boolean>(false)
@@ -375,7 +373,7 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
-          <Schedule courseOptions={multipleOptions.selected} activeClassesT={classesT} activeClassesTP={classesTP} />
+          <Schedule courseOptions={multipleOptions.selected} />
         </div>
       </div>
 
