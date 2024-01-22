@@ -1,6 +1,6 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
@@ -8,14 +8,11 @@ import { useShowGrid } from '../../hooks'
 import { PrintSchedule, ToggleScheduleGrid } from './schedule'
 
 type Props = {
-  activeClassesT: boolean
-  activeClassesTP: boolean
   courseOptions: CourseOption[]
 }
 
-const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => {
+const Schedule = ({ courseOptions }: Props) => {
   const scheduleRef = useRef(null)
-
   const lessonTypesDic = {
     T: 'Teórica',
     TP: 'Teórico-Prática',
@@ -86,6 +83,8 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
     return lessonTypesAcc
   }, [lessons, lessonTypesDic])
 
+  const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<String[]>([])
+
   /**
    * Find conflicts among classes between classes.
    * Consider that the classes are ordered in ascending order by the start_time.
@@ -153,10 +152,6 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
 
   const [showGrid, setShowGrid] = useShowGrid()
 
-  const takeScreenshot = () => {
-    console.log('coming soon')
-  }
-
   return (
     <>
       {/* Schedule Desktop */}
@@ -187,7 +182,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
                       <LessonBox
                         key={`lesson-box-${lessonIdx}`}
                         lesson={lesson}
-                        active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                        active={!hiddenLessonsTypes.includes(lesson.schedule.lesson_type)}
                       />
                     ))
                   : conflicts.map((lessons: Lesson[]) =>
@@ -197,7 +192,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
                           lesson={lesson}
                           conflict={lessons.length > 1 ? true : false}
                           conflicts={lessons.length > 1 ? lessons : undefined}
-                          active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                          active={!hiddenLessonsTypes.includes(lesson.schedule.lesson_type)}
                         />
                       ))
                     )}
@@ -210,15 +205,27 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
             {lessonTypes.map((lessonType: string) => (
-              <div className="inline-flex items-center gap-1.5 lg:gap-1" key={`lesson-type-${lessonType}`}>
-                <span
-                  // className={`h-3.5 w-3.5 rounded bg-schedule-tp/80 shadow 2xl:h-4 2xl:w-4`}
-                  className={`h-3.5 w-3.5 rounded shadow 2xl:h-4 2xl:w-4 ${
-                    'bg-schedule-' + lessonType.toLowerCase() + '/80'
-                  }`}
+              <label className="inline-flex items-center gap-1.5 lg:gap-1" key={`lesson-type-${lessonType}`}>
+                <input
+                  type="checkbox"
+                  className="peer hidden"
+                  checked={hiddenLessonsTypes.includes(lessonType)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setHiddenLessonsTypes((prev) => [...prev, lessonType])
+                    } else {
+                      setHiddenLessonsTypes((prev) => prev.filter((type) => type !== lessonType))
+                    }
+                  }}
                 />
-                <span>{lessonTypesDic[lessonType]}</span>
-              </div>
+                <span
+                  className={`h-3.5 w-3.5 rounded shadow 2xl:h-4 2xl:w-4 
+                  ${'bg-schedule-' + lessonType.toLowerCase() + '/80'}`}
+                />
+                <span className="cursor-pointer select-none peer-checked:line-through">
+                  {lessonTypesDic[lessonType]}
+                </span>
+              </label>
             ))}
           </div>
           <div className="flex gap-2">
@@ -235,22 +242,15 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP }: Props) => 
             <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
               <div className="h-full w-1 rounded bg-primary" />
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
-                {lessons.map((lesson: Lesson, lessonIdx: number) =>
-                  lesson.schedule.lesson_type === 'T'
-                    ? activeClassesT && (
-                        <ResponsiveLessonBox
-                          key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
-                          lesson={lesson}
-                          conflict={false}
-                        />
-                      )
-                    : activeClassesTP && (
-                        <ResponsiveLessonBox
-                          key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
-                          lesson={lesson}
-                          conflict={false}
-                        />
-                      )
+                {lessons.map(
+                  (lesson: Lesson, lessonIdx: number) =>
+                    !hiddenLessonsTypes.includes(lesson.schedule.lesson_type) && (
+                      <ResponsiveLessonBox
+                        key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
+                        lesson={lesson}
+                        conflict={false}
+                      />
+                    )
                 )}
               </div>
             </div>
