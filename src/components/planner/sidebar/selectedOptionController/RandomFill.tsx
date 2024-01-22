@@ -23,38 +23,6 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
 
   const [randomClasses, setRandomClasses] = useState({})
 
-  useEffect(() => {
-    if (Object.keys(randomClasses).length !== 0) return
-    const selected = multipleOptions.selected
-
-    const classes = [
-      ...new Set(
-        selected
-          .map((course) =>
-            course.schedules.filter((schedule) => schedule.lesson_type != 'T').map((schedule) => schedule.class_name)
-          )
-          .flat()
-      ),
-    ]
-
-    const keyValue = {}
-    classes.forEach((class_name) => {
-      keyValue[class_name] = true
-    })
-
-    setRandomClasses(keyValue)
-  }, [multipleOptions])
-
-  useEffect(() => {
-    const newLockedCourses = multipleOptions.selected
-      .filter((course) => course.locked)
-      .map((course) => course.course.info.acronym)
-    // Only update if locked courses changed
-    if (newLockedCourses.join() !== lockedCourses.join()) {
-      setLockedCourses(newLockedCourses)
-    }
-  }, [multipleOptions])
-
   /* 
   Usage:
     const generator = cartesianGenerator(...schedules); 
@@ -94,13 +62,6 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
 
     return cartesianGenerator(...allSchedules)
   }
-  const [generator, setGenerator] = useState(getSchedulesGenerator())
-
-  // Reset generator when locked courses changes as it will change the possible schedules
-  useEffect(() => {
-    setPermutations([])
-    setGenerator(getSchedulesGenerator())
-  }, [lockedCourses, randomClasses])
 
   /*
     Function to check if a schedule is valid (no overlapping classes)
@@ -188,7 +149,55 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
     })
   }
 
-  console.log('multiple options: ', multipleOptions)
+  /**
+   * Updating randomClasses and lockedCourses when:
+   * - Multiple options change
+   */
+  useEffect(() => {
+    // ------------------------------------------------------
+    // Updating all class names of the selected courses
+    if (Object.keys(randomClasses).length !== 0) return
+    const selected = multipleOptions.selected
+
+    const classes = [
+      ...new Set(
+        selected
+          .map((course) =>
+            course.schedules.filter((schedule) => schedule.lesson_type != 'T').map((schedule) => schedule.class_name)
+          )
+          .flat()
+      ),
+    ]
+
+    const keyValue = {}
+    classes.forEach((class_name) => {
+      keyValue[class_name] = true
+    })
+
+    setRandomClasses(keyValue)
+
+    // ------------------------------------------------------
+    // Updating locked courses
+    const newLockedCourses = multipleOptions.selected
+      .filter((course) => course.locked)
+      .map((course) => course.course.info.acronym)
+    // Only update if locked courses changed
+    if (newLockedCourses.join() !== lockedCourses.join()) {
+      setLockedCourses(newLockedCourses)
+    }
+  }, [multipleOptions])
+
+  /**
+   * Reseting generator and permutations when:
+   * - Multiple options change
+   * - Selected classes for random generations change
+   */
+  useEffect(() => {
+    setPermutations([])
+    setGenerator(getSchedulesGenerator())
+  }, [multipleOptions, randomClasses])
+
+  const [generator, setGenerator] = useState(getSchedulesGenerator())
 
   return (
     <TooltipProvider>
