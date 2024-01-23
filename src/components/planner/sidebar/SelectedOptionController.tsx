@@ -16,6 +16,7 @@ interface Option {
 type Props = {
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
+  majors: Major[],
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   currentOption: CourseOption[]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -27,6 +28,7 @@ type Props = {
 const SelectedOptionController = ({
   optionsListHook,
   selectedOptionHook,
+  majors,
   majorHook,
   currentOption,
   multipleOptionsHook,
@@ -143,7 +145,7 @@ const SelectedOptionController = ({
       </div>
       <div className="flex items-center order-1 gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption majorHook={majorHook} currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        <PasteOption majorHook={majorHook} multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
+        <PasteOption majors={majors} majorHook={majorHook} multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
         <RandomFill multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
       </div>
     </div>

@@ -110,7 +110,6 @@ export type MultipleOptions = {
   names: string[]
 }
 
-export type ImportedCourse = {
-  sigarra_id: number
-  class_name: string
+export type ImportedCourses = { 
+  [key: string]: string 
 }

@@ -133,6 +133,7 @@ const Sidebar = ({
           <SelectedOptionController
             optionsListHook={[optionsList, setOptionsList]}
             selectedOptionHook={[selectedOption, setSelectedOption]}
+            majors={majors}
             majorHook={majorHook}
             currentOption={multipleOptions.selected}
             multipleOptionsHook={multipleOptionsHook}

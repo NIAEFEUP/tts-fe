@@ -61,10 +61,10 @@ const CopyOption = ({ majorHook, currentOption, className }: Props) => {
   const copyOption = () => {
     navigator.clipboard.writeText(optionToString(major, currentOption))
     setIcon(true)
-    toast({ title: 'Horário copiado!', description: 'Podes colar o horário noutra opção ou enviar a um amigo.' })
+    toast({ title: 'Horário copiado', description: 'Podes colar o horário noutra opção ou enviar a um amigo.' })
     setTimeout(() => {
       setIcon(false)
-    }, 2000)
+    }, 1500)
   }
 
   return (
