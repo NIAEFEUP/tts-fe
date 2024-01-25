@@ -7,25 +7,30 @@ import { useToast } from '../../../ui/use-toast'
 import React, { useState } from 'react'
 import ConfirmationModal from './ConfirmationModal'
 import { Buffer } from 'buffer'
+import fillOptions from './fillOptions'
 
 type Props = {
   majors: Major[]
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  checkCourses: (course_unit_id: number[], importedCourses: ImportedCourses) => void
+  isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   className?: string
 }
 
-const PasteOption = ({ majors, majorHook, multipleOptionsHook, className }: Props) => {
+const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isImportedOptionHook, className }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [major, setMajor] = majorHook
   const [modalOpen, setModalOpen] = useState(false)
+  const [_, setIsImportedOption] = isImportedOptionHook
   const { toast } = useToast()
 
   // Temporary state to store the schedule tokens to be imported from clipboard between modal open and confirmation
-  const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>({})
+  const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>(null)
   const [importingMajor, setImportingMajor] = useState<Major>(null)
 
   const importSchedule = async () => {
+    //TODO: clipboard API is not supported in firefox
     const decoded_url = Buffer.from(await navigator.clipboard.readText(), 'base64').toString()
 
     if (!isValidURL(decoded_url)) {
@@ -55,41 +60,24 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, className }: Prop
       return
     }
 
-
-    var newOption = multipleOptions.options[multipleOptions.index]
-    newOption = newOption.map((courseOption: CourseOption) => {
-      const clearedOption = courseOption
-      clearedOption.option = null
-      return clearedOption
+    // Unchecked imported courses units
+    const unCheckedCourses = Object.keys(importedCourses).filter((course_unit_id) => {
+      return multipleOptions.options[multipleOptions.index].find((courseOption: CourseOption) => {
+        return courseOption.course.info.course_unit_id === Number(course_unit_id)
+      }) === undefined
     })
 
-    newOption.forEach((courseOption: CourseOption) => {
-      const courseUnitId = courseOption.course.info.course_unit_id
+    if(unCheckedCourses.length > 0){
+      //check the unCheckedCourses and fill the options
+      setImportingCoursesUnitOptions(importedCourses)
+      const unCheckedCoursesIds = unCheckedCourses.map((course_unit_id) => Number(course_unit_id))
+      setIsImportedOption(true)
+      checkCourses(unCheckedCoursesIds, importedCourses)
+      return;
+    }
 
-      const importingScheduleClassName = importedCourses[courseUnitId]
-      if (importingScheduleClassName === undefined) return
-
-      //get the schedule with class_name === importedSchedule from courseOption.schedules
-      const newSchedule = courseOption.schedules.find((schedule) => schedule.class_name === importingScheduleClassName)
-      if (newSchedule === undefined) return //TODO: need to select the UC
-
-      //replace the schedule
-      courseOption.option = newSchedule
-    })
-
-    setMultipleOptions((prevMultipleOptions) => {
-      const newOptions = [...prevMultipleOptions.options]
-      newOptions[prevMultipleOptions.index] = newOption
-      const value = {
-        index: prevMultipleOptions.index,
-        selected: newOption,
-        options: newOptions,
-        names: prevMultipleOptions.names,
-      }
-
-      return value
-    })
-
+    setIsImportedOption(true)
+    fillOptions(importedCourses, setMultipleOptions)
     toast({
       title: 'Horário colado!',
       description: 'A opção foi colada com sucesso',
@@ -190,6 +178,7 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, className }: Prop
     })
     setMajor(importingMajor)
     setModalOpen(false)
+    setImportingCoursesUnitOptions(null)
   }
 
 return (

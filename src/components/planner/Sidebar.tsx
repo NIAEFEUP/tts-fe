@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { CheckedCourse, Major, MultipleOptions } from '../../@types'
+import { CheckedCourse, ImportedCourses, Major, MultipleOptions } from '../../@types'
 import SessionController from './sidebar/SessionController'
 import OptionsController from './sidebar/OptionsController'
 import SelectedOptionController from './sidebar/SelectedOptionController'
@@ -16,6 +16,7 @@ type Props = {
   destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   repeatedCourseControlHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  checkCourses: (course_unit_id: number[], importedCourses: ImportedCourses) => void
 }
 
 const defaultOptionsList = [
@@ -85,6 +86,7 @@ const Sidebar = ({
   destBufferHook,
   repeatedCourseControlHook,
   multipleOptionsHook,
+  checkCourses,
 }: Props) => {
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
@@ -137,6 +139,8 @@ const Sidebar = ({
             majorHook={majorHook}
             currentOption={multipleOptions.selected}
             multipleOptionsHook={multipleOptionsHook}
+            checkCourses={checkCourses}
+            isImportedOptionHook={[isImportedOption, setImportedOption]}
           />
           <CoursesController
             multilpleOptionsHook={multipleOptionsHook}

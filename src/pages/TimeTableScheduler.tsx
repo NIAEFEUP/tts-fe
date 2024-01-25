@@ -2,8 +2,10 @@ import BackendAPI from '../api/backend'
 import StorageAPI from '../api/storage'
 import { useState, useEffect, useMemo } from 'react'
 import { Schedule, Sidebar } from '../components/planner'
-import { CheckedCourse, Course, CourseOption, CourseSchedule, Major, MultipleOptions } from '../@types'
+import { CheckedCourse, Course, CourseOption, CourseSchedule, ImportedCourses, Major, MultipleOptions } from '../@types'
 import { useMajor, useCourses } from '../hooks'
+import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
+import { useToast } from '../components/ui/use-toast'
 
 export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
   let frequency: Map<number, number> = new Map()
@@ -154,7 +156,8 @@ const TimeTableSchedulerPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
-  const [isImportedSchedule, setIsImportedSchedule] = useState<boolean>(false)
+  const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>(null)
+  const {toast} = useToast();
 
   const getCoursesForMajor = (major: Major, majorChangedRef) => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
@@ -273,6 +276,7 @@ const TimeTableSchedulerPage = () => {
       pickedCourses = removeDuplicatesFromCourseArray(pickedCourses)
     }
 
+    //TODO: I only want to fetch if I check a course and not when I uncheck one
     fetchPickedSchedules(pickedCourses).then((schedules: CourseSchedule[][]) => {
       if (isNewerPromise) {
         setMultipleOptions((prev) => {
@@ -351,22 +355,47 @@ const TimeTableSchedulerPage = () => {
             names: prev.names,
           }
         })
+
+        // If the change on checked courses was trigged by importing an option, fill the options with the importing option
+        if (importingCoursesUnitOptions !== null) {
+          fillOptions(importingCoursesUnitOptions, setMultipleOptions);
+          toast({
+            title: 'Horário colado!',
+            description: 'A opção foi colada com sucesso',
+            duration: 1500,
+          })
+        }
       }
     })
+
+    // assure correct value of extraCoursesActive when we see changes in checkedCourses
+    if (checkedCourses.length > 0 && !is_null_or_undefined(checkedCourses[0])) {
+      let isExtraCoursesColumnSupposedToShow = checkedCourses[0].length > 0 && !is_null_or_undefined(checkedCourses[0])
+
+      isExtraCoursesColumnSupposedToShow ? setExtraCoursesActive(true) : setExtraCoursesActive(false)
+    }
 
     return () => {
       isNewerPromise = false
     }
   }, [checkedCourses])
 
-  // assure correct value of extraCoursesActive when we see changes in checkedCourses
-  useEffect(() => {
-    if (checkedCourses.length > 0 && !is_null_or_undefined(checkedCourses[0])) {
-      let isExtraCoursesColumnSupposedToShow = checkedCourses[0].length > 0 && !is_null_or_undefined(checkedCourses[0])
+  // This function will check a the course units of the provided course_unit_id numbers
+  const checkCourses = (course_unit_id: number[], importedCourses: ImportedCourses = null) => {
+    setImportingCoursesUnitOptions(importedCourses);
 
-      isExtraCoursesColumnSupposedToShow ? setExtraCoursesActive(true) : setExtraCoursesActive(false)
+    let newCheckedCourses = [...checkedCourses]
+
+    for (let i = 0; i < newCheckedCourses.length; i++) {
+      for (let j = 0; j < newCheckedCourses[i].length; j++) {
+        if (course_unit_id.includes(newCheckedCourses[i][j].info.course_unit_id)) {
+          newCheckedCourses[i][j].checked = true
+        }
+      }
     }
-  }, [checkedCourses])
+
+    setCheckedCourses(newCheckedCourses)
+  }
 
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
@@ -389,6 +418,7 @@ const TimeTableSchedulerPage = () => {
         destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
         repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
         multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+        checkCourses={checkCourses}
       />
     </div>
   )

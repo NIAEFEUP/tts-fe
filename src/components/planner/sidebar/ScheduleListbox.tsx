@@ -17,6 +17,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
+  //FIXME (thePeras): If you are here you probably oberserved a bug. Don't worry its gonna be fixed very very soon
   var teacherOptions = [{ acronym: 'All teachers', name: '' }, ...courseOption.teachers]
   const [lastSelected, setLastSelected] = useState(selectedOption)
   const [previewing, setPreviewing] = useState(false)
@@ -168,7 +169,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
 
     let resolvedCourseOptions = resolveCourseOptions(multipleOptions.selected)
     let resolvedOptions = multipleOptions.options
-    //console.log(selectedOption)
     resolvedOptions[multipleOptions.index] = resolvedCourseOptions
 
     setMultipleOptions((prevMultipleOptions) => {

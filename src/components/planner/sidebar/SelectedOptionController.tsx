@@ -2,7 +2,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext, useRef } from 'react'
-import { CourseOption, Major, MultipleOptions } from '../../../@types'
+import { CourseOption, ImportedCourses, Major, MultipleOptions } from '../../../@types'
 import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
 import RandomFill from './selectedOptionController/RandomFill'
@@ -20,6 +20,8 @@ type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   currentOption: CourseOption[]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
+  checkCourses: (course_unit_id: number[], importedCourses: ImportedCourses) => void
+  isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
 /**
@@ -32,6 +34,8 @@ const SelectedOptionController = ({
   majorHook,
   currentOption,
   multipleOptionsHook,
+  checkCourses,
+  isImportedOptionHook,
 }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
   const [optionsList, setOptionsList] = optionsListHook
@@ -145,7 +149,7 @@ const SelectedOptionController = ({
       </div>
       <div className="flex items-center order-1 gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption majorHook={majorHook} currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        <PasteOption majors={majors} majorHook={majorHook} multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
+        <PasteOption majors={majors} majorHook={majorHook} multipleOptionsHook={multipleOptionsHook} checkCourses={checkCourses} isImportedOptionHook={isImportedOptionHook} className="sm:py-0 xl:p-1" />
         <RandomFill multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
       </div>
     </div>

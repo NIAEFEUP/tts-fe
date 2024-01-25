@@ -8,7 +8,7 @@ import { Buffer } from 'buffer'
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   currentOption: CourseOption[]
-  className?: string
+  className?: string,
 }
 
 /**
