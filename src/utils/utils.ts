@@ -153,7 +153,7 @@ const getClassTypeClassName = (type: string) => {
       return 'schedule-class-tc'
 
     default:
-      return 'schedule-class-other'
+      return 'schedule-class-o'
   }
 }
 
@@ -170,6 +170,24 @@ const getCourseTeachers = (courseOption: CourseOption) => {
   })
 
   return teachers
+}
+
+
+const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
+  console.log(courses)
+  if (!courses) return []
+  
+  let frequency: Map<number, number> = new Map()
+  let newCourseOptions: CourseOption[] = []
+
+  for (let courseOption of courses) {
+    if (!frequency.has(courseOption.course.info.id)) {
+      newCourseOptions.push(courseOption)
+      frequency.set(courseOption.course.info.id, 1)
+    }
+  }
+
+  return newCourseOptions
 }
 
 export {
@@ -194,4 +212,5 @@ export {
   getLessonTypeLongName,
   getCourseTeachers,
   cn,
+  removeDuplicatesFromCourseOption
 }

@@ -4,35 +4,23 @@ import { DarkModeSwitch } from './DarkModeSwitch'
 import { LogoNIAEFEUPImage } from '../../images'
 import { config, getPath } from '../../utils/utils'
 import {
-  MenuIcon,
-  XIcon,
+  Bars3Icon,
+  XMarkIcon,
   AtSymbolIcon,
   UserCircleIcon,
-  CollectionIcon,
-  SwitchHorizontalIcon,
+  RectangleStackIcon,
+  ArrowsRightLeftIcon,
   QuestionMarkCircleIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 
 const navigation = [
   {
-    title: 'Planner',
+    title: 'Horários',
     location: getPath(config.paths.planner),
-    icon: <CollectionIcon className="h-5 w-5" />,
+    icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
   },
-  {
-    title: 'Exchange',
-    location: getPath(config.paths.exchange),
-    icon: <SwitchHorizontalIcon className="h-5 w-5" />,
-    wip: true,
-  },
-  {
-    title: 'Profile',
-    location: getPath(config.paths.profile),
-    icon: <UserCircleIcon className="h-5 w-5" />,
-    wip: true,
-  },
-  { title: 'About', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
+  { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
   {
     title: 'FAQs',
     location: getPath(config.paths.faqs),
@@ -63,12 +51,7 @@ const Header = ({ siteTitle, location }: Props) => {
                     <img
                       src={LogoNIAEFEUPImage}
                       alt="Time Table Selector"
-                      className="z-20 inline-flex h-6 w-auto rounded-full transition dark:hidden"
-                    />
-                    <img
-                      src={LogoNIAEFEUPImage}
-                      alt="Time Table Selector"
-                      className="z-20 hidden h-6 w-auto rounded-full transition dark:inline-flex"
+                      className="z-20 inline-flex h-6 w-auto rounded-full transition"
                     />
                     <h3 className="text-xs font-bold tracking-tighter duration-150 lg:text-base">{siteTitle}</h3>
                   </Link>
@@ -147,12 +130,12 @@ const Hamburger = ({ open }: HamburgerProps) => (
       <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
         <span className="sr-only">Open nav menu</span>
         {open ? (
-          <XIcon
+          <XMarkIcon
             className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
             aria-hidden="true"
           />
         ) : (
-          <MenuIcon
+          <Bars3Icon
             className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
             aria-hidden="true"
           />

@@ -1,11 +1,13 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const colors = require('tailwindcss/colors')
 
 module.exports = {
   darkMode : 'class',
-  content : ['./src/**/*.{js,jsx,ts,tsx}'],
+  content : ['./src/**/*.{js,jsx,ts,tsx}', './src/styles/safelist.txt'],
   theme : {
     extend : {
       colors : {
+        ...colors,
         navy : '#18222e',
         lightNavy : '#212a36',
         darkish : '#333640',
@@ -29,7 +31,7 @@ module.exports = {
           s : '#7d3179',
           p : '#b66046',
           tc : '#733C3C',
-          other : '#69656A',
+          o : '#69656A',
         },
       },
       spacing : {

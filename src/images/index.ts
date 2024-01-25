@@ -1,6 +1,4 @@
 import AppLogo from './icon.png'
-import LogoAEFEUPImage from './aefeup.png'
-import LogoFEUPImage from './feup.png'
 import HomePageImage from './homepage1.png'
 import HomePageAltImage from './homepage2.jpg'
 import LogoFEDarkImage from './logo-dark.png'
@@ -15,8 +13,6 @@ import WaitNewScheduleImage from './wait-new-schedule.jpg'
 
 export {
   AppLogo,
-  LogoAEFEUPImage,
-  LogoFEUPImage,
   HomePageImage,
   HomePageAltImage,
   LogoFEDarkImage,

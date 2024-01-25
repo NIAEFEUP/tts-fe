@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { Transition, Disclosure } from '@headlessui/react'
-import { ChevronUpIcon } from '@heroicons/react/outline'
+import { ChevronUpIcon } from '@heroicons/react/24/outline'
 
 const ExchangeFaqs = () => {
   const data = [
