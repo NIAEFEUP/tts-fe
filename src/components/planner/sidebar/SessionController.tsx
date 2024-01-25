@@ -46,7 +46,7 @@ const SessionController = ({
         destBufferHook={destBufferHook}
         repeatedCourseControlHook={repeatedCourseControlHook}
       />
-      <CollaborativeSession />
+      {/* <CollaborativeSession /> */}
       <Export multipleOptions={multipleOptions} optionsList={optionsList} />
     </div>
   )
