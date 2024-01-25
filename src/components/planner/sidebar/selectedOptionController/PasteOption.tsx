@@ -1,4 +1,11 @@
-import { CourseOption, MultipleOptions, CheckedCourse, Major, CourseSchedule, ImportedCourses } from '../../../../@types'
+import {
+  CourseOption,
+  MultipleOptions,
+  CheckedCourse,
+  Major,
+  CourseSchedule,
+  ImportedCourses,
+} from '../../../../@types'
 import getMajors from '../../../../api/backend'
 import { getCourseTeachers } from '../../../../utils/utils'
 import { Button } from '../../../ui/button'
@@ -18,7 +25,14 @@ type Props = {
   className?: string
 }
 
-const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isImportedOptionHook, className }: Props) => {
+const PasteOption = ({
+  majors,
+  majorHook,
+  multipleOptionsHook,
+  checkCourses,
+  isImportedOptionHook,
+  className,
+}: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [major, setMajor] = majorHook
   const [modalOpen, setModalOpen] = useState(false)
@@ -62,18 +76,20 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isI
 
     // Unchecked imported courses units
     const unCheckedCourses = Object.keys(importedCourses).filter((course_unit_id) => {
-      return multipleOptions.options[multipleOptions.index].find((courseOption: CourseOption) => {
-        return courseOption.course.info.course_unit_id === Number(course_unit_id)
-      }) === undefined
+      return (
+        multipleOptions.options[multipleOptions.index].find((courseOption: CourseOption) => {
+          return courseOption.course.info.course_unit_id === Number(course_unit_id)
+        }) === undefined
+      )
     })
 
-    if(unCheckedCourses.length > 0){
+    if (unCheckedCourses.length > 0) {
       //check the unCheckedCourses and fill the options
       setImportingCoursesUnitOptions(importedCourses)
       const unCheckedCoursesIds = unCheckedCourses.map((course_unit_id) => Number(course_unit_id))
       setIsImportedOption(true)
       checkCourses(unCheckedCoursesIds, importedCourses)
-      return;
+      return
     }
 
     setIsImportedOption(true)
@@ -86,7 +102,7 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isI
   }
 
   /**
-   * 
+   *
    * @param options Decoded URL with major and courses units options
    * @returns true if the url is valid
    */
@@ -117,28 +133,32 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isI
       return
     }
 
-    let imported_course_units: CourseOption[] = [];
+    let imported_course_units: CourseOption[] = []
     for (const [course_unit_id, class_name_option] of Object.entries(importingCoursesUnitOptions)) {
-
       //get the course_unit info
       const course_unit_info = course_units.find((course_unit) => course_unit.course_unit_id === Number(course_unit_id))
 
-      const checked_course : CheckedCourse = {
+      const checked_course: CheckedCourse = {
         checked: true,
         info: course_unit_info,
       }
-      
+
       // get all the course unit schedules
       try {
-        var course_schedules : CourseSchedule[] = await getMajors.getCourseSchedule(checked_course)
+        var course_schedules: CourseSchedule[] = await getMajors.getCourseSchedule(checked_course)
       } catch (e: any) {
         console.log(e)
       }
 
       // Find the selected schedule
-      const selected_option = class_name_option !== 'null' ? course_schedules.find((schedule) => schedule.class_name === class_name_option && schedule.lesson_type !== 'T') : null;
+      const selected_option =
+        class_name_option !== 'null'
+          ? course_schedules.find(
+              (schedule) => schedule.class_name === class_name_option && schedule.lesson_type !== 'T'
+            )
+          : null
 
-      const course_option : CourseOption = {
+      const course_option: CourseOption = {
         shown: {
           T: true,
           TP: true,
@@ -156,7 +176,7 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isI
       course_option.filteredTeachers = course_teachers
 
       imported_course_units.push(course_option)
-    };
+    }
 
     // Create the new option with the imported courses
     const importedOption = {
@@ -181,21 +201,21 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isI
     setImportingCoursesUnitOptions(null)
   }
 
-return (
-  <>
-    <Button variant="icon" className={className.concat(' h-min w-min flex-grow bg-primary')}>
-      <ClipboardDocumentIcon onClick={importSchedule} className="h-5 w-5" />
-    </Button>
-    <ConfirmationModal
-      major={importingMajor}
-      isOpen={modalOpen}
-      closeModal={() => {
-        setModalOpen(false)
-      }}
-      confirmationAction={importScheduleWithDifferentMajor}
-    />
-  </>
-)
+  return (
+    <>
+      <Button variant="icon" onClick={importSchedule} className={className.concat(' h-min w-min flex-grow bg-primary')}>
+        <ClipboardDocumentIcon className="h-5 w-5" />
+      </Button>
+      <ConfirmationModal
+        major={importingMajor}
+        isOpen={modalOpen}
+        closeModal={() => {
+          setModalOpen(false)
+        }}
+        confirmationAction={importScheduleWithDifferentMajor}
+      />
+    </>
+  )
 }
 
 export default PasteOption

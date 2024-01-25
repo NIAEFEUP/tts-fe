@@ -157,7 +157,7 @@ const TimeTableSchedulerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(() => getModalIsOpenValue(true))
   const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
   const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>(null)
-  const {toast} = useToast();
+  const { toast } = useToast()
 
   const getCoursesForMajor = (major: Major, majorChangedRef) => {
     if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
@@ -358,7 +358,7 @@ const TimeTableSchedulerPage = () => {
 
         // If the change on checked courses was trigged by importing an option, fill the options with the importing option
         if (importingCoursesUnitOptions !== null) {
-          fillOptions(importingCoursesUnitOptions, setMultipleOptions);
+          fillOptions(importingCoursesUnitOptions, setMultipleOptions)
           toast({
             title: 'Horário colado!',
             description: 'A opção foi colada com sucesso',
@@ -382,7 +382,7 @@ const TimeTableSchedulerPage = () => {
 
   // This function will check a the course units of the provided course_unit_id numbers
   const checkCourses = (course_unit_id: number[], importedCourses: ImportedCourses = null) => {
-    setImportingCoursesUnitOptions(importedCourses);
+    setImportingCoursesUnitOptions(importedCourses)
 
     let newCheckedCourses = [...checkedCourses]
 
