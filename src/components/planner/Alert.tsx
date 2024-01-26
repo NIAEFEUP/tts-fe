@@ -2,10 +2,10 @@ import { ReactNode, useMemo } from 'react'
 import classNames from 'classnames'
 import {
   InformationCircleIcon,
-  ExclamationIcon,
+  ExclamationTriangleIcon,
   ExclamationCircleIcon,
   CheckCircleIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 
 export enum AlertType {
   info,
@@ -42,7 +42,7 @@ const Alert = ({ children, type }: Props) => {
       <div className="inline-flex items-center justify-center space-x-2">
         <span>
           {type === AlertType.info && <InformationCircleIcon className="h-6 w-6 md:h-5 md:w-5" />}
-          {type === AlertType.warning && <ExclamationIcon className="h-6 w-6 md:h-5 md:w-5" />}
+          {type === AlertType.warning && <ExclamationTriangleIcon className="h-6 w-6 md:h-5 md:w-5" />}
           {type === AlertType.error && <ExclamationCircleIcon className="h-6 w-6 md:h-5 md:w-5" />}
           {type === AlertType.success && <CheckCircleIcon className="h-6 w-6 md:h-5 md:w-5" />}
         </span>

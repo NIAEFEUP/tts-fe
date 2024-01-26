@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { Transition, Disclosure } from '@headlessui/react'
-import { ChevronUpIcon, DotsHorizontalIcon } from '@heroicons/react/outline'
+import { ChevronUpIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 
 const PlannerFaqs = () => {
   const data = [
@@ -73,7 +73,7 @@ const PlannerFaqs = () => {
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                No menu com opções extra <DotsHorizontalIcon className="mx-1 inline-flex h-5 w-5" />,{' '}
+                No menu com opções extra <EllipsisHorizontalIcon className="mx-1 inline-flex h-5 w-5" />,{' '}
                 <strong>exportar as opções em CSV</strong> e usar esse ficheiro para preencher no SIGARRA.
               </span>
             </li>
@@ -197,10 +197,7 @@ const PlannerFaqs = () => {
           >
             {({ open }) => (
               <>
-                <Disclosure.Button
-                  className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition 
-                  hover:bg-slate-700 hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base"
-                >
+                <Disclosure.Button className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition hover:bg-slate-700 hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base">
                   <span className="text-left">{faq.question}</span>
                   <ChevronUpIcon
                     className={classNames(

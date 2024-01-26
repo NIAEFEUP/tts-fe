@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { XIcon, LightBulbIcon } from '@heroicons/react/outline'
+import { XMarkIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { Fragment, useState } from 'react'
 
 const LessonTypesModal = () => {
@@ -52,10 +52,7 @@ const LessonTypesModal = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel
-                  className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 
-                  text-left align-middle shadow-xl transition-all dark:bg-dark"
-                >
+                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-dark">
                   <header className="flex items-center justify-between">
                     <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-secondary dark:text-white">
                       Tipos de aulas
@@ -66,7 +63,7 @@ const LessonTypesModal = () => {
                       onClick={closeModal}
                       className="rounded p-1 text-secondary transition hover:bg-secondary hover:text-white dark:text-white"
                     >
-                      <XIcon className="h-6 w-6" />
+                      <XMarkIcon className="h-6 w-6" />
                     </button>
                   </header>
 
@@ -75,42 +72,7 @@ const LessonTypesModal = () => {
                     seguintes:
                   </p>
 
-                  <div className="mt-4 text-gray-600 dark:text-white">
-                    <div className="flex flex-col gap-y-1 text-sm 2xl:gap-y-2 2xl:text-base">
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-t/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Teórica</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-tp/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Teórico-Prática</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-pl/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Prática Laboratorial</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-ot/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Orientação Tutorial</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-s/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Seminário</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-p/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Prática</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-tc/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Teórica de Campo</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 lg:gap-2">
-                        <span className="h-3.5 w-3.5 rounded bg-schedule-other/80 shadow 2xl:h-4 2xl:w-4" />
-                        <span>Outros</span>
-                      </div>
-                    </div>
-                  </div>
+                  <div className="mt-4 "></div>
 
                   <footer className="mt-6">
                     <button
