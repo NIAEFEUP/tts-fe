@@ -158,11 +158,19 @@
 }
 
 .schedule-class-conflict {
-  @apply z-20 border-2 opacity-75 border-rose-700 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1;
+  @apply z-20 border-2 opacity-75 border-red-600 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
 .schedule-class-conflict-warn {
   @apply z-20 border-2 opacity-75 border-amber-500 ring-amber-500 hover:z-30 hover:opacity-100 hover:ring-1;
+}
+
+.schedule-class-conflict-info {
+  @apply z-20 border-2  border-red-600 opacity-75 ring-red-500 hover:z-30 hover:opacity-100;
+}
+
+.schedule-class-conflict-warn-info {
+  @apply z-20 border-2 border-amber-500 opacity-75 ring-amber-500 hover:z-30 hover:opacity-100;
 }
 
 .schedule-class-conflict-highlight {
