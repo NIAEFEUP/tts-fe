@@ -74,9 +74,17 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   return parseFloat(second.start_time) < parseFloat(first.start_time) + parseFloat(first.duration)
 }
 
-const schedulesConflict = (first: CourseSchedule, second: CourseSchedule) => {
-  if (first.day !== second.day) return false
-  return (parseFloat(first.start_time) < (parseFloat(second.start_time) + parseFloat(second.duration))) && (parseFloat(first.start_time) >= (parseFloat(second.start_time))) 
+const schedulesConflict = (first, second) => {
+  if (first.day !== second.day) return false;
+  
+  const firstStart = parseFloat(first.start_time);
+  const secondStart = parseFloat(second.start_time);
+  const firstDuration = parseFloat(first.duration);
+  const secondDuration = parseFloat(second.duration);
+  const firstEnd = firstStart + firstDuration;
+  const secondEnd = secondStart + secondDuration;
+
+  return (firstStart < secondStart && firstEnd > secondStart) || (firstStart >= secondStart && firstStart < secondEnd);
 }
 
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
