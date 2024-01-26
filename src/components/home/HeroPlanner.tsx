@@ -56,10 +56,7 @@ const HeroPlanner = () => {
       content: (
         <div className="space-y-3">
           <p>
-            O TTS oferece aos estudantes a flexibilidade e praticidade de <strong>criar</strong>, <strong>planear</strong> e <strong>partilhar</strong>{' '} os horários com até 10 opções, 
-            semelhante à submissão de preferências no SIGARRA. Isso permite que os alunos planejem seus semestres com antecedência, 
-            tenham uma visão abrangente das opções disponíveis e aumentem suas chances de obter o horário desejado, evitando alocações automáticas 
-            indesejadas durante as inscrições nas turmas.
+            
           </p>
         </div>
       ),
