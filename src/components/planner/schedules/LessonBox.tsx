@@ -39,7 +39,7 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
   const [isHovered, setIsHovered] = useState(false)
   const severe = useMemo(() => conflicts?.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [conflicts])
 
-  const conflictTitle = conflict && isHovered ? 'Horários Sobrepostos' : ''
+  const conflictTitle = conflict && isHovered ? 'Aulas Sobrepostas' : ''
   const conflictedLessonsInfo = useMemo(() => {
     if (!conflicts) return []
 
@@ -87,15 +87,18 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
           <span>
             {conflictTitle && (
               <div
-                className={`absolute top-0 left-0 w-full py-2 text-center text-sm font-extrabold ${
-                  severe ? 'text-red-700' : 'text-amber-700'
+                className={`absolute top-0 left-0 w-full py-2 text-center text-xs font-extrabold xl:text-sm ${
+                  severe ? 'text-red-600' : 'text-amber-500'
                 }`}
               >
                 {conflictTitle}
-                <div className="px-1 py-1 text-left text-sm font-normal text-black">
-                  <ul className="list-disc pl-5">
+                <div className="px-1 py-1 text-center text-xs font-normal text-white xl:text-sm">
+                  <ul className="flex flex-wrap justify-center gap-2">
                     {conflictedLessonsInfo.map((conflictInfo, index) => (
-                      <li key={index}>{`${conflictInfo.name} (${conflictInfo.type})`}</li>
+                      <li key={index}>
+                        {`${conflictInfo.name} (${conflictInfo.type})`}
+                        {index < conflictedLessonsInfo.length - 1 ? ',' : ''}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -104,8 +107,8 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
 
             {lgLesson && (
               <div
-                className="flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter 
-              text-white lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs"
+                className={`flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white 
+              ${conflictTitle ? 'group-hover:blur-md' : ''} lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs`}
               >
                 {/* Top */}
                 <div className="flex w-full items-center justify-between">
@@ -141,7 +144,12 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               </div>
             )}
             {mdLesson && (
-              <div className="flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]">
+              <div
+                className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${
+                  conflictTitle ? 'group-hover:blur-md' : ''
+                } 
+              xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
+              >
                 <div className="flex w-full items-center justify-between gap-1">
                   <span title="Duração">
                     {timeSpan} (<strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>)
@@ -161,7 +169,10 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
               </div>
             )}
             {smLesson && (
-              <div className="flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-[0.6rem]">
+              <div
+                className={`flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter 
+                ${conflictTitle ? 'group-hover:blur-md' : ''} xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-[0.6rem]`}
+              >
                 <span title="Duração">{timeSpan}</span>
                 <span title="Sala">{lesson.schedule.location}</span>
                 <span title={professorDescription} className="truncate">
