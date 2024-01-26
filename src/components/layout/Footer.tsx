@@ -1,6 +1,6 @@
-import { LogoNIAEFEUPImage, LogoAEFEUPImage, LogoFEUPImage } from '../../images'
+import { LogoNIAEFEUPImage } from '../../images'
 import { GithubIcon, FacebookIcon, TwitterIcon, InstagramIcon, LinkedinIcon } from '../svgs'
-import { GlobeAltIcon, InboxInIcon } from '@heroicons/react/outline'
+import { GlobeAltIcon, InboxArrowDownIcon } from '@heroicons/react/24/outline'
 
 type Social = {
   label: string
@@ -15,44 +15,15 @@ const socials: Social[] = [
   { label: 'Instagram', url: 'https://www.instagram.com/niaefeup', icon: InstagramIcon },
   { label: 'Linkedin', url: 'https://pt.linkedin.com/company/nifeup', icon: LinkedinIcon },
   { label: 'Website', url: 'https://ni.fe.up.pt/', icon: GlobeAltIcon },
-  { label: 'Email us', url: 'mailto:ni@aefeup.pt', icon: InboxInIcon },
+  { label: 'Email us', url: 'mailto:ni@aefeup.pt', icon: InboxArrowDownIcon },
 ]
 
 const Footer = () => {
   return (
     <footer className="mt-8 bg-navy px-2 py-4 transition dark:bg-darker md:px-6 md:py-8">
-      <div className="justify-center md:flex md:justify-between">
-        {/* Left */}
-        <div className="flex items-center justify-center space-x-4 md:items-start md:justify-start">
-          <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-28" />
-          <ul className="w-min py-2 tracking-tight lg:w-max">
-            <li>
-              <h4 className="text-3xl font-bold text-white lg:text-4xl">NIAEFEUP</h4>
-            </li>
-            <li className="text-base font-medium text-gray-400 lg:text-lg">
-              <p>Rua Dr. Roberto Frias 4200-465, Porto</p>
-            </li>
-            <li className="mt-1 text-base font-normal text-gray-400 lg:text-lg">
-              <p>Sala B315</p>
-            </li>
-          </ul>
-        </div>
-
-        {/* Right */}
-        <div className="mt-4 flex flex-col items-center space-y-4 md:mt-0">
-          <a className="transition hover:opacity-90" href="https://sigarra.up.pt/feup">
-            <img src={LogoFEUPImage} alt="FEUP" className="h-auto w-48 rounded bg-gray-50 p-1" />
-          </a>
-          <a className="transition hover:opacity-90" href="https://www.aefeup.pt">
-            <img src={LogoAEFEUPImage} alt="AEFEUP" className="h-auto w-48 rounded bg-gray-50 p-2" />
-          </a>
-        </div>
-      </div>
-
-      <hr className="my-6 sm:mx-auto lg:my-8" />
-
-      <div className="flex flex-col items-center justify-between space-y-4 lg:flex-row lg:space-y-0">
-        <ul className="mt-4 flex items-center justify-center space-x-4 sm:mt-0">
+      <div className="flex flex-col items-center justify-between space-y-4 lg:flex-row">
+        {/* Social Media */}
+        <ul className="order-2 mt-4 flex items-center justify-center space-x-4 lg:order-1">
           {socials.map((social, socialIdx) => (
             <li key={`footer-social-${socialIdx}`}>
               <a
@@ -67,7 +38,14 @@ const Footer = () => {
           ))}
         </ul>
 
-        <div className="flex flex-col items-center justify-center">
+        {/* NI */}
+        <div className="order-1 flex items-center justify-center space-x-4 lg:order-2">
+          <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-20" />
+          <h1 className="flex flex-col items-center text-3xl font-bold text-white lg:text-4xl">NIAEFEUP</h1>
+        </div>
+
+        {/* Direitos */}
+        <div className="order-3 flex flex-col items-center justify-center">
           <p className="text-base font-medium text-white dark:text-gray-300 sm:text-center">
             © 2023{' '}
             <a href="https://ni.fe.up.pt" className="hover:underline">

@@ -1,10 +1,16 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseOption, CourseSchedule, Lesson } from '../@types'
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 /**
  * Get's the complete for a page.
@@ -152,7 +158,7 @@ const getClassTypeClassName = (type: string) => {
       return 'schedule-class-tc'
 
     default:
-      return 'schedule-class-other'
+      return 'schedule-class-o'
   }
 }
 
@@ -169,6 +175,24 @@ const getCourseTeachers = (courseOption: CourseOption) => {
   })
 
   return teachers
+}
+
+
+const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
+  console.log(courses)
+  if (!courses) return []
+  
+  let frequency: Map<number, number> = new Map()
+  let newCourseOptions: CourseOption[] = []
+
+  for (let courseOption of courses) {
+    if (!frequency.has(courseOption.course.info.id)) {
+      newCourseOptions.push(courseOption)
+      frequency.set(courseOption.course.info.id, 1)
+    }
+  }
+
+  return newCourseOptions
 }
 
 export {
@@ -193,4 +217,6 @@ export {
   getClassTypeClassName,
   getLessonTypeLongName,
   getCourseTeachers,
+  cn,
+  removeDuplicatesFromCourseOption
 }
