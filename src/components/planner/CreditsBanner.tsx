@@ -33,8 +33,8 @@ const CreditsBanner = ({ courses }: Props) => {
       )}
       {alertLevel === AlertType.error && (
         <>
-          Créditos selecionados: <strong>{credits} ECTS</strong>. O limite de créditos da U.Porto num semestre é{' '}
-          <strong>42 ECTS</strong>.
+          Créditos selecionados: <strong>{credits} ECTS</strong>. O limite de créditos da U.Porto num semestre, por
+          norma, é <strong>42 ECTS</strong>.
         </>
       )}
     </Alert>
