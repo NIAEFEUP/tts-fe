@@ -9,7 +9,7 @@ type Props = {
 const CreditsBanner = ({ courses }: Props) => {
   const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
   const credits = useMemo(() => {
-    return courses.length * 6
+    return courses.reduce((credits, courseUnit) => credits + courseUnit.info.ects, 0)
   }, [courses])
 
   useEffect(() => {
@@ -33,8 +33,8 @@ const CreditsBanner = ({ courses }: Props) => {
       )}
       {alertLevel === AlertType.error && (
         <>
-          Créditos selecionados: <strong>{credits} ECTS</strong>. O limite de créditos da U.Porto num semestre é{' '}
-          <strong>42 ECTS</strong>.
+          Créditos selecionados: <strong>{credits} ECTS</strong>. O limite de créditos da U.Porto num semestre, por
+          norma, é <strong>42 ECTS</strong>.
         </>
       )}
     </Alert>

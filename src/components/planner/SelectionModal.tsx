@@ -16,6 +16,7 @@ import {
 } from '@heroicons//react/24/solid'
 import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../pages/TimeTableScheduler'
 import { MajorSearchCombobox } from './MajorSearchCombobox'
+import CreditsBanner from './CreditsBanner'
 
 type Props = {
   majors: Major[]
@@ -355,7 +356,7 @@ const SelectionModal = ({
                   </Dialog.Title>
 
                   {/* Credits banner */}
-                  {/* <CreditsBanner courses={courses.flat().filter((course) => course.checked)} /> */}
+                  <CreditsBanner courses={courses.flat().filter((course) => course.checked)} />
 
                   {/* Alert banner */}
                   <Alert type={alertLevel}>
