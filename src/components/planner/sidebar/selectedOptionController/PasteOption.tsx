@@ -11,7 +11,8 @@ import { getCourseTeachers } from '../../../../utils/utils'
 import { Button } from '../../../ui/button'
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'
-import React, { useState } from 'react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
+import React, { useEffect, useState } from 'react'
 import ConfirmationModal from './ConfirmationModal'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
@@ -22,7 +23,6 @@ type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   checkCourses: (course_unit_id: number[], importedCourses: ImportedCourses) => void
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  className?: string
 }
 
 const PasteOption = ({
@@ -31,7 +31,6 @@ const PasteOption = ({
   multipleOptionsHook,
   checkCourses,
   isImportedOptionHook,
-  className,
 }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [major, setMajor] = majorHook
@@ -43,18 +42,33 @@ const PasteOption = ({
   const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>(null)
   const [importingMajor, setImportingMajor] = useState<Major>(null)
 
-  const importSchedule = async () => {
-    //TODO: clipboard API is not supported in firefox
-    const decoded_url = Buffer.from(await navigator.clipboard.readText(), 'base64').toString()
+  const [isClipboardSupported, setIsClipboardSupported] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  // Check if the browser Supports Clipboard API readText
+  // Eventually this will become dead code when Firefox starts supporting Clipboard API readText method
+  // See more: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/readText
+  useEffect(() => {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      setIsClipboardSupported(true)
+    }
+  }, [])
+
+  const importSchedule = async (value = null) => {
+    const url = value ?? await navigator.clipboard.readText()
+    const decoded_url = Buffer.from(url, 'base64').toString()
 
     if (!isValidURL(decoded_url)) {
+      const description = value ? 'O texto inserido não é uma opção válida' : 'O texto do clipboard não é uma opção válida';
       toast({
         title: 'Erro ao colar opção',
-        description: 'O texto do clipboard não é uma opção válida',
+        description,
         duration: 3000,
       })
       return
     }
+
+    setIsDropdownOpen(false)
 
     //ex: 36;1033#3LEIC02;1062#null;1044#null;1031#null;980#null;969#null
     var tokens: string[] = decoded_url.split(';')
@@ -154,8 +168,8 @@ const PasteOption = ({
       const selected_option =
         class_name_option !== 'null'
           ? course_schedules.find(
-              (schedule) => schedule.class_name === class_name_option && schedule.lesson_type !== 'T'
-            )
+            (schedule) => schedule.class_name === class_name_option && schedule.lesson_type !== 'T'
+          )
           : null
 
       const course_option: CourseOption = {
@@ -203,9 +217,34 @@ const PasteOption = ({
 
   return (
     <>
-      <Button variant="icon" onClick={importSchedule} className={className.concat(' h-min w-min flex-grow bg-primary')}>
-        <ClipboardDocumentIcon className="h-5 w-5" />
-      </Button>
+      {isClipboardSupported
+        ? <Button variant="icon" onClick={importSchedule} className="sm:py-0 xl:p-1 h-min w-min flex-grow bg-primary">
+          <ClipboardDocumentIcon className="h-5 w-5" />
+        </Button>
+        :
+        <DropdownMenu open={isDropdownOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button onClick={() => setIsDropdownOpen(true)} variant="icon" className="sm:py-0 xl:p-1 h-min w-min flex-grow bg-primary">
+              <ClipboardDocumentIcon className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <input
+              autoFocus
+              type="text"
+              placeholder="Colar aqui opção"
+              className="w-full p-2 rounded border border-slate-200 dark:border-slate-800 text-slate-950 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary"
+              onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  importSchedule(e.currentTarget.value)
+                }
+              }}
+              onBlur={() => setIsDropdownOpen(false)}
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      }
       <ConfirmationModal
         major={importingMajor}
         isOpen={modalOpen}

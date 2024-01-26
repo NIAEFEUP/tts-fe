@@ -5,7 +5,8 @@ import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
 import { useShowGrid } from '../../hooks'
-import { PrintSchedule, ToggleScheduleGrid } from './schedule'
+import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
+import PrintSchedule from './schedule/PrintSchedule'
 
 type Props = {
   courseOptions: CourseOption[]
