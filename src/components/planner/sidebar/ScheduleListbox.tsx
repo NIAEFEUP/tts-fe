@@ -1,7 +1,14 @@
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
-import { ChevronUpDownIcon, CheckIcon, EyeIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
-import { getScheduleOptionDisplayText } from '../../../utils/utils'
+import {
+  ChevronUpDownIcon,
+  CheckIcon,
+  EyeIcon,
+  LockClosedIcon,
+  LockOpenIcon,
+  ExclamationTriangleIcon,
+} from '@heroicons//react/24/solid'
+import { getScheduleOptionDisplayText, schedulesConflict } from '../../../utils/utils'
 import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../../@types'
 
 type Props = {
@@ -219,7 +226,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
   }
 
   const showName = (e, name) => {
-    console.log([...selectedTeachers])
     if (name === '') return
     if (e.target.children.length !== 0) e.target.children[0].innerText = name
   }
@@ -227,6 +233,17 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
   const showAcronym = (e, acronym) => {
     if (acronym === 'All teachers') return
     if (e.target.children.length !== 0) e.target.children[0].innerText = acronym
+  }
+
+  const timesCollideWithSelected = (option: CourseSchedule) => {
+    if (option === null) return null
+    const selectedOptions = multipleOptions.selected.map((co) => co.option).filter((so) => so !== null)
+    for (const selectedOption of selectedOptions) {
+      if (schedulesConflict(option, selectedOption) && option.course_unit_id !== selectedOption.course_unit_id) {
+        return 'class-conflict'
+      }
+    }
+    return null
   }
 
   // Get all the schedule types of the select option
@@ -314,6 +331,18 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
                             <EyeIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
+                        {(() => {
+                          const collisionType = timesCollideWithSelected(option)
+                          return collisionType ? (
+                            <span
+                              className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
+                                collisionType === 'class-conflict' ? 'text-rose-700' : 'text-amber-500'
+                              }`}
+                            >
+                              <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null
+                        })()}
                       </>
                     )}
                   </Listbox.Option>
@@ -449,5 +478,4 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
     )
   )
 }
-
 export default ScheduleListbox
