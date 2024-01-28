@@ -104,7 +104,7 @@ const getExtraCourses = (major: Major) => {
  * Retrieves the scrappe info from the backend
  */
 const getInfo = async () => {
-  return await apiRequest('info')
+  return await apiRequest('/info')
 }
 
 const api = {

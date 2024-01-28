@@ -1,4 +1,5 @@
 import Layout from './components/layout'
+import StorageAPI from './api/storage'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AboutPage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pages'
 import { getPath, config } from './utils/utils'
@@ -23,6 +24,7 @@ const redirects = [
 
 const App = () => {
   const [enabled, setEnabled] = useDarkMode()
+  StorageAPI.updateScrappeInfo()
 
   return (
     <BrowserRouter>
