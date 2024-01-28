@@ -100,6 +100,13 @@ const getExtraCourses = (major: Major) => {
   return extraCoursesData
 }
 
+/**
+ * Retrieves the scrappe info from the backend
+ */
+const getInfo = async () => {
+  return await apiRequest('info')
+}
+
 const api = {
   getMajors,
   getCourses,
@@ -107,6 +114,7 @@ const api = {
   getCoursesSchedules,
   getMajorCoursesSchedules,
   getExtraCourses,
+  getInfo
 }
 
 export default api
