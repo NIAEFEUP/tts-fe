@@ -49,8 +49,6 @@ export const controlCoursesGroupCheckbox = (courses: CheckedCourse[], groupCheck
 }
 
 const TimeTableSchedulerPage = () => {
-  StorageAPI.updateScrappeInfo()
-
   // add check property to courses
   const courseToCheckedCourse = (majorCourses: Course[][]): CheckedCourse[][] =>
     majorCourses.map((year: Course[]) =>
