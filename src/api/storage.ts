@@ -1,5 +1,6 @@
 import { MultipleOptions } from '../@types'
 import { getCourseTeachers } from '../utils/utils'
+import API from './backend'
 
 
 const INITIAL_VALUE = { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
@@ -54,8 +55,6 @@ const getOptionsStorage = (): MultipleOptions => {
           }
       }
 
-      
-
       return courseOptions
 
     } else {
@@ -78,10 +77,17 @@ const deleteOptionsStorage = (): void => {
   writeStorageInvalid(key, INITIAL_VALUE)
 }
 
+const updateScrappeInfo = async () => {
+  const key = 'niaefeup-tts.info'
+  const info = await API.getInfo()
+  writeStorage(key, info)
+}
+
 const StorageAPI = {
   getOptionsStorage,
   setOptionsStorage,
   deleteOptionsStorage,
+  updateScrappeInfo
 }
 
 export default StorageAPI
