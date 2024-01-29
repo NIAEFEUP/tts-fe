@@ -108,3 +108,20 @@ button {
   @apply absolute bottom-0 left-0 font-bold text-white opacity-75 text-4xl leading-normal p-5;
   content: 'CSS3';
 }
+
+.stamp-card-inner {
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+
+.stamp-card:hover .stamp-card-inner {
+  transform: rotateY(180deg);
+}
+
+.stamp-card-front, .stamp-card-back {
+  -webkit-backface-visibility: hidden; 
+}
+
+.stamp-card-back {
+  transform: rotateY(180deg);
+}

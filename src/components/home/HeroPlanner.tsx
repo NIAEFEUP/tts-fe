@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
 import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
 import { getPath, config } from '../../utils'
-import { LogoNIAEFEUPImage } from '../../images'
+import { StampNIAEFEUPImage, BackStampNIAEFEUPImage} from '../../images'
 
 
 type Card = {
@@ -87,19 +87,16 @@ const HeroPlanner = () => {
         <p className="text-center text-base font-normal xl:text-lg">
           A melhor ferramenta para escolheres e gerires o teu horário FEUP!
         </p>
-      </div>
-      <div className="mt-4 flex w-full items-center justify-center">
-        <div className="relative mr-4 ">
-          <Link
-            to={config.pathPrefix}
-            className="group inline-flex items-center justify-center gap-2 rounded bg-gray-100 px-6 py-3 text-center 
-            text-lg font-normal uppercase tracking-wider text-white transition-all hover:opacity-90 hover:opacity-90 border-4 border-dotted border-primary dark:border-whit"
-          >
-            <h4 className="text-2xl font-bold text-primary lg:text-xl">DEVELOPED BY </h4>
-            <img src={LogoNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-8" />
-            
-          </Link>
-        </div>
+        <div className="stamp-card w-40 h-40">
+          <div className="stamp-card-inner relative text-align-center transition transform w-100% h-100%">
+            <div className="stamp-card-front absolute w-100% h-100%">
+              <img src={StampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
+            </div>
+            <div className="stamp-card-back absolute rotate-y-180 w-100% h-100%">
+              <img src={BackStampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
+            </div>
+          </div>
+        </div> 
       </div>
       <div className="flex flex-col px-2 xl:px-4">
         {data.map((item, itemIdx) => (

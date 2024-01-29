@@ -7,6 +7,8 @@ import LogoFEDarkImage from './logo-dark.png'
 import LogoFELightImage from './logo-light.png'
 import LogoNIAEFEUPImage from './logo-ni.png'
 import LogoNIAEFEUPAltImage from './logo-ni2.png'
+import StampNIAEFEUPImage from './ni-stamp.png'
+import BackStampNIAEFEUPImage from './ni-stamp-back.png'
 import ScheduleLightImage from './schedule-light.png'
 import ScheduleDarkImage from './schedule-dark.png'
 import NoticeOldScheduleImage from './old-new-schedule.jpg'
@@ -23,6 +25,8 @@ export {
   LogoFELightImage,
   LogoNIAEFEUPImage,
   LogoNIAEFEUPAltImage,
+  StampNIAEFEUPImage,
+  BackStampNIAEFEUPImage,
   ScheduleLightImage,
   ScheduleDarkImage,
   NoticeOldScheduleImage,
