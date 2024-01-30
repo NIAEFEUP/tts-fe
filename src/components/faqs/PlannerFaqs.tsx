@@ -1,51 +1,10 @@
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { Transition, Disclosure } from '@headlessui/react'
-import { ChevronUpIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
+import { ChevronUpIcon } from '@heroicons/react/24/outline'
 
 const PlannerFaqs = () => {
   const data = [
-    {
-      question: <span>O que é que mudou relativamente à versão anterior do TTS?</span>,
-      answer: (
-        <div className="space-y-3">
-          <p>A nova versão do Time Table Selector tem várias novas funcionalidades entre elas:</p>
-          <ul className="ml-5 list-disc">
-            <li>
-              Pesquisar e <strong>filtrar cursos</strong> usando texto.
-            </li>
-            <li>
-              Inspecionar <strong>sobreposições</strong> de horários.
-            </li>
-            <li>
-              Inspecionar <strong>uma aula</strong> individualmente.
-            </li>
-            <li>
-              Fazer <strong>múltiplas opções</strong> de horário (até 10).
-            </li>
-            <li>
-              <strong>Guardar</strong> estado/progresso na plataforma <strong>automaticamente</strong> no mesmo browser.
-            </li>
-            <li>
-              <strong>Exportar/importar</strong> horários.
-            </li>
-            <li>
-              Transferir ficheiros <strong>CSV com as 10 opções</strong> de horário.
-            </li>
-            <li>
-              Usar <strong>modo claro</strong> e <strong>modo escuro</strong>.
-            </li>
-            <li>
-              Usar a plataforma adequadamente em <strong>dispositivos móveis</strong>.
-            </li>
-          </ul>
-          <p>
-            Para além disso a nova versão do TTS inclui uma interface mais polida e robusta, com melhor acessibilidade e
-            usabilidade.
-          </p>
-        </div>
-      ),
-    },
     {
       question: <span>Qual o caso de uso do TTS mais comum?</span>,
       answer: (
@@ -58,23 +17,22 @@ const PlannerFaqs = () => {
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Selecionar as <strong>unidades curriculares</strong> que pretende realizar no semestre e confirmar.
+                Selecionar as <strong>unidades curriculares</strong> a frequentar e confirmar.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Selecionar os <strong>horários pretendidos</strong> nas caixas associadas a cada curso.
+                Selecionar as <strong>turmas pretendidas</strong> nas caixas associadas a cada unidade curricular.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Fazer <strong>várias opções de horário</strong>, saltando entre elas usando as setas no topo.
+                Fazer <strong>várias opções de horário</strong>, saltando e ordenando por preferência.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                No menu com opções extra <EllipsisHorizontalIcon className="mx-1 inline-flex h-5 w-5" />,{' '}
-                <strong>exportar as opções em CSV</strong> e usar esse ficheiro para preencher no SIGARRA.
+                Exportar as <strong>opções em CSV</strong> para partilhar ou usar para preencher no SIGARRA.
               </span>
             </li>
           </ol>
@@ -82,7 +40,8 @@ const PlannerFaqs = () => {
       ),
     },
     {
-      question: <span>O que devo fazer se tenho cadeiras em vários cursos?</span>,
+      //TODO:
+      question: <span>O que devo fazer se tenho cadeiras em diferentes cursos?</span>,
       answer: (
         <div className="space-y-3">
           <p>
@@ -137,12 +96,6 @@ const PlannerFaqs = () => {
             o aluno deve fazer um pedido de troca de turma junto do departamento de curso e, no caso do limite de alunos
             da turma de destino não ser excedido o pedido será, em princípio concretizado.
           </p>
-          <p className="quote">
-            Tanto as <strong>trocas de turmas diretas</strong> como as <strong>indiretas</strong> serão facilitadas uma
-            vez que a plataforma de mudança de turma <strong>FEUP Exchange</strong> esteja desenvolvida também pelo
-            NIAEFEUP. Esta plataforma está <strong>em desenvolvimento</strong> e está planeado que saia a tempo do{' '}
-            <strong>ano letivo de 2023/2024</strong>.
-          </p>
         </div>
       ),
     },
@@ -162,6 +115,9 @@ const PlannerFaqs = () => {
         </div>
       ),
     },
+    /* Mais questões?
+      - Para que servem os cadeados?
+    */
   ]
 
   const id = 'planner'
@@ -181,10 +137,6 @@ const PlannerFaqs = () => {
         >
           Time Table Selector
         </button>
-        <p className="w-full text-lg">
-          Nesta secção podes ver as questão relacionadas com o{' '}
-          <strong className="text-slate-700 dark:text-white">planeamento de horário</strong>.
-        </p>
       </div>
 
       <div className="mx-auto flex w-full flex-col gap-8">

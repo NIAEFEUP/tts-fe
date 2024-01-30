@@ -75,10 +75,6 @@ button {
   margin-top: 1.5rem !important;
 }
 
-.quote {
-  @apply py-1 pl-4 border-l-4 border-slate-700 bg-lightish dark:border-white dark:bg-darkish;
-}
-
 #option-header .EmojiPickerReact {
   --epr-bg-color: rgb(242, 244, 247);
   --epr-category-label-bg-color: rgb(242, 244, 247);
