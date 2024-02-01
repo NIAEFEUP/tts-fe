@@ -40,33 +40,11 @@ const PlannerFaqs = () => {
       ),
     },
     {
-      //TODO:
       question: <span>O que devo fazer se tenho cadeiras em diferentes cursos?</span>,
       answer: (
         <div className="space-y-3">
-          <p>
-            Esta funcionalidade estava planeada para a nova versão do TTS e pode futuramente ser implementada. No
-            entanto, o planeador de horário apenas permite selecionar unidades curriculares de um curso. Esta
-            funcionalidade foi considerada ser de prioridade baixa para o planeador de horários por{' '}
-            <strong>4 motivos</strong>:
-          </p>
-          <ul className="ml-5 list-disc">
-            <li>Não são muito comuns casos de alunos nesta situação na UPorto.</li>
-            <li>Alunos nesta situação não costumam ter mais do que 1 ou 2 unidades curriculares noutro curso.</li>
-            <li>A submissão de horários para cursos diferentes é feita em momentos diferentes.</li>
-            <li>
-              <strong>Eventualmente</strong>, alunos em 2 cursos fruto da cisão dos mestrados integrados (exemplo:
-              L.EIC, M.EIC) estarão obrigados a concluir a licenciatura antes de prosseguir para o mestrado.
-            </li>
-          </ul>
-
-          <p>
-            Assim sendo, recomendamos <strong>fazer as opções de horário num curso e depois no outro</strong> e exportar
-            ambos os CSVs, já que a submissão é <strong>geralmente feita no SIGARRA</strong> e no mesmo formato que o
-            CSV oferece. Resumidamente, no que toca a{' '}
-            <strong>sobreposições de horário em unidades curriculares de cursos diferentes</strong>, essa gestão fica da
-            responsabilidade do utilizador.
-          </p>
+          <p>É possível selecionar unidades curriculares de diferentes cursos que já o selecionado.</p>
+          <p>Para isso basta <strong>aceder ao painel de escolha de UCs</strong> e clicar no botão no canto inferior esquerdo <strong>"UCs de outros cursos"</strong>, pesquisar o curso da unidade curricular desejável e selecionar.</p>
         </div>
       ),
     },
@@ -100,18 +78,27 @@ const PlannerFaqs = () => {
       ),
     },
     {
-      question: <span>O planeador deixa-me selecionar as cadeiras que eu quiser no meu curso?</span>,
+      question: <span>O planeador deixa-me selecionar as cadeiras que eu quiser?</span>,
       answer: (
         <div className="space-y-3">
           <p>
-            Sim, o planeador de horário permite selecionar as cadeiras que pretende no seu curso, no respetivo semestre.
-            No entanto, o planeador <strong>não se responsabiliza pela contagem de créditos ECTS</strong>. O máximo de
-            créditos na Universidade do Porto é <strong>42 ECTS num semestre</strong> e{' '}
-            <strong>75 ECTS num ano letivo</strong>. O NIAEFEUP recomenda que os estudantes evitem ultrapassar os{' '}
-            <strong>36 ECTS por semestre</strong>, já que um número superior a 36 corresponde (geralmente) a uma carga
-            horária pesada, pouco saudável e difícil de gerir.
+            Sim, o planeador de horário permite selecionar um número qualquer de cadeiras no respetivo semestre.
+            No entanto, o planeador <strong>não se responsabiliza pela contagem de créditos ECTS</strong>. Certifica-se que não 
+            estás a ultrapassar o limite de créditos permitido para a tua situação atual.
           </p>
-          <p>Avisos e contagem de créditos está planeada como uma funcionalidade para o futuro.</p>
+        </div>
+      ),
+    },
+    {
+      question: <span>Para que servem os cadeados ao lado das opções?</span>,
+      answer: (
+        <div className="space-y-3">
+          <p>
+            Os cadeados servem para conseguires bloqueares a opção atual de tal forma a que te impeça de alterares acidentalmente a opção exceto se voltares a desbloquear.
+          </p>
+          <p>
+            Esta funcionalidade é particularmente útil para as <strong>opções que já não tens dúvidas</strong> e também para que a opção <strong>não seja alterada ao utilizares o preenchimento aleatório</strong>.
+          </p>
         </div>
       ),
     },
@@ -128,7 +115,7 @@ const PlannerFaqs = () => {
   }, [])
 
   return (
-    <div id={id} className="mx-auto flex flex-col items-center justify-center gap-6 pt-20">
+    <div id={id} className="mx-auto flex flex-col items-center justify-center gap-6 pt-14">
       <div className="flex flex-col items-center justify-center">
         <button
           onClick={scrollToComponentTop}
