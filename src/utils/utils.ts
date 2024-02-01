@@ -187,7 +187,6 @@ const getCourseTeachers = (courseOption: CourseOption) => {
 
 
 const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
-  console.log(courses)
   if (!courses) return []
   
   let frequency: Map<number, number> = new Map()
