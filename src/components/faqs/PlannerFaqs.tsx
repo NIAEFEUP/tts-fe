@@ -130,7 +130,7 @@ const PlannerFaqs = () => {
         {data.map((faq, faqIdx) => (
           <Disclosure
             as="div"
-            defaultOpen={true}
+            defaultOpen={false}
             key={`planner-faq-${faqIdx}`}
             className="rounded-2xl bg-white p-3 dark:bg-dark"
           >
