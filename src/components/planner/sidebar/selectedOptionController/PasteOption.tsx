@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react'
 import ConfirmationModal from './ConfirmationModal'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 
 type Props = {
   majors: Major[]
@@ -214,42 +215,56 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isI
   return (
     <>
       {isClipboardSupported ? (
-        <Button
-          variant="icon"
-          onClick={async () => {
-            const value = await navigator.clipboard.readText()
-            importSchedule(value)
-          }}
-          className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
-        >
-          <ClipboardDocumentIcon className="h-5 w-5" />
-        </Button>
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="icon"
+                onClick={async () => {
+                  const value = await navigator.clipboard.readText()
+                  importSchedule(value)
+                }}
+                className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
+              >
+                <ClipboardDocumentIcon className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Colar horário</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       ) : (
         <DropdownMenu open={isDropdownOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              onClick={() => setIsDropdownOpen(true)}
-              variant="icon"
-              className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
-            >
-              <ClipboardDocumentIcon className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <input
-              autoFocus
-              type="text"
-              placeholder="Colar aqui opção"
-              className="text-slate-950 w-full rounded border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
-              onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  importSchedule(e.currentTarget.value)
-                }
-              }}
-              onBlur={() => setIsDropdownOpen(false)}
-            />
-          </DropdownMenuContent>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    onClick={() => setIsDropdownOpen(true)}
+                    variant="icon"
+                    className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
+                  >
+                    <ClipboardDocumentIcon className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Colar horário</TooltipContent>
+              <DropdownMenuContent>
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Colar aqui opção"
+                  className="text-slate-950 w-full rounded border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
+                  onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      importSchedule(e.currentTarget.value)
+                    }
+                  }}
+                  onBlur={() => setIsDropdownOpen(false)}
+                />
+              </DropdownMenuContent>
+            </Tooltip>
+          </TooltipProvider>
         </DropdownMenu>
       )}
       <ConfirmationModal

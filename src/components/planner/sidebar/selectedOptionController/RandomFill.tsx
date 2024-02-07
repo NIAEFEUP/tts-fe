@@ -6,6 +6,7 @@ import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { ScrollArea } from '../../../ui/scroll-area'
 import { Checkbox } from '../../../ui/checkbox'
+import { Separator } from '../../../ui/separator'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -239,6 +240,8 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
         </TooltipTrigger>
         <TooltipContent side="bottom" asChild>
           <ScrollArea className="mx-5 h-72 rounded px-3">
+            <div className="p-1">Preenchimento aleatório</div>
+            <Separator />
             {Object.keys(randomClasses).map((key) => (
               <div
                 key={key}
