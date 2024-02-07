@@ -251,10 +251,10 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                 className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
               >
                 {getOptionDisplayText(selectedOption)}
-                {!courseOption.locked && <ChevronUpDownIcon className="h-6 w-6" />}
+                {!courseOption.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-96">
+            <DropdownMenuContent className="w-96 bg-lightish text-darkish dark:bg-darkish dark:text-lightish">
               <DropdownMenuGroup>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
@@ -262,7 +262,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                     <span>Professores</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
-                    <DropdownMenuSubContent className="w-80">
+                    <DropdownMenuSubContent className="w-80 bg-lightish text-darkish dark:bg-darkish dark:text-lightish">
                       <DropdownMenuItem
                         onClick={(e) => {
                           e.preventDefault()
@@ -300,7 +300,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                 <DropdownMenuItem onSelect={() => handleClassSelection(null)}>
                   <span className="text-sm tracking-tighter">Remover Seleção</span>
                 </DropdownMenuItem>
-                {selectDropdownSchedules().map((option, optionIdx) => (
+                {selectDropdownSchedules().map((option) => (
                   <DropdownMenuCheckboxItem
                     className="gap-2"
                     onMouseEnter={() => showPreview(option)}
@@ -334,9 +334,9 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
             disabled={!courseOption.option}
           >
             {courseOption.locked ? (
-              <LockClosedIcon className="h-6 w-6 text-black" />
+              <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />
             ) : (
-              <LockOpenIcon className="h-6 w-6 text-black" />
+              <LockOpenIcon className="h-6 w-6 text-darkish dark:text-lightish" />
             )}
           </Button>
         </div>
