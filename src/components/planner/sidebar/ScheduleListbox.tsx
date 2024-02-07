@@ -1,15 +1,22 @@
-import { useState, useEffect, Fragment, useMemo, useRef } from 'react'
-import { Listbox, Transition } from '@headlessui/react'
-import {
-  ChevronUpDownIcon,
-  CheckIcon,
-  EyeIcon,
-  LockClosedIcon,
-  LockOpenIcon,
-  ExclamationTriangleIcon,
-} from '@heroicons//react/24/solid'
+import { ChevronUpDownIcon, ExclamationTriangleIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
+import { User } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { CourseOption, CourseSchedule, MultipleOptions } from '../../../@types'
 import { getScheduleOptionDisplayText, schedulesConflict } from '../../../utils/utils'
-import { CourseOption, CourseSchedule, MultipleOptions, ProfessorInformation } from '../../../@types'
+import { Button } from '../../ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '../../ui/dropdown-menu'
 
 type Props = {
   courseOption: CourseOption
@@ -26,11 +33,11 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
   //FIXME (thePeras): If you are here you probably oberserved a bug. Don't worry its gonna be fixed very very soon
   console.log(courseOption.teachers)
-  var teacherOptions = [{ acronym: 'All teachers', name: '' }, ...courseOption.teachers]
+  var teacherOptions = courseOption.teachers
   const [lastSelected, setLastSelected] = useState(selectedOption)
   const [previewing, setPreviewing] = useState(false)
 
-  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.filteredTeachers)
+  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.teachers)
 
   useEffect(() => {
     if (courseOption.option) {
@@ -39,16 +46,13 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
   }, [multipleOptions])
 
   const adaptedSchedules = useMemo(() => {
-    return [null, courseOption.schedules]
+    return [courseOption.schedules]
       .flat()
       .filter(
         (option: CourseSchedule | null) =>
           option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
       )
   }, [courseOption])
-
-  const getTeacherSelectionText = (selectedTeachers: Array<ProfessorInformation>) =>
-    selectedTeachers.length === 1 ? '1 teacher selected' : selectedTeachers.length + ' teachers selected'
 
   const handleListBoxSelection = (option: CourseSchedule) => {
     setLastSelected(option)
@@ -80,22 +84,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
       setPreviewing(true)
     }
     setSelectedOption(option)
-  }
-
-  const isLastSelected = (option: CourseSchedule) => {
-    // Checks if the CourseSchedule is the lastSelected CourseSchedule
-    if (!lastSelected || !option) return false
-    return (
-      option.day === lastSelected.day &&
-      option.duration === lastSelected.duration &&
-      option.start_time === lastSelected.start_time &&
-      option.location === lastSelected.location &&
-      option.lesson_type === lastSelected.lesson_type &&
-      option.course_unit_id === lastSelected.course_unit_id &&
-      option.last_updated === lastSelected.last_updated &&
-      option.class_name === lastSelected.class_name && // e.g. 1MIEIC01
-      option.composed_class_name === lastSelected.composed_class_name
-    ) // e.g. COMP752
   }
 
   const removePreview = () => {
@@ -198,20 +186,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, courseOption, setMultipleOptions])
 
-  const updateTeachersShown = (selectedTeachers: Array<ProfessorInformation>): void => {
-    if (selectedTeachers.some((other) => other.acronym === 'All teachers')) {
-      selectedTeachers = selectedTeachers.length !== 1 ? [] : courseOption.teachers
-    }
-    courseOption.filteredTeachers = selectedTeachers
-    setSelectedTeachers(selectedTeachers)
-    if (selectedOption) {
-      setSelectedOption(
-        hasCommonProfessorWith(selectedOption.professor_information, selectedTeachers) ? selectedOption : null
-      )
-      setLastSelected(null)
-    }
-  }
-
   const selectDropdownSchedules = (): Array<CourseSchedule> => {
     let selectedSchedules = []
 
@@ -225,16 +199,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
     return selectedSchedules
   }
 
-  const showName = (e, name) => {
-    if (name === '') return
-    if (e.target.children.length !== 0) e.target.children[0].innerText = name
-  }
-
-  const showAcronym = (e, acronym) => {
-    if (acronym === 'All teachers') return
-    if (e.target.children.length !== 0) e.target.children[0].innerText = acronym
-  }
-
   const timesCollideWithSelected = (option: CourseSchedule) => {
     if (option === null) return null
     const selectedOptions = multipleOptions.selected.map((co) => co.option).filter((so) => so !== null)
@@ -246,235 +210,180 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
     return null
   }
 
-  // Get all the schedule types of the select option
-  const getUcTypes = (option: CourseOption) => {
-    let ucTypes = new Set()
-    option.schedules.forEach((schedule) => ucTypes.add(schedule.lesson_type))
-    return ucTypes
+  function toggleTeacher(option) {
+    if (selectedTeachers.includes(option)) {
+      // If the teacher is already selected, remove it
+      setSelectedTeachers(selectedTeachers.filter((teacher) => teacher !== option))
+    } else {
+      // If the teacher is not selected, add it
+      setSelectedTeachers([...selectedTeachers, option])
+    }
+  }
+
+  function toggleAllTeachers(options) {
+    if (selectedTeachers.length > 0) {
+      // If all teachers are selected, deselect all
+      setSelectedTeachers([])
+    } else {
+      // If not all teachers are selected, select all
+      setSelectedTeachers(options)
+    }
   }
 
   return (
     adaptedSchedules && (
-      <Listbox
-        value={selectedOption}
-        onChange={(value) => (value.course_unit_id ? handleListBoxSelection(value) : handleListBoxSelection(null))}
-        disabled={courseOption.locked}
-      >
-        <div className="relative text-sm">
-          {/* Header */}
-          <p className="mb-0.5 flex text-xs lg:hidden xl:flex">
-            <strong>{courseOption.course.info.acronym}</strong>
-            <span>&nbsp;&middot;&nbsp;</span>
-            <span className="truncate tracking-tighter">{courseOption.course.info.name}&nbsp;</span>
-          </p>
+      <div className="relative text-sm">
+        {/* Header */}
+        <p className="mb-0.5 flex text-xs lg:hidden xl:flex">
+          <strong>{courseOption.course.info.acronym}</strong>
+          <span>&nbsp;&middot;&nbsp;</span>
+          <span className="truncate tracking-tighter">{courseOption.course.info.name}&nbsp;</span>
+        </p>
 
-          <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
-            <strong>{courseOption.course.info.acronym}</strong>
-          </p>
-
-          {/* Classes ListBox */}
-          <div className="flex flex-row gap-x-1">
-            {/* Button */}
-            <Listbox.Button
-              title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
-              className="group relative w-8/12 flex-shrink-0 cursor-pointer rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
-              text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
-            >
-              <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
+        <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
+          <strong>{courseOption.course.info.acronym}</strong>
+        </p>
+        <div className="flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild disabled={courseOption.locked}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
+              >
                 {getOptionDisplayText(selectedOption)}
-              </span>
-              {!courseOption.locked && (
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
-                  <ChevronUpDownIcon className="h-4 w-4 transition" aria-hidden="true" />
-                </span>
-              )}
-            </Listbox.Button>
-
-            {/* Dropdown */}
-            <Transition
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base">
+                {!courseOption.locked && <ChevronUpDownIcon className="h-6 w-6" />}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-96">
+              <DropdownMenuGroup>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Professores</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="w-80">
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.preventDefault()
+                          toggleAllTeachers(teacherOptions)
+                        }}
+                      >
+                        <span className="block truncate dark:text-white">
+                          {selectedTeachers.length === 0 ? 'Select All' : 'Erase all'}
+                        </span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      {teacherOptions.map((option) => {
+                        console.log(selectedTeachers)
+                        const isSelected = selectedTeachers.includes(option)
+                        return (
+                          <DropdownMenuCheckboxItem
+                            className="group gap-2"
+                            checked={isSelected}
+                            onSelect={(e) => {
+                              e.preventDefault()
+                              toggleTeacher(option)
+                            }}
+                          >
+                            <span className="group-hover:hidden">{option.acronym}</span>
+                            <span className="hidden truncate group-hover:block">{option.name}</span>
+                          </DropdownMenuCheckboxItem>
+                        )
+                      })}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup className="max-h-96 overflow-y-auto">
+                <DropdownMenuItem onSelect={() => handleListBoxSelection(null)}>
+                  <span className="text-sm tracking-tighter">Remover Seleção</span>
+                </DropdownMenuItem>
                 {selectDropdownSchedules().map((option, optionIdx) => (
-                  <Listbox.Option
+                  <DropdownMenuCheckboxItem
+                    className="gap-2"
                     onMouseEnter={() => showPreview(option)}
                     onMouseLeave={() => removePreview()}
-                    key={`schedule-listbox-option-${multipleOptions.index}-${optionIdx}`}
-                    value={option === null ? <>&nbsp;</> : option}
-                    className={({ active }) =>
-                      `group relative cursor-default select-none py-2 pl-10 pr-4
-                     text-sm ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
-                    }
+                    checked={selectedOption == option}
+                    onSelect={() => handleListBoxSelection(option)}
                   >
-                    {({ selected, active }) => (
-                      <>
-                        <span className={`block truncate dark:text-white ${selected ? 'font-medium' : 'font-normal'}`}>
-                          {getOptionDisplayText(option)}
+                    <span className="text-sm tracking-tighter">{getOptionDisplayText(option)}</span>
+
+                    {(() => {
+                      const collisionType = timesCollideWithSelected(option)
+                      return collisionType ? (
+                        <span
+                          className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
+                            collisionType === 'class-conflict' ? 'text-rose-700' : 'text-amber-500'
+                          }`}
+                        >
+                          <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
                         </span>
-                        {isLastSelected(option) ? (
-                          <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? 'text-white' : 'text-primary dark:text-white'
-                            }`}
-                          >
-                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        ) : selected ? (
-                          <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? 'text-white' : 'text-primary dark:text-white'
-                            }`}
-                          >
-                            <EyeIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        ) : null}
-                        {(() => {
-                          const collisionType = timesCollideWithSelected(option)
-                          return collisionType ? (
-                            <span
-                              className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
-                                collisionType === 'class-conflict' ? 'text-rose-700' : 'text-amber-500'
-                              }`}
-                            >
-                              <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                          ) : null
-                        })()}
-                      </>
-                    )}
-                  </Listbox.Option>
+                      ) : null
+                    })()}
+                  </DropdownMenuCheckboxItem>
                 ))}
-              </Listbox.Options>
-            </Transition>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button
+            variant="icon"
+            title="Bloquear/Desbloquear Horário"
+            onClick={toggleLocked}
+            disabled={!courseOption.option}
+          >
+            {courseOption.locked ? (
+              <LockClosedIcon className="h-6 w-6 text-black" />
+            ) : (
+              <LockOpenIcon className="h-6 w-6 text-black" />
+            )}
+          </Button>
+        </div>
 
-            {/* Teachers ListBox */}
-            <Listbox
-              value={selectedTeachers}
-              onChange={updateTeachersShown}
-              multiple={true}
-              by="acronym"
-              disabled={courseOption.locked}
+        {/* Show/Hide Checkboxes */}
+        <div className="mt-1 flex items-center justify-start space-x-4">
+          <div
+            title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
+            className="flex items-center justify-center space-x-1"
+          >
+            <input
+              type="checkbox"
+              checked={showTheoretical}
+              id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
+              className="checkbox-small disabled:hidden"
+              disabled={courseOption.option === null}
+              onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
+            />
+            <label
+              className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
+              htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
             >
-              {/* Button */}
-              <Listbox.Button
-                title={`Escolher Horário de ${courseOption.course.info.acronym} (${courseOption.course.info.name})`}
-                className="group relative w-3/12 cursor-pointer whitespace-nowrap rounded border-2 border-transparent bg-lightish py-1 pl-1 pr-9 text-left 
-                  text-xs transition hover:bg-primary/75 dark:bg-darkish dark:shadow dark:hover:bg-primary/50 2xl:py-1.5 2xl:pl-2.5 2xl:pr-10"
-              >
-                <span className="block truncate font-medium text-gray-700 group-hover:text-white dark:text-white">
-                  {getTeacherSelectionText(selectedTeachers)}
-                </span>
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-400 group-hover:text-white">
-                  {!courseOption.locked && <ChevronUpDownIcon className="h-4 w-4 transition" aria-hidden="true" />}
-                </span>
-              </Listbox.Button>
-
-              {/* Dropdown */}
-              <Transition
-                as={Fragment}
-                leave="transition ease-in duration-100"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Listbox.Options className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded border bg-light py-1 text-sm tracking-tight dark:bg-darkest lg:max-h-72 xl:text-base">
-                  {teacherOptions.map((option, optionIdx) => (
-                    <Listbox.Option
-                      key={option.acronym}
-                      value={option}
-                      onMouseOver={(e) => showName(e, option.name)}
-                      onMouseOut={(e) => showAcronym(e, option.acronym)}
-                      className={({ active }) =>
-                        `group relative cursor-default select-none py-2 pl-10 pr-4
-                            text-sm ${active ? 'bg-primary/75 text-white dark:bg-primary/75' : 'text-gray-900'}`
-                      }
-                    >
-                      {({ selected, active }) => (
-                        <>
-                          <span
-                            className={`block truncate dark:text-white ${
-                              selected ? 'font-medium' : 'font-normal'
-                            } pointer-events-none`}
-                          >
-                            {optionIdx === 0
-                              ? selectedTeachers.length === 0
-                                ? 'Select All'
-                                : 'Erase all'
-                              : option.acronym}
-                          </span>
-                          {selected ? (
-                            <span
-                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                active ? 'text-white' : 'text-primary dark:text-white'
-                              } pointer-events-none`}
-                            >
-                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                          ) : null}
-                        </>
-                      )}
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </Transition>
-            </Listbox>
-
-            {/* Lock Button */}
-            <button
-              title="Bloquear/Desbloquear Horário"
-              className="w-1/12"
-              onClick={toggleLocked}
-              disabled={courseOption.option ? false : true}
-            >
-              {courseOption.locked ? <LockClosedIcon className="h-6 w-6" /> : <LockOpenIcon className="h-6 w-6" />}
-            </button>
+              <span>Teóricas</span>
+            </label>
           </div>
-
-          {/* Show/Hide Checkboxes */}
-          <div className="mt-1 flex items-center justify-start space-x-4">
-            <div
-              title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
-              className="flex items-center justify-center space-x-1"
+          <div
+            title={`${showPractical ? 'Esconder' : 'Mostrar'} Aulas Práticas de ${courseOption.course.info.name}`}
+            className="flex items-center justify-center space-x-1"
+          >
+            <input
+              type="checkbox"
+              checked={showPractical}
+              id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
+              className="checkbox-small disabled:hidden"
+              disabled={courseOption.option === null}
+              onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
+            />
+            <label
+              className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
+              htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
             >
-              <input
-                type="checkbox"
-                checked={showTheoretical}
-                id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-                className="checkbox-small disabled:hidden"
-                disabled={courseOption.option === null}
-                onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
-              />
-              <label
-                className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-                htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-              >
-                <span>Teóricas</span>
-              </label>
-            </div>
-            <div
-              title={`${showPractical ? 'Esconder' : 'Mostrar'} Aulas Práticas de ${courseOption.course.info.name}`}
-              className="flex items-center justify-center space-x-1"
-            >
-              <input
-                type="checkbox"
-                checked={showPractical}
-                id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-                className="checkbox-small disabled:hidden"
-                disabled={courseOption.option === null}
-                onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
-              />
-              <label
-                className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-                htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-              >
-                <span>Práticas</span>
-              </label>
-            </div>
+              <span>Práticas</span>
+            </label>
           </div>
         </div>
-      </Listbox>
+      </div>
     )
   )
 }
