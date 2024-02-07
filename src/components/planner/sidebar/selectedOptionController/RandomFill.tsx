@@ -22,6 +22,9 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   )
   const [randomClasses, setRandomClasses] = useState({})
 
+  console.log(courseOptions)
+  console.log(randomClasses)
+
   /* 
   Usage:
     const generator = cartesianGenerator(...schedules); 
@@ -55,8 +58,7 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
       if (course.locked) {
         return [course.option]
       }
-      let aux = course.schedules.filter((schedule) => schedule.lesson_type != 'T' && randomClasses[schedule.class_name])
-      return aux
+      return course.schedules.filter((schedule) => schedule.lesson_type != 'T' && randomClasses[schedule.class_name])
     })
 
     return cartesianGenerator(...allSchedules)
@@ -113,19 +115,13 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
 
     const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
 
-    // =================================================================
-    // DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
-    console.log('Old permutations: ', permutations.length)
-    console.log('New permutations: ', newPermutations.length)
-    // console.log(newPermutations[randomNumber])
-    // DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
-    // =================================================================
-
     applySchedule(newPermutations[randomNumber])
     setPermutations(newPermutations)
   }
 
   const applySchedule = (schedules: CourseSchedule[]) => {
+    console.log('schedules: ', schedules)
+
     if (schedules.length <= 0) return
 
     setMultipleOptions((prevMultipleOptions) => {
@@ -184,15 +180,17 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
     setRandomClasses(keyValue)
   }, [multipleOptions])
 
+  /**
+   * Reseting generator and permutations when:
+   * -
+   */
   useEffect(() => {
-    // console.warn('Reseting locked courses and generator')
     // ------------------------------------------------------
     // Updating locked courses
     const newLockedCourses = multipleOptions.selected
       .filter((course) => course.locked)
       .map((course) => course.course.info.acronym)
     // Only update if locked courses changed
-    console.log('Locked courses changed? ', newLockedCourses.join() !== lockedCourses.join())
     if (newLockedCourses.join() !== lockedCourses.join()) {
       setLockedCourses(newLockedCourses)
       setPermutations([])
@@ -202,29 +200,15 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
 
   /**
    * Reseting generator and permutations when:
-   * - Multiple options change
+   * - Selected option changes
    * - Selected classes for random generations change
    */
   useEffect(() => {
-    // console.warn('Reseting generator and permutations')
     setPermutations([])
     setGenerator(getSchedulesGenerator())
   }, [multipleOptions.index, randomClasses])
-  // }, [multipleOptions.index, randomClasses])
 
   const [generator, setGenerator] = useState(getSchedulesGenerator())
-
-  // ===================================================================================================================================
-  // DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
-  console.log(
-    'Locked courses: ',
-    courseOptions.filter((course) => course.locked).map((course) => course.course.info.acronym)
-  )
-  // console.log('Random classes: ', randomClasses)
-  // console.log('Permutations: ', permutations.length)
-  // console.log('Multiple options: ', multipleOptions)
-  // DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
-  // ===================================================================================================================================
 
   return (
     <TooltipProvider>
