@@ -1,0 +1,19 @@
+{
+  "pathPrefix": "/",
+  "paths": {
+    "about": "about",
+    "profile": "profile",
+    "planner": "planner",
+    "exchange": "exchange",
+    "faqs": "faqs",
+    "notfound": "*",
+    "home": "home"
+  },
+  "api": {
+    "port": 443,
+    "protocol": "https",
+    "host": "ni.fe.up.pt",
+    "pathPrefix": "/tts/api",
+    "year": 2023
+  }
+}
