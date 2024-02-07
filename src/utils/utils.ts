@@ -1,9 +1,8 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { CourseOption, CourseSchedule, Lesson } from '../@types';
-import dev_config from '../config/local.json';
-import preview_config from '../config/preview.json';
-import config from '../config/prod.json';
+import config from '../config/prod.json'
+import dev_config from '../config/local.json'
+import { CourseOption, CourseSchedule, Lesson } from '../@types'
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -205,7 +204,27 @@ const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption
 }
 
 export {
-  cn, config, convertHour, convertWeekday,
-  convertWeekdayLong, dayNames, dev_config, getClassTypeClassName, getCourseTeachers, getDisplayDate, getLessonBoxStyles, getLessonBoxTime, getLessonTypeLongName, getPath, getScheduleOptionDisplayText, getSchoolYear, getSemester, maxHour, minHour, monthNames, preview_config, removeDuplicatesFromCourseOption, schedulesConflict, timesCollide
-};
-
+  config,
+  dev_config,
+  getPath,
+  minHour,
+  maxHour,
+  dayNames,
+  monthNames,
+  getDisplayDate,
+  getSemester,
+  getSchoolYear,
+  convertWeekday,
+  convertWeekdayLong,
+  convertHour,
+  timesCollide,
+  schedulesConflict,
+  getScheduleOptionDisplayText,
+  getLessonBoxTime,
+  getLessonBoxStyles,
+  getClassTypeClassName,
+  getLessonTypeLongName,
+  getCourseTeachers,
+  cn,
+  removeDuplicatesFromCourseOption
+}

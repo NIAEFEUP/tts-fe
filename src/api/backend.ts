@@ -1,24 +1,11 @@
-import { CheckedCourse, Major } from '../@types';
-import { extraCoursesData } from '../utils/data';
-import { config, dev_config, getSemester, preview_config } from '../utils/utils';
+import { CheckedCourse, Major } from '../@types'
+import { extraCoursesData } from '../utils/data'
+import { getSemester, config, dev_config } from '../utils/utils'
 
-const prod_val = Number(process.env.REACT_APP_PROD)
-let BE_CONFIG
 
-switch (prod_val) {
-  case 1:
-    BE_CONFIG = config
-    break
-  case 2:
-    BE_CONFIG = preview_config
-    break
-  default:
-    BE_CONFIG = dev_config
-}
-
-const BACKEND_URL =
-  process.env.REACT_APP_BACKEND_URL ||
-  `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
+const prod_val = process.env.REACT_APP_PROD
+const BE_CONFIG = Number(prod_val) ? config : dev_config
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
 const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
@@ -127,7 +114,7 @@ const api = {
   getCoursesSchedules,
   getMajorCoursesSchedules,
   getExtraCourses,
-  getInfo,
+  getInfo
 }
 
 export default api
