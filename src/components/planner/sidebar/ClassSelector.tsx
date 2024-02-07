@@ -24,7 +24,7 @@ type Props = {
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHook }: Props) => {
+const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook }: Props) => {
   const firstRenderRef = useRef(true)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [isImportedOption, setIsImportedOption] = isImportedOptionHook
@@ -54,7 +54,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
       )
   }, [courseOption])
 
-  const handleListBoxSelection = (option: CourseSchedule) => {
+  const handleClassSelection = (option: CourseSchedule) => {
     setLastSelected(option)
     setSelectedOption(option)
   }
@@ -182,7 +182,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
       setIsImportedOption(false)
     }
 
-    //this line is needed since adding isImportedOption SetImportedSchedule to the dependency array causes an insconsistent ListBox behavior
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, courseOption, setMultipleOptions])
 
@@ -298,7 +297,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup className="max-h-96 overflow-y-auto">
-                <DropdownMenuItem onSelect={() => handleListBoxSelection(null)}>
+                <DropdownMenuItem onSelect={() => handleClassSelection(null)}>
                   <span className="text-sm tracking-tighter">Remover Seleção</span>
                 </DropdownMenuItem>
                 {selectDropdownSchedules().map((option, optionIdx) => (
@@ -307,7 +306,7 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
                     onMouseEnter={() => showPreview(option)}
                     onMouseLeave={() => removePreview()}
                     checked={selectedOption == option}
-                    onSelect={() => handleListBoxSelection(option)}
+                    onSelect={() => handleClassSelection(option)}
                   >
                     <span className="text-sm tracking-tighter">{getOptionDisplayText(option)}</span>
 
@@ -387,4 +386,4 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
     )
   )
 }
-export default ScheduleListbox
+export default ClassSelector
