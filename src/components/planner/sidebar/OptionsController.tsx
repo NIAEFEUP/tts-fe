@@ -24,7 +24,6 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
       index: newIndex - 1,
       selected: prev.options[newIndex - 1],
       options: [...prev.options],
-      names: prev.names,
     }))
   }
 

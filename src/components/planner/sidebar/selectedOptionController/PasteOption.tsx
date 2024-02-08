@@ -202,7 +202,6 @@ const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isI
         index: prevMultipleOptions.index,
         selected: importedOption.courses,
         options: newOptions,
-        names: prevMultipleOptions.names,
       }
 
       return value

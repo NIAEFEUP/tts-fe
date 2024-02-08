@@ -22,9 +22,6 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   )
   const [randomClasses, setRandomClasses] = useState({})
 
-  console.log(courseOptions)
-  console.log(randomClasses)
-
   /* 
   Usage:
     const generator = cartesianGenerator(...schedules); 
@@ -120,8 +117,6 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   }
 
   const applySchedule = (schedules: CourseSchedule[]) => {
-    console.log('schedules: ', schedules)
-
     if (schedules.length <= 0) return
 
     setMultipleOptions((prevMultipleOptions) => {
@@ -137,7 +132,6 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
         index: prevMultipleOptions.index,
         selected: [...newSelected],
         options: prevMultipleOptions.options,
-        names: prevMultipleOptions.names,
       }
 
       return value

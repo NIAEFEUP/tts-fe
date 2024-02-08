@@ -69,7 +69,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
         index: prev.index,
         selected: [...newCourseOptions],
         options: prev.options,
-        names: prev.names,
       }
     })
   }
@@ -122,7 +121,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
-          names: prev.names,
         }
       })
     } else if (type === 'TP') {
@@ -141,7 +139,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
-          names: prev.names,
         }
       })
     }
@@ -183,7 +180,6 @@ const ScheduleListbox = ({ courseOption, multipleOptionsHook, isImportedOptionHo
         index: prevMultipleOptions.index,
         selected: resolvedCourseOptions,
         options: resolvedOptions,
-        names: prevMultipleOptions.names,
       }
 
       return value

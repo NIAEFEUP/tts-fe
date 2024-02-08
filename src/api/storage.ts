@@ -3,7 +3,7 @@ import { getCourseTeachers } from '../utils/utils'
 import API from './backend'
 
 
-const INITIAL_VALUE = { index: 0, selected: [], options: [], names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`) }
+const INITIAL_VALUE = { index: 0, selected: [], options: [] }
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
@@ -32,8 +32,6 @@ const getOptionsStorage = (): MultipleOptions => {
   try {
     if (isStorageValid(key, 7)) {
       const courseOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
-      // For older files (which don't have the attribute 'names')
-      if (courseOptions.names === undefined) courseOptions.names = INITIAL_VALUE.names
 
       for (let i = 0; i < courseOptions.options.length; i++) {
         for (let j = 0; j < courseOptions.options[i].length; j++) {
@@ -58,6 +56,7 @@ const getOptionsStorage = (): MultipleOptions => {
       return courseOptions
 
     } else {
+      console.log('Invalid storage')
       writeStorageInvalid(key, INITIAL_VALUE)
       return INITIAL_VALUE
     }
