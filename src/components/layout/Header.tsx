@@ -7,9 +7,7 @@ import {
   Bars3Icon,
   XMarkIcon,
   AtSymbolIcon,
-  UserCircleIcon,
   RectangleStackIcon,
-  ArrowsRightLeftIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
 
