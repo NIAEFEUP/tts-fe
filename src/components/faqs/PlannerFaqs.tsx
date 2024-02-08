@@ -12,27 +12,27 @@ const PlannerFaqs = () => {
           <ol className="mt-1 ml-5 list-decimal">
             <li className="font-bold">
               <span className="font-normal">
-                Escolher o <strong>ciclo de estudos</strong> (curso) que frequenta.
+                Escolher o <strong>ciclo de estudos</strong> (curso) que frequentas.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Selecionar as <strong>unidades curriculares</strong> a frequentar e confirmar.
+                Seleciona as <strong>unidades curriculares</strong> que vais frequentar e confirmar.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Selecionar as <strong>turmas pretendidas</strong> nas caixas associadas a cada unidade curricular.
+                Seleciona as <strong>turmas pretendidas</strong> nas caixas associadas a cada unidade curricular.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Fazer <strong>várias opções de horário</strong>, saltando e ordenando por preferência.
+                Faz <strong>várias opções de horário</strong>, saltando e ordenando de acordo com a tua preferência.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Exportar as <strong>opções em CSV</strong> para partilhar ou usar para preencher no SIGARRA.
+                Exporta as <strong>opções em CSV</strong> para partilhar ou para mais facilmente preencher no SIGARRA.
               </span>
             </li>
           </ol>
@@ -44,7 +44,11 @@ const PlannerFaqs = () => {
       answer: (
         <div className="space-y-3">
           <p>É possível selecionar unidades curriculares de diferentes cursos que já o selecionado.</p>
-          <p>Para isso basta <strong>aceder ao painel de escolha de UCs</strong> e clicar no botão no canto inferior esquerdo <strong>"UCs de outros cursos"</strong>, pesquisar o curso da unidade curricular desejável e selecionar.</p>
+          <p>
+            Para isso basta <strong>aceder ao painel de escolha de UCs</strong> e clicar no botão no canto inferior
+            esquerdo <strong>"UCs de outros cursos"</strong>, pesquisar o curso da unidade curricular desejável e
+            selecionar.
+          </p>
         </div>
       ),
     },
@@ -56,8 +60,8 @@ const PlannerFaqs = () => {
             As opções de horário são submetidas e processadas pelos <strong>departamentos de curso</strong>. De uma
             maneira geral há períodos dedicados a troca de turmas, sobre os quais os estudantes devem ser avisados por
             email. O processamento de pedidos de mudança de turma também é da responsabilidade do departamento de curso.
-            No entanto, no caso de encontrar outro estudantes que quer fazer a <strong>troca inversa</strong> é sempre
-            possível fazer a troca de turma numa fase inicial do semestre. Um{' '}
+            No entanto, no caso de encontrares outro estudantes que querem fazer a <strong>troca inversa</strong> é
+            sempre possível fazer a troca de turma numa fase inicial do semestre. Um{' '}
             <strong>exemplo de troca de turma direta</strong> é o seguinte:
           </p>
           <ul className="ml-5 list-disc">
@@ -70,41 +74,40 @@ const PlannerFaqs = () => {
           </ul>
           <p>
             Nesta situação, e caso não recebam nenhuma outra indicação, ambos os estudantes devem entrar em contacto com
-            o departamento do curso e pedir a troca direta. Relativamente a <strong>trocas de turmas indiretas</strong>,
+            o departamento do curso e pedir a troca direta. Relativamente à <strong>trocas de turmas indiretas</strong>,
             o aluno deve fazer um pedido de troca de turma junto do departamento de curso e, no caso do limite de alunos
-            da turma de destino não ser excedido o pedido será, em princípio concretizado.
+            da turma de destino não ser excedido o pedido poderá ser concretizado.
           </p>
         </div>
       ),
     },
     {
-      question: <span>O planeador deixa-me selecionar as cadeiras que eu quiser?</span>,
+      question: <span>O TTS deixa-me selecionar as cadeiras que eu quiser?</span>,
       answer: (
         <div className="space-y-3">
           <p>
-            Sim, o planeador de horário permite selecionar um número qualquer de cadeiras no respetivo semestre.
-            No entanto, o planeador <strong>não se responsabiliza pela contagem de créditos ECTS</strong>. Certifica-se que não 
-            estás a ultrapassar o limite de créditos permitido para a tua situação atual.
+            Sim, o TTS de horário permite selecionar um número qualquer de cadeiras no respetivo semestre. No entanto, o
+            TTS <strong>não se responsabiliza pela contagem de créditos ECTS</strong>. Certifica-se que não estás a
+            ultrapassar o limite de créditos permitido para a tua situação atual.
           </p>
         </div>
       ),
     },
     {
-      question: <span>Para que servem os cadeados ao lado das opções?</span>,
+      question: <span>Para que servem os cadeados ao lado de cada opção de unidade curricular?</span>,
       answer: (
         <div className="space-y-3">
           <p>
-            Os cadeados servem para conseguires bloqueares a opção atual de tal forma a que te impeça de alterares acidentalmente a opção exceto se voltares a desbloquear.
+            Os cadeados servem para conseguires bloqueares a opção atual de tal forma a que te impeça de alterares
+            acidentalmente a opção exceto se voltares a desbloquear.
           </p>
           <p>
-            Esta funcionalidade é particularmente útil para as <strong>opções que já não tens dúvidas</strong> e também para que a opção <strong>não seja alterada ao utilizares o preenchimento aleatório</strong>.
+            Esta funcionalidade é particularmente útil para as <strong>opções que já não tens dúvidas</strong> e também
+            para que a opção <strong>não seja alterada ao utilizares o preenchimento aleatório</strong>.
           </p>
         </div>
       ),
     },
-    /* Mais questões?
-      - Para que servem os cadeados?
-    */
   ]
 
   const id = 'planner'
