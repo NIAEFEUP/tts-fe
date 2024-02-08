@@ -249,11 +249,8 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
           <span>&nbsp;&middot;&nbsp;</span>
           <span className="truncate tracking-tighter">{courseOption.course.info.name}&nbsp;</span>
         </p>
-
-        <p className="mb-0.5 hidden text-xs lg:flex xl:hidden">
-          <strong>{courseOption.course.info.acronym}</strong>
-        </p>
         <div className="flex items-center">
+          {/* Dropdown Menu */}
           <DropdownMenu onOpenChange={() => setIsDropdownOpen(!isDropdownOpen)}>
             <DropdownMenuTrigger asChild disabled={courseOption.locked} ref={classSelectorTriggerRef}>
               <Button
@@ -341,6 +338,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* Lock Button */}
           <Button
             variant="icon"
             title="Bloquear/Desbloquear Horário"
