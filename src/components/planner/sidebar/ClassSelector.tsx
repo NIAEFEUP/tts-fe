@@ -26,6 +26,9 @@ type Props = {
 
 const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook }: Props) => {
   const firstRenderRef = useRef(true)
+  const classSelectorTriggerRef = useRef(null)
+  const classSelectorContentRef = useRef(null)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [isImportedOption, setIsImportedOption] = isImportedOptionHook
   const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
@@ -37,6 +40,15 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
   const [previewing, setPreviewing] = useState(false)
 
   const [selectedTeachers, setSelectedTeachers] = useState(courseOption.teachers)
+
+  /**
+   * This useEffect is used to make the dropdown content width match the trigger width
+   */
+  useEffect(() => {
+    if (classSelectorTriggerRef.current && classSelectorContentRef.current) {
+      classSelectorContentRef.current.style.width = `${classSelectorTriggerRef.current.offsetWidth}px`
+    }
+  }, [isDropdownOpen])
 
   useEffect(() => {
     if (courseOption.option) {
@@ -242,8 +254,8 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
           <strong>{courseOption.course.info.acronym}</strong>
         </p>
         <div className="flex items-center">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild disabled={courseOption.locked}>
+          <DropdownMenu onOpenChange={() => setIsDropdownOpen(!isDropdownOpen)}>
+            <DropdownMenuTrigger asChild disabled={courseOption.locked} ref={classSelectorTriggerRef}>
               <Button
                 variant="outline"
                 size="sm"
@@ -253,7 +265,10 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                 {!courseOption.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-96 bg-lightish text-darkish dark:bg-darkish dark:text-lightish">
+            <DropdownMenuContent
+              className="bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
+              ref={classSelectorContentRef}
+            >
               <DropdownMenuGroup>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
@@ -309,7 +324,6 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                     onSelect={() => handleClassSelection(option)}
                   >
                     <span className="text-sm tracking-tighter">{getOptionDisplayText(option)}</span>
-
                     {(() => {
                       const collisionType = timesCollideWithSelected(option)
                       return collisionType ? (
