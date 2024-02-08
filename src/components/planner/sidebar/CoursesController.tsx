@@ -1,5 +1,5 @@
-import ScheduleListbox from './ScheduleListbox'
 import { removeDuplicatesFromCourseOption } from '../../../utils/utils'
+import { default as ClassSelector } from './ClassSelector'
 
 const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
   const [multipleOptions, setMultipleOptions] = multilpleOptionsHook
@@ -10,11 +10,11 @@ const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
       {multipleOptions.selected.length > 0 &&
         removeDuplicatesFromCourseOption(multipleOptions.options[multipleOptions.index]).map(
           (courseOption, courseOptionIdx) => (
-            <ScheduleListbox
+            <ClassSelector
               courseOption={courseOption}
               multipleOptionsHook={[multipleOptions, setMultipleOptions]}
               isImportedOptionHook={[isImportedOption, setIsImportedOption]}
-              key={`course-schedule-listbox-${multipleOptions.index}-${courseOption.course.info.id}`}
+              key={`course-schedule-${multipleOptions.index}-${courseOption.course.info.id}`}
             />
           )
         )}
