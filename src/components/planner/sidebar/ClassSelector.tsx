@@ -32,7 +32,6 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
   const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
   const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
   //FIXME (thePeras): If you are here you probably oberserved a bug. Don't worry its gonna be fixed very very soon
-  console.log(courseOption.teachers)
   var teacherOptions = courseOption.teachers
   const [lastSelected, setLastSelected] = useState(selectedOption)
   const [previewing, setPreviewing] = useState(false)
@@ -231,7 +230,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
 
   return (
     adaptedSchedules && (
-      <div className="relative text-sm">
+      <div className="relative text-sm" key={`course-option-${courseOption.course.info.acronym}`}>
         {/* Header */}
         <p className="mb-0.5 flex text-xs lg:hidden xl:flex">
           <strong>{courseOption.course.info.acronym}</strong>
@@ -275,10 +274,10 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       {teacherOptions.map((option) => {
-                        console.log(selectedTeachers)
                         const isSelected = selectedTeachers.includes(option)
                         return (
                           <DropdownMenuCheckboxItem
+                            key={`teacher-${option.acronym}`}
                             className="group gap-2"
                             checked={isSelected}
                             onSelect={(e) => {
@@ -302,6 +301,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                 </DropdownMenuItem>
                 {selectDropdownSchedules().map((option) => (
                   <DropdownMenuCheckboxItem
+                    key={`schedule-${option.class_name}`}
                     className="gap-2"
                     onMouseEnter={() => showPreview(option)}
                     onMouseLeave={() => removePreview()}
