@@ -56,7 +56,6 @@ const getOptionsStorage = (): MultipleOptions => {
       return courseOptions
 
     } else {
-      console.log('Invalid storage')
       writeStorageInvalid(key, INITIAL_VALUE)
       return INITIAL_VALUE
     }
