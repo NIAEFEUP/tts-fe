@@ -395,6 +395,9 @@ const TimeTableSchedulerPage = () => {
     setCheckedCourses(newCheckedCourses)
   }
 
+  console.log(multipleOptions)
+  console.log(majors)
+
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
       {/* Schedule Preview */}
