@@ -1,5 +1,8 @@
 import { CheckedCourse, Major, CourseOption, MultipleOptions } from '../../../@types'
+
+// import CoursePicker from './sessionController/CoursePicker'
 import CoursePicker from './sessionController/CoursePicker'
+
 import CollaborativeSession from './sessionController/CollaborativeSession'
 import Export from './sessionController/Export'
 

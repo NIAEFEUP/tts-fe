@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Combobox, Transition } from '@headlessui/react'
-import { Major } from '../../@types'
+import { Major } from '../../../../../@types'
 import { Fragment, useState, useEffect, SetStateAction } from 'react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
 
