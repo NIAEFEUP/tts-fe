@@ -23,8 +23,8 @@ export type Major = {
 // } // FICA APENAS COMO STATE (não é um type)
 
 export type CourseInfo = {
-    id: number // passa a ser o sigarra_id
-    course_unit_year: number
+    id: number, // passa a ser o sigarra_id
+    course_unit_year: number,
     ects: number,
     acronym: string,
     name: string,
@@ -34,7 +34,7 @@ export type CourseInfo = {
     // year: number // remover ??
 }
 
-// selected_courses = CourseInfo[] // FICA APENAS COMO STATE (não é um type)
+export type selected_courses = Array<CourseInfo>
 
 export type CourseOption = {
     course_id: number,
@@ -63,6 +63,8 @@ export type Slot = {
     duration: number,
     location: string,
     lesson_type: string,
+    professors_link: string,
+    professors: Array<ProfessorInformation>,
     // last_updated: string, (is it needed??)
 }
 
@@ -70,8 +72,6 @@ export type Class = {
     name: string
     course_id: number,
     composed_name: string,
-    professors: Array<ProfessorInformation>,
-    professors_link: string,
     slots: Array<Slot>
 }
 
@@ -93,12 +93,6 @@ export type Subject = {
 export type Lesson = {
     course: Course
     schedule: CourseSchedule
-}
-
-export type MultipleOptions = {
-    index: number
-    selected: CourseOption[]
-    options: CourseOption[][]
 }
 
 export type ImportedCourses = { 

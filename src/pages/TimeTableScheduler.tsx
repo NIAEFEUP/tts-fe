@@ -6,6 +6,8 @@ import { CheckedCourse, Course, CourseOption, CourseSchedule, ImportedCourses, M
 import { useMajor, useCourses } from '../hooks'
 import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
 import { useToast } from '../components/ui/use-toast'
+import { CourseInfo } from '../@types/new_index'
+import MajorContext from '../contexts/MajorContext'
 
 export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
   let frequency: Map<number, number> = new Map()
@@ -49,6 +51,52 @@ export const controlCoursesGroupCheckbox = (courses: CheckedCourse[], groupCheck
 }
 
 const TimeTableSchedulerPage = () => {
+  // ==============================================================================================================================
+  // ========================================================= OLD STATES =========================================================
+  const [major, setMajor, majorChangedRef] = useMajor('niaefeup-tts.major') // the picked major
+  const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor('niaefeup-tts.extra-major')
+  const [checkedCourses, setCheckedCourses] = useCourses('niaefeup-tts.courses') // courses for the major with frontend properties
+  const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = useCourses('niaefeup-tts.courses-buffer')
+  const [extraCoursesModalBuffer, setExtraCoursesModalBuffer] = useCourses('niaefeup-tts.extra-courses-buffer')
+  const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
+  const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = useState<boolean>(false)
+  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
+  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({
+    index: 0,
+    selected: [],
+    options: [],
+  }) // schedule options and selected schedule
+  const totalSelected = useMemo(
+    () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
+    [multipleOptions]
+  )
+  // ===============================================================================================================================
+
+  // ==============================================================================
+  // ============================ NEW STATES AND HOOKS ============================
+  const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
+  const [majorIndex, setMajorIndex] = useState<number>(null)
+  const [courseInfo, setCourseInfo] = useState<CourseInfo[]>([])
+  const [pickedCourses, setPickedCourses] = useState([])
+
+  useEffect(() => {
+    getCoursesForMajor(majors[majorIndex])
+  }, [majorIndex])
+
+  // ==============================================================================
+  // ================================== FUNCTION ==================================
+
+  const getCoursesForMajor = (major: Major) => {
+    if (majorIndex === null) return
+
+    BackendAPI.getCourses(major).then((courses: CourseInfo[]) => {
+      setCourseInfo(courses)
+    })
+  }
+
+  // ============================ NEW STATES AND HOOKS ============================
+  // ==============================================================================
+
   // add check property to courses
   const courseToCheckedCourse = (majorCourses: Course[][]): CheckedCourse[][] =>
     majorCourses.map((year: Course[]) =>
@@ -57,27 +105,6 @@ const TimeTableSchedulerPage = () => {
         info: item,
       }))
     )
-
-  /**
-   * Considering that the yearCourses is sorted by the course_unit_year field in ascending order, the function groups the major courses by year.
-   * @param yearCourses All the courses in a major.
-   * @returns The courses grouped by year.
-   * @example input: [{ course: 1, year: 1 }, { course: 3, year: 1 }, { course: 2, year: 2 }]
-   * @example output: [[{ course: 1, year: 1 }, { course: 3, year: 1 }], [{ course: 2, year: 2 }]]
-   */
-  const groupMajorCoursesByYear = (yearCourses: Course[]): Course[][] => {
-    let majorCourses: Course[][] = []
-    let currYear = 0
-    for (let i = 0; i < yearCourses.length; i++) {
-      if (yearCourses[i].course_unit_year !== currYear) {
-        currYear += 1
-        majorCourses.push([yearCourses[i]])
-      } else {
-        majorCourses[currYear - 1].push(yearCourses[i])
-      }
-    }
-    return majorCourses
-  }
 
   const getEmptyCourseOption = (course: CheckedCourse, schedules: CourseSchedule[]): CourseOption => {
     let teachers = []
@@ -123,25 +150,6 @@ const TimeTableSchedulerPage = () => {
     return checkedCourses[0].length > 0
   }
 
-  const [major, setMajor, majorChangedRef] = useMajor('niaefeup-tts.major') // the picked major
-  const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor('niaefeup-tts.extra-major')
-  const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
-  const [checkedCourses, setCheckedCourses] = useCourses('niaefeup-tts.courses') // courses for the major with frontend properties
-  const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = useCourses('niaefeup-tts.courses-buffer')
-  const [extraCoursesModalBuffer, setExtraCoursesModalBuffer] = useCourses('niaefeup-tts.extra-courses-buffer')
-  const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
-  const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = useState<boolean>(false)
-  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
-  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({
-    index: 0,
-    selected: [],
-    options: [],
-  }) // schedule options and selected schedule
-  const totalSelected = useMemo(
-    () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
-    [multipleOptions]
-  )
-
   /**
    * If there are chosen courses, the SelectionModal will be open and closed otherwise
    */
@@ -158,26 +166,6 @@ const TimeTableSchedulerPage = () => {
   const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>(null)
   const { toast } = useToast()
 
-  const getCoursesForMajor = (major: Major, majorChangedRef) => {
-    if (major === null || (majorChangedRef.current === false && checkedCourses.length > 0)) return
-
-    let finalNewCheckedCourses: CheckedCourse[][]
-
-    if (checkedCourses[0] === undefined) {
-      finalNewCheckedCourses = [[]]
-    } else {
-      finalNewCheckedCourses = [checkedCourses[0]]
-    }
-
-    BackendAPI.getCourses(major).then((courses: Course[]) => {
-      const majorCourses = groupMajorCoursesByYear(courses)
-      const newCheckedCourses = courseToCheckedCourse(majorCourses)
-      let uCC = updateCheckedCourses(newCheckedCourses, multipleOptions.selected)
-      majorChangedRef.current = false
-      setCheckedCourses([...uCC])
-    })
-  }
-
   useEffect(() => {
     if (totalSelected.length === 0) return
     StorageAPI.setOptionsStorage(multipleOptions)
@@ -193,7 +181,8 @@ const TimeTableSchedulerPage = () => {
 
   // once a major has been picked => fetch courses for the major
   useEffect(() => {
-    getCoursesForMajor(major, majorChangedRef)
+    // esta função mudar o checkedcourses
+    getCoursesForMajor(major)
   }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
 
   /**
@@ -206,7 +195,7 @@ const TimeTableSchedulerPage = () => {
     if (extraCoursesMajor.acronym === major.acronym && !chosenMajorMainModalEqualToExtra) {
       setExtraMajorEqualToMainMajor(true)
     } else {
-      getCoursesForMajor(extraCoursesMajor, extraCoursesMajorChangedRef)
+      getCoursesForMajor(extraCoursesMajor)
 
       if (extraMajorEqualToMainMajor) setExtraMajorEqualToMainMajor(false)
     }
@@ -399,29 +388,31 @@ const TimeTableSchedulerPage = () => {
   console.log(majors)
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-      {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-        <div className="h-full w-full">
-          <Schedule courseOptions={multipleOptions.selected} />
+    <MajorContext.Provider value={{ majors, setMajors, majorIndex, setMajorIndex }}>
+      <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+        {/* Schedule Preview */}
+        <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+          <div className="h-full w-full">
+            <Schedule courseOptions={multipleOptions.selected} />
+          </div>
         </div>
-      </div>
 
-      {/* Sidebar */}
-      <Sidebar
-        majors={majors}
-        openHook={[isModalOpen, setIsModalOpen]}
-        majorHook={[major, setMajor]}
-        coursesHook={[checkedCourses, setCheckedCourses]}
-        extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
-        extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
-        sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-        destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-        repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-        multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-        checkCourses={checkCourses}
-      />
-    </div>
+        {/* Sidebar */}
+        <Sidebar
+          majors={majors}
+          majorIndexHook={[majorIndex, setMajorIndex]}
+          openHook={[isModalOpen, setIsModalOpen]}
+          coursesHook={[checkedCourses, setCheckedCourses]}
+          extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
+          extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
+          sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
+          destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
+          repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
+          multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+          checkCourses={checkCourses}
+        />
+      </div>
+    </MajorContext.Provider>
   )
 }
 

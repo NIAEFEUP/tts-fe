@@ -1,14 +1,34 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../../ui/tabs'
+import { CourseInfo } from '../../../../../@types/new_index'
+import { CourseYearCheckboxes } from './CourseYearCheckboxes'
 
-const CourseYearTabs = ({}) => {
+type Props = {
+  courses: CourseInfo[][]
+  pickedCourses: CourseInfo[]
+}
+
+const CourseYearTabs = ({ courses, pickedCourses }: Props) => {
+  const isCourseChecked = (idx) => {
+    for (const course of pickedCourses) {
+      if (course.id === idx) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   return (
-    <Tabs defaultValue="1" className="w-[400px]">
+    <Tabs defaultValue={`${courses.length}`} className="w-[400px]">
       <TabsList>
-        <TabsTrigger value="1">Account</TabsTrigger>
-        <TabsTrigger value="2 ">Password</TabsTrigger>
+        {courses.map((yearCourses, idx) => (
+          <TabsTrigger value={`${idx + 1}`}>`${idx + 1}º Ano`</TabsTrigger>
+        ))}
       </TabsList>
-      <TabsContent value="1">Make changes to your account here.</TabsContent>
-      <TabsContent value="2">Change your password here.</TabsContent>
+
+      {courses.map((yearCourses, idx) => (
+        <TabsContent value={`${idx + 1}`}>{<CourseYearCheckboxes courses={yearCourses} />}</TabsContent>
+      ))}
     </Tabs>
   )
 }

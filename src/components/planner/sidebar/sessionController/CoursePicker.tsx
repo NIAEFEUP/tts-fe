@@ -3,12 +3,12 @@ import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
 import { MajorSearchCombobox } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
-import { CheckedCourse, Course, Major } from '../../../../@types'
+import { CheckedCourse } from '../../../../@types'
+import { Course, Major } from '../../../../@types/new_index'
+import { groupCoursesByYear } from '../../../../utils/utils'
 
 type Props = {
-  majors: Major[]
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -18,9 +18,9 @@ type Props = {
 }
 
 const CoursePicker = ({
-  majors,
+  // majors,
+  // majorIndexHook,
   openHook,
-  majorHook,
   coursesHook,
   extraCoursesActiveHook,
   extraCoursesModalOpenHook,
@@ -28,7 +28,7 @@ const CoursePicker = ({
   destBufferHook,
   repeatedCourseControlHook,
 }: Props) => {
-  const [major, setMajor] = majorHook
+  // const [majorIndex, setMajorIndex] = majorIndexHook
 
   return (
     <Dialog>
@@ -48,7 +48,7 @@ const CoursePicker = ({
         </DialogHeader>
         <div className="flex">
           <div>
-            <MajorSearchCombobox majors={majors} majorHook={[major, setMajor]} />
+            <MajorSearchCombobox />
           </div>
           <Separator orientation="vertical" />
           <div></div>

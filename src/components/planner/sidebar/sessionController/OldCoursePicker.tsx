@@ -355,7 +355,7 @@ const CoursePicker = ({
                   </Alert>
 
                   {/* Select major dropdown */}
-                  <MajorSearchCombobox majors={majors} majorHook={[major, setMajor]} />
+                  <MajorSearchCombobox />
 
                   <div className={classNames(extraCoursesActive ? 'grid grid-cols-8 divide-x-2' : '')}>
                     {extraCoursesActive ? <div className="col-span-2">{showUcsExtra()}</div> : <></>}
