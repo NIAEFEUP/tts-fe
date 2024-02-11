@@ -396,27 +396,29 @@ const SelectionModal = ({
 
                               {/* Children checkboxes */}
                               <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
-                                {year.map((course: CheckedCourse, courseIdx: number) => (
-                                  <div
-                                    title={course?.info.name}
-                                    key={`checkbox-${yearIdx}-${courseIdx}`}
-                                    className="flex items-center transition"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      className="checkbox"
-                                      checked={courses[yearIdx + 1][courseIdx].checked}
-                                      id={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                      onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
-                                    />
-                                    <label
-                                      className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                                      htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                {year
+                                  .sort((a, b) => a.info.sigarra_id - b.info.sigarra_id)
+                                  .map((course: CheckedCourse, courseIdx: number) => (
+                                    <div
+                                      title={course?.info.name}
+                                      key={`checkbox-${yearIdx}-${courseIdx}`}
+                                      className="flex items-center transition"
                                     >
-                                      {course.info.acronym}
-                                    </label>
-                                  </div>
-                                ))}
+                                      <input
+                                        type="checkbox"
+                                        className="checkbox"
+                                        checked={courses[yearIdx + 1][courseIdx].checked}
+                                        id={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                        onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
+                                      />
+                                      <label
+                                        className="ml-1.5 block cursor-pointer text-sm dark:text-white"
+                                        htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
+                                      >
+                                        {course.info.acronym}
+                                      </label>
+                                    </div>
+                                  ))}
                               </div>
                             </div>
                           ))

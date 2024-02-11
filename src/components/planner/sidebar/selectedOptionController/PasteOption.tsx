@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react'
 import ConfirmationModal from './ConfirmationModal'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 
 type Props = {
   majors: Major[]
@@ -25,13 +26,7 @@ type Props = {
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const PasteOption = ({
-  majors,
-  majorHook,
-  multipleOptionsHook,
-  checkCourses,
-  isImportedOptionHook,
-}: Props) => {
+const PasteOption = ({ majors, majorHook, multipleOptionsHook, checkCourses, isImportedOptionHook }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [major, setMajor] = majorHook
   const [modalOpen, setModalOpen] = useState(false)
@@ -54,12 +49,14 @@ const PasteOption = ({
     }
   }, [])
 
-  const importSchedule = async (value = null) => {
-    const url = value ?? await navigator.clipboard.readText()
+  const importSchedule = async (value) => {
+    const url = value
     const decoded_url = Buffer.from(url, 'base64').toString()
 
     if (!isValidURL(decoded_url)) {
-      const description = value ? 'O texto inserido não é uma opção válida' : 'O texto do clipboard não é uma opção válida';
+      const description = value
+        ? 'O texto inserido não é uma opção válida'
+        : 'O texto do clipboard não é uma opção válida'
       toast({
         title: 'Erro ao colar opção',
         description,
@@ -168,8 +165,8 @@ const PasteOption = ({
       const selected_option =
         class_name_option !== 'null'
           ? course_schedules.find(
-            (schedule) => schedule.class_name === class_name_option && schedule.lesson_type !== 'T'
-          )
+              (schedule) => schedule.class_name === class_name_option && schedule.lesson_type !== 'T'
+            )
           : null
 
       const course_option: CourseOption = {
@@ -205,7 +202,6 @@ const PasteOption = ({
         index: prevMultipleOptions.index,
         selected: importedOption.courses,
         options: newOptions,
-        names: prevMultipleOptions.names,
       }
 
       return value
@@ -217,34 +213,59 @@ const PasteOption = ({
 
   return (
     <>
-      {isClipboardSupported
-        ? <Button variant="icon" onClick={importSchedule} className="sm:py-0 xl:p-1 h-min w-min flex-grow bg-primary">
-          <ClipboardDocumentIcon className="h-5 w-5" />
-        </Button>
-        :
+      {isClipboardSupported ? (
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="icon"
+                onClick={async () => {
+                  const value = await navigator.clipboard.readText()
+                  importSchedule(value)
+                }}
+                className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
+              >
+                <ClipboardDocumentIcon className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Colar horário</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : (
         <DropdownMenu open={isDropdownOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button onClick={() => setIsDropdownOpen(true)} variant="icon" className="sm:py-0 xl:p-1 h-min w-min flex-grow bg-primary">
-              <ClipboardDocumentIcon className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <input
-              autoFocus
-              type="text"
-              placeholder="Colar aqui opção"
-              className="w-full p-2 rounded border border-slate-200 dark:border-slate-800 text-slate-950 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary"
-              onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  importSchedule(e.currentTarget.value)
-                }
-              }}
-              onBlur={() => setIsDropdownOpen(false)}
-            />
-          </DropdownMenuContent>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    onClick={() => setIsDropdownOpen(true)}
+                    variant="icon"
+                    className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
+                  >
+                    <ClipboardDocumentIcon className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Colar horário</TooltipContent>
+              <DropdownMenuContent>
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Colar aqui opção"
+                  className="text-slate-950 w-full rounded border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
+                  onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      importSchedule(e.currentTarget.value)
+                    }
+                  }}
+                  onBlur={() => setIsDropdownOpen(false)}
+                />
+              </DropdownMenuContent>
+            </Tooltip>
+          </TooltipProvider>
         </DropdownMenu>
-      }
+      )}
       <ConfirmationModal
         major={importingMajor}
         isOpen={modalOpen}

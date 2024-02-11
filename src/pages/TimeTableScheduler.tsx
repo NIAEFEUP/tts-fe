@@ -136,7 +136,6 @@ const TimeTableSchedulerPage = () => {
     index: 0,
     selected: [],
     options: [],
-    names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`),
   }) // schedule options and selected schedule
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
@@ -352,7 +351,6 @@ const TimeTableSchedulerPage = () => {
             index: prev.index,
             selected: newCourseOptions,
             options: newOptions,
-            names: prev.names,
           }
         })
 

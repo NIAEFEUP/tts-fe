@@ -85,7 +85,6 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
         index: prev.index,
         selected: [...newCourseOptions],
         options: prev.options,
-        names: prev.names,
       }
     })
   }
@@ -122,7 +121,6 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
-          names: prev.names,
         }
       })
     } else if (type === 'TP') {
@@ -141,7 +139,6 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
           index: prev.index,
           selected: [...newCourseOptions],
           options: prev.options,
-          names: prev.names,
         }
       })
     }
@@ -183,7 +180,6 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
         index: prevMultipleOptions.index,
         selected: resolvedCourseOptions,
         options: resolvedOptions,
-        names: prevMultipleOptions.names,
       }
 
       return value

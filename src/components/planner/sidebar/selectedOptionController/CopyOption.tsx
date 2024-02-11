@@ -4,11 +4,12 @@ import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline'
 import { Major, CourseOption } from '../../../../@types'
 import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 
 type Props = {
   majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   currentOption: CourseOption[]
-  className?: string,
+  className?: string
 }
 
 /**
@@ -68,13 +69,20 @@ const CopyOption = ({ majorHook, currentOption, className }: Props) => {
   }
 
   return (
-    <Button
-      variant="icon"
-      className={className.concat(' h-min w-min flex-grow bg-primary')}
-      onClick={() => copyOption()}
-    >
-      {icon ? <CheckIcon className="h-5 w-5" /> : <DocumentDuplicateIcon className="h-5 w-5" />}
-    </Button>
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="icon"
+            className={className.concat(' h-min w-min flex-grow bg-primary')}
+            onClick={() => copyOption()}
+          >
+            {icon ? <CheckIcon className="h-5 w-5" /> : <DocumentDuplicateIcon className="h-5 w-5" />}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Copiar horário</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
