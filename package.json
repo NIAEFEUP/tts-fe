@@ -48,10 +48,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "eject": "react-scripts eject",
     "check": "npx prettier --check .",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -79,6 +80,7 @@
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.12",
     "autoprefixer": "^10.4.7",
+    "cypress": "^13.6.4",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.14",
