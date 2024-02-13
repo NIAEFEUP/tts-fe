@@ -1,11 +1,10 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
-import { MajorSearchCombobox } from './course-picker'
+import { MajorSearchCombobox, CourseYearTabs } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
 import { CheckedCourse } from '../../../../@types'
 import { Course, Major } from '../../../../@types/new_index'
-import { groupCoursesByYear } from '../../../../utils/utils'
 
 type Props = {
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -18,8 +17,6 @@ type Props = {
 }
 
 const CoursePicker = ({
-  // majors,
-  // selectedMajorHook,
   openHook,
   coursesHook,
   extraCoursesActiveHook,
@@ -46,10 +43,10 @@ const CoursePicker = ({
             servers.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex">
-          <div>
+        <div className="flex w-[1000px]">
+          <div className="flex flex-col gap-2">
             <MajorSearchCombobox />
-            <div className="w-96"> </div>
+            <CourseYearTabs />
           </div>
           <Separator orientation="vertical" className="mx-5" />
           <div></div>

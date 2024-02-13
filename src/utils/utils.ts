@@ -223,6 +223,7 @@ const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
   return majorCourses
 }
 
+
 export {
   config,
   dev_config,

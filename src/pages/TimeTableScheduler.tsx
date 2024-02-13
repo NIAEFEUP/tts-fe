@@ -8,6 +8,7 @@ import fillOptions from '../components/planner/sidebar/selectedOptionController/
 import { useToast } from '../components/ui/use-toast'
 import { CourseInfo } from '../@types/new_index'
 import MajorContext from '../contexts/MajorContext'
+import CourseContext from '../contexts/CourseContext'
 
 export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
   let frequency: Map<number, number> = new Map()
@@ -76,23 +77,39 @@ const TimeTableSchedulerPage = () => {
   // ============================ NEW STATES AND HOOKS ============================
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
   const [selectedMajor, setSelectedMajor] = useState<Major>(null)
-  const [courseInfo, setCourseInfo] = useState<CourseInfo[]>([])
+  const [coursesInfo, setCoursesInfo] = useState([])
   const [pickedCourses, setPickedCourses] = useState([])
 
   useEffect(() => {
-    getCoursesForMajor(selectedMajor)
+    {
+      /* Fetch major courses */
+    }
+    // if (selectedMajor === null) return
+
+    BackendAPI.getCourses(selectedMajor).then((courses) => {
+      {
+        /* TODO: Remover o map de dentro do setCoursesInfo
+          Para isso é preciso mudar a maneira como os 
+          dados são enviados a partir do backend 
+        */
+      }
+      setCoursesInfo(
+        courses.map((course: Course) => ({
+          id: course.sigarra_id,
+          course_unit_year: course.course_unit_year,
+          ects: course.ects,
+          acronym: course.acronym,
+          name: course.name,
+          url: course.url,
+        }))
+      )
+    })
   }, [selectedMajor])
 
   // ==============================================================================
-  // ================================== FUNCTION ==================================
+  // ================================== FUNCTIONS ==================================
 
-  const getCoursesForMajor = (major: Major) => {
-    if (selectedMajor === null) return
-
-    BackendAPI.getCourses(major).then((courses: CourseInfo[]) => {
-      setCourseInfo(courses)
-    })
-  }
+  const fetchMajorCourses = (major: Major) => {}
 
   // ============================ NEW STATES AND HOOKS ============================
   // ==============================================================================
@@ -178,28 +195,6 @@ const TimeTableSchedulerPage = () => {
       setMajors(majors)
     })
   }, [])
-
-  // once a major has been picked => fetch courses for the major
-  useEffect(() => {
-    // esta função mudar o checkedcourses
-    getCoursesForMajor(major)
-  }, [major, majorChangedRef, checkedCourses, setCheckedCourses])
-
-  /**
-   * Checks if the current selected extra major is the same as the main major selected in the selectionModal
-   * If it is not, it will fetch the courses for the current major
-   */
-  useEffect(() => {
-    if (is_null_or_undefined(extraCoursesMajor)) return
-
-    if (extraCoursesMajor.acronym === major.acronym && !chosenMajorMainModalEqualToExtra) {
-      setExtraMajorEqualToMainMajor(true)
-    } else {
-      getCoursesForMajor(extraCoursesMajor)
-
-      if (extraMajorEqualToMainMajor) setExtraMajorEqualToMainMajor(false)
-    }
-  }, [extraCoursesMajor, extraCoursesMajorChangedRef, checkedCourses, setCheckedCourses])
 
   const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
     let extraUCs: CheckedCourse[] = []
@@ -384,32 +379,35 @@ const TimeTableSchedulerPage = () => {
     setCheckedCourses(newCheckedCourses)
   }
 
-  console.log(multipleOptions)
-  console.log(majors)
+  console.log('multipleOptions:', multipleOptions)
+  console.log('majors: ', majors)
+  console.log('courses info: ', coursesInfo)
 
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
-      <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-        {/* Schedule Preview */}
-        <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-          <div className="h-full w-full">
-            <Schedule courseOptions={multipleOptions.selected} />
+      <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo }}>
+        <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+          {/* Schedule Preview */}
+          <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+            <div className="h-full w-full">
+              <Schedule courseOptions={multipleOptions.selected} />
+            </div>
           </div>
-        </div>
 
-        {/* Sidebar */}
-        <Sidebar
-          openHook={[isModalOpen, setIsModalOpen]}
-          coursesHook={[checkedCourses, setCheckedCourses]}
-          extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
-          extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
-          sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-          destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-          repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-          multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-          checkCourses={checkCourses}
-        />
-      </div>
+          {/* Sidebar */}
+          <Sidebar
+            openHook={[isModalOpen, setIsModalOpen]}
+            coursesHook={[checkedCourses, setCheckedCourses]}
+            extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}
+            extraCoursesModalOpenHook={[isExtraUcsModelOpen, setIsExtraUcsModalOpen]}
+            sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
+            destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
+            repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
+            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
+            checkCourses={checkCourses}
+          />
+        </div>
+      </CourseContext.Provider>
     </MajorContext.Provider>
   )
 }

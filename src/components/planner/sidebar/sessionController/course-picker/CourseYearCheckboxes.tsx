@@ -7,7 +7,7 @@ type Props = {
 export const CourseYearCheckboxes = ({ courses }) => {
   return (
     <>
-      <div className="mt-2 ml-4 flex grid grid-flow-col grid-rows-8 flex-wrap items-center justify-center gap-x-1 gap-y-1.5 p-1">
+      <div className="mt-2 ml-4  grid grid-flow-col grid-rows-8 flex-wrap items-center justify-center gap-x-1 gap-y-1.5 p-1">
         {courses.map((course: CourseInfo, courseIdx: number) => (
           <div
             title={course.name}
@@ -20,7 +20,9 @@ export const CourseYearCheckboxes = ({ courses }) => {
               defaultChecked={true /*course.checked*/}
               id={`course-checkbox-${course.course_unit_year}-${courseIdx}`}
             />
-            <label className="ml-1.5 block cursor-pointer text-sm dark:text-white">{course.name}</label>
+            <label className="ml-1.5 block cursor-pointer text-sm dark:text-white">
+              {course.name + ' (' + course.acronym + ')'}
+            </label>
           </div>
         ))}
       </div>

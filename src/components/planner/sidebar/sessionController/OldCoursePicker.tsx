@@ -6,7 +6,7 @@ import { CheckedCourse, Course, Major } from '../../../../@types'
 import { getSchoolYear, getSemester } from '../../../../utils/utils'
 import { AcademicCapIcon, CheckCircleIcon, PencilSquareIcon, PlusIcon, XCircleIcon } from '@heroicons//react/24/solid'
 import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../../../pages/TimeTableScheduler'
-import { MajorSearchCombobox } from './course-picker/MajorSearchCombobox'
+import { MajorSearchCombobox } from './course-picker'
 import { Button } from '../../../ui/button'
 
 type Props = {

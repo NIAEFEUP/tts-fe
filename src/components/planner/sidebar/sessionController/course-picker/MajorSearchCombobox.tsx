@@ -10,7 +10,7 @@ import MajorContext from '../../../../../contexts/MajorContext'
  * wants to select courses from. They can type the major or click on the rightmost corner to open
  * the list of possible majors.
  */
-export const MajorSearchCombobox = () => {
+const MajorSearchCombobox = () => {
   const { majors, setMajors, selectedMajor, setSelectedMajor } = useContext(MajorContext)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [selected, setSelected] = useState<Major>(selectedMajor)
@@ -58,8 +58,8 @@ export const MajorSearchCombobox = () => {
         <Combobox.Input
           placeholder={
             window.matchMedia('(max-width: 1024px)').matches === true
-              ? 'Pesquise o seu curso pelo nome ou sigla'
-              : 'Escolha e/ou digite o nome ou sigla do seu ciclo de estudos'
+              ? 'Pesquisa o teu curso pelo nome ou sigla'
+              : 'Escolhe e/ou digita o nome ou sigla do teu ciclo de estudos'
           }
           className={classNames(
             selected !== null ? 'font-semibold' : '',
@@ -90,7 +90,7 @@ export const MajorSearchCombobox = () => {
         >
           {filteredMajors.length === 0 && majorQuery !== '' ? (
             <div className="relative cursor-pointer select-none py-2 px-4 text-gray-700 dark:text-white">
-              Nenhum curso encontrado com este nome.
+              Nenhum curso encontrado com este nome/sigla.
             </div>
           ) : (
             filteredMajors.map((major: Major, majorIdx: number) => (
@@ -127,3 +127,5 @@ export const MajorSearchCombobox = () => {
     </Combobox>
   )
 }
+
+export default MajorSearchCombobox
