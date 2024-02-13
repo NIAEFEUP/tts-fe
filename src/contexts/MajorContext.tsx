@@ -1,4 +1,4 @@
-import { Context, Dispatch, SetStateAction, useState } from 'react'
+import { Context, Dispatch, SetStateAction } from 'react'
 import { createContext } from 'react'
 import { Major } from '../@types/new_index'
 

@@ -96,3 +96,11 @@ button {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.tab-trigger[data-state='active'] {
+  @apply bg-primary text-white;
+}
+
+.radix-checkbox[data-state='checked'] {
+  @apply bg-primary text-white dark:bg-primary/50 
+}

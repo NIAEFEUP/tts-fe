@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
-import { MajorSearchCombobox, CourseYearTabs } from './course-picker'
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
 import { CheckedCourse } from '../../../../@types'
 import { Course, Major } from '../../../../@types/new_index'
@@ -49,7 +49,9 @@ const CoursePicker = ({
             <CourseYearTabs />
           </div>
           <Separator orientation="vertical" className="mx-5" />
-          <div></div>
+          <div>
+            <PickedCoursesList />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
