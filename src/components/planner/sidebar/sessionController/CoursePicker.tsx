@@ -19,7 +19,7 @@ type Props = {
 
 const CoursePicker = ({
   // majors,
-  // majorIndexHook,
+  // selectedMajorHook,
   openHook,
   coursesHook,
   extraCoursesActiveHook,
@@ -28,7 +28,7 @@ const CoursePicker = ({
   destBufferHook,
   repeatedCourseControlHook,
 }: Props) => {
-  // const [majorIndex, setMajorIndex] = majorIndexHook
+  // const [selectedMajor, setSelectedMajor] = selectedMajorHook
 
   return (
     <Dialog>
@@ -49,8 +49,9 @@ const CoursePicker = ({
         <div className="flex">
           <div>
             <MajorSearchCombobox />
+            <div className="w-96"> </div>
           </div>
-          <Separator orientation="vertical" />
+          <Separator orientation="vertical" className="mx-5" />
           <div></div>
         </div>
       </DialogContent>

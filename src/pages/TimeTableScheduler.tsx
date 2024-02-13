@@ -75,19 +75,19 @@ const TimeTableSchedulerPage = () => {
   // ==============================================================================
   // ============================ NEW STATES AND HOOKS ============================
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
-  const [majorIndex, setMajorIndex] = useState<number>(null)
+  const [selectedMajor, setSelectedMajor] = useState<Major>(null)
   const [courseInfo, setCourseInfo] = useState<CourseInfo[]>([])
   const [pickedCourses, setPickedCourses] = useState([])
 
   useEffect(() => {
-    getCoursesForMajor(majors[majorIndex])
-  }, [majorIndex])
+    getCoursesForMajor(selectedMajor)
+  }, [selectedMajor])
 
   // ==============================================================================
   // ================================== FUNCTION ==================================
 
   const getCoursesForMajor = (major: Major) => {
-    if (majorIndex === null) return
+    if (selectedMajor === null) return
 
     BackendAPI.getCourses(major).then((courses: CourseInfo[]) => {
       setCourseInfo(courses)
@@ -388,7 +388,7 @@ const TimeTableSchedulerPage = () => {
   console.log(majors)
 
   return (
-    <MajorContext.Provider value={{ majors, setMajors, majorIndex, setMajorIndex }}>
+    <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
       <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
         {/* Schedule Preview */}
         <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
@@ -399,8 +399,6 @@ const TimeTableSchedulerPage = () => {
 
         {/* Sidebar */}
         <Sidebar
-          majors={majors}
-          majorIndexHook={[majorIndex, setMajorIndex]}
           openHook={[isModalOpen, setIsModalOpen]}
           coursesHook={[checkedCourses, setCheckedCourses]}
           extraCoursesActiveHook={[extraCoursesActive, setExtraCoursesActive]}

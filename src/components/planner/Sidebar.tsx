@@ -6,8 +6,6 @@ import SelectedOptionController from './sidebar/SelectedOptionController'
 import CoursesController from './sidebar/CoursesController'
 
 type Props = {
-  majors: Major[]
-  majorIndexHook: [number, React.Dispatch<React.SetStateAction<number>>]
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -76,8 +74,6 @@ const defaultOptionsList = [
  * Sidebar with all the main schedule interactions
  */
 const Sidebar = ({
-  majors,
-  majorIndexHook,
   openHook,
   coursesHook,
   extraCoursesActiveHook,
