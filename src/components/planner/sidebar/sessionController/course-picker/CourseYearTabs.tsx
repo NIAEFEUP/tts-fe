@@ -4,6 +4,7 @@ import { CourseInfo } from '../../../../../@types/new_index'
 import { CourseYearCheckboxes } from './CourseYearCheckboxes'
 import CourseContext from '../../../../../contexts/CourseContext'
 import { groupCoursesByYear } from '../../../../../utils/utils'
+import { ScrollArea } from '../../../../ui/scroll-area'
 
 type Props = {
   courses: CourseInfo[][]
@@ -17,7 +18,7 @@ const CourseYearTabs = () => {
   const coursesByYear = groupCoursesByYear(coursesInfo)
 
   return (
-    <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
+    <Tabs value={selectedTab} onValueChange={setSelectedTab} className="box-border w-[27.5rem]">
       <TabsList className="w-full">
         {coursesByYear.map((_, idx) => (
           <TabsTrigger key={idx} value={`${idx + 1}`}>
@@ -25,10 +26,9 @@ const CourseYearTabs = () => {
           </TabsTrigger>
         ))}
       </TabsList>
-
       {coursesByYear.map((yearCourses, idx) => (
         <TabsContent key={idx} value={`${idx + 1}`}>
-          {<CourseYearCheckboxes courses={yearCourses} />}
+          <ScrollArea className="h-[200px] px-3">{<CourseYearCheckboxes courses={yearCourses} />}</ScrollArea>
         </TabsContent>
       ))}
     </Tabs>

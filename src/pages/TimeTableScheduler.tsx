@@ -380,10 +380,6 @@ const TimeTableSchedulerPage = () => {
     setCheckedCourses(newCheckedCourses)
   }
 
-  console.log('multipleOptions:', multipleOptions)
-  console.log('majors: ', majors)
-  console.log('courses info: ', coursesInfo)
-
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
       <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo }}>

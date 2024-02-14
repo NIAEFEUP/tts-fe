@@ -1,7 +1,15 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../../../ui/dialog'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
-import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList } from './course-picker'
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
 import { CheckedCourse } from '../../../../@types'
 import { Course, Major } from '../../../../@types/new_index'
@@ -35,24 +43,28 @@ const CoursePicker = ({
           <PencilSquareIcon className="h-5 w-5 text-white" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="h-fit min-w-fit">
         <DialogHeader>
           <DialogTitle>Seleciona as tuas Unidades Curriculares</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your account and remove your data from our
-            servers.
+          <DialogDescription className="mt-2">
+            Escolhe um curso e unidades curriculares à esquerda. À direita aparecem as unidades curriculares que
+            escolheste.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex w-[1000px]">
-          <div className="flex flex-col gap-2">
-            <MajorSearchCombobox />
+        <MajorSearchCombobox />
+        <Separator />
+        <div className="flex">
+          <div className="flex w-fit flex-col gap-2">
             <CourseYearTabs />
           </div>
           <Separator orientation="vertical" className="mx-5" />
-          <div>
-            <PickedCoursesList />
-          </div>
+          <PickedCoursesList />
         </div>
+        <DialogFooter className="g-8 items-center">
+          <Ects />
+          <Button>Voltar</Button>
+          <Button>Guardar</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

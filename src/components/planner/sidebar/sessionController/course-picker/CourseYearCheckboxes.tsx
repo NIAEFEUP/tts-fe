@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { CourseInfo } from '../../../../../@types/new_index'
 import CourseContext from '../../../../../contexts/CourseContext'
 import { Checkbox } from '../../../../ui/checkbox'
@@ -9,57 +9,43 @@ type Props = {
 }
 
 export const CourseYearCheckboxes = ({ courses }: Props) => {
-  const { pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
+  const [checkboxList, setCheckboxList] = useState<boolean[]>(courses.map((course) => pickedCourses.includes(course)))
 
-  const isCourseChecked = (idx) => {
-    return pickedCourses.some((course) => course.id === idx)
+  const toggleCourse = (idx: number) => {
+    // Toggle the checkbox
+    setCheckboxList((prev) => {
+      const newCheckboxList = [...prev]
+      newCheckboxList[idx] = !newCheckboxList[idx]
+      return newCheckboxList
+    })
+    // Add or remove the course from the pickedCourses list
+    if (pickedCourses.includes(courses[idx]))
+      setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse !== courses[idx]))
+    else setPickedCourses([...pickedCourses, courses[idx]])
   }
 
+  /*
+   * Update the checkboxList when the pickedCourses change
+   * This happends when the user removes a course from the pickedCourses list
+   */
+  useEffect(() => {
+    setCheckboxList(courses.map((course) => pickedCourses.includes(course)))
+  }, [pickedCourses])
+
   return (
-    <div className="flex flex-col justify-start gap-2">
+    <div className="flex flex-col justify-start gap-2 p-2">
       {courses.map((course: CourseInfo, courseIdx: number) => (
         <div key={`course-checkbox-${course.course_unit_year}-${course.id}`} className="flex items-center space-x-2">
           <Checkbox
             id={`checkbox-${courseIdx}`}
             title={course.name}
-            defaultChecked={isCourseChecked(course.id)}
-            onCheckedChange={() => {
-              console.log('Selecting!!')
-              if (pickedCourses.includes(course)) {
-                setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse !== course))
-              } else {
-                setPickedCourses([...pickedCourses, course])
-              }
-            }}
+            checked={checkboxList[courseIdx]}
+            onCheckedChange={() => toggleCourse(courseIdx)}
           />
-          <Label htmlFor={`checkbox-${courseIdx}`}> {course.name + ' (' + course.acronym + ')'}</Label>
-        </div>
-      ))}
-    </div>
-  )
-
-  return (
-    <div className="mt-2 ml-4  grid grid-flow-col grid-rows-8 flex-wrap items-center justify-center gap-x-1 gap-y-1.5 p-1">
-      {courses.map((course: CourseInfo, courseIdx: number) => (
-        <div
-          title={course.name}
-          key={`course-checkbox-${course.course_unit_year}-${course.id}`}
-          className="flex items-center transition"
-          onSelect={() => {
-            console.log('Selecting!!')
-            if (pickedCourses.includes(course)) return
-            setPickedCourses([...pickedCourses, course])
-          }}
-        >
-          <input
-            type="checkbox"
-            className="checkbox"
-            defaultChecked={true /*course.checked*/}
-            id={`course-checkbox-${course.course_unit_year}-${courseIdx}`}
-          />
-          <label className="ml-1.5 block cursor-pointer text-sm dark:text-white">
+          <Label htmlFor={`checkbox-${courseIdx}`} className="text-wrap">
             {course.name + ' (' + course.acronym + ')'}
-          </label>
+          </Label>
         </div>
       ))}
     </div>
