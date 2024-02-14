@@ -8,7 +8,7 @@ type Props = {
   courses: CourseInfo[]
 }
 
-export const CourseYearCheckboxes = ({ courses }) => {
+export const CourseYearCheckboxes = ({ courses }: Props) => {
   const { pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo } = useContext(CourseContext)
 
   const isCourseChecked = (idx) => {
@@ -18,7 +18,7 @@ export const CourseYearCheckboxes = ({ courses }) => {
   return (
     <div className="flex flex-col justify-start gap-2">
       {courses.map((course: CourseInfo, courseIdx: number) => (
-        <div key={`course-checkbox-${course.course_unit_year}-${course.id}`}>
+        <div key={`course-checkbox-${course.course_unit_year}-${course.id}`} className="flex items-center space-x-2">
           <Checkbox
             id={`checkbox-${courseIdx}`}
             title={course.name}

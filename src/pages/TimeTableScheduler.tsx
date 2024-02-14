@@ -28,28 +28,29 @@ export const is_null_or_undefined = (element) => {
   return element === undefined || element === null
 }
 
-/**
- * This method serves to go to a group of checkboxes and put the correct checked value on the group checkbox
- */
-export const controlCoursesGroupCheckbox = (courses: CheckedCourse[], groupCheckboxId: string) => {
-  let some = courses.some((course) => course.checked)
-  let every = courses.every((course) => course.checked)
+// TODO: delete this!!
+// /**
+//  * This method serves to go to a group of checkboxes and put the correct checked value on the group checkbox
+//  */
+// export const controlCoursesGroupCheckbox = (courses: CheckedCourse[], groupCheckboxId: string) => {
+//   let some = courses.some((course) => course.checked)
+//   let every = courses.every((course) => course.checked)
 
-  //@ts-ignore
-  let checkbox: HTMLInputElement = document.getElementById(groupCheckboxId)
-  if (!checkbox) return
+//   //@ts-ignore
+//   let checkbox: HTMLInputElement = document.getElementById(groupCheckboxId)
+//   if (!checkbox) return
 
-  if (every) {
-    checkbox.checked = true
-    checkbox.indeterminate = false
-  } else if (some) {
-    checkbox.checked = false
-    checkbox.indeterminate = true
-  } else {
-    checkbox.checked = false
-    checkbox.indeterminate = false
-  }
-}
+//   if (every) {
+//     checkbox.checked = true
+//     checkbox.indeterminate = false
+//   } else if (some) {
+//     checkbox.checked = false
+//     checkbox.indeterminate = true
+//   } else {
+//     checkbox.checked = false
+//     checkbox.indeterminate = false
+//   }
+// }
 
 const TimeTableSchedulerPage = () => {
   // ==============================================================================================================================

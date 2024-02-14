@@ -5,7 +5,7 @@ import Alert, { AlertType } from '../../Alert'
 import { CheckedCourse, Course, Major } from '../../../../@types'
 import { getSchoolYear, getSemester } from '../../../../utils/utils'
 import { AcademicCapIcon, CheckCircleIcon, PencilSquareIcon, PlusIcon, XCircleIcon } from '@heroicons//react/24/solid'
-import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../../../pages/TimeTableScheduler'
+import { is_null_or_undefined } from '../../../../pages/TimeTableScheduler'
 import { MajorSearchCombobox } from './course-picker'
 import { Button } from '../../../ui/button'
 
@@ -271,14 +271,14 @@ const CoursePicker = ({
 
   useEffect(() => {
     // Regular courses
-    for (let year = 1; year < courses.length; year++) {
-      controlCoursesGroupCheckbox(courses[year], `year-checkbox-${year - 1}`)
-    }
+    // for (let year = 1; year < courses.length; year++) {
+    // controlCoursesGroupCheckbox(courses[year], `year-checkbox-${year - 1}`)
+    // }
 
-    // Extra courses
-    if (courses[0] !== undefined && courses[0] !== null) {
-      controlCoursesGroupCheckbox(courses[0], 'extraCourseGroupCheckbox')
-    }
+    // // Extra courses
+    // if (courses[0] !== undefined && courses[0] !== null) {
+    // controlCoursesGroupCheckbox(courses[0], 'extraCourseGroupCheckbox')
+    // }
 
     warnIfMajorIsTheSameBetween(courses[0], courses.slice(1))
   }, [courses])

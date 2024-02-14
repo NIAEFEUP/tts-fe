@@ -48,33 +48,6 @@ button {
   }
 }
 
-.checkbox {
-  @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-primary hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent;
-}
-
-.extra-courses-checkbox {
-  @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-secondary hover:bg-secondary/75 hover:text-secondary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent indeterminate:text-secondary focus:text-secondary checked:text-secondary;
-}
-
-.checkbox-small {
-  @apply h-3 w-3 cursor-pointer rounded border-2 border-transparent bg-lightish p-0 text-primary transition 
-  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
-  dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
-}
-
-.extra-course-checkbox-small {
-  @apply h-3 w-3 cursor-pointer rounded border-2 border-transparent bg-lightish p-0 text-secondary transition 
-  hover:bg-secondary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
-  dark:focus:ring-0 xl:h-3.5 xl:w-3.5 indeterminate:text-secondary focus:text-secondary checked:text-secondary/75;
-}
-
-.checkboxes {
-  @apply flex flex-wrap items-center justify-center gap-y-2 gap-x-4 md:flex-row md:items-start lg:gap-y-6 lg:gap-x-14;
-  margin-top: 1.5rem !important;
-}
-
 #option-header .EmojiPickerReact {
   --epr-bg-color: rgb(242, 244, 247);
   --epr-category-label-bg-color: rgb(242, 244, 247);
@@ -85,7 +58,6 @@ button {
   --epr-category-label-bg-color: rgb(26, 28, 35);
 }
 
-
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 #option-name::-webkit-scrollbar {
  display: none;
@@ -95,12 +67,4 @@ button {
 #option-name {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
-}
-
-.tab-trigger[data-state='active'] {
-  @apply bg-primary text-white;
-}
-
-.radix-checkbox[data-state='checked'] {
-  @apply bg-primary text-white dark:bg-primary/50 
 }
