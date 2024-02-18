@@ -75,6 +75,14 @@ button {
   margin-top: 1.5rem !important;
 }
 
+.schedule {
+  @apply lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5;
+}
+
+.sidebar {
+  @apply lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4
+}
+
 #option-header .EmojiPickerReact {
   --epr-bg-color: rgb(242, 244, 247);
   --epr-category-label-bg-color: rgb(242, 244, 247);
