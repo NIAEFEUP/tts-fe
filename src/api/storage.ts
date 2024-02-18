@@ -75,6 +75,16 @@ const deleteOptionsStorage = (): void => {
   writeStorageInvalid(key, INITIAL_VALUE)
 }
 
+const setSelectedMajorStorage = (selectedMajor: any): void => {
+  const key = 'niaefeup-tts.selected-major'
+  writeStorage(key, selectedMajor)
+}
+
+const setPickedCoursesStorage = (pickedCourses: any): void => {
+  const key = 'niaefeup-tts.picked-courses'
+  writeStorage(key, pickedCourses)
+}
+
 const updateScrappeInfo = async () => {
   const key = 'niaefeup-tts.info'
   const info = await API.getInfo()
@@ -85,7 +95,9 @@ const StorageAPI = {
   getOptionsStorage,
   setOptionsStorage,
   deleteOptionsStorage,
-  updateScrappeInfo
+  updateScrappeInfo,
+  setSelectedMajorStorage,
+  setPickedCoursesStorage,
 }
 
 export default StorageAPI

@@ -11,7 +11,7 @@ import MajorContext from '../../../../../contexts/MajorContext'
  * the list of possible majors.
  */
 const MajorSearchCombobox = () => {
-  const { majors, setMajors, selectedMajor, setSelectedMajor } = useContext(MajorContext)
+  const { majors, selectedMajor, setSelectedMajor } = useContext(MajorContext)
   const [majorQuery, setMajorQuery] = useState<string>('')
   const [selected, setSelected] = useState<Major>(selectedMajor)
 

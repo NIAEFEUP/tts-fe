@@ -1,7 +1,7 @@
 import { useContext } from 'react'
+import CourseContext from '../../../../../contexts/CourseContext'
 import { CourseInfo } from '../../../../../@types/new_index'
 import { Separator } from '../../../../ui/separator'
-import CourseContext from '../../../../../contexts/CourseContext'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const PickedCourse = ({ course }: Props) => {
-  const { pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
 
   const removeCourse = () => {
     setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse !== course))

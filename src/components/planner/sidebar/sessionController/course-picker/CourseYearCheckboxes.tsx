@@ -10,7 +10,7 @@ type Props = {
 
 export const CourseYearCheckboxes = ({ courses }: Props) => {
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
-  const [checkboxList, setCheckboxList] = useState<boolean[]>(courses.map((course) => pickedCourses.includes(course)))
+  const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 
   const toggleCourse = (idx: number) => {
     // Toggle the checkbox
@@ -20,18 +20,18 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
       return newCheckboxList
     })
     // Add or remove the course from the pickedCourses list
-    if (pickedCourses.includes(courses[idx]))
-      setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse !== courses[idx]))
+    if (pickedCourses.some((pickedCourse) => pickedCourse.id === courses[idx].id))
+      setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse.id !== courses[idx].id))
     else setPickedCourses([...pickedCourses, courses[idx]])
   }
 
   /*
-   * Update the checkboxList when the pickedCourses change
+   * Update the checkboxList on load and when the pickedCourses changes
    * This happends when the user removes a course from the pickedCourses list
    */
   useEffect(() => {
-    setCheckboxList(courses.map((course) => pickedCourses.includes(course)))
-  }, [pickedCourses])
+    setCheckboxList(courses.map((course) => pickedCourses.some((pickedCourse) => pickedCourse.id === course.id)))
+  }, [courses, pickedCourses])
 
   return (
     <div className="flex flex-col justify-start gap-2 p-2">

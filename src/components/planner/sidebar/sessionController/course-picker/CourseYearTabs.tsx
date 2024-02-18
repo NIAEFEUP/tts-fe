@@ -1,18 +1,12 @@
 import { useContext, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../../ui/tabs'
-import { CourseInfo } from '../../../../../@types/new_index'
 import { CourseYearCheckboxes } from './CourseYearCheckboxes'
 import CourseContext from '../../../../../contexts/CourseContext'
 import { groupCoursesByYear } from '../../../../../utils/utils'
 import { ScrollArea } from '../../../../ui/scroll-area'
 
-type Props = {
-  courses: CourseInfo[][]
-  pickedCourses: CourseInfo[]
-}
-
 const CourseYearTabs = () => {
-  const { pickedCourses, coursesInfo } = useContext(CourseContext)
+  const { coursesInfo } = useContext(CourseContext)
   const [selectedTab, setSelectedTab] = useState('1')
 
   const coursesByYear = groupCoursesByYear(coursesInfo)

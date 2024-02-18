@@ -77,23 +77,22 @@ const TimeTableSchedulerPage = () => {
   // ==============================================================================
   // ============================ NEW STATES AND HOOKS ============================
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
-  const [selectedMajor, setSelectedMajor] = useState<Major>(null)
+  const [selectedMajor, setSelectedMajor] = useState(
+    JSON.parse(localStorage.getItem('niaefeup-tts.selected-major')) || null
+  )
+  // const [selectedMajor, setSelectedMajor] = useState<Major>(null)
   const [coursesInfo, setCoursesInfo] = useState([])
-  const [pickedCourses, setPickedCourses] = useState([])
+  const [pickedCourses, setPickedCourses] = useState(
+    JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
+  )
 
   useEffect(() => {
-    {
-      /* Fetch major courses */
-    }
+    // Fetch major courses
     // if (selectedMajor === null) return
-
     BackendAPI.getCourses(selectedMajor).then((courses) => {
-      {
-        /* TODO: Remover o map de dentro do setCoursesInfo
-          Para isso é preciso mudar a maneira como os 
-          dados são enviados a partir do backend 
-        */
-      }
+      // TODO: Remover o map de dentro do setCoursesInfo
+      // Para isso é preciso mudar a maneira como os
+      // dados são enviados a partir do backend
       setCoursesInfo(
         courses.map((course: Course) => ({
           id: course.sigarra_id,
@@ -110,19 +109,19 @@ const TimeTableSchedulerPage = () => {
   // ==============================================================================
   // ================================== FUNCTIONS ==================================
 
-  const fetchMajorCourses = (major: Major) => {}
+  // const fetchMajorCourses = (major: Major) => {}
 
   // ============================ NEW STATES AND HOOKS ============================
   // ==============================================================================
 
   // add check property to courses
-  const courseToCheckedCourse = (majorCourses: Course[][]): CheckedCourse[][] =>
-    majorCourses.map((year: Course[]) =>
-      year.map((item: Course) => ({
-        checked: false,
-        info: item,
-      }))
-    )
+  // const courseToCheckedCourse = (majorCourses: Course[][]): CheckedCourse[][] =>
+  //   majorCourses.map((year: Course[]) =>
+  //     year.map((item: Course) => ({
+  //       checked: false,
+  //       info: item,
+  //     }))
+  //   )
 
   const getEmptyCourseOption = (course: CheckedCourse, schedules: CourseSchedule[]): CourseOption => {
     let teachers = []

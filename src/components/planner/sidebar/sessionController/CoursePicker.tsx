@@ -1,18 +1,14 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../../../ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import StorageAPI from '../../../../api/storage'
+import CourseContext from '../../../../contexts/CourseContext'
+import MajorContext from '../../../../contexts/MajorContext'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
-import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
 import { CheckedCourse } from '../../../../@types'
 import { Course, Major } from '../../../../@types/new_index'
+import { useContext, useEffect } from 'react'
 
 type Props = {
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -34,6 +30,16 @@ const CoursePicker = ({
   repeatedCourseControlHook,
 }: Props) => {
   // const [selectedMajor, setSelectedMajor] = selectedMajorHook
+  const { pickedCourses } = useContext(CourseContext)
+  const { selectedMajor } = useContext(MajorContext)
+
+  useEffect(() => {
+    StorageAPI.setPickedCoursesStorage(pickedCourses)
+  }, [pickedCourses])
+
+  useEffect(() => {
+    StorageAPI.setSelectedMajorStorage(selectedMajor)
+  }, [selectedMajor])
 
   return (
     <Dialog>
@@ -60,11 +66,6 @@ const CoursePicker = ({
           <Separator orientation="vertical" className="mx-5" />
           <PickedCoursesList />
         </div>
-        <DialogFooter className="g-8 items-center">
-          <Ects />
-          <Button>Voltar</Button>
-          <Button>Guardar</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

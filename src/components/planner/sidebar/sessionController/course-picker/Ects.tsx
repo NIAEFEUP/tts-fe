@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import CourseContext from '../../../../../contexts/CourseContext'
 import { InformationCircleIcon } from '@heroicons/react/24/solid'
 import { Tooltip, TooltipContent, TooltipProvider } from '../../../../ui/tooltip'
@@ -19,11 +19,11 @@ const Ects = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <InformationCircleIcon
-                className={`ml-1 h-6 w-6 transition ${warning == 1 ? 'text-amber-500' : 'text-red-600'}`}
+                className={`ml-1 h-6 w-6 transition ${warning === 1 ? 'text-amber-500' : 'text-red-600'}`}
               />
             </TooltipTrigger>
             <TooltipContent>
-              {warning == 1
+              {warning === 1
                 ? 'O NIAEFEUP recomenda escolher 36 ou menos ECTS.'
                 : 'O limite de créditos por semestre, por norma, é 42 ECTS'}
             </TooltipContent>
