@@ -8,6 +8,7 @@ import {
   XMarkIcon,
   AtSymbolIcon,
   RectangleStackIcon,
+  ArrowsRightLeftIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
 
@@ -16,6 +17,12 @@ const navigation = [
     title: 'Horários',
     location: getPath(config.paths.planner),
     icon: <RectangleStackIcon className="h-5 w-5" />,
+    wip: false,
+  },
+  {
+    title: 'Exchange',
+    location: getPath(config.paths.exchange),
+    icon: <ArrowsRightLeftIcon className="h-5 w-5"/>,
     wip: false,
   },
   { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
