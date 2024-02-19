@@ -1,9 +1,12 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
-import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage, StampNIAEFEUPImage, BackStampNIAEFEUPImage } from '../../images'
+import { useEffect, useContext } from 'react'
+import { ScheduleLightImage, ScheduleDarkImage, StampNIAEFEUPImage, BackStampNIAEFEUPImage } from '../../images'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { getPath, config } from '../../utils/utils'
+import FeatureCards from './FeatureCards';
+import { ThemeContext } from '../../contexts/ThemeContext';
+
 
 type Card = {
   id: string
@@ -15,13 +18,15 @@ type Card = {
 }
 
 const HeroPlanner = () => {
+  const { enabled } = useContext(ThemeContext); 
+  const ScheduleImage = enabled ? ScheduleDarkImage : ScheduleLightImage;
   const data: Card[] = [
     {
       id: 'intro',
       reverse: false,
       title: 'O que é o TTS?',
       subtitle: 'O teu melhor amigo para escolher e gerir o teu horário na UPorto.',
-      image: ScheduleDarkImage,
+      image: ScheduleImage,
       content: (
         <div className="space-y-3">
           <p>
@@ -68,7 +73,7 @@ const HeroPlanner = () => {
                   <img src={BackStampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
                 </div>
               </div>
-            </div>
+        </div>
         <div className="flex flex-row items-center justify-center w-15">
             <button
               onClick={scrollToComponentTop}
@@ -77,7 +82,7 @@ const HeroPlanner = () => {
             >
               Time Table Selector
             </button>
-          </div> 
+        </div> 
           <p className="text-center text-base font-normal xl:text-lg">
           Não deixes o horário perfeito escapar!
           </p>
@@ -113,40 +118,22 @@ const HeroPlanner = () => {
         ))}
       </div>
 
-
-      <div className="flex flex-row items-center justify-center w-15">
-            <button
-              onClick={scrollToComponentTop}
-              className="relative text-center font-headings text-2xl w-15 pt-12 font-bold capitalize text-primary transition 
-              before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
-            >
-              As principais funcionalidades do TTS
-            </button>
-      </div> 
-      <p className="text-center text-base font-normal xl:text-lg">
-        Temos muitas novas funcionalidades do TTS e planos para futuras atualizações.
-      </p>
-
-      <div className="grid grid-cols-3 gap-12 m-12">
-          <div className="bg-white p-5 rounded-md dark:bg-dark">
-            <p className="font-bold text-md">Partilhar horários com amigos</p>
-          </div>
-          <div className="bg-white p-5 rounded-md dark:bg-dark">
-            <p className="font-bold text-md">Definir até 10 opções de horários</p>
-          </div>
-          <div className="bg-white p-5 rounded-md dark:bg-dark">
-            <p className="font-bold text-md">Completar o horário com cadeiras aleatórias</p>
-          </div>
-          <div className="bg-white p-5 rounded-md dark:bg-dark">
-            <p className="font-bold text-md">Tirar print ao horário</p>
-          </div>
-          <div className="bg-white p-5 rounded-md dark:bg-dark">
-            <p className="font-bold text-md">Filtrar as opções de horários pelos professores</p>
-          </div>
-          <div className="bg-white p-5 rounded-md dark:bg-dark">
-            <p className="font-bold text-md">Reordenar e personalizar as opções de horário</p>
-          </div>
+      <div id = "features">
+        <div className="flex flex-row items-center justify-center w-15">
+              <button
+                onClick={scrollToComponentTop}
+                className="relative text-center font-headings text-2xl w-15 pt-12 font-bold capitalize text-primary transition 
+                before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
+              >
+                As principais funcionalidades do TTS
+              </button>
+        </div> 
+        <p className="text-center text-base font-normal xl:text-lg">
+              Temos novas funcionalidades do TTS e planos para futuras atualizações.
+        </p>
+        <FeatureCards />
       </div>
+
 
       <div className="mt-4 flex w-full items-center justify-end">
         <div className="relative mr-4">
