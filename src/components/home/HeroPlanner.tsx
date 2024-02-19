@@ -31,34 +31,19 @@ const HeroPlanner = () => {
             como uma melhor alternativa à ferramenta de horários do SIGARRA, para ajudar os estudantes da Universidade do Porto a planear e elaborar o seu horário para um semestre.
           </p>
           <p>
-            O TTS oferece aos estudantes a flexibilidade e praticidade de <strong>criar</strong>, <strong>planear</strong> e <strong>partilhar</strong>{' '} os horários com até 10 opções.
-            Isso permite que os alunos planejem seus semestres com antecedência, 
-            tenham uma visão abrangente das opções disponíveis e aumentem suas chances de obter o horário desejado, evitando alocações automáticas 
-            indesejadas durante as inscrições nas turmas.
-            Tens dúvidas sobre a plataforma? A{' '}
+            O TTS é a ferramenta que torna o processo de escolher turmas mais simples, mais flexível e da forma a perderes o menos tempo possível.
+            Molda o horário à tua maneira, quer seja por preferires certos professores ou dias livres.
+            Partilha facilmente os horários com os amigos e <strong> não deixes o horário perfeito escapar</strong>.
+          Tens dúvidas sobre a plataforma? A{' '}
             <Link
               className="font-medium text-primary transition-all hover:underline hover:opacity-80"
               to={getPath(config.paths.faqs)}
             >
-              página das FAQs
+            página das FAQs
             </Link>{' '}
             esclarece as dúvidas mais comuns.
-          </p>
-        </div>
-      ),
-    },
-    {
-      id: 'why',
-      title: <span>O que há de novo na nova versão do TTS?</span>,
-      subtitle: <span>Temos muitas novas funcionalidades do TTS e planos para futuras atualizações.</span>,
-      image: HomePageAltImage,
-      reverse: true,
-      content: (
-        <div className="space-y-3">
-          <p>
-            
-          </p>
-        </div>
+            </p>
+          </div>
       ),
     },
   ]
@@ -75,29 +60,29 @@ const HeroPlanner = () => {
   }, [])
 
   return (
-    <div id={id} className="flex flex-col items-center justify-center pt-12 xl:pt-16">
-      <div className="flex flex-col items-center justify-center space-y-1">
-        <button
-          onClick={scrollToComponentTop}
-          className="relative text-center font-headings text-3xl font-bold capitalize text-primary transition 
-          before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
-        >
-          Time Table Selector
-        </button>
-        <p className="text-center text-base font-normal xl:text-lg">
-          A melhor ferramenta para escolheres e gerires o teu horário FEUP!
-        </p>
-        <div className="stamp-card w-40 h-40">
-          <div className="stamp-card-inner relative text-align-center transition transform w-100% h-100%">
-            <div className="stamp-card-front absolute w-100% h-100%">
-              <img src={StampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
+    <div id={id} className="flex flex-col relative items-center justify-center pt-12 xl:pt-16">
+        <div className="stamp-card w-20 h-10 relative bottom-5 left-40 px-2 py-4 rotate-[17deg]">
+              <div className="stamp-card-inner relative text-align-center transition transform w-100% h-100%">
+                <div className="stamp-card-front absolute w-100% h-100%">
+                  <img src={StampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
+                </div>
+                <div className="stamp-card-back absolute rotate-y-180 w-100% h-100%">
+                  <img src={BackStampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
+                </div>
+              </div>
             </div>
-            <div className="stamp-card-back absolute rotate-y-180 w-100% h-100%">
-              <img src={BackStampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
-            </div>
-          </div>
-        </div> 
-      </div>
+        <div className="flex flex-row items-center justify-center w-15">
+            <button
+              onClick={scrollToComponentTop}
+              className="relative text-center font-headings text-3xl w-15 font-bold capitalize text-primary transition 
+              before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
+            >
+              Time Table Selector
+            </button>
+          </div> 
+          <p className="text-center text-base font-normal xl:text-lg">
+          Não deixes o horário perfeito escapar!
+          </p>
       <div className="flex flex-col px-2 xl:px-4">
         {data.map((item, itemIdx) => (
           <div id={item.id} key={`planner-card-feature-${itemIdx}`} className="pt-8 lg:pt-16">
@@ -128,6 +113,41 @@ const HeroPlanner = () => {
             </div>
           </div>
         ))}
+      </div>
+
+
+      <div className="flex flex-row items-center justify-center w-15">
+            <button
+              onClick={scrollToComponentTop}
+              className="relative text-center font-headings text-2xl w-15 pt-12 font-bold capitalize text-primary transition 
+              before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
+            >
+              As principais funcionalidades do TTS
+            </button>
+      </div> 
+      <p className="text-center text-base font-normal xl:text-lg">
+        Temos muitas novas funcionalidades do TTS e planos para futuras atualizações.
+      </p>
+
+      <div className="grid grid-cols-3 gap-12 m-12">
+          <div className="bg-white p-5 rounded-md dark:bg-dark">
+            <p className="font-bold text-md">Partilhar horários com amigos</p>
+          </div>
+          <div className="bg-white p-5 rounded-md dark:bg-dark">
+            <p className="font-bold text-md">Definir até 10 opções de horários</p>
+          </div>
+          <div className="bg-white p-5 rounded-md dark:bg-dark">
+            <p className="font-bold text-md">Completar o horário com cadeiras aleatórias</p>
+          </div>
+          <div className="bg-white p-5 rounded-md dark:bg-dark">
+            <p className="font-bold text-md">Tirar print ao horário</p>
+          </div>
+          <div className="bg-white p-5 rounded-md dark:bg-dark">
+            <p className="font-bold text-md">Filtrar as opções de horários pelos professores</p>
+          </div>
+          <div className="bg-white p-5 rounded-md dark:bg-dark">
+            <p className="font-bold text-md">Reordenar e personalizar as opções de horário</p>
+          </div>
       </div>
 
       <div className="mt-4 flex w-full items-center justify-end">
