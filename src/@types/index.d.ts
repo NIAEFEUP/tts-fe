@@ -11,6 +11,7 @@ export type Course = {
   id: number
   course_id: number
   course_unit_id: number
+  sigarra_id: number
   course: string
   name: string
   acronym: string
@@ -19,6 +20,7 @@ export type Course = {
   semester: number
   year: number
   schedule_url: string
+  ects: number
   last_updated: string
 }
 
@@ -83,6 +85,7 @@ export type CourseOption = {
     T: boolean
     TP: boolean
   }
+  locked: boolean
   course: CheckedCourse
   option: CourseSchedule | null
   schedules: CourseSchedule[]
@@ -105,10 +108,8 @@ export type MultipleOptions = {
   index: number
   selected: CourseOption[]
   options: CourseOption[][]
-  names: string[]
 }
 
-export type ImportedCourse = {
-  course_unit_id: number
-  class_name: string
+export type ImportedCourses = { 
+  [key: string]: string 
 }

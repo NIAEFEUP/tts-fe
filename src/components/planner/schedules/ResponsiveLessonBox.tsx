@@ -1,6 +1,11 @@
 import classNames from 'classnames'
 import { Lesson } from '../../../@types'
-import { convertWeekdayLong, getClassTypeClassName, getLessonBoxTime, getLessonTypeLongName } from '../../../utils'
+import {
+  convertWeekdayLong,
+  getClassTypeClassName,
+  getLessonBoxTime,
+  getLessonTypeLongName,
+} from '../../../utils/utils'
 
 type Props = {
   lesson: Lesson
@@ -42,7 +47,7 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
         <div className="flex w-full items-center justify-between gap-3">
           <span title="Sala">{lesson.schedule.location}</span>
           <span title="Professor(es)" className="whitespace-nowrap">
-            {lesson.schedule.professor_information.map(prof_info => prof_info.acronym).join(', ')}
+            {lesson.schedule.professor_information.map((prof_info) => prof_info.acronym).join(', ')}
           </span>
         </div>
       </div>

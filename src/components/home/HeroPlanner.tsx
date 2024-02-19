@@ -1,11 +1,9 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
-import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage } from '../../images'
-import { ArrowNarrowRightIcon } from '@heroicons/react/outline'
-import { getPath, config } from '../../utils'
-import { StampNIAEFEUPImage, BackStampNIAEFEUPImage} from '../../images'
-
+import { HomePageImage, HomePageAltImage, ScheduleDarkImage, LogoNIAEFEUPAltImage, StampNIAEFEUPImage, BackStampNIAEFEUPImage } from '../../images'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { getPath, config } from '../../utils/utils'
 
 type Card = {
   id: string
@@ -158,7 +156,7 @@ const HeroPlanner = () => {
             text-lg font-normal uppercase tracking-wider text-white transition-all hover:opacity-90"
           >
             <span>Experimentar</span>
-            <ArrowNarrowRightIcon className="h-5 w-5 transition-all group-hover:ml-2" />
+            <ArrowRightIcon className="h-5 w-5 transition-all group-hover:ml-2" />
           </Link>
         </div>
       </div>

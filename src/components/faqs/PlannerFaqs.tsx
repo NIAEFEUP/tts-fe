@@ -1,51 +1,10 @@
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { Transition, Disclosure } from '@headlessui/react'
-import { ChevronUpIcon, DotsHorizontalIcon } from '@heroicons/react/outline'
+import { ChevronUpIcon } from '@heroicons/react/24/outline'
 
 const PlannerFaqs = () => {
   const data = [
-    {
-      question: <span>O que é que mudou relativamente à versão anterior do TTS?</span>,
-      answer: (
-        <div className="space-y-3">
-          <p>A nova versão do Time Table Selector tem várias novas funcionalidades entre elas:</p>
-          <ul className="ml-5 list-disc">
-            <li>
-              Pesquisar e <strong>filtrar cursos</strong> usando texto.
-            </li>
-            <li>
-              Inspecionar <strong>sobreposições</strong> de horários.
-            </li>
-            <li>
-              Inspecionar <strong>uma aula</strong> individualmente.
-            </li>
-            <li>
-              Fazer <strong>múltiplas opções</strong> de horário (até 10).
-            </li>
-            <li>
-              <strong>Guardar</strong> estado/progresso na plataforma <strong>automaticamente</strong> no mesmo browser.
-            </li>
-            <li>
-              <strong>Exportar/importar</strong> horários.
-            </li>
-            <li>
-              Transferir ficheiros <strong>CSV com as 10 opções</strong> de horário.
-            </li>
-            <li>
-              Usar <strong>modo claro</strong> e <strong>modo escuro</strong>.
-            </li>
-            <li>
-              Usar a plataforma adequadamente em <strong>dispositivos móveis</strong>.
-            </li>
-          </ul>
-          <p>
-            Para além disso a nova versão do TTS inclui uma interface mais polida e robusta, com melhor acessibilidade e
-            usabilidade.
-          </p>
-        </div>
-      ),
-    },
     {
       question: <span>Qual o caso de uso do TTS mais comum?</span>,
       answer: (
@@ -53,28 +12,27 @@ const PlannerFaqs = () => {
           <ol className="mt-1 ml-5 list-decimal">
             <li className="font-bold">
               <span className="font-normal">
-                Escolher o <strong>ciclo de estudos</strong> (curso) que frequenta.
+                Escolher o <strong>ciclo de estudos</strong> (curso) que frequentas.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Selecionar as <strong>unidades curriculares</strong> que pretende realizar no semestre e confirmar.
+                Seleciona as <strong>unidades curriculares</strong> que vais frequentar e confirmar.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Selecionar os <strong>horários pretendidos</strong> nas caixas associadas a cada curso.
+                Seleciona as <strong>turmas pretendidas</strong> nas caixas associadas a cada unidade curricular.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                Fazer <strong>várias opções de horário</strong>, saltando entre elas usando as setas no topo.
+                Faz <strong>várias opções de horário</strong>, saltando e ordenando de acordo com a tua preferência.
               </span>
             </li>
             <li className="font-bold">
               <span className="font-normal">
-                No menu com opções extra <DotsHorizontalIcon className="mx-1 inline-flex h-5 w-5" />,{' '}
-                <strong>exportar as opções em CSV</strong> e usar esse ficheiro para preencher no SIGARRA.
+                Exporta as <strong>opções em CSV</strong> para partilhar ou para mais facilmente preencher no SIGARRA.
               </span>
             </li>
           </ol>
@@ -82,31 +40,14 @@ const PlannerFaqs = () => {
       ),
     },
     {
-      question: <span>O que devo fazer se tenho cadeiras em vários cursos?</span>,
+      question: <span>O que devo fazer se tenho cadeiras em diferentes cursos?</span>,
       answer: (
         <div className="space-y-3">
+          <p>É possível selecionar unidades curriculares de diferentes cursos que já o selecionado.</p>
           <p>
-            Esta funcionalidade estava planeada para a nova versão do TTS e pode futuramente ser implementada. No
-            entanto, o planeador de horário apenas permite selecionar unidades curriculares de um curso. Esta
-            funcionalidade foi considerada ser de prioridade baixa para o planeador de horários por{' '}
-            <strong>4 motivos</strong>:
-          </p>
-          <ul className="ml-5 list-disc">
-            <li>Não são muito comuns casos de alunos nesta situação na UPorto.</li>
-            <li>Alunos nesta situação não costumam ter mais do que 1 ou 2 unidades curriculares noutro curso.</li>
-            <li>A submissão de horários para cursos diferentes é feita em momentos diferentes.</li>
-            <li>
-              <strong>Eventualmente</strong>, alunos em 2 cursos fruto da cisão dos mestrados integrados (exemplo:
-              L.EIC, M.EIC) estarão obrigados a concluir a licenciatura antes de prosseguir para o mestrado.
-            </li>
-          </ul>
-
-          <p>
-            Assim sendo, recomendamos <strong>fazer as opções de horário num curso e depois no outro</strong> e exportar
-            ambos os CSVs, já que a submissão é <strong>geralmente feita no SIGARRA</strong> e no mesmo formato que o
-            CSV oferece. Resumidamente, no que toca a{' '}
-            <strong>sobreposições de horário em unidades curriculares de cursos diferentes</strong>, essa gestão fica da
-            responsabilidade do utilizador.
+            Para isso basta <strong>aceder ao painel de escolha de UCs</strong> e clicar no botão no canto inferior
+            esquerdo <strong>"UCs de outros cursos"</strong>, pesquisar o curso da unidade curricular desejável e
+            selecionar.
           </p>
         </div>
       ),
@@ -119,8 +60,8 @@ const PlannerFaqs = () => {
             As opções de horário são submetidas e processadas pelos <strong>departamentos de curso</strong>. De uma
             maneira geral há períodos dedicados a troca de turmas, sobre os quais os estudantes devem ser avisados por
             email. O processamento de pedidos de mudança de turma também é da responsabilidade do departamento de curso.
-            No entanto, no caso de encontrar outro estudantes que quer fazer a <strong>troca inversa</strong> é sempre
-            possível fazer a troca de turma numa fase inicial do semestre. Um{' '}
+            No entanto, no caso de encontrares outro estudantes que querem fazer a <strong>troca inversa</strong> é
+            sempre possível fazer a troca de turma numa fase inicial do semestre. Um{' '}
             <strong>exemplo de troca de turma direta</strong> é o seguinte:
           </p>
           <ul className="ml-5 list-disc">
@@ -133,32 +74,37 @@ const PlannerFaqs = () => {
           </ul>
           <p>
             Nesta situação, e caso não recebam nenhuma outra indicação, ambos os estudantes devem entrar em contacto com
-            o departamento do curso e pedir a troca direta. Relativamente a <strong>trocas de turmas indiretas</strong>,
+            o departamento do curso e pedir a troca direta. Relativamente à <strong>trocas de turmas indiretas</strong>,
             o aluno deve fazer um pedido de troca de turma junto do departamento de curso e, no caso do limite de alunos
-            da turma de destino não ser excedido o pedido será, em princípio concretizado.
-          </p>
-          <p className="quote">
-            Tanto as <strong>trocas de turmas diretas</strong> como as <strong>indiretas</strong> serão facilitadas uma
-            vez que a plataforma de mudança de turma <strong>FEUP Exchange</strong> esteja desenvolvida também pelo
-            NIAEFEUP. Esta plataforma está <strong>em desenvolvimento</strong> e está planeado que saia a tempo do{' '}
-            <strong>ano letivo de 2023/2024</strong>.
+            da turma de destino não ser excedido o pedido poderá ser concretizado.
           </p>
         </div>
       ),
     },
     {
-      question: <span>O planeador deixa-me selecionar as cadeiras que eu quiser no meu curso?</span>,
+      question: <span>O TTS deixa-me selecionar as cadeiras que eu quiser?</span>,
       answer: (
         <div className="space-y-3">
           <p>
-            Sim, o planeador de horário permite selecionar as cadeiras que pretende no seu curso, no respetivo semestre.
-            No entanto, o planeador <strong>não se responsabiliza pela contagem de créditos ECTS</strong>. O máximo de
-            créditos na Universidade do Porto é <strong>42 ECTS num semestre</strong> e{' '}
-            <strong>75 ECTS num ano letivo</strong>. O NIAEFEUP recomenda que os estudantes evitem ultrapassar os{' '}
-            <strong>36 ECTS por semestre</strong>, já que um número superior a 36 corresponde (geralmente) a uma carga
-            horária pesada, pouco saudável e difícil de gerir.
+            Sim, o TTS de horário permite selecionar um número qualquer de cadeiras no respetivo semestre. No entanto, o
+            TTS <strong>não se responsabiliza pela contagem de créditos ECTS</strong>. Certifica-se que não estás a
+            ultrapassar o limite de créditos permitido para a tua situação atual.
           </p>
-          <p>Avisos e contagem de créditos está planeada como uma funcionalidade para o futuro.</p>
+        </div>
+      ),
+    },
+    {
+      question: <span>Para que servem os cadeados ao lado de cada opção de unidade curricular?</span>,
+      answer: (
+        <div className="space-y-3">
+          <p>
+            Os cadeados servem para conseguires bloqueares a opção atual de tal forma a que te impeça de alterares
+            acidentalmente a opção exceto se voltares a desbloquear.
+          </p>
+          <p>
+            Esta funcionalidade é particularmente útil para as <strong>opções que já não tens dúvidas</strong> e também
+            para que a opção <strong>não seja alterada ao utilizares o preenchimento aleatório</strong>.
+          </p>
         </div>
       ),
     },
@@ -172,7 +118,7 @@ const PlannerFaqs = () => {
   }, [])
 
   return (
-    <div id={id} className="mx-auto flex flex-col items-center justify-center gap-6 pt-20">
+    <div id={id} className="mx-auto flex flex-col items-center justify-center gap-6 pt-14">
       <div className="flex flex-col items-center justify-center">
         <button
           onClick={scrollToComponentTop}
@@ -181,26 +127,19 @@ const PlannerFaqs = () => {
         >
           Time Table Selector
         </button>
-        <p className="w-full text-lg">
-          Nesta secção podes ver as questão relacionadas com o{' '}
-          <strong className="text-slate-700 dark:text-white">planeamento de horário</strong>.
-        </p>
       </div>
 
       <div className="mx-auto flex w-full flex-col gap-8">
         {data.map((faq, faqIdx) => (
           <Disclosure
             as="div"
-            defaultOpen={true}
+            defaultOpen={false}
             key={`planner-faq-${faqIdx}`}
             className="rounded-2xl bg-white p-3 dark:bg-dark"
           >
             {({ open }) => (
               <>
-                <Disclosure.Button
-                  className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition 
-                  hover:bg-slate-700 hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base"
-                >
+                <Disclosure.Button className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition hover:bg-slate-700 hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base">
                   <span className="text-left">{faq.question}</span>
                   <ChevronUpIcon
                     className={classNames(

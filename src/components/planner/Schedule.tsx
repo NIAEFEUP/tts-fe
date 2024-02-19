@@ -1,18 +1,30 @@
+import '../../styles/schedule.css'
 import classNames from 'classnames'
-import { useMemo } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Lesson, CourseOption } from '../../@types'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
-import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
-import '../../styles/schedule.css'
+import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils/utils'
+import { useShowGrid } from '../../hooks'
+import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
+import PrintSchedule from './schedule/PrintSchedule'
 
 type Props = {
-  showGrid: boolean
-  activeClassesT: boolean
-  activeClassesTP: boolean
   courseOptions: CourseOption[]
 }
 
-const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: Props) => {
+const Schedule = ({ courseOptions }: Props) => {
+  const scheduleRef = useRef(null)
+  const lessonTypesDic = {
+    T: 'Teórica',
+    TP: 'Teórico-Prática',
+    PL: 'Prática Laboratorial',
+    OT: 'Orientação Tutorial',
+    S: 'Seminário',
+    P: 'Prática',
+    TC: 'Teórica de Campo',
+    O: 'Outros',
+  }
+
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
@@ -54,6 +66,25 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     })
     return lessonsAcc
   }, [subjects])
+
+  const lessonTypes = useMemo(() => {
+    let lessonTypesAcc = []
+
+    lessons.forEach((lesson) => {
+      if (!lessonTypesAcc.includes(lesson.schedule.lesson_type)) {
+        lessonTypesAcc.push(lesson.schedule.lesson_type)
+      }
+    })
+
+    // Same order every time
+    lessonTypesAcc.sort((first, second) => {
+      return Object.keys(lessonTypesDic).indexOf(first) > Object.keys(lessonTypesDic).indexOf(second) ? 1 : -1
+    })
+
+    return lessonTypesAcc
+  }, [lessons, lessonTypesDic])
+
+  const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<String[]>([])
 
   /**
    * Find conflicts among classes between classes.
@@ -120,10 +151,12 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
     return lessonsAcc
   }, [lessons])
 
+  const [showGrid, setShowGrid] = useShowGrid()
+
   return (
     <>
       {/* Schedule Desktop */}
-      <div className="schedule-area">
+      <div ref={scheduleRef} className="schedule-area gap-2">
         <div className="schedule-top">
           <div className="schedule-top-empty">
             <span className="dummy">00:00</span>
@@ -150,7 +183,7 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
                       <LessonBox
                         key={`lesson-box-${lessonIdx}`}
                         lesson={lesson}
-                        active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                        active={!hiddenLessonsTypes.includes(lesson.schedule.lesson_type)}
                       />
                     ))
                   : conflicts.map((lessons: Lesson[]) =>
@@ -160,12 +193,45 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
                           lesson={lesson}
                           conflict={lessons.length > 1 ? true : false}
                           conflicts={lessons.length > 1 ? lessons : undefined}
-                          active={lesson.schedule.lesson_type === 'T' ? activeClassesT : activeClassesTP}
+                          active={!hiddenLessonsTypes.includes(lesson.schedule.lesson_type)}
                         />
                       ))
                     )}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* TODO: Create a component for this */}
+        <div className="flex justify-between gap-5 pl-16">
+          <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
+            {lessonTypes.map((lessonType: string) => (
+              <label className="inline-flex items-center gap-1.5 lg:gap-1" key={`lesson-type-${lessonType}`}>
+                <input
+                  type="checkbox"
+                  className="peer hidden"
+                  checked={hiddenLessonsTypes.includes(lessonType)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setHiddenLessonsTypes((prev) => [...prev, lessonType])
+                    } else {
+                      setHiddenLessonsTypes((prev) => prev.filter((type) => type !== lessonType))
+                    }
+                  }}
+                />
+                <span
+                  className={`h-3.5 w-3.5 rounded shadow 2xl:h-4 2xl:w-4 
+                  ${'bg-schedule-' + lessonType.toLowerCase() + '/80'}`}
+                />
+                <span className="cursor-pointer select-none peer-checked:line-through">
+                  {lessonTypesDic[lessonType]}
+                </span>
+              </label>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
+            <PrintSchedule component={scheduleRef} />
           </div>
         </div>
       </div>
@@ -177,22 +243,15 @@ const Schedule = ({ courseOptions, activeClassesT, activeClassesTP, showGrid }: 
             <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
               <div className="h-full w-1 rounded bg-primary" />
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
-                {lessons.map((lesson: Lesson, lessonIdx: number) =>
-                  lesson.schedule.lesson_type === 'T'
-                    ? activeClassesT && (
-                        <ResponsiveLessonBox
-                          key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
-                          lesson={lesson}
-                          conflict={false}
-                        />
-                      )
-                    : activeClassesTP && (
-                        <ResponsiveLessonBox
-                          key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
-                          lesson={lesson}
-                          conflict={false}
-                        />
-                      )
+                {lessons.map(
+                  (lesson: Lesson, lessonIdx: number) =>
+                    !hiddenLessonsTypes.includes(lesson.schedule.lesson_type) && (
+                      <ResponsiveLessonBox
+                        key={`responsive-lesson-box-${dayNumber}-${lessonIdx}`}
+                        lesson={lesson}
+                        conflict={false}
+                      />
+                    )
                 )}
               </div>
             </div>

@@ -1,10 +1,16 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseOption, CourseSchedule, Lesson } from '../@types'
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 /**
  * Get's the complete for a page.
@@ -66,6 +72,19 @@ const convertHour = (hourNumber: string) => {
 const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   if (first.day !== second.day) return false
   return parseFloat(second.start_time) < parseFloat(first.start_time) + parseFloat(first.duration)
+}
+
+const schedulesConflict = (first, second) => {
+  if (first.day !== second.day) return false;
+  
+  const firstStart = parseFloat(first.start_time);
+  const secondStart = parseFloat(second.start_time);
+  const firstDuration = parseFloat(first.duration);
+  const secondDuration = parseFloat(second.duration);
+  const firstEnd = firstStart + firstDuration;
+  const secondEnd = secondStart + secondDuration;
+
+  return (firstStart < secondStart && firstEnd > secondStart) || (firstStart >= secondStart && firstStart < secondEnd);
 }
 
 const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
@@ -147,7 +166,7 @@ const getClassTypeClassName = (type: string) => {
       return 'schedule-class-tc'
 
     default:
-      return 'schedule-class-other'
+      return 'schedule-class-o'
   }
 }
 
@@ -166,6 +185,23 @@ const getCourseTeachers = (courseOption: CourseOption) => {
   return teachers
 }
 
+
+const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
+  if (!courses) return []
+  
+  let frequency: Map<number, number> = new Map()
+  let newCourseOptions: CourseOption[] = []
+
+  for (let courseOption of courses) {
+    if (!frequency.has(courseOption.course.info.id)) {
+      newCourseOptions.push(courseOption)
+      frequency.set(courseOption.course.info.id, 1)
+    }
+  }
+
+  return newCourseOptions
+}
+
 export {
   config,
   dev_config,
@@ -181,10 +217,13 @@ export {
   convertWeekdayLong,
   convertHour,
   timesCollide,
+  schedulesConflict,
   getScheduleOptionDisplayText,
   getLessonBoxTime,
   getLessonBoxStyles,
   getClassTypeClassName,
   getLessonTypeLongName,
   getCourseTeachers,
+  cn,
+  removeDuplicatesFromCourseOption
 }
