@@ -1,34 +1,26 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from '../../../ui/dialog'
 import StorageAPI from '../../../../api/storage'
 import CourseContext from '../../../../contexts/CourseContext'
 import MajorContext from '../../../../contexts/MajorContext'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
-import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList } from './course-picker'
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
-import { CheckedCourse } from '../../../../@types'
 import { Course, Major } from '../../../../@types/new_index'
 import { useContext, useEffect } from 'react'
+import { TrashIcon } from '@heroicons/react/24/solid'
+import { CheckIcon } from '@heroicons/react/24/outline'
 
-type Props = {
-  openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  repeatedCourseControlHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-}
-
-const CoursePicker = ({
-  openHook,
-  coursesHook,
-  extraCoursesActiveHook,
-  extraCoursesModalOpenHook,
-  sourceBufferHook,
-  destBufferHook,
-  repeatedCourseControlHook,
-}: Props) => {
+const CoursePicker = () => {
   // const [selectedMajor, setSelectedMajor] = selectedMajorHook
   const { pickedCourses } = useContext(CourseContext)
   const { selectedMajor } = useContext(MajorContext)
@@ -66,6 +58,18 @@ const CoursePicker = ({
           <Separator orientation="vertical" className="mx-5" />
           <PickedCoursesList />
         </div>
+        <DialogFooter className="grid grid-cols-2">
+          <div />
+          <div className="flex items-center justify-between pr-4">
+            <Ects />
+            <DialogClose asChild>
+              <Button variant="icon" className="gap-2 bg-lightish text-darkish">
+                <CheckIcon className="h-5 w-5" />
+                <span>Pronto</span>
+              </Button>
+            </DialogClose>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

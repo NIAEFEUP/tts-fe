@@ -2,7 +2,8 @@ import { useContext } from 'react'
 import CourseContext from '../../../../../contexts/CourseContext'
 import { CourseInfo } from '../../../../../@types/new_index'
 import { Separator } from '../../../../ui/separator'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { Button } from '../../../../ui/button'
+import { XMarkIcon } from '@heroicons/react/24/solid'
 
 type Props = {
   course: CourseInfo
@@ -16,16 +17,17 @@ const PickedCourse = ({ course }: Props) => {
   }
 
   return (
-    <div
-      onClick={() => removeCourse()}
-      className="group m-2 ml-0 mr-4 flex cursor-pointer items-center rounded bg-lightish p-2"
-    >
-      <div className="grow text-lg font-bold">
-        {course.name} <span className="text-sm font-light">({course.acronym})</span>
+    <div className="flex items-stretch justify-between gap-2">
+      <div className="my-2 flex h-full grow items-center justify-between rounded bg-lightish p-2">
+        <span className="">{course.ects}</span>
+        <Separator orientation="vertical" className="mx-2" />
+        <div className="grow text-lg font-bold">
+          {course.name} <span className="w-full text-sm font-light">({course.acronym})</span>
+        </div>
       </div>
-      <Separator orientation="vertical" className="mx-5" />
-      <div className="text-nowrap min-w-fit">{course.ects} ECTS</div>
-      <XMarkIcon className="hidden h-6 w-6 text-red-600 group-hover:block" />
+      <Button variant="icon" onClick={removeCourse} className="my-2 h-auto bg-lightish">
+        <XMarkIcon className="h-5 w-5 text-primary" />
+      </Button>
     </div>
   )
 }

@@ -1,9 +1,7 @@
 import { CheckedCourse, Major, CourseOption, MultipleOptions } from '../../../@types'
 
-// import OldCoursePicker from './sessionController/CoursePicker'
 import CoursePicker from './sessionController/CoursePicker'
 
-import CollaborativeSession from './sessionController/CollaborativeSession'
 import Export from './sessionController/Export'
 
 type Props = {
@@ -35,15 +33,7 @@ const SessionController = ({
   return (
     <div className="flex w-full gap-1">
       {/* Course Picker */}
-      <CoursePicker
-        openHook={openHook}
-        coursesHook={coursesHook}
-        extraCoursesActiveHook={extraCoursesActiveHook}
-        extraCoursesModalOpenHook={extraCoursesModalOpenHook}
-        sourceBufferHook={sourceBufferHook}
-        destBufferHook={destBufferHook}
-        repeatedCourseControlHook={repeatedCourseControlHook}
-      />
+      <CoursePicker />
 
       {/* <CollaborativeSession /> */}
       <Export multipleOptions={multipleOptions} optionsList={optionsList} />
