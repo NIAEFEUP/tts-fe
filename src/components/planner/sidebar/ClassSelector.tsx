@@ -2,7 +2,7 @@ import { ChevronUpDownIcon, ExclamationTriangleIcon, LockClosedIcon, LockOpenIco
 import { User } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../../@types'
-import { getScheduleOptionDisplayText, schedulesConflict } from '../../../utils/utils'
+import { getScheduleOptionDisplayText, schedulesConflict } from '../../../utils'
 import { Button } from '../../ui/button'
 import {
   DropdownMenu,

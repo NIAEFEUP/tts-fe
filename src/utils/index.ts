@@ -223,6 +223,19 @@ const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
   return majorCourses
 }
 
+const isSubset = (set1, set2, same) => {  
+  for (let elem1 of set1) {
+    let found = false
+    for (let elem2 of set2) {
+      if (same(elem1, elem2)) {
+        found = true
+        break
+      }
+    }
+    if (!found) return false
+  }
+  return true
+}
 
 export {
   config,
@@ -249,4 +262,5 @@ export {
   cn,
   removeDuplicatesFromCourseOption,
   groupCoursesByYear,
+  isSubset,
 }

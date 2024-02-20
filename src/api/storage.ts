@@ -1,5 +1,5 @@
 import { MultipleOptions } from '../@types'
-import { getCourseTeachers } from '../utils/utils'
+import { getCourseTeachers } from '../utils'
 import API from './backend'
 
 

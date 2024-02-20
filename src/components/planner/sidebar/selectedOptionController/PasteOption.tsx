@@ -6,7 +6,7 @@ import {
   CourseSchedule,
   ImportedCourses,
 } from '../../../../@types'
-import { getCourseTeachers } from '../../../../utils/utils'
+import { getCourseTeachers } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'

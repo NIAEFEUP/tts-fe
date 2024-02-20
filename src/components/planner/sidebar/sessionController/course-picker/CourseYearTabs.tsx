@@ -2,8 +2,9 @@ import { useContext, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../../ui/tabs'
 import { CourseYearCheckboxes } from './CourseYearCheckboxes'
 import CourseContext from '../../../../../contexts/CourseContext'
-import { groupCoursesByYear } from '../../../../../utils/utils'
+import { groupCoursesByYear } from '../../../../../utils'
 import { ScrollArea } from '../../../../ui/scroll-area'
+import { isSubset } from '../../../../../utils'
 
 const CourseYearTabs = () => {
   const { coursesInfo, pickedCourses, setPickedCourses } = useContext(CourseContext)
@@ -16,17 +17,17 @@ const CourseYearTabs = () => {
         break
       }
       default: {
-        let newPickedCourses = [...pickedCourses]
-
-        if (pickedCourses.some((pickedCourse) => pickedCourse.course_unit_year === parseInt(selectedTab))) {
-          newPickedCourses = pickedCourses.filter(
-            (pickedCourse) => pickedCourse.course_unit_year !== parseInt(selectedTab)
+        let newPickedCourses = new Set([...pickedCourses])
+        const yearCourses = new Set(coursesByYear[parseInt(idx)])
+        if (isSubset(yearCourses, newPickedCourses, (course1, course2) => course1.id === course2.id)) {
+          newPickedCourses = new Set(
+            pickedCourses.filter((pickedCourse) => pickedCourse.course_unit_year !== parseInt(selectedTab))
           )
         } else {
-          newPickedCourses = [...newPickedCourses, ...coursesByYear[parseInt(selectedTab) - 1]]
+          newPickedCourses = new Set([...pickedCourses, ...coursesByYear[parseInt(selectedTab) - 1]])
         }
 
-        setPickedCourses(newPickedCourses)
+        setPickedCourses([...newPickedCourses.values()])
         break
       }
     }
@@ -36,7 +37,12 @@ const CourseYearTabs = () => {
     <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
       <TabsList className="w-full">
         {coursesByYear.map((_, idx) => (
-          <TabsTrigger onClick={(event) => handleClick(event, idx)} key={idx} value={`${idx + 1}`}>
+          <TabsTrigger
+            className="select-none"
+            onClick={(event) => handleClick(event, idx)}
+            key={idx}
+            value={`${idx + 1}`}
+          >
             {`${idx + 1}º Ano`}
           </TabsTrigger>
         ))}

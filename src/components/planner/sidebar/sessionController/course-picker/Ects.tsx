@@ -6,7 +6,6 @@ import { TooltipTrigger } from '@radix-ui/react-tooltip'
 
 const Ects = () => {
   const { pickedCourses } = useContext(CourseContext)
-
   const totalEcts = pickedCourses.reduce((acc, course) => acc + course.ects, 0)
   const warning = totalEcts > 42 ? 2 : totalEcts > 36 ? 1 : 0
 

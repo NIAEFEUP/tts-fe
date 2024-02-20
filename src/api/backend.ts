@@ -1,6 +1,5 @@
 import { CheckedCourse, Major } from '../@types'
-import { extraCoursesData } from '../utils/data'
-import { getSemester, config, dev_config } from '../utils/utils'
+import { getSemester, config, dev_config } from '../utils'
 
 
 const prod_val = process.env.REACT_APP_PROD
@@ -91,16 +90,6 @@ const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
 }
 
 /**
- * Retrieves all course units outside of a given major
- * @param major major to exclude course units from
- * @returns array of course units
- */
-const getExtraCourses = (major: Major) => {
-  // TODO: implement
-  return extraCoursesData
-}
-
-/**
  * Retrieves the scrappe info from the backend
  */
 const getInfo = async () => {
@@ -113,7 +102,6 @@ const api = {
   getCourseSchedule,
   getCoursesSchedules,
   getMajorCoursesSchedules,
-  getExtraCourses,
   getInfo
 }
 
