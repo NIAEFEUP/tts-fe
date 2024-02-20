@@ -51,10 +51,8 @@ const CoursePicker = () => {
         </DialogHeader>
         <MajorSearchCombobox />
         <Separator />
-        <div className="flex">
-          <div className="flex w-fit flex-col gap-2">
-            <CourseYearTabs />
-          </div>
+        <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
+          <CourseYearTabs />
           <Separator orientation="vertical" className="mx-5" />
           <PickedCoursesList />
         </div>
