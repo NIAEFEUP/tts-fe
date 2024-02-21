@@ -17,14 +17,23 @@ const CourseYearTabs = () => {
         break
       }
       default: {
-        let newPickedCourses = new Set([...pickedCourses])
-        const yearCourses = new Set(coursesByYear[parseInt(idx)])
+        let newPickedCourses = [...pickedCourses]
+        const yearCourses = coursesByYear[parseInt(idx)]
         if (isSubset(yearCourses, newPickedCourses, (course1, course2) => course1.id === course2.id)) {
-          newPickedCourses = new Set(
-            pickedCourses.filter((pickedCourse) => pickedCourse.course_unit_year !== parseInt(selectedTab))
+          newPickedCourses = pickedCourses.filter(
+            (pickedCourse) => pickedCourse.course_unit_year !== parseInt(selectedTab)
           )
         } else {
-          newPickedCourses = new Set([...pickedCourses, ...coursesByYear[parseInt(selectedTab) - 1]])
+          newPickedCourses = [...pickedCourses, ...coursesByYear[parseInt(selectedTab) - 1]]
+        }
+
+        // Remove duplicates
+        for (let i = 0; i < newPickedCourses.length; i++) {
+          for (let j = i + 1; j < newPickedCourses.length; j++) {
+            if (newPickedCourses[i].id === newPickedCourses[j].id) {
+              newPickedCourses.splice(j--, 1)
+            }
+          }
         }
 
         setPickedCourses([...newPickedCourses.values()])

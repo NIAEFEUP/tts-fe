@@ -14,14 +14,14 @@ import MajorContext from '../../../../contexts/MajorContext'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
-import { PencilSquareIcon } from '@heroicons//react/24/solid'
+import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import api from '../../../../api/backend'
 
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
-  const { pickedCourses } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
   const { selectedMajor } = useContext(MajorContext)
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const CoursePicker = () => {
         </DialogHeader>
         <MajorSearchCombobox />
         <Separator />
-        <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
+        <div className="w-[55rem] grid-cols-[1fr_3rem_1fr] grid">
           <CourseYearTabs />
           <Separator orientation="vertical" className="mx-5" />
           <PickedCoursesList />
@@ -66,12 +66,18 @@ const CoursePicker = () => {
           <div />
           <div className="flex items-center justify-between pr-4">
             <Ects />
-            <DialogClose asChild>
-              <Button variant="icon" className="gap-2 bg-lightish text-darkish">
-                <CheckIcon className="h-5 w-5" />
-                <span>Pronto</span>
+            <div className="flex gap-2">
+              <Button onClick={() => setPickedCourses([])} variant="icon" className="gap-2 bg-lightish text-darkish">
+                <TrashIcon className="h-5 w-5" />
+                <span>Limpar</span>
               </Button>
-            </DialogClose>
+              <DialogClose asChild>
+                <Button variant="icon" className="gap-2 bg-lightish text-darkish">
+                  <CheckIcon className="h-5 w-5" />
+                  <span>Pronto</span>
+                </Button>
+              </DialogClose>
+            </div>
           </div>
         </DialogFooter>
       </DialogContent>
