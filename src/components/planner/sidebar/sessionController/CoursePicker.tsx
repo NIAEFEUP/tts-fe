@@ -15,13 +15,12 @@ import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
-import { Course, Major } from '../../../../@types/new_index'
-import { useContext, useEffect } from 'react'
-import { TrashIcon } from '@heroicons/react/24/solid'
+import { useContext, useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/24/outline'
+import api from '../../../../api/backend'
 
 const CoursePicker = () => {
-  // const [selectedMajor, setSelectedMajor] = selectedMajorHook
+  const [open, setOpen] = useState(false)
   const { pickedCourses } = useContext(CourseContext)
   const { selectedMajor } = useContext(MajorContext)
 
@@ -33,8 +32,15 @@ const CoursePicker = () => {
     StorageAPI.setSelectedMajorStorage(selectedMajor)
   }, [selectedMajor])
 
+  const handleOpenChange = () => {
+    setOpen(!open)
+    if (open === false) return
+    const schedules = api._getCoursesSchedules(pickedCourses)
+    console.log(schedules)
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares">
           <span className="hidden md:block lg:hidden xl:block">Escolher UCs</span>

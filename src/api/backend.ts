@@ -1,4 +1,5 @@
 import { CheckedCourse, Major } from '../@types'
+import { CourseInfo } from '../@types/new_index'
 import { getSemester, config, dev_config } from '../utils'
 
 
@@ -90,6 +91,25 @@ const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
 }
 
 /**
+ * Retrieves all schedule options for a given course unit
+ * @param course course of which to retrieve schedule
+ * @returns array of schedule options
+ */
+const _getCourseSchedule = async (course: CourseInfo) => {
+  if (course === null) return []
+  return await apiRequest(`/schedule/${course.id}/`)
+}
+
+const _getCoursesSchedules = async (courses : CourseInfo[]) => {
+  return courses.map((course) => {
+    const schedule = _getCourseSchedule(course)
+
+    console.log(schedule)
+    return ''
+  })
+}
+
+/**
  * Retrieves the scrappe info from the backend
  */
 const getInfo = async () => {
@@ -102,6 +122,8 @@ const api = {
   getCourseSchedule,
   getCoursesSchedules,
   getMajorCoursesSchedules,
+  _getCourseSchedule,
+  _getCoursesSchedules,
   getInfo
 }
 

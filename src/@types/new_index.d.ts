@@ -29,6 +29,7 @@ export type CourseInfo = {
     acronym: string,
     name: string,
     url: string,
+    classes?: Array<Class>
     // last_updated: string, // remover ??
     // semester: number, // remover ??
     // year: number // remover ??
@@ -75,10 +76,6 @@ export type Class = {
     slots: Array<Slot>
 }
 
-export type Course = {
-    course_id: number
-    classes: Array<Class>
-}
 
 // |=============================================================|
 // |         Ver se nao podemos apagar daqui para baixo:         |
