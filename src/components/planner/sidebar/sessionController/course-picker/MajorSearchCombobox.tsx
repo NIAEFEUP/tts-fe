@@ -50,6 +50,7 @@ const MajorSearchCombobox = () => {
       <PopoverContent style={{ width: triggerWidth }} className="p-0">
         <Command
           filter={(value, search) => {
+            if (value === 'remove') return 1
             const major = majors.find((major) => major.id === parseInt(value))
             return match(major?.name, search, true) ||
               match(major?.name, search, false) ||
@@ -63,19 +64,22 @@ const MajorSearchCombobox = () => {
           <CommandEmpty>Nenhum curso corresponde à tua pesquisa.</CommandEmpty>
           <CommandGroup className="h-fit max-h-64 overflow-y-auto scroll-smooth">
             {/* <ScrollArea className="h-64"> */}
+            <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
+              Remover Seleção
+            </CommandItem>
             {majors.map((major) => (
               <CommandItem
                 key={major.id}
                 value={major.id.toString()}
                 onSelect={(currentMajorId) => {
                   const currentMajor = majors.find((major) => major.id === parseInt(currentMajorId))
-                  setSelectedMajor(currentMajor.id === selectedMajor.id ? null : currentMajor)
+                  setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
                   setOpen(false)
                 }}
               >
                 {getDisplayMajorText(major)}
                 <CheckIcon
-                  className={cn('ml-auto h-4 w-4', selectedMajor.id === major.id ? 'opacity-100' : 'opacity-0')}
+                  className={cn('ml-auto h-4 w-4', selectedMajor?.id === major.id ? 'opacity-100' : 'opacity-0')}
                 />
               </CommandItem>
             ))}
