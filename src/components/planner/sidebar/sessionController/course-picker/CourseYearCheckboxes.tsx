@@ -43,7 +43,7 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
             checked={checkboxList[courseIdx]}
             onCheckedChange={() => toggleCourse(courseIdx)}
           />
-          <Label htmlFor={`checkbox-${courseIdx}`} className="text-wrap">
+          <Label htmlFor={`checkbox-${courseIdx}`} className="text-wrap leading-normal">
             {course.name + ' (' + course.acronym + ')'}
           </Label>
         </div>
