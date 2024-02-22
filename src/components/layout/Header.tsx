@@ -11,6 +11,7 @@ import {
   ArrowsRightLeftIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
+import { LoginDialog } from '../auth/LoginDialog'
 
 const navigation = [
   {
@@ -87,7 +88,9 @@ const Header = ({ siteTitle, location }: Props) => {
                     ))}
                 </div>
 
-                <div className="hidden self-center md:inline-flex">
+
+                <div className="hidden self-center md:inline-flex gap-x-4">
+                  <LoginDialog />
                   <DarkModeSwitch />
                 </div>
               </div>

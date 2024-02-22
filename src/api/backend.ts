@@ -2,22 +2,33 @@ import { CheckedCourse, Major } from '../@types'
 import { extraCoursesData } from '../utils/data'
 import { getSemester, config, dev_config } from '../utils/utils'
 
-
 const prod_val = process.env.REACT_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
 const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
+ * Returns the url for which the login form will make a post request to in sigarra
+ * @param faculty faculty is the parameter of the login endpoint
+ * @returns 
+ */
+const sigarraAuthApi = (faculty) => {
+  return `https://sigarra.up.pt/${faculty}/pt/mob_val_geral.autentica`
+}
+
+/**
  * Make a request to the backend server.
  * @param route route to be appended to backend url
  * @returns response from the backend
  */
-const apiRequest = async (route: string) => {
+const apiRequest = async (route: string, method: string, body: FormData | null, tts_backend: boolean) => {
   const slash = route[0] === '/' ? '' : '/'
-  const url = BACKEND_URL + slash + route
+  
+  let url = "";
+  if (tts_backend) url += BACKEND_URL + slash
+  url += route
 
-  const data = await fetch(url)
+  const data = await fetch(url, { method: method, body: body, credentials: "include" })
     .then((response) => response.json())
     .catch((error) => console.error(error))
 
@@ -29,7 +40,7 @@ const apiRequest = async (route: string) => {
  * @returns all majors from the backend
  */
 const getMajors = async () => {
-  return await apiRequest(`/course/${config.api.year}`)
+  return await apiRequest(`/course/${config.api.year}`, "GET", null, true)
 }
 
 /**
@@ -39,7 +50,7 @@ const getMajors = async () => {
  */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`)
+  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`, "GET", null, true)
 }
 
 /**
@@ -49,7 +60,7 @@ const getCourses = async (major: Major) => {
  */
 const getCourseSchedule = async (course: CheckedCourse) => {
   if (course === null) return []
-  return await apiRequest(`/schedule/${course.info.id}/`)
+  return await apiRequest(`/schedule/${course.info.id}/`, "GET", null, true)
 }
 
 /**
@@ -104,7 +115,18 @@ const getExtraCourses = (major: Major) => {
  * Retrieves the scrappe info from the backend
  */
 const getInfo = async () => {
-  return await apiRequest('/info/')
+  return await apiRequest('/info/', "GET", null, true)
+}
+
+/**
+ * Authenticate with sigarra
+ */
+export const login = async (faculty, username, password) => {
+  const loginData = new FormData();
+  loginData.append("pv_login", username);
+  loginData.append("pv_password", password);
+
+  return await apiRequest(sigarraAuthApi(faculty), "POST", loginData, false);
 }
 
 const api = {
