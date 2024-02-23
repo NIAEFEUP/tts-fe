@@ -13,7 +13,7 @@ export const LoginForm = () => {
         const form = e.target;
 
         const username = form.elements['username'].value;
-        const password = form.elements['username'].value;
+        const password = form.elements['password'].value;
         
         await login("feup", username, password);
     }

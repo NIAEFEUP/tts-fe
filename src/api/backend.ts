@@ -126,7 +126,7 @@ export const login = async (faculty, username, password) => {
   loginData.append("pv_login", username);
   loginData.append("pv_password", password);
 
-  return await apiRequest(sigarraAuthApi(faculty), "POST", loginData, false);
+  return await apiRequest("/login/", "POST", loginData, true);
 }
 
 const api = {
