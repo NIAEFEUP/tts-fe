@@ -8,9 +8,9 @@ export const LoginDialog = () => {
     const [open, setOpen] = useState<boolean>(false);
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button type="button" className="btn btn-primary btn-lg">
+                <Button onClick={() => { setOpen(true) }} type="button" className="btn btn-primary btn-lg">
                     <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
                 </Button>
             </DialogTrigger>
@@ -21,7 +21,7 @@ export const LoginDialog = () => {
                         Entra com as tuas credencias do sigarra.
                     </DialogDescription>
                 </DialogHeader>
-                <LoginForm />
+                <LoginForm setOpen={setOpen} />
             </DialogContent>
         </Dialog>
     );
