@@ -10,9 +10,11 @@ export const ExchangeSidebar = () => {
                     <TabsTrigger value="direta">Troca direta</TabsTrigger>
                     <TabsTrigger value="indireta">Troca indireta</TabsTrigger>
                 </TabsList>
-                <TabsContent value="direta"><DirectExchange></DirectExchange></TabsContent>
+                <TabsContent value="direta">
+                    <DirectExchange />
+                </TabsContent>
                 <TabsContent value="indireta"></TabsContent>
-            </Tabs>   
+            </Tabs>
         </div>
     );
 }
