@@ -4,7 +4,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
 import MajorContext from '../../../../../contexts/MajorContext'
 import { cn } from '../../../../../utils'
 import { Button } from '../../../../../components/ui/button'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../../../../../components/ui/command'
+import { Command, CommandEmpty, CommandList, CommandInput, CommandItem } from '../../../../../components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../../../components/ui/popover'
 
 /**
@@ -62,8 +62,7 @@ const MajorSearchCombobox = () => {
         >
           <CommandInput placeholder="Procurar curso..." className="h-9" />
           <CommandEmpty>Nenhum curso corresponde à tua pesquisa.</CommandEmpty>
-          <CommandGroup className="h-fit max-h-64 overflow-y-auto scroll-smooth">
-            {/* <ScrollArea className="h-64"> */}
+          <CommandList>
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
@@ -83,8 +82,7 @@ const MajorSearchCombobox = () => {
                 />
               </CommandItem>
             ))}
-            {/* </ScrollArea> */}
-          </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
