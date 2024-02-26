@@ -8,31 +8,20 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protoc
 const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
- * Returns the url for which the login form will make a post request to in sigarra
- * @param faculty faculty is the parameter of the login endpoint
- * @returns 
- */
-const sigarraAuthApi = (faculty) => {
-  return `https://sigarra.up.pt/${faculty}/pt/mob_val_geral.autentica`
-}
-
-/**
  * Make a request to the backend server.
  * @param route route to be appended to backend url
  * @returns response from the backend
  */
-const apiRequest = async (route: string, method: string, body: FormData | null, tts_backend: boolean) => {
-  const slash = route[0] === '/' ? '' : '/'
-  
-  let url = "";
-  if (tts_backend) url += BACKEND_URL + slash
-  url += route
+const apiRequest = async (route: string, method: string, body: FormData | null) => {
+    const slash = route[0] === '/' ? '' : '/'
 
-  const data = await fetch(url, { method: method, body: body, credentials: "include" })
-    .then((response) => response.json())
-    .catch((error) => console.error(error))
+    const url = BACKEND_URL + slash + route;
 
-  return data
+    const data = await fetch(url, { method: method, body: body, credentials: "include" })
+        .then((response) => response.json())
+        .catch((error) => console.error(error))
+
+    return data
 }
 
 /**
@@ -40,7 +29,7 @@ const apiRequest = async (route: string, method: string, body: FormData | null, 
  * @returns all majors from the backend
  */
 const getMajors = async () => {
-  return await apiRequest(`/course/${config.api.year}`, "GET", null, true)
+    return await apiRequest(`/course/${config.api.year}`, "GET", null)
 }
 
 /**
@@ -49,8 +38,8 @@ const getMajors = async () => {
  * @returns course units array
  */
 const getCourses = async (major: Major) => {
-  if (major === null) return []
-  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`, "GET", null, true)
+    if (major === null) return []
+    return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`, "GET", null)
 }
 
 /**
@@ -59,8 +48,8 @@ const getCourses = async (major: Major) => {
  * @returns array of schedule options
  */
 const getCourseSchedule = async (course: CheckedCourse) => {
-  if (course === null) return []
-  return await apiRequest(`/schedule/${course.info.id}/`, "GET", null, true)
+    if (course === null) return []
+    return await apiRequest(`/schedule/${course.info.id}/`, "GET", null)
 }
 
 /**
@@ -69,15 +58,15 @@ const getCourseSchedule = async (course: CheckedCourse) => {
  * @returns array of schedule options
  */
 const getCoursesSchedules = async (courses: CheckedCourse[]) => {
-  if (!courses || courses.length === 0) return []
+    if (!courses || courses.length === 0) return []
 
-  let schedules = []
-  for (let course of courses) {
-    const schedule = await getCourseSchedule(course)
-    schedules.push(schedule)
-  }
+    let schedules = []
+    for (let course of courses) {
+        const schedule = await getCourseSchedule(course)
+        schedules.push(schedule)
+    }
 
-  return schedules
+    return schedules
 }
 
 /**
@@ -86,19 +75,19 @@ const getCoursesSchedules = async (courses: CheckedCourse[]) => {
  * @returns array of schedule options
  */
 const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
-  if (!courses || courses.length === 0) return []
+    if (!courses || courses.length === 0) return []
 
-  let schedules = []
-  for (let yearCourses of courses) {
-    let yearSchedules = []
-    for (let course of yearCourses) {
-      const schedule = await getCourseSchedule(course)
-      yearSchedules.push(schedule)
+    let schedules = []
+    for (let yearCourses of courses) {
+        let yearSchedules = []
+        for (let course of yearCourses) {
+            const schedule = await getCourseSchedule(course)
+            yearSchedules.push(schedule)
+        }
+        schedules.push(yearSchedules)
     }
-    schedules.push(yearSchedules)
-  }
 
-  return schedules
+    return schedules
 }
 
 /**
@@ -107,36 +96,36 @@ const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
  * @returns array of course units
  */
 const getExtraCourses = (major: Major) => {
-  // TODO: implement
-  return extraCoursesData
+    // TODO: implement
+    return extraCoursesData
 }
 
 /**
  * Retrieves the scrappe info from the backend
  */
 const getInfo = async () => {
-  return await apiRequest('/info/', "GET", null, true)
+    return await apiRequest('/info/', "GET", null)
 }
 
 /**
  * Authenticate with sigarra
  */
-export const login = async (faculty, username, password) => {
-  const loginData = new FormData();
-  loginData.append("pv_login", username);
-  loginData.append("pv_password", password);
+export const login = async (faculty: string, username: string, password: string) => {
+    const loginData = new FormData();
+    loginData.append("pv_login", username);
+    loginData.append("pv_password", password);
 
-  return await apiRequest("/login/", "POST", loginData, true);
+    return await apiRequest("/login/", "POST", loginData);
 }
 
 const api = {
-  getMajors,
-  getCourses,
-  getCourseSchedule,
-  getCoursesSchedules,
-  getMajorCoursesSchedules,
-  getExtraCourses,
-  getInfo
+    getMajors,
+    getCourses,
+    getCourseSchedule,
+    getCoursesSchedules,
+    getMajorCoursesSchedules,
+    getExtraCourses,
+    getInfo
 }
 
 export default api

@@ -12,6 +12,9 @@ import {
   QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
 import { LoginDialog } from '../auth/LoginDialog'
+import { LogoutDialog } from '../auth/LogoutDialog'
+import { useContext } from 'react'
+import { SessionContext } from '../../contexts/SessionContext'
 
 const navigation = [
   {
@@ -41,6 +44,8 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
+  const {loggedIn, setLoggedIn} = useContext(SessionContext);
+
   return (
     <Disclosure
       as="nav"
@@ -90,7 +95,11 @@ const Header = ({ siteTitle, location }: Props) => {
 
 
                 <div className="hidden self-center md:inline-flex gap-x-4">
-                  <LoginDialog />
+                  {
+                    loggedIn 
+                      ? <LogoutDialog /> 
+                      : <LoginDialog />
+                  }
                   <DarkModeSwitch />
                 </div>
               </div>

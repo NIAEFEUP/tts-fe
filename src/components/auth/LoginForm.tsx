@@ -1,16 +1,18 @@
-import { useForm, useFormContext } from "react-hook-form";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { useForm } from "react-hook-form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { login } from "../../api/backend";
-import { ToastAction } from "../ui/toast"
 import { useToast } from "../ui/use-toast"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import { useState } from "react";
+import { SessionContext } from "../../contexts/SessionContext";
+import { useContext } from "react";
 
 export const LoginForm = ({
     setOpen
 }) => {
+    const { loggedIn, setLoggedIn } = useContext(SessionContext);
     const form = useForm();
     const [errorMessages, setErrorMessages] = useState<{ name?: string, message?: string }>({});
     const { toast } = useToast();
@@ -29,33 +31,33 @@ export const LoginForm = ({
             newErrorMessages = { ...newErrorMessages, uname: "Campo obrigatório" };
         }
 
-        if(!password) {
+        if (!password) {
             newErrorMessages = { ...newErrorMessages, pass: "Campo obrigatório" };
         }
 
         setErrorMessages(newErrorMessages);
 
-        if(username && password) {
+        if (username && password) {
             login("feup", username, password)
-            .then((res) => {
-                if(!res.authenticated) {
-                    newErrorMessages = { ...newErrorMessages, invalid_credentials: "Seu username ou senha estão incorretos" };
+                .then((res) => {
+                    if (!res.authenticated) {
+                        newErrorMessages = { ...newErrorMessages, invalid_credentials: "Seu username ou senha estão incorretos" };
+                        setErrorMessages(newErrorMessages);
+                    } else {
+                        setOpen(false);
+                        setLoggedIn(true);
+                        localStorage.setItem("username", username);
+                        toast({
+                            title: "Login realizado com sucesso!",
+                            duration: 1500,
+                        });
+                    }
+                })
+                .catch((e) => {
+                    console.error(e);
+                    newErrorMessages = { ...newErrorMessages, login_error: "Ocorreu um erro durante o login." };
                     setErrorMessages(newErrorMessages);
-                } else {
-                    setOpen(false);
-                    toast({
-                        variant: "success",
-                        title: "Login realizado com sucesso!",
-                        description: "Você encontra-se logado.",
-                        action: <ToastAction altText="Close">Fechar</ToastAction>,
-                    });
-                }
-            })
-            .catch((e) => {
-                console.error(e);
-                newErrorMessages = { ...newErrorMessages, login_error: "Ocorreu um erro durante o login." };
-                setErrorMessages(newErrorMessages);
-            });
+                });
         }
     }
 
@@ -100,9 +102,9 @@ export const LoginForm = ({
                     )}
                 />
                 {renderErrorMessage("invalid_credentials")}
-                <Button className="p-5 w-full mt-2" type="submit">Entrar</Button>     
+                <Button className="p-5 w-full mt-2" type="submit">Entrar</Button>
                 {renderErrorMessage("login_error")}
             </form>
-        </Form>      
+        </Form>
     );
 };

@@ -10,8 +10,9 @@ export const LoginDialog = () => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => { setOpen(true) }} type="button" className="btn btn-primary btn-lg">
-                    <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
+                <Button onClick={() => { setOpen(true) }} type="button" className="btn btn-primary">
+                    Entrar 
+                    <ArrowRightEndOnRectangleIcon className="h-5 w-5 ml-2" />
                 </Button>
             </DialogTrigger>
             <DialogContent>

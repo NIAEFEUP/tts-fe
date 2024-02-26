@@ -7,6 +7,8 @@ import { useDarkMode } from './hooks'
 import { ThemeContext } from './contexts/ThemeContext'
 import { Toaster } from './components/ui/toaster'
 import './app.css'
+import { SessionContext } from './contexts/SessionContext'
+import { useState } from 'react'
 
 // Configures the path for pages.
 const pages = [
@@ -25,10 +27,17 @@ const redirects = [
 
 const App = () => {
   const [enabled, setEnabled] = useDarkMode()
+  const [loggedIn, setLoggedIn] = useState<boolean>(() => {
+    const username = localStorage.getItem("username");
+
+    return username !== null;
+  });
+
   StorageAPI.updateScrappeInfo()
 
   return (
     <BrowserRouter>
+    <SessionContext.Provider value={{loggedIn, setLoggedIn}}>
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <Routes>
           {pages.map((page, pageIdx) => (
@@ -54,6 +63,7 @@ const App = () => {
           ))}
         </Routes>
       </ThemeContext.Provider>
+    </SessionContext.Provider>
     </BrowserRouter>
   )
 }
