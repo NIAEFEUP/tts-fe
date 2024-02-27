@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-import { cn } from '../../../utils/utils'
+import { cn } from '../../../utils'
 
 /**
  * //TODO - complete this with colors for each class type

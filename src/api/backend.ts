@@ -1,6 +1,6 @@
 import { CheckedCourse, Major } from '../@types'
-import { extraCoursesData } from '../utils/data'
-import { getSemester, config, dev_config } from '../utils/utils'
+import { CourseInfo } from '../@types/new_index'
+import { getSemester, config, dev_config } from '../utils'
 
 
 const prod_val = process.env.REACT_APP_PROD
@@ -91,13 +91,22 @@ const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
 }
 
 /**
- * Retrieves all course units outside of a given major
- * @param major major to exclude course units from
- * @returns array of course units
+ * Retrieves all schedule options for a given course unit
+ * @param course course of which to retrieve schedule
+ * @returns array of schedule options
  */
-const getExtraCourses = (major: Major) => {
-  // TODO: implement
-  return extraCoursesData
+const _getCourseSchedule = async (course: CourseInfo) => {
+  if (course === null) return []
+  return await apiRequest(`/schedule/${course.id}/`)
+}
+
+const _getCoursesSchedules = async (courses : CourseInfo[]) => {
+  return courses.map((course) => {
+    const schedule = _getCourseSchedule(course)
+
+    console.log(schedule)
+    return ''
+  })
 }
 
 /**
@@ -113,7 +122,8 @@ const api = {
   getCourseSchedule,
   getCoursesSchedules,
   getMajorCoursesSchedules,
-  getExtraCourses,
+  _getCourseSchedule,
+  _getCoursesSchedules,
   getInfo
 }
 

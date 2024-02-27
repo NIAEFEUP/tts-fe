@@ -1,12 +1,11 @@
 import { CheckedCourse, Major, CourseOption, MultipleOptions } from '../../../@types'
+
 import CoursePicker from './sessionController/CoursePicker'
-import CollaborativeSession from './sessionController/CollaborativeSession'
+
 import Export from './sessionController/Export'
 
 type Props = {
-  majors: Major[]
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -21,9 +20,7 @@ type Props = {
  * Sidebar with all the main schedule interactions
  */
 const SessionController = ({
-  majors,
   openHook,
-  majorHook,
   coursesHook,
   extraCoursesActiveHook,
   extraCoursesModalOpenHook,
@@ -35,17 +32,9 @@ const SessionController = ({
 }: Props) => {
   return (
     <div className="flex w-full gap-1">
-      <CoursePicker
-        majors={majors}
-        openHook={openHook}
-        majorHook={majorHook}
-        coursesHook={coursesHook}
-        extraCoursesActiveHook={extraCoursesActiveHook}
-        extraCoursesModalOpenHook={extraCoursesModalOpenHook}
-        sourceBufferHook={sourceBufferHook}
-        destBufferHook={destBufferHook}
-        repeatedCourseControlHook={repeatedCourseControlHook}
-      />
+      {/* Course Picker */}
+      <CoursePicker />
+
       {/* <CollaborativeSession /> */}
       <Export multipleOptions={multipleOptions} optionsList={optionsList} />
     </div>

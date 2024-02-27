@@ -1,4 +1,4 @@
-import { removeDuplicatesFromCourseOption } from '../../../utils/utils'
+import { removeDuplicatesFromCourseOption } from '../../../utils'
 import ClassSelector from './ClassSelector'
 
 const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {

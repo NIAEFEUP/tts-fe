@@ -6,9 +6,7 @@ import SelectedOptionController from './sidebar/SelectedOptionController'
 import CoursesController from './sidebar/CoursesController'
 
 type Props = {
-  majors: Major[]
   openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -76,9 +74,7 @@ const defaultOptionsList = [
  * Sidebar with all the main schedule interactions
  */
 const Sidebar = ({
-  majors,
   openHook,
-  majorHook,
   coursesHook,
   extraCoursesActiveHook,
   extraCoursesModalOpenHook,
@@ -115,9 +111,7 @@ const Sidebar = ({
       <div className="space-y-2">
         <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
           <SessionController
-            majors={majors}
             openHook={openHook}
-            majorHook={majorHook}
             coursesHook={coursesHook}
             extraCoursesActiveHook={extraCoursesActiveHook}
             extraCoursesModalOpenHook={extraCoursesModalOpenHook}
@@ -135,8 +129,6 @@ const Sidebar = ({
           <SelectedOptionController
             optionsListHook={[optionsList, setOptionsList]}
             selectedOptionHook={[selectedOption, setSelectedOption]}
-            majors={majors}
-            majorHook={majorHook}
             currentOption={multipleOptions.selected}
             multipleOptionsHook={multipleOptionsHook}
             checkCourses={checkCourses}

@@ -2,7 +2,7 @@ import { ChevronUpDownIcon, ExclamationTriangleIcon, LockClosedIcon, LockOpenIco
 import { User } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../../@types'
-import { getScheduleOptionDisplayText, schedulesConflict } from '../../../utils/utils'
+import { getScheduleOptionDisplayText, schedulesConflict } from '../../../utils'
 import { Button } from '../../ui/button'
 import {
   DropdownMenu,
@@ -247,7 +247,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
         </p>
         <div className="flex items-center">
           {/* Dropdown Menu */}
-          <DropdownMenu onOpenChange={() => setIsDropdownOpen(!isDropdownOpen)}>
+          <DropdownMenu onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild disabled={courseOption.locked} ref={classSelectorTriggerRef}>
               <Button
                 variant="outline"

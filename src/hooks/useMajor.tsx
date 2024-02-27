@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { Major } from '../@types'
+import { Major } from '../@types/new_index'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
