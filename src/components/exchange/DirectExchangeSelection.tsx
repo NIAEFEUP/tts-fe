@@ -21,27 +21,28 @@ import {
 } from "../ui/popover"
 
 
-const frameworks = [
+const ucClasses = [
     {
-        value: "next.js",
-        label: "Next.js",
+        value: "1",
+        label: "3LEIC01",
     },
     {
-        value: "sveltekit",
-        label: "SvelteKit",
+        value: "2",
+        label: "3LEIC02",
     },
     {
-        value: "nuxt.js",
-        label: "Nuxt.js",
+        value: "3",
+        label: "3LEIC03",
     },
     {
-        value: "remix",
-        label: "Remix",
+        value: "4",
+        label: "3LEIC04",
     },
     {
-        value: "astro",
-        label: "Astro",
+        value: "5",
+        label: "3LEIC05",
     },
+
 ]
 
 export function DirectExchangeSelection(props) {
@@ -49,60 +50,62 @@ export function DirectExchangeSelection(props) {
     const [value, setValue] = useState<string>("")
 
     return (
-        <div className="flex w-full justify-between">
-            <div className="mt-4 flex flex-col space-y-4">
-                <p>{props.UC}</p>
+        <div className="flex w-full justify-between space-x-4 items-center">
+            <div className="flex flex-col space-y-2">
+                <span className="font-bold">{props.UC}</span>
                 <div className="flex flex-row items-center">
-                    <span className="w-fit bg-slate-200 p-2 text-center">{props.Class}</span>
+                    <Input disabled type="text" className="w-[80px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={props.ucClass}></Input>
                     <span>
                         <ArrowRightIcon className="mx-2 h-5 w-5"></ArrowRightIcon>
                     </span>
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className="w-[150px] justify-between"
+                            >
+                                {value
+                                    ? ucClasses.find((ucClass) => ucClass.value === value)?.label
+                                    : "Escolher turma..."}
+                                {/*<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />*/}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[180px] p-0">
+                            <Command>
+                                <CommandInput className="border-none focus:ring-0" placeholder="Procurar turma..." />
+                                <CommandEmpty>Nenhuma turma encontrada.</CommandEmpty>
+                                <CommandGroup>
+                                    {ucClasses.map((ucClass) => (
+                                        <CommandItem
+                                            className="pl-2"
+                                            key={ucClass.value}
+                                            value={ucClass.value}
+                                            onSelect={(currentValue) => {
+                                                setValue(currentValue === value ? "" : currentValue)
+                                                setOpen(false)
+                                            }}
+                                        >
+                                            {/*<Check
+                                                className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    value === framework.value ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />*/}
+                                            {ucClass.label}
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
             </div>
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-[200px] justify-between"
-                    >
-                        {value
-                            ? frameworks.find((framework) => framework.value === value)?.label
-                            : "Select framework..."}
-                        {/*<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />*/}
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                        <CommandInput placeholder="Search framework..." />
-                        <CommandEmpty>No framework found.</CommandEmpty>
-                        <CommandGroup>
-                            {frameworks.map((framework) => (
-                                <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
-                                    onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
-                                        setOpen(false)
-                                    }}
-                                >
-                                    {/*<Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            value === framework.value ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />*/}
-                                    {framework.label}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
-            <div className="mt-4 flex flex-col space-y-4">
-                <p>Estudante</p>
-                <Input></Input>
+            
+            <div className="flex flex-col space-y-2">
+                <span className="font-bold">Estudante</span>
+                <Input />
             </div>
         </div>
     )
