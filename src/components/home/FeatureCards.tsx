@@ -37,14 +37,14 @@ const features = [
 
 const FeatureCards = () => {
   return (
-    <div className="grid grid-cols-3 gap-12 m-12">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-12 m-4 sm:m-8 lg:m-12">
       {features.map((feature, index) => (
-        <div key={index} className="bg-white p-5 rounded-lg dark:bg-dark text-center shadow-lg">
-          <Button className="flex-grow rounded-full border-4 border-primary bg-inherit hover:bg-secondary text-primary dark:bg-inherit dark:text-primary relative h-20 w-20 top-0 left-0 mx-auto">
-            <feature.Icon className="h-15 w-15 mx-auto" />
+        <div key={index} className="bg-white p-4 sm:p-5 rounded-lg dark:bg-dark text-center shadow-lg">
+          <Button className="flex-grow rounded-full border-4 border-primary bg-inherit hover:bg-secondary text-primary dark:bg-inherit dark:text-primary relative h-16 w-16 sm:h-20 sm:w-20 top-0 left-0 mx-auto">
+            <feature.Icon className="h-10 w-10 sm:h-15 sm:w-15 mx-auto" />
           </Button>
-          <h3 className="font-bold text-md py-2">{feature.title}</h3>
-          <p>{feature.description}</p>
+          <h3 className="font-bold text-sm sm:text-md py-2">{feature.title}</h3>
+          <p className="text-xs sm:text-sm">{feature.description}</p>
         </div>
       ))}
     </div>

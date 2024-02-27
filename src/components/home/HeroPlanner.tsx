@@ -64,15 +64,17 @@ const HeroPlanner = () => {
 
   return (
     <div id={id} className="flex flex-col relative items-center justify-center pt-12 xl:pt-16">
-        <div className="stamp-card w-20 h-10 relative bottom-5 left-40 px-2 py-4 rotate-[17deg]">
-              <div className="stamp-card-inner relative text-align-center transition transform w-100% h-100%">
+            <div className="flex flex-col items-center justify-center w-full">
+        <div className="stamp-card w-20 h-10 relative bottom-10 sm:bottom-10 md:left-[200px] md:bottom-5 md:rotate-[17deg]">
+            <div className="stamp-card-inner relative text-align-center transition transform w-100% h-100%">
                 <div className="stamp-card-front absolute w-100% h-100%">
-                  <img src={StampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
+                    <img src={StampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
                 </div>
                 <div className="stamp-card-back absolute rotate-y-180 w-100% h-100%">
-                  <img src={BackStampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
+                    <img src={BackStampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
                 </div>
-              </div>
+            </div>
+        </div>
         </div>
         <div className="flex flex-row items-center justify-center w-15">
             <button
@@ -125,11 +127,11 @@ const HeroPlanner = () => {
                 className="relative text-center font-headings text-2xl w-15 pt-12 font-bold capitalize text-primary transition 
                 before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
               >
-                As principais funcionalidades do TTS
+                Principais Funcionalidades
               </button>
         </div> 
         <p className="text-center text-base font-normal xl:text-lg">
-              Temos novas funcionalidades do TTS e planos para futuras atualizações.
+              Temos novas funcionalidades e planos para futuras atualizações.
         </p>
         <FeatureCards />
       </div>
