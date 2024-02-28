@@ -80,6 +80,46 @@ button {
   --epr-category-label-bg-color: rgb(242, 244, 247);
 }
 
+
+.stamp {
+  @apply w-10 h-5 inline-block p-10 mt-5 bg-white relative text-center filter drop-shadow-md;
+  background: radial-gradient(
+    transparent 0px,     
+    transparent 4px, 
+    white 4px,
+    white
+  );
+  background-size: 20px 20px;
+  background-position: -10px -10px;
+}
+
+.stamp::after {
+  @apply absolute left-5 top-5 right-5 bottom-5 z-[-1];
+  content: '';
+}
+
+.stamp::before {
+  @apply absolute bottom-0 left-0 font-bold text-white opacity-75 text-4xl leading-normal p-5;
+  content: 'CSS3';
+}
+
+.stamp-card-inner {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.stamp-card:hover .stamp-card-inner {
+  transform: rotateY(180deg);
+}
+
+.stamp-card-front, .stamp-card-back {
+  -webkit-backface-visibility: hidden; 
+}
+
+.stamp-card-back {
+  transform: rotateY(180deg);
+}
+
 #option-header .EmojiPickerReact.epr-dark-theme {
   --epr-bg-color: rgb(26, 28, 35);
   --epr-category-label-bg-color: rgb(26, 28, 35);
