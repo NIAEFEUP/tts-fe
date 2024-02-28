@@ -237,12 +237,12 @@ const Schedule = ({ courseOptions }: Props) => {
       </div>
 
       {/* Schedule Mobile */}
-      <div className="flex h-full w-full flex-col items-center justify-start space-y-2 lg:hidden gap-2">
+      <div className="flex h-full w-full flex-col items-center justify-start gap-2 space-y-2 lg:hidden">
         {lessonsGroupedByDays.length > 0 ? (
           lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
             <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
-              <div className="flex h-full w-4 rounded bg-primary">
-                <strong className='text-white text-xl'>{convertWeekdayLong(dayNumber)[0]}</strong>
+              <div className="flex h-full rounded bg-primary p-1">
+                <strong className="text-xl text-white">{convertWeekdayLong(dayNumber)[0]}</strong>
               </div>
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
                 {lessons.map(
