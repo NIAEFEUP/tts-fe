@@ -111,7 +111,7 @@ const Sidebar = ({
   }, [selectedOption])
 
   return (
-    <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col-reverse lg:flex-col justify-between rounded bg-lightest px-5 py-5 justify-center dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 lg:justify-start">
+    <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col rounded bg-lightest px-5 py-5 justify-start dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 items-start">
         <SessionController
           majors={majors}
           openHook={openHook}
