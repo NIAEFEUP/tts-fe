@@ -1,6 +1,7 @@
 import { CheckCircleIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "../ui/button";
 import { DirectExchangeSelection } from "./DirectExchangeSelection";
+import { getStudentSchedule } from "../../api/backend";
 
 const UCs = [
     { name: "Computação Gráfica", ucClass: "3LEIC01" },    
@@ -10,6 +11,12 @@ const UCs = [
 ]
 
 export function DirectExchange() {
+    
+    getStudentSchedule(localStorage.getItem("username")).then((res) => {
+        console.log(localStorage.getItem("username"));
+        console.log(res);
+    });
+
     return (
         <div className="flex justify-center flex-col space-y-4 mt-4">
             <Button variant="info" className="w-full"><InformationCircleIcon className="h-5 w-5 mr-2"></InformationCircleIcon>Como funcionam as trocas diretas?</Button>

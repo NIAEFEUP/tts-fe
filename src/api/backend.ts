@@ -118,6 +118,13 @@ export const login = async (faculty: string, username: string, password: string)
     return await apiRequest("/login/", "POST", loginData);
 }
 
+export const getStudentSchedule = async(username) => {
+    const data  = new FormData();
+    data.append("pv_codigo", username);
+  
+    return await apiRequest("/student_schedule", "GET", data);
+  }  
+
 const api = {
     getMajors,
     getCourses,
