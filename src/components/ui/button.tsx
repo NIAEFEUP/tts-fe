@@ -20,6 +20,8 @@ const buttonVariants = cva(
           'bg-slate-100 text-slate-900 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80',
         ghost: 'hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50',
         link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50',
+        info: 'bg-blue-100 text-blue-950 hover:bg-slate-100/80 dark:bg-slate-600 dark:text-blue-50 dark:hover:bg-slate-800/80 border border-blue-800 dark:border-blue-400',
+        submit: 'bg-green-100 text-green-950 hover:bg-slate-100/80 dark:bg-slate-600 dark:text-green-50 dark:hover:bg-slate-800/80 border border-green-800 dark:border-green-400'
       },
       size: {
         default: 'h-10 px-4 py-2',
