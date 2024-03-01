@@ -123,8 +123,15 @@ export const login = async (faculty: string, username: string, password: string)
  */
 export const getStudentSchedule = async(username: string) => {
   
-    return await apiRequest(`/student_schedule?pv_codigo=${username}`, "GET", null);
-  }  
+    return await apiRequest(`/student_schedule/${username}/`, "GET", null);
+}  
+
+/**
+ * Get course unit schedules from sigarra
+ */
+export const getCourseScheduleSigarra = async(course_unit_id: string) => {
+    return await apiRequest(`/schedule_sigarra/${course_unit_id}/`, "GET", null);
+}
 
 const api = {
     getMajors,
