@@ -118,11 +118,12 @@ export const login = async (faculty: string, username: string, password: string)
     return await apiRequest("/login/", "POST", loginData);
 }
 
-export const getStudentSchedule = async(username) => {
-    const data  = new FormData();
-    data.append("pv_codigo", username);
+/**
+ * Get student schedule from sigarra 
+ */
+export const getStudentSchedule = async(username: string) => {
   
-    return await apiRequest("/student_schedule", "GET", data);
+    return await apiRequest(`/student_schedule?pv_codigo=${username}`, "GET", null);
   }  
 
 const api = {
