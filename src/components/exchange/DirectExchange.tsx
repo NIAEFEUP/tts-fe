@@ -17,7 +17,7 @@ export function DirectExchange() {
             try {
                 const data = await getStudentSchedule(username);
                 setSchedule(data.filter(course => course.tipo === "TP")
-                    .map(course => ({ ucName: course.ucurr_sigla, ucClass: course.turma_sigla, ucCode: course.ocorrencia_id })));
+                    .map(course => ({ ucName: course.ucurr_nome, ucClass: course.turma_sigla, ucCode: course.ocorrencia_id })));
             } catch (err) {
                 setError(err);
             } finally {
