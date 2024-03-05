@@ -83,6 +83,7 @@ export function DirectExchangeSelection(props) {
                                             key={ucClass.value}
                                             value={ucClass.value}
                                             onSelect={(currentValue) => {
+                                                console.log("current value: ", currentValue);
                                                 setValue(currentValue === value ? "" : currentValue)
                                                 setOpen(false)
                                             }}
@@ -96,7 +97,7 @@ export function DirectExchangeSelection(props) {
                     </Popover>
                 </div>
             </div>
-            
+
             <div className="flex flex-col space-y-2">
                 <span className="font-bold">Estudante</span>
                 <Input />

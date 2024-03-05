@@ -123,7 +123,9 @@ export const login = async (faculty: string, username: string, password: string)
 */
 export const submitDirectExchange = async (exchangeChoices: ClassExchange[]) => {
     const formData = new FormData();
-    formData.append("exchangeChoices", JSON.stringify(exchangeChoices));
+    for (const choice of exchangeChoices) {
+        formData.append("exchangeChoices[]", JSON.stringify(choice));
+    }
 
     return await apiRequest("/submit_direct_exchange/", "POST", formData);
 }
