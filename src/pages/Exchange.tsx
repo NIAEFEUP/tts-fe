@@ -1,8 +1,12 @@
 import { Schedule } from "../components/planner";
 import { ExchangeSidebar } from "../components/exchange/ExchangeSidebar";
 import { getStudentSchedule } from "../api/backend";
+import { useContext } from "react";
+import { SessionContext } from "../contexts/SessionContext";
 
 const ExchangePage = () => {
+
+    const {loggedIn, setLoggedIn} = useContext(SessionContext);
     
     const courses = getStudentSchedule(localStorage.getItem('username')).then((response) => {
         var courseOptions = [];
@@ -72,12 +76,19 @@ const ExchangePage = () => {
     }).catch((e: Error) => console.log(e));
 
     return (
+        <>
+        {loggedIn ?
         <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
             <div className="schedule">
                 <Schedule courseOptions={[]}/>
             </div>
             <ExchangeSidebar />
         </div>
+        : 
+        <div className="flex justify-center items-center h-96 text-center">
+            <p className="text-2xl">Entra na tua conta para aceder a esta página</p>
+        </div>}
+        </>
     );
 }
 

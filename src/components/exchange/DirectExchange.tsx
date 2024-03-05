@@ -2,13 +2,15 @@ import { CheckCircleIcon, InformationCircleIcon } from "@heroicons/react/24/outl
 import { Button } from "../ui/button";
 import { DirectExchangeSelection } from "./DirectExchangeSelection";
 import { getStudentSchedule } from "../../api/backend";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { SessionContext } from "../../contexts/SessionContext";
 
 export function DirectExchange() {
 
     const [schedule, setSchedule] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const {loggedIn, setLoggedIn} = useContext(SessionContext);
 
     const username = localStorage.getItem("username");
 
@@ -19,7 +21,12 @@ export function DirectExchange() {
                 setSchedule(data.filter(course => course.tipo === "TP")
                     .map(course => ({ ucName: course.ucurr_nome, ucClass: course.turma_sigla, ucCode: course.ocorrencia_id })));
             } catch (err) {
-                setError(err);
+                if(err.response.status === 403) {
+                    setLoggedIn(false);
+                }
+                else {
+                    setError(err);
+                }
             } finally {
                 setIsLoading(false);
             }
