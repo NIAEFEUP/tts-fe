@@ -3,6 +3,7 @@ import { ExchangeSidebar } from "../components/exchange/ExchangeSidebar";
 import { getStudentSchedule } from "../api/backend";
 import { useContext } from "react";
 import { SessionContext } from "../contexts/SessionContext";
+import NotAuthorizedPage from "./NotAuthorized";
 
 const ExchangePage = () => {
 
@@ -85,9 +86,7 @@ const ExchangePage = () => {
             <ExchangeSidebar />
         </div>
         : 
-        <div className="flex justify-center items-center h-96 text-center">
-            <p className="text-2xl">Entra na tua conta para aceder a esta página</p>
-        </div>}
+        <NotAuthorizedPage />}
         </>
     );
 }
