@@ -48,7 +48,7 @@ export function DirectExchange() {
             <Button variant="submit" className="w-full"><CheckCircleIcon className="h-5 w-5 mr-2"></CheckCircleIcon>Submeter Troca</Button>
             {
                 schedule.map((uc) => (
-                    <DirectExchangeSelection ucName={uc.ucName} ucClass={uc.ucClass} ucCode={uc.ucCode} />
+                    <DirectExchangeSelection ucName={uc.ucName} ucClass={uc.ucClass} ucCode={uc.ucCode} key={uc.ucName} />
                 ))
             }
         </div>
