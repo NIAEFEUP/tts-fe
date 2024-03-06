@@ -18,7 +18,13 @@ const apiRequest = async (route: string, method: string, body: FormData | null) 
     const url = BACKEND_URL + slash + route;
 
     const data = await fetch(url, { method: method, body: body, credentials: "include" })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.ok) {
+                return response.json()
+            } else {
+                return response
+            }
+        })
         .catch((error) => console.error(error))
 
     return data

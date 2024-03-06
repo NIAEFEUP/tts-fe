@@ -18,15 +18,13 @@ export function DirectExchange() {
         const fetchData = async () => {
             try {
                 const data = await getStudentSchedule(username);
+                if(data.status === 403) {
+                    setLoggedIn(false);
+                }
                 setSchedule(data.filter(course => course.tipo === "TP")
                     .map(course => ({ ucName: course.ucurr_nome, ucClass: course.turma_sigla, ucCode: course.ocorrencia_id })));
             } catch (err) {
-                if(err.response.status === 403) {
-                    setLoggedIn(false);
-                }
-                else {
-                    setError(err);
-                }
+                setError(err);
             } finally {
                 setIsLoading(false);
             }
