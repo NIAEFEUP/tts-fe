@@ -1,16 +1,23 @@
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { ClassExchange } from "../../@types";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { SubmitDirectExchangeForm } from "./SubmitDirectExchangeForm";
 
-export const SubmitDirectExchangeButton = () => {
+type Props = {
+    currentDirectExchange: Map<string, ClassExchange>
+}
+
+export const SubmitDirectExchangeButton = ({
+    currentDirectExchange
+}: Props) => {
     const [open, setOpen] = useState<boolean>(false);
 
     return <>
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => { setOpen(true) }} variant="submit" className="w-full"><CheckCircleIcon className="h-5 w-5 mr-2"></CheckCircleIcon>Submeter Troca</Button>
+                <Button disabled={currentDirectExchange.size === 0} onClick={() => { setOpen(true) }} variant="submit" className="w-full"><CheckCircleIcon className="h-5 w-5 mr-2"></CheckCircleIcon>Submeter Troca</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -19,7 +26,7 @@ export const SubmitDirectExchangeButton = () => {
                         Após a submissão, tanto tu como o estudante com o qual especificaste na troca terão de clicar num link de confirmação para que a
                         troca se efetue de facto.
                     </DialogDescription>
-                    <SubmitDirectExchangeForm dialogAction={setOpen} />
+                    <SubmitDirectExchangeForm currentDirectExchange={currentDirectExchange} dialogAction={setOpen} />
                 </DialogHeader>
             </DialogContent>
         </Dialog>

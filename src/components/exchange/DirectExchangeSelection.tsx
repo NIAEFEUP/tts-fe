@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Input } from '../ui/input'
 import { Button } from "../ui/button"
@@ -17,22 +17,42 @@ import {
     PopoverTrigger,
 } from "../ui/popover"
 import { getCourseScheduleSigarra } from "../../api/backend"
+import { ClassExchange, CourseOption } from "../../@types"
 
+type props = {
+    setCurrentDirectExchange: Dispatch<SetStateAction<Map<string, ClassExchange>>>,
+    currentDirectExchange: Map<string, ClassExchange>,
+    ucName: string,
+    ucClass: string,
+    ucCode: string,
+    ucSigla: string
+};
 
-export function DirectExchangeSelection(props) {
+export function DirectExchangeSelection({
+    setCurrentDirectExchange,
+    currentDirectExchange,
+    ucName,
+    ucClass,
+    ucCode,
+    ucSigla
+}: props) {
     const [open, setOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
+    const [selectedClass, setSelectedClass] = useState<string>("");
+    const [student, setStudent] = useState<string>("");
 
     const [ucClasses, setUcClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    console.log("Uc sigla: ", ucSigla);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getCourseScheduleSigarra(props.ucCode);
-                setUcClasses(data.filter((ucClass) => ucClass.tipo === "TP").sort((a, b) => a.turma_sigla.localeCompare(b.turma_sigla))
-                    .map(ucClass => ({ value: ucClass.aula_id.toString(), label: ucClass.turma_sigla})));
+                const data = await getCourseScheduleSigarra(ucCode);
+                setUcClasses(data.filter((otherUcClass) => otherUcClass.tipo === "TP" && ucClass !== otherUcClass.turma_sigla).sort((a, b) => a.turma_sigla.localeCompare(b.turma_sigla))
+                    .map(otherUcClass => ({ value: otherUcClass.aula_id.toString(), label: otherUcClass.turma_sigla })));
 
             } catch (err) {
                 setError(err);
@@ -42,7 +62,7 @@ export function DirectExchangeSelection(props) {
         };
 
         fetchData();
-    }, [props.ucCode]);
+    }, [ucCode]);
 
     if (isLoading) {
         return <p>Loading schedule...</p>;
@@ -52,12 +72,14 @@ export function DirectExchangeSelection(props) {
         return <p>Error fetching schedule: {error.message}</p>;
     }
 
+    console.log("Student: ", student);
+
     return (
         <div className="flex w-full justify-between space-x-4 items-center">
             <div className="flex flex-col space-y-2">
-                <span className="font-bold">{props.ucName}</span>
+                <span className="font-bold">{ucName}</span>
                 <div className="flex flex-row items-center">
-                    <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={props.ucClass}></Input>
+                    <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={ucClass}></Input>
                     <span>
                         <ArrowRightIcon className="mx-2 h-5 w-5"></ArrowRightIcon>
                     </span>
@@ -79,18 +101,28 @@ export function DirectExchangeSelection(props) {
                                 <CommandInput className="border-none focus:ring-0" placeholder="Procurar turma..." />
                                 <CommandEmpty>Nenhuma turma encontrada.</CommandEmpty>
                                 <CommandGroup>
-                                    {ucClasses.map((ucClass) => (
+                                    {ucClasses.map((otherStudentUcClass) => (
                                         <CommandItem
                                             className="pl-2"
-                                            key={ucClass.value}
-                                            value={ucClass.value}
+                                            key={otherStudentUcClass.value}
+                                            value={otherStudentUcClass.value}
                                             onSelect={(currentValue) => {
-                                                console.log("current value: ", currentValue);
+                                                currentDirectExchange.delete(currentValue);
+                                                console.log("fuck this shit as a student: ", student);
+                                                setCurrentDirectExchange(
+                                                    new Map(currentDirectExchange.set(otherStudentUcClass.value, {
+                                                        course_unit: ucSigla,
+                                                        old_class: otherStudentUcClass.label,
+                                                        new_class: ucClass, // auth student class
+                                                        other_student: student
+                                                    }))
+                                                )
+                                                setSelectedClass(currentValue);
                                                 setValue(currentValue === value ? "" : currentValue)
                                                 setOpen(false)
                                             }}
                                         >
-                                            {ucClass.label}
+                                            {otherStudentUcClass.label}
                                         </CommandItem>
                                     ))}
                                 </CommandGroup>
@@ -102,8 +134,10 @@ export function DirectExchangeSelection(props) {
 
             <div className="flex flex-col space-y-2">
                 <span className="font-bold">Estudante</span>
-                <Input />
+                <Input onChange={(event) => {
+                    setStudent(event.target.value);
+                }} value={student} />
             </div>
-        </div>
+        </div >
     )
 }
