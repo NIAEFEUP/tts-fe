@@ -18,7 +18,13 @@ const apiRequest = async (route: string, method: string, body: FormData | null) 
     const url = BACKEND_URL + slash + route;
 
     const data = await fetch(url, { method: method, body: body, credentials: "include" })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.ok) {
+                return response.json()
+            } else {
+                return response
+            }
+        })
         .catch((error) => console.error(error))
 
     return data
@@ -128,6 +134,21 @@ export const submitDirectExchange = async (exchangeChoices: ClassExchange[]) => 
     }
 
     return await apiRequest("/submit_direct_exchange/", "POST", formData);
+}
+
+ /*
+ * Get student schedule from sigarra 
+ */
+export const getStudentSchedule = async(username: string) => {
+  
+    return await apiRequest(`/student_schedule/${username}/`, "GET", null);
+}  
+
+/**
+ * Get course unit schedules from sigarra
+ */
+export const getCourseScheduleSigarra = async(course_unit_id: string) => {
+    return await apiRequest(`/schedule_sigarra/${course_unit_id}/`, "GET", null);
 }
 
 const api = {
