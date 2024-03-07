@@ -118,7 +118,7 @@ export type ClassExchange = {
     course_unit: string,
     old_class: string,
     new_class: string,
-    other_student: string // We know the current student, so we only need to register the other one
+    other_student: string // If the user didn't specify a student, it will be none
 }
 
 export type ExchangeCourseUnit = {

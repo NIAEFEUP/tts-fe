@@ -6,6 +6,9 @@ import { Form } from "../ui/form";
 import PulseLoader from "react-spinners/PulseLoader";
 import { ClassExchange } from "../../@types";
 import { ExchangeSelectionPreview } from "./ExchangeSelectionPreview";
+import { ExchangeErrors } from "../../services/exchange/errors";
+import { CheckCircleIcon, CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { toast } from "../ui/use-toast";
 
 type Props = {
     dialogAction: Dispatch<SetStateAction<boolean>>,
@@ -14,6 +17,8 @@ type Props = {
 
 export const SubmitDirectExchangeForm = ({ dialogAction, currentDirectExchange }: Props) => {
     const [exchangeBeingProcessed, setExchangeBeingProcessed] = useState<boolean>(false);
+    const [exchangeError, setExchangeError] = useState<string>();
+    const [submitSuccessShow, setSubmitSuccessShow] = useState<boolean>(false);
     const form = useForm();
 
     const handleSubmit = async (e) => {
@@ -21,10 +26,24 @@ export const SubmitDirectExchangeForm = ({ dialogAction, currentDirectExchange }
 
         setExchangeBeingProcessed(true);
 
-        submitDirectExchange(Array.from(currentDirectExchange.values())).then((res) => {
+        submitDirectExchange(Array.from(currentDirectExchange.values())).then(async (res) => {
             setExchangeBeingProcessed(false);
-            if (res.ok) {
-                dialogAction(false);
+            if (res.success) {
+                setSubmitSuccessShow(true);
+
+                setTimeout(() => {
+                    dialogAction(false);
+
+                    toast({
+                        title: 'Troca submetida',
+                        description: 'A troca foi submetida com sucesso!',
+                        duration: 2000,
+                    })
+                }, 1000);
+            }
+            else {
+                const content = await res.json();
+                setExchangeError(ExchangeErrors[content.error]);
             }
         }).catch((err) => {
             console.log(err);
@@ -46,5 +65,15 @@ export const SubmitDirectExchangeForm = ({ dialogAction, currentDirectExchange }
             className="mx-auto"
             loading={exchangeBeingProcessed}
         />
+
+        {submitSuccessShow && <>
+            <CheckCircleIcon className="w-10 h-10 mx-auto success-text" />
+            <p className="text-center success-text">Submetido com sucesso!</p>
+        </>}
+
+        {exchangeError && <>
+            <ExclamationCircleIcon className="w-10 h-10 mx-auto error-text" />
+            <p className="error-text text-center">{exchangeError}</p>
+        </>}
     </Form>
 }

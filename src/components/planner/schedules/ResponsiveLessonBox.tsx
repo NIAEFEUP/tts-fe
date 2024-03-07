@@ -15,8 +15,6 @@ type Props = {
 const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
     const lessonType = lesson.schedule.lesson_type
 
-    console.log("lesson is: ", lesson);
-
     return (
         <div
             className={classNames(

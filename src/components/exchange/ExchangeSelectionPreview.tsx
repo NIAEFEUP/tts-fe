@@ -19,30 +19,22 @@ type Props = {
 export const ExchangeSelectionPreview = ({
     exchange
 }: Props) => {
-    return <div className="flex w-full justify-between space-x-4 items-center">
+    return <div className="flex w-full justify-around rounded-md border p-4 shadow-md">
         <div className="flex flex-col space-y-2">
             <span className="font-bold">{exchange.course_unit}</span>
-            <div className="flex flex-row items-center">
-                <Input
-                    disabled
-                    type="text"
-                    className="w-1/2 disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white"
-                    placeholder={exchange.old_class}></Input>
+            <div className="flex flex-end">
+                {/* The new class of the other student is our old class */}
+                <p>{exchange.new_class}</p>
                 <span>
                     <ArrowRightIcon className="mx-2 h-5 w-5"></ArrowRightIcon>
                 </span>
-                <Input
-                    disabled
-                    type="text"
-                    className="w-1/2 disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white"
-                    placeholder={exchange.new_class}></Input>
-
+                <p>{exchange.old_class}</p>
             </div>
         </div>
 
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-2 mr-0">
             <span className="font-bold">Estudante</span>
-            <Input />
+            <span >{exchange.other_student}</span>
         </div>
     </div >
 

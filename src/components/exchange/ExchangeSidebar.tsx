@@ -3,13 +3,13 @@ import { DirectExchange } from "./DirectExchange";
 import { Dispatch, SetStateAction } from "react";
 import { CourseOption } from "../../@types";
 
-type props = {
+type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
 }
 
 export const ExchangeSidebar = ({
     setCourseOptions
-}) => {
+}: Props) => {
     return (
         <div className="sidebar">
             <Tabs defaultValue="direta" className="w-full">

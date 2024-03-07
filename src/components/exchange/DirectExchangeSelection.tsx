@@ -39,8 +39,6 @@ export function DirectExchangeSelection({
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    console.log("Uc sigla: ", uc.sigla);
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -65,8 +63,6 @@ export function DirectExchangeSelection({
     if (error) {
         return <p>Error fetching schedule: {error.message}</p>;
     }
-
-    console.log("Student: ", student);
 
     return (
         <div className="flex w-full justify-between space-x-4 items-center">
@@ -101,7 +97,6 @@ export function DirectExchangeSelection({
                                             key={otherStudentUcClass.value}
                                             value={otherStudentUcClass.value}
                                             onSelect={(currentValue) => {
-                                                currentDirectExchange.delete(currentValue);
                                                 setCurrentDirectExchange(
                                                     new Map(currentDirectExchange.set(uc.sigla, {
                                                         course_unit: uc.sigla,
@@ -129,6 +124,11 @@ export function DirectExchangeSelection({
                 <span className="font-bold">Estudante</span>
                 <Input onChange={(event) => {
                     setStudent(event.target.value);
+                    const exchange = currentDirectExchange.get(uc.sigla);
+                    exchange.other_student = event.target.value;
+                    setCurrentDirectExchange(
+                        new Map(currentDirectExchange.set(uc.sigla, exchange))
+                    )
                 }} value={student} />
             </div>
         </div >

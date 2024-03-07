@@ -106,16 +106,11 @@ export function DirectExchange({
                 <div>
                     {
                         schedule.map((uc) => {
-                            console.log("uc is: ", uc)
                             return (
                                 <DirectExchangeSelection
                                     setCurrentDirectExchange={setCurrentDirectExchange}
                                     currentDirectExchange={currentDirectExchange}
                                     uc={uc}
-                                    // ucName={uc.ucName}
-                                    // ucSigla={uc.ucSigla}
-                                    // ucClass={uc.ucClass}
-                                    // ucCode={uc.ucCode}
                                     key={uc.ucName}
                                 />
                             )

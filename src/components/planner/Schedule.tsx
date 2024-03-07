@@ -25,8 +25,6 @@ const Schedule = ({ courseOptions }: Props) => {
         O: 'Outros',
     }
 
-    console.log("course options are: ", courseOptions);
-
     const dayValues = Array.from({ length: 6 }, (_, i) => i)
     const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
@@ -48,13 +46,10 @@ const Schedule = ({ courseOptions }: Props) => {
         return chosenSubjects
     }, [courseOptions])
 
-    console.log("subjects are: ", subjects);
-
     const lessons = useMemo(() => {
         let lessonsAcc: Lesson[] = []
 
         subjects.forEach((subject) => {
-            console.log("curr subject is: ", subject);
             if (subject.shown.T) {
                 subject.theoreticalLessons.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
             }
@@ -71,8 +66,6 @@ const Schedule = ({ courseOptions }: Props) => {
         })
         return lessonsAcc
     }, [subjects])
-
-    console.log("lessons: ", lessons);
 
     const lessonTypes = useMemo(() => {
         let lessonTypesAcc = []

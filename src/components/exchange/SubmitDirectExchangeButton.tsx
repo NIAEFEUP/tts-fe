@@ -1,6 +1,7 @@
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { ClassExchange } from "../../@types";
+import { validateExchangeChoices } from "../../services/exchange/validation";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { SubmitDirectExchangeForm } from "./SubmitDirectExchangeForm";
@@ -17,7 +18,14 @@ export const SubmitDirectExchangeButton = ({
     return <>
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button disabled={currentDirectExchange.size === 0} onClick={() => { setOpen(true) }} variant="submit" className="w-full"><CheckCircleIcon className="h-5 w-5 mr-2"></CheckCircleIcon>Submeter Troca</Button>
+                <Button
+                    disabled={!validateExchangeChoices(currentDirectExchange)}
+                    variant="submit"
+                    className="w-full"
+                >
+                    <CheckCircleIcon className="h-5 w-5 mr-2" />
+                    Submeter Troca
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
