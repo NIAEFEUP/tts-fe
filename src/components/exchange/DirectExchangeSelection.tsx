@@ -17,24 +17,18 @@ import {
     PopoverTrigger,
 } from "../ui/popover"
 import { getCourseScheduleSigarra } from "../../api/backend"
-import { ClassExchange, CourseOption } from "../../@types"
+import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types"
 
 type props = {
     setCurrentDirectExchange: Dispatch<SetStateAction<Map<string, ClassExchange>>>,
     currentDirectExchange: Map<string, ClassExchange>,
-    ucName: string,
-    ucClass: string,
-    ucCode: string,
-    ucSigla: string
+    uc: ExchangeCourseUnit
 };
 
 export function DirectExchangeSelection({
     setCurrentDirectExchange,
     currentDirectExchange,
-    ucName,
-    ucClass,
-    ucCode,
-    ucSigla
+    uc
 }: props) {
     const [open, setOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
@@ -45,13 +39,13 @@ export function DirectExchangeSelection({
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    console.log("Uc sigla: ", ucSigla);
+    console.log("Uc sigla: ", uc.sigla);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getCourseScheduleSigarra(ucCode);
-                setUcClasses(data.filter((otherUcClass) => otherUcClass.tipo === "TP" && ucClass !== otherUcClass.turma_sigla).sort((a, b) => a.turma_sigla.localeCompare(b.turma_sigla))
+                const data = await getCourseScheduleSigarra(uc.code);
+                setUcClasses(data.filter((otherUcClass) => otherUcClass.tipo === "TP" && uc.class !== otherUcClass.turma_sigla).sort((a, b) => a.turma_sigla.localeCompare(b.turma_sigla))
                     .map(otherUcClass => ({ value: otherUcClass.aula_id.toString(), label: otherUcClass.turma_sigla })));
 
             } catch (err) {
@@ -62,7 +56,7 @@ export function DirectExchangeSelection({
         };
 
         fetchData();
-    }, [ucCode]);
+    }, [uc.code]);
 
     if (isLoading) {
         return <p>Loading schedule...</p>;
@@ -77,9 +71,9 @@ export function DirectExchangeSelection({
     return (
         <div className="flex w-full justify-between space-x-4 items-center">
             <div className="flex flex-col space-y-2">
-                <span className="font-bold">{ucName}</span>
+                <span className="font-bold">{uc.name}</span>
                 <div className="flex flex-row items-center">
-                    <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={ucClass}></Input>
+                    <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={uc.class}></Input>
                     <span>
                         <ArrowRightIcon className="mx-2 h-5 w-5"></ArrowRightIcon>
                     </span>
@@ -108,12 +102,11 @@ export function DirectExchangeSelection({
                                             value={otherStudentUcClass.value}
                                             onSelect={(currentValue) => {
                                                 currentDirectExchange.delete(currentValue);
-                                                console.log("fuck this shit as a student: ", student);
                                                 setCurrentDirectExchange(
-                                                    new Map(currentDirectExchange.set(otherStudentUcClass.value, {
-                                                        course_unit: ucSigla,
+                                                    new Map(currentDirectExchange.set(uc.sigla, {
+                                                        course_unit: uc.sigla,
                                                         old_class: otherStudentUcClass.label,
-                                                        new_class: ucClass, // auth student class
+                                                        new_class: uc.class, // auth student class
                                                         other_student: student
                                                     }))
                                                 )

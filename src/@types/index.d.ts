@@ -120,3 +120,10 @@ export type ClassExchange = {
     new_class: string,
     other_student: string // We know the current student, so we only need to register the other one
 }
+
+export type ExchangeCourseUnit = {
+    sigla: string,
+    name: string,
+    class: string,
+    code: string
+}

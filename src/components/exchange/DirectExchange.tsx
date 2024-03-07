@@ -5,7 +5,8 @@ import { getStudentSchedule } from "../../api/backend";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { SessionContext } from "../../contexts/SessionContext";
 import { SubmitDirectExchangeButton } from "./SubmitDirectExchangeButton";
-import { ClassExchange, CourseOption } from "../../@types";
+import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types";
+import { MoonLoader } from "react-spinners";
 
 type props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
@@ -30,7 +31,12 @@ export function DirectExchange({
                     setLoggedIn(false);
                 } else {
                     setSchedule(data.filter(course => course.tipo === "TP")
-                        .map(course => ({ ucSigla: course.ucurr_sigla, ucName: course.ucurr_nome, ucClass: course.turma_sigla, ucCode: course.ocorrencia_id })));
+                        .map(course => ({
+                            sigla: course.ucurr_sigla,
+                            name: course.ucurr_nome,
+                            class: course.turma_sigla,
+                            code: course.ocorrencia_id
+                        })));
                     // setCourseOptions(data.filter(course => course.tipo === "TP").map(course => ({
                     //     shown: {
                     //         T: false,
@@ -81,37 +87,44 @@ export function DirectExchange({
         fetchData();
     }, [username]);
 
-    if (isLoading) {
-        return <p>Loading schedule...</p>;
-    }
+    // if (isLoading) {
+    //     return <p>Loading schedule...</p>;
+    // }
 
     if (error) {
         return <p>Error fetching schedule: {error.message}</p>;
     }
 
-    return (
+    return <>
         <div className="flex justify-center flex-col space-y-4 mt-4">
             <Button variant="info" className="w-full">
                 <InformationCircleIcon className="h-5 w-5 mr-2"></InformationCircleIcon>
                 Como funcionam as trocas diretas?
             </Button>
             <SubmitDirectExchangeButton currentDirectExchange={currentDirectExchange} />
-            {
-                schedule.map((uc) => {
-                    console.log("uc is: ", uc)
-                    return (
-                        <DirectExchangeSelection
-                            setCurrentDirectExchange={setCurrentDirectExchange}
-                            currentDirectExchange={currentDirectExchange}
-                            ucName={uc.ucName}
-                            ucSigla={uc.ucSigla}
-                            ucClass={uc.ucClass}
-                            ucCode={uc.ucCode}
-                            key={uc.ucName}
-                        />
-                    )
-                })
-            }
+            {!isLoading ?
+                <div>
+                    {
+                        schedule.map((uc) => {
+                            console.log("uc is: ", uc)
+                            return (
+                                <DirectExchangeSelection
+                                    setCurrentDirectExchange={setCurrentDirectExchange}
+                                    currentDirectExchange={currentDirectExchange}
+                                    uc={uc}
+                                    // ucName={uc.ucName}
+                                    // ucSigla={uc.ucSigla}
+                                    // ucClass={uc.ucClass}
+                                    // ucCode={uc.ucCode}
+                                    key={uc.ucName}
+                                />
+                            )
+                        })
+                    }
+                </div> : <div className="mt-4">
+                    <MoonLoader className="mx-auto my-auto" loading={isLoading} />
+                    <p className="text-center">A carregar os horários</p>
+                </div>}
         </div>
-    );
+    </>;
 }
