@@ -1,4 +1,4 @@
-import { CheckedCourse, Major } from '../@types'
+import { CheckedCourse, ClassExchange, Major } from '../@types'
 import { extraCoursesData } from '../utils/data'
 import { getSemester, config, dev_config } from '../utils/utils'
 
@@ -125,6 +125,18 @@ export const login = async (faculty: string, username: string, password: string)
 }
 
 /**
+ * Submit direct exchange request
+*/
+export const submitDirectExchange = async (exchangeChoices: ClassExchange[]) => {
+    const formData = new FormData();
+    for (const choice of exchangeChoices) {
+        formData.append("exchangeChoices[]", JSON.stringify(choice));
+    }
+
+    return await apiRequest("/submit_direct_exchange/", "POST", formData);
+}
+
+ /*
  * Get student schedule from sigarra 
  */
 export const getStudentSchedule = async(username: string) => {
