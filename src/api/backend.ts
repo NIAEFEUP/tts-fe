@@ -125,6 +125,13 @@ export const login = async (faculty: string, username: string, password: string)
 }
 
 /**
+ * Logout from backend 
+ */
+export const logout = async () => {
+    return await apiRequest("/logout/", "POST", null); 
+}
+
+/**
  * Get student schedule from sigarra 
  */
 export const getStudentSchedule = async(username: string) => {
