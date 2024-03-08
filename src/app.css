@@ -104,3 +104,11 @@ button {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.success-text {
+    @apply text-green-400;
+}
+
+.error-text {
+    @apply text-red-500;
+}
