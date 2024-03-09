@@ -1,7 +1,7 @@
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "../ui/button";
 import { DirectExchangeSelection } from "./DirectExchangeSelection";
-import { getStudentSchedule } from "../../api/backend";
+import { getStudentSchedule, logout } from "../../api/backend";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { SessionContext } from "../../contexts/SessionContext";
 import { SubmitDirectExchangeButton } from "./SubmitDirectExchangeButton";
@@ -29,6 +29,7 @@ export function DirectExchange({
                 const data = await getStudentSchedule(username);
                 if (data.status === 403) {
                     setLoggedIn(false);
+                    await logout();
                 } else {
                     setSchedule(data.filter(course => course.tipo === "TP")
                         .map(course => ({
