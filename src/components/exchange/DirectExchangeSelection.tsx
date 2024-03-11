@@ -34,6 +34,7 @@ export function DirectExchangeSelection({
     const [value, setValue] = useState<string>("");
     const [selectedClass, setSelectedClass] = useState<string>("");
     const [student, setStudent] = useState<string>("");
+    const [include, setInclude] = useState<boolean>(false);
 
     const [ucClasses, setUcClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -64,73 +65,93 @@ export function DirectExchangeSelection({
         return <p>Error fetching schedule: {error.message}</p>;
     }
 
-    return (
-        <div className="flex w-full justify-between space-x-4 items-center">
-            <div className="flex flex-col space-y-2">
-                <span className="font-bold">{uc.name}</span>
-                <div className="flex flex-row items-center">
-                    <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={uc.class}></Input>
-                    <span>
-                        <ArrowRightIcon className="mx-2 h-5 w-5"></ArrowRightIcon>
-                    </span>
-                    <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={open}
-                                className="w-[150px] justify-between"
-                            >
-                                {value
-                                    ? ucClasses.find((ucClass) => ucClass.value === value)?.label
-                                    : "Escolher turma..."}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[180px] p-0">
-                            <Command>
-                                <CommandInput className="border-none focus:ring-0" placeholder="Procurar turma..." />
-                                <CommandEmpty>Nenhuma turma encontrada.</CommandEmpty>
-                                <CommandGroup>
-                                    {ucClasses.map((otherStudentUcClass) => (
-                                        <CommandItem
-                                            className="pl-2"
-                                            key={otherStudentUcClass.value}
-                                            value={otherStudentUcClass.value}
-                                            onSelect={(currentValue) => {
-                                                setCurrentDirectExchange(
-                                                    new Map(currentDirectExchange.set(uc.sigla, {
-                                                        course_unit: uc.sigla,
-                                                        old_class: otherStudentUcClass.label,
-                                                        new_class: uc.class, // auth student class
-                                                        other_student: student
-                                                    }))
-                                                )
-                                                setSelectedClass(currentValue);
-                                                setValue(currentValue === value ? "" : currentValue)
-                                                setOpen(false)
-                                            }}
-                                        >
-                                            {otherStudentUcClass.label}
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
+    return <>
+        { include ?
+            <div className="flex w-full justify-between space-x-1 items-center">
+                <div className="flex flex-col space-y-2 w-1/2">
+                    <span className="font-bold">{uc.name}</span>
+                    <div className="flex flex-row items-center">
+                        <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={uc.class}></Input>
+                        <span>
+                            <ArrowRightIcon className="mx-2 h-5 w-5"></ArrowRightIcon>
+                        </span>
+                        <Popover open={open} onOpenChange={setOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={open}
+                                    className="w-full justify-between"
+                                >
+                                    {value
+                                        ? ucClasses.find((ucClass) => ucClass.value === value)?.label
+                                        : "Escolher turma..."}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-1/2 p-0">
+                                <Command>
+                                    <CommandInput className="border-none focus:ring-0" placeholder="Procurar turma..." />
+                                    <CommandEmpty>Nenhuma turma encontrada.</CommandEmpty>
+                                    <CommandGroup>
+                                        {ucClasses.map((otherStudentUcClass) => (
+                                            <CommandItem
+                                                className="pl-2"
+                                                key={otherStudentUcClass.value}
+                                                value={otherStudentUcClass.value}
+                                                onSelect={(currentValue) => {
+                                                    setCurrentDirectExchange(
+                                                        new Map(currentDirectExchange.set(uc.sigla, {
+                                                            course_unit: uc.sigla,
+                                                            old_class: otherStudentUcClass.label,
+                                                            new_class: uc.class, // auth student class
+                                                            other_student: student
+                                                        }))
+                                                    )
+                                                    setSelectedClass(currentValue);
+                                                    setValue(currentValue === value ? "" : currentValue)
+                                                    setOpen(false)
+                                                }}
+                                            >
+                                                {otherStudentUcClass.label}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                    </div>
                 </div>
-            </div>
 
-            <div className="flex flex-col space-y-2">
-                <span className="font-bold">Estudante</span>
-                <Input onChange={(event) => {
-                    setStudent(event.target.value);
-                    const exchange = currentDirectExchange.get(uc.sigla);
-                    exchange.other_student = event.target.value;
-                    setCurrentDirectExchange(
-                        new Map(currentDirectExchange.set(uc.sigla, exchange))
-                    )
-                }} value={student} />
+                <div className="flex flex-row w-1/2">
+                    <div className="flex flex-col space-y-2">
+                        <span className="font-bold">Estudante</span>
+                        <Input onChange={(event) => {
+                            setStudent(event.target.value);
+                            const exchange = currentDirectExchange.get(uc.sigla);
+                            exchange.other_student = event.target.value;
+                            setCurrentDirectExchange(
+                                new Map(currentDirectExchange.set(uc.sigla, exchange))
+                            )
+                        }} value={student} />
+                    </div>
+
+                    <Button variant="destructive" onClick={() => {
+                        setInclude(false);
+                        currentDirectExchange.delete(uc.sigla);
+                        setValue("");
+                        setSelectedClass("");
+                        setStudent("");
+                        setCurrentDirectExchange(currentDirectExchange);
+                        }}>-</Button>
+                    </div>
             </div>
-        </div >
-    )
+            :
+            <div className="flex w-full justify-between space-x-4 items-center">
+                <div className="flex flex-col space-y-2">
+                    <span className="font-bold">{uc.name}</span>
+                </div>
+                <Button variant="info" onClick={() => setInclude(true)}>Incluir</Button>
+            </div> 
+        }
+    </>
 }
