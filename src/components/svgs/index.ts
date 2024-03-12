@@ -8,6 +8,8 @@ import TidyIcon from './fancy/Tidy'
 import ConsultIcon from './fancy/Consult'
 import SelectIcon from './fancy/Select'
 import NitSigIcon from './NitSigIcon'
+import NoCourseSelectedPlaceholder from './NoCourseSelected'
+import NoMajorSelectedPlaceholder from './NoMajorSelectedPlaceholder'
 
 export {
   LinktreeIcon,
@@ -20,4 +22,6 @@ export {
   ConsultIcon,
   SelectIcon,
   NitSigIcon,
+  NoCourseSelectedPlaceholder,
+  NoMajorSelectedPlaceholder
 }

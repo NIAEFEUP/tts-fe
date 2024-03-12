@@ -13,6 +13,7 @@ import CourseContext from '../../../../contexts/CourseContext'
 import MajorContext from '../../../../contexts/MajorContext'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
+import { NoMajorSelectedPlaceholder } from '../../../svgs'
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
@@ -58,13 +59,22 @@ const CoursePicker = () => {
         <MajorSearchCombobox />
         <Separator />
         <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
-          <CourseYearTabs />
+          {selectedMajor ? (
+            <CourseYearTabs />
+          ) : (
+            <div className="flex-col h-64 w-full items-center justify-center text-center text-sm dark:text-white">
+              <div className='flex items-center justify-center'>
+                <NoMajorSelectedPlaceholder />
+              </div>
+              <span>Não selecionaste um curso.</span>
+            </div>
+          )}
           <Separator orientation="vertical" className="mx-5" />
           <PickedCoursesList />
         </div>
         <DialogFooter className="grid grid-cols-2">
           <div />
-          <div className="flex items-center justify-between pr-4">
+          <div className="flex items-center justify-between pr-4 dark:text-white">
             <Ects />
             <div className="flex gap-2">
               <Button onClick={() => setPickedCourses([])} variant="icon" className="gap-2 bg-lightish text-darkish">
