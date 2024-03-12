@@ -67,8 +67,8 @@ export function DirectExchangeSelection({
 
     return <>
         { include ?
-            <div className="flex w-full justify-between space-x-1 items-center">
-                <div className="flex flex-col space-y-2 w-1/2">
+            <div className="flex w-full justify-between space-x-1 items-end">
+                <div className="flex flex-col space-y-2 w-4/6">
                     <span className="font-bold">{uc.name}</span>
                     <div className="flex flex-row items-center">
                         <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={uc.class}></Input>
@@ -122,35 +122,38 @@ export function DirectExchangeSelection({
                     </div>
                 </div>
 
-                <div className="flex flex-row w-1/2">
+                <div className="flex flex-row w-2/6">
                     <div className="flex flex-col space-y-2">
                         <span className="font-bold">Estudante</span>
-                        <Input onChange={(event) => {
-                            setStudent(event.target.value);
-                            const exchange = currentDirectExchange.get(uc.sigla);
-                            exchange.other_student = event.target.value;
-                            setCurrentDirectExchange(
-                                new Map(currentDirectExchange.set(uc.sigla, exchange))
-                            )
-                        }} value={student} />
-                    </div>
 
-                    <Button variant="destructive" onClick={() => {
-                        setInclude(false);
-                        currentDirectExchange.delete(uc.sigla);
-                        setValue("");
-                        setSelectedClass("");
-                        setStudent("");
-                        setCurrentDirectExchange(currentDirectExchange);
-                        }}>-</Button>
+                        <div className="flex flex-row space-x-1">
+                            <Input onChange={(event) => {
+                                setStudent(event.target.value);
+                                const exchange = currentDirectExchange.get(uc.sigla);
+                                exchange.other_student = event.target.value;
+                                setCurrentDirectExchange(
+                                    new Map(currentDirectExchange.set(uc.sigla, exchange))
+                                )
+                            }} value={student} />
+
+                            <Button variant="destructive" className="w-1/5" onClick={() => {
+                                setInclude(false);
+                                setValue("");
+                                setSelectedClass("");
+                                setStudent("");
+                                currentDirectExchange.delete(uc.sigla);
+                                setCurrentDirectExchange(currentDirectExchange);
+                            }}>-</Button>
+                        </div>
+                    </div>
                     </div>
             </div>
             :
             <div className="flex w-full justify-between space-x-4 items-center">
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2 w-full">
                     <span className="font-bold">{uc.name}</span>
+                    <Button variant="outline" className="w-full" onClick={() => setInclude(true)}>Incluir</Button>
                 </div>
-                <Button variant="info" onClick={() => setInclude(true)}>Incluir</Button>
             </div> 
         }
     </>
