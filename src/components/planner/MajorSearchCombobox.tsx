@@ -60,6 +60,7 @@ export const MajorSearchCombobox = ({ majors, majorHook }: Props) => {
     >
       <div className="relative w-full rounded text-left">
         <Combobox.Input
+          data-testid="major-input"
           placeholder={
             window.matchMedia('(max-width: 1024px)').matches === true
               ? 'Pesquise o seu curso pelo nome ou sigla'

@@ -6,7 +6,7 @@ const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
   const [isImportedOption, setIsImportedOption] = isImportedOptionHook
 
   return (
-    <div className="flex w-full flex-col gap-4 px-0 py-2">
+    <div data-testid="courses-controller" className="flex w-full flex-col gap-4 px-0 py-2">
       {multipleOptions.selected.length > 0 &&
         removeDuplicatesFromCourseOption(multipleOptions.options[multipleOptions.index])
           .sort((a, b) => a.course.info.sigarra_id - b.course.info.sigarra_id)

@@ -302,7 +302,7 @@ const SelectionModal = ({
         <PencilSquareIcon className="h-5 w-5 text-white" />
       </Button>
 
-      <Transition appear show={isThisOpen} as={Fragment}>
+      <Transition data-testid="course-picker" appear show={isThisOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <OuterMask />
           <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-12">

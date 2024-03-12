@@ -39,6 +39,7 @@
     "react-scripts": "5.0.1",
     "react-sortablejs": "^6.0.0",
     "react-toastify": "^9.1.1",
+    "sortablejs": "^1.15.2",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^4.6.4",

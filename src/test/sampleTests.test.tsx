@@ -2,7 +2,8 @@ import { CheckedCourse, Course } from '../@types'
 import CreditsBanner from '../components/planner/CreditsBanner'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { AlertType } from '../components/planner/Alert'
+import renderer from 'react-test-renderer';
+import FaqsPage from '../pages/Faqs'
 
 describe("Examples of unit testing", () => {
     const getExampleCourse = (ects: number) : CheckedCourse[] => {
@@ -44,6 +45,15 @@ describe("Examples of unit testing", () => {
     })
 })
 
+/*
+    Snapshot tests create a snapshot everytime the tests are ran, comparing the current snapshot with the previous one.
+    These type of tests have the advantage of being simple to write for complex components.
+*/
 describe("Examples of snapshot testing", () => {
-    
+    test("Tests Faqs page rendering", () => {
+        const tree = renderer
+            .create(<FaqsPage></FaqsPage>)
+            .toJSON();
+        expect(tree).toMatchSnapshot();
+    })
 })  
