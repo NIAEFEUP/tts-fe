@@ -25,6 +25,8 @@ const Schedule = ({ courseOptions }: Props) => {
         O: 'Outros',
     }
 
+    console.log("Course options: ", courseOptions);
+
     const dayValues = Array.from({ length: 6 }, (_, i) => i)
     const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
@@ -153,6 +155,9 @@ const Schedule = ({ courseOptions }: Props) => {
 
     const [showGrid, setShowGrid] = useShowGrid()
 
+    console.log("lessons: ", lessons);
+    console.log("conflicts: ", conflicts);
+
     return (
         <>
             {/* Schedule Desktop */}
@@ -179,6 +184,7 @@ const Schedule = ({ courseOptions }: Props) => {
                             <ScheduleGrid showGrid={showGrid} />
                             <div className="schedule-classes">
                                 {lessons.length === conflicts.length
+
                                     ? lessons.map((lesson: Lesson, lessonIdx: number) => (
                                         <LessonBox
                                             key={`lesson-box-${lessonIdx}`}
