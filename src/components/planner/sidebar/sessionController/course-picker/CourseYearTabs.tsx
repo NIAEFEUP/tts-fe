@@ -43,8 +43,6 @@ const CourseYearTabs = () => {
     }
   }
 
-  console.log("'" + coursesByYear + "'")
-
   return coursesByYear.length > 0 ? (
     <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
       <TabsList className="w-full">

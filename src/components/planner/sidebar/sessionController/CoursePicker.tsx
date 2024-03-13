@@ -41,8 +41,6 @@ const CoursePicker = () => {
     console.log(schedules)
   }
 
-  console.log()
-
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -94,7 +92,7 @@ const CoursePicker = () => {
         ) : (
           <div className="flex h-64 w-[55rem] flex-col items-center justify-center text-center text-sm dark:text-white">
             <Desert />
-            <span>Seleciona um curso primerio.</span>
+            <span>Seleciona um curso primeiro.</span>
           </div>
         )}
       </DialogContent>
