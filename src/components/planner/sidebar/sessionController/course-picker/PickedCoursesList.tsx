@@ -14,7 +14,7 @@ const PickedCoursesList = () => {
       ))}
     </ScrollArea>
   ) : (
-    <div className="flex items-center justify-center">
+    <div className="flex h-64 items-center justify-center">
       <NoCourseSelected />
     </div>
   )
