@@ -5,6 +5,7 @@ import CourseContext from '../../../../../contexts/CourseContext'
 import { groupCoursesByYear } from '../../../../../utils'
 import { ScrollArea } from '../../../../ui/scroll-area'
 import { isSubset } from '../../../../../utils'
+import { NoMajorSelected } from '../../../../svgs'
 
 const CourseYearTabs = () => {
   const { coursesInfo, pickedCourses, setPickedCourses } = useContext(CourseContext)
@@ -42,7 +43,7 @@ const CourseYearTabs = () => {
     }
   }
 
-  return (
+  return coursesByYear.length > 0 ? (
     <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
       <TabsList className="w-full">
         {coursesByYear.map((_, idx) => (
@@ -66,6 +67,10 @@ const CourseYearTabs = () => {
         )
       })}
     </Tabs>
+  ) : (
+    <div className="flex items-center justify-center">
+      <NoMajorSelected />
+    </div>
   )
 }
 

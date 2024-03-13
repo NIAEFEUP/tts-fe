@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import CourseContext from '../../../../../contexts/CourseContext'
 import { ScrollArea } from '../../../../ui/scroll-area'
 import PickedCourse from './PickedCourse'
+import { NoCourseSelected } from '../../../../svgs'
 
 const PickedCoursesList = () => {
   const { pickedCourses } = useContext(CourseContext)
@@ -13,8 +14,8 @@ const PickedCoursesList = () => {
       ))}
     </ScrollArea>
   ) : (
-    <div className="flex h-64 w-full items-center justify-center text-center dark:text-white">
-      Ainda não escolheste nenhuma cadeira.
+    <div className="flex h-64 items-center justify-center">
+      <NoCourseSelected />
     </div>
   )
 }
