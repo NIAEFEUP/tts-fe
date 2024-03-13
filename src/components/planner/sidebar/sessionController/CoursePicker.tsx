@@ -13,17 +13,18 @@ import CourseContext from '../../../../contexts/CourseContext'
 import MajorContext from '../../../../contexts/MajorContext'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
-import { NoMajorSelectedPlaceholder } from '../../../svgs'
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import api from '../../../../api/backend'
+import { Desert } from '../../../svgs'
 
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
   const { selectedMajor } = useContext(MajorContext)
+  const showContent = selectedMajor || pickedCourses.length > 0
 
   useEffect(() => {
     StorageAPI.setPickedCoursesStorage(pickedCourses)
@@ -39,6 +40,8 @@ const CoursePicker = () => {
     const schedules = api._getCoursesSchedules(pickedCourses)
     console.log(schedules)
   }
+
+  console.log()
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -58,38 +61,42 @@ const CoursePicker = () => {
         </DialogHeader>
         <MajorSearchCombobox />
         <Separator />
-        <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
-          {selectedMajor ? (
-            <CourseYearTabs />
-          ) : (
-            <div className="flex-col h-64 w-full items-center justify-center text-center text-sm dark:text-white">
-              <div className='flex items-center justify-center'>
-                <NoMajorSelectedPlaceholder />
+        {showContent ? (
+          <>
+            <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
+              <CourseYearTabs />
+              <Separator orientation="vertical" className="mx-5" />
+              <PickedCoursesList />
+            </div>
+            <DialogFooter className="grid grid-cols-2">
+              <div />
+              <div className="flex items-center justify-between pr-4 dark:text-white">
+                <Ects />
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setPickedCourses([])}
+                    variant="icon"
+                    className="gap-2 bg-lightish text-darkish"
+                  >
+                    <TrashIcon className="h-5 w-5" />
+                    <span>Limpar</span>
+                  </Button>
+                  <DialogClose asChild>
+                    <Button variant="icon" className="gap-2 bg-lightish text-darkish">
+                      <CheckIcon className="h-5 w-5" />
+                      <span>Pronto</span>
+                    </Button>
+                  </DialogClose>
+                </div>
               </div>
-              <span>Não selecionaste um curso.</span>
-            </div>
-          )}
-          <Separator orientation="vertical" className="mx-5" />
-          <PickedCoursesList />
-        </div>
-        <DialogFooter className="grid grid-cols-2">
-          <div />
-          <div className="flex items-center justify-between pr-4 dark:text-white">
-            <Ects />
-            <div className="flex gap-2">
-              <Button onClick={() => setPickedCourses([])} variant="icon" className="gap-2 bg-lightish text-darkish">
-                <TrashIcon className="h-5 w-5" />
-                <span>Limpar</span>
-              </Button>
-              <DialogClose asChild>
-                <Button variant="icon" className="gap-2 bg-lightish text-darkish">
-                  <CheckIcon className="h-5 w-5" />
-                  <span>Pronto</span>
-                </Button>
-              </DialogClose>
-            </div>
+            </DialogFooter>
+          </>
+        ) : (
+          <div className="flex h-64 w-[55rem] flex-col items-center justify-center text-center text-sm dark:text-white">
+            <Desert />
+            <span>Seleciona um curso primerio.</span>
           </div>
-        </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   )
