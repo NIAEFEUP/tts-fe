@@ -37,7 +37,7 @@ const CoursePicker = () => {
   const handleOpenChange = () => {
     setOpen(!open)
     if (open === false) return
-    const schedules = api._getCoursesSchedules(pickedCourses)
+    const schedules = api.getCoursesClasses(pickedCourses)
     console.log(schedules)
   }
 

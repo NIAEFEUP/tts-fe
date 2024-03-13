@@ -6,15 +6,11 @@ import SelectedOptionController from './sidebar/SelectedOptionController'
 import CoursesController from './sidebar/CoursesController'
 
 type Props = {
-  openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
   repeatedCourseControlHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
-  checkCourses: (course_unit_id: number[], importedCourses: ImportedCourses) => void
 }
 
 const defaultOptionsList = [
@@ -73,17 +69,7 @@ const defaultOptionsList = [
 /**
  * Sidebar with all the main schedule interactions
  */
-const Sidebar = ({
-  openHook,
-  coursesHook,
-  extraCoursesActiveHook,
-  extraCoursesModalOpenHook,
-  sourceBufferHook,
-  destBufferHook,
-  repeatedCourseControlHook,
-  multipleOptionsHook,
-  checkCourses,
-}: Props) => {
+const Sidebar = ({ multipleOptionsHook }: Props) => {
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
@@ -110,17 +96,7 @@ const Sidebar = ({
     <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
       <div className="space-y-2">
         <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
-          <SessionController
-            openHook={openHook}
-            coursesHook={coursesHook}
-            extraCoursesActiveHook={extraCoursesActiveHook}
-            extraCoursesModalOpenHook={extraCoursesModalOpenHook}
-            sourceBufferHook={sourceBufferHook}
-            destBufferHook={destBufferHook}
-            repeatedCourseControlHook={repeatedCourseControlHook}
-            multipleOptions={multipleOptions}
-            optionsList={optionsList}
-          />
+          <SessionController multipleOptions={multipleOptions} optionsList={optionsList} />
           <OptionsController
             multipleOptionsHook={multipleOptionsHook}
             optionsListHook={[optionsList, setOptionsList]}
@@ -131,7 +107,6 @@ const Sidebar = ({
             selectedOptionHook={[selectedOption, setSelectedOption]}
             currentOption={multipleOptions.selected}
             multipleOptionsHook={multipleOptionsHook}
-            checkCourses={checkCourses}
             isImportedOptionHook={[isImportedOption, setImportedOption]}
           />
           <CoursesController

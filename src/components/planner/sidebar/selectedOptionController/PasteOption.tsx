@@ -19,11 +19,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
-  checkCourses: (course_unit_id: number[], importedCourses: ImportedCourses) => void
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const PasteOption = ({ multipleOptionsHook, checkCourses, isImportedOptionHook }: Props) => {
+const PasteOption = ({ multipleOptionsHook, isImportedOptionHook }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const [modalOpen, setModalOpen] = useState(false)
   const [_, setIsImportedOption] = isImportedOptionHook
@@ -86,7 +85,9 @@ const PasteOption = ({ multipleOptionsHook, checkCourses, isImportedOptionHook }
       setImportingCoursesUnitOptions(importedCourses)
       const unCheckedCoursesIds = unCheckedCourses.map((course_unit_id) => Number(course_unit_id))
       setIsImportedOption(true)
-      checkCourses(unCheckedCoursesIds, importedCourses)
+      // TODO (diogotvf7): this function and probably component will need a fix due to the refactor
+      // as the whole data structure has changed
+      // checkCourses(unCheckedCoursesIds, importedCourses)
       return
     }
 

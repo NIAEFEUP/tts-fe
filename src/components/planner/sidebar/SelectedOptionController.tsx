@@ -18,7 +18,6 @@ type Props = {
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
   currentOption: CourseOption[]
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
-  checkCourses: (course_unit_id: number[], importedCourses: ImportedCourses) => void
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
@@ -30,7 +29,6 @@ const SelectedOptionController = ({
   selectedOptionHook,
   currentOption,
   multipleOptionsHook,
-  checkCourses,
   isImportedOptionHook,
 }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
@@ -58,7 +56,7 @@ const SelectedOptionController = ({
     if (document.activeElement === textarea.current) return
     if (isHovered) {
       if (isScrollingBack) {
-        if (textarea.current.scrollLeft == 0) isScrollingBack = false
+        if (textarea.current.scrollLeft === 0) isScrollingBack = false
         else return
       }
       if (textarea.current.scrollLeft >= textarea.current.scrollWidth - textarea.current.clientWidth) {
@@ -101,7 +99,11 @@ const SelectedOptionController = ({
       <div className="order-2 flex flex-grow gap-3 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <PopoverTrigger className="aspect-square h-10 w-10 rounded p-1 text-xl hover:bg-lightish hover:dark:bg-darkish">
-            <img src={getOptionById(selectedOption)?.icon} className="h-full w-full" />
+            <img
+              src={getOptionById(selectedOption)?.icon}
+              className="h-full w-full"
+              alt={optionsList[selectedOption].name}
+            />
           </PopoverTrigger>
           <PopoverContent side="bottom" className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
             <EmojiPicker
@@ -145,11 +147,7 @@ const SelectedOptionController = ({
       </div>
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        <PasteOption
-          multipleOptionsHook={multipleOptionsHook}
-          checkCourses={checkCourses}
-          isImportedOptionHook={isImportedOptionHook}
-        />
+        <PasteOption multipleOptionsHook={multipleOptionsHook} isImportedOptionHook={isImportedOptionHook} />
         <RandomFill multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
       </div>
     </div>

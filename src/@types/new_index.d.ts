@@ -10,7 +10,7 @@ enum lesson_type {
 
 /* Majors */
 export type Major = {
-    id: number      // passa a ser o sigarra_id
+    id: number
     faculty: number
     acronym: string
     name: string
@@ -19,7 +19,7 @@ export type Major = {
 }
 
 export type CourseInfo = {
-    id: number, // passa a ser o sigarra_id
+    id: number,
     course_unit_year: number,
     ects: number,
     acronym: string,
