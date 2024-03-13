@@ -18,10 +18,6 @@ export type Major = {
     // year: number // remover ??
 }
 
-// selected_major = {
-//     id: number
-// } // FICA APENAS COMO STATE (não é um type)
-
 export type CourseInfo = {
     id: number, // passa a ser o sigarra_id
     course_unit_year: number,
@@ -35,14 +31,32 @@ export type CourseInfo = {
     // year: number // remover ??
 }
 
+export type Class = {
+    // course_unit_id: number, // é mesmo necessário ??
+    name: string
+    composed_name: string,
+    slots: Array<Slot>
+}
+
+export type Slot = {
+    lesson_type: string,
+    day: number,
+    start_time: number,
+    duration: number,
+    location: string,
+    professors_link: string,
+    professors: Array<ProfessorInformation>,
+    // last_updated: string, (is it needed??)
+}
+
+
+// selected_major = {
+//     id: number
+// } // FICA APENAS COMO STATE (não é um type)
+
 export type selected_courses = Array<CourseInfo>
 
-export type CourseOption = {
-    course_id: number,
-    locked: boolean,
-    filteredTeachers: Array<ProfessorInformation>,
-    hide: Array<lesson_type>,
-}
+export type MultipleOptions = Array<Option> 
 
 export type Option = {
     id: number,
@@ -51,30 +65,48 @@ export type Option = {
     course_option: Array<CourseOption>
 }
 
-export type MultipleOptions = Array<Option> 
+export type CourseOption = {
+    course_id: number,
+    locked: boolean,
+    filteredTeachers: Array<ProfessorInformation>,
+    hide: Array<lesson_type>,
+}
 
 export type ProfessorInformation = {
     acronym: string
     name: string
 }
 
-export type Slot = {
-    day: number,
-    start_time: number,
-    duration: number,
-    location: string,
-    lesson_type: string,
-    professors_link: string,
-    professors: Array<ProfessorInformation>,
-    // last_updated: string, (is it needed??)
-}
 
-export type Class = {
-    name: string
-    course_id: number,
-    composed_name: string,
-    slots: Array<Slot>
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // |=============================================================|
