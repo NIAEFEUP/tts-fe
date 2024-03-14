@@ -34,7 +34,7 @@ export function DirectExchangeSelection({
     const [value, setValue] = useState<string>("");
     const [selectedClass, setSelectedClass] = useState<string>("");
     const [student, setStudent] = useState<string>("");
-    const [include, setInclude] = useState<boolean>(false);
+    const [isExchangeSelectionIncluded, setIsExchangeSelectionIncluded] = useState<boolean>(false);
 
     const [ucClasses, setUcClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +66,7 @@ export function DirectExchangeSelection({
     }
 
     return <>
-        { include ?
+        { isExchangeSelectionIncluded ?
             <div className="flex w-full justify-between space-x-1 items-end">
                 <div className="flex flex-col space-y-2 w-4/6">
                     <span className="font-bold">{uc.name}</span>
@@ -137,7 +137,7 @@ export function DirectExchangeSelection({
                             }} value={student} />
 
                             <Button variant="destructive" className="w-1/5" onClick={() => {
-                                setInclude(false);
+                                setIsExchangeSelectionIncluded(false);
                                 setValue("");
                                 setSelectedClass("");
                                 setStudent("");
@@ -152,7 +152,7 @@ export function DirectExchangeSelection({
             <div className="flex w-full justify-between space-x-4 items-center">
                 <div className="flex flex-col space-y-2 w-full">
                     <span className="font-bold">{uc.name}</span>
-                    <Button variant="outline" className="w-full" onClick={() => setInclude(true)}>Incluir</Button>
+                    <Button variant="outline" className="w-full" onClick={() => setIsExchangeSelectionIncluded(true)}>Incluir</Button>
                 </div>
             </div> 
         }
