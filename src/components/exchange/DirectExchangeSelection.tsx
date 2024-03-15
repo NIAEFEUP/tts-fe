@@ -16,7 +16,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "../ui/popover"
-import { getCourseScheduleSigarra } from "../../api/backend"
+import { getCourseScheduleSigarra, getCourseStudents  } from "../../api/backend"
 import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types"
 
 type props = {
@@ -35,6 +35,11 @@ export function DirectExchangeSelection({
     const [selectedClass, setSelectedClass] = useState<string>("");
     const [student, setStudent] = useState<string>("");
 
+    const [students, setStudents] = useState([]);
+    const [studentOpen, setStudentOpen] = useState<boolean>(false);
+    const [studentValue, setStudentValue] = useState<string>("");
+    const [searchTerm, setSearchTerm] = useState('');
+
     const [ucClasses, setUcClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -45,7 +50,9 @@ export function DirectExchangeSelection({
                 const data = await getCourseScheduleSigarra(uc.code);
                 setUcClasses(data.filter((otherUcClass) => otherUcClass.tipo === "TP" && uc.class !== otherUcClass.turma_sigla).sort((a, b) => a.turma_sigla.localeCompare(b.turma_sigla))
                     .map(otherUcClass => ({ value: otherUcClass.aula_id.toString(), label: otherUcClass.turma_sigla })));
-
+                
+                const studentsData = await getCourseStudents(uc.code);
+                setStudents(studentsData);
             } catch (err) {
                 setError(err);
             } finally {
@@ -65,9 +72,9 @@ export function DirectExchangeSelection({
     }
 
     return (
-        <div className="flex w-full justify-between space-x-4 items-center">
+            <div className="flex flex-col w-full justify-between space-y-4 items-start border-2 border-gray-200 shadow-md p-4 mb-4 rounded-md">            
             <div className="flex flex-col space-y-2">
-                <span className="font-bold">{uc.name}</span>
+                <span className="font-bold text-center">{uc.name}</span>
                 <div className="flex flex-row items-center">
                     <Input disabled type="text" className="w-[85px] disabled:cursor-default disabled:opacity-100 placeholder:text-black dark:placeholder:text-white" placeholder={uc.class}></Input>
                     <span>
@@ -86,7 +93,7 @@ export function DirectExchangeSelection({
                                     : "Escolher turma..."}
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[180px] p-0">
+                        <PopoverContent className="w-[220px] p-0 max-h-[215px] overflow-y-auto">
                             <Command>
                                 <CommandInput className="border-none focus:ring-0" placeholder="Procurar turma..." />
                                 <CommandEmpty>Nenhuma turma encontrada.</CommandEmpty>
@@ -120,17 +127,64 @@ export function DirectExchangeSelection({
                 </div>
             </div>
 
-            <div className="flex flex-col space-y-2">
-                <span className="font-bold">Estudante</span>
-                <Input onChange={(event) => {
-                    setStudent(event.target.value);
-                    const exchange = currentDirectExchange.get(uc.sigla);
-                    exchange.other_student = event.target.value;
-                    setCurrentDirectExchange(
-                        new Map(currentDirectExchange.set(uc.sigla, exchange))
-                    )
-                }} value={student} />
+            <div className="flex flex-col space-y-2 w-full"> 
+                <span className="font-bold text-sm">Estudante</span>
+                <div className="flex items-center"> 
+                    <Popover open={studentOpen} onOpenChange={setStudentOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={studentOpen}
+                                className="w-full justify-between"
+                            >
+                                {studentValue
+                                    ? students.find((student) => student.codigo === studentValue)?.codigo
+                                    : "Escolher estudante..."}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0 max-h-[215px] overflow-y-auto">
+                            <Command>
+                                <CommandInput 
+                                    className="border-none focus:ring-0" 
+                                    placeholder="Procurar estudante..." 
+                                    value={searchTerm}
+                                    onValueChange={(newTerm) => setSearchTerm(newTerm)}
+                                />
+                                <CommandEmpty>Nenhum estudante encontrado.</CommandEmpty>
+                                <CommandGroup>
+                                    {students.filter((student) => student.codigo.startsWith(searchTerm)).map((student) => {
+                                        const nameParts = student.nome.split(' ');
+                                        const displayName = `${nameParts[0]} ${nameParts[nameParts.length - 1]}`;
+                                        return (
+                                            <CommandItem
+                                                className="pl-2"
+                                                key={student.codigo}
+                                                value={student.codigo}
+                                                onSelect={(currentValue) => {
+                                                    setStudent(currentValue);
+                                                    const exchange = currentDirectExchange.get(uc.sigla);
+                                                    exchange.other_student = currentValue;
+                                                    setCurrentDirectExchange(
+                                                        new Map(currentDirectExchange.set(uc.sigla, exchange))
+                                                    )
+                                                    setStudentValue(currentValue === studentValue ? "" : currentValue)
+                                                    setStudentOpen(false)
+                                                }}
+                                            >
+                                                <div className="flex flex-col">
+                                                    <div>{student.codigo}</div>
+                                                    <div className="text-gray-600">{displayName}</div>
+                                                </div>
+                                            </CommandItem>
+                                        )
+                                    })}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                </div>
             </div>
-        </div >
+        </div>
     )
 }
