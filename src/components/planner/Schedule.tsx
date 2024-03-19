@@ -7,6 +7,8 @@ import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from 
 import { useShowGrid } from '../../hooks'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
+import EyeIcon from '@heroicons/react'
+
 
 type Props = {
   courseOptions: CourseOption[]
@@ -219,10 +221,13 @@ const Schedule = ({ courseOptions }: Props) => {
                     }
                   }}
                 />
-                <span
-                  className={`h-3.5 w-3.5 rounded shadow 2xl:h-4 2xl:w-4 
-                  ${'bg-schedule-' + lessonType.toLowerCase() + '/80'}`}
-                />
+                
+                <span className={`flex items-center justify-center h-4 w-4 rounded 2xl:h-4 2xl:w-4 
+                ${'bg-schedule-' + lessonType.toLowerCase() + '/80'}`} style={{ marginRight: '5px' }}>
+                  <EyeIcon className={`h-3 w-3 text-white`} />
+                </span>
+
+
                 <span className="cursor-pointer select-none peer-checked:line-through">
                   {lessonTypesDic[lessonType]}
                 </span>
@@ -234,7 +239,7 @@ const Schedule = ({ courseOptions }: Props) => {
             <PrintSchedule component={scheduleRef} />
           </div>
         </div>
-      </div>
+
 
       {/* Schedule Mobile */}
       <div className="flex h-full w-full flex-col items-center justify-start gap-2 space-y-2 lg:hidden">
