@@ -25,8 +25,6 @@ const Schedule = ({ courseOptions }: Props) => {
         O: 'Outros',
     }
 
-    console.log("Course options: ", courseOptions);
-
     const dayValues = Array.from({ length: 6 }, (_, i) => i)
     const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
@@ -154,9 +152,6 @@ const Schedule = ({ courseOptions }: Props) => {
     }, [lessons])
 
     const [showGrid, setShowGrid] = useShowGrid()
-
-    console.log("lessons: ", lessons);
-    console.log("conflicts: ", conflicts);
 
     return (
         <>

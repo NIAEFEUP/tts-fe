@@ -2,18 +2,20 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "../ui/button";
 import { DirectExchangeSelection } from "./DirectExchangeSelection";
 import { getStudentSchedule, logout } from "../../api/backend";
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { SessionContext } from "../../contexts/SessionContext";
 import { SubmitDirectExchangeButton } from "./SubmitDirectExchangeButton";
 import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types";
 import { MoonLoader } from "react-spinners";
-import { getProfessorInformationFromSigarraScheduleApi } from "../../utils/utils";
+import { convertSigarraCourseToTtsCourse } from "../../utils/utils";
 
 type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
+    courseOptions: CourseOption[]
 }
 
 export function DirectExchange({
+    courseOptions,
     setCourseOptions
 }: Props) {
     const [currentDirectExchange, setCurrentDirectExchange] = useState<Map<string, ClassExchange>>(new Map<string, ClassExchange>());
@@ -39,62 +41,10 @@ export function DirectExchange({
                             class: course.turma_sigla,
                             code: course.ocorrencia_id
                         })));
-                    setCourseOptions(data.filter(course => course.tipo === "TP").map(course => ({
-                        shown: {
-                            T: false,
-                            TP: true,
-                        },
-                        locked: false,
-                        course: {
-                            checked: true,
-                            info: {
-                                id: parseInt(course.ocorrencia_id, 10),
-                                course_id: parseInt(course.ocorrencia_id, 10),
-                                course_unit_id: parseInt(course.ocorrencia_id, 10),
-                                sigarra_id: parseInt(course.ocorrencia_id, 10),
-                                course: course.ucurr_sigla,
-                                name: course.ucurr_sigla,
-                                acronym: course.ucurr_sigla,
-                                url: "",
-                                course_unit_year: 3,
-                                semester: 2,
-                                year: 2023,
-                                schedule_url: "",
-                                ects: 6,
-                                last_updated: "none"
-                            }
-                        },
-                        option: {
-                            day: course.dia - 2,
-                            duration: course.aula_duracao.toString(),
-                            start_time: course.hora_inicio,
-                            location: course.sala_sigla,
-                            lesson_type: course.tipo,
-                            is_composed: false,
-                            class_name: course.turma_sigla,
-                            course_unit_id: course.ocorrencia_id,
-                            last_updated: "",
-                            composed_class_name: "",
-                            professors_link: "",
-                            professor_information: []
-                        },
-                        schedules: [{
-                            day: course.dia - 2,
-                            duration: course.aula_duracao.toString(),
-                            start_time: (course.hora_inicio / 3600).toString(),
-                            location: course.sala_sigla,
-                            lesson_type: course.tipo,
-                            is_composed: false,
-                            class_name: course.turma_sigla,
-                            course_unit_id: course.ocorrencia_id,
-                            last_updated: "",
-                            composed_class_name: "",
-                            professors_link: "",
-                            professor_information: getProfessorInformationFromSigarraScheduleApi(course)
-                        }],
-                        teachers: [],
-                        filteredTeachers: []
-                    })))
+                    setCourseOptions(data.filter(course => course.tipo === "TP").map(course => {
+                        const convertedCourse = convertSigarraCourseToTtsCourse(course);
+                        return convertedCourse;
+                    }))
                 }
             } catch (err) {
                 setError(err);
@@ -129,6 +79,8 @@ export function DirectExchange({
                                 <DirectExchangeSelection
                                     setCurrentDirectExchange={setCurrentDirectExchange}
                                     currentDirectExchange={currentDirectExchange}
+                                    courseOptions={courseOptions}
+                                    setCourseOptions={setCourseOptions}
                                     uc={uc}
                                     key={uc.name}
                                 />

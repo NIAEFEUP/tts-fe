@@ -57,8 +57,6 @@ const LessonBox = ({ lesson, active, conflict, conflicts }: Props) => {
         setInspectShown(true)
     }
 
-    console.log("lesson is: ", lesson)
-
     return (
         <>
             {inspectShown && <LessonPopover lesson={lesson} isOpenHook={[inspectShown, setInspectShown]} />}

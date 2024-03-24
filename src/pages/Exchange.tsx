@@ -21,7 +21,7 @@ const ExchangePage = () => {
                         </div>
                     </div>
 
-                    <ExchangeSidebar setCourseOptions={setCourseOptions} />
+                    <ExchangeSidebar courseOptions={courseOptions} setCourseOptions={setCourseOptions} />
                 </div>
                 :
                 <NotAuthorizedPage />}
