@@ -2,31 +2,33 @@ import BackendAPI from '../api/backend'
 import StorageAPI from '../api/storage'
 import { useState, useEffect, useMemo } from 'react'
 import { Schedule, Sidebar } from '../components/planner'
-import { CheckedCourse, Course, CourseOption, CourseSchedule, ImportedCourses, Major, MultipleOptions } from '../@types'
-import { useMajor, useCourses } from '../hooks'
-import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
-import { useToast } from '../components/ui/use-toast'
-import { CourseInfo } from '../@types/new_index'
+import { CourseOption, Major, MultipleOptions } from '../@types'
+import { useCourses } from '../hooks'
+// import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
+// import { useToast } from '../components/ui/use-toast'
+// import { CourseInfo } from '../@types/new_index'
+import { defaultMultipleOptions } from '../utils'
 import MajorContext from '../contexts/MajorContext'
 import CourseContext from '../contexts/CourseContext'
+import MultipleOptionsContext from '../contexts/MultipleOptionsContext'
 
-export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
-  let frequency: Map<number, number> = new Map()
-  let newCourses: CheckedCourse[] = []
+// export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
+//   let frequency: Map<number, number> = new Map()
+//   let newCourses: CheckedCourse[] = []
 
-  for (let course of courses) {
-    if (!frequency.has(course.info.id)) {
-      newCourses.push(course)
-      frequency.set(course.info.id, 1)
-    }
-  }
+//   for (let course of courses) {
+//     if (!frequency.has(course.info.id)) {
+//       newCourses.push(course)
+//       frequency.set(course.info.id, 1)
+//     }
+//   }
 
-  return newCourses
-}
+//   return newCourses
+// }
 
-export const is_null_or_undefined = (element) => {
-  return element === undefined || element === null
-}
+// export const is_null_or_undefined = (element) => {
+//   return element === undefined || element === null
+// }
 
 // TODO: delete this!!
 // /**
@@ -55,22 +57,22 @@ export const is_null_or_undefined = (element) => {
 const TimeTableSchedulerPage = () => {
   // ==============================================================================================================================
   // ========================================================= OLD STATES =========================================================
-  const [major, setMajor, majorChangedRef] = useMajor('niaefeup-tts.major') // the picked major
-  const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor('niaefeup-tts.extra-major')
+  // const [major, setMajor, majorChangedRef] = useMajor('niaefeup-tts.major') // the picked major
+  // const [extraCoursesMajor, setExtraCoursesMajor, extraCoursesMajorChangedRef] = useMajor('niaefeup-tts.extra-major')
   const [checkedCourses, setCheckedCourses] = useCourses('niaefeup-tts.courses') // courses for the major with frontend properties
   const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = useCourses('niaefeup-tts.courses-buffer')
   const [extraCoursesModalBuffer, setExtraCoursesModalBuffer] = useCourses('niaefeup-tts.extra-courses-buffer')
-  const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
+  // const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
   const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = useState<boolean>(false)
-  const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
-  const [multipleOptions, setMultipleOptions] = useState<MultipleOptions>({
+  // const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
+  const [multipleOptions_, setMultipleOptions_] = useState<MultipleOptions>({
     index: 0,
     selected: [],
     options: [],
   }) // schedule options and selected schedule
   const totalSelected = useMemo(
-    () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
-    [multipleOptions]
+    () => multipleOptions_.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
+    [multipleOptions_]
   )
   // ===============================================================================================================================
 
@@ -86,27 +88,17 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
   )
 
+  const [multipleOptions, setMultipleOptions] = useState(
+    JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
+  )
+  const [selectedOption, setSelectedOption] = useState(
+    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 0
+  )
+
   useEffect(() => {
     BackendAPI.getCourses(selectedMajor).then((courses) => {
       setCoursesInfo(courses)
     })
-    // Fetch major courses
-    // if (selectedMajor === null) return
-    // BackendAPI.getCourses(selectedMajor).then((courses) => {
-    //   // TODO: Remover o map de dentro do setCoursesInfo
-    //   // Para isso é preciso mudar a maneira como os
-    //   // dados são enviados a partir do backend
-    //   setCoursesInfo(
-    //     courses.map((course: Course) => ({
-    //       id: course.sigarra_id,
-    //       course_unit_year: course.course_unit_year,
-    //       ects: course.ects,
-    //       acronym: course.acronym,
-    //       name: course.name,
-    //       url: course.url,
-    //     }))
-    //   )
-    // })
   }, [selectedMajor])
 
   // ==============================================================================
@@ -385,23 +377,27 @@ const TimeTableSchedulerPage = () => {
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
       <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo }}>
-        <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-          {/* Schedule Preview */}
-          <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-            <div className="h-full w-full">
-              <Schedule courseOptions={multipleOptions.selected} />
+        <MultipleOptionsContext.Provider
+          value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}
+        >
+          <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+            {/* Schedule Preview */}
+            <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+              <div className="h-full w-full">
+                <Schedule courseOptions={multipleOptions_.selected} />
+              </div>
             </div>
-          </div>
 
-          {/* Sidebar */}
-          <Sidebar
-            coursesHook={[checkedCourses, setCheckedCourses]}
-            sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-            destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-            repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-            multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-          />
-        </div>
+            {/* Sidebar */}
+            <Sidebar
+              coursesHook={[checkedCourses, setCheckedCourses]}
+              sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
+              destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
+              repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
+              multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
+            />
+          </div>
+        </MultipleOptionsContext.Provider>
       </CourseContext.Provider>
     </MajorContext.Provider>
   )

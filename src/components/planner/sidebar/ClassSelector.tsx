@@ -1,7 +1,7 @@
+import { useEffect, useMemo, useRef, useState, useContext } from 'react'
 import { ChevronUpDownIcon, ExclamationTriangleIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
 import { User } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { CourseOption, CourseSchedule, MultipleOptions } from '../../../@types'
+// import { CourseOption, CourseSchedule, MultipleOptions } from '../../../@types'
 import { getScheduleOptionDisplayText, schedulesConflict } from '../../../utils'
 import { Button } from '../../ui/button'
 import {
@@ -17,29 +17,31 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../../ui/dropdown-menu'
+import { CourseInfo, Slot } from '../../../@types/new_index'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
 type Props = {
-  courseOption: CourseOption
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
-  isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+  course: CourseInfo
 }
 
-const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook }: Props) => {
-  const firstRenderRef = useRef(true)
+const ClassSelector = ({ course }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
-  const [isImportedOption, setIsImportedOption] = isImportedOptionHook
-  const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
-  const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
-  const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
-  //FIXME (thePeras): If you are here you probably oberserved a bug. Don't worry its gonna be fixed very very soon
-  var teacherOptions = courseOption.teachers
-  const [lastSelected, setLastSelected] = useState(selectedOption)
   const [previewing, setPreviewing] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
-  const [selectedTeachers, setSelectedTeachers] = useState(courseOption.teachers)
+  // const firstRenderRef = useRef(true)
+  // const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  // const [isImportedOption, setIsImportedOption] = isImportedOptionHook
+  // const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
+  // const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
+  // const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
+  // //FIXME (thePeras): If you are here you probably oberserved a bug. Don't worry its gonna be fixed very very soon
+  // var teacherOptions = courseOption.teachers
+  // const [lastSelected, setLastSelected] = useState(selectedOption)
+
+  // const [selectedTeachers, setSelectedTeachers] = useState(courseOption.teachers)
 
   /**
    * This useEffect is used to make the dropdown content width match the trigger width
@@ -50,46 +52,48 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
     }
   }, [isDropdownOpen])
 
-  useEffect(() => {
-    if (courseOption.option) {
-      setSelectedOption(courseOption.option)
-    }
-  }, [multipleOptions])
+  // useEffect(() => {
+  //   if (courseOption.option) {
+  //     setSelectedOption(courseOption.option)
+  //   }
+  // }, [multipleOptions])
 
-  const adaptedSchedules = useMemo(() => {
-    return [courseOption.schedules]
-      .flat()
-      .filter(
-        (option: CourseSchedule | null) =>
-          option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
-      )
-  }, [courseOption])
+  // const adaptedSchedules = useMemo(() => {
+  //   return [courseOption.schedules]
+  //     .flat()
+  //     .filter(
+  //       (option: CourseSchedule | null) =>
+  //         option?.lesson_type !== 'T' && (null || option?.class_name !== null || option?.composed_class_name !== null)
+  //     )
+  // }, [courseOption])
 
-  const handleClassSelection = (option: CourseSchedule) => {
-    setLastSelected(option)
-    setSelectedOption(option)
-  }
+  // const handleClassSelection = (option: CourseSchedule) => {
+  //   setLastSelected(option)
+  //   setSelectedOption(option)
+  // }
 
   const toggleLocked = () => {
     setMultipleOptions((prev) => {
-      let newCourseOptions = prev.selected
+      let newMultipleOptions = prev
+      let newSelectedOption = prev[selectedOption]
 
-      for (let i = 0; i < prev.selected.length; i++) {
-        const option = prev.selected[i]
-        if (option.course.info.id === courseOption.course.info.id) {
-          newCourseOptions[i].locked = !newCourseOptions[i].locked
-        }
+      for (let i = 0; i < newSelectedOption.course_options.length; i++) {
+        const courseOption = newSelectedOption.course_options[i]
+        if (courseOption.course_id === course.id)
+          newSelectedOption.course_options[i].locked = !newSelectedOption.course_options[i].locked
       }
 
-      return {
-        index: prev.index,
-        selected: [...newCourseOptions],
-        options: prev.options,
-      }
+      newMultipleOptions[selectedOption] = newSelectedOption
+
+      return [...newMultipleOptions]
     })
   }
 
-  const showPreview = (option: CourseSchedule) => {
+  // =================================================================
+  //                          Checkpoint
+  // =================================================================
+
+  const showPreview = (option: Slot) => {
     if (!previewing) {
       setPreviewing(true)
     }
@@ -313,7 +317,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
                     className="gap-2"
                     onMouseEnter={() => showPreview(option)}
                     onMouseLeave={() => removePreview()}
-                    checked={selectedOption == option}
+                    checked={selectedOption === option}
                     onSelect={() => handleClassSelection(option)}
                   >
                     <span className="text-sm tracking-tighter">{getOptionDisplayText(option)}</span>
@@ -334,6 +338,7 @@ const ClassSelector = ({ courseOption, multipleOptionsHook, isImportedOptionHook
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+
           {/* Lock Button */}
           <Button
             variant="icon"

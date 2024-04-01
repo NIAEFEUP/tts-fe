@@ -49,11 +49,6 @@ export type Slot = {
     // last_updated: string, (is it needed??)
 }
 
-
-// selected_major = {
-//     id: number
-// } // FICA APENAS COMO STATE (não é um type)
-
 export type selected_courses = Array<CourseInfo>
 
 export type MultipleOptions = Array<Option> 
@@ -62,11 +57,12 @@ export type Option = {
     id: number,
     icon: string,
     name: string,
-    course_option: Array<CourseOption>
+    course_options: Array<CourseOption>
 }
 
 export type CourseOption = {
     course_id: number,
+    picked_class_id: number,
     locked: boolean,
     filteredTeachers: Array<ProfessorInformation>,
     hide: Array<lesson_type>,

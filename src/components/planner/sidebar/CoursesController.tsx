@@ -1,23 +1,22 @@
-import { removeDuplicatesFromCourseOption } from '../../../utils'
+import { useContext } from 'react'
+import CourseContext from '../../../contexts/CourseContext'
 import ClassSelector from './ClassSelector'
+import { NoMajorSelected } from '../../svgs'
 
 const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
-  const [multipleOptions, setMultipleOptions] = multilpleOptionsHook
-  const [isImportedOption, setIsImportedOption] = isImportedOptionHook
+  const { pickedCourses } = useContext(CourseContext)
 
   return (
     <div className="flex w-full flex-col gap-4 px-0 py-2">
-      {multipleOptions.selected.length > 0 &&
-        removeDuplicatesFromCourseOption(multipleOptions.options[multipleOptions.index])
-          .sort((a, b) => a.course.info.sigarra_id - b.course.info.sigarra_id)
-          .map((courseOption, courseOptionIdx) => (
-            <ClassSelector
-              courseOption={courseOption}
-              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-              isImportedOptionHook={[isImportedOption, setIsImportedOption]}
-              key={`course-schedule-${multipleOptions.index}-${courseOption.course.info.id}`}
-            />
-          ))}
+      {pickedCourses.length > 0 ? (
+        pickedCourses
+          .sort((course1, course2) => course1.id - course2.id)
+          .map((course, courseIdx) => (
+            <ClassSelector course={course} key={`course-schedule-${courseIdx}-${course.id}`} />
+          ))
+      ) : (
+        <NoMajorSelected className="h-40 w-full" />
+      )}
     </div>
   )
 }

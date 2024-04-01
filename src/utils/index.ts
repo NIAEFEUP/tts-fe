@@ -1,8 +1,7 @@
-import React, { FC, ComponentProps } from 'react'
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
-import { CourseOption, CourseSchedule, Lesson } from '../@types'
-import { CourseInfo } from '../@types/new_index'
+import { CourseSchedule, Lesson } from '../@types'
+import { CourseInfo, CourseOption, MultipleOptions, selected_courses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minHour = 8
@@ -171,36 +170,42 @@ const getClassTypeClassName = (type: string) => {
   }
 }
 
-const getCourseTeachers = (courseOption: CourseOption) => {
-  let teachers = []
-  courseOption.schedules.forEach((schedule, idx) => {
-    if (schedule.lesson_type !== 'T') {
-      schedule.professor_information.forEach((prof_info) => {
-        if (!teachers.some((other) => other.acronym === prof_info.acronym)) {
-          teachers.push(prof_info)
-        }
-      })
-    }
-  })
-
-  return teachers
+const getCourseTeachers = (courseInfo: CourseInfo) => {
+  return courseInfo.classes.forEach(classInfo => 
+    classInfo.slots.forEach(slot => slot.professors)  
+  )
 }
 
-const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
-  if (!courses) return []
+// const getCourseTeachers = (courseOption: CourseOption) => {
+//   let teachers = []
+//   courseOption.schedules.forEach((schedule, idx) => {
+//     if (schedule.lesson_type !== 'T') {
+//       schedule.professor_information.forEach((prof_info) => {
+//         if (!teachers.some((other) => other.acronym === prof_info.acronym)) {
+//           teachers.push(prof_info)
+//         }
+//       })
+//     }
+//   })
 
-  let frequency: Map<number, number> = new Map()
-  let newCourseOptions: CourseOption[] = []
+//   return teachers
+// }
 
-  for (let courseOption of courses) {
-    if (!frequency.has(courseOption.course.info.id)) {
-      newCourseOptions.push(courseOption)
-      frequency.set(courseOption.course.info.id, 1)
-    }
-  }
+// const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
+//   if (!courses) return []
 
-  return newCourseOptions
-}
+//   let frequency: Map<number, number> = new Map()
+//   let newCourseOptions: CourseOption[] = []
+
+//   for (let courseOption of courses) {
+//     if (!frequency.has(courseOption.course.info.id)) {
+//       newCourseOptions.push(courseOption)
+//       frequency.set(courseOption.course.info.id, 1)
+//     }
+//   }
+
+//   return newCourseOptions
+// }
 
 /**
  * Considering that the yearCourses is sorted by the course_unit_year field in ascending order, the function groups the major courses by year.
@@ -237,6 +242,82 @@ const isSubset = (set1, set2, same) => {
   return true
 }
 
+const defaultMultipleOptions = (selected_courses:selected_courses) : MultipleOptions => {
+  const defaultCourseOption : CourseOption[] = selected_courses.map(course => (
+    {
+      course_id: course.id,
+      picked_class_id: 0,
+      locked: false,
+      filteredTeachers: [],
+      hide: []
+    }
+  ))
+  
+  return [
+    {
+      id: 1,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
+      name: 'Horário 1',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 2,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
+      name: 'Horário 2',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 3,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
+      name: 'Horário 3',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 4,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
+      name: 'Horário 4',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 5,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
+      name: 'Horário 5',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 6,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
+      name: 'Horário 6',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 7,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
+      name: 'Horário 7',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 8,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
+      name: 'Horário 8',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 9,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
+      name: 'Horário 9',
+      course_options: defaultCourseOption,
+    },
+    {
+      id: 10,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
+      name: 'Horário 10',
+      course_options: defaultCourseOption,
+    },
+  ]
+}
+
+
 export {
   config,
   dev_config,
@@ -260,7 +341,8 @@ export {
   getLessonTypeLongName,
   getCourseTeachers,
   cn,
-  removeDuplicatesFromCourseOption,
+  // removeDuplicatesFromCourseOption,
   groupCoursesByYear,
   isSubset,
+  defaultMultipleOptions,
 }

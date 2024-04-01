@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { CheckedCourse, ImportedCourses, Major, MultipleOptions } from '../../@types'
+import { CheckedCourse, MultipleOptions } from '../../@types'
 import SessionController from './sidebar/SessionController'
 import OptionsController from './sidebar/OptionsController'
 import SelectedOptionController from './sidebar/SelectedOptionController'
@@ -71,7 +71,7 @@ const defaultOptionsList = [
  */
 const Sidebar = ({ multipleOptionsHook }: Props) => {
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
-  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  const [multipleOptions] = multipleOptionsHook
 
   //TODO: Type for optionsList
   const [optionsList, setOptionsList] = useState(

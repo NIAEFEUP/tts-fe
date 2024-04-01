@@ -1,4 +1,4 @@
-import { CheckedCourse, Major } from '../@types'
+import { Major } from '../@types'
 import { CourseInfo } from '../@types/new_index'
 import { getSemester, config, dev_config } from '../utils'
 
@@ -53,7 +53,11 @@ const getCourseClass = async (course: CourseInfo) => {
 }
 
 const getCoursesClasses = async (courses : CourseInfo[]) => {
-  return courses.map(async (course) => await getCourseClass(course))
+  return courses.map(async (course) => {
+    const courseClass = await getCourseClass(course)
+    course['classes'] = courseClass
+    return course
+  })
 }
 
 /**
