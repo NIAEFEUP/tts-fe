@@ -33,8 +33,9 @@ export type CourseInfo = {
 
 export type Class = {
     // course_unit_id: number, // é mesmo necessário ??
+    // composed_name: string,
+    id: number,
     name: string
-    composed_name: string,
     slots: Array<Slot>
 }
 
@@ -64,11 +65,12 @@ export type CourseOption = {
     course_id: number,
     picked_class_id: number,
     locked: boolean,
-    filteredTeachers: Array<ProfessorInformation>,
+    filteredTeachers: Array<number>,
     hide: Array<lesson_type>,
 }
 
 export type ProfessorInformation = {
+    id: number
     acronym: string
     name: string
 }

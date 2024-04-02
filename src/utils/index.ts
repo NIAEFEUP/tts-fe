@@ -1,7 +1,7 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, MultipleOptions, selected_courses } from '../@types/new_index'
+import { CourseInfo, CourseOption, Slot, MultipleOptions, selected_courses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minHour = 8
@@ -48,7 +48,7 @@ const getSchoolYear = () => {
 const convertWeekday = (dayNumber: number) => {
   if (dayNumber < 0 || dayNumber > 7) return null
 
-  const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sab', 'Dom']
+  const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sáb', 'Dom']
   return weekdays[dayNumber]
 }
 
@@ -87,15 +87,19 @@ const schedulesConflict = (first, second) => {
   return (firstStart < secondStart && firstEnd > secondStart) || (firstStart >= secondStart && firstStart < secondEnd)
 }
 
-const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
-  // prioritize single class name
-  const classTitle = option.class_name !== null ? option.class_name : option.composed_class_name
-  const professor_acronyms = option.professor_information.map((prof_info) => prof_info.acronym)
-  return [classTitle, professor_acronyms, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
+  const classInfo = course.classes.find((classInfo) => classInfo.id === picked_class_id)
+  if (!classInfo) return ''
+
+  const classTitle = classInfo.name
+  const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
+  const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
+
+  return [classTitle, professor_acronyms, ...weekdays, ...professor_acronyms].join(', ')
 }
 
-const getLessonBoxTime = (schedule: CourseSchedule) => {
-  return [convertHour(schedule.start_time), convertHour(addHour(schedule.start_time, schedule.duration))].join('-')
+const getLessonBoxTime = (slot: Slot) => {
+  return [convertHour(slot.start_time.toString()), convertHour(addHour(slot.start_time.toString(), slot.duration.toString()))].join('-')
 }
 
 const addHour = (hour1: string, hour2: string): string => {
@@ -334,7 +338,7 @@ export {
   convertHour,
   timesCollide,
   schedulesConflict,
-  getScheduleOptionDisplayText,
+  getClassDisplayText,
   getLessonBoxTime,
   getLessonBoxStyles,
   getClassTypeClassName,

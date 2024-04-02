@@ -83,7 +83,7 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.selected-major')) || null
   )
   // const [selectedMajor, setSelectedMajor] = useState<Major>(null)
-  const [coursesInfo, setCoursesInfo] = useState([])
+  const [coursesInfo, setCoursesInfo] = useState(JSON.parse(localStorage.getItem('niaefeup-tts.courses-info')) || [])
   const [pickedCourses, setPickedCourses] = useState(
     JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
   )
@@ -188,6 +188,7 @@ const TimeTableSchedulerPage = () => {
     document.getElementById('layout').scrollIntoView()
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
+      StorageAPI.setMajorsStorage(majors)
     })
   }, [])
 
