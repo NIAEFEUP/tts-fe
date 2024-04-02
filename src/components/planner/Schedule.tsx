@@ -7,7 +7,7 @@ import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from 
 import { useShowGrid } from '../../hooks'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
-import { EyeIcon } from '@heroicons/react/24/outline'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
 type Props = {
   courseOptions: CourseOption[]
@@ -207,7 +207,10 @@ const Schedule = ({ courseOptions }: Props) => {
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
             {lessonTypes.map((lessonType: string) => (
-              <label className="inline-flex items-center gap-1.5 lg:gap-1" key={`lesson-type-${lessonType}`}>
+              <label
+                className="group relative flex items-center gap-1.5 overflow-x-hidden rounded-lg hover:cursor-pointer lg:gap-1"
+                key={`lesson-type-${lessonType}`}
+              >
                 <input
                   type="checkbox"
                   className="peer hidden"
@@ -220,16 +223,25 @@ const Schedule = ({ courseOptions }: Props) => {
                     }
                   }}
                 />
-                
-                <span className={`flex items-center justify-center h-4 w-4 rounded 2xl:h-4 2xl:w-4 
-                ${'bg-schedule-' + lessonType.toLowerCase() + '/80'}`} style={{ marginRight: '5px' }}>
-                  <EyeIcon className={`h-3 w-3 text-white`} />
-                </span>
 
+                <span
+                  className={`flex h-4 w-4 items-center justify-center rounded 2xl:h-4 2xl:w-4 
+                ${'bg-schedule-' + lessonType.toLowerCase() + '/80'}`}
+                  style={{ marginRight: '5px' }}
+                >
+                  {hiddenLessonsTypes.find((lesson) => lesson === lessonType) ? (
+                    <EyeSlashIcon className={`h-3 w-3 text-white`} />
+                  ) : (
+                    <EyeIcon className={`h-3 w-3 text-white`} />
+                  )}
+                </span>
 
                 <span className="cursor-pointer select-none peer-checked:line-through">
                   {lessonTypesDic[lessonType]}
                 </span>
+
+                {/* Shine box */}
+                <div className="z-5 absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-shine" />
               </label>
             ))}
           </div>
