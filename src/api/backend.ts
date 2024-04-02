@@ -1,6 +1,6 @@
-import { CheckedCourse, Major } from '../@types'
-import { extraCoursesData } from '../utils/data'
-import { getSemester, config, dev_config } from '../utils/utils'
+import { Major } from '../@types'
+import { CourseInfo } from '../@types/new_index'
+import { getSemester, config, dev_config } from '../utils'
 
 
 const prod_val = process.env.REACT_APP_PROD
@@ -47,57 +47,17 @@ const getCourses = async (major: Major) => {
  * @param course course of which to retrieve schedule
  * @returns array of schedule options
  */
-const getCourseSchedule = async (course: CheckedCourse) => {
+const getCourseClass = async (course: CourseInfo) => {
   if (course === null) return []
-  return await apiRequest(`/schedule/${course.info.id}/`)
+  return await apiRequest(`/class/${course.id}/`)
 }
 
-/**
- * Retrieves all schedule options for a given course unit
- * @param courses course of which to retrieve schedule
- * @returns array of schedule options
- */
-const getCoursesSchedules = async (courses: CheckedCourse[]) => {
-  if (!courses || courses.length === 0) return []
-
-  let schedules = []
-  for (let course of courses) {
-    const schedule = await getCourseSchedule(course)
-    schedules.push(schedule)
-  }
-
-  return schedules
-}
-
-/**
- * Retrieves all schedule options for a given course unit
- * @param courses course of which to retrieve schedule
- * @returns array of schedule options
- */
-const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
-  if (!courses || courses.length === 0) return []
-
-  let schedules = []
-  for (let yearCourses of courses) {
-    let yearSchedules = []
-    for (let course of yearCourses) {
-      const schedule = await getCourseSchedule(course)
-      yearSchedules.push(schedule)
-    }
-    schedules.push(yearSchedules)
-  }
-
-  return schedules
-}
-
-/**
- * Retrieves all course units outside of a given major
- * @param major major to exclude course units from
- * @returns array of course units
- */
-const getExtraCourses = (major: Major) => {
-  // TODO: implement
-  return extraCoursesData
+const getCoursesClasses = async (courses : CourseInfo[]) => {
+  return courses.map(async (course) => {
+    const courseClass = await getCourseClass(course)
+    course['classes'] = courseClass
+    return course
+  })
 }
 
 /**
@@ -110,11 +70,59 @@ const getInfo = async () => {
 const api = {
   getMajors,
   getCourses,
-  getCourseSchedule,
-  getCoursesSchedules,
-  getMajorCoursesSchedules,
-  getExtraCourses,
+  getCourseClass,
+  getCoursesClasses,
   getInfo
 }
 
 export default api
+
+
+
+// DEPRECATED
+// TODO: remove
+// /**
+//  * Retrieves all schedule options for a given course unit
+//  * @param course course of which to retrieve schedule
+//  * @returns array of schedule options
+//  */
+// const getCourseSchedule = async (course: CheckedCourse) => {
+//   if (course === null) return []
+//   return await apiRequest(`/schedule/${course.info.id}/`)
+// }
+// /**
+//  * Retrieves all schedule options for a given course unit
+//  * @param courses course of which to retrieve schedule
+//  * @returns array of schedule options
+//  */
+// const getCoursesSchedules = async (courses: CheckedCourse[]) => {
+//   if (!courses || courses.length === 0) return []
+
+//   let schedules = []
+//   for (let course of courses) {
+//     const schedule = await getCourseSchedule(course)
+//     schedules.push(schedule)
+//   }
+
+//   return schedules
+// }
+// /**
+//  * Retrieves all schedule options for a given course unit
+//  * @param courses course of which to retrieve schedule
+//  * @returns array of schedule options
+//  */
+// const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
+//   if (!courses || courses.length === 0) return []
+
+//   let schedules = []
+//   for (let yearCourses of courses) {
+//     let yearSchedules = []
+//     for (let course of yearCourses) {
+//       const schedule = await getCourseSchedule(course)
+//       yearSchedules.push(schedule)
+//     }
+//     schedules.push(yearSchedules)
+//   }
+
+//   return schedules
+// }

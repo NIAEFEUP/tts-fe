@@ -1,6 +1,5 @@
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
 import { MultipleOptions } from '../../../../@types'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 
 type Props = {
   multipleOptions: MultipleOptions

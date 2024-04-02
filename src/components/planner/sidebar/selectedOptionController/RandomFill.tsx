@@ -1,7 +1,7 @@
 import { BoltIcon } from '@heroicons/react/24/outline'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../../../@types'
 import { useEffect, useState } from 'react'
-import { removeDuplicatesFromCourseOption } from '../../../../utils/utils'
+import { removeDuplicatesFromCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { ScrollArea } from '../../../ui/scroll-area'
