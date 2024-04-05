@@ -2,19 +2,22 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "../ui/button";
 import { DirectExchangeSelection } from "./DirectExchangeSelection";
 import { getStudentSchedule, logout } from "../../api/backend";
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { SessionContext } from "../../contexts/SessionContext";
 import { SubmitDirectExchangeButton } from "./SubmitDirectExchangeButton";
 import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types";
 import { MoonLoader } from "react-spinners";
+import { convertSigarraCourseToTtsCourse } from "../../utils/utils";
 
-type props = {
+type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
+    courseOptions: CourseOption[]
 }
 
 export function DirectExchange({
+    courseOptions,
     setCourseOptions
-}) {
+}: Props) {
     const [currentDirectExchange, setCurrentDirectExchange] = useState<Map<string, ClassExchange>>(new Map<string, ClassExchange>());
     const [schedule, setSchedule] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -38,45 +41,10 @@ export function DirectExchange({
                             class: course.turma_sigla,
                             code: course.ocorrencia_id
                         })));
-                    // setCourseOptions(data.filter(course => course.tipo === "TP").map(course => ({
-                    //     shown: {
-                    //         T: false,
-                    //         TP: true,
-                    //     },
-                    //     locked: false,
-                    //     course: {
-                    //         checked: true,
-                    //         info: {}
-                    //     },
-                    //     option: {
-                    //         day: course.dia,
-                    //         duration: course.aula_duracao,
-                    //         start_time: course.hora_inicio,
-                    //         location: course.sala_sigla,
-                    //         lesson_type: course.tipo,
-                    //         is_composed: false,
-                    //         course_unit_id: course.ocorrencia_id,
-                    //         last_updated: "",
-                    //         composed_class_name: "",
-                    //         professors_link: "",
-                    //         professor_information: []
-                    //     },
-                    //     schedules: [{
-                    //         day: course.dia,
-                    //         duration: course.aula_duracao,
-                    //         start_time: course.hora_inicio,
-                    //         location: course.sala_sigla,
-                    //         lesson_type: course.tipo,
-                    //         is_composed: false,
-                    //         course_unit_id: course.ocorrencia_id,
-                    //         last_updated: "",
-                    //         composed_class_name: "",
-                    //         professors_link: "",
-                    //         professor_information: []
-                    //     }],
-                    //     teachers: [],
-                    //     filteredTeachers: []
-                    // })))
+                    setCourseOptions(data.filter(course => course.tipo === "TP").map(course => {
+                        const convertedCourse = convertSigarraCourseToTtsCourse(course);
+                        return convertedCourse;
+                    }))
                 }
             } catch (err) {
                 setError(err);
@@ -111,8 +79,10 @@ export function DirectExchange({
                                 <DirectExchangeSelection
                                     setCurrentDirectExchange={setCurrentDirectExchange}
                                     currentDirectExchange={currentDirectExchange}
+                                    courseOptions={courseOptions}
+                                    setCourseOptions={setCourseOptions}
                                     uc={uc}
-                                    key={uc.ucName}
+                                    key={uc.name}
                                 />
                             )
                         })
