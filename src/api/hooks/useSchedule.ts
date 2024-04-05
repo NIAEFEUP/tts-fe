@@ -1,39 +1,41 @@
 import { useContext, useMemo } from "react";
 import useSWR from "swr";
 import { SessionContext } from "../../contexts/SessionContext";
-import { logout } from "../backend";
+import { getStudentSchedule, logout } from "../backend";
 
-export function useSchedule(username) {
-    const { loggedIn, setLoggedIn } = useContext(SessionContext);
-    const getStudentSchedule = async (key: string) => {
+export function useSchedule(username, setLoggedIn) {
+    const studentSchedule = async (username: string) => {
         try {
-            const res = await fetch(key, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await getStudentSchedule(username);
 
             if (!res.ok) {
-                if(res.status === 403) {
-                   await logout();
-                   setLoggedIn(false);
+                if (res.status === 403) {
+                    await logout();
+                    setLoggedIn(false);
                 }
-                throw error;
             }
 
-            return res;
+            return res.filter(course => course.tipo === "TP")
+                .map(course => ({
+                    sigla: course.ucurr_sigla,
+                    name: course.ucurr_nome,
+                    class: course.turma_sigla,
+                    code: course.ocorrencia_id
+                }));
 
         } catch (error) {
             return error;
         }
     };
 
-    const { data, error } = useSWR(`/student_schedule/${username}`, getStudentSchedule);
-    const studentSchedule = useMemo(() => data ? data : null, [data]);
+    const { isLoading, isValidating, data, error } = useSWR(username, studentSchedule);
+
+    console.log("is loading: ", isLoading);
 
     return {
-        data: studentSchedule,
+        data,
         error,
-        isLoading: !data
+        isLoading,
+        isValidating
     };
 }
-

@@ -1,7 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { DirectExchange } from "./DirectExchange";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { CourseOption } from "../../@types";
+import { SessionContext } from "../../contexts/SessionContext";
+import { useSchedule } from "../../api/hooks/useSchedule";
 
 type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
@@ -12,6 +14,15 @@ export const ExchangeSidebar = ({
     setCourseOptions,
     courseOptions
 }: Props) => {
+    const username = localStorage.getItem("username");
+
+    const { loggedIn, setLoggedIn } = useContext(SessionContext);
+    const {
+        data: schedule,
+        isLoading: isScheduleLoading,
+        isValidating: isScheduleValidating
+    } = useSchedule(username, loggedIn);
+
     return (
         <div className="sidebar">
             <Tabs defaultValue="direta" className="w-full">

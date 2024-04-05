@@ -52,6 +52,8 @@ export function DirectExchangeSelection({
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    console.log("Uc is: ", uc);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -87,10 +89,10 @@ export function DirectExchangeSelection({
                         <span className="font-bold text-center">{uc.name}</span>
                         <Button variant="destructive" className="w-4 h-6" onClick={() => {
                             const originalCourseSchedule = originalSchedule.current.filter((courseOption) => courseOption.course.info.acronym === uc.sigla)[0];
-                                setCourseOptions((prev) => ([
-                                    ...(prev.filter(schedule => schedule.course.info.name !== uc.sigla)),
-                                    originalCourseSchedule
-                                ]));
+                            setCourseOptions((prev) => ([
+                                ...(prev.filter(schedule => schedule.course.info.name !== uc.sigla)),
+                                originalCourseSchedule
+                            ]));
                             setIsExchangeSelectionIncluded(false);
                             setValue("");
                             setSelectedClass("");

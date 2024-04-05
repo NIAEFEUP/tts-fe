@@ -4,6 +4,7 @@ import { DirectExchangeSelection } from "./DirectExchangeSelection";
 import { getStudentSchedule, logout } from "../../api/backend";
 import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { SessionContext } from "../../contexts/SessionContext";
+import { useSchedule } from "../../api/hooks/useSchedule";
 import { SubmitDirectExchangeButton } from "./SubmitDirectExchangeButton";
 import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types";
 import { MoonLoader } from "react-spinners";
@@ -18,47 +19,40 @@ export function DirectExchange({
     courseOptions,
     setCourseOptions
 }: Props) {
-    const [currentDirectExchange, setCurrentDirectExchange] = useState<Map<string, ClassExchange>>(new Map<string, ClassExchange>());
-    const [schedule, setSchedule] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const { loggedIn, setLoggedIn } = useContext(SessionContext);
 
-    const username = localStorage.getItem("username");
+    const [currentDirectExchange, setCurrentDirectExchange] = useState<Map<string, ClassExchange>>(new Map<string, ClassExchange>());
+    const [error, setError] = useState(null);
+
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getStudentSchedule(username);
-                if (data.status === 403) {
-                    setLoggedIn(false);
-                    await logout();
-                } else {
-                    setSchedule(data.filter(course => course.tipo === "TP")
-                        .map(course => ({
-                            sigla: course.ucurr_sigla,
-                            name: course.ucurr_nome,
-                            class: course.turma_sigla,
-                            code: course.ocorrencia_id
-                        })));
-                    setCourseOptions(data.filter(course => course.tipo === "TP").map(course => {
-                        const convertedCourse = convertSigarraCourseToTtsCourse(course);
-                        return convertedCourse;
-                    }))
-                }
-            } catch (err) {
-                setError(err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+        // const fetchData = async () => {
+        //     try {
+        //         const data = await getStudentSchedule(username);
+        //         if (data.status === 403) {
+        //             setLoggedIn(false);
+        //             await logout();
+        //         } else {
+        //             setSchedule(data.filter(course => course.tipo === "TP")
+        //                 .map(course => ({
+        //                     sigla: course.ucurr_sigla,
+        //                     name: course.ucurr_nome,
+        //                     class: course.turma_sigla,
+        //                     code: course.ocorrencia_id
+        //                 })));
+        //             setCourseOptions(data.filter(course => course.tipo === "TP").map(course => {
+        //                 const convertedCourse = convertSigarraCourseToTtsCourse(course);
+        //                 return convertedCourse;
+        //             }))
+        //         }
+        //     } catch (err) {
+        //         setError(err);
+        //     } finally {
+        //         setIsLoading(false);
+        //     }
+        // };
 
-        fetchData();
-    }, [username]);
-
-    // if (isLoading) {
-    //     return <p>Loading schedule...</p>;
-    // }
+        // fetchData();
+    }, []);
 
     if (error) {
         return <p>Error fetching schedule: {error.message}</p>;
