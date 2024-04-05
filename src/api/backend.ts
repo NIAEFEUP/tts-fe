@@ -128,7 +128,7 @@ export const login = async (faculty: string, username: string, password: string)
  * Logout from backend 
  */
 export const logout = async () => {
-    return await apiRequest("/logout/", "POST", null); 
+    return await apiRequest("/logout/", "POST", null);
 }
 
 /**
@@ -143,22 +143,25 @@ export const submitDirectExchange = async (exchangeChoices: ClassExchange[]) => 
     return await apiRequest("/submit_direct_exchange/", "POST", formData);
 }
 
- /*
- * Get student schedule from sigarra 
- */
-export const getStudentSchedule = async(username: string) => {
-  
+/*
+* Get student schedule from sigarra 
+*/
+export const getStudentSchedule = async (username: string) => {
     return await apiRequest(`/student_schedule/${username}/`, "GET", null);
-}  
+}
 
 /**
  * Get course unit schedules from sigarra
  */
-export const getCourseScheduleSigarra = async(course_unit_id: string) => {
+export const getCourseScheduleSigarra = async (course_unit_id: string) => {
     return await apiRequest(`/schedule_sigarra/${course_unit_id}/`, "GET", null);
 }
 
-export const getCourseStudents = async(course_unit_id: string) => {
+export const getClassScheduleSigarra = async (course_unit_id: string, class_name: string) => {
+    return await apiRequest(`/class_sigarra_schedule/${course_unit_id}/${class_name}`, "GET", null);
+}
+
+export const getCourseStudents = async (course_unit_id: string) => {
     return await apiRequest(`/students_per_course_unit/${course_unit_id}/`, "GET", null);
 }
 

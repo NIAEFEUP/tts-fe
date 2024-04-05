@@ -1,6 +1,6 @@
 "use client"
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Input } from '../ui/input'
 import { Button } from "../ui/button"
@@ -16,18 +16,24 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "../ui/popover"
-import { getCourseScheduleSigarra, getCourseStudents } from "../../api/backend"
+
+import { getClassScheduleSigarra, getCourseScheduleSigarra, getCourseStudents } from "../../api/backend"
 import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types"
+import { convertSigarraCourseToTtsCourse } from "../../utils/utils"
 
 type props = {
     setCurrentDirectExchange: Dispatch<SetStateAction<Map<string, ClassExchange>>>,
     currentDirectExchange: Map<string, ClassExchange>,
+    courseOptions: CourseOption[],
+    setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>,
     uc: ExchangeCourseUnit
 };
 
 export function DirectExchangeSelection({
     setCurrentDirectExchange,
     currentDirectExchange,
+    setCourseOptions,
+    courseOptions,
     uc
 }: props) {
     const [open, setOpen] = useState<boolean>(false);
@@ -35,6 +41,7 @@ export function DirectExchangeSelection({
     const [selectedClass, setSelectedClass] = useState<string>("");
     const [student, setStudent] = useState<string>("");
     const [isExchangeSelectionIncluded, setIsExchangeSelectionIncluded] = useState<boolean>(false);
+    const originalSchedule = useRef([...courseOptions]);
 
     const [students, setStudents] = useState([]);
     const [studentOpen, setStudentOpen] = useState<boolean>(false);
@@ -79,6 +86,11 @@ export function DirectExchangeSelection({
                     <div className="flex flex-row justify-between">
                         <span className="font-bold text-center">{uc.name}</span>
                         <Button variant="destructive" className="w-4 h-6" onClick={() => {
+                            const originalCourseSchedule = originalSchedule.current.filter((courseOption) => courseOption.course.info.acronym === uc.sigla)[0];
+                                setCourseOptions((prev) => ([
+                                    ...(prev.filter(schedule => schedule.course.info.name !== uc.sigla)),
+                                    originalCourseSchedule
+                                ]));
                             setIsExchangeSelectionIncluded(false);
                             setValue("");
                             setSelectedClass("");
@@ -115,7 +127,13 @@ export function DirectExchangeSelection({
                                                 className="pl-2"
                                                 key={otherStudentUcClass.value}
                                                 value={otherStudentUcClass.value}
-                                                onSelect={(currentValue) => {
+                                                onSelect={async (classId) => {
+                                                    const selectedClassSchedule = await getClassScheduleSigarra(uc.code, otherStudentUcClass.label);
+                                                    setCourseOptions((prev) => ([
+                                                        ...(prev.filter(schedule => schedule.course.info.name !== uc.sigla)),
+                                                        convertSigarraCourseToTtsCourse(selectedClassSchedule),
+                                                    ]));
+
                                                     setCurrentDirectExchange(
                                                         new Map(currentDirectExchange.set(uc.sigla, {
                                                             course_unit: uc.sigla,
@@ -124,8 +142,8 @@ export function DirectExchangeSelection({
                                                             other_student: student
                                                         }))
                                                     )
-                                                    setSelectedClass(currentValue);
-                                                    setValue(currentValue === value ? "" : currentValue)
+                                                    setSelectedClass(classId);
+                                                    setValue(classId === value ? "" : classId)
                                                     setOpen(false)
                                                 }}
                                             >

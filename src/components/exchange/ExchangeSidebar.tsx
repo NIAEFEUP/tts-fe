@@ -5,10 +5,12 @@ import { CourseOption } from "../../@types";
 
 type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
+    courseOptions: CourseOption[]
 }
 
 export const ExchangeSidebar = ({
-    setCourseOptions
+    setCourseOptions,
+    courseOptions
 }: Props) => {
     return (
         <div className="sidebar">
@@ -18,7 +20,7 @@ export const ExchangeSidebar = ({
                     <TabsTrigger value="indireta">Troca indireta</TabsTrigger>
                 </TabsList>
                 <TabsContent value="direta">
-                    <DirectExchange setCourseOptions={setCourseOptions} />
+                    <DirectExchange courseOptions={courseOptions} setCourseOptions={setCourseOptions} />
                 </TabsContent>
                 <TabsContent value="indireta"></TabsContent>
             </Tabs>
