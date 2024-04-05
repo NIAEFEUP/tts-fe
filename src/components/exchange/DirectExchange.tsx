@@ -20,6 +20,7 @@ export function DirectExchange({
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const { loggedIn, setLoggedIn } = useContext(SessionContext);
+    const [selectedStudents, setSelectedStudents] = useState([]);
 
     const username = localStorage.getItem("username");
 
@@ -113,6 +114,8 @@ export function DirectExchange({
                                     currentDirectExchange={currentDirectExchange}
                                     uc={uc}
                                     key={uc.ucName}
+                                    setSelectedStudents={setSelectedStudents}
+                                    selectedStudents={selectedStudents}
                                 />
                             )
                         })

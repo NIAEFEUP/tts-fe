@@ -22,13 +22,17 @@ import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types"
 type props = {
     setCurrentDirectExchange: Dispatch<SetStateAction<Map<string, ClassExchange>>>,
     currentDirectExchange: Map<string, ClassExchange>,
-    uc: ExchangeCourseUnit
+    uc: ExchangeCourseUnit,
+    setSelectedStudents: Dispatch<SetStateAction<any[]>>,
+    selectedStudents: any[],
 };
 
 export function DirectExchangeSelection({
     setCurrentDirectExchange,
     currentDirectExchange,
-    uc
+    uc,
+    setSelectedStudents,
+    selectedStudents,
 }: props) {
     const [open, setOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
@@ -165,33 +169,41 @@ export function DirectExchangeSelection({
                                     />
                                     <CommandEmpty>Nenhum estudante encontrado.</CommandEmpty>
                                     <CommandGroup>
-                                        {students.filter((student) => student.codigo.startsWith(searchTerm)).map((student) => {
-                                            const nameParts = student.nome.split(' ');
-                                            const displayName = `${nameParts[0]} ${nameParts[nameParts.length - 1]}`;
-                                            return (
+                                        {
+                                            [...selectedStudents, ...students]
+                                            .filter((student, index, self) =>
+                                                index === self.findIndex((s) => s.codigo === student.codigo)
+                                            )
+                                            .filter((student) => student.codigo.startsWith(searchTerm))
+                                            .map((student) => {
+                                                const nameParts = student.nome.split(' ');
+                                                const displayName = `${nameParts[0]} ${nameParts[nameParts.length - 1]}`;
+                                                return (
                                                 <CommandItem
                                                     className="pl-2"
                                                     key={student.codigo}
                                                     value={student.codigo}
                                                     onSelect={(currentValue) => {
-                                                        setStudent(currentValue);
-                                                        const exchange = currentDirectExchange.get(uc.sigla);
-                                                        exchange.other_student = currentValue;
-                                                        setCurrentDirectExchange(
-                                                            new Map(currentDirectExchange.set(uc.sigla, exchange))
-                                                        )
-                                                        setStudentValue(currentValue === studentValue ? "" : currentValue)
-                                                        setStudentOpen(false)
+                                                    setStudent(currentValue);
+                                                    const exchange = currentDirectExchange.get(uc.sigla);
+                                                    exchange.other_student = currentValue;
+                                                    setCurrentDirectExchange(
+                                                        new Map(currentDirectExchange.set(uc.sigla, exchange))
+                                                    )
+                                                    setStudentValue(currentValue === studentValue ? "" : currentValue)
+                                                    setStudentOpen(false)
+                                                    setSelectedStudents([student, ...selectedStudents]);
                                                     }}
                                                 >
                                                     <div className="flex flex-col">
-                                                        <div>{student.codigo}</div>
-                                                        <div className="text-gray-600">{displayName}</div>
+                                                    <div>{student.codigo}</div>
+                                                    <div className="text-gray-600">{displayName}</div>
                                                     </div>
                                                 </CommandItem>
-                                            )
-                                        })}
-                                    </CommandGroup>
+                                                )
+                                            })
+                                        }
+                                        </CommandGroup>
                                 </Command>
                             </PopoverContent>
                         </Popover>
