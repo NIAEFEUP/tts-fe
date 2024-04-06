@@ -77,6 +77,8 @@ export function DirectExchangeSelection({
         return <p>Error fetching schedule: {error.message}</p>;
     }
 
+    console.log(currentDirectExchange);
+
     return (
         <div className="flex flex-col w-full justify-between space-y-4 items-start border-2 border-gray-200 shadow-sm bg-white p-4 mb-4 rounded-md">
             {isExchangeSelectionIncluded ? <>
@@ -130,15 +132,8 @@ export function DirectExchangeSelection({
                                                         ...(prev.filter(schedule => schedule.course.info.name !== uc.acronym)),
                                                         ...convertSigarraCoursesToTtsCourses(selectedClassSchedule),
                                                     ]));
+                                                    currentDirectExchange.get(uc.acronym).old_class = otherStudentUcClass.value;
 
-                                                    setCurrentDirectExchange(
-                                                        new Map(currentDirectExchange.set(uc.acronym, {
-                                                            course_unit: uc.acronym,
-                                                            old_class: otherStudentUcClass.label,
-                                                            new_class: uc.class, // auth student class
-                                                            other_student: student
-                                                        }))
-                                                    )
                                                     setSelectedToExchangeClass(classId === selectedToExchangeClass ? "" : classId)
                                                     setOpen(false)
                                                 }}
@@ -169,7 +164,19 @@ export function DirectExchangeSelection({
                 :
                 <div className="flex flex-row items-center space-x-2 w-full">
                     <span className="font-bold text-center w-2/3">{uc.name}</span>
-                    <Button variant="outline" className="w-1/3 bg-gray-100" onClick={() => setIsExchangeSelectionIncluded(true)}>Incluir</Button>
+                    <Button variant="outline" className="w-1/3 bg-gray-100" onClick={() => {
+                        setStudent("");
+                        setStudentValue("");
+                        setCurrentDirectExchange(
+                            new Map(currentDirectExchange.set(uc.acronym, {
+                                course_unit: uc.acronym,
+                                old_class: "",
+                                new_class: uc.class, // auth student class
+                                other_student: student
+                            }))
+                        );
+                        setIsExchangeSelectionIncluded(true);
+                    }}>Incluir</Button>
                 </div>
             }
         </div >
