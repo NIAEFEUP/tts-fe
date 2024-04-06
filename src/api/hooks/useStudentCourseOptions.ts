@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { getStudentSchedule, logout } from "../backend";
 
-export function useSchedule(username, setLoggedIn) {
+export function useStudentCourseOptions(username, setLoggedIn) {
     const studentSchedule = async (username: string) => {
         try {
             const res = await getStudentSchedule(username);
@@ -14,15 +14,13 @@ export function useSchedule(username, setLoggedIn) {
             }
 
             return res;
+
         } catch (error) {
             return error;
         }
     };
 
-    const { isLoading, isValidating, data, error } = useSWR(username, studentSchedule, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
-    });
+    const { isLoading, isValidating, data, error } = useSWR(username, studentSchedule);
 
     return {
         data,

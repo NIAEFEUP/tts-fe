@@ -32,11 +32,10 @@ type props = {
 
 export function DirectExchangeSelection({
     setCourseOptions,
-    courseOptions,
     uc
 }: props) {
     const { marketplaceToggled, currentDirectExchange, setCurrentDirectExchange } = useContext(DirectExchangeContext);
-    const { schedule, isLoadingSchedule, isValidatingSchedule, originalSchedule } = useContext(StudentScheduleContext);
+    const { originalSchedule } = useContext(StudentScheduleContext);
 
     const [open, setOpen] = useState<boolean>(false);
     const [selectedToExchangeClass, setSelectedToExchangeClass] = useState<string>("");

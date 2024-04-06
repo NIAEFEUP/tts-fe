@@ -53,10 +53,10 @@ export const ExchangeStudentSelection = ({
                                         value={student.codigo}
                                         onSelect={(currentValue) => {
                                             setStudent(currentValue);
-                                            const exchange = currentDirectExchange.get(uc.sigla);
+                                            const exchange = currentDirectExchange.get(uc.acronym);
                                             exchange.other_student = currentValue;
                                             setCurrentDirectExchange(
-                                                new Map(currentDirectExchange.set(uc.sigla, exchange))
+                                                new Map(currentDirectExchange.set(uc.acronym, exchange))
                                             )
                                             setStudentValue(currentValue === studentValue ? "" : currentValue)
                                             setStudentOpen(false)
