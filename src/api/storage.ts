@@ -1,5 +1,4 @@
-import { MultipleOptions } from '../@types'
-import { CourseInfo, Major } from '../@types/new_index'
+import { MultipleOptions, CourseInfo, Major } from '../@types/new_index'
 import { getCourseTeachers } from '../utils'
 import API from './backend'
 
@@ -66,6 +65,16 @@ const writeStorageInvalid = (key: string, INITIAL_VALUE?: any) => {
 //   }
 // }
 
+const setOptionsStorage = (multipleOptions: MultipleOptions) => {
+  const key = 'niaefeup-tts.multiple-options'
+  writeStorage(key, multipleOptions);
+}
+
+const removeOptionsStorage = () => {
+  const key = 'niaefeup-tts.multiple-options'
+  writeStorageInvalid(key)
+}
+
 const setMajorsStorage = (majors : Major[]) => {
   const key = 'niaefeup-tts.majors'
   writeStorage(key, majors)
@@ -74,16 +83,6 @@ const setMajorsStorage = (majors : Major[]) => {
 const getMajorsStorage = () => {
   const key = 'niaefeup-tts.majors'
   return JSON.parse(localStorage.getItem(key))
-}
-
-const setOptionsStorage = (courseOptions: MultipleOptions): void => {
-  const key = 'niaefeup-tts.options'
-  writeStorage(key, courseOptions)
-}
-
-const deleteOptionsStorage = (): void => {
-  const key = 'niaefeup-tts.options'
-  writeStorageInvalid(key, INITIAL_VALUE)
 }
 
 const setSelectedMajorStorage = (selectedMajor: any): void => {
@@ -104,10 +103,10 @@ const updateScrappeInfo = async () => {
 
 const StorageAPI = {
   // getOptionsStorage,
-  setMajorsStorage,
-  getMajorsStorage,
   setOptionsStorage,
-  deleteOptionsStorage,
+  removeOptionsStorage,
+  getMajorsStorage,
+  setMajorsStorage,
   updateScrappeInfo,
   setSelectedMajorStorage,
   setPickedCoursesStorage,

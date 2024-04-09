@@ -1,46 +1,43 @@
 import { useContext, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../../ui/tabs'
 import { CourseYearCheckboxes } from './CourseYearCheckboxes'
+import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import CourseContext from '../../../../../contexts/CourseContext'
-import { groupCoursesByYear } from '../../../../../utils'
+import { groupCoursesByYear, replaceCourseOptions } from '../../../../../utils'
 import { ScrollArea } from '../../../../ui/scroll-area'
 import { isSubset } from '../../../../../utils'
 import { NoMajorSelected } from '../../../../svgs'
 
 const CourseYearTabs = () => {
   const { coursesInfo, pickedCourses, setPickedCourses } = useContext(CourseContext)
+  const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [selectedTab, setSelectedTab] = useState('1')
   const coursesByYear = groupCoursesByYear(coursesInfo)
 
-  const handleClick = (event, idx) => {
-    switch (event.detail) {
-      case 1: {
-        break
-      }
-      default: {
-        let newPickedCourses = [...pickedCourses]
-        const yearCourses = coursesByYear[parseInt(idx)]
-        if (isSubset(yearCourses, newPickedCourses, (course1, course2) => course1.id === course2.id)) {
-          newPickedCourses = pickedCourses.filter(
-            (pickedCourse) => pickedCourse.course_unit_year !== parseInt(selectedTab)
-          )
-        } else {
-          newPickedCourses = [...pickedCourses, ...coursesByYear[parseInt(selectedTab) - 1]]
-        }
+  /*
+   * Handle a double click in a year tab which function as a
+   * select all/deselect all course units from that year
+   */
+  const handleClick = (idx) => {
+    let newPickedCourses = [...pickedCourses]
+    const yearCourses = coursesByYear[parseInt(idx)]
+    if (isSubset(yearCourses, newPickedCourses, (course1, course2) => course1.id === course2.id)) {
+      newPickedCourses = pickedCourses.filter((pickedCourse) => pickedCourse.course_unit_year !== parseInt(selectedTab))
+    } else {
+      newPickedCourses = [...pickedCourses, ...coursesByYear[parseInt(selectedTab) - 1]]
+    }
 
-        // Remove duplicates
-        for (let i = 0; i < newPickedCourses.length; i++) {
-          for (let j = i + 1; j < newPickedCourses.length; j++) {
-            if (newPickedCourses[i].id === newPickedCourses[j].id) {
-              newPickedCourses.splice(j--, 1)
-            }
-          }
+    // Remove duplicates
+    for (let i = 0; i < newPickedCourses.length; i++) {
+      for (let j = i + 1; j < newPickedCourses.length; j++) {
+        if (newPickedCourses[i].id === newPickedCourses[j].id) {
+          newPickedCourses.splice(j--, 1)
         }
-
-        setPickedCourses([...newPickedCourses.values()])
-        break
       }
     }
+
+    setMultipleOptions(replaceCourseOptions(newPickedCourses, multipleOptions))
+    setPickedCourses([...newPickedCourses.values()])
   }
 
   return coursesByYear.length > 0 ? (
@@ -49,7 +46,8 @@ const CourseYearTabs = () => {
         {coursesByYear.map((_, idx) => (
           <TabsTrigger
             className="select-none"
-            onClick={(event) => handleClick(event, idx)}
+            onDoubleClick={() => handleClick(idx)}
+            // onClick={(event) => handleClick(event, idx)}
             key={idx}
             value={`${idx + 1}`}
           >

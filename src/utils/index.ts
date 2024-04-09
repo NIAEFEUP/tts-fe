@@ -88,7 +88,7 @@ const schedulesConflict = (first, second) => {
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
-  const classInfo = course.classes.find((classInfo) => classInfo.id === picked_class_id)
+  const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
   if (!classInfo) return ''
 
   const classTitle = classInfo.name
@@ -246,80 +246,100 @@ const isSubset = (set1, set2, same) => {
   return true
 }
 
-const defaultMultipleOptions = (selected_courses:selected_courses) : MultipleOptions => {
-  const defaultCourseOption : CourseOption[] = selected_courses.map(course => (
-    {
-      course_id: course.id,
-      picked_class_id: 0,
-      locked: false,
-      filteredTeachers: [],
-      hide: []
-    }
-  ))
-  
-  return [
+const createDefaultCourseOption = (course: CourseInfo) : CourseOption => ({
+  course_id: course.id,
+  picked_class_id: 0,
+  locked: false,
+  filteredTeachers: [],
+  hide: []
+})
+
+const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions) : MultipleOptions => (
+   multipleOptions.map((option) => {
+     option.course_options.push(createDefaultCourseOption(course))
+     return option
+   })
+)
+
+const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions) : MultipleOptions => (
+  multipleOptions.map((option) => {
+    option.course_options = option.course_options.filter((courseOption) => courseOption.course_id !== course.id)
+    return option
+  })
+)
+
+const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
+  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
+
+  return multipleOptions.map((option) => {
+    option.course_options = [...courseOptions]
+    return option
+  })
+}
+
+
+const defaultMultipleOptions = (selected_courses:selected_courses) : MultipleOptions => ([
     {
       id: 1,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
       name: 'Horário 1',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 2,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
       name: 'Horário 2',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 3,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
       name: 'Horário 3',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 4,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
       name: 'Horário 4',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 5,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
       name: 'Horário 5',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 6,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
       name: 'Horário 6',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 7,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
       name: 'Horário 7',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 8,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
       name: 'Horário 8',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 9,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
       name: 'Horário 9',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
     {
       id: 10,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
       name: 'Horário 10',
-      course_options: defaultCourseOption,
+      course_options: [],
     },
-  ]
-}
+  ]);
 
 
 export {
@@ -348,5 +368,8 @@ export {
   // removeDuplicatesFromCourseOption,
   groupCoursesByYear,
   isSubset,
+  addCourseOption, 
+  removeCourseOption,
+  replaceCourseOptions,
   defaultMultipleOptions,
 }

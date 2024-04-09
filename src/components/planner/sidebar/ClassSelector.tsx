@@ -31,9 +31,13 @@ const ClassSelector = ({ course }: Props) => {
 
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
-  const courseOption = useMemo(() => {
-    return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  }, [selectedOption, multipleOptions, course.id])
+  // const courseOption = useMemo(() => {
+  //   return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
+  // }, [selectedOption, multipleOptions, course.id])
+
+  const classesLoaded = course.classes !== undefined
+  const courseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
+
   const [filteredTeachers, setFilteredTeachers] = useState(courseOption.filteredTeachers)
   const [locked, setLocked] = useState(courseOption.locked)
   const [hide, setHide] = useState(courseOption.hide)
@@ -41,8 +45,7 @@ const ClassSelector = ({ course }: Props) => {
   const [preview, setPreview] = useState(null)
   const [display, setDisplay] = useState(courseOption.picked_class_id)
 
-  const allTeachers = course.classes.flatMap((c) => c.slots.flatMap((s) => s.professors.flat()))
-
+  const allTeachers = classesLoaded ? course.classes.flatMap((c) => c.slots.flatMap((s) => s.professors.flat())) : []
   //
   // CourseInfo         --> immutable
   //
@@ -192,6 +195,8 @@ const ClassSelector = ({ course }: Props) => {
   // }
 
   const getOptions = (): Array<Class> => {
+    if (!classesLoaded) return []
+
     if (filteredTeachers.length === 0) return course.classes
 
     return course.classes.filter((c) => {
@@ -200,7 +205,10 @@ const ClassSelector = ({ course }: Props) => {
     })
   }
 
+  // Checks if the selected class has time conflicts with the classInfo
+  // This is used to display a warning icon in each class of the dropdown in case of conflicts
   const timesCollideWithSelected = (classInfo: Class) => {
+    console.log('id: ', display)
     const currentSlots = course.classes.find((c) => c.id === display).slots
 
     for (let slot of classInfo.slots)
@@ -208,6 +216,7 @@ const ClassSelector = ({ course }: Props) => {
     return false
   }
 
+  // Checks if two arrays of professors have a common professor
   const hasCommonProfessorWith = (profs1, profs2) =>
     profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
 

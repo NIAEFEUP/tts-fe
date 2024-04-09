@@ -1,8 +1,10 @@
 import { useContext, useState, useEffect } from 'react'
 import { CourseInfo } from '../../../../../@types/new_index'
 import CourseContext from '../../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { Checkbox } from '../../../../ui/checkbox'
 import { Label } from '../../../../ui/label'
+import { addCourseOption, removeCourseOption } from '../../../../../utils'
 
 type Props = {
   courses: CourseInfo[]
@@ -10,6 +12,7 @@ type Props = {
 
 export const CourseYearCheckboxes = ({ courses }: Props) => {
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
+  const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 
   const toggleCourse = (idx: number) => {
@@ -20,9 +23,13 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
       return newCheckboxList
     })
     // Add or remove the course from the pickedCourses list
-    if (pickedCourses.some((pickedCourse) => pickedCourse.id === courses[idx].id))
+    if (pickedCourses.some((pickedCourse) => pickedCourse.id === courses[idx].id)) {
+      setMultipleOptions(removeCourseOption(courses[idx], multipleOptions))
       setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse.id !== courses[idx].id))
-    else setPickedCourses([...pickedCourses, courses[idx]])
+    } else {
+      setMultipleOptions(addCourseOption(courses[idx], multipleOptions))
+      setPickedCourses([...pickedCourses, courses[idx]])
+    }
   }
 
   /*
