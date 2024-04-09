@@ -29,22 +29,19 @@ const ResponsiveLessonBox = ({ lesson, conflict }: Props) => {
           'flex h-full w-full flex-col items-center justify-between gap-6'
         )}
       >
-        <div className="flex w-full flex-col justify-between gap-2">
-          <span className="flex w-full items-center justify-between">
-            <strong title="Dia">{convertWeekdayLong(lesson.schedule.day)}</strong>
-            <strong title={getLessonTypeLongName(lessonType)}>{lessonType}</strong>
-          </span>
-          <span title="Duração">{getLessonBoxTime(lesson.schedule)}</span>
+        <div className='flex w-full justify-between gap-2'>
+          <strong title="Sigla da Unidade Curricular" className='text-lg'>{lesson.course.acronym}</strong>
+          <span title={getLessonTypeLongName(lessonType)} className='text-lg'>{lessonType}</span>
         </div>
 
-        <div className="flex w-full flex-col items-start gap-2">
-          <strong title="Sigla da Unidade Curricular">{lesson.course.acronym}</strong>
+        <div className="flex flex-col">
+          <span title="Duração">{getLessonBoxTime(lesson.schedule)}</span>
           <span title="Nome da Turma">
             {lesson.schedule.composed_class_name ? lesson.schedule.composed_class_name : lesson.schedule.class_name}
           </span>
         </div>
 
-        <div className="flex w-full items-center justify-between gap-3">
+        <div className='flex w-full justify-between'>
           <span title="Sala">{lesson.schedule.location}</span>
           <span title="Professor(es)" className="whitespace-nowrap">
             {lesson.schedule.professor_information.map((prof_info) => prof_info.acronym).join(', ')}
