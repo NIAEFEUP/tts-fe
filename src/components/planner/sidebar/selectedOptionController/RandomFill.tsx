@@ -6,6 +6,7 @@ import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { ScrollArea } from '../../../ui/scroll-area'
 import { Checkbox } from '../../../ui/checkbox'
+import { Separator } from '../../../ui/separator'
 
 type Props = {
   multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
@@ -15,12 +16,10 @@ type Props = {
 const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
   const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
-
   const [permutations, setPermutations] = useState([])
   const [lockedCourses, setLockedCourses] = useState(
     courseOptions.filter((course) => course.locked).map((course) => course.course.info.acronym)
   )
-
   const [randomClasses, setRandomClasses] = useState({})
 
   /* 
@@ -56,8 +55,7 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
       if (course.locked) {
         return [course.option]
       }
-      let aux = course.schedules.filter((schedule) => schedule.lesson_type != 'T' && randomClasses[schedule.class_name])
-      return aux
+      return course.schedules.filter((schedule) => schedule.lesson_type != 'T' && randomClasses[schedule.class_name])
     })
 
     return cartesianGenerator(...allSchedules)
@@ -134,7 +132,6 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
         index: prevMultipleOptions.index,
         selected: [...newSelected],
         options: prevMultipleOptions.options,
-        names: prevMultipleOptions.names,
       }
 
       return value
@@ -175,7 +172,13 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
     })
 
     setRandomClasses(keyValue)
+  }, [multipleOptions])
 
+  /**
+   * Reseting generator and permutations when:
+   * -
+   */
+  useEffect(() => {
     // ------------------------------------------------------
     // Updating locked courses
     const newLockedCourses = multipleOptions.selected
@@ -184,18 +187,20 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
     // Only update if locked courses changed
     if (newLockedCourses.join() !== lockedCourses.join()) {
       setLockedCourses(newLockedCourses)
+      setPermutations([])
+      setGenerator(getSchedulesGenerator())
     }
   }, [multipleOptions])
 
   /**
    * Reseting generator and permutations when:
-   * - Multiple options change
+   * - Selected option changes
    * - Selected classes for random generations change
    */
   useEffect(() => {
     setPermutations([])
     setGenerator(getSchedulesGenerator())
-  }, [multipleOptions, randomClasses])
+  }, [multipleOptions.index, randomClasses])
 
   const [generator, setGenerator] = useState(getSchedulesGenerator())
 
@@ -213,6 +218,8 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
         </TooltipTrigger>
         <TooltipContent side="bottom" asChild>
           <ScrollArea className="mx-5 h-72 rounded px-3">
+            <div className="p-1">Preenchimento aleatório</div>
+            <Separator />
             {Object.keys(randomClasses).map((key) => (
               <div
                 key={key}

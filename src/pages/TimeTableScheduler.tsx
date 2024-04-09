@@ -136,7 +136,6 @@ const TimeTableSchedulerPage = () => {
     index: 0,
     selected: [],
     options: [],
-    names: Array.from({ length: 10 }, (_, i) => `Horário ${i + 1}`),
   }) // schedule options and selected schedule
   const totalSelected = useMemo(
     () => multipleOptions.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
@@ -352,7 +351,6 @@ const TimeTableSchedulerPage = () => {
             index: prev.index,
             selected: newCourseOptions,
             options: newOptions,
-            names: prev.names,
           }
         })
 
@@ -400,7 +398,7 @@ const TimeTableSchedulerPage = () => {
   return (
     <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
       {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+      <div className="lg:min-h-adjusted order-3 lg:order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
           <Schedule courseOptions={multipleOptions.selected} />
         </div>

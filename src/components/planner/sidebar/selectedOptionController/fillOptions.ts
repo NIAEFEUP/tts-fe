@@ -34,7 +34,6 @@ const fillOptions = (importedCourses: ImportedCourses, setMultipleOptions: React
             index: prevMultipleOptions.index,
             selected: newOptions[prevMultipleOptions.index],
             options: newOptions,
-            names: prevMultipleOptions.names,
         };
 
         return value;

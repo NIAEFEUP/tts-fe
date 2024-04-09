@@ -24,7 +24,6 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
       index: newIndex - 1,
       selected: prev.options[newIndex - 1],
       options: [...prev.options],
-      names: prev.names,
     }))
   }
 
@@ -68,7 +67,7 @@ const OptionsController = ({ multipleOptionsHook, optionsListHook, selectedOptio
 
   return (
     <ReactSortable
-      className="m-y-2 flex flex-row justify-start gap-2 overflow-x-auto py-2 text-center"
+      className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start"
       list={optionsList}
       setList={setOptionsList}
       group="groupName"

@@ -1,0 +1,16 @@
+on:
+  push:
+    branches: [develop]
+jobs:
+  deploy:
+    name: "Deploy to netlify"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for the Netlify Preview
+        uses: kamranayub/wait-for-netlify-action@v2.1.0
+        id: waitForNetlify
+        with:
+          site_name: 'tts-fe-preview'
+          max_timeout: 300 # 5 minutes
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}	
