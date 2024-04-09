@@ -1,7 +1,7 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, Slot, MultipleOptions, selected_courses } from '../@types/new_index'
+import { CourseInfo, CourseOption, Slot, MultipleOptions, Option, selected_courses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minHour = 8
@@ -89,7 +89,7 @@ const schedulesConflict = (first, second) => {
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
-  if (!classInfo) return ''
+  if (!classInfo) return ' '
 
   const classTitle = classInfo.name
   const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
@@ -248,7 +248,7 @@ const isSubset = (set1, set2, same) => {
 
 const createDefaultCourseOption = (course: CourseInfo) : CourseOption => ({
   course_id: course.id,
-  picked_class_id: 0,
+  picked_class_id: null,
   locked: false,
   filteredTeachers: [],
   hide: []
@@ -279,68 +279,77 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
 
 
 const defaultMultipleOptions = (selected_courses:selected_courses) : MultipleOptions => ([
-    {
-      id: 1,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
-      name: 'Horário 1',
-      course_options: [],
-    },
-    {
-      id: 2,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
-      name: 'Horário 2',
-      course_options: [],
-    },
-    {
-      id: 3,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
-      name: 'Horário 3',
-      course_options: [],
-    },
-    {
-      id: 4,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
-      name: 'Horário 4',
-      course_options: [],
-    },
-    {
-      id: 5,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
-      name: 'Horário 5',
-      course_options: [],
-    },
-    {
-      id: 6,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
-      name: 'Horário 6',
-      course_options: [],
-    },
-    {
-      id: 7,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
-      name: 'Horário 7',
-      course_options: [],
-    },
-    {
-      id: 8,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
-      name: 'Horário 8',
-      course_options: [],
-    },
-    {
-      id: 9,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
-      name: 'Horário 9',
-      course_options: [],
-    },
-    {
-      id: 10,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
-      name: 'Horário 10',
-      course_options: [],
-    },
-  ]);
+  {
+    id: 1,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
+    name: 'Horário 1',
+    course_options: [],
+  },
+  {
+    id: 2,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
+    name: 'Horário 2',
+    course_options: [],
+  },
+  {
+    id: 3,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
+    name: 'Horário 3',
+    course_options: [],
+  },
+  {
+    id: 4,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
+    name: 'Horário 4',
+    course_options: [],
+  },
+  {
+    id: 5,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
+    name: 'Horário 5',
+    course_options: [],
+  },
+  {
+    id: 6,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
+    name: 'Horário 6',
+    course_options: [],
+  },
+  {
+    id: 7,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
+    name: 'Horário 7',
+    course_options: [],
+  },
+  {
+    id: 8,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
+    name: 'Horário 8',
+    course_options: [],
+  },
+  {
+    id: 9,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
+    name: 'Horário 9',
+    course_options: [],
+  },
+  {
+    id: 10,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
+    name: 'Horário 10',
+    course_options: [],
+  },
+]);
 
+const getAllPickedSlots = (selected_courses : selected_courses, option : Option) => {
+  return option.course_options.flatMap((course) => {
+    if (!course.picked_class_id) return []
+    const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
+    const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
+    // console.log("Course: ", courseInfo.name)
+    return classInfo.slots
+  })
+}
 
 export {
   config,
@@ -372,4 +381,5 @@ export {
   removeCourseOption,
   replaceCourseOptions,
   defaultMultipleOptions,
+  getAllPickedSlots,
 }

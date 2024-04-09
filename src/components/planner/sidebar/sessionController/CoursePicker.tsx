@@ -44,6 +44,7 @@ const CoursePicker = () => {
     setOpen(!open)
     if (open === false) return
     api.getCoursesClasses(pickedCourses)
+    StorageAPI.setPickedCoursesStorage(pickedCourses)
   }
 
   return (

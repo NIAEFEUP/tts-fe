@@ -6,6 +6,8 @@ import { NoMajorSelected } from '../../svgs'
 const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
   const { pickedCourses } = useContext(CourseContext)
 
+  console.log('pickedCourses', pickedCourses)
+
   return (
     <div className="flex w-full flex-col gap-4 px-0 py-2">
       {pickedCourses.length > 0 ? (

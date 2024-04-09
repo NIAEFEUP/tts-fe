@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, useContext } from 'react'
 import { ChevronUpDownIcon, ExclamationTriangleIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
 import { User } from 'lucide-react'
 // import { CourseOption, CourseSchedule, MultipleOptions } from '../../../@types'
-import { getClassDisplayText, schedulesConflict } from '../../../utils'
+import { getAllPickedSlots, getClassDisplayText, schedulesConflict } from '../../../utils'
 import { Button } from '../../ui/button'
 import {
   DropdownMenu,
@@ -19,6 +19,7 @@ import {
 } from '../../ui/dropdown-menu'
 import { CourseInfo, Class, Slot, ProfessorInformation } from '../../../@types/new_index'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
+import CourseContext from '../../../contexts/CourseContext'
 
 type Props = {
   course: CourseInfo
@@ -30,12 +31,13 @@ const ClassSelector = ({ course }: Props) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
+  const { pickedCourses } = useContext(CourseContext)
 
   // const courseOption = useMemo(() => {
   //   return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
   // }, [selectedOption, multipleOptions, course.id])
 
-  const classesLoaded = course.classes !== undefined
+  const [classesLoaded, setClassesLoaded] = useState(course.classes !== undefined)
   const courseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
 
   const [filteredTeachers, setFilteredTeachers] = useState(courseOption.filteredTeachers)
@@ -46,11 +48,6 @@ const ClassSelector = ({ course }: Props) => {
   const [display, setDisplay] = useState(courseOption.picked_class_id)
 
   const allTeachers = classesLoaded ? course.classes.flatMap((c) => c.slots.flatMap((s) => s.professors.flat())) : []
-  //
-  // CourseInfo         --> immutable
-  //
-  //  picked_class_id   --> mutable
-  //
 
   // const firstRenderRef = useRef(true)
   // const [multipleOptions, setMultipleOptions] = multipleOptionsHook
@@ -195,8 +192,6 @@ const ClassSelector = ({ course }: Props) => {
   // }
 
   const getOptions = (): Array<Class> => {
-    if (!classesLoaded) return []
-
     if (filteredTeachers.length === 0) return course.classes
 
     return course.classes.filter((c) => {
@@ -205,15 +200,18 @@ const ClassSelector = ({ course }: Props) => {
     })
   }
 
-  // Checks if the selected class has time conflicts with the classInfo
+  // Checks if any of the selected classes have time conflicts with the classInfo
   // This is used to display a warning icon in each class of the dropdown in case of conflicts
   const timesCollideWithSelected = (classInfo: Class) => {
-    console.log('id: ', display)
-    const currentSlots = course.classes.find((c) => c.id === display).slots
+    const pickedSlots = getAllPickedSlots(pickedCourses, multipleOptions[selectedOption])
+    // console.log(pickedSlots)
+    return pickedSlots.some((slot) => classInfo.slots.some((currentSlot) => schedulesConflict(slot, currentSlot)))
 
-    for (let slot of classInfo.slots)
-      for (let currentSlot of currentSlots) if (schedulesConflict(slot, currentSlot)) return true
-    return false
+    // const currentClass = course.classes.find((c) => c.id === display)
+    // if (currentClass)
+    //   return classInfo.slots.some((slot) =>
+    //     currentClass.slots.some((currentSlot) => schedulesConflict(slot, currentSlot))
+    //   )
   }
 
   // Checks if two arrays of professors have a common professor
@@ -232,21 +230,6 @@ const ClassSelector = ({ course }: Props) => {
     setPreview(null)
   }
 
-  useEffect(() => {
-    setMultipleOptions((prev) => {
-      let newMultipleOptions = prev
-      let newSelectedOption = prev[selectedOption]
-
-      newSelectedOption['picked_class_id'] = preview ? preview : display
-      newSelectedOption['filteredTeachers'] = filteredTeachers
-      newSelectedOption['locked'] = locked
-      newSelectedOption['hide'] = hide
-
-      newMultipleOptions[selectedOption] = newSelectedOption
-      return [...newMultipleOptions]
-    })
-  }, [preview, display, filteredTeachers, locked, hide, selectedOption, setMultipleOptions])
-
   function toggleTeacher(id) {
     if (filteredTeachers.includes(id)) {
       setFilteredTeachers(filteredTeachers.filter((t) => t !== id))
@@ -262,6 +245,27 @@ const ClassSelector = ({ course }: Props) => {
       setFilteredTeachers(teachers.flatMap((t) => t.id))
     }
   }
+
+  useEffect(() => {
+    setMultipleOptions((prev) => {
+      let newMultipleOptions = prev
+      let newSelectedOption = prev[selectedOption]
+
+      newSelectedOption['picked_class_id'] = preview ? preview : display
+      newSelectedOption['filteredTeachers'] = filteredTeachers
+      newSelectedOption['locked'] = locked
+      newSelectedOption['hide'] = hide
+
+      newMultipleOptions[selectedOption] = newSelectedOption
+      return [...newMultipleOptions]
+    })
+  }, [preview, display, filteredTeachers, locked, hide, selectedOption, setMultipleOptions])
+
+  useEffect(() => {
+    setClassesLoaded(course.classes !== undefined)
+  }, [multipleOptions, setClassesLoaded, course.classes])
+
+  console.log(multipleOptions[selectedOption])
 
   return (
     <div className="relative text-sm" key={`course-option-${course.acronym}`}>
@@ -280,7 +284,7 @@ const ClassSelector = ({ course }: Props) => {
               size="sm"
               className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
             >
-              {getClassDisplayText(course, display)}{' '}
+              <span>{getClassDisplayText(course, display)} </span>
               {!courseOption.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
             </Button>
           </DropdownMenuTrigger>
@@ -333,37 +337,26 @@ const ClassSelector = ({ course }: Props) => {
               <DropdownMenuItem onSelect={() => setDisplay(null)}>
                 <span className="text-sm tracking-tighter">Remover Seleção</span>
               </DropdownMenuItem>
-              {getOptions().map((classInfo) => (
-                <DropdownMenuCheckboxItem
-                  key={`schedule-${classInfo.name}`}
-                  className="gap-2"
-                  onMouseEnter={() => showPreview(classInfo)}
-                  onMouseLeave={() => removePreview()}
-                  checked={selectedOption === classInfo.id}
-                  onSelect={() => setDisplay(classInfo.id)}
-                >
-                  <span className="text-sm tracking-tighter">{getClassDisplayText(course, classInfo.id)}</span>
-                  <span
-                    className={`absolute inset-y-0 right-0 flex items-center pr-3 text-rose-700 ${
-                      timesCollideWithSelected(classInfo) ? 'block' : 'hidden'
-                    }`}
+              {classesLoaded &&
+                getOptions().map((classInfo) => (
+                  <DropdownMenuCheckboxItem
+                    key={`schedule-${classInfo.name}`}
+                    className="gap-2"
+                    onMouseEnter={() => showPreview(classInfo)}
+                    onMouseLeave={() => removePreview()}
+                    checked={selectedOption === classInfo.id}
+                    onSelect={() => setDisplay(classInfo.id)}
                   >
-                    <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  {/* {(() => {
-                    const collisionType = timesCollideWithSelected(option)
-                    return collisionType ? (
-                      <span
-                        className={`absolute inset-y-0 right-0 flex items-center pr-3 text-rose-700 ${
-                          collisionType ? 'block' : 'hidden'
-                        }`}
-                      >
-                        <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                    ) : null
-                  })()} */}
-                </DropdownMenuCheckboxItem>
-              ))}
+                    <span className="text-sm tracking-tighter">{getClassDisplayText(course, classInfo.id)}</span>
+                    <span
+                      className={`absolute inset-y-0 right-0 flex items-center pr-3 text-rose-700 ${
+                        timesCollideWithSelected(classInfo) ? 'block' : 'hidden'
+                      }`}
+                    >
+                      <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                  </DropdownMenuCheckboxItem>
+                ))}
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -373,7 +366,7 @@ const ClassSelector = ({ course }: Props) => {
           variant="icon"
           title="Bloquear/Desbloquear Horário"
           onClick={() => setLocked(!locked)}
-          disabled={!courseOption.picked_class_id}
+          disabled={display === null}
         >
           {courseOption.locked ? (
             <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />

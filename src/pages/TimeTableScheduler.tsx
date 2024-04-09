@@ -375,6 +375,16 @@ const TimeTableSchedulerPage = () => {
   //   setCheckedCourses(newCheckedCourses)
   // }
 
+  useEffect(() => {
+    StorageAPI.setPickedCoursesStorage(pickedCourses)
+  }, [pickedCourses])
+
+  useEffect(() => {
+    console.log('Saving multiple options')
+    console.log(multipleOptions[selectedOption])
+    StorageAPI.setOptionsStorage(multipleOptions)
+  }, [multipleOptions])
+
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
       <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo }}>
