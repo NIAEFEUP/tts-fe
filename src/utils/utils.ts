@@ -1,6 +1,6 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
-import { CourseOption, CourseSchedule, Lesson, ProfessorInformation } from '../@types'
+import { CourseOption, CourseSchedule, ExchangeCourseUnit, Lesson, ProfessorInformation } from '../@types'
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 const minHour = 8
@@ -203,77 +203,82 @@ const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption
 }
 
 const getProfessorInformationFromSigarraScheduleApi = (course) => {
-    const docentes = course.docentes;
+    const docentes = course.professors;
 
     let result: Array<ProfessorInformation> = [];
 
     docentes.forEach(({ ...docente }) => {
         result.push({
-            acronym: course["doc_sigla"],
-            name: docente["doc_nome"]
+            acronym: docente["acronym"],
+            name: docente["name"]
         })
     });
 
     return result;
 }
 
-const convertSigarraCourseToTtsCourse = (course) => {
-    return {
-        shown: {
-            T: false,
-            TP: true,
-        },
-        locked: false,
-        course: {
-            checked: true,
-            info: {
-                id: parseInt(course.ocorrencia_id, 10),
-                course_id: parseInt(course.ocorrencia_id, 10),
-                course_unit_id: parseInt(course.ocorrencia_id, 10),
-                sigarra_id: parseInt(course.ocorrencia_id, 10),
-                course: course.ucurr_sigla,
-                name: course.ucurr_sigla,
-                acronym: course.ucurr_sigla,
-                url: course.url,
-                course_unit_year: 3,
-                semester: 2,
-                year: 2023,
-                schedule_url: "",
-                ects: course.ects,
-                last_updated: course.last_updated
-            }
-        },
-        option: {
-            day: course.dia - 2,
-            duration: course.aula_duracao.toString(),
-            start_time: course.hora_inicio,
-            location: course.sala_sigla,
-            lesson_type: course.tipo,
-            is_composed: false,
-            class_name: course.turma_sigla,
-            course_unit_id: course.ocorrencia_id,
-            last_updated: "",
-            composed_class_name: "",
-            professors_link: "",
-            professor_information: []
-        },
-        schedules: [{
-            day: course.dia - 2,
-            duration: course.aula_duracao.toString(),
-            start_time: (course.hora_inicio / 3600).toString(),
-            location: course.sala_sigla,
-            lesson_type: course.tipo,
-            is_composed: false,
-            class_name: course.turma_sigla,
-            course_unit_id: course.ocorrencia_id,
-            last_updated: "",
-            composed_class_name: "",
-            professors_link: "",
-            professor_information: getProfessorInformationFromSigarraScheduleApi(course)
-        }],
-        teachers: [],
-        filteredTeachers: []
-    }
+const convertSigarraCoursesToTtsCourses = (courses: ExchangeCourseUnit[]): CourseOption[] => {
+    const conversion = [];
+    courses.forEach((course) => {
+        conversion.push({
+            shown: {
+                T: course.type === "T",
+                TP: course.type === "TP",
+            },
+            locked: false,
+            course: {
+                checked: true,
+                info: {
+                    id: parseInt(course.code),
+                    course_id: parseInt(course.code),
+                    course_unit_id: parseInt(course.code),
+                    sigarra_id: parseInt(course.code),
+                    course: course.acronym,
+                    name: course.acronym,
+                    acronym: course.acronym,
+                    url: "",
+                    course_unit_year: 3,
+                    semester: 2,
+                    year: 2023,
+                    schedule_url: "",
+                    ects: 0,
+                    last_updated: ""
+                }
+            },
+            option: {
+                day: course.day,
+                duration: course.duration.toString(),
+                start_time: course.start,
+                location: course.room,
+                lesson_type: course.type,
+                is_composed: false,
+                class_name: course.class,
+                course_unit_id: parseInt(course.code),
+                last_updated: "",
+                composed_class_name: "",
+                professors_link: "",
+                professor_information: getProfessorInformationFromSigarraScheduleApi(course)
+            },
+            schedules: [{
+                day: course.day,
+                duration: course.duration.toString(),
+                start_time: course.start,
+                location: course.room,
+                lesson_type: course.type,
+                is_composed: false,
+                class_name: course.class,
+                course_unit_id: parseInt(course.code),
+                last_updated: "",
+                composed_class_name: "",
+                professors_link: "",
+                professor_information: getProfessorInformationFromSigarraScheduleApi(course)
+            }],
+            teachers: [],
+            filteredTeachers: []
+        })
+    })
+
+    return conversion;
 }
 
 export {
@@ -300,5 +305,5 @@ export {
     getCourseTeachers,
     cn,
     removeDuplicatesFromCourseOption,
-    convertSigarraCourseToTtsCourse
+    convertSigarraCoursesToTtsCourses
 }
