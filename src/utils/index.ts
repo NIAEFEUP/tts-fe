@@ -1,7 +1,7 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, Slot, MultipleOptions, Option, selected_courses } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, selected_courses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minHour = 8
@@ -98,7 +98,7 @@ const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
   return [classTitle, professor_acronyms, ...weekdays, ...professor_acronyms].join(', ')
 }
 
-const getLessonBoxTime = (slot: Slot) => {
+const getLessonBoxTime = (slot: SlotInfo) => {
   return [convertHour(slot.start_time.toString()), convertHour(addHour(slot.start_time.toString(), slot.duration.toString()))].join('-')
 }
 
@@ -250,7 +250,7 @@ const createDefaultCourseOption = (course: CourseInfo) : CourseOption => ({
   course_id: course.id,
   picked_class_id: null,
   locked: false,
-  filteredTeachers: [],
+  selectedTeachers: [],
   hide: []
 })
 
