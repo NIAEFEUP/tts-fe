@@ -24,7 +24,7 @@ export const ExchangeSidebar = ({
         data: schedule,
         isLoading: isLoadingSchedule,
         isValidating: isValidatingSchedule
-    } = useSchedule(username, loggedIn);
+    } = useSchedule(username, setLoggedIn);
 
     console.log(schedule);
 
