@@ -1,6 +1,6 @@
 "use client"
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect, useState, useRef } from "react"
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import { Input } from '../ui/input'
 import { Button } from "../ui/button"
@@ -19,7 +19,10 @@ import {
 
 import { getClassScheduleSigarra, getCourseScheduleSigarra, getCourseStudents } from "../../api/backend"
 import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types"
-import { convertSigarraCourseToTtsCourse } from "../../utils/utils"
+import { convertSigarraCoursesToTtsCourses } from "../../utils/utils"
+import { DirectExchangeContext } from "../../contexts/DirectExchangeContext"
+import { ExchangeStudentSelection } from "./ExchangeStudentSelection"
+import { StudentScheduleContext } from "../../contexts/StudentScheduleContext"
 
 type props = {
     setCurrentDirectExchange: Dispatch<SetStateAction<Map<string, ClassExchange>>>,
@@ -40,17 +43,17 @@ export function DirectExchangeSelection({
     setCourseOptions,
     courseOptions
 }: props) {
+    const { marketplaceToggled, currentDirectExchange, setCurrentDirectExchange } = useContext(DirectExchangeContext);
+    const { originalSchedule } = useContext(StudentScheduleContext);
+
     const [open, setOpen] = useState<boolean>(false);
-    const [value, setValue] = useState<string>("");
-    const [selectedClass, setSelectedClass] = useState<string>("");
+    const [selectedToExchangeClass, setSelectedToExchangeClass] = useState<string>("");
     const [student, setStudent] = useState<string>("");
     const [isExchangeSelectionIncluded, setIsExchangeSelectionIncluded] = useState<boolean>(false);
-    const originalSchedule = useRef([...courseOptions]);
 
     const [students, setStudents] = useState([]);
     const [studentOpen, setStudentOpen] = useState<boolean>(false);
     const [studentValue, setStudentValue] = useState<string>("");
-    const [searchTerm, setSearchTerm] = useState('');
 
     const [ucClasses, setUcClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -60,8 +63,8 @@ export function DirectExchangeSelection({
         const fetchData = async () => {
             try {
                 const data = await getCourseScheduleSigarra(uc.code);
-                setUcClasses(data.filter((otherUcClass) => otherUcClass.tipo === "TP" && uc.class !== otherUcClass.turma_sigla).sort((a, b) => a.turma_sigla.localeCompare(b.turma_sigla))
-                    .map(otherUcClass => ({ value: otherUcClass.aula_id.toString(), label: otherUcClass.turma_sigla })));
+                setUcClasses(data.filter((otherUcClass) => otherUcClass.type === "TP" && uc.class !== otherUcClass.class).sort((a, b) => a.class.localeCompare(b.class))
+                    .map(otherUcClass => ({ value: otherUcClass.class.toString(), label: otherUcClass.class })));
 
                 const studentsData = await getCourseStudents(uc.code);
                 setStudents(studentsData);
@@ -83,6 +86,8 @@ export function DirectExchangeSelection({
         return <p>Error fetching schedule: {error.message}</p>;
     }
 
+    console.log(currentDirectExchange);
+
     return (
         <div className="flex flex-col w-full justify-between space-y-4 items-start border-2 border-gray-200 shadow-sm bg-white p-4 mb-4 rounded-md">
             {isExchangeSelectionIncluded ? <>
@@ -90,16 +95,15 @@ export function DirectExchangeSelection({
                     <div className="flex flex-row justify-between">
                         <span className="font-bold text-center">{uc.name}</span>
                         <Button variant="destructive" className="w-4 h-6" onClick={() => {
-                            const originalCourseSchedule = originalSchedule.current.filter((courseOption) => courseOption.course.info.acronym === uc.sigla)[0];
-                                setCourseOptions((prev) => ([
-                                    ...(prev.filter(schedule => schedule.course.info.name !== uc.sigla)),
-                                    originalCourseSchedule
-                                ]));
+                            const originalCourseSchedule = originalSchedule.filter((courseOption) => courseOption.course.info.acronym === uc.acronym);
+                            setCourseOptions((prev) => ([
+                                ...(prev.filter(schedule => schedule.course.info.name !== uc.acronym)),
+                                ...originalCourseSchedule
+                            ]));
                             setIsExchangeSelectionIncluded(false);
-                            setValue("");
-                            setSelectedClass("");
+                            setSelectedToExchangeClass("");
                             setStudent("");
-                            currentDirectExchange.delete(uc.sigla);
+                            currentDirectExchange.delete(uc.acronym);
                             setCurrentDirectExchange(currentDirectExchange);
                         }}>-</Button>
                     </div>
@@ -116,8 +120,8 @@ export function DirectExchangeSelection({
                                     aria-expanded={open}
                                     className="w-2/3 justify-between"
                                 >
-                                    {value
-                                        ? ucClasses.find((ucClass) => ucClass.value === value)?.label
+                                    {selectedToExchangeClass
+                                        ? selectedToExchangeClass.toUpperCase()
                                         : "Escolher turma..."}
                                 </Button>
                             </PopoverTrigger>
@@ -134,20 +138,12 @@ export function DirectExchangeSelection({
                                                 onSelect={async (classId) => {
                                                     const selectedClassSchedule = await getClassScheduleSigarra(uc.code, otherStudentUcClass.label);
                                                     setCourseOptions((prev) => ([
-                                                        ...(prev.filter(schedule => schedule.course.info.name !== uc.sigla)),
-                                                        convertSigarraCourseToTtsCourse(selectedClassSchedule),
+                                                        ...(prev.filter(schedule => schedule.course.info.name !== uc.acronym)),
+                                                        ...convertSigarraCoursesToTtsCourses(selectedClassSchedule),
                                                     ]));
+                                                    currentDirectExchange.get(uc.acronym).old_class = otherStudentUcClass.value;
 
-                                                    setCurrentDirectExchange(
-                                                        new Map(currentDirectExchange.set(uc.sigla, {
-                                                            course_unit: uc.sigla,
-                                                            old_class: otherStudentUcClass.label,
-                                                            new_class: uc.class, // auth student class
-                                                            other_student: student
-                                                        }))
-                                                    )
-                                                    setSelectedClass(classId);
-                                                    setValue(classId === value ? "" : classId)
+                                                    setSelectedToExchangeClass(classId === selectedToExchangeClass ? "" : classId)
                                                     setOpen(false)
                                                 }}
                                             >
@@ -227,13 +223,37 @@ export function DirectExchangeSelection({
                         </Popover>
                     </div>
                 </div>
+                {!marketplaceToggled
+                    ? <ExchangeStudentSelection
+                        studentOpen={studentOpen}
+                        setStudentOpen={setStudentOpen}
+                        studentValue={studentValue}
+                        setStudentValue={setStudentValue}
+                        students={students}
+                        student={student}
+                        setStudent={setStudent}
+                        uc={uc}
+                    />
+                    : ""}
             </>
                 :
                 <div className="flex flex-row items-center space-x-2 w-full">
                     <span className="font-bold text-center w-2/3">{uc.name}</span>
-                    <Button variant="outline" className="w-1/3 bg-gray-100" onClick={() => setIsExchangeSelectionIncluded(true)}>Incluir</Button>
+                    <Button variant="outline" className="w-1/3 bg-gray-100" onClick={() => {
+                        setStudent("");
+                        setStudentValue("");
+                        setCurrentDirectExchange(
+                            new Map(currentDirectExchange.set(uc.acronym, {
+                                course_unit: uc.acronym,
+                                old_class: "",
+                                new_class: uc.class, // auth student class
+                                other_student: student
+                            }))
+                        );
+                        setIsExchangeSelectionIncluded(true);
+                    }}>Incluir</Button>
                 </div>
             }
-        </div>
+        </div >
     )
 }

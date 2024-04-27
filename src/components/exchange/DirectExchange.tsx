@@ -1,13 +1,13 @@
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { Button } from "../ui/button";
 import { DirectExchangeSelection } from "./DirectExchangeSelection";
-import { getStudentSchedule, logout } from "../../api/backend";
-import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { SessionContext } from "../../contexts/SessionContext";
 import { SubmitDirectExchangeButton } from "./SubmitDirectExchangeButton";
-import { ClassExchange, CourseOption, ExchangeCourseUnit } from "../../@types";
+import { ClassExchange, CourseOption } from "../../@types";
 import { MoonLoader } from "react-spinners";
-import { convertSigarraCourseToTtsCourse } from "../../utils/utils";
+import { ToggleMarketplaceSubmissionMode } from "./marketplace/ToggleMarketplaceSubmissionMode";
+import { DirectExchangeContext } from "../../contexts/DirectExchangeContext";
+import { DirectExchangeInfoButton } from "./buttons/DirectExchangeInfoButton";
+import { StudentScheduleContext } from "../../contexts/StudentScheduleContext";
 
 type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
@@ -19,11 +19,11 @@ export function DirectExchange({
     setCourseOptions
 }: Props) {
     const [currentDirectExchange, setCurrentDirectExchange] = useState<Map<string, ClassExchange>>(new Map<string, ClassExchange>());
-    const [schedule, setSchedule] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const { loggedIn, setLoggedIn } = useContext(SessionContext);
     const [selectedStudents, setSelectedStudents] = useState([]);
+    const { schedule, isLoadingSchedule, isValidatingSchedule } = useContext(StudentScheduleContext);
+    const [marketplaceToggled, setMarketplaceToggled] = useState(false);
 
     const username = localStorage.getItem("username");
 
@@ -65,18 +65,23 @@ export function DirectExchange({
         return <p>Error fetching schedule: {error.message}</p>;
     }
 
-    return <>
+    return <DirectExchangeContext.Provider value={
+        {
+            marketplaceToggled: marketplaceToggled,
+            setMarketplaceToggled: setMarketplaceToggled,
+            currentDirectExchange: currentDirectExchange,
+            setCurrentDirectExchange: setCurrentDirectExchange
+        }}>
         <div className="flex justify-center flex-col space-y-4 mt-4">
-            <Button variant="info" className="w-full">
-                <InformationCircleIcon className="h-5 w-5 mr-2"></InformationCircleIcon>
-                Como funcionam as trocas diretas?
-            </Button>
+            <DirectExchangeInfoButton />
             <SubmitDirectExchangeButton currentDirectExchange={currentDirectExchange} />
-            {!isLoading ?
+            <ToggleMarketplaceSubmissionMode />
+            {!isLoadingSchedule ?
                 <div>
                     {
                         schedule.map((uc) => {
-                            return (
+                            if (uc.type !== "T") {
+                                return (
                                 <DirectExchangeSelection
                                     setCurrentDirectExchange={setCurrentDirectExchange}
                                     currentDirectExchange={currentDirectExchange}
@@ -91,9 +96,9 @@ export function DirectExchange({
                         })
                     }
                 </div> : <div className="mt-4">
-                    <MoonLoader className="mx-auto my-auto" loading={isLoading} />
+                    <MoonLoader className="mx-auto my-auto" loading={isLoadingSchedule} />
                     <p className="text-center">A carregar os horários</p>
                 </div>}
         </div>
-    </>;
+    </DirectExchangeContext.Provider>
 }
