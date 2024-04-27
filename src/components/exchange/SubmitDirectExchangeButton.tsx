@@ -1,6 +1,7 @@
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ClassExchange } from "../../@types";
+import { DirectExchangeContext } from "../../contexts/DirectExchangeContext";
 import { validateExchangeChoices } from "../../services/exchange/validation";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
@@ -14,12 +15,13 @@ export const SubmitDirectExchangeButton = ({
     currentDirectExchange
 }: Props) => {
     const [open, setOpen] = useState<boolean>(false);
+    const { marketplaceToggled } = useContext(DirectExchangeContext);
 
     return <>
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button
-                    disabled={!validateExchangeChoices(currentDirectExchange)}
+                    disabled={!validateExchangeChoices(currentDirectExchange, marketplaceToggled)}
                     variant="submit"
                     className="w-full"
                 >

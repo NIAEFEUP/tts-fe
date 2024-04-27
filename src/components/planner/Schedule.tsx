@@ -179,6 +179,7 @@ const Schedule = ({ courseOptions }: Props) => {
                             <ScheduleGrid showGrid={showGrid} />
                             <div className="schedule-classes">
                                 {lessons.length === conflicts.length
+
                                     ? lessons.map((lesson: Lesson, lessonIdx: number) => (
                                         <LessonBox
                                             key={`lesson-box-${lessonIdx}`}

@@ -122,8 +122,14 @@ export type ClassExchange = {
 }
 
 export type ExchangeCourseUnit = {
-    sigla: string,
+    acronym: string,
     name: string,
     class: string,
-    code: string
+    code: string,
+    type: string,
+    duration: number,
+    room: string,
+    start: string,
+    day: number,
+    professors
 }
