@@ -27,12 +27,16 @@ import { StudentScheduleContext } from "../../contexts/StudentScheduleContext"
 type props = {
     courseOptions: CourseOption[],
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>,
-    uc: ExchangeCourseUnit
+    uc: ExchangeCourseUnit,
+    setSelectedStudents: Dispatch<SetStateAction<any[]>>,
+    selectedStudents: any[],
 };
 
 export function DirectExchangeSelection({
     setCourseOptions,
-    uc
+    uc,
+    setSelectedStudents,
+    selectedStudents,
 }: props) {
     const { marketplaceToggled, currentDirectExchange, setCurrentDirectExchange } = useContext(DirectExchangeContext);
     const { originalSchedule } = useContext(StudentScheduleContext);
@@ -158,6 +162,8 @@ export function DirectExchangeSelection({
                         student={student}
                         setStudent={setStudent}
                         uc={uc}
+                        setSelectedStudents={setSelectedStudents}
+                        selectedStudents={selectedStudents}
                     />
                     : ""}
             </>

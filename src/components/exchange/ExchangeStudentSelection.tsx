@@ -12,7 +12,9 @@ export const ExchangeStudentSelection = ({
     students,
     student,
     setStudent,
-    uc
+    uc,
+    setSelectedStudents,
+    selectedStudents
 }) => {
     const { currentDirectExchange, setCurrentDirectExchange } = useContext(DirectExchangeContext);
     const [searchTerm, setSearchTerm] = useState("");
@@ -43,7 +45,13 @@ export const ExchangeStudentSelection = ({
                         />
                         <CommandEmpty>Nenhum estudante encontrado.</CommandEmpty>
                         <CommandGroup>
-                            {students.filter((student) => student.codigo.startsWith(searchTerm)).map((student) => {
+                        {
+                            [...selectedStudents, ...students]
+                            .filter((student, index, self) =>
+                                index === self.findIndex((s) => s.codigo === student.codigo)
+                            )
+                            .filter((student) => student.codigo.startsWith(searchTerm))
+                            .map((student) => {
                                 const nameParts = student.nome.split(' ');
                                 const displayName = `${nameParts[0]} ${nameParts[nameParts.length - 1]}`;
                                 return (
@@ -60,6 +68,7 @@ export const ExchangeStudentSelection = ({
                                             )
                                             setStudentValue(currentValue === studentValue ? "" : currentValue)
                                             setStudentOpen(false)
+                                            setSelectedStudents([student, ...selectedStudents]);
                                         }}
                                     >
                                         <div className="flex flex-col">

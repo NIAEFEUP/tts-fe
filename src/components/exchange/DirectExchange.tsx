@@ -12,6 +12,7 @@ import { StudentScheduleContext } from "../../contexts/StudentScheduleContext";
 type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
     courseOptions: CourseOption[]
+
 }
 
 export function DirectExchange({
@@ -23,6 +24,8 @@ export function DirectExchange({
     const { loggedIn, setLoggedIn } = useContext(SessionContext);
     const { schedule, isLoadingSchedule, isValidatingSchedule } = useContext(StudentScheduleContext);
     const [marketplaceToggled, setMarketplaceToggled] = useState(false);
+    const [selectedStudents, setSelectedStudents] = useState([]);
+
 
     if (error) {
         return <p>Error fetching schedule: {error.message}</p>;
@@ -50,6 +53,8 @@ export function DirectExchange({
                                         setCourseOptions={setCourseOptions}
                                         uc={uc}
                                         key={uc.name}
+                                        setSelectedStudents={setSelectedStudents}
+                                        selectedStudents={selectedStudents}
                                     />
                                 )
                             }
