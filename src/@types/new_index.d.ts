@@ -40,7 +40,7 @@ export type ClassInfo = {
 }
 
 export type SlotInfo = {
-    lesson_type: string,
+    type: string,
     day: number,
     start_time: number,
     duration: number,
@@ -56,7 +56,7 @@ export type ProfessorInfo = {
     name: string
 }
 
-export type selected_courses = Array<CourseInfo>
+export type picked_courses = Array<CourseInfo>
 
 export type MultipleOptions = Array<Option> 
 
@@ -124,4 +124,9 @@ export type Lesson = {
 
 export type ImportedCourses = { 
     [key: string]: string 
+}
+
+export type ConflictInfo = {
+    courseInfo: CourseInfo
+    classInfo: ClassInfo
 }

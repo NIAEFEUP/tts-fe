@@ -15,8 +15,6 @@ type Props = {
 }
 
 const ClassItem = ({ classInfo, displayed, checked, conflict, onSelect, onMouseEnter, onMouseLeave }: Props) => {
-  console.log(classInfo)
-
   return (
     <DropdownMenuCheckboxItem
       onSelect={() => onSelect}
@@ -28,7 +26,7 @@ const ClassItem = ({ classInfo, displayed, checked, conflict, onSelect, onMouseE
         <div>
           {classInfo.slots.map((slot, idx) => (
             <div key={`${classInfo.name}-${idx}`} className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500">{slot.lesson_type}</span>
+              <span className="text-xs text-gray-500">{slot.type}</span>
               {/* <span className="text-xs text-gray-500">{convertWeekday(slot.day)}</span> */}
               {/* <span className="text-xs text-gray-500">{getLessonBoxTime(slot)}</span> */}
               <span className="text-xs text-gray-500">{slot.location}</span>

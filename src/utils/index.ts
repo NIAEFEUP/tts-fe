@@ -1,7 +1,7 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, selected_courses } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, picked_courses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minHour = 8
@@ -93,10 +93,22 @@ const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
 
   const classTitle = classInfo.name
   const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
+  const classTypes = classInfo.slots.map((slot) => slot.type)
   const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
 
-  return [classTitle, professor_acronyms, ...weekdays, ...professor_acronyms].join(', ')
+  return [classTitle, professor_acronyms, ...weekdays, ...classTypes, ...professor_acronyms].join(', ')
 }
+
+// const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
+//   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
+//   if (!classInfo) return ' '
+
+//   const classTitle = classInfo.name
+//   const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
+//   const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
+
+//   return [classTitle, professor_acronyms, ...weekdays, ...professor_acronyms].join(', ')
+// }
 
 const getLessonBoxTime = (slot: SlotInfo) => {
   return [convertHour(slot.start_time.toString()), convertHour(addHour(slot.start_time.toString(), slot.duration.toString()))].join('-')
@@ -106,14 +118,14 @@ const addHour = (hour1: string, hour2: string): string => {
   return (parseFloat(hour1) + parseFloat(hour2)).toString()
 }
 
-const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) => {
+const getLessonBoxStyles = (slotInfo: SlotInfo, maxHour: number, minHour: number) => {
   const step = (maxHour - minHour) * 2
-  const top = (parseFloat(lesson.schedule.start_time) - minHour) * 2
-  const length = parseFloat(lesson.schedule.duration) * 2
+  const top = (slotInfo.start_time - minHour) * 2
+  const length = slotInfo.duration * 2
 
   return {
     top: `${(top * 100) / step}%`,
-    left: `${(lesson.schedule.day * 100) / 6}%`,
+    left: `${(slotInfo.day * 100) / 6}%`,
     height: `${length * (100 / step)}%`,
   }
 }
@@ -171,6 +183,27 @@ const getClassTypeClassName = (type: string) => {
 
     default:
       return 'schedule-class-o'
+  }
+}
+
+const getClassType = (type: string) => {
+  switch (type) {
+    case 'T': return 'Teórica';
+    case 'TP': return 'Teórico-Prática';
+    case 'PL': return 'Prática Laboratorial';
+    case 'OT': return 'Orientação Tutorial';
+    case 'S': return 'Seminário';
+    case 'P': return 'Prática';
+    case 'TC': return 'Teórica de Campo';
+    case 'O': return 'Outros';
+    case 'Teórica' : return 'T';
+    case 'Teórico-Prática' : return 'TP';
+    case 'Prática Laboratorial' : return 'PL';
+    case 'Orientação Tutorial' : return 'OT';
+    case 'Seminário' : return 'S';
+    case 'Prática' : return 'P';
+    case 'Teórica de Campo' : return 'TC';
+    case 'Outros' : return 'O';
   }
 }
 
@@ -250,7 +283,7 @@ const createDefaultCourseOption = (course: CourseInfo) : CourseOption => ({
   course_id: course.id,
   picked_class_id: null,
   locked: false,
-  selectedTeachers: [],
+  filteredTeachers: [],
   hide: []
 })
 
@@ -278,7 +311,7 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
 }
 
 
-const defaultMultipleOptions = (selected_courses:selected_courses) : MultipleOptions => ([
+const defaultMultipleOptions = (selected_courses:picked_courses) : MultipleOptions => ([
   {
     id: 1,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
@@ -341,7 +374,7 @@ const defaultMultipleOptions = (selected_courses:selected_courses) : MultipleOpt
   },
 ]);
 
-const getAllPickedSlots = (selected_courses : selected_courses, option : Option) => {
+const getAllPickedSlots = (selected_courses : picked_courses, option : Option) => {
   return option.course_options.flatMap((course) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
@@ -382,4 +415,5 @@ export {
   replaceCourseOptions,
   defaultMultipleOptions,
   getAllPickedSlots,
+  getClassType,
 }

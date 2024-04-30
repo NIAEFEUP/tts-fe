@@ -13,7 +13,7 @@ const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
   return (
     <div className={`flex ${noCoursesPicked ? 'h-max justify-center' : ''} w-full flex-col gap-4 px-0 py-2`}>
       {noCoursesPicked ? (
-        <NoMajorSelected className="h-40 w-full" />
+        <NoMajorSelected className="my-20 h-40 w-full" />
       ) : (
         pickedCourses
           .sort((course1, course2) => course1.id - course2.id)
