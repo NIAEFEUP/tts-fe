@@ -7,6 +7,7 @@ import { MoonLoader } from "react-spinners";
 import { ToggleMarketplaceSubmissionMode } from "./marketplace/ToggleMarketplaceSubmissionMode";
 import { DirectExchangeContext } from "../../contexts/DirectExchangeContext";
 import { DirectExchangeInfoButton } from "./buttons/DirectExchangeInfoButton";
+import { DirectExchangeHistoryButton } from "./DirectExchangeHistory";
 import { StudentScheduleContext } from "../../contexts/StudentScheduleContext";
 
 type Props = {
@@ -40,6 +41,7 @@ export function DirectExchange({
         }}>
         <div className="flex justify-center flex-col space-y-4 mt-4">
             <DirectExchangeInfoButton />
+            <DirectExchangeHistoryButton />
             <SubmitDirectExchangeButton currentDirectExchange={currentDirectExchange} />
             <ToggleMarketplaceSubmissionMode />
             {!isLoadingSchedule ?
