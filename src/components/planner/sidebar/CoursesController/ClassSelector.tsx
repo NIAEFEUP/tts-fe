@@ -32,9 +32,10 @@ const ClassSelector = ({ course }: Props) => {
     const classSelectorContentRef = useRef(null)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-
     const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
     const { pickedCourses } = useContext(CourseContext)
+
+    const [ selectedClassId, setSelectedClassId ] = useState<number | null>(null);
 
     // const courseOption = useMemo(() => {
     //   return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
@@ -187,7 +188,7 @@ const ClassSelector = ({ course }: Props) => {
                             size="sm"
                             className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
                         >
-                            <span>{getClassDisplayText(course, display)} </span>
+                            <span>{getClassDisplayText(course, selectedClassId)} </span>
                             {!courseOption.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
                         </Button>
                     </DropdownMenuTrigger>
@@ -195,7 +196,7 @@ const ClassSelector = ({ course }: Props) => {
                         className="bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
                         ref={classSelectorContentRef}
                     >
-                        {classesLoaded ? (
+                        {!classesLoaded ? (
                             <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
                         ) : (
                             <>
@@ -249,7 +250,7 @@ const ClassSelector = ({ course }: Props) => {
                                                 displayed={display === classInfo.id}
                                                 checked={selectedOption === classInfo.id}
                                                 conflict={timesCollideWithSelected(classInfo)}
-                                                onSelect={() => setSelectedOption(classInfo.id)}
+                                                onSelect={() => setSelectedClassId(classInfo.id)}
                                                 onMouseEnter={() => showPreview(classInfo)}
                                                 onMouseLeave={() => removePreview()}
                                             />

@@ -17,9 +17,9 @@ type Props = {
 const ClassItem = ({ classInfo, displayed, checked, conflict, onSelect, onMouseEnter, onMouseLeave }: Props) => {
   return (
     <DropdownMenuCheckboxItem
-      onSelect={() => onSelect}
-      onMouseEnter={() => onMouseEnter}
-      onMouseLeave={() => onMouseLeave}
+      onSelect={() => onSelect()}
+      onMouseEnter={() => onMouseEnter()}
+      onMouseLeave={() => onMouseLeave()}
     >
       <div className="grow">
         <span className="text-sm tracking-tighter">{classInfo.name}</span>

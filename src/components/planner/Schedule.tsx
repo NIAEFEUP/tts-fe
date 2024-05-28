@@ -18,6 +18,7 @@ import ClassBox from './schedules/ClassBox'
 const Schedule = () => {
   const { pickedCourses } = useContext(CourseContext)
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
+  
 
   const scheduleRef = useRef(null)
 

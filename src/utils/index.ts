@@ -88,6 +88,7 @@ const schedulesConflict = (first, second) => {
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
+  console.log("This course is: ", course, " and class id is: ", picked_class_id);
   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
   if (!classInfo) return ' '
 
