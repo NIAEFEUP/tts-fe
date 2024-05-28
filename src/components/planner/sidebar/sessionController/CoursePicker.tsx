@@ -10,6 +10,7 @@ import {
 } from '../../../ui/dialog'
 import StorageAPI from '../../../../api/storage'
 import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import MajorContext from '../../../../contexts/MajorContext'
 import { Button } from '../../../ui/button'
 import { Separator } from '../../../ui/separator'
@@ -24,7 +25,12 @@ const CoursePicker = () => {
   const [open, setOpen] = useState(false)
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
   const { selectedMajor } = useContext(MajorContext)
+  const { multipleOptions } = useContext(MultipleOptionsContext)
   const showContent = selectedMajor || pickedCourses.length > 0
+
+  useEffect(() => {
+    StorageAPI.setOptionsStorage(multipleOptions)
+  }, [multipleOptions])
 
   useEffect(() => {
     StorageAPI.setPickedCoursesStorage(pickedCourses)
@@ -37,8 +43,8 @@ const CoursePicker = () => {
   const handleOpenChange = () => {
     setOpen(!open)
     if (open === false) return
-    const schedules = api.getCoursesClasses(pickedCourses)
-    console.log(schedules)
+    api.getCoursesClasses(pickedCourses)
+    StorageAPI.setPickedCoursesStorage(pickedCourses)
   }
 
   return (

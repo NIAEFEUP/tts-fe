@@ -1,91 +1,125 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
-import { Lesson, CourseOption } from '../../@types'
+// import { Lesson, CourseOption } from '../../@types'
+import { Option, CourseOption } from '../../@types/new_index'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
-import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide } from '../../utils'
+import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide, getClassType } from '../../utils'
 import { useShowGrid } from '../../hooks'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
-type Props = {
-  courseOptions: CourseOption[]
-}
+import { useContext } from 'react'
+import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
+import CourseContext from '../../contexts/CourseContext'
+import ClassBox from './schedules/ClassBox'
 
-const Schedule = ({ courseOptions }: Props) => {
+const Schedule = () => {
+  const { pickedCourses } = useContext(CourseContext)
+  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
+
   const scheduleRef = useRef(null)
-  const lessonTypesDic = {
-    T: 'Teórica',
-    TP: 'Teórico-Prática',
-    PL: 'Prática Laboratorial',
-    OT: 'Orientação Tutorial',
-    S: 'Seminário',
-    P: 'Prática',
-    TC: 'Teórica de Campo',
-    O: 'Outros',
-  }
 
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
-  const subjects = useMemo(() => {
-    const classes = courseOptions.filter((item) => item.option !== null)
+  const classes = useMemo(() => {
+    let aux = [];
+    const option = multipleOptions[selectedOption];
 
-    const chosenSubjects = classes.map((subject, subjectIdx) => ({
-      shown: subject.shown,
-      course: subject.course.info,
-      // A course schedule, may have more than one practical class.
-      practicalLesson: classes.map((item) =>
-        item.schedules.filter((elem) => elem.lesson_type !== 'T' && elem.class_name === subject.option.class_name)
-      )[subjectIdx],
-      // A course schedule, may have more than one theoretical class.
-      theoreticalLessons: classes.map((item) =>
-        item.schedules.filter((elem) => elem.lesson_type === 'T' && elem.class_name === subject.option.class_name)
-      )[subjectIdx],
-    }))
-    return chosenSubjects
-  }, [courseOptions])
+    console.log("Option: ", option);
+    
+    for (let i = 0; i < option.course_options.length; i++) {
+      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id) 
+      const class_info = course_info.classes?.find((class_info) => class_info.id === option.course_options[i].picked_class_id)
 
-  const lessons = useMemo(() => {
-    let lessonsAcc: Lesson[] = []
+      if (course_info === undefined || class_info === undefined) continue;
+      aux.push({
+        course_info: course_info,
+        class_info: class_info,
+      })
+    }
+    
+    return aux;
+  }, [multipleOptions, pickedCourses, selectedOption]);
 
-    subjects.forEach((subject) => {
-      if (subject.shown.T) {
-        subject.theoreticalLessons.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
-      }
+  console.log("Classes: ", classes);
 
-      if (subject.shown.TP) {
-        subject.practicalLesson.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
-      }
-    })
+  const slotTypes = useMemo(() => {
+    let aux = []
 
-    lessonsAcc.sort((first, second) => {
-      if (first.schedule.day === second.schedule.day)
-        return parseFloat(first.schedule.start_time) > parseFloat(second.schedule.start_time) ? -1 : 1
-      else return first.schedule.day > second.schedule.day ? 1 : -1
-    })
-    return lessonsAcc
-  }, [subjects])
+    for (let i = 0; i < classes.length; i++) {
+      const current_class = classes[i];
+      const class_info = current_class?.class_info;
 
-  const lessonTypes = useMemo(() => {
-    let lessonTypesAcc = []
-
-    lessons.forEach((lesson) => {
-      if (!lessonTypesAcc.includes(lesson.schedule.lesson_type)) {
-        lessonTypesAcc.push(lesson.schedule.lesson_type)
-      }
-    })
-
-    // Same order every time
-    lessonTypesAcc.sort((first, second) => {
-      return Object.keys(lessonTypesDic).indexOf(first) > Object.keys(lessonTypesDic).indexOf(second) ? 1 : -1
-    })
-
-    return lessonTypesAcc
-  }, [lessons, lessonTypesDic])
+      class_info.slots.array.forEach(element => {
+        aux.push(element.type);
+      }); 
+    }
+    
+    return aux
+  }, [classes]);
 
   const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<String[]>([])
+
+  // const subjects = useMemo(() => {
+  //   const classes = courseOptions.filter((item) => item.option !== null)
+
+  //   const chosenSubjects = classes.map((subject, subjectIdx) => ({
+  //     shown: subject.shown,
+  //     course: subject.course.info,
+  //     // A course schedule, may have more than one practical class.
+  //     practicalLesson: classes.map((item) =>
+  //       item.schedules.filter((elem) => elem.lesson_type !== 'T' && elem.class_name === subject.option.class_name)
+  //     )[subjectIdx],
+  //     // A course schedule, may have more than one theoretical class.
+  //     theoreticalLessons: classes.map((item) =>
+  //       item.schedules.filter((elem) => elem.lesson_type === 'T' && elem.class_name === subject.option.class_name)
+  //     )[subjectIdx],
+  //   }))
+  //   return chosenSubjects
+  // }, [courseOptions])
+
+  // const lessons = useMemo(() => {
+  //   let lessonsAcc: Lesson[] = []
+
+  //   // - Dá push a uma Lesson
+  //   // - Dá sort
+  //   subjects.forEach((subject) => {
+  //     console.log('subject: ', subject) /*if (subject.shown.T) {
+  //       subject.theoreticalLessons.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
+  //     }
+
+  //     if (subject.shown.TP) {
+  //       subject.practicalLesson.forEach((lesson) => lessonsAcc.push({ course: subject.course, schedule: lesson }))
+  //     }*/
+  //   })
+
+  //   lessonsAcc.sort((first, second) => {
+  //     if (first.schedule.day === second.schedule.day)
+  //       return parseFloat(first.schedule.start_time) > parseFloat(second.schedule.start_time) ? -1 : 1
+  //     else return first.schedule.day > second.schedule.day ? 1 : -1
+  //   })
+  //   return lessonsAcc
+  // }, [subjects])
+
+  // const lessonTypes = useMemo(() => {
+  //   let lessonTypesAcc = []
+
+  //   lessons.forEach((lesson) => {
+  //     if (!lessonTypesAcc.includes(lesson.schedule.lesson_type)) {
+  //       lessonTypesAcc.push(lesson.schedule.lesson_type)
+  //     }
+  //   })
+
+  //   // Same order every time
+  //   lessonTypesAcc.sort((first, second) => {
+  //     return Object.keys(lessonTypesDic).indexOf(first) > Object.keys(lessonTypesDic).indexOf(second) ? 1 : -1
+  //   })
+
+  //   return lessonTypesAcc
+  // }, [lessons, lessonTypesDic])
 
   /**
    * Find conflicts among classes between classes.
@@ -101,56 +135,30 @@ const Schedule = ({ courseOptions }: Props) => {
    * 2nd iteraction: acc = [RC], conflictsAcc = [[AMAT]]
    * 3rd iteraction: acc = [RC, TC], conflictsAcc = [[AMAT], [RC, TC]]
    */
-  const conflicts = useMemo(() => {
-    let acc = []
-    let conflictsAcc = []
-
-    for (let i = 0; i < lessons.length; i++) {
-      const curLesson = lessons[i]
-      if (acc.length === 0) {
-        acc.push(curLesson)
-        if (i === lessons.length - 1) {
-          conflictsAcc.push(acc)
-        }
-        continue
-      }
-
-      let collidesWithAll = true
-      for (let j = 0; j < acc.length; j++) {
-        const curAccLesson = acc[j]
-        if (!timesCollide(curLesson.schedule, curAccLesson.schedule)) {
-          collidesWithAll = false
-          break
-        }
-      }
-      if (collidesWithAll) {
-        acc.push(curLesson)
-      } else {
-        conflictsAcc.push(acc)
-        acc = [curLesson]
-      }
-      if (i === lessons.length - 1) conflictsAcc.push(acc)
-    }
-    return conflictsAcc
-  }, [lessons])
-
   const lessonsGroupedByDays = useMemo(() => {
     let i = 0
     let j = 0
     let lessonsAcc = []
 
-    while (i < lessons.length) {
-      let acc = []
-      while (j < lessons.length && lessons[i].schedule.day === lessons[j].schedule.day) {
-        acc.unshift(lessons[j])
-        j++
+    for (let i = 0; i < classes.length; i++) {
+      const current_class = classes[i];
+
+      const class_info = current_class.class_info;
+      const current_slots = class_info.slots
+
+      while ( i < current_slots.length ) {
+        let acc = []
+        while (j < current_slots.length && current_slots[i].schedule.day === current_slots[j].schedule.day) {
+          acc.unshift(current_slots[j])
+          j++
+        }
+        i = j
+        lessonsAcc.push(acc)
       }
-      i = j
-      lessonsAcc.push(acc)
     }
 
     return lessonsAcc
-  }, [lessons])
+  }, [classes])
 
   const [showGrid, setShowGrid] = useShowGrid()
 
@@ -179,25 +187,15 @@ const Schedule = ({ courseOptions }: Props) => {
             <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
-                {lessons.length === conflicts.length
-                  ? lessons.map((lesson: Lesson, lessonIdx: number) => (
-                      <LessonBox
-                        key={`lesson-box-${lessonIdx}`}
-                        lesson={lesson}
-                        active={!hiddenLessonsTypes.includes(lesson.schedule.lesson_type)}
-                      />
-                    ))
-                  : conflicts.map((lessons: Lesson[]) =>
-                      lessons.map((lesson: Lesson, lessonIdx: number) => (
-                        <LessonBox
-                          key={`conflict-lesson-box-${lessonIdx}`}
-                          lesson={lesson}
-                          conflict={lessons.length > 1 ? true : false}
-                          conflicts={lessons.length > 1 ? lessons : undefined}
-                          active={!hiddenLessonsTypes.includes(lesson.schedule.lesson_type)}
-                        />
-                      ))
-                    )}
+                {classes.map((c) => (
+                  c.classInfo === undefined 
+                  ? <></>
+                   : <ClassBox 
+                    key={`course[${c.course_info.id}]-class[${c.class_info.id}]`}
+                    courseInfo={c.course_info}
+                    classInfo={c.class_info ?? null}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -206,7 +204,7 @@ const Schedule = ({ courseOptions }: Props) => {
         {/* TODO: Create a component for this */}
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
-            {lessonTypes.map((lessonType: string) => (
+            {slotTypes.map((lessonType: string) => (
               <label
                 className="group relative flex items-center gap-1.5 overflow-x-hidden rounded-lg hover:cursor-pointer lg:gap-1"
                 key={`lesson-type-${lessonType}`}
@@ -236,9 +234,7 @@ const Schedule = ({ courseOptions }: Props) => {
                   )}
                 </span>
 
-                <span className="cursor-pointer select-none peer-checked:line-through">
-                  {lessonTypesDic[lessonType]}
-                </span>
+                <span className="cursor-pointer select-none peer-checked:line-through">{getClassType(lessonType)}</span>
 
                 {/* Shine box */}
                 <div className="z-5 absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-shine" />
@@ -253,7 +249,7 @@ const Schedule = ({ courseOptions }: Props) => {
       </div>
 
       {/* Schedule Mobile */}
-      <div className="flex h-full w-full flex-col items-center justify-start gap-2 space-y-2 lg:hidden">
+      {/* <div className="flex h-full w-full flex-col items-center justify-start gap-2 space-y-2 lg:hidden">
         {lessonsGroupedByDays.length > 0 ? (
           lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
             <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
@@ -277,7 +273,7 @@ const Schedule = ({ courseOptions }: Props) => {
         ) : (
           <span>Nenhum horário selecionado</span>
         )}
-      </div>
+      </div> */}
     </>
   )
 }

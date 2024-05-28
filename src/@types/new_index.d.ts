@@ -25,31 +25,38 @@ export type CourseInfo = {
     acronym: string,
     name: string,
     url: string,
-    classes?: Array<Class>
+    classes?: Array<ClassInfo>
     // last_updated: string, // remover ??
     // semester: number, // remover ??
     // year: number // remover ??
 }
 
-export type Class = {
+export type ClassInfo = {
     // course_unit_id: number, // é mesmo necessário ??
+    // composed_name: string,
+    id: number,
     name: string
-    composed_name: string,
-    slots: Array<Slot>
+    slots: Array<SlotInfo>
 }
 
-export type Slot = {
-    lesson_type: string,
+export type SlotInfo = {
+    type: string,
     day: number,
     start_time: number,
     duration: number,
     location: string,
     professors_link: string,
-    professors: Array<ProfessorInformation>,
+    professors: Array<ProfessorInfo>,
     // last_updated: string, (is it needed??)
 }
 
-export type selected_courses = Array<CourseInfo>
+export type ProfessorInfo = {
+    id: number
+    acronym: string
+    name: string
+}
+
+export type picked_courses = Array<CourseInfo>
 
 export type MultipleOptions = Array<Option> 
 
@@ -64,13 +71,8 @@ export type CourseOption = {
     course_id: number,
     picked_class_id: number,
     locked: boolean,
-    filteredTeachers: Array<ProfessorInformation>,
+    filteredTeachers: Array<number>,
     hide: Array<lesson_type>,
-}
-
-export type ProfessorInformation = {
-    acronym: string
-    name: string
 }
 
 
@@ -122,4 +124,9 @@ export type Lesson = {
 
 export type ImportedCourses = { 
     [key: string]: string 
+}
+
+export type ConflictInfo = {
+    courseInfo: CourseInfo
+    classInfo: ClassInfo
 }

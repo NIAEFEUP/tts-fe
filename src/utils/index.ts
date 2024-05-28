@@ -1,7 +1,7 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, MultipleOptions, selected_courses } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, picked_courses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minHour = 8
@@ -48,7 +48,7 @@ const getSchoolYear = () => {
 const convertWeekday = (dayNumber: number) => {
   if (dayNumber < 0 || dayNumber > 7) return null
 
-  const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sab', 'Dom']
+  const weekdays = ['2ªf', '3ªf', '4ªf', '5ªf', '6ªf', 'Sáb', 'Dom']
   return weekdays[dayNumber]
 }
 
@@ -87,29 +87,45 @@ const schedulesConflict = (first, second) => {
   return (firstStart < secondStart && firstEnd > secondStart) || (firstStart >= secondStart && firstStart < secondEnd)
 }
 
-const getScheduleOptionDisplayText = (option: CourseSchedule | null) => {
-  // prioritize single class name
-  const classTitle = option.class_name !== null ? option.class_name : option.composed_class_name
-  const professor_acronyms = option.professor_information.map((prof_info) => prof_info.acronym)
-  return [classTitle, professor_acronyms, convertWeekday(option.day), getLessonBoxTime(option)].join(', ')
+const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
+  const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
+  if (!classInfo) return ' '
+
+  const classTitle = classInfo.name
+  const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
+  const classTypes = classInfo.slots.map((slot) => slot.type)
+  const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
+
+  return [classTitle, professor_acronyms, ...weekdays, ...classTypes, ...professor_acronyms].join(', ')
 }
 
-const getLessonBoxTime = (schedule: CourseSchedule) => {
-  return [convertHour(schedule.start_time), convertHour(addHour(schedule.start_time, schedule.duration))].join('-')
+// const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
+//   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
+//   if (!classInfo) return ' '
+
+//   const classTitle = classInfo.name
+//   const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
+//   const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
+
+//   return [classTitle, professor_acronyms, ...weekdays, ...professor_acronyms].join(', ')
+// }
+
+const getLessonBoxTime = (slot: SlotInfo) => {
+  return [convertHour(slot.start_time.toString()), convertHour(addHour(slot.start_time.toString(), slot.duration.toString()))].join('-')
 }
 
 const addHour = (hour1: string, hour2: string): string => {
   return (parseFloat(hour1) + parseFloat(hour2)).toString()
 }
 
-const getLessonBoxStyles = (lesson: Lesson, maxHour: number, minHour: number) => {
+const getLessonBoxStyles = (slotInfo: SlotInfo, maxHour: number, minHour: number) => {
   const step = (maxHour - minHour) * 2
-  const top = (parseFloat(lesson.schedule.start_time) - minHour) * 2
-  const length = parseFloat(lesson.schedule.duration) * 2
+  const top = (slotInfo.start_time - minHour) * 2
+  const length = slotInfo.duration * 2
 
   return {
     top: `${(top * 100) / step}%`,
-    left: `${(lesson.schedule.day * 100) / 6}%`,
+    left: `${(slotInfo.day * 100) / 6}%`,
     height: `${length * (100 / step)}%`,
   }
 }
@@ -167,6 +183,27 @@ const getClassTypeClassName = (type: string) => {
 
     default:
       return 'schedule-class-o'
+  }
+}
+
+const getClassType = (type: string) => {
+  switch (type) {
+    case 'T': return 'Teórica';
+    case 'TP': return 'Teórico-Prática';
+    case 'PL': return 'Prática Laboratorial';
+    case 'OT': return 'Orientação Tutorial';
+    case 'S': return 'Seminário';
+    case 'P': return 'Prática';
+    case 'TC': return 'Teórica de Campo';
+    case 'O': return 'Outros';
+    case 'Teórica' : return 'T';
+    case 'Teórico-Prática' : return 'TP';
+    case 'Prática Laboratorial' : return 'PL';
+    case 'Orientação Tutorial' : return 'OT';
+    case 'Seminário' : return 'S';
+    case 'Prática' : return 'P';
+    case 'Teórica de Campo' : return 'TC';
+    case 'Outros' : return 'O';
   }
 }
 
@@ -242,81 +279,110 @@ const isSubset = (set1, set2, same) => {
   return true
 }
 
-const defaultMultipleOptions = (selected_courses:selected_courses) : MultipleOptions => {
-  const defaultCourseOption : CourseOption[] = selected_courses.map(course => (
-    {
-      course_id: course.id,
-      picked_class_id: 0,
-      locked: false,
-      filteredTeachers: [],
-      hide: []
-    }
-  ))
-  
-  return [
-    {
-      id: 1,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
-      name: 'Horário 1',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 2,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
-      name: 'Horário 2',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 3,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
-      name: 'Horário 3',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 4,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
-      name: 'Horário 4',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 5,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
-      name: 'Horário 5',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 6,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
-      name: 'Horário 6',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 7,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
-      name: 'Horário 7',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 8,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
-      name: 'Horário 8',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 9,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
-      name: 'Horário 9',
-      course_options: defaultCourseOption,
-    },
-    {
-      id: 10,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
-      name: 'Horário 10',
-      course_options: defaultCourseOption,
-    },
-  ]
+const createDefaultCourseOption = (course: CourseInfo) : CourseOption => ({
+  course_id: course.id,
+  picked_class_id: null,
+  locked: false,
+  filteredTeachers: [],
+  hide: []
+})
+
+const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions) : MultipleOptions => (
+   multipleOptions.map((option) => {
+     option.course_options.push(createDefaultCourseOption(course))
+     return option
+   })
+)
+
+const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions) : MultipleOptions => (
+  multipleOptions.map((option) => {
+    option.course_options = option.course_options.filter((courseOption) => courseOption.course_id !== course.id)
+    return option
+  })
+)
+
+const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
+  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
+
+  return multipleOptions.map((option) => {
+    option.course_options = [...courseOptions]
+    return option
+  })
 }
 
+
+const defaultMultipleOptions = (selected_courses:picked_courses) : MultipleOptions => ([
+  {
+    id: 1,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
+    name: 'Horário 1',
+    course_options: [],
+  },
+  {
+    id: 2,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
+    name: 'Horário 2',
+    course_options: [],
+  },
+  {
+    id: 3,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
+    name: 'Horário 3',
+    course_options: [],
+  },
+  {
+    id: 4,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
+    name: 'Horário 4',
+    course_options: [],
+  },
+  {
+    id: 5,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
+    name: 'Horário 5',
+    course_options: [],
+  },
+  {
+    id: 6,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
+    name: 'Horário 6',
+    course_options: [],
+  },
+  {
+    id: 7,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
+    name: 'Horário 7',
+    course_options: [],
+  },
+  {
+    id: 8,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
+    name: 'Horário 8',
+    course_options: [],
+  },
+  {
+    id: 9,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
+    name: 'Horário 9',
+    course_options: [],
+  },
+  {
+    id: 10,
+    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
+    name: 'Horário 10',
+    course_options: [],
+  },
+]);
+
+const getAllPickedSlots = (selected_courses : picked_courses, option : Option) => {
+  return option.course_options.flatMap((course) => {
+    if (!course.picked_class_id) return []
+    const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
+    const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
+    // console.log("Course: ", courseInfo.name)
+    return classInfo.slots
+  })
+}
 
 export {
   config,
@@ -334,7 +400,7 @@ export {
   convertHour,
   timesCollide,
   schedulesConflict,
-  getScheduleOptionDisplayText,
+  getClassDisplayText,
   getLessonBoxTime,
   getLessonBoxStyles,
   getClassTypeClassName,
@@ -344,5 +410,10 @@ export {
   // removeDuplicatesFromCourseOption,
   groupCoursesByYear,
   isSubset,
+  addCourseOption, 
+  removeCourseOption,
+  replaceCourseOptions,
   defaultMultipleOptions,
+  getAllPickedSlots,
+  getClassType,
 }

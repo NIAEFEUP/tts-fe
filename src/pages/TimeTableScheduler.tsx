@@ -83,7 +83,7 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.selected-major')) || null
   )
   // const [selectedMajor, setSelectedMajor] = useState<Major>(null)
-  const [coursesInfo, setCoursesInfo] = useState([])
+  const [coursesInfo, setCoursesInfo] = useState(JSON.parse(localStorage.getItem('niaefeup-tts.courses-info')) || [])
   const [pickedCourses, setPickedCourses] = useState(
     JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
   )
@@ -96,10 +96,26 @@ const TimeTableSchedulerPage = () => {
   )
 
   useEffect(() => {
+    if (totalSelected.length === 0) return
+    StorageAPI.setOptionsStorage(multipleOptions)
+  }, [multipleOptions, totalSelected])
+
+  useEffect(() => {
     BackendAPI.getCourses(selectedMajor).then((courses) => {
       setCoursesInfo(courses)
     })
   }, [selectedMajor])
+
+  // // fetch majors when component is ready
+  useEffect(() => {
+    document.getElementById('layout').scrollIntoView()
+    BackendAPI.getMajors().then((majors: Major[]) => {
+      setMajors(majors)
+      StorageAPI.setMajorsStorage(majors)
+    })
+  }, [])
+
+  // ==============================================================================
 
   // ==============================================================================
   // ================================== FUNCTIONS ==================================
@@ -177,19 +193,6 @@ const TimeTableSchedulerPage = () => {
   // const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = useState<boolean>(false)
   // const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>(null)
   // const { toast } = useToast()
-
-  useEffect(() => {
-    if (totalSelected.length === 0) return
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions, totalSelected])
-
-  // fetch majors when component is ready
-  useEffect(() => {
-    document.getElementById('layout').scrollIntoView()
-    BackendAPI.getMajors().then((majors: Major[]) => {
-      setMajors(majors)
-    })
-  }, [])
 
   // const updateCheckedCourses = (newCheckedCourses: CheckedCourse[][], importedCourses: CourseOption[]) => {
   //   let extraUCs: CheckedCourse[] = []
@@ -374,6 +377,16 @@ const TimeTableSchedulerPage = () => {
   //   setCheckedCourses(newCheckedCourses)
   // }
 
+  useEffect(() => {
+    StorageAPI.setPickedCoursesStorage(pickedCourses)
+  }, [pickedCourses])
+
+  useEffect(() => {
+    console.log('Saving multiple options')
+    console.log(multipleOptions[selectedOption])
+    StorageAPI.setOptionsStorage(multipleOptions)
+  }, [multipleOptions])
+
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
       <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo }}>
@@ -384,7 +397,7 @@ const TimeTableSchedulerPage = () => {
             {/* Schedule Preview */}
             <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
               <div className="h-full w-full">
-                <Schedule courseOptions={multipleOptions_.selected} />
+                <Schedule />
               </div>
             </div>
 

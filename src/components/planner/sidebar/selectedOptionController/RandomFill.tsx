@@ -1,7 +1,7 @@
 import { BoltIcon } from '@heroicons/react/24/outline'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../../../@types'
 import { useEffect, useState } from 'react'
-import { removeDuplicatesFromCourseOption } from '../../../../utils'
+// import { removeDuplicatesFromCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { ScrollArea } from '../../../ui/scroll-area'
@@ -15,7 +15,8 @@ type Props = {
 
 const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
-  const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
+  // const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
+  const courseOptions = multipleOptions.selected
   const [permutations, setPermutations] = useState([])
   const [lockedCourses, setLockedCourses] = useState(
     courseOptions.filter((course) => course.locked).map((course) => course.course.info.acronym)
@@ -24,6 +25,8 @@ const RandomFill = ({ multipleOptionsHook, className }: Props) => {
 
   /* 
   Usage:
+
+  ~~~~~~~~~~~~~~~~~~~~~~~~~
     const generator = cartesianGenerator(...schedules); 
     const combination = generator.next().value;
   */
