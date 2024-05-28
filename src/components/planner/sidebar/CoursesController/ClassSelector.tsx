@@ -195,7 +195,7 @@ const ClassSelector = ({ course }: Props) => {
             ref={classSelectorContentRef}
           >
             {classesLoaded ? (
-              <p className="w-100 select-none p-2 text-center">No classes loaded yet</p>
+              <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
             ) : (
               <>
                 <DropdownMenuGroup>

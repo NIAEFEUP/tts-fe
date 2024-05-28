@@ -1,7 +1,8 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
-import { Lesson, CourseOption } from '../../@types'
+// import { Lesson, CourseOption } from '../../@types'
+import { Option, CourseOption } from '../../@types/new_index'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide, getClassType } from '../../utils'
 import { useShowGrid } from '../../hooks'
@@ -12,6 +13,7 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import { useContext } from 'react'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import CourseContext from '../../contexts/CourseContext'
+import ClassBox from './schedules/ClassBox'
 
 const Schedule = () => {
   const { pickedCourses } = useContext(CourseContext)
@@ -22,30 +24,42 @@ const Schedule = () => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
-  const slots = useMemo(() => {
-    let aux = []
-    const option = multipleOptions[selectedOption]
-    for (let i = 0; i < option.course_options.length; i++) {
-      const course_option = option.course_options[i]
-      const picked_class = course_option.picked_class_id
+  const classes = useMemo(() => {
+    let aux = [];
+    const option = multipleOptions[selectedOption];
 
+    console.log("Option: ", option);
+    
+    for (let i = 0; i < option.course_options.length; i++) {
+      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id) 
+      const class_info = course_info.classes?.find((class_info) => class_info.id === option.course_options[i].picked_class_id)
+
+      if (course_info === undefined || class_info === undefined) continue;
       aux.push({
-        course: course_option,
-        class: pickedCourses.find((course) => course.id === course_option.course_id),
+        course_info: course_info,
+        class_info: class_info,
       })
     }
-    return aux
-  }, [multipleOptions, pickedCourses, selectedOption])
+    
+    return aux;
+  }, [multipleOptions, pickedCourses, selectedOption]);
+
+  console.log("Classes: ", classes);
 
   const slotTypes = useMemo(() => {
     let aux = []
-    slots.forEach((slot) => {
-      if (!aux.includes(slot.schedule.lesson_type)) {
-        aux.push(slot.schedule.lesson_type)
-      }
-    })
+
+    for (let i = 0; i < classes.length; i++) {
+      const current_class = classes[i];
+      const class_info = current_class?.class_info;
+
+      class_info.slots.array.forEach(element => {
+        aux.push(element.type);
+      }); 
+    }
+    
     return aux
-  }, [slots])
+  }, [classes]);
 
   const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<String[]>([])
 
@@ -126,18 +140,25 @@ const Schedule = () => {
     let j = 0
     let lessonsAcc = []
 
-    while (i < slots.length) {
-      let acc = []
-      while (j < slots.length && slots[i].schedule.day === slots[j].schedule.day) {
-        acc.unshift(slots[j])
-        j++
+    for (let i = 0; i < classes.length; i++) {
+      const current_class = classes[i];
+
+      const class_info = current_class.class_info;
+      const current_slots = class_info.slots
+
+      while ( i < current_slots.length ) {
+        let acc = []
+        while (j < current_slots.length && current_slots[i].schedule.day === current_slots[j].schedule.day) {
+          acc.unshift(current_slots[j])
+          j++
+        }
+        i = j
+        lessonsAcc.push(acc)
       }
-      i = j
-      lessonsAcc.push(acc)
     }
 
     return lessonsAcc
-  }, [slots])
+  }, [classes])
 
   const [showGrid, setShowGrid] = useShowGrid()
 
@@ -166,11 +187,13 @@ const Schedule = () => {
             <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
-                {slots.map((slot) => (
-                  <LessonBox
-                    key={`lesson-box-${slot.class.class_name}-${slot.schedule.class_name}-${slot.schedule.lesson_type}`}
-                    info={{ courseInfo: slot.course, classInfo: slot.class }}
-                    conflictsInfo={[]}
+                {classes.map((c) => (
+                  c.classInfo === undefined 
+                  ? <></>
+                   : <ClassBox 
+                    key={`course[${c.course_info.id}]-class[${c.class_info.id}]`}
+                    courseInfo={c.course_info}
+                    classInfo={c.class_info ?? null}
                   />
                 ))}
               </div>
@@ -226,7 +249,7 @@ const Schedule = () => {
       </div>
 
       {/* Schedule Mobile */}
-      <div className="flex h-full w-full flex-col items-center justify-start gap-2 space-y-2 lg:hidden">
+      {/* <div className="flex h-full w-full flex-col items-center justify-start gap-2 space-y-2 lg:hidden">
         {lessonsGroupedByDays.length > 0 ? (
           lessonsGroupedByDays.map((lessons: Lesson[], dayNumber: number) => (
             <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${dayNumber}`}>
@@ -250,7 +273,7 @@ const Schedule = () => {
         ) : (
           <span>Nenhum horário selecionado</span>
         )}
-      </div>
+      </div> */}
     </>
   )
 }

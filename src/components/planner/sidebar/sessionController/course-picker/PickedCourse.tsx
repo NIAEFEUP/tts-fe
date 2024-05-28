@@ -1,5 +1,7 @@
 import { useContext } from 'react'
 import CourseContext from '../../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
+import { removeCourseOption } from '../../../../../utils'
 import { CourseInfo } from '../../../../../@types/new_index'
 import { Separator } from '../../../../ui/separator'
 import { Button } from '../../../../ui/button'
@@ -11,9 +13,11 @@ type Props = {
 
 const PickedCourse = ({ course }: Props) => {
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
-
+  const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
+  
   const removeCourse = () => {
-    setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse !== course))
+    setMultipleOptions(removeCourseOption(course, multipleOptions))
+    setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse.id !== course.id))
   }
 
   return (
