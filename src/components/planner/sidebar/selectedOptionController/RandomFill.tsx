@@ -15,6 +15,7 @@ type Props = {
 
 const RandomFill = ({ multipleOptionsHook, className }: Props) => {
   const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  console.log("Multiple options are: ", multipleOptions);
   // const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
   const courseOptions = multipleOptions.selected
   const [permutations, setPermutations] = useState([])

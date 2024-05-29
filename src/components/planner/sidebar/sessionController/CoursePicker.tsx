@@ -20,7 +20,7 @@ import { useContext, useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import api from '../../../../api/backend'
 import { Desert } from '../../../svgs'
-
+import { removeAllCourseOptions } from '../../../../utils'
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
@@ -78,7 +78,10 @@ const CoursePicker = () => {
                 <Ects />
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => setPickedCourses([])}
+                    onClick={() => {
+                      setPickedCourses([])
+                      removeAllCourseOptions(multipleOptions)
+                    }}
                     variant="icon"
                     className="gap-2 bg-lightish text-darkish"
                   >

@@ -19,7 +19,7 @@ const ClassBox = ({courseInfo, classInfo} : Props) => {
     <>
         {classInfo.slots.map((slot, index) => (
             <LessonBox
-                key={`course[${courseInfo.id}]-class[${classInfo.id}]-${index}`} 
+                key={`course[${courseInfo.id}]-class[${classInfo.id}]-${slot.lesson_type}-${index}`} 
                 courseInfo={courseInfo}
                 classInfo={classInfo}
                 slotInfo={slot}

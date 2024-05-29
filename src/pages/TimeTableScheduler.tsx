@@ -70,6 +70,7 @@ const TimeTableSchedulerPage = () => {
     selected: [],
     options: [],
   }) // schedule options and selected schedule
+
   const totalSelected = useMemo(
     () => multipleOptions_.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
     [multipleOptions_]

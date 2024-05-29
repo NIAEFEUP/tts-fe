@@ -17,9 +17,10 @@ interface Option {
 
 const Option = ({ item, selectedHook, multipleOptionsHook }) => {
   const [selected, setSelected] = selectedHook
-  const [_, setMultipleOptions] = multipleOptionsHook
+  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
 
   const setOptionIndex = (newIndex: number) => {
+    console.log("Previous multiple options was: ", multipleOptions);
     setMultipleOptions((prev) => ({
       index: newIndex - 1,
       selected: prev.options[newIndex - 1],

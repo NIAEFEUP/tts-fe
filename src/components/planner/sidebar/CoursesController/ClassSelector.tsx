@@ -119,6 +119,8 @@ const ClassSelector = ({ course }: Props) => {
         //   )
     }
 
+    const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => classInfo.slots.some((slot) => slot.professors.some((professor) => !filteredTeachers.includes(professor.id)));
+
     // Checks if two arrays of professors have a common professor
     const hasCommonProfessorWith = (profs1, profs2) =>
         profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
@@ -135,7 +137,7 @@ const ClassSelector = ({ course }: Props) => {
         setPreview(null)
     }
 
-    function toggleTeacher(id) {
+    const toggleTeacher = (id : number) => {
         if (filteredTeachers.includes(id)) {
             setFilteredTeachers(filteredTeachers.filter((t) => t !== id))
         } else {
@@ -143,7 +145,7 @@ const ClassSelector = ({ course }: Props) => {
         }
     }
 
-    function toggleAllTeachers(teachers: ProfessorInfo[]) {
+    const toggleAllTeachers = (teachers: ProfessorInfo[]) => {
         if (filteredTeachers.length > 0) {
             setFilteredTeachers([])
         } else {
@@ -219,20 +221,17 @@ const ClassSelector = ({ course }: Props) => {
                                                     </span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                {allTeachers.map((option) => {
-                                                    const isFiltered = filteredTeachers.includes(option.id)
-                                                    return (
+                                                {allTeachers.map((option) => (
                                                         <ProfessorItem
                                                             key={`${course.acronym}-teacher-${option.acronym}`}
                                                             professorInformation={option}
-                                                            filtered={isFiltered}
+                                                            filtered={filteredTeachers.includes(option.id)}
                                                             onSelect={(e) => {
                                                                 e.preventDefault()
                                                                 toggleTeacher(option.id)
                                                             }}
                                                         />
-                                                    )
-                                                })}
+                                                ))}
                                             </DropdownMenuSubContent>
                                         </DropdownMenuPortal>
                                     </DropdownMenuSub>
@@ -243,9 +242,10 @@ const ClassSelector = ({ course }: Props) => {
                                         <span className="text-sm tracking-tighter">Remover Seleção</span>
                                     </DropdownMenuItem>
                                     {classesLoaded &&
-                                        getOptions().map((classInfo) => (
+                                        getOptions().map((classInfo) => classInfoHasFilteredTeacher(classInfo) ? (
                                             <ClassItem
                                                 key={`schedule-${classInfo.name}`}
+                                                course_id={course.id}
                                                 classInfo={classInfo}
                                                 displayed={display === classInfo.id}
                                                 checked={selectedOption === classInfo.id}
@@ -254,7 +254,7 @@ const ClassSelector = ({ course }: Props) => {
                                                 onMouseEnter={() => showPreview(classInfo)}
                                                 onMouseLeave={() => removePreview()}
                                             />
-                                        ))}
+                                        ): <></>)}
                                 </DropdownMenuGroup>
                             </>
                         )}
