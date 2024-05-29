@@ -88,13 +88,12 @@ const schedulesConflict = (first, second) => {
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
-  console.log("This course is: ", course, " and class id is: ", picked_class_id);
   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
   if (!classInfo) return ' '
-
+  
   const classTitle = classInfo.name
-  const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
-  const classTypes = classInfo.slots.map((slot) => slot.type)
+  const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.professor_acronym))
+  const classTypes = classInfo.slots.map((slot) => slot.lesson_type)
   const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
 
   return [classTitle, professor_acronyms, ...weekdays, ...classTypes, ...professor_acronyms].join(', ')

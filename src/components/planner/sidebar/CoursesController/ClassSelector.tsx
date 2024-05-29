@@ -60,9 +60,9 @@ const ClassSelector = ({ course }: Props) => {
 
         // Filter out duplicates
         const uniqueTeachers = teachers.filter((professor) => {
-            if (!uniqueProfessors[professor.id]) {
+            if (!uniqueProfessors[professor.professor_id]) {
                 // If the professor has not been encountered yet, add it to the temporary object
-                uniqueProfessors[professor.id] = professor
+                uniqueProfessors[professor.professor_id] = professor
                 return true
             }
             return false
@@ -119,6 +119,12 @@ const ClassSelector = ({ course }: Props) => {
         //   )
     }
 
+    const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => {
+        if(filteredTeachers.length === 0) return true;
+
+        return classInfo.slots.filter((slot) => slot.professors.some((professor) => filteredTeachers.includes(professor.professor_id))).length > 0;
+    }
+
     // Checks if two arrays of professors have a common professor
     const hasCommonProfessorWith = (profs1, profs2) =>
         profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
@@ -136,6 +142,7 @@ const ClassSelector = ({ course }: Props) => {
     }
 
     function toggleTeacher(id) {
+        console.log("Id is: ", id);
         if (filteredTeachers.includes(id)) {
             setFilteredTeachers(filteredTeachers.filter((t) => t !== id))
         } else {
@@ -220,15 +227,16 @@ const ClassSelector = ({ course }: Props) => {
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 {allTeachers.map((option) => {
-                                                    const isFiltered = filteredTeachers.includes(option.id)
+                                                    const isFiltered = (filteredTeachers.length === 0) || filteredTeachers.includes(option.professor_id)
                                                     return (
                                                         <ProfessorItem
-                                                            key={`${course.acronym}-teacher-${option.acronym}`}
+                                                            key={`${course.acronym}-teacher-${option.professor_acronym}`}
                                                             professorInformation={option}
                                                             filtered={isFiltered}
                                                             onSelect={(e) => {
+                                                                console.log("selected: ", e);
                                                                 e.preventDefault()
-                                                                toggleTeacher(option.id)
+                                                                toggleTeacher(option.professor_id)
                                                             }}
                                                         />
                                                     )
@@ -243,9 +251,10 @@ const ClassSelector = ({ course }: Props) => {
                                         <span className="text-sm tracking-tighter">Remover Seleção</span>
                                     </DropdownMenuItem>
                                     {classesLoaded &&
-                                        getOptions().map((classInfo) => (
+                                        getOptions().map((classInfo) => classInfoHasFilteredTeacher(classInfo) ? (
                                             <ClassItem
                                                 key={`schedule-${classInfo.name}`}
+                                                course_id={course.id}
                                                 classInfo={classInfo}
                                                 displayed={display === classInfo.id}
                                                 checked={selectedOption === classInfo.id}
@@ -254,7 +263,7 @@ const ClassSelector = ({ course }: Props) => {
                                                 onMouseEnter={() => showPreview(classInfo)}
                                                 onMouseLeave={() => removePreview()}
                                             />
-                                        ))}
+                                        ): <></>)}
                                 </DropdownMenuGroup>
                             </>
                         )}

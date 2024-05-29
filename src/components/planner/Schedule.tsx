@@ -19,6 +19,7 @@ const Schedule = () => {
   const { pickedCourses } = useContext(CourseContext)
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   
+  console.log("Current picked courses are: ", pickedCourses);
 
   const scheduleRef = useRef(null)
 
@@ -29,8 +30,6 @@ const Schedule = () => {
     let aux = [];
     const option = multipleOptions[selectedOption];
 
-    console.log("Option: ", option);
-    
     for (let i = 0; i < option.course_options.length; i++) {
       const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id) 
       const class_info = course_info.classes?.find((class_info) => class_info.id === option.course_options[i].picked_class_id)
@@ -50,15 +49,14 @@ const Schedule = () => {
   const slotTypes = useMemo(() => {
     let aux = []
 
-    for (let i = 0; i < classes.length; i++) {
-      const current_class = classes[i];
-      const class_info = current_class?.class_info;
+    for (const currentClass of classes) {
+      const class_info = currentClass?.class_info;
 
-      class_info.slots.array.forEach(element => {
-        aux.push(element.type);
+      class_info.slots.forEach(element => {
+        aux.push(element.lesson_type);
       }); 
     }
-    
+
     return aux
   }, [classes]);
 
@@ -136,7 +134,7 @@ const Schedule = () => {
    * 2nd iteraction: acc = [RC], conflictsAcc = [[AMAT]]
    * 3rd iteraction: acc = [RC, TC], conflictsAcc = [[AMAT], [RC, TC]]
    */
-  const lessonsGroupedByDays = useMemo(() => {
+  /*const lessonsGroupedByDays = useMemo(() => {
     let i = 0
     let j = 0
     let lessonsAcc = []
@@ -146,6 +144,8 @@ const Schedule = () => {
 
       const class_info = current_class.class_info;
       const current_slots = class_info.slots
+
+      console.log("CURRENT SLOTS ARE: ", current_slots);
 
       while ( i < current_slots.length ) {
         let acc = []
@@ -159,7 +159,7 @@ const Schedule = () => {
     }
 
     return lessonsAcc
-  }, [classes])
+  }, [classes])*/
 
   const [showGrid, setShowGrid] = useShowGrid()
 

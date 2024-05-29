@@ -1,10 +1,12 @@
-import { useContext, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { ClassInfo } from '../../../../@types/new_index'
 import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
 import { ExclamationTriangleIcon, EyeIcon } from '@heroicons/react/20/solid'
 import { getLessonBoxTime, convertWeekday } from '../../../../utils'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 
 type Props = {
+  course_id: number,
   classInfo: ClassInfo
   displayed?: boolean
   checked?: boolean
@@ -14,10 +16,22 @@ type Props = {
   onMouseLeave?: () => void
 }
 
-const ClassItem = ({ classInfo, displayed, checked, conflict, onSelect, onMouseEnter, onMouseLeave }: Props) => {
+const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, onSelect, onMouseEnter, onMouseLeave }: Props) => {
+
+  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
+
+  const selectOption = () => {
+    const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.course_id === course_id);
+    if(multipleOptionsEntry) {
+      multipleOptionsEntry.picked_class_id = classInfo.id;
+      setMultipleOptions({...multipleOptions})
+    }
+    onSelect();
+  }
+
   return (
     <DropdownMenuCheckboxItem
-      onSelect={() => onSelect()}
+      onSelect={() => selectOption()}
       onMouseEnter={() => onMouseEnter()}
       onMouseLeave={() => onMouseLeave()}
     >

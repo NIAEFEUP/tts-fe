@@ -40,7 +40,7 @@ export type ClassInfo = {
 }
 
 export type SlotInfo = {
-    type: string,
+    lesson_type: string,
     day: number,
     start_time: number,
     duration: number,
