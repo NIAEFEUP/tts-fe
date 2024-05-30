@@ -116,6 +116,7 @@ export type ImportedCourses = {
 
 export type ClassExchange = {
     course_unit: string,
+    course_unit_id: string,
     old_class: string,
     new_class: string,
     other_student: string // If the user didn't specify a student, it will be none

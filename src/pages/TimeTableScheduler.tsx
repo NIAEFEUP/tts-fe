@@ -178,6 +178,8 @@ const TimeTableSchedulerPage = () => {
     })
   }
 
+  console.log("Current multiple options is: ", multipleOptions);
+
   useEffect(() => {
     if (totalSelected.length === 0) return
     StorageAPI.setOptionsStorage(multipleOptions)
