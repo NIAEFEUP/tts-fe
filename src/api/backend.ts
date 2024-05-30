@@ -170,6 +170,10 @@ export const getStudentHistory = async () => {
     return await apiRequest(`/direct_exchange/history/`, "GET", null);
 }
 
+export const getExportExchanges = async () => {
+    return await fetch(BACKEND_URL + "/export/", { method: "GET", body: null, credentials: "include" });
+}
+
 const api = {
     getMajors,
     getCourses,
