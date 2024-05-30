@@ -19,8 +19,6 @@ const Schedule = () => {
   const { pickedCourses } = useContext(CourseContext)
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   
-  console.log("Current picked courses are: ", pickedCourses);
-
   const scheduleRef = useRef(null)
 
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
@@ -47,13 +45,13 @@ const Schedule = () => {
   console.log("Classes: ", classes);
 
   const slotTypes = useMemo(() => {
-    let aux = []
+    let aux = new Set()
 
     for (const currentClass of classes) {
       const class_info = currentClass?.class_info;
 
       class_info.slots.forEach(element => {
-        aux.push(element.lesson_type);
+        aux.add(element.lesson_type);
       }); 
     }
 
@@ -205,7 +203,7 @@ const Schedule = () => {
         {/* TODO: Create a component for this */}
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
-            {slotTypes.map((lessonType: string) => (
+            {[...slotTypes].map((lessonType: string) => (
               <label
                 className="group relative flex items-center gap-1.5 overflow-x-hidden rounded-lg hover:cursor-pointer lg:gap-1"
                 key={`lesson-type-${lessonType}`}

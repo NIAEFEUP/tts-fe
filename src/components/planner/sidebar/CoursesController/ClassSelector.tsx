@@ -22,6 +22,7 @@ import CourseContext from '../../../../contexts/CourseContext'
 import ProfessorItem from './ProfessorItem'
 import ClassItem from './ClassItem'
 import StorageAPI from '../../../../api/storage'
+import CoursesController from '../CoursesController'
 
 type Props = {
     course: CourseInfo
@@ -36,6 +37,19 @@ const ClassSelector = ({ course }: Props) => {
     const { pickedCourses } = useContext(CourseContext)
 
     const [ selectedClassId, setSelectedClassId ] = useState<number | null>(null);
+
+    useEffect(() => {
+        const course_options = multipleOptions[selectedOption].course_options;
+        const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
+
+        if(!option[0]) {
+            setSelectedClassId(null);
+            return;
+        }
+
+        setSelectedClassId(option[0].picked_class_id);
+
+    }, [selectedOption, multipleOptions, course.id]);
 
     // const courseOption = useMemo(() => {
     //   return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
@@ -96,12 +110,13 @@ const ClassSelector = ({ course }: Props) => {
         if (filteredTeachers.length === 0) return course.classes
 
         return course.classes.filter((c) => {
-            const slots = c.slots
-            const aux = slots.every((s) => {
-                return s.professors.some((p) => !filteredTeachers.includes(p.id))
-            })
-            console.log('class: ', c.name, '          - ', aux)
-            return aux
+            return c.slots.filter((slot) => slot.professors.filter((professor) => filteredTeachers.includes(professor.professor_id)).length > 0).length > 0
+            // const slots = c.slots
+            // const aux = slots.filter((s) => {
+            //     return s.professors.some((p) => filteredTeachers.includes(p.professor_id))
+            // })
+            // console.log('class: ', c.name, '          - ', aux)
+            // return aux
         })
     }
 
@@ -119,11 +134,7 @@ const ClassSelector = ({ course }: Props) => {
         //   )
     }
 
-    const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => {
-        if(filteredTeachers.length === 0) return true;
-
-        return classInfo.slots.filter((slot) => slot.professors.some((professor) => filteredTeachers.includes(professor.professor_id))).length > 0;
-    }
+    console.log("Filtered teachers are: ", filteredTeachers)
 
     // Checks if two arrays of professors have a common professor
     const hasCommonProfessorWith = (profs1, profs2) =>
@@ -142,7 +153,6 @@ const ClassSelector = ({ course }: Props) => {
     }
 
     function toggleTeacher(id) {
-        console.log("Id is: ", id);
         if (filteredTeachers.includes(id)) {
             setFilteredTeachers(filteredTeachers.filter((t) => t !== id))
         } else {
@@ -154,7 +164,7 @@ const ClassSelector = ({ course }: Props) => {
         if (filteredTeachers.length > 0) {
             setFilteredTeachers([])
         } else {
-            setFilteredTeachers(teachers.flatMap((t) => t.id))
+            setFilteredTeachers(teachers.flatMap((t) => t.professor_id))
         }
     }
 
@@ -251,7 +261,7 @@ const ClassSelector = ({ course }: Props) => {
                                         <span className="text-sm tracking-tighter">Remover Seleção</span>
                                     </DropdownMenuItem>
                                     {classesLoaded &&
-                                        getOptions().map((classInfo) => classInfoHasFilteredTeacher(classInfo) ? (
+                                        getOptions().map((classInfo) => (
                                             <ClassItem
                                                 key={`schedule-${classInfo.name}`}
                                                 course_id={course.id}
@@ -263,7 +273,7 @@ const ClassSelector = ({ course }: Props) => {
                                                 onMouseEnter={() => showPreview(classInfo)}
                                                 onMouseLeave={() => removePreview()}
                                             />
-                                        ): <></>)}
+                                        ))}
                                 </DropdownMenuGroup>
                             </>
                         )}

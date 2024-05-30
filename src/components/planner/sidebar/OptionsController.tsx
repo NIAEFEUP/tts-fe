@@ -2,9 +2,10 @@ import { MultipleOptions } from '../../../@types'
 import { ReactSortable } from 'react-sortablejs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip'
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
+import { useContext } from 'react'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
 type Props = {
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
 }
@@ -15,26 +16,18 @@ interface Option {
   name: string
 }
 
-const Option = ({ item, selectedHook, multipleOptionsHook }) => {
+const Option = ({ item, selectedHook }) => {
   const [selected, setSelected] = selectedHook
-  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
 
-  const setOptionIndex = (newIndex: number) => {
-    console.log("Previous multiple options was: ", multipleOptions);
-    setMultipleOptions((prev) => ({
-      index: newIndex - 1,
-      selected: prev.options[newIndex - 1],
-      options: [...prev.options],
-    }))
-  }
-
-  return (
+   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger
           onClick={() => {
             setSelected(item.id)
-            setOptionIndex(item.id)
+            setSelectedOption(item.id)
+            //setOptionIndex(item.id)
           }}
           className={`
             group relative box-border flex aspect-square h-10 w-10 cursor-pointer flex-col
@@ -62,7 +55,7 @@ const Option = ({ item, selectedHook, multipleOptionsHook }) => {
  * Sortable list of schedule options
  * Each option can be selected by clicking on it
  */
-const OptionsController = ({ multipleOptionsHook, optionsListHook, selectedOptionHook }: Props) => {
+const OptionsController = ({ optionsListHook, selectedOptionHook }: Props) => {
   const [optionsList, setOptionsList] = optionsListHook
   const [selectedOption, setSelectedOption] = selectedOptionHook
 
@@ -81,7 +74,6 @@ const OptionsController = ({ multipleOptionsHook, optionsListHook, selectedOptio
           item={item}
           key={item.id}
           selectedHook={[selectedOption, setSelectedOption]}
-          multipleOptionsHook={multipleOptionsHook}
         />
       ))}
     </ReactSortable>

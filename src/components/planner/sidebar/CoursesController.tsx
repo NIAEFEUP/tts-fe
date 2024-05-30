@@ -1,12 +1,13 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import CourseContext from '../../../contexts/CourseContext'
 import ClassSelector from './CoursesController/ClassSelector'
 import { NoMajorSelected } from '../../svgs'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
-const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
-    const { pickedCourses } = useContext(CourseContext)
+const CoursesController = ({}) => {
+    const { pickedCourses, setPickedCourses } = useContext(CourseContext)
 
-    console.log('Picked courses is: ', pickedCourses)
+    // If picked courses is not null, we need to fetch the schedules
 
     const noCoursesPicked = pickedCourses.length === 0
 

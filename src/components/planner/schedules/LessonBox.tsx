@@ -27,7 +27,7 @@ const LessonBox = ({
   conflictsInfo
  }: Props) => {
   const classTitle = classInfo.name
-  const lessonType = slotInfo.type
+  const lessonType = slotInfo.lesson_type
   const timeSpan = getLessonBoxTime(slotInfo)
   const duration = slotInfo.duration
   const smLesson = duration < 1
@@ -38,7 +38,7 @@ const LessonBox = ({
     (slotInfo.professors.length > 1 ? 'es' : '') +
     ':\n' +
     slotInfo.professors
-      .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
+      .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.professor_name)
       .join('\n')
 
   const [inspectShown, setInspectShown] = useState(false)
@@ -147,7 +147,7 @@ const LessonBox = ({
                 <div className="flex w-full items-center justify-between gap-1">
                   <span title="Sala">{slotInfo.location}</span>
                   <span title={professorDescription} className="truncate">
-                    {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
+                    {slotInfo.professors.map((prof_info) => prof_info.professor_acronym).join(', ')}
                   </span>
                 </div>
               </div>
@@ -173,7 +173,7 @@ const LessonBox = ({
                   <span title="Sala">{slotInfo.location}</span>
                   <span title="Turma">{classTitle}</span>
                   <span title={professorDescription} className="truncate">
-                    {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
+                    {slotInfo.professors.map((prof_info) => prof_info.professor_acronym).join(', ')}
                   </span>
                 </div>
               </div>
@@ -187,7 +187,7 @@ const LessonBox = ({
                 <span title="Duração">{timeSpan}</span>
                 <span title="Sala">{slotInfo.location}</span>
                 <span title={professorDescription} className="truncate">
-                  {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
+                  {slotInfo.professors.map((prof_info) => prof_info.professor_acronym).join(', ')}
                 </span>
               </div>
             )}

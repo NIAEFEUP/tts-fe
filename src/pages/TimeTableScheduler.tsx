@@ -11,6 +11,7 @@ import { defaultMultipleOptions } from '../utils'
 import MajorContext from '../contexts/MajorContext'
 import CourseContext from '../contexts/CourseContext'
 import MultipleOptionsContext from '../contexts/MultipleOptionsContext'
+import api from '../api/backend'
 
 // export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
 //   let frequency: Map<number, number> = new Map()
@@ -65,16 +66,7 @@ const TimeTableSchedulerPage = () => {
   // const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
   const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = useState<boolean>(false)
   // const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
-  const [multipleOptions_, setMultipleOptions_] = useState<MultipleOptions>({
-    index: 0,
-    selected: [],
-    options: [],
-  }) // schedule options and selected schedule
-
-  const totalSelected = useMemo(
-    () => multipleOptions_.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
-    [multipleOptions_]
-  )
+ 
   // ===============================================================================================================================
 
   // ==============================================================================
@@ -92,8 +84,19 @@ const TimeTableSchedulerPage = () => {
   const [multipleOptions, setMultipleOptions] = useState(
     JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
   )
+
+  useEffect(() => {
+    if(pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
+  });
+
+  const totalSelected = useMemo(
+    () => multipleOptions.map((co) => co.course_options.filter((option) => option.picked_class_id !== null)).flat(),
+    //() => multipleOptions_.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
+    [multipleOptions]
+  )
+
   const [selectedOption, setSelectedOption] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 0
+    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 1
   )
 
   useEffect(() => {
@@ -383,7 +386,6 @@ const TimeTableSchedulerPage = () => {
   }, [pickedCourses])
 
   useEffect(() => {
-    console.log('Saving multiple options')
     console.log(multipleOptions[selectedOption])
     StorageAPI.setOptionsStorage(multipleOptions)
   }, [multipleOptions])
@@ -408,7 +410,7 @@ const TimeTableSchedulerPage = () => {
               sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
               destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
               repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-              multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
+              //multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
             />
           </div>
         </MultipleOptionsContext.Provider>

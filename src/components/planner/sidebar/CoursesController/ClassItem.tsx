@@ -17,14 +17,13 @@ type Props = {
 }
 
 const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, onSelect, onMouseEnter, onMouseLeave }: Props) => {
-
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
   const selectOption = () => {
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.course_id === course_id);
     if(multipleOptionsEntry) {
       multipleOptionsEntry.picked_class_id = classInfo.id;
-      setMultipleOptions({...multipleOptions})
+      setMultipleOptions([...multipleOptions]);
     }
     onSelect();
   }
@@ -40,12 +39,12 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, onSelec
         <div>
           {classInfo.slots.map((slot, idx) => (
             <div key={`${classInfo.name}-${idx}`} className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500">{slot.type}</span>
+              <span className="text-xs text-gray-500">{slot.lesson_type}</span>
               {/* <span className="text-xs text-gray-500">{convertWeekday(slot.day)}</span> */}
               {/* <span className="text-xs text-gray-500">{getLessonBoxTime(slot)}</span> */}
               <span className="text-xs text-gray-500">{slot.location}</span>
               <span className="text-xs text-gray-500">
-                {slot.professors.map((professor) => professor.acronym).join(', ')}
+                {slot.professors.map((professor) => professor.professor_acronym).join(', ')}
               </span>
             </div>
           ))}

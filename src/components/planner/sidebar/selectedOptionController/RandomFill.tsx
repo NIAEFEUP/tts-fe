@@ -1,26 +1,27 @@
 import { BoltIcon } from '@heroicons/react/24/outline'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../../../@types'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 // import { removeDuplicatesFromCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { ScrollArea } from '../../../ui/scroll-area'
 import { Checkbox } from '../../../ui/checkbox'
 import { Separator } from '../../../ui/separator'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 
 type Props = {
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   className?: string
 }
 
-const RandomFill = ({ multipleOptionsHook, className }: Props) => {
-  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+const RandomFill = ({ className }: Props) => {
+  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
   console.log("Multiple options are: ", multipleOptions);
   // const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
-  const courseOptions = multipleOptions.selected
+  const courseOptions = multipleOptions[selectedOption].course_options
   const [permutations, setPermutations] = useState([])
   const [lockedCourses, setLockedCourses] = useState(
-    courseOptions.filter((course) => course.locked).map((course) => course.course.info.acronym)
+    []
+    //courseOptions.filter((course) => course.locked).map((course) => course.course.info.acronym)
   )
   const [randomClasses, setRandomClasses] = useState({})
 

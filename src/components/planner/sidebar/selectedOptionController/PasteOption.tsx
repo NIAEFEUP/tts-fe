@@ -11,19 +11,19 @@ import { Button } from '../../../ui/button'
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ConfirmationModal from './ConfirmationModal'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 
 type Props = {
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const PasteOption = ({ multipleOptionsHook, isImportedOptionHook }: Props) => {
-  const [multipleOptions, setMultipleOptions] = multipleOptionsHook
+const PasteOption = ({ isImportedOptionHook }: Props) => {
+  const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
   const [modalOpen, setModalOpen] = useState(false)
   const [_, setIsImportedOption] = isImportedOptionHook
   const { toast } = useToast()

@@ -17,7 +17,6 @@ type Props = {
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
   currentOption: CourseOption[]
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
@@ -28,7 +27,6 @@ const SelectedOptionController = ({
   optionsListHook,
   selectedOptionHook,
   currentOption,
-  multipleOptionsHook,
   isImportedOptionHook,
 }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
@@ -147,8 +145,8 @@ const SelectedOptionController = ({
       </div>
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        <PasteOption multipleOptionsHook={multipleOptionsHook} isImportedOptionHook={isImportedOptionHook} />
-        <RandomFill multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
+        {/*<PasteOption isImportedOptionHook={isImportedOptionHook} />*/}
+        {/*<RandomFill className="sm:py-0 xl:p-1" />*/}
       </div>
     </div>
   )

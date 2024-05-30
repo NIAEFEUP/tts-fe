@@ -305,7 +305,9 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
   const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
-    option.course_options = [...courseOptions]
+    // We have to use JSON.parse as well as JSON.stringify in order to create a copy for each option. Otherwise, they would
+    // all have the same reference to the same object
+    option.course_options = [...JSON.parse(JSON.stringify(courseOptions))]
     return option
   })
 }
