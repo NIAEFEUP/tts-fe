@@ -176,6 +176,7 @@ export function DirectExchangeSelection({
                         setCurrentDirectExchange(
                             new Map(currentDirectExchange.set(uc.acronym, {
                                 course_unit: uc.acronym,
+                                course_unit_id: uc.code,
                                 old_class: "",
                                 new_class: uc.class, // auth student class
                                 other_student: student
