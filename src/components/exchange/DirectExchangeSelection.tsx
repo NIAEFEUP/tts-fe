@@ -81,8 +81,6 @@ export function DirectExchangeSelection({
         return <p>Error fetching schedule: {error.message}</p>;
     }
 
-    console.log(currentDirectExchange);
-
     return (
         <div className="flex flex-col w-full justify-between space-y-4 items-start border-2 border-gray-200 shadow-sm bg-white p-4 mb-4 rounded-md">
             {isExchangeSelectionIncluded ? <>

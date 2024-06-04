@@ -9,6 +9,7 @@ import { DirectExchangeContext } from "../../contexts/DirectExchangeContext";
 import { DirectExchangeInfoButton } from "./buttons/DirectExchangeInfoButton";
 import { DirectExchangeHistoryButton } from "./DirectExchangeHistory";
 import { StudentScheduleContext } from "../../contexts/StudentScheduleContext";
+import { WarningSigarraSync } from "./WarningSigarraSync"
 
 type Props = {
     setCourseOptions: Dispatch<SetStateAction<CourseOption[]>>
@@ -45,9 +46,11 @@ export function DirectExchange({
             <SubmitDirectExchangeButton currentDirectExchange={currentDirectExchange} />
             <ToggleMarketplaceSubmissionMode />
             {!isLoadingSchedule ?
+                <>
+                <WarningSigarraSync noChanges={schedule["noChanges"]} />
                 <div>
                     {
-                        schedule.map((uc) => {
+                        schedule["schedule"].map((uc) => {
                             if (uc.type !== "T") {
                                 return (
                                     <DirectExchangeSelection
@@ -62,10 +65,14 @@ export function DirectExchange({
                             }
                         })
                     }
-                </div> : <div className="mt-4">
+                </div> 
+                </>
+                : 
+                <div className="mt-4">
                     <MoonLoader className="mx-auto my-auto" loading={isLoadingSchedule} />
                     <p className="text-center">A carregar os horários</p>
-                </div>}
+                </div>
+            }
         </div>
     </DirectExchangeContext.Provider>
 }
