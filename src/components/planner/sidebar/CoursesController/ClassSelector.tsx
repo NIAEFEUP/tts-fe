@@ -63,6 +63,8 @@ const ClassSelector = ({ course }: Props) => {
             return;
         }
 
+        console.log("CLASS SELECTOR MULTIPLE OPTIONS: ", multipleOptions);
+
         setSelectedClassId(option[0].picked_class_id);
         setDisplay(option[0].picked_class_id);
 

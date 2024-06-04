@@ -85,9 +85,12 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
   )
 
+  //TODO (thePeras): Looks suspicious
   useEffect(() => {
     if(pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
   });
+
+  console.log("MULTIPLE OPTIONS ARE: ", multipleOptions);
 
   const totalSelected = useMemo(
     () => multipleOptions.map((co) => co.course_options.filter((option) => option.picked_class_id !== null)).flat(),

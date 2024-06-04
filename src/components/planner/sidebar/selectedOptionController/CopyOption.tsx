@@ -23,17 +23,12 @@ const CopyOption = ({ currentOption, className }: Props) => {
    * @param selectedOption current schedule
    * @returns stringified schedule
    */
+
+  //TODO (thePeras): Add link here
   const optionToString = (selectedOption: CourseOption[]) => {
-    let copyOption: string = ''
-    for (let i = 0; i < selectedOption.length; i++) {
-      let uc_course_unit_id = selectedOption[i].course_id;
-      copyOption += ';' + uc_course_unit_id + '#'
-      if (selectedOption[i].picked_class_id == null) {
-        copyOption += 'null'
-      } else {
-        copyOption += selectedOption[i].picked_class_id
-      }
-    }
+    const copyOption = selectedOption.map((element) => {
+      return element.course_id + '#' + element.picked_class_id;
+    }).join(';');
 
     return Buffer.from(copyOption).toString('base64')
   }

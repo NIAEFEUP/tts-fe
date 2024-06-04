@@ -16,7 +16,8 @@ import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { CourseOption } from '../../../../@types/new_index'
+import { CourseInfo, CourseOption } from '../../../../@types/new_index'
+import api from '../../../../api/backend'
 
 type Props = {
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -47,11 +48,12 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
   const importSchedule = async (value) => {
     const url = value
     const decoded_url = Buffer.from(url, 'base64').toString()
+    const isImporteFromClipboard : boolean = value;
 
     if (!isValidURL(decoded_url)) {
-      const description = value
-        ? 'O texto inserido não é uma opção válida'
-        : 'O texto do clipboard não é uma opção válida'
+      const description = isImporteFromClipboard
+        ? 'O texto do clipboard não é uma opção válida'
+        : 'O texto inserido não é uma opção válida'
       toast({
         title: 'Erro ao colar opção',
         description,
@@ -62,9 +64,10 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
 
     setIsDropdownOpen(false)
 
-    //ex: 1033#3LEIC02;1062#null;1044#null;1031#null;980#null;969#null
+    //ex: course_id#picked_class_id;course_id#picked_class_id
     const tokens: string[] = decoded_url.split(';')
 
+    //TODO (thePeras): A more function programming oportunity here
     const importedCourses: ImportedCourses = {}
     tokens.forEach((token) => {
       const course = token.split('#')
@@ -72,20 +75,27 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
     })
 
     // Unchecked imported courses units
-    /*const unCheckedCourses = Object.keys(importedCourses).filter((course_unit_id) => {
-      return (
-        multipleOptions[selectedOption].course_options.find((courseOption: CourseOption) => {
-          return courseOption.picked_class_id === Number(course_unit_id)
-        }) === undefined
-      )
-      /*return (
-        multipleOptions.options[multipleOptions.index].find((courseOption: CourseOption) => {
-          return courseOption.course.info.course_unit_id === Number(course_unit_id)
-        }) === undefined
-      )
+
+    const checkedCoursesIds = multipleOptions[selectedOption].course_options.map((courseOption: CourseOption) => {
+      return courseOption.course_id
     })
 
-    if (unCheckedCourses.length > 0) {
+    const uncheckedCoursesIds = Object.keys(importedCourses).filter((course_unit_id) => {
+      return !checkedCoursesIds.includes(Number(course_unit_id))
+    })
+
+
+    if (uncheckedCoursesIds.length > 0) {
+      const courses = await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {
+        return await api.getCourseUnit(Number(course_unit_id))
+      }));
+
+      //append option to multipleOptions
+      const newMultipleOptions = [...multipleOptions];
+      newMultipleOptions[selectedOption].course_options.concat(courses);
+      setMultipleOptions(newMultipleOptions);
+
+      /*
       //check the unCheckedCourses and fill the options
       setImportingCoursesUnitOptions(importedCourses)
       const unCheckedCoursesIds = unCheckedCourses.map((course_unit_id) => Number(course_unit_id))
@@ -93,11 +103,11 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       // TODO (diogotvf7): this function and probably component will need a fix due to the refactor
       // as the whole data structure has changed
       // checkCourses(unCheckedCoursesIds, importedCourses)
-      return
-    }*/
+      return*/
+    }
 
     //setIsImportedOption(true)
-    fillOptions(importedCourses, selectedOption, setMultipleOptions);
+    fillOptions(importedCourses, selectedOption, multipleOptions, setMultipleOptions);
     toast({
       title: 'Horário colado!',
       description: 'A opção foi colada com sucesso',
