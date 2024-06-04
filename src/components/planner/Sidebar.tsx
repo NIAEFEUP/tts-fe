@@ -105,7 +105,7 @@ const Sidebar = ({ /*multipleOptionsHook */}: Props) => {
           <SelectedOptionController
             optionsListHook={[optionsList, setOptionsList]}
             selectedOptionHook={[selectedOption, setSelectedOption]}
-            currentOption={[]}
+            currentOption={multipleOptions[selectedOption].course_options}
             isImportedOptionHook={[isImportedOption, setImportedOption]}
           />
           <CoursesController/>

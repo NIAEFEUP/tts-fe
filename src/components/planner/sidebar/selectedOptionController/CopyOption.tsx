@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Button } from '../../../ui/button'
 import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline'
-import { CourseOption } from '../../../../@types'
 import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
+import { CourseOption } from '../../../../@types/new_index'
 
 type Props = {
   currentOption: CourseOption[]
@@ -26,12 +26,12 @@ const CopyOption = ({ currentOption, className }: Props) => {
   const optionToString = (selectedOption: CourseOption[]) => {
     let copyOption: string = ''
     for (let i = 0; i < selectedOption.length; i++) {
-      let uc_course_unit_id = selectedOption[i].course.info.course_unit_id
+      let uc_course_unit_id = selectedOption[i].course_id;
       copyOption += ';' + uc_course_unit_id + '#'
-      if (selectedOption[i].option == null) {
+      if (selectedOption[i].picked_class_id == null) {
         copyOption += 'null'
       } else {
-        copyOption += selectedOption[i].option.class_name
+        copyOption += selectedOption[i].picked_class_id
       }
     }
 

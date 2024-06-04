@@ -1,5 +1,4 @@
 import {
-  CourseOption,
   MultipleOptions,
   CheckedCourse,
   Major,
@@ -17,13 +16,14 @@ import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { CourseOption } from '../../../../@types/new_index'
 
 type Props = {
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
 const PasteOption = ({ isImportedOptionHook }: Props) => {
-  const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
+  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
   const [modalOpen, setModalOpen] = useState(false)
   const [_, setIsImportedOption] = isImportedOptionHook
   const { toast } = useToast()
@@ -63,17 +63,22 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
     setIsDropdownOpen(false)
 
     //ex: 1033#3LEIC02;1062#null;1044#null;1031#null;980#null;969#null
-    var tokens: string[] = decoded_url.split(';')
+    const tokens: string[] = decoded_url.split(';')
 
-    var importedCourses: ImportedCourses = {}
+    const importedCourses: ImportedCourses = {}
     tokens.forEach((token) => {
       const course = token.split('#')
       importedCourses[course[0]] = course[1]
     })
 
     // Unchecked imported courses units
-    const unCheckedCourses = Object.keys(importedCourses).filter((course_unit_id) => {
+    /*const unCheckedCourses = Object.keys(importedCourses).filter((course_unit_id) => {
       return (
+        multipleOptions[selectedOption].course_options.find((courseOption: CourseOption) => {
+          return courseOption.picked_class_id === Number(course_unit_id)
+        }) === undefined
+      )
+      /*return (
         multipleOptions.options[multipleOptions.index].find((courseOption: CourseOption) => {
           return courseOption.course.info.course_unit_id === Number(course_unit_id)
         }) === undefined
@@ -89,10 +94,10 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       // as the whole data structure has changed
       // checkCourses(unCheckedCoursesIds, importedCourses)
       return
-    }
+    }*/
 
-    setIsImportedOption(true)
-    fillOptions(importedCourses, setMultipleOptions)
+    //setIsImportedOption(true)
+    fillOptions(importedCourses, selectedOption, setMultipleOptions);
     toast({
       title: 'Horário colado!',
       description: 'A opção foi colada com sucesso',

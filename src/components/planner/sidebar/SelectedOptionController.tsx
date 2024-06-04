@@ -2,10 +2,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext, useRef } from 'react'
-import { CourseOption, ImportedCourses, MultipleOptions } from '../../../@types'
 import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
 import RandomFill from './selectedOptionController/RandomFill'
+import { CourseOption } from '../../../@types/new_index'
 
 interface Option {
   id: number
@@ -145,7 +145,7 @@ const SelectedOptionController = ({
       </div>
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        {/*<PasteOption isImportedOptionHook={isImportedOptionHook} />*/}
+        <PasteOption isImportedOptionHook={isImportedOptionHook} />
         {/*<RandomFill className="sm:py-0 xl:p-1" />*/}
       </div>
     </div>

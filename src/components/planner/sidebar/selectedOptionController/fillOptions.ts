@@ -1,8 +1,17 @@
-import { ImportedCourses, MultipleOptions } from "../../../../@types";
+import { ImportedCourses } from "../../../../@types";
+import { MultipleOptions } from "../../../../@types/new_index";
 
-const fillOptions = (importedCourses: ImportedCourses, setMultipleOptions: React.Dispatch<React.SetStateAction<MultipleOptions>>) => {
+const fillOptions = (importedCourses: ImportedCourses, selectedOption: number,  setMultipleOptions: React.Dispatch<React.SetStateAction<MultipleOptions>>) => {
     setMultipleOptions((prevMultipleOptions) => {
-        const newOptions = prevMultipleOptions.options.map((optionsArray, index) => {
+        
+        for(const option of prevMultipleOptions[selectedOption].course_options) {
+            const optionIntValue = parseInt(importedCourses[option.course_id]);
+            option.picked_class_id = isNaN(optionIntValue) ? null : optionIntValue;
+        }
+
+        return prevMultipleOptions;
+        // We have to set the picked class_ids of the current multiple option to the imported course picked class id equivalent
+        /*const newOptions = prevMultipleOptions.options.map((optionsArray, index) => {
             if (index !== prevMultipleOptions.index) {
                 return optionsArray; // Keep other options unchanged
             }
@@ -28,15 +37,17 @@ const fillOptions = (importedCourses: ImportedCourses, setMultipleOptions: React
 
                 return { ...courseOption, option: newOption, locked: false };
             });
-        });
+        });*/
 
-        const value = {
+        return []
+
+        /*const value = {
             index: prevMultipleOptions.index,
             selected: newOptions[prevMultipleOptions.index],
             options: newOptions,
         };
 
-        return value;
+        return value;*/
     });
 }
 

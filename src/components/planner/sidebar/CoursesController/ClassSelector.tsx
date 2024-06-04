@@ -38,18 +38,7 @@ const ClassSelector = ({ course }: Props) => {
 
     const [ selectedClassId, setSelectedClassId ] = useState<number | null>(null);
 
-    useEffect(() => {
-        const course_options = multipleOptions[selectedOption].course_options;
-        const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
-
-        if(!option[0]) {
-            setSelectedClassId(null);
-            return;
-        }
-
-        setSelectedClassId(option[0].picked_class_id);
-
-    }, [selectedOption, multipleOptions, course.id]);
+    
 
     // const courseOption = useMemo(() => {
     //   return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
@@ -64,6 +53,23 @@ const ClassSelector = ({ course }: Props) => {
 
     const [preview, setPreview] = useState(null)
     const [display, setDisplay] = useState(courseOption.picked_class_id)
+
+    useEffect(() => {
+        const course_options = multipleOptions[selectedOption].course_options;
+        const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
+
+        if(!option[0]) {
+            setSelectedClassId(null);
+            return;
+        }
+
+        setSelectedClassId(option[0].picked_class_id);
+        setDisplay(option[0].picked_class_id);
+
+    }, [selectedOption, multipleOptions, course.id]);
+
+    console.log("current course option: ", courseOption);
+    console.log("DISPLAY IS: ", display)
 
     const allTeachers = useMemo(() => {
         if (!classesLoaded) return []
@@ -111,12 +117,6 @@ const ClassSelector = ({ course }: Props) => {
 
         return course.classes.filter((c) => {
             return c.slots.filter((slot) => slot.professors.filter((professor) => filteredTeachers.includes(professor.professor_id)).length > 0).length > 0
-            // const slots = c.slots
-            // const aux = slots.filter((s) => {
-            //     return s.professors.some((p) => filteredTeachers.includes(p.professor_id))
-            // })
-            // console.log('class: ', c.name, '          - ', aux)
-            // return aux
         })
     }
 
@@ -244,7 +244,6 @@ const ClassSelector = ({ course }: Props) => {
                                                             professorInformation={option}
                                                             filtered={isFiltered}
                                                             onSelect={(e) => {
-                                                                console.log("selected: ", e);
                                                                 e.preventDefault()
                                                                 toggleTeacher(option.professor_id)
                                                             }}
