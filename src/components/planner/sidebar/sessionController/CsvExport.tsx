@@ -8,8 +8,12 @@ type Props = {
   optionsList: any
 }
 
-const csvEncode = (text: string) => {
-  return !text.includes(',') ? text : `"${text}"`
+const csvEncode = (text: string | null | undefined) => {
+  if (!text)
+    return ''
+  if (text.includes(','))
+    return `"${text}"`
+  return text
 }
 
 /**
@@ -26,9 +30,11 @@ const CsvExport = ({ multipleOptions, optionsList }: Props) => {
     console.log(multipleOptions)
     pickedCourses.forEach(course => {
       const line = [course.course_unit_year, csvEncode(course.name), course.acronym]
-      optionsList.forEach(pickedOption => {
-        // const fullOption = multipleOptions.options[option.id - 1]
-        // line.push(fullOption[i]?.option?.class_name || '')
+      multipleOptions.forEach(option => {
+        const courseOption = option.course_options.find(courseOption => courseOption.course_id === course.id)
+        const pickedClass = course.classes.find(c => c.id === courseOption?.picked_class_id);
+
+        line.push(csvEncode(pickedClass?.name))
       })
       lines.push(line.join(','))
     })
