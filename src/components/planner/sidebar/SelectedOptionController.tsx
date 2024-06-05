@@ -6,6 +6,7 @@ import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
 import RandomFill from './selectedOptionController/RandomFill'
 import { CourseOption } from '../../../@types/new_index'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
 interface Option {
   id: number
@@ -31,7 +32,8 @@ const SelectedOptionController = ({
 }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
   const [optionsList, setOptionsList] = optionsListHook
-  const [selectedOption, setSelectedOption] = selectedOptionHook
+  //const [selectedOption, setSelectedOption] = selectedOptionHook
+  const { selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
   let isHovered = false

@@ -93,6 +93,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       //append option to multipleOptions
       const newMultipleOptions = [...multipleOptions];
       newMultipleOptions[selectedOption].course_options.concat(courses);
+      console.log("NEW MULTIPLE OPTIONS ARE: ", newMultipleOptions);
       setMultipleOptions(newMultipleOptions);
 
       /*

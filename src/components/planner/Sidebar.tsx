@@ -16,52 +16,52 @@ type Props = {
 
 const defaultOptionsList = [
   {
-    id: 1,
+    id: 0,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
     name: 'Horário 1',
   },
   {
-    id: 2,
+    id: 1,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
     name: 'Horário 2',
   },
   {
-    id: 3,
+    id: 2,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
     name: 'Horário 3',
   },
   {
-    id: 4,
+    id: 3,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
     name: 'Horário 4',
   },
   {
-    id: 5,
+    id: 4,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
     name: 'Horário 5',
   },
   {
-    id: 6,
+    id: 5,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
     name: 'Horário 6',
   },
   {
-    id: 7,
+    id: 6,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
     name: 'Horário 7',
   },
   {
-    id: 8,
+    id: 7,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
     name: 'Horário 8',
   },
   {
-    id: 9,
+    id: 8,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
     name: 'Horário 9',
   },
   {
-    id: 10,
+    id: 9,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
     name: 'Horário 10',
   },

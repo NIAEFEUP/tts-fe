@@ -7,7 +7,6 @@ import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
 type Props = {
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
-  selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface Option {
@@ -17,15 +16,15 @@ interface Option {
 }
 
 const Option = ({ item, selectedHook }) => {
-  const [selected, setSelected] = selectedHook
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+
+  console.log("ITEM IS: ", multipleOptions[selectedOption]);
 
    return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger
           onClick={() => {
-            setSelected(item.id)
             setSelectedOption(item.id)
             //setOptionIndex(item.id)
           }}
@@ -33,12 +32,12 @@ const Option = ({ item, selectedHook }) => {
             group relative box-border flex aspect-square h-10 w-10 cursor-pointer flex-col
             items-center justify-center rounded border-2 border-transparent p-2
             dark:shadow hover:dark:border-primary/50 md:h-14 md:w-14 lg:h-10 lg:w-10 xl:h-14 xl:w-14
-            ${selected === item.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
+            ${selectedOption === item.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
             `}
         >
           <div
             className={`absolute inset-x-0 top-0 text-transparent transition-colors duration-300 dark:group-hover:text-white ${
-              selected === item.id ? 'group-hover:text-white' : 'group-hover:text-slate-700'
+              selectedOption === item.id ? 'group-hover:text-white' : 'group-hover:text-slate-700'
             }`}
           >
             <EllipsisHorizontalIcon className="m-auto h-5 w-5" />
@@ -57,7 +56,6 @@ const Option = ({ item, selectedHook }) => {
  */
 const OptionsController = ({ optionsListHook, selectedOptionHook }: Props) => {
   const [optionsList, setOptionsList] = optionsListHook
-  const [selectedOption, setSelectedOption] = selectedOptionHook
 
   return (
     <ReactSortable
@@ -73,7 +71,6 @@ const OptionsController = ({ optionsListHook, selectedOptionHook }: Props) => {
         <Option
           item={item}
           key={item.id}
-          selectedHook={[selectedOption, setSelectedOption]}
         />
       ))}
     </ReactSortable>
