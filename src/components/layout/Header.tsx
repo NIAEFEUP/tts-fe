@@ -15,6 +15,7 @@ import { LoginDialog } from '../auth/LoginDialog'
 import { LogoutDialog } from '../auth/LogoutDialog'
 import { useContext } from 'react'
 import { SessionContext } from '../../contexts/SessionContext'
+import { ExportExchangeButton } from '../exchange/buttons/ExportExchangeButton'
 
 const navigation = [
   {
@@ -26,7 +27,7 @@ const navigation = [
   {
     title: 'Exchange',
     location: getPath(config.paths.exchange),
-    icon: <ArrowsRightLeftIcon className="h-5 w-5"/>,
+    icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
     wip: false,
   },
   { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
@@ -44,7 +45,7 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const {loggedIn, setLoggedIn} = useContext(SessionContext);
+  const { loggedIn, setLoggedIn } = useContext(SessionContext);
 
   return (
     <Disclosure
@@ -75,11 +76,10 @@ const Header = ({ siteTitle, location }: Props) => {
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button
                           type="button"
-                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
-                            location === link.title
+                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
                               ? 'text-primary dark:text-white'
                               : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
-                          }`}
+                            }`}
                         >
                           <span className="flex items-center justify-center space-x-1.5">
                             <span>{link.icon}</span>
@@ -95,9 +95,10 @@ const Header = ({ siteTitle, location }: Props) => {
 
 
                 <div className="hidden self-center md:inline-flex gap-x-4">
+                  <ExportExchangeButton />
                   {
-                    loggedIn 
-                      ? <LogoutDialog /> 
+                    loggedIn
+                      ? <LogoutDialog />
                       : <LoginDialog />
                   }
                   <DarkModeSwitch />
@@ -120,11 +121,10 @@ type HamburgerProps = {
 
 const Hamburger = ({ open }: HamburgerProps) => (
   <div
-    className={`z-50 md:hidden ${
-      open
+    className={`z-50 md:hidden ${open
         ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
         : 'flex w-full items-center justify-between'
-    }`}
+      }`}
   >
     <Link to={config.pathPrefix}>
       {open ? (
@@ -174,11 +174,10 @@ const Mobile = ({ location }: MobileProps) => (
         <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
           <button
             type="button"
-            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
-              location === link.title
+            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
                 ? 'text-primary dark:text-white'
                 : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
-            }`}
+              }`}
           >
             <span className="flex items-center justify-center space-x-2">
               <span>{link.icon}</span>
