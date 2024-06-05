@@ -8,6 +8,10 @@ type Props = {
   optionsList: any
 }
 
+const csvEncode = (text: string) => {
+  return !text.includes(',') ? text : `"${text}"`
+}
+
 /**
  * Sidebar with all the main schedule interactions
  */
@@ -16,18 +20,17 @@ const CsvExport = ({ multipleOptions, optionsList }: Props) => {
 
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
-    optionsList.forEach((option) => header.push(option.name))
+    optionsList.forEach((pickedOption) => header.push(pickedOption.name))
     const lines = []
 
     console.log(multipleOptions)
-    multipleOptions.forEach((option, i) => {
-      // const info = pickedCourses.find(course => course.id == option.course_options.id)
-      // const line = [info.course_unit_year, info.name, info.acronym]
-      optionsList.forEach((option) => {
+    pickedCourses.forEach(course => {
+      const line = [course.course_unit_year, csvEncode(course.name), course.acronym]
+      optionsList.forEach(pickedOption => {
         // const fullOption = multipleOptions.options[option.id - 1]
         // line.push(fullOption[i]?.option?.class_name || '')
       })
-      // lines.push(line.join(','))
+      lines.push(line.join(','))
     })
 
     const csv = [header.join(','), lines.flat().join('\n')].join('\n')
