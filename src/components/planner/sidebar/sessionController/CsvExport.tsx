@@ -1,5 +1,7 @@
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
-import { MultipleOptions } from '../../../../@types'
+import { MultipleOptions } from '../../../../@types/new_index'
+import { useContext } from 'react'
+import CourseContext from '../../../../contexts/CourseContext'
 
 type Props = {
   multipleOptions: MultipleOptions
@@ -10,19 +12,22 @@ type Props = {
  * Sidebar with all the main schedule interactions
  */
 const CsvExport = ({ multipleOptions, optionsList }: Props) => {
+  const { pickedCourses } = useContext(CourseContext);
+
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
     optionsList.forEach((option) => header.push(option.name))
     const lines = []
 
-    multipleOptions.selected.forEach((uc, i) => {
-      const info = uc.course.info
-      const line = [info.course_unit_year, info.name, info.acronym]
+    console.log(multipleOptions)
+    multipleOptions.forEach((option, i) => {
+      // const info = pickedCourses.find(course => course.id == option.course_options.id)
+      // const line = [info.course_unit_year, info.name, info.acronym]
       optionsList.forEach((option) => {
-        const fullOption = multipleOptions.options[option.id - 1]
-        line.push(fullOption[i]?.option?.class_name || '')
+        // const fullOption = multipleOptions.options[option.id - 1]
+        // line.push(fullOption[i]?.option?.class_name || '')
       })
-      lines.push(line.join(','))
+      // lines.push(line.join(','))
     })
 
     const csv = [header.join(','), lines.flat().join('\n')].join('\n')
