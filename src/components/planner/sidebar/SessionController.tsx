@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import { CheckedCourse, Major, CourseOption, MultipleOptions } from '../../../@types'
 
 import CoursePicker from './sessionController/CoursePicker'
 

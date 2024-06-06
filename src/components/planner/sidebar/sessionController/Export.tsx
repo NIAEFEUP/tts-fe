@@ -3,7 +3,7 @@ import NitSigExport from './NitSigExport'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
 import { Button } from '../../../ui/button'
 
-import { CourseOption, MultipleOptions } from '../../../../@types/new_index'
+import { MultipleOptions } from '../../../../@types/new_index'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
 
 type Props = {
