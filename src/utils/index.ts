@@ -213,6 +213,16 @@ const getCourseTeachers = (courseInfo: CourseInfo) => {
   )
 }
 
+const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
+  return {
+    course_id: course.id,
+    picked_class_id: null,
+    locked: false,
+    filteredTeachers: [],
+    hide: []
+  }
+}
+
 // const getCourseTeachers = (courseOption: CourseOption) => {
 //   let teachers = []
 //   courseOption.schedules.forEach((schedule, idx) => {
@@ -418,4 +428,5 @@ export {
   defaultMultipleOptions,
   getAllPickedSlots,
   getClassType,
+  convertCourseInfoToCourseOption
 }

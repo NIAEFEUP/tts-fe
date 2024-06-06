@@ -38,8 +38,6 @@ const ClassSelector = ({ course }: Props) => {
 
     const [ selectedClassId, setSelectedClassId ] = useState<number | null>(null);
 
-    
-
     // const courseOption = useMemo(() => {
     //   return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
     // }, [selectedOption, multipleOptions, course.id])

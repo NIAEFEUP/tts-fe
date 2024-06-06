@@ -5,7 +5,7 @@ import {
   CourseSchedule,
   ImportedCourses,
 } from '../../../../@types'
-import { getCourseTeachers } from '../../../../utils'
+import { convertCourseInfoToCourseOption, getCourseTeachers } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'
@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { CourseInfo, CourseOption } from '../../../../@types/new_index'
 import api from '../../../../api/backend'
+import CourseContext from '../../../../contexts/CourseContext'
 
 type Props = {
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -25,6 +26,7 @@ type Props = {
 
 const PasteOption = ({ isImportedOptionHook }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
   const [modalOpen, setModalOpen] = useState(false)
   const [_, setIsImportedOption] = isImportedOptionHook
   const { toast } = useToast()
@@ -86,14 +88,24 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
 
 
     if (uncheckedCoursesIds.length > 0) {
-      const courses = await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {
+      const courses: CourseInfo[] = (await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {
         return await api.getCourseUnit(Number(course_unit_id))
-      }));
+      }))).flat();
 
       //append option to multipleOptions
+      // const newMultipleOptions = [...multipleOptions];
+      // newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(courses)
+      // // newMultipleOptions[selectedOption].course_options.concat(courses);
+      // // currentCourseOptions = currentCourseOptions.concat(courses)
+      // setMultipleOptions(newMultipleOptions);
+
+      const newPickedCourses = [...pickedCourses];
+      setPickedCourses(newPickedCourses.concat(courses));
+
       const newMultipleOptions = [...multipleOptions];
-      newMultipleOptions[selectedOption].course_options.concat(courses);
-      console.log("NEW MULTIPLE OPTIONS ARE: ", newMultipleOptions);
+      newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(
+        courses.map((course) => convertCourseInfoToCourseOption(course))
+      );
       setMultipleOptions(newMultipleOptions);
 
       /*

@@ -42,8 +42,6 @@ const Schedule = () => {
     return aux;
   }, [multipleOptions, pickedCourses, selectedOption]);
 
-  console.log("Classes: ", classes);
-
   const slotTypes = useMemo(() => {
     let aux = new Set()
 

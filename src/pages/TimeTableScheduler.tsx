@@ -81,6 +81,8 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
   )
 
+  console.log("EIEIEIE PICKED COURSES ARE: ", pickedCourses);
+
   const [multipleOptions, setMultipleOptions] = useState(
     JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
   )
@@ -88,9 +90,8 @@ const TimeTableSchedulerPage = () => {
   //TODO (thePeras): Looks suspicious
   useEffect(() => {
     if(pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
-  });
+  }, [pickedCourses]);
 
-  console.log("MULTIPLE OPTIONS ARE: ", multipleOptions);
 
   const totalSelected = useMemo(
     () => multipleOptions.map((co) => co.course_options.filter((option) => option.picked_class_id !== null)).flat(),
@@ -99,7 +100,7 @@ const TimeTableSchedulerPage = () => {
   )
 
   const [selectedOption, setSelectedOption] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 1
+    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 0
   )
 
   useEffect(() => {
@@ -392,6 +393,7 @@ const TimeTableSchedulerPage = () => {
     console.log(multipleOptions[selectedOption])
     StorageAPI.setOptionsStorage(multipleOptions)
   }, [multipleOptions])
+
 
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
