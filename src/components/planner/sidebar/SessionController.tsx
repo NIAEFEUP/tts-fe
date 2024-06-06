@@ -6,15 +6,10 @@ import CoursePicker from './sessionController/CoursePicker'
 import Export from './sessionController/Export'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
-type Props = {
-  multipleOptions: MultipleOptions
-  optionsList: any
-}
-
 /**
  * Sidebar with all the main schedule interactions
  */
-const SessionController = ({ optionsList }: Props) => {
+const SessionController = () => {
   const { multipleOptions } = useContext(MultipleOptionsContext)
   return (
     <div className="flex w-full gap-1">
@@ -22,7 +17,7 @@ const SessionController = ({ optionsList }: Props) => {
       <CoursePicker />
 
       {/* <CollaborativeSession /> */}
-      <Export multipleOptions={multipleOptions} optionsList={optionsList} />
+      <Export multipleOptions={multipleOptions} />
     </div>
   )
 }

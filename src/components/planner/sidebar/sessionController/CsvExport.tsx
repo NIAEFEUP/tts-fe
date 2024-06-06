@@ -5,7 +5,6 @@ import CourseContext from '../../../../contexts/CourseContext'
 
 type Props = {
   multipleOptions: MultipleOptions
-  optionsList: any
 }
 
 const csvEncode = (text: string | null | undefined) => {
@@ -19,12 +18,12 @@ const csvEncode = (text: string | null | undefined) => {
 /**
  * Sidebar with all the main schedule interactions
  */
-const CsvExport = ({ multipleOptions, optionsList }: Props) => {
+const CsvExport = ({ multipleOptions }: Props) => {
   const { pickedCourses } = useContext(CourseContext);
 
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
-    optionsList.forEach((pickedOption) => header.push(pickedOption.name))
+    multipleOptions.forEach((option) => header.push(option.name))
     const lines = []
 
     console.log(multipleOptions)
