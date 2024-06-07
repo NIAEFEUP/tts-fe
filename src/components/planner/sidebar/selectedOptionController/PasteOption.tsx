@@ -86,6 +86,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       return !checkedCoursesIds.includes(Number(course_unit_id))
     })
 
+    console.log("Unchecked course ids: ", uncheckedCoursesIds)
 
     if (uncheckedCoursesIds.length > 0) {
       const courses: CourseInfo[] = (await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {

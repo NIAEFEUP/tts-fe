@@ -66,7 +66,7 @@ const getCoursesClasses = async (courses : CourseInfo[]) => {
  */
 const getCourseUnit = async (id: number) => {
   if (id === null) return []
-  const class_info = (await apiRequest(`course_unit/${id}/`))[0];
+  const class_info = (await apiRequest(`course_unit/${id}/`));
   class_info['classes'] = await getCourseClass(class_info);
   return class_info;
 }
