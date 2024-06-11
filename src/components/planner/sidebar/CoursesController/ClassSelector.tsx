@@ -36,13 +36,8 @@ const ClassSelector = ({ course }: Props) => {
     const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
     const { pickedCourses } = useContext(CourseContext)
 
-    const [ selectedClassId, setSelectedClassId ] = useState<number | null>(null);
+    const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
-    // const courseOption = useMemo(() => {
-    //   return multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-    // }, [selectedOption, multipleOptions, course.id])
-
-    const [classesLoaded, setContentLoaded] = useState(course.classes !== undefined)
     const courseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
 
     const [filteredTeachers, setFilteredTeachers] = useState(courseOption.filteredTeachers)
@@ -56,7 +51,7 @@ const ClassSelector = ({ course }: Props) => {
         const course_options = multipleOptions[selectedOption].course_options;
         const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
 
-        if(!option[0]) {
+        if (!option[0]) {
             setSelectedClassId(null);
             return;
         }
@@ -68,28 +63,33 @@ const ClassSelector = ({ course }: Props) => {
 
     }, [selectedOption, multipleOptions, course.id]);
 
-    console.log("current course option: ", courseOption);
-    console.log("DISPLAY IS: ", display)
 
-    const allTeachers = useMemo(() => {
-        if (!classesLoaded) return []
+    const teachers = useMemo(() => {
+        if (!course.classes) return []
+        const allTeachers = course.classes.flatMap((c) => c.slots.flatMap((s) => s.professors))
 
-        const teachers = course.classes.flatMap((c) => c.slots.flatMap((s) => s.professors))
-
-        const uniqueProfessors: { [key: number]: ProfessorInfo } = {}
-
-        // Filter out duplicates
-        const uniqueTeachers = teachers.filter((professor) => {
-            if (!uniqueProfessors[professor.professor_id]) {
-                // If the professor has not been encountered yet, add it to the temporary object
-                uniqueProfessors[professor.professor_id] = professor
-                return true
+        const uniqueIds = new Set();
+        return allTeachers.filter(item => {
+            if (!uniqueIds.has(item.id)) {
+                uniqueIds.add(item.id);
+                return true;
             }
-            return false
-        })
+            return false;
+        });
+    }, [course.classes])
 
-        return uniqueTeachers
-    }, [classesLoaded, course.classes])
+    console.log("Unique teachers are: ", teachers)
+
+    const teacherFilters = useMemo(() => {
+        return teachers.map((teacher) => {
+            return {
+                ...teacher,
+                isFiltered: filteredTeachers.includes(teacher.id)
+            }
+        })
+    }, [teachers, filteredTeachers]);
+
+    console.log("Teacher filters are: ", teacherFilters)
 
     // const firstRenderRef = useRef(true)
     // const [multipleOptions, setMultipleOptions] = multipleOptionsHook
@@ -113,10 +113,8 @@ const ClassSelector = ({ course }: Props) => {
     }, [isDropdownOpen])
 
     const getOptions = (): Array<ClassInfo> => {
-        if (filteredTeachers.length === 0) return course.classes
-
         return course.classes.filter((c) => {
-            return c.slots.filter((slot) => slot.professors.filter((professor) => filteredTeachers.includes(professor.professor_id)).length > 0).length > 0
+            return c.slots.filter((slot) => slot.professors.filter((professor) => filteredTeachers.includes(professor.id)).length > 0).length > 0
         })
     }
 
@@ -161,10 +159,11 @@ const ClassSelector = ({ course }: Props) => {
     }
 
     function toggleAllTeachers(teachers: ProfessorInfo[]) {
+        console.log("Teachers are: ", filteredTeachers)
         if (filteredTeachers.length > 0) {
             setFilteredTeachers([])
         } else {
-            setFilteredTeachers(teachers.flatMap((t) => t.professor_id))
+            setFilteredTeachers(teachers.flatMap((t) => t.id))
         }
     }
 
@@ -183,10 +182,6 @@ const ClassSelector = ({ course }: Props) => {
     //   })
     //   StorageAPI.setOptionsStorage(multipleOptions)
     // }, [preview, display, filteredTeachers, locked, hide, selectedOption, setMultipleOptions, multipleOptions])
-
-    useEffect(() => {
-        setContentLoaded(course.classes !== undefined)
-    }, [multipleOptions, setContentLoaded, course.classes])
 
     return (
         <div className="relative text-sm" key={`course-option-${course.acronym}`}>
@@ -213,7 +208,7 @@ const ClassSelector = ({ course }: Props) => {
                         className="bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
                         ref={classSelectorContentRef}
                     >
-                        {!classesLoaded ? (
+                        {course.classes == undefined ? (
                             <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
                         ) : (
                             <>
@@ -228,24 +223,23 @@ const ClassSelector = ({ course }: Props) => {
                                                 <DropdownMenuItem
                                                     onClick={(e) => {
                                                         e.preventDefault()
-                                                        toggleAllTeachers(allTeachers)
+                                                        toggleAllTeachers(teachers)
                                                     }}
                                                 >
                                                     <span className="block truncate dark:text-white">
-                                                        {filteredTeachers?.length === 0 ? 'Apagar todos' : 'Selecionar Todos'}
+                                                        {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
                                                     </span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                {allTeachers.map((option) => {
-                                                    const isFiltered = (filteredTeachers.length === 0) || filteredTeachers.includes(option.professor_id)
+                                                {teacherFilters.map((option) => {
                                                     return (
                                                         <ProfessorItem
-                                                            key={`${course.acronym}-teacher-${option.professor_acronym}`}
+                                                            key={`${course.acronym}-teacher-${option.acronym}`}
                                                             professorInformation={option}
-                                                            filtered={isFiltered}
+                                                            filtered={option.isFiltered}
                                                             onSelect={(e) => {
                                                                 e.preventDefault()
-                                                                toggleTeacher(option.professor_id)
+                                                                toggleTeacher(option.id)
                                                             }}
                                                         />
                                                     )
@@ -259,7 +253,7 @@ const ClassSelector = ({ course }: Props) => {
                                     <DropdownMenuItem onSelect={() => setDisplay(null)}>
                                         <span className="text-sm tracking-tighter">Remover Seleção</span>
                                     </DropdownMenuItem>
-                                    {classesLoaded &&
+                                    {course.classes &&
                                         getOptions().map((classInfo) => (
                                             <ClassItem
                                                 key={`schedule-${classInfo.name}`}
