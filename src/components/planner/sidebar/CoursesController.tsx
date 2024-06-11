@@ -19,7 +19,7 @@ const CoursesController = ({}) => {
             ) : (
                 pickedCourses
                     .sort((course1, course2) => course1.id - course2.id)
-                    .filter((course) => multipleOptions[selectedOption].course_options.some((option) => option.course_id === course.id))
+                    //.filter((course) => multipleOptions[selectedOption].course_options.some((option) => option.course_id === course.id))
                     .map((course, courseIdx) => (
                         <ClassSelector course={course} key={`course-schedule-${courseIdx}-${course.id}`} />
                     ))

@@ -81,8 +81,6 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
   )
 
-  console.log("EIEIEIE PICKED COURSES ARE: ", pickedCourses);
-
   const [multipleOptions, setMultipleOptions] = useState(
     JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
   )

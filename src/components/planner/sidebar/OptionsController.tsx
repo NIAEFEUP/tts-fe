@@ -42,7 +42,10 @@ const Option = ({ item, selectedHook }) => {
           >
             <EllipsisHorizontalIcon className="m-auto h-5 w-5" />
           </div>
-          <img src={item.icon} className="h-8 w-8 transform duration-200 ease-in-out group-hover:mt-3" />
+          <img src={item.icon} className="h-8 w-8 transform duration-200 ease-in-out group-hover:mt-3" alt={item.name} />
+          {/** 
+          <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png" className="h-8 w-8 transform duration-200 ease-in-out group-hover:mt-3" alt={item.name} />
+          */} 
         </TooltipTrigger>
         <TooltipContent className="w-32 truncate">{item.name}</TooltipContent>
       </Tooltip>

@@ -26,8 +26,9 @@ type Props = {
 
 const PasteOption = ({ isImportedOptionHook }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+  const [otherCoursesImported, setOtherCoursesImported] = useState<boolean>(false);
   const { pickedCourses, setPickedCourses } = useContext(CourseContext);
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [_, setIsImportedOption] = isImportedOptionHook
   const { toast } = useToast()
 
@@ -89,6 +90,9 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
     console.log("Unchecked course ids: ", uncheckedCoursesIds)
 
     if (uncheckedCoursesIds.length > 0) {
+      setOtherCoursesImported(true);
+      return;
+
       const courses: CourseInfo[] = (await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {
         return await api.getCourseUnit(Number(course_unit_id))
       }))).flat();
@@ -103,10 +107,19 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       const newPickedCourses = [...pickedCourses];
       setPickedCourses(newPickedCourses.concat(courses));
 
-      const newMultipleOptions = [...multipleOptions];
-      newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(
-        courses.map((course) => convertCourseInfoToCourseOption(course))
-      );
+      let newMultipleOptions = [...multipleOptions];
+      newMultipleOptions.forEach((option) => {
+        console.log("skill issue first: ", option.course_options);
+        option.course_options = option.course_options.concat(
+          courses.map((course) => convertCourseInfoToCourseOption(course))
+        )
+        console.log("skill issue 2: ", option.course_options);
+      });
+
+
+      // newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(
+      //   courses.map((course) => convertCourseInfoToCourseOption(course))
+      // );
       setMultipleOptions(newMultipleOptions);
 
       /*
