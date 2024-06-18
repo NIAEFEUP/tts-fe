@@ -3,18 +3,17 @@ import NitSigExport from './NitSigExport'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
 import { Button } from '../../../ui/button'
 
-import { CourseOption, MultipleOptions } from '../../../../@types'
+import { MultipleOptions } from '../../../../@types/new_index'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
 
 type Props = {
   multipleOptions: MultipleOptions
-  optionsList: any
 }
 
 /**
  * Sidebar with all the main schedule interactions
  */
-const Export = ({ multipleOptions, optionsList }: Props) => {
+const Export = ({ multipleOptions }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,7 +23,7 @@ const Export = ({ multipleOptions, optionsList }: Props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
-          <CsvExport multipleOptions={multipleOptions} optionsList={optionsList} />
+          <CsvExport multipleOptions={multipleOptions} />
         </DropdownMenuItem>
         <DropdownMenuItem>
           <NitSigExport />

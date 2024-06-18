@@ -56,7 +56,7 @@ export type ProfessorInfo = {
     name: string
 }
 
-export type picked_courses = Array<CourseInfo>
+export type PickedCourses = Array<CourseInfo>
 
 export type MultipleOptions = Array<Option> 
 

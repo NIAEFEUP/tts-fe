@@ -1,7 +1,7 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, picked_courses } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 const minHour = 8
@@ -312,7 +312,7 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
 }
 
 
-const defaultMultipleOptions = (selected_courses:picked_courses) : MultipleOptions => ([
+const defaultMultipleOptions = (selected_courses: PickedCourses) : MultipleOptions => ([
   {
     id: 1,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
@@ -375,7 +375,7 @@ const defaultMultipleOptions = (selected_courses:picked_courses) : MultipleOptio
   },
 ]);
 
-const getAllPickedSlots = (selected_courses : picked_courses, option : Option) => {
+const getAllPickedSlots = (selected_courses : PickedCourses, option : Option) => {
   return option.course_options.flatMap((course) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
