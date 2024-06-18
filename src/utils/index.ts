@@ -92,7 +92,7 @@ const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
   if (!classInfo) return ' '
   
   const classTitle = classInfo.name
-  const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
+  const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.professor_acronym))
   const classTypes = classInfo.slots.map((slot) => slot.lesson_type)
   const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
 
@@ -213,6 +213,16 @@ const getCourseTeachers = (courseInfo: CourseInfo) => {
   )
 }
 
+const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
+  return {
+    course_id: course.id,
+    picked_class_id: null,
+    locked: false,
+    filteredTeachers: [],
+    hide: []
+  }
+}
+
 // const getCourseTeachers = (courseOption: CourseOption) => {
 //   let teachers = []
 //   courseOption.schedules.forEach((schedule, idx) => {
@@ -313,7 +323,9 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
   const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
-    option.course_options = [...courseOptions]
+    // We have to use JSON.parse as well as JSON.stringify in order to create a copy for each option. Otherwise, they would
+    // all have the same reference to the same object
+    option.course_options = [...JSON.parse(JSON.stringify(courseOptions))]
     return option
   })
 }
@@ -425,4 +437,5 @@ export {
   getAllPickedSlots,
   getClassType,
   removeAllCourseOptions,
+  convertCourseInfoToCourseOption
 }

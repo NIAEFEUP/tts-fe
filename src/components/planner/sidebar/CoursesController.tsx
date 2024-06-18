@@ -1,12 +1,14 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import CourseContext from '../../../contexts/CourseContext'
 import ClassSelector from './CoursesController/ClassSelector'
 import { NoMajorSelected } from '../../svgs'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
-const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
-    const { pickedCourses } = useContext(CourseContext)
+const CoursesController = ({}) => {
+    const { pickedCourses, setPickedCourses } = useContext(CourseContext)
+    const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
-    console.log('Picked courses is: ', pickedCourses)
+    // If picked courses is not null, we need to fetch the schedules
 
     const noCoursesPicked = pickedCourses.length === 0
 
@@ -17,6 +19,7 @@ const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
             ) : (
                 pickedCourses
                     .sort((course1, course2) => course1.id - course2.id)
+                    //.filter((course) => multipleOptions[selectedOption].course_options.some((option) => option.course_id === course.id))
                     .map((course, courseIdx) => (
                         <ClassSelector course={course} key={`course-schedule-${courseIdx}-${course.id}`} />
                     ))

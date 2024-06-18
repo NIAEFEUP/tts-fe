@@ -2,10 +2,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext, useRef } from 'react'
-import { CourseOption, ImportedCourses, MultipleOptions } from '../../../@types'
 import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
 import RandomFill from './selectedOptionController/RandomFill'
+import { CourseOption } from '../../../@types/new_index'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 
 interface Option {
   id: number
@@ -17,7 +18,6 @@ type Props = {
   optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
   currentOption: CourseOption[]
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
@@ -28,12 +28,12 @@ const SelectedOptionController = ({
   optionsListHook,
   selectedOptionHook,
   currentOption,
-  multipleOptionsHook,
   isImportedOptionHook,
 }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
   const [optionsList, setOptionsList] = optionsListHook
-  const [selectedOption, setSelectedOption] = selectedOptionHook
+  //const [selectedOption, setSelectedOption] = selectedOptionHook
+  const { selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
   let isHovered = false
@@ -147,8 +147,8 @@ const SelectedOptionController = ({
       </div>
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        <PasteOption multipleOptionsHook={multipleOptionsHook} isImportedOptionHook={isImportedOptionHook} />
-        <RandomFill multipleOptionsHook={multipleOptionsHook} className="sm:py-0 xl:p-1" />
+        <PasteOption isImportedOptionHook={isImportedOptionHook} />
+        {/*<RandomFill className="sm:py-0 xl:p-1" />*/}
       </div>
     </div>
   )

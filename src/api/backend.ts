@@ -54,10 +54,21 @@ const getCourseClass = async (course: CourseInfo) => {
 
 const getCoursesClasses = async (courses : CourseInfo[]) => {
   return courses.map(async (course) => {
-    const courseClass = await getCourseClass(course)
-    course['classes'] = courseClass
+    course['classes'] = await getCourseClass(course)
     return course
   })
+}
+
+/**
+ * Retrieves full class information with classes
+ * @param id class id
+ * @returns CourseInfo
+ */
+const getCourseUnit = async (id: number) => {
+  if (id === null) return []
+  const class_info = (await apiRequest(`course_unit/${id}/`));
+  class_info['classes'] = await getCourseClass(class_info);
+  return class_info;
 }
 
 /**
@@ -72,6 +83,7 @@ const api = {
   getCourses,
   getCourseClass,
   getCoursesClasses,
+  getCourseUnit,
   getInfo
 }
 

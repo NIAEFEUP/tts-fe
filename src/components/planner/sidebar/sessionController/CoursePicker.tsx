@@ -29,6 +29,7 @@ const CoursePicker = () => {
   const showContent = selectedMajor || pickedCourses.length > 0
 
   useEffect(() => {
+    console.log("Multiple options have changed!");
     StorageAPI.setOptionsStorage(multipleOptions)
   }, [multipleOptions])
 
@@ -43,7 +44,8 @@ const CoursePicker = () => {
   const handleOpenChange = () => {
     setOpen(!open)
     if (open === false) return
-    api.getCoursesClasses(pickedCourses)
+    api.getCoursesClasses(pickedCourses) // (thePeras): not using the return value and modifying the parameter directly???
+    console.log("Picked courses are fd: ", pickedCourses);
     StorageAPI.setPickedCoursesStorage(pickedCourses)
   }
 

@@ -1,43 +1,25 @@
-import { ImportedCourses, MultipleOptions } from "../../../../@types";
+import { ImportedCourses } from "../../../../@types";
+import { MultipleOptions } from "../../../../@types/new_index";
 
-const fillOptions = (importedCourses: ImportedCourses, setMultipleOptions: React.Dispatch<React.SetStateAction<MultipleOptions>>) => {
-    setMultipleOptions((prevMultipleOptions) => {
-        const newOptions = prevMultipleOptions.options.map((optionsArray, index) => {
-            if (index !== prevMultipleOptions.index) {
-                return optionsArray; // Keep other options unchanged
-            }
+const fillOptions = (importedCourses: ImportedCourses, selectedOption: number, multipleOptions: MultipleOptions, setMultipleOptions: React.Dispatch<React.SetStateAction<MultipleOptions>>) => {
+    const newMultipleOptions = [...multipleOptions];
 
-            // Cleaning the previous options
-            optionsArray = optionsArray.map((courseOption) => {
-                return { ...courseOption, option: null, locked: false };
-            })
+    console.log("Imported courses are: ", importedCourses);
 
-            return optionsArray.map((courseOption) => {
-                const courseUnitId = courseOption.course.info.course_unit_id;
-                const importingScheduleClassName = importedCourses[courseUnitId];
+    // This handles
+    newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.map((option) => {
+        const importedOption = importedCourses[option.course_id];
+        if(importedOption !== undefined) {
+            const optionIntValue = parseInt(importedOption);
+            const newValue = isNaN(optionIntValue) ? null : optionIntValue;
 
-                if (importingScheduleClassName === undefined || importingScheduleClassName === 'null') {
-                    return courseOption;
-                }
-
-                const newOption = courseOption.schedules.find((schedule) => schedule.class_name === importingScheduleClassName);
-                if (newOption === undefined) {
-                    console.log("Invalid option for course unit: " + courseUnitId);
-                    return courseOption;
-                }
-
-                return { ...courseOption, option: newOption, locked: false };
-            });
-        });
-
-        const value = {
-            index: prevMultipleOptions.index,
-            selected: newOptions[prevMultipleOptions.index],
-            options: newOptions,
-        };
-
-        return value;
+            return { ...option, picked_class_id: newValue };
+        } else {
+            return { ...option }
+        }
     });
+
+    setMultipleOptions(newMultipleOptions)
 }
 
 export default fillOptions;

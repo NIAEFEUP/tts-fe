@@ -22,6 +22,7 @@ import CourseContext from '../../../../contexts/CourseContext'
 import ProfessorItem from './ProfessorItem'
 import ClassItem from './ClassItem'
 import StorageAPI from '../../../../api/storage'
+import CoursesController from '../CoursesController'
 
 type Props = {
     course: CourseInfo
@@ -51,6 +52,25 @@ const ClassSelector = ({ course }: Props) => {
     const [preview, setPreview] = useState(null)
     const [display, setDisplay] = useState(courseOption.picked_class_id)
 
+    useEffect(() => {
+        const course_options = multipleOptions[selectedOption].course_options;
+        const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
+
+        if(!option[0]) {
+            setSelectedClassId(null);
+            return;
+        }
+
+        console.log("CLASS SELECTOR MULTIPLE OPTIONS: ", multipleOptions);
+
+        setSelectedClassId(option[0].picked_class_id);
+        setDisplay(option[0].picked_class_id);
+
+    }, [selectedOption, multipleOptions, course.id]);
+
+    console.log("current course option: ", courseOption);
+    console.log("DISPLAY IS: ", display)
+
     const allTeachers = useMemo(() => {
         if (!classesLoaded) return []
 
@@ -60,9 +80,9 @@ const ClassSelector = ({ course }: Props) => {
 
         // Filter out duplicates
         const uniqueTeachers = teachers.filter((professor) => {
-            if (!uniqueProfessors[professor.id]) {
+            if (!uniqueProfessors[professor.professor_id]) {
                 // If the professor has not been encountered yet, add it to the temporary object
-                uniqueProfessors[professor.id] = professor
+                uniqueProfessors[professor.professor_id] = professor
                 return true
             }
             return false
@@ -96,12 +116,7 @@ const ClassSelector = ({ course }: Props) => {
         if (filteredTeachers.length === 0) return course.classes
 
         return course.classes.filter((c) => {
-            const slots = c.slots
-            const aux = slots.every((s) => {
-                return s.professors.some((p) => !filteredTeachers.includes(p.id))
-            })
-            console.log('class: ', c.name, '          - ', aux)
-            return aux
+            return c.slots.filter((slot) => slot.professors.filter((professor) => filteredTeachers.includes(professor.professor_id)).length > 0).length > 0
         })
     }
 
@@ -119,7 +134,8 @@ const ClassSelector = ({ course }: Props) => {
         //   )
     }
 
-    const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => classInfo.slots.some((slot) => slot.professors.some((professor) => !filteredTeachers.includes(professor.id)));
+    const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => classInfo.slots.some((slot) => slot.professors.some((professor) => !filteredTeachers.includes(professor.professor_id)));
+    console.log("Filtered teachers are: ", filteredTeachers)
 
     // Checks if two arrays of professors have a common professor
     const hasCommonProfessorWith = (profs1, profs2) =>
@@ -149,7 +165,7 @@ const ClassSelector = ({ course }: Props) => {
         if (filteredTeachers.length > 0) {
             setFilteredTeachers([])
         } else {
-            setFilteredTeachers(teachers.flatMap((t) => t.id))
+            setFilteredTeachers(teachers.flatMap((t) => t.professor_id))
         }
     }
 
@@ -221,17 +237,19 @@ const ClassSelector = ({ course }: Props) => {
                                                     </span>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                {allTeachers.map((option) => (
+                                                {allTeachers.map((option) => {
+                                                    const isFiltered = (filteredTeachers.length === 0) || filteredTeachers.includes(option.professor_id)
+                                                    return (
                                                         <ProfessorItem
-                                                            key={`${course.acronym}-teacher-${option.acronym}`}
+                                                            key={`${course.acronym}-teacher-${option.professor_acronym}`}
                                                             professorInformation={option}
-                                                            filtered={filteredTeachers.includes(option.id)}
+                                                            filtered={filteredTeachers.includes(option.professor_id)}
                                                             onSelect={(e) => {
                                                                 e.preventDefault()
-                                                                toggleTeacher(option.id)
+                                                                toggleTeacher(option.professor_id)
                                                             }}
                                                         />
-                                                ))}
+                                                )})}
                                             </DropdownMenuSubContent>
                                         </DropdownMenuPortal>
                                     </DropdownMenuSub>

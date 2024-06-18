@@ -12,9 +12,14 @@ type Props = {
 
 const ProfessorItem = ({ professorInformation, filtered, onSelect }: Props) => {
   return (
-    <DropdownMenuCheckboxItem onSelect={(e) => onSelect(e)} checked={!filtered} className="group gap-2">
-      <span className="text-sm tracking-tighter">{professorInformation.name}</span>
-      <span className="text-xs text-gray-500">{professorInformation.acronym}</span>
+    <DropdownMenuCheckboxItem onSelect={(e) => onSelect(e)} checked={filtered} className="group gap-2">
+      <span className="text-sm tracking-tighter">{professorInformation.professor_name}</span>
+      <span className="text-xs text-gray-500">{professorInformation.professor_acronym}</span>
+
+      {/* {or} */}
+
+      {/* <span className="group-hover:hidden">{professorInformation.acronym}</span>
+      <span className="hidden truncate group-hover:block">{professorInformation.name}</span> */}
     </DropdownMenuCheckboxItem>
   )
 }

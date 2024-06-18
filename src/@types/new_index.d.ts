@@ -51,9 +51,9 @@ export type SlotInfo = {
 }
 
 export type ProfessorInfo = {
-    id: number
-    acronym: string
-    name: string
+    professor_id: number
+    professor_acronym: string
+    professor_name: string
 }
 
 export type picked_courses = Array<CourseInfo>
