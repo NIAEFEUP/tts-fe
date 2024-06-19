@@ -55,6 +55,11 @@ const getCourseClass = async (course: CourseInfo) => {
 const getCoursesClasses = async (courses : CourseInfo[]) => {
   return courses.map(async (course) => {
     course['classes'] = await getCourseClass(course)
+    course['classes'] = course.classes.map((c) => { return {
+      ...c,
+      filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
+    }})
+    console.log("api course classes: ", course.classes);
     return course
   })
 }
