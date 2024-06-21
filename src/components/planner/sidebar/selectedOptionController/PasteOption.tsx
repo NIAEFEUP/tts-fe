@@ -51,7 +51,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
   const importSchedule = async (value) => {
     const url = value
     const decoded_url = Buffer.from(url, 'base64').toString()
-    const isImporteFromClipboard : boolean = value;
+    const isImporteFromClipboard: boolean = value;
 
     if (!isValidURL(decoded_url)) {
       const description = isImporteFromClipboard
@@ -91,7 +91,6 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
 
     if (uncheckedCoursesIds.length > 0) {
       setOtherCoursesImported(true);
-      return;
 
       const courses: CourseInfo[] = (await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {
         return await api.getCourseUnit(Number(course_unit_id))
@@ -109,7 +108,6 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
 
       let newMultipleOptions = [...multipleOptions];
       newMultipleOptions.forEach((option) => {
-        console.log("skill issue first: ", option.course_options);
         option.course_options = option.course_options.concat(
           courses.map((course) => convertCourseInfoToCourseOption(course))
         )

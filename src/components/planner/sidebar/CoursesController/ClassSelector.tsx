@@ -105,7 +105,7 @@ const ClassSelector = ({ course }: Props) => {
 
   const getOptions = (): Array<ClassInfo> => {
     return course.classes?.filter((c) => {
-      return c.filteredTeachers.every((element) => filteredTeachers.includes(element));
+      return c.filteredTeachers?.every((element) => filteredTeachers.includes(element));
     })
   }
 
