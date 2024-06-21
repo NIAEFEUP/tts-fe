@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState, useContext } from 'react'
 import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
 import { User } from 'lucide-react'
-// import { CourseOption, CourseSchedule, MultipleOptions } from '../../../@types'
 import { getAllPickedSlots, getClassDisplayText, schedulesConflict } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import {
@@ -16,17 +15,24 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../../../ui/dropdown-menu'
-import { CourseInfo, ClassInfo, ProfessorInfo } from '../../../../@types/new_index'
+import { CourseInfo, ClassInfo, ProfessorInfo, CourseOption } from '../../../../@types/new_index'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import CourseContext from '../../../../contexts/CourseContext'
 import ProfessorItem from './ProfessorItem'
 import ClassItem from './ClassItem'
-import StorageAPI from '../../../../api/storage'
-import CoursesController from '../CoursesController'
-import { uniqueTeachersFromCourseInfo } from '../../../../utils/CourseInfo'
+import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils/CourseInfo'
 
 type Props = {
   course: CourseInfo
+}
+
+const buildTeacherFilters = (teachers, filteredTeachers) => {
+  return teachers.map((teacher) => {
+    return {
+      ...teacher,
+      isFiltered: filteredTeachers.includes(teacher.id)
+    }
+  })
 }
 
 const ClassSelector = ({ course }: Props) => {
@@ -35,15 +41,34 @@ const ClassSelector = ({ course }: Props) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
-  const { pickedCourses } = useContext(CourseContext)
+  const { pickedCourses, choosingNewCourse } = useContext(CourseContext)
 
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
-  const courseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
+  const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
+  courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
 
-  console.log("Course option bl is: ", courseOption);
+  console.log("Bloat course option is: ", courseOption.filteredTeachers, " and bloat 2 is: ", courseOption);
 
-  const [filteredTeachers, setFilteredTeachers] = useState(courseOption.filteredTeachers)
+  /**
+   * This is used to retrieve the teachers from a course and to populate the filter of the teachers
+   * which is the dropdown menu that appears by clicking on "Professores" on the class selector dropdown
+  */
+  const teachers = useMemo(() => {
+    if (!course.classes) return []
+
+    return uniqueTeachersFromCourseInfo(course);
+  }, [course.classes])
+
+  // This is used to store the ids of the teachers so it is easy to verify if a teacher is filtered or not
+  const [filteredTeachers, setFilteredTeachers] = useState(teacherIdsFromCourseInfo(course));
+
+  // This is used as an object with the teacher properties in order for us to being able
+  // to show teacher information on the filter dropdown menu
+  const [teacherFilters, setTeacherFilters] = useState(() => {
+    return buildTeacherFilters(teachers, filteredTeachers);
+  });
+
   const [locked, setLocked] = useState(courseOption.locked)
   const [hide, setHide] = useState(courseOption.hide)
 
@@ -59,43 +84,15 @@ const ClassSelector = ({ course }: Props) => {
       return;
     }
 
-    console.log("CLASS SELECTOR MULTIPLE OPTIONS: ", multipleOptions);
-
     setSelectedClassId(option[0].picked_class_id);
     setDisplay(option[0].picked_class_id);
-
   }, [selectedOption, multipleOptions, course.id]);
 
-
-  const teachers = useMemo(() => {
-    if (!course.classes) return []
-
-    return uniqueTeachersFromCourseInfo(course);
-  }, [course.classes])
-
-  const teacherFilters = useMemo(() => {
-    return teachers.map((teacher) => {
-      return {
-        ...teacher,
-        isFiltered: filteredTeachers.includes(teacher.id)
-      }
-    })
-  }, [teachers, filteredTeachers]);
-
-  console.log("teachers filters are: ", teacherFilters);
-  console.log("filtered teachers: ", filteredTeachers);
-
-  // const firstRenderRef = useRef(true)
-  // const [multipleOptions, setMultipleOptions] = multipleOptionsHook
-  // const [isImportedOption, setIsImportedOption] = isImportedOptionHook
-  // const [selectedOption, setSelectedOption] = useState<CourseSchedule | null>(courseOption.option)
-  // const [showTheoretical, setShowTheoretical] = useState<boolean>(courseOption.shown.T)
-  // const [showPractical, setShowPractical] = useState<boolean>(courseOption.shown.TP)
-  // //FIXME (thePeras): If you are here you probably oberserved a bug. Don't worry its gonna be fixed very very soon
-  // var teacherOptions = courseOption.teachers
-  // const [lastSelected, setLastSelected] = useState(selectedOption)
-
-  // const [selectedTeachers, setSelectedTeachers] = useState(courseOption.teachers)
+  useEffect(() => {
+    setTeacherFilters(() => {
+      return buildTeacherFilters(teachers, filteredTeachers);
+    });
+  }, [filteredTeachers])
 
   /**
    * This useEffect is used to make the dropdown content width match the trigger width
@@ -107,10 +104,17 @@ const ClassSelector = ({ course }: Props) => {
   }, [isDropdownOpen])
 
   const getOptions = (): Array<ClassInfo> => {
-    return course.classes.filter((c) => {
-      return c.slots.filter((slot) => slot.professors.filter((professor) => filteredTeachers.includes(professor.id)).length > 0).length > 0
+    return course.classes?.filter((c) => {
+      return c.filteredTeachers.every((element) => filteredTeachers.includes(element));
     })
   }
+
+  useEffect(() => {
+    setFilteredTeachers(courseOption.filteredTeachers);
+  }, [choosingNewCourse])
+
+  console.log("current hell filtered teachers", filteredTeachers);
+  console.log("current hell teacher filters", teacherFilters);
 
   // Checks if any of the selected classes have time conflicts with the classInfo
   // This is used to display a warning icon in each class of the dropdown in case of conflicts
@@ -142,7 +146,7 @@ const ClassSelector = ({ course }: Props) => {
     setPreview(null)
   }
 
-  function toggleTeacher(id) {
+  function toggleTeacher(id: number) {
     if (filteredTeachers.includes(id)) {
       setFilteredTeachers(filteredTeachers.filter((t) => t !== id))
     } else {
@@ -151,7 +155,6 @@ const ClassSelector = ({ course }: Props) => {
   }
 
   function toggleAllTeachers(teachers: ProfessorInfo[]) {
-    console.log("Teachers are: ", filteredTeachers)
     if (filteredTeachers.length > 0) {
       setFilteredTeachers([])
     } else {
@@ -175,6 +178,8 @@ const ClassSelector = ({ course }: Props) => {
   //   })
   //   StorageAPI.setOptionsStorage(multipleOptions)
   // }, [preview, display, filteredTeachers, locked, hide, selectedOption, setMultipleOptions, multipleOptions])
+
+  console.log("flying hell: ", course);
 
   return (
     <div className="relative text-sm" key={`course-option-${course.acronym}`}>
@@ -201,7 +206,7 @@ const ClassSelector = ({ course }: Props) => {
             className="bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
             ref={classSelectorContentRef}
           >
-            {course.classes == undefined ? (
+            {course.classes === null ? (
               <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
             ) : (
               <>

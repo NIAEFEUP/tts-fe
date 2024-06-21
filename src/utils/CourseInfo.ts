@@ -9,7 +9,6 @@ export const teachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] 
 
 export const uniqueTeachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] => {
   const uniqueIds = new Set();
-  console.log("techers from course info3: ", teachersFromCourseInfo(courseInfo));
   return teachersFromCourseInfo(courseInfo).filter(item => {
     if (!uniqueIds.has(item.id)) {
       uniqueIds.add(item.id);

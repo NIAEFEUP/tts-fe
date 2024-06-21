@@ -292,6 +292,7 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
 const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions => {
   return multipleOptions.map((option) => {
     const currentOption = createDefaultCourseOption(course);
+    console.log("I'm so lost: ", course);
     console.log("hoje vou ma: ", course["classes"]);
     console.log("hoje vou m: ", course.classes);
     currentOption.filteredTeachers = teacherIdsFromCourseInfo(course);
