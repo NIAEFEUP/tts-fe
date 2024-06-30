@@ -1,3 +1,4 @@
+import { WrapText } from 'lucide-react'
 import { MultipleOptions, CourseInfo, Major } from '../@types/new_index'
 import { getCourseTeachers } from '../utils'
 import API from './backend'
@@ -126,8 +127,28 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
 }
 
 const setMultipleOptionsStorage = (multipleOptions: MultipleOptions) => {
-  const key = 'niaefeup-tts.multiple-options'
+  const key = 'niaefeup-tts.multiple-options';
   writeStorage(key, multipleOptions);
+}
+
+const getSelectedOptionStorage = () => {
+  const key = 'niaefeup-tts.selected-option';
+  
+  let selectedOption;
+  try {
+    selectedOption = parseInt(localStorage.getItem(key));
+  } catch (error) {
+    console.error(error);
+    selectedOption = 0;
+    writeStorageInvalid(key, selectedOption);
+  }
+
+  return selectedOption;
+}
+
+const setSelectedOptionStorage = (selectedOption: number) => {
+  const key = 'niaefeup-tts.selected-option';
+  writeStorage(key, selectedOption);
 }
 
 const removeOptionsStorage = () => {
@@ -165,6 +186,8 @@ const StorageAPI = {
   // getOptionsStorage,
   getMultipleOptionsStorage,
   setMultipleOptionsStorage,
+  getSelectedOptionStorage,
+  setSelectedOptionStorage,
   removeOptionsStorage,
   getMajorsStorage,
   setMajorsStorage,
