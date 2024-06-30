@@ -2,9 +2,6 @@ import { MultipleOptions, CourseInfo, Major } from '../@types/new_index'
 import { getCourseTeachers } from '../utils'
 import API from './backend'
 
-
-const INITIAL_VALUE = { index: 0, selected: [], options: [] }
-
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
   const storedFetchDate = JSON.parse(localStorage.getItem(key + '.fetch-date'))
@@ -27,43 +24,106 @@ const writeStorageInvalid = (key: string, INITIAL_VALUE?: any) => {
   localStorage.setItem(key + '.fetch-date', null)
 }
 
-// const getOptionsStorage = (): MultipleOptions => {
-//   const key = 'niaefeup-tts.options'
-//   try {
-//     if (isStorageValid(key, 7)) {
-//       const courseOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
+const getMultipleOptionsStorage = (): MultipleOptions => {
+  const key = 'niaefeup-tts.multiple-options'
+  const defaultValue = [
+    {
+      id: 1,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
+      name: 'Horário 1',
+      course_options: [],
+    },
+    {
+      id: 2,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
+      name: 'Horário 2',
+      course_options: [],
+    },
+    {
+      id: 3,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
+      name: 'Horário 3',
+      course_options: [],
+    },
+    {
+      id: 4,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
+      name: 'Horário 4',
+      course_options: [],
+    },
+    {
+      id: 5,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
+      name: 'Horário 5',
+      course_options: [],
+    },
+    {
+      id: 6,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
+      name: 'Horário 6',
+      course_options: [],
+    },
+    {
+      id: 7,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
+      name: 'Horário 7',
+      course_options: [],
+    },
+    {
+      id: 8,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
+      name: 'Horário 8',
+      course_options: [],
+    },
+    {
+      id: 9,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
+      name: 'Horário 9',
+      course_options: [],
+    },
+    {
+      id: 10,
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
+      name: 'Horário 10',
+      course_options: [],
+    },
+  ];
 
-//       for (let i = 0; i < courseOptions.options.length; i++) {
-//         for (let j = 0; j < courseOptions.options[i].length; j++) {
-//           if (courseOptions.options[i][j].teachers === undefined) {
-//             courseOptions.options[i][j].teachers = getCourseTeachers(courseOptions.options[i][j])
-//           }
-//           if (courseOptions.options[i][j].filteredTeachers === undefined) {
-//             courseOptions.options[i][j].filteredTeachers = getCourseTeachers(courseOptions.options[i][j])
-//           }
-//         }
-//       }
+  try {
+    if (isStorageValid(key, 7)) {
+      const multipleOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
 
-//       for (let i = 0; i < courseOptions.selected.length; i++) {
-//           if (courseOptions.selected[i].teachers === undefined) {
-//             courseOptions.selected[i].teachers = getCourseTeachers(courseOptions.selected[i])
-//           }
-//           if (courseOptions.selected[i].filteredTeachers === undefined) {
-//             courseOptions.selected[i].filteredTeachers = getCourseTeachers(courseOptions.selected[i])
-//           }
-//       }
+      // TODO (Process-ing): Test if this check is really necessary
+      //for (let i = 0; i < courseOptions.options.length; i++) {
+      //         for (let j = 0; j < courseOptions.options[i].length; j++) {
+      //           if (courseOptions.options[i][j].teachers === undefined) {
+      //             courseOptions.options[i][j].teachers = getCourseTeachers(courseOptions.options[i][j])
+      //           }
+      //           if (courseOptions.options[i][j].filteredTeachers === undefined) {
+      //             courseOptions.options[i][j].filteredTeachers = getCourseTeachers(courseOptions.options[i][j])
+      //           }
+      //         }
+      //       }
+      
+      //       for (let i = 0; i < courseOptions.selected.length; i++) {
+      //           if (courseOptions.selected[i].teachers === undefined) {
+      //             courseOptions.selected[i].teachers = getCourseTeachers(courseOptions.selected[i])
+      //           }
+      //           if (courseOptions.selected[i].filteredTeachers === undefined) {
+      //             courseOptions.selected[i].filteredTeachers = getCourseTeachers(courseOptions.selected[i])
+      //           }
 
-//       return courseOptions
+      return multipleOptions;
 
-//     } else {
-//       writeStorageInvalid(key, INITIAL_VALUE)
-//       return INITIAL_VALUE
-//     }
-//   } catch (error) {
-//     console.warn(error)
-//     return INITIAL_VALUE
-//   }
-// }
+    } else {
+      writeStorageInvalid(key, defaultValue);
+      return defaultValue;
+    }
+  } catch (error) {
+    console.warn(error)
+    return defaultValue;
+  }
+}
 
 const setOptionsStorage = (multipleOptions: MultipleOptions) => {
   const key = 'niaefeup-tts.multiple-options'

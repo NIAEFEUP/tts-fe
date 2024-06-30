@@ -198,9 +198,9 @@ const getClassType = (type: string) => {
 }
 
 const getCourseTeachers = (courseInfo: CourseInfo) => {
-  return courseInfo.classes.forEach(classInfo =>
-    classInfo.slots.forEach(slot => slot.professors)
-  )
+  return courseInfo.classes.reduce((acc, classInfo) =>
+    [...acc, ...classInfo.slots.map(slot => slot.professors)],
+  []);
 }
 
 const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
@@ -320,69 +320,6 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
   })
 }
 
-const defaultMultipleOptions = (selected_courses: PickedCourses): MultipleOptions => ([
-  {
-    id: 1,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
-    name: 'Horário 1',
-    course_options: [],
-  },
-  {
-    id: 2,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
-    name: 'Horário 2',
-    course_options: [],
-  },
-  {
-    id: 3,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
-    name: 'Horário 3',
-    course_options: [],
-  },
-  {
-    id: 4,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
-    name: 'Horário 4',
-    course_options: [],
-  },
-  {
-    id: 5,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
-    name: 'Horário 5',
-    course_options: [],
-  },
-  {
-    id: 6,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
-    name: 'Horário 6',
-    course_options: [],
-  },
-  {
-    id: 7,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
-    name: 'Horário 7',
-    course_options: [],
-  },
-  {
-    id: 8,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
-    name: 'Horário 8',
-    course_options: [],
-  },
-  {
-    id: 9,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
-    name: 'Horário 9',
-    course_options: [],
-  },
-  {
-    id: 10,
-    icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
-    name: 'Horário 10',
-    course_options: [],
-  },
-]);
-
 const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
   return option.course_options.flatMap((course) => {
     if (!course.picked_class_id) return []
@@ -421,7 +358,6 @@ export {
   addCourseOption,
   removeCourseOption,
   replaceCourseOptions,
-  defaultMultipleOptions,
   getAllPickedSlots,
   getClassType,
   convertCourseInfoToCourseOption
