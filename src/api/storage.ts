@@ -125,7 +125,7 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
   }
 }
 
-const setOptionsStorage = (multipleOptions: MultipleOptions) => {
+const setMultipleOptionsStorage = (multipleOptions: MultipleOptions) => {
   const key = 'niaefeup-tts.multiple-options'
   writeStorage(key, multipleOptions);
 }
@@ -163,7 +163,8 @@ const updateScrappeInfo = async () => {
 
 const StorageAPI = {
   // getOptionsStorage,
-  setOptionsStorage,
+  getMultipleOptionsStorage,
+  setMultipleOptionsStorage,
   removeOptionsStorage,
   getMajorsStorage,
   setMajorsStorage,
