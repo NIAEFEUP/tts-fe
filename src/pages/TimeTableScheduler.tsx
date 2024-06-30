@@ -362,7 +362,6 @@ const TimeTableSchedulerPage = () => {
             sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
             destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
             repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-          //multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
           />
         </div>
       </CourseContext.Provider>

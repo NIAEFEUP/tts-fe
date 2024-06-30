@@ -72,7 +72,7 @@ const defaultOptionsList = [
  */
 const Sidebar = ({ /*multipleOptionsHook */}: Props) => {
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+  const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
 
   //TODO: Type for optionsList
   const [optionsList, setOptionsList] = useState(
@@ -88,10 +88,6 @@ const Sidebar = ({ /*multipleOptionsHook */}: Props) => {
   useEffect(() => {
     localStorage.setItem('niaefeup-tts.optionsList', JSON.stringify(optionsList))
   }, [optionsList])
-
-  useEffect(() => {
-    localStorage.setItem('niaefeup-tts.selected-option', selectedOption.toString())
-  }, [selectedOption])
 
   return (
     <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">

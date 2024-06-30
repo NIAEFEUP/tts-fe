@@ -23,7 +23,7 @@ const Export = ({ multipleOptions }: Props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
-          <CsvExport multipleOptions={multipleOptions} />
+          <CsvExport />
         </DropdownMenuItem>
         <DropdownMenuItem>
           <NitSigExport />

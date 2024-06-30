@@ -2,10 +2,7 @@ import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
 import { MultipleOptions } from '../../../../@types/new_index'
 import { useContext } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
-
-type Props = {
-  multipleOptions: MultipleOptions
-}
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 
 const csvEncode = (text: string | null | undefined) => {
   if (!text)
@@ -18,8 +15,9 @@ const csvEncode = (text: string | null | undefined) => {
 /**
  * Sidebar with all the main schedule interactions
  */
-const CsvExport = ({ multipleOptions }: Props) => {
+const CsvExport = () => {
   const { pickedCourses } = useContext(CourseContext);
+  const { multipleOptions } = useContext(MultipleOptionsContext);
 
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
