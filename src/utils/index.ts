@@ -1,9 +1,10 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, picked_courses } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { teacherIdsFromCourseInfo } from './CourseInfo'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -90,25 +91,14 @@ const schedulesConflict = (first, second) => {
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
   if (!classInfo) return ' '
-  
+
   const classTitle = classInfo.name
-  const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.professor_acronym))
-  const classTypes = classInfo.slots.map((slot) => slot.lesson_type)
-  const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
+  //const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
+  //const classTypes = classInfo.slots.map((slot) => slot.lesson_type)
+  //const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
 
-  return [classTitle, professor_acronyms, ...weekdays, ...classTypes, ...professor_acronyms].join(', ')
+  return [classTitle].join(', ')
 }
-
-// const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
-//   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
-//   if (!classInfo) return ' '
-
-//   const classTitle = classInfo.name
-//   const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
-//   const weekdays = classInfo.slots.map((slot) => convertWeekday(slot.day))
-
-//   return [classTitle, professor_acronyms, ...weekdays, ...professor_acronyms].join(', ')
-// }
 
 const getLessonBoxTime = (slot: SlotInfo) => {
   return [convertHour(slot.start_time.toString()), convertHour(addHour(slot.start_time.toString(), slot.duration.toString()))].join('-')
@@ -196,20 +186,20 @@ const getClassType = (type: string) => {
     case 'P': return 'Prática';
     case 'TC': return 'Teórica de Campo';
     case 'O': return 'Outros';
-    case 'Teórica' : return 'T';
-    case 'Teórico-Prática' : return 'TP';
-    case 'Prática Laboratorial' : return 'PL';
-    case 'Orientação Tutorial' : return 'OT';
-    case 'Seminário' : return 'S';
-    case 'Prática' : return 'P';
-    case 'Teórica de Campo' : return 'TC';
-    case 'Outros' : return 'O';
+    case 'Teórica': return 'T';
+    case 'Teórico-Prática': return 'TP';
+    case 'Prática Laboratorial': return 'PL';
+    case 'Orientação Tutorial': return 'OT';
+    case 'Seminário': return 'S';
+    case 'Prática': return 'P';
+    case 'Teórica de Campo': return 'TC';
+    case 'Outros': return 'O';
   }
 }
 
 const getCourseTeachers = (courseInfo: CourseInfo) => {
-  return courseInfo.classes.forEach(classInfo => 
-    classInfo.slots.forEach(slot => slot.professors)  
+  return courseInfo.classes.forEach(classInfo =>
+    classInfo.slots.forEach(slot => slot.professors)
   )
 }
 
@@ -275,7 +265,7 @@ const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
   return majorCourses
 }
 
-const isSubset = (set1, set2, same) => {  
+const isSubset = (set1, set2, same) => {
   for (let elem1 of set1) {
     let found = false
     for (let elem2 of set2) {
@@ -289,22 +279,30 @@ const isSubset = (set1, set2, same) => {
   return true
 }
 
-const createDefaultCourseOption = (course: CourseInfo) : CourseOption => ({
-  course_id: course.id,
-  picked_class_id: null,
-  locked: false,
-  filteredTeachers: [],
-  hide: []
-})
+const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
+  return {
+    course_id: course.id,
+    picked_class_id: null,
+    locked: false,
+    filteredTeachers: [],
+    hide: []
+  }
+}
 
-const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions) : MultipleOptions => (
-   multipleOptions.map((option) => {
-     option.course_options.push(createDefaultCourseOption(course))
-     return option
-   })
-)
+const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions => {
+  return multipleOptions.map((option) => {
+    const currentOption = createDefaultCourseOption(course);
+    console.log("I'm so lost: ", course);
+    console.log("hoje vou ma: ", course["classes"]);
+    console.log("hoje vou m: ", course.classes);
+    currentOption.filteredTeachers = teacherIdsFromCourseInfo(course);
+    console.log("CURRENT OPTION: ", teacherIdsFromCourseInfo(course));
+    option.course_options.push(currentOption)
+    return option
+  })
+}
 
-const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions) : MultipleOptions => (
+const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions => (
   multipleOptions.map((option) => {
     option.course_options = option.course_options.filter((courseOption) => courseOption.course_id !== course.id)
     return option
@@ -318,7 +316,6 @@ const removeAllCourseOptions = (multipleOptions: MultipleOptions) : MultipleOpti
   })
 )
 
-
 const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
   const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
@@ -330,8 +327,7 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
   })
 }
 
-
-const defaultMultipleOptions = (selected_courses:picked_courses) : MultipleOptions => ([
+const defaultMultipleOptions = (selected_courses: PickedCourses): MultipleOptions => ([
   {
     id: 1,
     icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
@@ -394,7 +390,7 @@ const defaultMultipleOptions = (selected_courses:picked_courses) : MultipleOptio
   },
 ]);
 
-const getAllPickedSlots = (selected_courses : picked_courses, option : Option) => {
+const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
   return option.course_options.flatMap((course) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
@@ -427,10 +423,9 @@ export {
   getLessonTypeLongName,
   getCourseTeachers,
   cn,
-  // removeDuplicatesFromCourseOption,
   groupCoursesByYear,
   isSubset,
-  addCourseOption, 
+  addCourseOption,
   removeCourseOption,
   replaceCourseOptions,
   defaultMultipleOptions,

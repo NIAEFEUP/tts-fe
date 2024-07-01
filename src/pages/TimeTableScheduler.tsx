@@ -27,34 +27,6 @@ import api from '../api/backend'
 //   return newCourses
 // }
 
-// export const is_null_or_undefined = (element) => {
-//   return element === undefined || element === null
-// }
-
-// TODO: delete this!!
-// /**
-//  * This method serves to go to a group of checkboxes and put the correct checked value on the group checkbox
-//  */
-// export const controlCoursesGroupCheckbox = (courses: CheckedCourse[], groupCheckboxId: string) => {
-//   let some = courses.some((course) => course.checked)
-//   let every = courses.every((course) => course.checked)
-
-//   //@ts-ignore
-//   let checkbox: HTMLInputElement = document.getElementById(groupCheckboxId)
-//   if (!checkbox) return
-
-//   if (every) {
-//     checkbox.checked = true
-//     checkbox.indeterminate = false
-//   } else if (some) {
-//     checkbox.checked = false
-//     checkbox.indeterminate = true
-//   } else {
-//     checkbox.checked = false
-//     checkbox.indeterminate = false
-//   }
-// }
-
 const TimeTableSchedulerPage = () => {
   // ==============================================================================================================================
   // ========================================================= OLD STATES =========================================================
@@ -66,7 +38,7 @@ const TimeTableSchedulerPage = () => {
   // const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
   const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = useState<boolean>(false)
   // const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
- 
+
   // ===============================================================================================================================
 
   // ==============================================================================
@@ -85,11 +57,12 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
   )
 
+  const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
+
   //TODO (thePeras): Looks suspicious
   useEffect(() => {
-    if(pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
+    if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
   }, [pickedCourses]);
-
 
   const totalSelected = useMemo(
     () => multipleOptions.map((co) => co.course_options.filter((option) => option.picked_class_id !== null)).flat(),
@@ -395,7 +368,7 @@ const TimeTableSchedulerPage = () => {
 
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
-      <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo }}>
+      <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo, choosingNewCourse, setChoosingNewCourse }}>
         <MultipleOptionsContext.Provider
           value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}
         >
@@ -408,13 +381,7 @@ const TimeTableSchedulerPage = () => {
             </div>
 
             {/* Sidebar */}
-            <Sidebar
-              coursesHook={[checkedCourses, setCheckedCourses]}
-              sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-              destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-              repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-              //multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
-            />
+            <Sidebar />
           </div>
         </MultipleOptionsContext.Provider>
       </CourseContext.Provider>

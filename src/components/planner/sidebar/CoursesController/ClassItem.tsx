@@ -44,7 +44,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, onSelec
               {/* <span className="text-xs text-gray-500">{getLessonBoxTime(slot)}</span> */}
               <span className="text-xs text-gray-500">{slot.location}</span>
               <span className="text-xs text-gray-500">
-                {slot.professors.map((professor) => professor.professor_acronym).join(', ')}
+                {slot.professors.map((professor) => professor.acronym).join(', ')}
               </span>
             </div>
           ))}

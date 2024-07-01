@@ -6,14 +6,6 @@ import SelectedOptionController from './sidebar/SelectedOptionController'
 import CoursesController from './sidebar/CoursesController'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 
-type Props = {
-  coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  repeatedCourseControlHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  multipleOptionsHook: [MultipleOptions, React.Dispatch<React.SetStateAction<MultipleOptions>>]
-}
-
 const defaultOptionsList = [
   {
     id: 0,
@@ -70,7 +62,7 @@ const defaultOptionsList = [
 /**
  * Sidebar with all the main schedule interactions
  */
-const Sidebar = ({ /*multipleOptionsHook */}: Props) => {
+const Sidebar = () => {
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
 
@@ -97,10 +89,9 @@ const Sidebar = ({ /*multipleOptionsHook */}: Props) => {
     <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
       <div className="space-y-2">
         <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
-          <SessionController optionsList={optionsList} />
+          <SessionController />
           <OptionsController
             optionsListHook={[optionsList, setOptionsList]}
-            selectedOptionHook={[selectedOption, setSelectedOption]}
           />
           <SelectedOptionController
             optionsListHook={[optionsList, setOptionsList]}

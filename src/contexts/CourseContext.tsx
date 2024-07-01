@@ -6,13 +6,17 @@ interface CoursesContextContent {
   setPickedCourses: Dispatch<SetStateAction<CourseInfo[]>>
   coursesInfo: CourseInfo[]
   setCoursesInfo: Dispatch<SetStateAction<CourseInfo[]>>
+  choosingNewCourse: boolean
+  setChoosingNewCourse: Dispatch<SetStateAction<boolean>>
 }
 
 const CourseContext: Context<CoursesContextContent> = createContext({
   pickedCourses: [],
-  setPickedCourses: (pickedCourses: CourseInfo[]) => {},
+  setPickedCourses: (pickedCourses: CourseInfo[]) => { },
   coursesInfo: [],
-  setCoursesInfo: (courseInfo: CourseInfo[]) => {},
+  setCoursesInfo: (courseInfo: CourseInfo[]) => { },
+  choosingNewCourse: false,
+  setChoosingNewCourse: (choosingCourse: boolean) => { }
 })
 
 export default CourseContext
