@@ -9,8 +9,6 @@ const CoursesController = ({ }) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
   // If picked courses is not null, we need to fetch the schedules
-  console.log("Poor picked courses: ", pickedCourses);
-
   const noCoursesPicked = pickedCourses.length === 0
 
   return (

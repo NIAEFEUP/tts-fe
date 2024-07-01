@@ -18,8 +18,6 @@ interface Option {
 const Option = ({ item }) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
 
-  console.log("ITEM IS: ", multipleOptions[selectedOption]);
-
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>

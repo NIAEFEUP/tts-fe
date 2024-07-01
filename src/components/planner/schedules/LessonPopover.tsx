@@ -3,13 +3,22 @@ import { Lesson } from '../../../@types'
 import { Dialog, Transition } from '@headlessui/react'
 import Alert, { AlertType } from '../Alert'
 import InspectLessonBox from './InspectLessonBox'
+import { ClassInfo, SlotInfo, CourseInfo } from '../../../@types/new_index'
 
 type Props = {
-  lesson: Lesson
+  courseInfo: CourseInfo
+  classInfo: ClassInfo
+  slotInfo: SlotInfo
+  // conflictsInfo: Array<ConflictInfo>
   isOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
+const LessonPopover = ({ 
+    courseInfo,
+    classInfo,
+    slotInfo,
+    isOpenHook 
+}: Props) => {
   const [isOpen, setIsOpen] = isOpenHook
 
   const closeModal = () => {
@@ -56,7 +65,7 @@ const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
                 </Dialog.Title>
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
-                  <InspectLessonBox lesson={lesson} />
+                  <InspectLessonBox courseInfo={courseInfo} classInfo={classInfo} slotInfo={slotInfo} />
                 </div>
 
                 <footer className="flex justify-end">
@@ -78,4 +87,4 @@ const ConflictsPopover = ({ lesson, isOpenHook }: Props) => {
   )
 }
 
-export default ConflictsPopover
+export default LessonPopover

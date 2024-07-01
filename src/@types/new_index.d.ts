@@ -76,37 +76,26 @@ export type CourseOption = {
   hide: Array<lesson_type>,
 }
 
+// export type ClassDescriptor = {
+//   classInfo: ClassInfo
+//   courseInfo: CourseInfo
+// }
 
+// export type ConflictInfo = {
+//     classDescriptor: ClassDescriptor
+//     slotInfo: SlotInfo
+// }
 
+export type ClassDescriptor = {
+  classInfo: ClassInfo
+  courseInfo: CourseInfo
+  slotInfo?: SlotInfo
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export type ConflictsInfo = {
+    severe: boolean
+    classDescriptors: ClassDescriptor[]
+}
 
 // |=============================================================|
 // |         Ver se nao podemos apagar daqui para baixo:         |
@@ -125,9 +114,4 @@ export type Lesson = {
 
 export type ImportedCourses = {
   [key: string]: string
-}
-
-export type ConflictInfo = {
-  courseInfo: CourseInfo
-  classInfo: ClassInfo
 }

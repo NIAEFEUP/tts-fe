@@ -23,7 +23,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, onSelec
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.course_id === course_id);
     if(multipleOptionsEntry) {
       multipleOptionsEntry.picked_class_id = classInfo.id;
-      setMultipleOptions({...multipleOptions});
+      setMultipleOptions([...multipleOptions]);
     }
     onSelect();
   }

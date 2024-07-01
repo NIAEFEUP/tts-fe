@@ -75,13 +75,17 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   return parseFloat(second.start_time) < parseFloat(first.start_time) + parseFloat(first.duration)
 }
 
-const schedulesConflict = (first, second) => {
+const conflictsSeverity = (first: SlotInfo, second: SlotInfo) => {
+  return first.lesson_type === "TP" && second.lesson_type === "TP"
+}
+
+const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
   if (first.day !== second.day) return false
 
-  const firstStart = parseFloat(first.start_time)
-  const secondStart = parseFloat(second.start_time)
-  const firstDuration = parseFloat(first.duration)
-  const secondDuration = parseFloat(second.duration)
+  const firstStart = first.start_time
+  const secondStart = second.start_time
+  const firstDuration = first.duration
+  const secondDuration = second.duration
   const firstEnd = firstStart + firstDuration
   const secondEnd = secondStart + secondDuration
 
@@ -292,11 +296,7 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
 const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions => {
   return multipleOptions.map((option) => {
     const currentOption = createDefaultCourseOption(course);
-    console.log("I'm so lost: ", course);
-    console.log("hoje vou ma: ", course["classes"]);
-    console.log("hoje vou m: ", course.classes);
     currentOption.filteredTeachers = teacherIdsFromCourseInfo(course);
-    console.log("CURRENT OPTION: ", teacherIdsFromCourseInfo(course));
     option.course_options.push(currentOption)
     return option
   })
@@ -432,5 +432,6 @@ export {
   getAllPickedSlots,
   getClassType,
   removeAllCourseOptions,
-  convertCourseInfoToCourseOption
+  convertCourseInfoToCourseOption,
+  conflictsSeverity
 }

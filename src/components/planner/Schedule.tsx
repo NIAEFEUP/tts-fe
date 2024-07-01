@@ -1,8 +1,8 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 // import { Lesson, CourseOption } from '../../@types'
-import { Option, CourseOption } from '../../@types/new_index'
+import { Option, CourseOption, ConflictsInfo, ClassDescriptor } from '../../@types/new_index'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide, getClassType } from '../../utils'
 import { useShowGrid } from '../../hooks'
@@ -18,45 +18,49 @@ import ClassBox from './schedules/ClassBox'
 const Schedule = () => {
   const { pickedCourses } = useContext(CourseContext)
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
-  
+
   const scheduleRef = useRef(null)
 
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
+  const [classes, setClasses] = useState<ClassDescriptor[]>([])
+  const [conflictInfo, setConflictInfo] = useState<ConflictsInfo[]>([]);
 
-  const classes = useMemo(() => {
-    let aux = [];
-    const option = multipleOptions[selectedOption];
+  useEffect(() => {
+    let newClasses = []
+    const option = multipleOptions[selectedOption]
 
     for (let i = 0; i < option.course_options.length; i++) {
-      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id) 
-      const class_info = course_info.classes?.find((class_info) => class_info.id === option.course_options[i].picked_class_id)
+      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
+      const class_info = course_info.classes?.find(
+        (class_info) => class_info.id === option.course_options[i].picked_class_id
+      )
 
-      if (course_info === undefined || class_info === undefined) continue;
-      aux.push({
-        course_info: course_info,
-        class_info: class_info,
+      if (course_info === undefined || class_info === undefined) continue
+      newClasses.push({
+        courseInfo: course_info,
+        classInfo: class_info,
       })
     }
     
-    return aux;
-  }, [multipleOptions, pickedCourses, selectedOption]);
+    //setConflictInfo(computeConflicts(newClasses))
+    setClasses(newClasses)
+  }, [multipleOptions, pickedCourses, selectedOption])
 
   const slotTypes = useMemo(() => {
     let aux = new Set()
 
     for (const currentClass of classes) {
-      const class_info = currentClass?.class_info;
+      const class_info = currentClass?.classInfo
+      console.log("current classes is: ", currentClass);
 
-      class_info.slots.forEach(element => {
-        aux.add(element.lesson_type);
-      }); 
+      class_info.slots.forEach((element) => {
+        aux.add(element.lesson_type)
+      })
     }
 
     return aux
-  }, [classes]);
-
-  console.log("Slot types: ", slotTypes);
+  }, [classes])
 
   const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<String[]>([])
 
@@ -186,15 +190,16 @@ const Schedule = () => {
             <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
-                {classes.map((c) => (
-                  c.classInfo === undefined 
-                  ? <></>
-                   : <ClassBox 
-                      key={`course[${c.course_info.id}]-class[${c.class_info.id}]`}
-                      courseInfo={c.course_info}
-                      classInfo={c.class_info ?? null}
-                  />
-                ))}
+                {classes
+                  .filter((c) => c.classInfo !== undefined)
+                  .map((c) => (
+                    <ClassBox
+                      key={`course[${c.courseInfo.id}]-class[${c.classInfo.id}]`}
+                      courseInfo={c.courseInfo}
+                      classInfo={c.classInfo ?? null}
+                      classes={classes}
+                    />
+                  ))}
               </div>
             </div>
           </div>
@@ -256,6 +261,17 @@ const Schedule = () => {
                 <strong className="text-xl text-white">{convertWeekdayLong(dayNumber)[0]}</strong>
               </div>
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
+                {
+                  classes.map((c) => (
+                  c.classInfo === undefined 
+                  ? <></>
+                   : <ClassBox 
+                      key={`course[${c.course_info.id}]-class[${c.class_info.id}]`}
+                      courseInfo={c.course_info}
+                      classInfo={c.class_info ?? null}
+                  />
+                ))
+                }
                 {lessons.map(
                   (lesson: Lesson, lessonIdx: number) =>
                     !hiddenLessonsTypes.includes(lesson.schedule.lesson_type) && (
