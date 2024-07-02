@@ -10,14 +10,20 @@ const CombinedProvider = ({ children }) => {
   const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());  // TODO (Process-ing): Investigate integrating localStorage directly in the state (like in useLocalStorage)
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
 
-  const setMultipleOptions = (options: MultipleOptions) => {
-    setMultipleOptionsState(options);
-    StorageAPI.setMultipleOptionsStorage(options);
+  const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
+    if (newMultipleOptions instanceof Function)
+      newMultipleOptions = newMultipleOptions(multipleOptions);
+
+    setMultipleOptionsState(newMultipleOptions);
+    StorageAPI.setMultipleOptionsStorage(newMultipleOptions);
   }
 
-  const setSelectedOption = (option: number) => {
-    setSelectedOptionState(option);
-    StorageAPI.setSelectedOptionStorage(option);
+  const setSelectedOption = (newOption: number | ((prevOption: number) => number)) => {
+    if (newOption instanceof Function)
+      newOption = newOption(selectedOption);
+
+    setSelectedOptionState(newOption);
+    StorageAPI.setSelectedOptionStorage(newOption);
   }
 
   return (

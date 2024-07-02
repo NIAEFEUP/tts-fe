@@ -29,61 +29,61 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
   const key = 'niaefeup-tts.multiple-options'
   const defaultValue = [
     {
-      id: 1,
+      id: 0,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
       name: 'Horário 1',
       course_options: [],
     },
     {
-      id: 2,
+      id: 1,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
       name: 'Horário 2',
       course_options: [],
     },
     {
-      id: 3,
+      id: 2,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
       name: 'Horário 3',
       course_options: [],
     },
     {
-      id: 4,
+      id: 3,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
       name: 'Horário 4',
       course_options: [],
     },
     {
-      id: 5,
+      id: 4,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
       name: 'Horário 5',
       course_options: [],
     },
     {
-      id: 6,
+      id: 5,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
       name: 'Horário 6',
       course_options: [],
     },
     {
-      id: 7,
+      id: 6,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
       name: 'Horário 7',
       course_options: [],
     },
     {
-      id: 8,
+      id: 7,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
       name: 'Horário 8',
       course_options: [],
     },
     {
-      id: 9,
+      id: 8,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
       name: 'Horário 9',
       course_options: [],
     },
     {
-      id: 10,
+      id: 9,
       icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
       name: 'Horário 10',
       course_options: [],
@@ -134,11 +134,8 @@ const setMultipleOptionsStorage = (multipleOptions: MultipleOptions) => {
 const getSelectedOptionStorage = () => {
   const key = 'niaefeup-tts.selected-option';
   
-  let selectedOption;
-  try {
-    selectedOption = parseInt(localStorage.getItem(key));
-  } catch (error) {
-    console.error(error);
+  let selectedOption = parseInt(localStorage.getItem(key));
+  if (isNaN(selectedOption)) {
     selectedOption = 0;
     writeStorageInvalid(key, selectedOption);
   }

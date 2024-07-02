@@ -31,7 +31,7 @@ const SelectedOptionController = ({
   isImportedOptionHook,
 }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
-  const [optionsList, setOptionsList] = optionsListHook
+  const [optionsList, setOptionsList] = [[{}], () => {}]
   //const [selectedOption, setSelectedOption] = selectedOptionHook
   const { selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
