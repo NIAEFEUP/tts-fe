@@ -43,7 +43,7 @@ const MajorSearchCombobox = () => {
           aria-expanded={open}
           className="w-full justify-between dark:bg-darker dark:text-slate-50"
         >
-          {selectedMajor ? majors.find((major) => major.id === selectedMajor.id)?.name : 'Seleciona um curso...'}
+          {selectedMajor ? majors?.find((major) => major.id === selectedMajor.id)?.name : 'Seleciona um curso...'}
           <ChevronUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -52,7 +52,7 @@ const MajorSearchCombobox = () => {
           className="dark:bg-darker"
           filter={(value, search) => {
             if (value === 'remove') return 1
-            const major = majors.find((major) => major.id === parseInt(value))
+            const major = majors?.find((major) => major.id === parseInt(value))
             return match(major?.name, search, true) ||
               match(major?.name, search, false) ||
               match(major?.acronym, search, true) ||
@@ -67,12 +67,12 @@ const MajorSearchCombobox = () => {
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
-            {majors.map((major) => (
+            {majors?.map((major) => (
               <CommandItem
                 key={major.id}
                 value={major.id.toString()}
                 onSelect={(currentMajorId) => {
-                  const currentMajor = majors.find((major) => major.id === parseInt(currentMajorId))
+                  const currentMajor = majors?.find((major) => major.id === parseInt(currentMajorId))
                   setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
                   setOpen(false)
                 }}

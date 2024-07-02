@@ -1,12 +1,13 @@
 import { BoltIcon } from '@heroicons/react/24/outline'
 import { CourseOption, CourseSchedule, MultipleOptions } from '../../../../@types'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState, useMemo } from 'react'
 // import { removeDuplicatesFromCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { ScrollArea } from '../../../ui/scroll-area'
 import { Checkbox } from '../../../ui/checkbox'
 import { Separator } from '../../../ui/separator'
+import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 
 type Props = {
@@ -14,16 +15,45 @@ type Props = {
 }
 
 const RandomFill = ({ className }: Props) => {
+  const { pickedCourses, } = useContext(CourseContext);
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
   console.log("Multiple options are: ", multipleOptions);
   // const courseOptions = removeDuplicatesFromCourseOption(multipleOptions.selected)
   const courseOptions = multipleOptions[selectedOption].course_options
   const [permutations, setPermutations] = useState([])
   const [lockedCourses, setLockedCourses] = useState(
-    []
-    //courseOptions.filter((course) => course.locked).map((course) => course.course.info.acronym)
+    courseOptions.filter((course) => course.locked).map((course) => course.course_id)
   )
-  const [randomClasses, setRandomClasses] = useState({})
+
+  const classes = useMemo(() => {
+    let aux = [];
+    const option = multipleOptions[selectedOption];
+
+    for (let i = 0; i < option.course_options.length; i++) {
+      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
+
+      if (course_info.classes) {
+        course_info.classes.forEach((class_info) => {
+          aux.push({
+            course_info: course_info,
+            class_info: class_info,
+          });
+        });
+      }
+    }
+
+    return aux;
+  }, [multipleOptions, pickedCourses, selectedOption]);
+
+  console.log("Classes are: ", classes);
+
+  const [randomClasses, setRandomClasses] = useState(
+    Array.from(new Set(classes.map((class_info) => class_info.class_info.name)))
+  );
+
+  console.log("random classes are: ", randomClasses);
+
+
 
   /* 
   Usage:
@@ -32,13 +62,13 @@ const RandomFill = ({ className }: Props) => {
     const generator = cartesianGenerator(...schedules); 
     const combination = generator.next().value;
   */
-  function* cartesianGenerator(...a) {
-    if (a.length === 0) {
+  function* cartesianGenerator(...arrays) {
+    if (arrays.length === 0) {
       yield []
       return
     }
 
-    const [head, ...tail] = a
+    const [head, ...tail] = arrays
 
     if (head.length === 0) {
       for (const t of cartesianGenerator(...tail)) {
@@ -49,8 +79,10 @@ const RandomFill = ({ className }: Props) => {
 
     for (const h of head) {
       for (const t of cartesianGenerator(...tail)) {
-        if (!isValidSchedule([h, ...t])) continue
-        yield [h, ...t]
+
+        if (isValidSchedule([h, ...t])) {
+          yield [h, ...t]
+        }
       }
     }
   }
@@ -58,13 +90,19 @@ const RandomFill = ({ className }: Props) => {
   const getSchedulesGenerator = () => {
     const allSchedules = courseOptions.map((course) => {
       if (course.locked) {
-        return [course.option]
+        return pickedCourses.find((picked) => picked.id === course.course_id).classes.find(
+          (cls) => cls.id === course.picked_class_id
+        );
       }
-      return course.schedules.filter((schedule) => schedule.lesson_type != 'T' && randomClasses[schedule.class_name])
-    })
 
-    return cartesianGenerator(...allSchedules)
+      return classes
+        .filter((class_info) => class_info.course_info.id === course.course_id)
+        .map((class_info) => class_info.class_info);
+    });
+
+    return cartesianGenerator(...allSchedules);
   }
+
 
   /*
     Function to check if a schedule is valid (no overlapping classes)
@@ -122,29 +160,58 @@ const RandomFill = ({ className }: Props) => {
   }
 
   const applySchedule = (schedules: CourseSchedule[]) => {
-    if (schedules.length <= 0) return
+    if (schedules.length <= 0) return;
+
+    console.log("Previous multiple options are: ", multipleOptions);
 
     setMultipleOptions((prevMultipleOptions) => {
-      const selected = prevMultipleOptions.selected
+      const newMultipleOptions = [...prevMultipleOptions];
 
-      const newSelected = selected.map((course, index) => {
-        let newCourse = course
-        newCourse.option = schedules[index] ?? null
-        return newCourse
-      })
+      const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption + 1);
 
-      const value = {
-        index: prevMultipleOptions.index,
-        selected: [...newSelected],
-        options: prevMultipleOptions.options,
+      if (selectedOptionIndex === -1) {
+        console.error('Selected option not found in multipleOptions.');
+        return prevMultipleOptions;
       }
 
-      return value
-    })
+      const selectedOptionCopy = { ...newMultipleOptions[selectedOptionIndex] };
+
+      if (!selectedOptionCopy.course_options) {
+        console.error('course_options is undefined in selectedOptionCopy.');
+        return prevMultipleOptions;
+      }
+
+      const newCourseOptions = selectedOptionCopy.course_options.map((course) => {
+        const matchedSchedule = schedules.find((schedule) => schedule.course_unit_id === course.course_id)
+        if (matchedSchedule) {
+          console.log("Matched schedule ID is: ", matchedSchedule.id);
+          return {
+            course_id: matchedSchedule.course_unit_id,
+            hide: course.hide,
+            filteredTeachers: course.filteredTeachers,
+            locked: course.locked,
+            picked_class_id: matchedSchedule.id,
+          };
+        }
+        return course;
+      });
+
+      selectedOptionCopy.course_options = newCourseOptions;
+      newMultipleOptions[selectedOptionIndex] = selectedOptionCopy;
+
+      console.log("New course options are: ", newCourseOptions);
+
+      return newMultipleOptions;
+    });
   }
 
+
+
   const toggleRandomClasses = (event) => {
+
+
     setRandomClasses((prevRandomClasses) => {
+      console.log("prevprev" + prevRandomClasses)
       const newRandomClasses = { ...prevRandomClasses }
       newRandomClasses[event.target.id] = !newRandomClasses[event.target.id]
       return newRandomClasses
@@ -159,14 +226,16 @@ const RandomFill = ({ className }: Props) => {
     // ------------------------------------------------------
     // Updating all class names of the selected courses
     if (Object.keys(randomClasses).length !== 0) return
-    const selected = multipleOptions.selected
+    const newMultipleOptions = [...multipleOptions];
+    const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption);
+
+    const selected = newMultipleOptions[selectedOptionIndex]?.course_options;
 
     const classes = [
       ...new Set(
-        selected
-          .map((course) =>
-            course.schedules.filter((schedule) => schedule.lesson_type != 'T').map((schedule) => schedule.class_name)
-          )
+        selected?.map((course) =>
+          course.picked_class_id
+        )
           .flat()
       ),
     ]
@@ -184,13 +253,21 @@ const RandomFill = ({ className }: Props) => {
    * -
    */
   useEffect(() => {
+
     // ------------------------------------------------------
+
+    const newMultipleOptions = [...multipleOptions];
+
+    const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption);
+
+    console.log("Selected option index is: ", selectedOption);
+
+    const selected = newMultipleOptions[selectedOptionIndex]?.course_options
     // Updating locked courses
-    const newLockedCourses = multipleOptions.selected
-      .filter((course) => course.locked)
-      .map((course) => course.course.info.acronym)
+    const newLockedCourses = selected?.filter((course) => course.locked)
+      .map((course) => course.course_id)
     // Only update if locked courses changed
-    if (newLockedCourses.join() !== lockedCourses.join()) {
+    if (newLockedCourses?.join() !== lockedCourses?.join()) {
       setLockedCourses(newLockedCourses)
       setPermutations([])
       setGenerator(getSchedulesGenerator())
@@ -205,10 +282,13 @@ const RandomFill = ({ className }: Props) => {
   useEffect(() => {
     setPermutations([])
     setGenerator(getSchedulesGenerator())
-  }, [multipleOptions.index, randomClasses])
+  }, [selectedOption, randomClasses])
 
   const [generator, setGenerator] = useState(getSchedulesGenerator())
 
+
+
+  console.log("final random classes are: ", randomClasses)
   return (
     <TooltipProvider>
       <Tooltip>
