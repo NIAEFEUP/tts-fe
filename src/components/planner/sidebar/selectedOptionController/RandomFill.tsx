@@ -29,16 +29,18 @@ const RandomFill = ({ className }: Props) => {
     let aux = [];
     const option = multipleOptions[selectedOption];
 
-    for (let i = 0; i < option.course_options.length; i++) {
-      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
-
-      if (course_info.classes) {
-        course_info.classes.forEach((class_info) => {
-          aux.push({
-            course_info: course_info,
-            class_info: class_info,
+    if (option){
+      for (let i = 0; i < option.course_options.length; i++) {
+        const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
+  
+        if (course_info.classes) {
+          course_info.classes.forEach((class_info) => {
+            aux.push({
+              course_info: course_info,
+              class_info: class_info,
+            });
           });
-        });
+        }
       }
     }
 
@@ -51,7 +53,6 @@ const RandomFill = ({ className }: Props) => {
     Array.from(new Set(classes.map((class_info) => class_info.class_info.name)))
   );
 
-  console.log("random classes are: ", randomClasses);
 
 
 
@@ -64,24 +65,23 @@ const RandomFill = ({ className }: Props) => {
   */
   function* cartesianGenerator(...arrays) {
     if (arrays.length === 0) {
-      yield []
-      return
+      yield [];
+      return;
     }
 
-    const [head, ...tail] = arrays
+    const [head, ...tail] = arrays;
 
     if (head.length === 0) {
       for (const t of cartesianGenerator(...tail)) {
-        yield [null, ...t]
+        yield [null, ...t];
       }
-      return
+      return;
     }
 
     for (const h of head) {
       for (const t of cartesianGenerator(...tail)) {
-
         if (isValidSchedule([h, ...t])) {
-          yield [h, ...t]
+          yield [h, ...t];
         }
       }
     }
@@ -95,7 +95,11 @@ const RandomFill = ({ className }: Props) => {
         );
       }
 
-      return classes
+      const availableClasses = classes.filter((class_info) => {
+        return randomClasses.includes(class_info.class_info.name);
+      });
+
+      return availableClasses
         .filter((class_info) => class_info.course_info.id === course.course_id)
         .map((class_info) => class_info.class_info);
     });
@@ -186,10 +190,7 @@ const RandomFill = ({ className }: Props) => {
         if (matchedSchedule) {
           console.log("Matched schedule ID is: ", matchedSchedule.id);
           return {
-            course_id: matchedSchedule.course_unit_id,
-            hide: course.hide,
-            filteredTeachers: course.filteredTeachers,
-            locked: course.locked,
+            ...course,
             picked_class_id: matchedSchedule.id,
           };
         }
@@ -208,13 +209,13 @@ const RandomFill = ({ className }: Props) => {
 
 
   const toggleRandomClasses = (event) => {
-
-
+    const className = event.target.id
     setRandomClasses((prevRandomClasses) => {
-      console.log("prevprev" + prevRandomClasses)
-      const newRandomClasses = { ...prevRandomClasses }
-      newRandomClasses[event.target.id] = !newRandomClasses[event.target.id]
-      return newRandomClasses
+      if (prevRandomClasses.includes(className)) {
+        return prevRandomClasses.filter((name) => name !== className)
+      } else {
+        return [...prevRandomClasses, className]
+      }
     })
   }
 
@@ -223,29 +224,17 @@ const RandomFill = ({ className }: Props) => {
    * - Multiple options change
    */
   useEffect(() => {
-    // ------------------------------------------------------
-    // Updating all class names of the selected courses
-    if (Object.keys(randomClasses).length !== 0) return
-    const newMultipleOptions = [...multipleOptions];
-    const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption);
+    if (randomClasses.length !== 0) return
 
-    const selected = newMultipleOptions[selectedOptionIndex]?.course_options;
+    const newMultipleOptions = [...multipleOptions]
+    const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption)
+    const selected = newMultipleOptions[selectedOptionIndex]?.course_options
 
     const classes = [
-      ...new Set(
-        selected?.map((course) =>
-          course.picked_class_id
-        )
-          .flat()
-      ),
+      ...new Set(selected?.map((course) => course.picked_class_id).flat())
     ]
 
-    const keyValue = {}
-    classes.forEach((class_name) => {
-      keyValue[class_name] = true
-    })
-
-    setRandomClasses(keyValue)
+    setRandomClasses(classes)
   }, [multipleOptions])
 
   /**
@@ -288,7 +277,6 @@ const RandomFill = ({ className }: Props) => {
 
 
 
-  console.log("final random classes are: ", randomClasses)
   return (
     <TooltipProvider>
       <Tooltip>
@@ -296,7 +284,7 @@ const RandomFill = ({ className }: Props) => {
           <Button
             onClick={applyRandomSchedule}
             variant="icon"
-            className={className.concat(' h-min w-min flex-grow bg-secondary')}
+            className={`${className} h-min w-min flex-grow bg-secondary`}
           >
             <BoltIcon className="h-5 w-5" />
           </Button>
@@ -305,12 +293,12 @@ const RandomFill = ({ className }: Props) => {
           <ScrollArea className="mx-5 h-72 rounded px-3">
             <div className="p-1">Preenchimento aleatório</div>
             <Separator />
-            {Object.keys(randomClasses).map((key) => (
+            {Array.from(new Set(classes.map((class_info) => class_info.class_info.name))).map((key) => (
               <div
                 key={key}
                 className="mt-1 flex items-center space-x-2 rounded p-1 hover:cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-700"
               >
-                <Checkbox id={key} checked={randomClasses[key]} onClick={toggleRandomClasses} />
+                <Checkbox id={key} checked={randomClasses.includes(key)} onClick={toggleRandomClasses} />
                 <label
                   htmlFor={key}
                   className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
