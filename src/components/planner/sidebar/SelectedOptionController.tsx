@@ -15,7 +15,6 @@ interface Option {
 }
 
 type Props = {
-  optionsListHook: [Option[], React.Dispatch<React.SetStateAction<Option[]>>]
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
   currentOption: CourseOption[]
   isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -25,15 +24,12 @@ type Props = {
  * Interactions with the currently selected option
  */
 const SelectedOptionController = ({
-  optionsListHook,
   selectedOptionHook,
   currentOption,
   isImportedOptionHook,
 }: Props) => {
   const { enabled, setEnabled } = useContext(ThemeContext)
-  const [optionsList, setOptionsList] = [[{}], () => {}]
-  //const [selectedOption, setSelectedOption] = selectedOptionHook
-  const { selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
   let isHovered = false
@@ -69,28 +65,26 @@ const SelectedOptionController = ({
   }
 
   const getOptionById = (id: number) => {
-    return optionsList.find((elem) => elem.id === id)
+    return multipleOptions.find((elem) => elem.id === id)
   }
 
   const renameOptionName = (event) => {
     const newName = event.target.value.trim()
     event.target.value = newName
-    setOptionsList((prevOptionsList) => {
-      const updatedOptionsList = prevOptionsList.map((item) =>
+    setMultipleOptions((prevMultipleOptions) => {
+      const updatedMultipleOptions = prevMultipleOptions.map((item) =>
         item.id === selectedOption ? { ...item, name: newName } : item
       )
-      localStorage.setItem('niaefeup-tts.optionsList', JSON.stringify(updatedOptionsList))
-      return updatedOptionsList
+      return updatedMultipleOptions;
     })
   }
 
   const changeOptionIcon = (newIcon) => {
-    setOptionsList((prevOptionsList) => {
-      const updatedOptionsList = prevOptionsList.map((item) =>
+    setMultipleOptions((prevMultipleOptions) => {
+      const updatedMultipleOptions = prevMultipleOptions.map((item) =>
         item.id === selectedOption ? { ...item, icon: newIcon } : item
       )
-      localStorage.setItem('niaefeup-tts.optionsList', JSON.stringify(updatedOptionsList))
-      return updatedOptionsList
+      return updatedMultipleOptions;
     })
   }
 
@@ -102,7 +96,7 @@ const SelectedOptionController = ({
             <img
               src={getOptionById(selectedOption)?.icon}
               className="h-full w-full"
-              alt={optionsList[selectedOption].name}
+              alt={multipleOptions[selectedOption].name}
             />
           </PopoverTrigger>
           <PopoverContent side="bottom" className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">

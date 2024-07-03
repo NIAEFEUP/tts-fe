@@ -20,27 +20,13 @@ const Sidebar = ({ /*multipleOptionsHook */}: Props) => {
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
   const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
 
-  //TODO: Type for optionsList
-  const [optionsList, setOptionsList] = useState(
-    () => JSON.parse(localStorage.getItem('niaefeup-tts.optionsList'))
-  )
-
-  /*const [selectedOption, setSelectedOption] = useState(() =>
-    localStorage.getItem('niaefeup-tts.selected-option')
-      ? parseInt(localStorage.getItem('niaefeup-tts.selected-option'))
-      : 0
-  )*/
-
   return (
     <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
       <div className="space-y-2">
         <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
           <SessionController />
-          <OptionsController
-            selectedOptionHook={[selectedOption, setSelectedOption]}
-          />
+          <OptionsController />
           <SelectedOptionController
-            optionsListHook={[optionsList, setOptionsList]}
             selectedOptionHook={[selectedOption, setSelectedOption]}
             currentOption={multipleOptions[selectedOption].course_options}
             isImportedOptionHook={[isImportedOption, setImportedOption]}
