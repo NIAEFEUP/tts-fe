@@ -4,15 +4,8 @@ import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext, useRef } from 'react'
 import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
-import RandomFill from './selectedOptionController/RandomFill'
 import { CourseOption } from '../../../@types/new_index'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
-
-interface Option {
-  id: number
-  icon: string
-  name: string
-}
 
 type Props = {
   selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]

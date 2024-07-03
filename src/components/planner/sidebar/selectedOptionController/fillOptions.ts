@@ -1,10 +1,12 @@
-import { useContext } from "react";
 import { ImportedCourses } from "../../../../@types";
 import { MultipleOptions } from "../../../../@types/new_index";
-import MultipleOptionsContext from "../../../../contexts/MultipleOptionsContext";
 
-const fillOptions = (importedCourses: ImportedCourses) => {
-    const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
+const fillOptions = (
+    importedCourses: ImportedCourses,
+    multipleOptions: MultipleOptions,
+    setMultipleOptions: (newMultipleOptions: MultipleOptions) => void,
+    selectedOption: number
+) => {
     const newMultipleOptions = [...multipleOptions];
 
     console.log("Imported courses are: ", importedCourses);
