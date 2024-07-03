@@ -1,6 +1,5 @@
 import classNames from 'classnames'
-import { useState, useMemo } from 'react'
-import { Lesson } from '../../../@types'
+import { useState } from 'react'
 import {
   getClassTypeClassName,
   getLessonTypeLongName,
@@ -9,8 +8,6 @@ import {
   maxHour,
   minHour,
 } from '../../../utils'
-import LessonPopover from './LessonPopover'
-import ConflictsPopover from './ConflictsPopover'
 import { ClassInfo, SlotInfo, CourseInfo, ConflictInfo } from '../../../@types/new_index'
 
 type Props = {
