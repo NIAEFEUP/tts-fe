@@ -10,18 +10,19 @@ type Props = {
   classInfo: ClassInfo
   displayed?: boolean
   checked?: boolean
-  conflict?: boolean
+  conflict?: boolean,
+  previewing: number,
   onSelect?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
 
-const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, onSelect, onMouseEnter, onMouseLeave }: Props) => {
+const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, previewing, onSelect, onMouseEnter, onMouseLeave }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
   const selectOption = () => {
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.course_id === course_id);
-    if(multipleOptionsEntry) {
+    if (multipleOptionsEntry) {
       multipleOptionsEntry.picked_class_id = classInfo.id;
       setMultipleOptions([...multipleOptions]);
     }
@@ -50,9 +51,8 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, onSelec
           ))}
         </div>
       </div>
-      <span className={`absolute inset-y-0 right-0 flex items-center pr-3 text-rose-700 ${true ? 'block' : 'hidden'}`}>
-        <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
-      </span>
+      <ExclamationTriangleIcon className={`h-5 w-5 ${true ? 'block' : 'hidden'}`} aria-hidden="true" />
+      <EyeIcon className={`h-5 w-5 ${previewing === classInfo.id ? 'block' : 'hidden'}`} aria-hidden="true" />
     </DropdownMenuCheckboxItem>
   )
 }

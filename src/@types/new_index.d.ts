@@ -21,6 +21,7 @@ export type Major = {
 export type CourseInfo = {
   id: number,
   course_unit_year: number,
+  course_unit_id: number,
   ects: number,
   acronym: string,
   name: string,
@@ -93,8 +94,8 @@ export type ClassDescriptor = {
 }
 
 export type ConflictsInfo = {
-    severe: boolean
-    classDescriptors: ClassDescriptor[]
+  severe: boolean
+  classDescriptors: ClassDescriptor[]
 }
 
 // |=============================================================|
