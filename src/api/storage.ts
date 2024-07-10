@@ -95,11 +95,17 @@ const setPickedCoursesStorage = (pickedCourses: any): void => {
   writeStorage(key, pickedCourses)
 }
 
+const setConflictsStorage = (conflicts: any): void => {
+  const key = 'niaefeup-tts.conflict-info'
+  writeStorage(key, conflicts)
+}
+
 const updateScrappeInfo = async () => {
   const key = 'niaefeup-tts.info'
   const info = await API.getInfo()
   writeStorage(key, info)
 }
+
 
 const StorageAPI = {
   // getOptionsStorage,
@@ -107,6 +113,7 @@ const StorageAPI = {
   removeOptionsStorage,
   getMajorsStorage,
   setMajorsStorage,
+  setConflictsStorage,
   updateScrappeInfo,
   setSelectedMajorStorage,
   setPickedCoursesStorage,

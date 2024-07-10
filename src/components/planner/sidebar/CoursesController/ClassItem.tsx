@@ -4,21 +4,22 @@ import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
 import { ExclamationTriangleIcon, EyeIcon } from '@heroicons/react/20/solid'
 import { getLessonBoxTime, convertWeekday } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import ConflictsContext from '../../../../contexts/ConflictContext'
 
 type Props = {
   course_id: number,
   classInfo: ClassInfo
   displayed?: boolean
   checked?: boolean
-  conflict?: boolean,
   previewing: number,
   onSelect?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
 
-const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, previewing, onSelect, onMouseEnter, onMouseLeave }: Props) => {
+const ClassItem = ({ course_id, classInfo, displayed, checked, previewing, onSelect, onMouseEnter, onMouseLeave }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
+  const {conflicts} = useContext(ConflictsContext);
 
   const selectOption = () => {
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.course_id === course_id);
@@ -28,6 +29,17 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, preview
     }
     onSelect();
   }
+
+  const conflict = useMemo(() => {
+    let aux = null;
+    for (const slot of classInfo.slots) {
+      if (conflicts[slot.id] && aux?.severity < conflicts[slot.id].severity)
+        aux = conflicts[slot.id];
+      
+      if (aux?.severity) return aux;
+    }
+    return aux;
+  }, [conflicts]);
 
   return (
     <DropdownMenuCheckboxItem
@@ -51,7 +63,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, conflict, preview
           ))}
         </div>
       </div>
-      <ExclamationTriangleIcon className={`h-5 w-5 ${true ? 'block' : 'hidden'}`} aria-hidden="true" />
+      <ExclamationTriangleIcon className={`h-5 w-5 ${conflict ? 'block' : 'hidden'} ${conflict?.severity ? 'text-red-600' : 'text-amber-500'}`} aria-hidden="true" />
       <EyeIcon className={`h-5 w-5 ${previewing === classInfo.id ? 'block' : 'hidden'}`} aria-hidden="true" />
     </DropdownMenuCheckboxItem>
   )

@@ -42,6 +42,7 @@ export type ClassInfo = {
 }
 
 export type SlotInfo = {
+  id: number,
   lesson_type: string,
   day: number,
   start_time: number,
@@ -93,10 +94,12 @@ export type ClassDescriptor = {
   slotInfo?: SlotInfo
 }
 
-export type ConflictsInfo = {
+export type ConflictInfo = {
   severe: boolean
-  classDescriptors: ClassDescriptor[]
+  conflictingClasses: ClassDescriptor[]
 }
+
+export type Conflicts = Map<number, ConflictInfo>
 
 // |=============================================================|
 // |         Ver se nao podemos apagar daqui para baixo:         |

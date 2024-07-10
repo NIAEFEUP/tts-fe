@@ -3,11 +3,11 @@ import { Lesson } from '../../../@types'
 import { Dialog, Transition } from '@headlessui/react'
 import Alert, { AlertType } from '../Alert'
 import InspectLessonBox from './InspectLessonBox'
-import { ClassInfo, SlotInfo, CourseInfo, ConflictsInfo, ClassDescriptor } from '../../../@types/new_index'
+import { ClassInfo, SlotInfo, CourseInfo, ConflictInfo, ClassDescriptor } from '../../../@types/new_index'
 
 
 type Props = {
-  conflictsInfo: ConflictsInfo,
+  conflictsInfo: ConflictInfo,
   isOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
@@ -70,7 +70,7 @@ const ConflictsPopover = ({
                 </Dialog.Title>
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
-                  {conflictsInfo.classDescriptors.map((classDescriptor: ClassDescriptor, lessonIdx: number) => (
+                  {conflictsInfo.conflictingClasses.map((classDescriptor: ClassDescriptor, lessonIdx: number) => (
                     <InspectLessonBox
                       key={`conflict-inspect-lesson-box-${lessonIdx}`}
                       courseInfo={classDescriptor.courseInfo}

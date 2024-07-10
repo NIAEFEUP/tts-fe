@@ -267,7 +267,6 @@ const ClassSelector = ({ course }: Props) => {
                         classInfo={classInfo}
                         displayed={display === classInfo.id}
                         checked={selectedOption === classInfo.id}
-                        conflict={timesCollideWithSelected(classInfo)}
                         previewing={previewing}
                         onSelect={() => setSelectedClassId(classInfo.id)}
                         onMouseEnter={() => showPreview(classInfo)}

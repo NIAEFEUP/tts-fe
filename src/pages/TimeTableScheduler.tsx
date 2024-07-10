@@ -57,6 +57,10 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
   )
 
+  const [conflicts, setConflicts] = useState(
+    JSON.parse(localStorage.getItem('niaefeup-tts.conflict-info')) || []
+  )
+
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
 
   //TODO (thePeras): Looks suspicious
@@ -365,6 +369,9 @@ const TimeTableSchedulerPage = () => {
     StorageAPI.setOptionsStorage(multipleOptions)
   }, [multipleOptions])
 
+  useEffect(() => {
+    StorageAPI.setConflictsStorage(conflicts)
+  }, [conflicts]);
 
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>

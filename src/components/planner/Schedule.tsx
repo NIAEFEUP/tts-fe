@@ -2,7 +2,7 @@ import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useEffect, useMemo, useRef, useState } from 'react'
 // import { Lesson, CourseOption } from '../../@types'
-import { Option, CourseOption, ConflictsInfo, ClassDescriptor } from '../../@types/new_index'
+import { Option, CourseOption, ConflictInfo, ClassDescriptor } from '../../@types/new_index'
 import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
 import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide, getClassType } from '../../utils'
 import { useShowGrid } from '../../hooks'
@@ -24,7 +24,7 @@ const Schedule = () => {
   const dayValues = Array.from({ length: 6 }, (_, i) => i)
   const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
   const [classes, setClasses] = useState<ClassDescriptor[]>([])
-  const [conflictInfo, setConflictInfo] = useState<ConflictsInfo[]>([]);
+  const [conflictInfo, setConflictInfo] = useState<ConflictInfo[]>([]);
 
   useEffect(() => {
     let newClasses = []

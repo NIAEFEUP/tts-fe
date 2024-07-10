@@ -1,10 +1,11 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ClassDescriptor, Conflicts } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { teacherIdsFromCourseInfo } from './CourseInfo'
+import { Hash } from 'crypto'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -395,10 +396,11 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
     const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
-    // console.log("Course: ", courseInfo.name)
+
     return classInfo.slots
   })
 }
+
 
 export {
   config,
@@ -433,5 +435,5 @@ export {
   getClassType,
   removeAllCourseOptions,
   convertCourseInfoToCourseOption,
-  conflictsSeverity
+  conflictsSeverity,
 }
