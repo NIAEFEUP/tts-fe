@@ -55,7 +55,6 @@ const ClassSelector = ({ course }: Props) => {
     useEffect(() => {
         const course_options = multipleOptions[selectedOption].course_options;
         const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
-
         if(!option[0]) {
             setSelectedClassId(null);
             return;
@@ -68,8 +67,6 @@ const ClassSelector = ({ course }: Props) => {
 
     }, [selectedOption, multipleOptions, course.id]);
 
-    console.log("current course option: ", courseOption);
-    console.log("DISPLAY IS: ", display)
 
     const allTeachers = useMemo(() => {
         if (!classesLoaded) return []
@@ -111,6 +108,20 @@ const ClassSelector = ({ course }: Props) => {
             classSelectorContentRef.current.style.width = `${classSelectorTriggerRef.current.offsetWidth}px`
         }
     }, [isDropdownOpen])
+
+
+    useEffect(() => {
+        const newMultipleOptions = [...multipleOptions];
+        const courseOptions = newMultipleOptions[selectedOption].course_options.map(opt => {
+            if (opt.course_id === course.id) {
+                return { ...opt, locked: locked };
+            }
+            return opt;
+        });
+        newMultipleOptions[selectedOption].course_options = courseOptions;
+        setMultipleOptions(newMultipleOptions);
+    }, [locked, selectedOption]);
+    
 
     const getOptions = (): Array<ClassInfo> => {
         if (filteredTeachers.length === 0) return course.classes
