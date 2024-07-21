@@ -93,27 +93,6 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
   try {
     if (isStorageValid(key, 7)) {
       const multipleOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
-
-      // TODO (Process-ing): Test if this check is really necessary
-      //for (let i = 0; i < courseOptions.options.length; i++) {
-      //         for (let j = 0; j < courseOptions.options[i].length; j++) {
-      //           if (courseOptions.options[i][j].teachers === undefined) {
-      //             courseOptions.options[i][j].teachers = getCourseTeachers(courseOptions.options[i][j])
-      //           }
-      //           if (courseOptions.options[i][j].filteredTeachers === undefined) {
-      //             courseOptions.options[i][j].filteredTeachers = getCourseTeachers(courseOptions.options[i][j])
-      //           }
-      //         }
-      //       }
-      
-      //       for (let i = 0; i < courseOptions.selected.length; i++) {
-      //           if (courseOptions.selected[i].teachers === undefined) {
-      //             courseOptions.selected[i].teachers = getCourseTeachers(courseOptions.selected[i])
-      //           }
-      //           if (courseOptions.selected[i].filteredTeachers === undefined) {
-      //             courseOptions.selected[i].filteredTeachers = getCourseTeachers(courseOptions.selected[i])
-      //           }
-
       return multipleOptions;
 
     } else {
