@@ -1,9 +1,16 @@
-import { useState, useEffect } from 'react'
+import BackendAPI from '../api/backend'
+import StorageAPI from '../api/storage'
+import { useState, useEffect, useMemo } from 'react'
 import { Schedule, Sidebar } from '../components/planner'
+import { CourseOption, Major, MultipleOptions } from '../@types'
 import { useCourses } from '../hooks'
 // import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
 // import { useToast } from '../components/ui/use-toast'
 // import { CourseInfo } from '../@types/new_index'
+import MajorContext from '../contexts/MajorContext'
+import CourseContext from '../contexts/CourseContext'
+import MultipleOptionsContext from '../contexts/MultipleOptionsContext'
+import api from '../api/backend'
 
 // export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
 //   let frequency: Map<number, number> = new Map()
@@ -35,12 +42,34 @@ const TimeTableSchedulerPage = () => {
 
   // ==============================================================================
   // ============================ NEW STATES AND HOOKS ============================
+  StorageAPI.getSelectedMajorStorage();
+  const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
+  const [selectedMajor, setSelectedMajor] = useState(StorageAPI.getSelectedMajorStorage());
   // const [selectedMajor, setSelectedMajor] = useState<Major>(null)
+  const [coursesInfo, setCoursesInfo] = useState(StorageAPI.getCoursesInfoStorage());
+  const [pickedCourses, setPickedCourses] = useState(StorageAPI.getPickedCoursesStorage());
 
-  // TODO(Process-ing): Why do we need this?
+  const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
+
+  //TODO (thePeras): Looks suspicious
   useEffect(() => {
-    document.getElementById('layout').scrollIntoView();
-  }, []);
+    if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
+  }, [pickedCourses]);
+
+  useEffect(() => {
+    BackendAPI.getCourses(selectedMajor).then((courses) => {
+      setCoursesInfo(courses)
+    })
+  }, [selectedMajor])
+
+  // // fetch majors when component is ready
+  useEffect(() => {
+    document.getElementById('layout').scrollIntoView()
+    BackendAPI.getMajors().then((majors: Major[]) => {
+      setMajors(majors)
+      StorageAPI.setMajorsStorage(majors)
+    })
+  }, [])
 
   // ==============================================================================
 
@@ -304,24 +333,32 @@ const TimeTableSchedulerPage = () => {
   //   setCheckedCourses(newCheckedCourses)
   // }
 
+  useEffect(() => {
+    StorageAPI.setPickedCoursesStorage(pickedCourses)
+  }, [pickedCourses])
+
 
   return (
-    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-      {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-        <div className="h-full w-full">
-          <Schedule />
-        </div>
-      </div>
+    <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
+      <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo, choosingNewCourse, setChoosingNewCourse }}>
+        <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+          {/* Schedule Preview */}
+          <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+            <div className="h-full w-full">
+              <Schedule />
+            </div>
+          </div>
 
-      {/* Sidebar */}
-      <Sidebar
-        coursesHook={[checkedCourses, setCheckedCourses]}
-        sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-        destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-        repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-      />
-    </div>
+          {/* Sidebar */}
+          <Sidebar
+            coursesHook={[checkedCourses, setCheckedCourses]}
+            sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
+            destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
+            repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
+          />
+        </div>
+      </CourseContext.Provider>
+    </MajorContext.Provider>
   )
 }
 
