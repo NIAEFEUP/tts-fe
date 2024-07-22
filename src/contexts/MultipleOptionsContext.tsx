@@ -14,6 +14,6 @@ const MultipleOptionsContext: Context<MultipleOptionsContent> = createContext({
   setMultipleOptions: (multipleOptions: MultipleOptions) => {},
   selectedOption: 0,
   setSelectedOption: (selectedOption: number) => {},
-})
+});
 
 export default MultipleOptionsContext

@@ -1,17 +1,9 @@
-import BackendAPI from '../api/backend'
-import StorageAPI from '../api/storage'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Schedule, Sidebar } from '../components/planner'
-import { CourseOption, Major, MultipleOptions } from '../@types'
 import { useCourses } from '../hooks'
 // import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
 // import { useToast } from '../components/ui/use-toast'
 // import { CourseInfo } from '../@types/new_index'
-import { defaultMultipleOptions } from '../utils'
-import MajorContext from '../contexts/MajorContext'
-import CourseContext from '../contexts/CourseContext'
-import MultipleOptionsContext from '../contexts/MultipleOptionsContext'
-import api from '../api/backend'
 
 // export const removeDuplicatesFromCourseArray = (courses: CheckedCourse[]): CheckedCourse[] => {
 //   let frequency: Map<number, number> = new Map()
@@ -43,56 +35,12 @@ const TimeTableSchedulerPage = () => {
 
   // ==============================================================================
   // ============================ NEW STATES AND HOOKS ============================
-  const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
-  const [selectedMajor, setSelectedMajor] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-major')) || null
-  )
   // const [selectedMajor, setSelectedMajor] = useState<Major>(null)
-  const [coursesInfo, setCoursesInfo] = useState(JSON.parse(localStorage.getItem('niaefeup-tts.courses-info')) || [])
-  const [pickedCourses, setPickedCourses] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
-  )
 
-  const [multipleOptions, setMultipleOptions] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
-  )
-
-  const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
-
-  //TODO (thePeras): Looks suspicious
+  // TODO(Process-ing): Why do we need this?
   useEffect(() => {
-    if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
-  }, [pickedCourses]);
-
-  const totalSelected = useMemo(
-    () => multipleOptions.map((co) => co.course_options.filter((option) => option.picked_class_id !== null)).flat(),
-    //() => multipleOptions_.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
-    [multipleOptions]
-  )
-
-  const [selectedOption, setSelectedOption] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 0
-  )
-
-  useEffect(() => {
-    if (totalSelected.length === 0) return
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions, totalSelected])
-
-  useEffect(() => {
-    BackendAPI.getCourses(selectedMajor).then((courses) => {
-      setCoursesInfo(courses)
-    })
-  }, [selectedMajor])
-
-  // // fetch majors when component is ready
-  useEffect(() => {
-    document.getElementById('layout').scrollIntoView()
-    BackendAPI.getMajors().then((majors: Major[]) => {
-      setMajors(majors)
-      StorageAPI.setMajorsStorage(majors)
-    })
-  }, [])
+    document.getElementById('layout').scrollIntoView();
+  }, []);
 
   // ==============================================================================
 
@@ -356,42 +304,24 @@ const TimeTableSchedulerPage = () => {
   //   setCheckedCourses(newCheckedCourses)
   // }
 
-  useEffect(() => {
-    StorageAPI.setPickedCoursesStorage(pickedCourses)
-  }, [pickedCourses])
-
-  useEffect(() => {
-    console.log(multipleOptions[selectedOption])
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions])
-
 
   return (
-    <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
-      <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo, choosingNewCourse, setChoosingNewCourse }}>
-        <MultipleOptionsContext.Provider
-          value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}
-        >
-          <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-            {/* Schedule Preview */}
-            <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-              <div className="h-full w-full">
-                <Schedule />
-              </div>
-            </div>
+    <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+      {/* Schedule Preview */}
+      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+        <div className="h-full w-full">
+          <Schedule />
+        </div>
+      </div>
 
-            {/* Sidebar */}
-            <Sidebar
-              coursesHook={[checkedCourses, setCheckedCourses]}
-              sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-              destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-              repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-            //multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
-            />
-          </div>
-        </MultipleOptionsContext.Provider>
-      </CourseContext.Provider>
-    </MajorContext.Provider>
+      {/* Sidebar */}
+      <Sidebar
+        coursesHook={[checkedCourses, setCheckedCourses]}
+        sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
+        destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
+        repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
+      />
+    </div>
   )
 }
 

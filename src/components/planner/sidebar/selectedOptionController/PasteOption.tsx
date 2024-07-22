@@ -132,7 +132,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
     }
 
     //setIsImportedOption(true)
-    fillOptions(importedCourses, selectedOption, multipleOptions, setMultipleOptions);
+    fillOptions(importedCourses, multipleOptions, setMultipleOptions, selectedOption);
     toast({
       title: 'Horário colado!',
       description: 'A opção foi colada com sucesso',

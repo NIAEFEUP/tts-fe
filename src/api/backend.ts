@@ -1,5 +1,4 @@
-import { Major } from '../@types'
-import { CourseInfo } from '../@types/new_index'
+import { Major, CourseInfo } from '../@types/new_index'
 import { getSemester, config, dev_config } from '../utils'
 
 
