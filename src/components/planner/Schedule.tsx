@@ -19,6 +19,9 @@ const Schedule = () => {
   const { pickedCourses } = useContext(CourseContext)
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
 
+  console.log("current picked courses: ", pickedCourses);
+  console.log("current multiple options: ", multipleOptions);
+
   const scheduleRef = useRef(null)
 
   const dayValues = Array.from({ length: 6 }, (_, i) => i)

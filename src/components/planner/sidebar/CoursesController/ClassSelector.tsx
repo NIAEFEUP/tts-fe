@@ -40,11 +40,8 @@ const ClassSelector = ({ course }: Props) => {
   const classSelectorContentRef = useRef(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
+  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses, choosingNewCourse } = useContext(CourseContext)
-
-  // When user hovers class items, the schedule of said class item will appear
-  const [previewing, setPreviewing] = useState<number | null>(null)
 
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
@@ -73,10 +70,12 @@ const ClassSelector = ({ course }: Props) => {
   const [locked, setLocked] = useState(courseOption.locked)
   const [hide, setHide] = useState(courseOption.hide)
 
+  const [preview, setPreview] = useState<number | null>(null)
   const [display, setDisplay] = useState(courseOption.picked_class_id)
 
 
   const deleteOption = () => {
+    console.log("delete option called");
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.picked_class_id === selectedClassId);
     multipleOptionsEntry.picked_class_id = null;
     setSelectedClassId(null);
@@ -92,7 +91,7 @@ const ClassSelector = ({ course }: Props) => {
       return;
     }
 
-    if (!previewing) setSelectedClassId(option[0].picked_class_id);
+    setSelectedClassId(option[0].picked_class_id);
     setDisplay(option[0].picked_class_id);
   }, [selectedOption, multipleOptions, course.id]);
 
@@ -114,8 +113,8 @@ const ClassSelector = ({ course }: Props) => {
   const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => classInfo.slots.some((slot) => slot.professors.some((professor) => !filteredTeachers.includes(professor.id)));
 
   const getOptions = (): Array<ClassInfo> => {
-    return course.classes?.filter((c) => {
-      return c.filteredTeachers?.every((element) => filteredTeachers.includes(element));
+      return course.classes?.filter((c) => {
+        return c.filteredTeachers?.every((element) => filteredTeachers.includes(element));
     })
   }
 
@@ -127,6 +126,7 @@ const ClassSelector = ({ course }: Props) => {
   // This is used to display a warning icon in each class of the dropdown in case of conflicts
   const timesCollideWithSelected = (classInfo: ClassInfo) => {
     const pickedSlots = getAllPickedSlots(pickedCourses, multipleOptions[selectedOption])
+    // console.log(pickedSlots)
     return pickedSlots.some((slot) => classInfo.slots.some((currentSlot) => schedulesConflict(slot, currentSlot)))
 
     // const currentClass = course.classes.find((c) => c.id === display)
@@ -143,12 +143,11 @@ const ClassSelector = ({ course }: Props) => {
   const showPreview = (classInfo: ClassInfo) => {
     const newMultipleOptions = [...multipleOptions];
     const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
-      if (c.course_id === course.id) {
-        setPreviewing(classInfo.id);
-
+      if(c.course_id === course.id) {
+        setPreview(c.course_id)
         c.picked_class_id = classInfo.id
       }
-
+      
       return c;
     });
 
@@ -157,20 +156,19 @@ const ClassSelector = ({ course }: Props) => {
   }
 
   const removePreview = () => {
-    const newMultipleOptions = [...multipleOptions];
-
+    /*const newMultipleOptions = [...multipleOptions];
     const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
-      if (c.course_id === course.course_unit_id) {
-        c.picked_class_id = selectedClassId
+      if(c.course_id === course.id) {
+        c.picked_class_id = preview
       }
-
+      
       return c;
     });
-
     newMultipleOptions[selectedOption].course_options = newCourseOptions;
-    setMultipleOptions(newMultipleOptions);
-
-    setPreviewing(null);
+    setMultipleOptions(newMultipleOptions)*/
+    
+    setSelectedClassId(preview)
+    setPreview(null)
   }
 
   function toggleTeacher(id: number) {
@@ -188,6 +186,23 @@ const ClassSelector = ({ course }: Props) => {
       setFilteredTeachers(teachers.flatMap((t) => t.id))
     }
   }
+
+  // useEffect(() => {
+
+  //   setMultipleOptions((prev) => {
+  //     let newMultipleOptions = prev
+  //     let newSelectedOption = prev[selectedOption]
+
+  //     newSelectedOption['picked_class_id'] = preview ? preview : display
+  //     newSelectedOption['filteredTeachers'] = filteredTeachers
+  //     newSelectedOption['locked'] = locked
+  //     newSelectedOption['hide'] = hide
+
+  //     newMultipleOptions[selectedOption] = newSelectedOption
+  //     return [...newMultipleOptions]
+  //   })
+  //   StorageAPI.setOptionsStorage(multipleOptions)
+  // }, [preview, display, filteredTeachers, locked, hide, selectedOption, setMultipleOptions, multipleOptions])
 
   return (
     <div className="relative text-sm" key={`course-option-${course.acronym}`}>
@@ -267,7 +282,8 @@ const ClassSelector = ({ course }: Props) => {
                         classInfo={classInfo}
                         displayed={display === classInfo.id}
                         checked={selectedOption === classInfo.id}
-                        previewing={previewing}
+                        previewing={preview}
+                        conflict={timesCollideWithSelected(classInfo)}
                         onSelect={() => setSelectedClassId(classInfo.id)}
                         onMouseEnter={() => showPreview(classInfo)}
                         onMouseLeave={() => removePreview()}
@@ -338,4 +354,4 @@ const ClassSelector = ({ course }: Props) => {
     </div>
   )
 }
-export default ClassSelector;
+export default ClassSelector
