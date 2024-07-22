@@ -91,7 +91,7 @@ const ClassSelector = ({ course }: Props) => {
       return;
     }
 
-    setSelectedClassId(option[0].picked_class_id);
+    if (!preview) setSelectedClassId(option[0].picked_class_id);
     setDisplay(option[0].picked_class_id);
   }, [selectedOption, multipleOptions, course.id]);
 
@@ -113,8 +113,8 @@ const ClassSelector = ({ course }: Props) => {
   const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => classInfo.slots.some((slot) => slot.professors.some((professor) => !filteredTeachers.includes(professor.id)));
 
   const getOptions = (): Array<ClassInfo> => {
-      return course.classes?.filter((c) => {
-        return c.filteredTeachers?.every((element) => filteredTeachers.includes(element));
+    return course.classes?.filter((c) => {
+      return c.filteredTeachers?.every((element) => filteredTeachers.includes(element));
     })
   }
 
@@ -140,14 +140,16 @@ const ClassSelector = ({ course }: Props) => {
   const hasCommonProfessorWith = (profs1, profs2) =>
     profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
 
+  // Puts inside the preview the actual selected class so we can then restore it later after the user stops
+  // previewing
   const showPreview = (classInfo: ClassInfo) => {
     const newMultipleOptions = [...multipleOptions];
     const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
-      if(c.course_id === course.id) {
-        setPreview(c.course_id)
+      if (c.course_id === course.id) {
+        setPreview(classInfo.id)
         c.picked_class_id = classInfo.id
       }
-      
+
       return c;
     });
 
@@ -155,20 +157,26 @@ const ClassSelector = ({ course }: Props) => {
     setMultipleOptions(newMultipleOptions)
   }
 
+  // Restores into multiple options the picked_class_id prior to when the user started previewing
   const removePreview = () => {
-    /*const newMultipleOptions = [...multipleOptions];
+    const newMultipleOptions = [...multipleOptions];
+
+    console.log("course unit id: ", course.course_unit_id)
+
+    console.log("selected class id: ", selectedClassId)
+
     const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
-      if(c.course_id === course.id) {
-        c.picked_class_id = preview
+      if (c.course_id === course.course_unit_id) {
+        c.picked_class_id = selectedClassId
       }
-      
+
       return c;
     });
+
     newMultipleOptions[selectedOption].course_options = newCourseOptions;
-    setMultipleOptions(newMultipleOptions)*/
-    
-    setSelectedClassId(preview)
-    setPreview(null)
+    setMultipleOptions(newMultipleOptions);
+
+    setPreview(null);
   }
 
   function toggleTeacher(id: number) {
@@ -282,7 +290,7 @@ const ClassSelector = ({ course }: Props) => {
                         classInfo={classInfo}
                         displayed={display === classInfo.id}
                         checked={selectedOption === classInfo.id}
-                        previewing={preview}
+                        preview={preview}
                         conflict={timesCollideWithSelected(classInfo)}
                         onSelect={() => setSelectedClassId(classInfo.id)}
                         onMouseEnter={() => showPreview(classInfo)}

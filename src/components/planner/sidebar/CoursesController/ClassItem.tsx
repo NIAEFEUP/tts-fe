@@ -12,14 +12,14 @@ type Props = {
   classInfo: ClassInfo
   displayed?: boolean
   checked?: boolean
-  previewing: number
+  preview: number
   conflict?: boolean
   onSelect?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
 
-const ClassItem = ({ course_id, classInfo, displayed, checked, previewing, onSelect, onMouseEnter, onMouseLeave }: Props) => {
+const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect, onMouseEnter, onMouseLeave }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses } = useContext(CourseContext);
 
@@ -33,30 +33,32 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, previewing, onSel
   }
 
   const conflict: number = useMemo(() => {
-    let classes : ClassInfo[] = []
+    let classes: ClassInfo[] = []
 
     for (const course_option of multipleOptions[selectedOption].course_options) {
-      if (course_option.picked_class_id && course_option.course_id !== course_id) {     
+      if (course_option.picked_class_id && course_option.course_id !== course_id) {
         const pickedCourse = pickedCourses.find(co => co.id === course_option.course_id);
         // retrieve class with the picked class id of the course option
         const pickedClass = pickedCourse.classes.find(c => c.id === course_option.picked_class_id);
-        
-        classes.push(pickedClass);        
+
+        classes.push(pickedClass);
       }
     }
 
-    for (const pickedClass of classes) 
-      for (const slot1 of pickedClass.slots) 
-        for (const slot2 of classInfo.slots) 
+    for (const pickedClass of classes)
+      for (const slot1 of pickedClass.slots)
+        for (const slot2 of classInfo.slots)
           if (schedulesConflict(slot1, slot2)) {
             if (slot1.lesson_type == "TP" && slot2.lesson_type == "TP")
               return 2
             else if (slot1.lesson_type == "TP" || slot2.lesson_type == "TP")
               return 1
-            else 
+            else
               return 0
           }
-    }, []);
+  }, []);
+
+  console.log("prevewing is: ", preview)
 
   return (
     <DropdownMenuCheckboxItem
@@ -81,7 +83,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, previewing, onSel
         </div>
       </div>
       <ExclamationTriangleIcon className={`h-5 w-5 ${conflict ? 'block' : 'hidden'} ${conflict == 2 ? 'text-red-600' : 'text-amber-500'}`} aria-hidden="true" />
-      <EyeIcon className={`h-5 w-5 ${previewing === classInfo.id ? 'block' : 'hidden'}`} aria-hidden="true" />
+      <EyeIcon className={`h-5 w-5 ${preview === classInfo.id ? 'block' : 'hidden'}`} aria-hidden="true" />
     </DropdownMenuCheckboxItem>
   )
 }
