@@ -1,6 +1,4 @@
-import { WrapText } from 'lucide-react'
-import { MultipleOptions, CourseInfo, Major } from '../@types/new_index'
-import { getCourseTeachers } from '../utils'
+import { MultipleOptions, CourseInfo, Major, PickedCourses } from '../@types/new_index'
 import API from './backend'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
@@ -137,14 +135,24 @@ const setMajorsStorage = (majors : Major[]) => {
   writeStorage(key, majors)
 }
 
-const getMajorsStorage = () => {
+const getMajorsStorage = (): Major[] => {
   const key = 'niaefeup-tts.majors'
   return JSON.parse(localStorage.getItem(key))
 }
 
-const setSelectedMajorStorage = (selectedMajor: any): void => {
+const getSelectedMajorStorage = (): Major => {
+  const key = 'niaefeup-tts.selected-major';
+  return JSON.parse(localStorage.getItem(key)) || null;
+}
+
+const setSelectedMajorStorage = (selectedMajor: Major): void => {
   const key = 'niaefeup-tts.selected-major'
   writeStorage(key, selectedMajor)
+}
+
+const getPickedCoursesStorage = (): PickedCourses => {
+  const key = 'niaefeup-tts.picked-courses'
+  return JSON.parse(localStorage.getItem(key)) || []
 }
 
 const setPickedCoursesStorage = (pickedCourses: any): void => {
@@ -152,7 +160,17 @@ const setPickedCoursesStorage = (pickedCourses: any): void => {
   writeStorage(key, pickedCourses)
 }
 
-const updateScrappeInfo = async () => {
+const getCoursesInfoStorage = (): CourseInfo[] => {
+  const key = 'niaefeup-tts.courses-info';
+  return JSON.parse(localStorage.getItem(key)) || [];
+}
+
+const setCoursesInfoStorage = (coursesInfo: CourseInfo[]): void => {
+  const key = 'niaefeup-tts.courses-info';
+  writeStorage(key, coursesInfo)
+}
+
+const updateScrappeInfo = async (): Promise<void> => {
   const key = 'niaefeup-tts.info'
   const info = await API.getInfo()
   writeStorage(key, info)
@@ -168,8 +186,12 @@ const StorageAPI = {
   getMajorsStorage,
   setMajorsStorage,
   updateScrappeInfo,
+  getSelectedMajorStorage,
   setSelectedMajorStorage,
+  getPickedCoursesStorage,
   setPickedCoursesStorage,
+  getCoursesInfoStorage,
+  setCoursesInfoStorage,
 }
 
 export default StorageAPI

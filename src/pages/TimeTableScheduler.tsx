@@ -42,15 +42,12 @@ const TimeTableSchedulerPage = () => {
 
   // ==============================================================================
   // ============================ NEW STATES AND HOOKS ============================
+  StorageAPI.getSelectedMajorStorage();
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
-  const [selectedMajor, setSelectedMajor] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-major')) || null
-  )
+  const [selectedMajor, setSelectedMajor] = useState(StorageAPI.getSelectedMajorStorage());
   // const [selectedMajor, setSelectedMajor] = useState<Major>(null)
-  const [coursesInfo, setCoursesInfo] = useState(JSON.parse(localStorage.getItem('niaefeup-tts.courses-info')) || [])
-  const [pickedCourses, setPickedCourses] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
-  )
+  const [coursesInfo, setCoursesInfo] = useState(StorageAPI.getCoursesInfoStorage());
+  const [pickedCourses, setPickedCourses] = useState(StorageAPI.getPickedCoursesStorage());
 
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
 
@@ -58,10 +55,6 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
   }, [pickedCourses]);
-
-  const [selectedOption, setSelectedOption] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 0
-  )
 
   useEffect(() => {
     BackendAPI.getCourses(selectedMajor).then((courses) => {
