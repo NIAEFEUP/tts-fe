@@ -103,9 +103,14 @@ const ClassSelector = ({ course }: Props) => {
     }
   }, [isDropdownOpen])
 
+  //(thePeras): Classes options should be a new state
+  /**
+   * Return the classes options filtered by the selected teachers
+   * Classes with at least one of its teachers selected will be returned
+   */
   const getOptions = (): Array<ClassInfo> => {
     return course.classes?.filter((c) => {
-      return c.filteredTeachers?.every((element) => filteredTeachers.includes(element));
+      return c.filteredTeachers?.some((element) => filteredTeachers.includes(element));
     })
   }
 
