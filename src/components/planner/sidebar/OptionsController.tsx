@@ -18,9 +18,7 @@ interface Option {
 const Option = ({ item, selectedHook }) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
 
-  console.log("ITEM IS: ", multipleOptions[selectedOption]);
-
-   return (
+  return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger
@@ -36,9 +34,8 @@ const Option = ({ item, selectedHook }) => {
             `}
         >
           <div
-            className={`absolute inset-x-0 top-0 text-transparent transition-colors duration-300 dark:group-hover:text-white ${
-              selectedOption === item.id ? 'group-hover:text-white' : 'group-hover:text-slate-700'
-            }`}
+            className={`absolute inset-x-0 top-0 text-transparent transition-colors duration-300 dark:group-hover:text-white ${selectedOption === item.id ? 'group-hover:text-white' : 'group-hover:text-slate-700'
+              }`}
           >
             <EllipsisHorizontalIcon className="m-auto h-5 w-5" />
           </div>

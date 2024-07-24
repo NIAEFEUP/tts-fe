@@ -22,6 +22,7 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
       newCheckboxList[idx] = !newCheckboxList[idx]
       return newCheckboxList
     })
+
     // Add or remove the course from the pickedCourses list
     if (pickedCourses.some((pickedCourse) => pickedCourse.id === courses[idx].id)) {
       setMultipleOptions(removeCourseOption(courses[idx], multipleOptions))

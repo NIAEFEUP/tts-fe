@@ -45,7 +45,6 @@ const CoursePicker = () => {
     setOpen(!open)
     if (open === false) return
     api.getCoursesClasses(pickedCourses) // (thePeras): not using the return value and modifying the parameter directly???
-    console.log("Picked courses are fd: ", pickedCourses);
     StorageAPI.setPickedCoursesStorage(pickedCourses)
   }
 

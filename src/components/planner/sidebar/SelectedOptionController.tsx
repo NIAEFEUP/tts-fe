@@ -148,7 +148,7 @@ const SelectedOptionController = ({
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
         <PasteOption isImportedOptionHook={isImportedOptionHook} />
-        {<RandomFill className="sm:py-0 xl:p-1" />}
+        <RandomFill className="sm:py-0 xl:p-1" />
       </div>
     </div>
   )

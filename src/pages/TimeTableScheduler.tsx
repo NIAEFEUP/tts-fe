@@ -7,7 +7,7 @@ import { useCourses } from '../hooks'
 // import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
 // import { useToast } from '../components/ui/use-toast'
 // import { CourseInfo } from '../@types/new_index'
-import { defaultMultipleOptions } from '../utils'
+import { defaultMultipleOptions, getClassTypeClassName } from '../utils'
 import MajorContext from '../contexts/MajorContext'
 import CourseContext from '../contexts/CourseContext'
 import MultipleOptionsContext from '../contexts/MultipleOptionsContext'
@@ -66,7 +66,7 @@ const TimeTableSchedulerPage = () => {
   // const [extraMajorEqualToMainMajor, setExtraMajorEqualToMainMajor] = useState<boolean>(false)
   const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = useState<boolean>(false)
   // const [extraCoursesActive, setExtraCoursesActive] = useState<boolean>(false)
- 
+
   // ===============================================================================================================================
 
   // ==============================================================================
@@ -81,15 +81,13 @@ const TimeTableSchedulerPage = () => {
     JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
   )
 
-  console.log("EIEIEIE PICKED COURSES ARE: ", pickedCourses);
-
   const [multipleOptions, setMultipleOptions] = useState(
     JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
   )
 
   //TODO (thePeras): Looks suspicious
   useEffect(() => {
-    if(pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
+    if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
   }, [pickedCourses]);
 
 
@@ -390,7 +388,6 @@ const TimeTableSchedulerPage = () => {
   }, [pickedCourses])
 
   useEffect(() => {
-    console.log(multipleOptions[selectedOption])
     StorageAPI.setOptionsStorage(multipleOptions)
   }, [multipleOptions])
 
@@ -415,7 +412,7 @@ const TimeTableSchedulerPage = () => {
               sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
               destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
               repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-              //multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
+            //multipleOptionsHook={[multipleOptions_, setMultipleOptions_]}
             />
           </div>
         </MultipleOptionsContext.Provider>
