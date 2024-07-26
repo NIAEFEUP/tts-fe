@@ -54,7 +54,9 @@ const TimeTableSchedulerPage = () => {
   //TODO (thePeras): Looks suspicious
   useEffect(() => {
     if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
-  }, [pickedCourses]);
+  }, [pickedCourses])
+
+  console.log("tts picked courses: ", pickedCourses);
 
   useEffect(() => {
     BackendAPI.getCourses(selectedMajor).then((courses) => {

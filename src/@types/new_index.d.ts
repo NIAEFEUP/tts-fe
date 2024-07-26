@@ -25,7 +25,7 @@ export type CourseInfo = {
   acronym: string,
   name: string,
   url: string,
-  classes: Array<ClassInfo>
+  classes?: Array<ClassInfo>
   // last_updated: string, // remover ??
   // semester: number, // remover ??
   // year: number // remover ??

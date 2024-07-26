@@ -8,7 +8,8 @@ import { Checkbox } from '../../../ui/checkbox'
 import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { ClassInfo, SlotInfo } from '../../../../@types/new_index'
+import { ClassInfo, CourseInfo, SlotInfo } from '../../../../@types/new_index'
+import api from '../../../../api/backend'
 
 type Props = {
   className?: string
@@ -23,39 +24,46 @@ const RandomFill = ({ className }: Props) => {
     courseOptions.filter((course) => course.locked).map((course) => course.course_id)
   )
 
-  console.log("picked courses is: ", pickedCourses);
-
-  const getClasses = () => {
+  const getClasses = async () => {
     let aux = []
-    const option = multipleOptions[selectedOption]
-
-    if (option) {
-      for (let i = 0; i < option.course_options.length; i++) {
-        const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
-        console.log("course_info keys 1: ", Object.keys(course_info));
-        console.log("course_info: ", { ...course_info });
-        console.log("course_info keys 2: ", Object.getOwnPropertyDescriptors(course_info));
-
-        console.log("current picked courses: ", pickedCourses);
-        console.log(`this should not be undefined ${course_info.classes}`)
-        if (course_info && course_info.classes) {
-          course_info.classes.forEach((class_info) => {
-            aux.push({
-              course_info: course_info,
+    await pickedCourses.forEach(async (course: CourseInfo) => {
+      if(course && course.classes) {
+        course.classes.forEach((class_info) => {
+          aux.push({
+              course_info: course,
               class_info: class_info,
             })
-          })
-        }
+        }) 
+      } else if(!course.classes) {
+        console.log("MY HERE!!");
+        course["classes"] = await api.getCourseClass(course);
+        console.log("what the fruit: ", course["classes"]);
+        course["classes"].forEach((class_info) => {
+          aux.push({
+              course_info: course,
+              class_info: class_info,
+            })
+        })
+        console.log("current aux is: ", aux);
       }
-    }
+    })
 
     return aux
   }
 
-  const [classes, setClasses] = useState(getClasses());
   useEffect(() => {
-    setClasses(getClasses());
-  }, [multipleOptions, pickedCourses, selectedOption])
+    console.log("HELL: ", [...pickedCourses]);
+  }, [pickedCourses])
+
+  const [classes, setClasses] = useState([]);
+  useEffect(() => {
+    const t = async () => {
+      const c = await getClasses();
+      setClasses(c);
+    }
+
+    t();
+  }, [pickedCourses, multipleOptions, selectedOption])
 
   const [randomClasses, setRandomClasses] = useState(
     Array.from(new Set(classes.map((class_info) => class_info.class_info.name)))
@@ -77,6 +85,7 @@ const RandomFill = ({ className }: Props) => {
     const combination = generator.next().value;
   */
   function* cartesianGenerator(...arrays) {
+    console.log("arrays: ", arrays);
     if (arrays.length === 0) {
       yield []
       return
@@ -164,6 +173,8 @@ const RandomFill = ({ className }: Props) => {
     return true
   }
 
+  console.log("permutations: ", permutations);
+
   const applyRandomSchedule = () => {
     let newPermutations = [...permutations]
     const STEP = 10000
@@ -175,7 +186,6 @@ const RandomFill = ({ className }: Props) => {
 
     const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
 
-    console.log("new permutations: ", newPermutations[randomNumber]);
     applySchedule(newPermutations[randomNumber])
     setPermutations(newPermutations)
   }
@@ -196,11 +206,7 @@ const RandomFill = ({ className }: Props) => {
       const newCourseOptions = selectedOptionCopy.course_options.map((course) => {
         if (course.locked) return course
         
-        console.log("current schedules is: ", schedules);
-
         const matchedSchedule = schedules?.find((schedule) => schedule.course_unit_id === course.course_id)
-
-        console.log("matched schedules: ", matchedSchedule);
 
         if (matchedSchedule) {
           return {
@@ -211,14 +217,8 @@ const RandomFill = ({ className }: Props) => {
         return course
       })
 
-      console.log("new course options xxx: ", newCourseOptions);
-
       selectedOptionCopy.course_options = newCourseOptions
-      console.log("selected option copy: ", selectedOptionCopy);
       newMultipleOptions[selectedOption] = selectedOptionCopy
-      console.log("")
-
-      console.log("new multiple options: ", newMultipleOptions);
 
       return newMultipleOptions
     })
@@ -285,7 +285,7 @@ const RandomFill = ({ className }: Props) => {
 
   const [generator, setGenerator] = useState(getSchedulesGenerator())
 
-
+  console.log("generator is: ", getSchedulesGenerator());
 
   return (
     <TooltipProvider>

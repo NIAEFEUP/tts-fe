@@ -5,6 +5,7 @@ import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsConte
 import { Checkbox } from '../../../../ui/checkbox'
 import { Label } from '../../../../ui/label'
 import { addCourseOption, removeCourseOption } from '../../../../../utils'
+import api from '../../../../../api/backend'
 
 type Props = {
   courses: CourseInfo[]
@@ -28,8 +29,8 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
       setMultipleOptions(removeCourseOption(courses[idx], multipleOptions))
       setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse.id !== courses[idx].id))
     } else {
+      setPickedCourses([...pickedCourses, courses[idx]]);
       setMultipleOptions(addCourseOption(courses[idx], multipleOptions))
-      setPickedCourses([...pickedCourses, courses[idx]])
     }
   }
 
@@ -49,7 +50,7 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
             id={`checkbox-${courseIdx}`}
             title={course.name}
             checked={checkboxList[courseIdx]}
-            onCheckedChange={() => toggleCourse(courseIdx)}
+            onCheckedChange={() => { toggleCourse(courseIdx) }}
           />
           <Label htmlFor={`checkbox-${courseIdx}`} className="text-wrap leading-normal hover:cursor-pointer">
             {course.name + ' (' + course.acronym + ')'}
