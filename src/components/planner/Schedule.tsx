@@ -1,10 +1,8 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
-// import { Lesson, CourseOption } from '../../@types'
-import { Option, CourseOption } from '../../@types/new_index'
-import { ScheduleGrid, LessonBox, ResponsiveLessonBox } from './schedules'
-import { minHour, maxHour, convertHour, convertWeekdayLong, timesCollide, getClassType } from '../../utils'
+import { ScheduleGrid } from './schedules'
+import { minHour, maxHour, convertHour, convertWeekdayLong, getClassType } from '../../utils'
 import { useShowGrid } from '../../hooks'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
@@ -185,7 +183,7 @@ const Schedule = () => {
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
                 {classes.map((c) => (
-                  c.classInfo === undefined 
+                  c.class_info === undefined 
                   ? <></>
                    : <ClassBox 
                     key={`course[${c.course_info.id}]-class[${c.class_info.id}]`}

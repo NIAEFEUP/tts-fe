@@ -8,6 +8,7 @@ import { Checkbox } from '../../../ui/checkbox'
 import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { ClassInfo, SlotInfo } from '../../../../@types/new_index'
 
 type Props = {
   className?: string
@@ -117,6 +118,7 @@ const RandomFill = ({ className }: Props) => {
         .map((class_info) => class_info.class_info)
     })
 
+    console.log("all schedules: ", allSchedules);
 
     return cartesianGenerator(...allSchedules)
   }
@@ -125,18 +127,18 @@ const RandomFill = ({ className }: Props) => {
   /*
     Function to check if a schedule is valid (no overlapping classes)
   */
-  const isValidSchedule = (courses: CourseSchedule[]) => {
+  const isValidSchedule = (courses: SlotInfo[]) => {
     const schedules = courses
-      .filter((schedule) => schedule !== null)
-      .map((schedule) => {
+      .filter((slot) => slot !== null)
+      .map((slot) => {
         return {
-          day: schedule.day,
-          start_time: parseFloat(schedule.start_time),
-          duration: parseFloat(schedule.duration),
+          day: slot.day,
+          start_time: slot.start_time,
+          duration: slot.duration,
         }
       })
       .sort((a, b) => {
-        if (a.day == b.day) return a.start_time - b.start_time
+        if (a.day === b.day) return a.start_time - b.start_time
         return a.day - b.day
       })
 
@@ -173,24 +175,18 @@ const RandomFill = ({ className }: Props) => {
 
     const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
 
+    console.log("new permutations: ", newPermutations[randomNumber]);
     applySchedule(newPermutations[randomNumber])
     setPermutations(newPermutations)
   }
 
-  const applySchedule = (schedules: CourseSchedule[]) => {
+  const applySchedule = (schedules: ClassInfo[]) => {
     if (schedules.length <= 0) return
-
 
     setMultipleOptions((prevMultipleOptions) => {
       const newMultipleOptions = [...prevMultipleOptions]
-      const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption + 1)
 
-      if (selectedOptionIndex === -1) {
-        console.error('Selected option not found in multipleOptions.')
-        return prevMultipleOptions
-      }
-
-      const selectedOptionCopy = { ...newMultipleOptions[selectedOptionIndex] }
+      const selectedOptionCopy = { ...newMultipleOptions[selectedOption] }
 
       if (!selectedOptionCopy.course_options) {
         console.error('course_options is undefined in selectedOptionCopy.')
@@ -199,9 +195,12 @@ const RandomFill = ({ className }: Props) => {
 
       const newCourseOptions = selectedOptionCopy.course_options.map((course) => {
         if (course.locked) return course
-
+        
+        console.log("current schedules is: ", schedules);
 
         const matchedSchedule = schedules?.find((schedule) => schedule.course_unit_id === course.course_id)
+
+        console.log("matched schedules: ", matchedSchedule);
 
         if (matchedSchedule) {
           return {
@@ -212,9 +211,14 @@ const RandomFill = ({ className }: Props) => {
         return course
       })
 
-      selectedOptionCopy.course_options = newCourseOptions
-      newMultipleOptions[selectedOptionIndex] = selectedOptionCopy
+      console.log("new course options xxx: ", newCourseOptions);
 
+      selectedOptionCopy.course_options = newCourseOptions
+      console.log("selected option copy: ", selectedOptionCopy);
+      newMultipleOptions[selectedOption] = selectedOptionCopy
+      console.log("")
+
+      console.log("new multiple options: ", newMultipleOptions);
 
       return newMultipleOptions
     })
@@ -239,8 +243,7 @@ const RandomFill = ({ className }: Props) => {
     if (randomClasses.length !== 0) return
 
     const newMultipleOptions = [...multipleOptions]
-    const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption)
-    const selected = newMultipleOptions[selectedOptionIndex]?.course_options
+    const selected = newMultipleOptions[selectedOption]?.course_options
 
     const classes = [
       ...new Set(selected?.map((course) => course.picked_class_id).flat())
@@ -257,10 +260,7 @@ const RandomFill = ({ className }: Props) => {
   useEffect(() => {
     const newMultipleOptions = [...multipleOptions]
 
-    const selectedOptionIndex = newMultipleOptions.findIndex(option => option.id === selectedOption)
-
-
-    const selected = newMultipleOptions[selectedOptionIndex]?.course_options
+    const selected = newMultipleOptions[selectedOption]?.course_options
     // Updating locked courses
     const newLockedCourses = selected?.filter((course) => course.locked)
       .map((course) => course.course_id)

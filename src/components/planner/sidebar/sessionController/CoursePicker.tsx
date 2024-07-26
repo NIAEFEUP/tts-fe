@@ -23,15 +23,9 @@ import { Desert } from '../../../svgs'
 
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses, setChoosingNewCourse } = useContext(CourseContext)
   const { selectedMajor } = useContext(MajorContext)
-  const { multipleOptions } = useContext(MultipleOptionsContext)
   const showContent = selectedMajor || pickedCourses.length > 0
-
-  useEffect(() => {
-    console.log("Multiple options have changed!");
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions])
 
   useEffect(() => {
     StorageAPI.setPickedCoursesStorage(pickedCourses)
@@ -41,7 +35,8 @@ const CoursePicker = () => {
     StorageAPI.setSelectedMajorStorage(selectedMajor)
   }, [selectedMajor])
 
-  const handleOpenChange = () => {
+  const handleOpenChange = async () => {
+    setChoosingNewCourse((prev) => !prev);
     setOpen(!open)
     if (open === false) return
     api.getCoursesClasses(pickedCourses) // (thePeras): not using the return value and modifying the parameter directly???
@@ -49,7 +44,7 @@ const CoursePicker = () => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={async () => { await handleOpenChange() }}>
       <DialogTrigger asChild>
         <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares">
           <span className="hidden md:block lg:hidden xl:block">Escolher UCs</span>

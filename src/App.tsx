@@ -3,8 +3,7 @@ import StorageAPI from './api/storage'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AboutPage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pages'
 import { getPath, config } from './utils'
-import { useDarkMode } from './hooks'
-import { ThemeContext } from './contexts/ThemeContext'
+import CombinedProvider from './contexts/CombinedProvider'
 import { Toaster } from './components/ui/toaster'
 import './app.css'
 
@@ -23,12 +22,11 @@ const redirects = [
 ]
 
 const App = () => {
-  const [enabled, setEnabled] = useDarkMode()
   StorageAPI.updateScrappeInfo()
 
   return (
     <BrowserRouter>
-      <ThemeContext.Provider value={{ enabled, setEnabled }}>
+      <CombinedProvider>
         <Routes>
           {pages.map((page, pageIdx) => (
             <Route
@@ -52,7 +50,7 @@ const App = () => {
             />
           ))}
         </Routes>
-      </ThemeContext.Provider>
+      </CombinedProvider>
     </BrowserRouter>
   )
 }

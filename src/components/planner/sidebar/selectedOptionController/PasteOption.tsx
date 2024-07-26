@@ -26,8 +26,9 @@ type Props = {
 
 const PasteOption = ({ isImportedOptionHook }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+  const [otherCoursesImported, setOtherCoursesImported] = useState<boolean>(false);
   const { pickedCourses, setPickedCourses } = useContext(CourseContext);
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [_, setIsImportedOption] = isImportedOptionHook
   const { toast } = useToast()
 
@@ -50,7 +51,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
   const importSchedule = async (value) => {
     const url = value
     const decoded_url = Buffer.from(url, 'base64').toString()
-    const isImporteFromClipboard : boolean = value;
+    const isImporteFromClipboard: boolean = value;
 
     if (!isValidURL(decoded_url)) {
       const description = isImporteFromClipboard
@@ -86,8 +87,11 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       return !checkedCoursesIds.includes(Number(course_unit_id))
     })
 
+    console.log("Unchecked course ids: ", uncheckedCoursesIds)
 
     if (uncheckedCoursesIds.length > 0) {
+      setOtherCoursesImported(true);
+
       const courses: CourseInfo[] = (await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {
         return await api.getCourseUnit(Number(course_unit_id))
       }))).flat();
@@ -102,10 +106,18 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       const newPickedCourses = [...pickedCourses];
       setPickedCourses(newPickedCourses.concat(courses));
 
-      const newMultipleOptions = [...multipleOptions];
-      newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(
-        courses.map((course) => convertCourseInfoToCourseOption(course))
-      );
+      let newMultipleOptions = [...multipleOptions];
+      newMultipleOptions.forEach((option) => {
+        option.course_options = option.course_options.concat(
+          courses.map((course) => convertCourseInfoToCourseOption(course))
+        )
+        console.log("skill issue 2: ", option.course_options);
+      });
+
+
+      // newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(
+      //   courses.map((course) => convertCourseInfoToCourseOption(course))
+      // );
       setMultipleOptions(newMultipleOptions);
 
       /*
@@ -120,7 +132,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
     }
 
     //setIsImportedOption(true)
-    fillOptions(importedCourses, selectedOption, multipleOptions, setMultipleOptions);
+    fillOptions(importedCourses, multipleOptions, setMultipleOptions, selectedOption);
     toast({
       title: 'Horário colado!',
       description: 'A opção foi colada com sucesso',

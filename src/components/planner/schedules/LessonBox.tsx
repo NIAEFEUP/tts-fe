@@ -1,6 +1,5 @@
 import classNames from 'classnames'
-import { useState, useMemo } from 'react'
-import { Lesson } from '../../../@types'
+import { useState } from 'react'
 import {
   getClassTypeClassName,
   getLessonTypeLongName,
@@ -9,8 +8,6 @@ import {
   maxHour,
   minHour,
 } from '../../../utils'
-import LessonPopover from './LessonPopover'
-import ConflictsPopover from './ConflictsPopover'
 import { ClassInfo, SlotInfo, CourseInfo, ConflictInfo } from '../../../@types/new_index'
 
 type Props = {
@@ -38,7 +35,7 @@ const LessonBox = ({
     (slotInfo.professors.length > 1 ? 'es' : '') +
     ':\n' +
     slotInfo.professors
-      .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.professor_name)
+      .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
       .join('\n')
 
   const [inspectShown, setInspectShown] = useState(false)
@@ -147,7 +144,7 @@ const LessonBox = ({
                 <div className="flex w-full items-center justify-between gap-1">
                   <span title="Sala">{slotInfo.location}</span>
                   <span title={professorDescription} className="truncate">
-                    {slotInfo.professors.map((prof_info) => prof_info.professor_acronym).join(', ')}
+                    {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
                   </span>
                 </div>
               </div>
@@ -173,7 +170,7 @@ const LessonBox = ({
                   <span title="Sala">{slotInfo.location}</span>
                   <span title="Turma">{classTitle}</span>
                   <span title={professorDescription} className="truncate">
-                    {slotInfo.professors.map((prof_info) => prof_info.professor_acronym).join(', ')}
+                    {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
                   </span>
                 </div>
               </div>
@@ -187,7 +184,7 @@ const LessonBox = ({
                 <span title="Duração">{timeSpan}</span>
                 <span title="Sala">{slotInfo.location}</span>
                 <span title={professorDescription} className="truncate">
-                  {slotInfo.professors.map((prof_info) => prof_info.professor_acronym).join(', ')}
+                  {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
                 </span>
               </div>
             )}

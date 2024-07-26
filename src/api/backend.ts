@@ -1,5 +1,4 @@
-import { Major } from '../@types'
-import { CourseInfo } from '../@types/new_index'
+import { Major, CourseInfo } from '../@types/new_index'
 import { getSemester, config, dev_config } from '../utils'
 
 
@@ -52,9 +51,15 @@ const getCourseClass = async (course: CourseInfo) => {
   return await apiRequest(`/class/${course.id}/`)
 }
 
-const getCoursesClasses = async (courses : CourseInfo[]) => {
+const getCoursesClasses = async (courses: CourseInfo[]) => {
   return courses.map(async (course) => {
-    course['classes'] = await getCourseClass(course)
+    course.classes = await getCourseClass(course)
+    course.classes = course.classes.map((c) => {
+      return {
+        ...c,
+        filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
+      }
+    })
     return course
   })
 }
@@ -66,7 +71,7 @@ const getCoursesClasses = async (courses : CourseInfo[]) => {
  */
 const getCourseUnit = async (id: number) => {
   if (id === null) return []
-  const class_info = (await apiRequest(`course_unit/${id}/`))[0];
+  const class_info = (await apiRequest(`course_unit/${id}/`));
   class_info['classes'] = await getCourseClass(class_info);
   return class_info;
 }

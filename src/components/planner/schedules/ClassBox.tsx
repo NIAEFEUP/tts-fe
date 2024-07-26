@@ -11,11 +11,7 @@ type Props = {
   }
 
 const ClassBox = ({courseInfo, classInfo} : Props) => {
-  const { pickedCourses } = useContext(CourseContext)
-  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
-
   return (
-
     <>
         {classInfo.slots.map((slot, index) => (
             <LessonBox
