@@ -1,7 +1,12 @@
 import { ImportedCourses } from "../../../../@types";
 import { MultipleOptions } from "../../../../@types/new_index";
 
-const fillOptions = (importedCourses: ImportedCourses, selectedOption: number, multipleOptions: MultipleOptions, setMultipleOptions: React.Dispatch<React.SetStateAction<MultipleOptions>>) => {
+const fillOptions = (
+    importedCourses: ImportedCourses,
+    multipleOptions: MultipleOptions,
+    setMultipleOptions: (newMultipleOptions: MultipleOptions) => void,
+    selectedOption: number
+) => {
     const newMultipleOptions = [...multipleOptions];
 
     console.log("Imported courses are: ", importedCourses);

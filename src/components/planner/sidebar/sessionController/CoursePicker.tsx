@@ -23,15 +23,10 @@ import { Desert } from '../../../svgs'
 import { removeAllCourseOptions } from '../../../../utils'
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
+  const { multipleOptions } = useContext(MultipleOptionsContext)
   const { pickedCourses, setPickedCourses, setChoosingNewCourse } = useContext(CourseContext)
   const { selectedMajor } = useContext(MajorContext)
-  const { multipleOptions } = useContext(MultipleOptionsContext)
   const showContent = selectedMajor || pickedCourses.length > 0
-
-  useEffect(() => {
-    console.log("Multiple options have changed!");
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions])
 
   useEffect(() => {
     StorageAPI.setPickedCoursesStorage(pickedCourses)

@@ -7,7 +7,6 @@ import { useCourses } from '../hooks'
 // import fillOptions from '../components/planner/sidebar/selectedOptionController/fillOptions'
 // import { useToast } from '../components/ui/use-toast'
 // import { CourseInfo } from '../@types/new_index'
-import { defaultMultipleOptions } from '../utils'
 import MajorContext from '../contexts/MajorContext'
 import CourseContext from '../contexts/CourseContext'
 import MultipleOptionsContext from '../contexts/MultipleOptionsContext'
@@ -43,19 +42,12 @@ const TimeTableSchedulerPage = () => {
 
   // ==============================================================================
   // ============================ NEW STATES AND HOOKS ============================
+  StorageAPI.getSelectedMajorStorage();
   const [majors, setMajors] = useState<Major[]>([]) // all the [majors]]]
-  const [selectedMajor, setSelectedMajor] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-major')) || null
-  )
+  const [selectedMajor, setSelectedMajor] = useState(StorageAPI.getSelectedMajorStorage());
   // const [selectedMajor, setSelectedMajor] = useState<Major>(null)
-  const [coursesInfo, setCoursesInfo] = useState(JSON.parse(localStorage.getItem('niaefeup-tts.courses-info')) || [])
-  const [pickedCourses, setPickedCourses] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.picked-courses')) || []
-  )
-
-  const [multipleOptions, setMultipleOptions] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.multiple-options')) || defaultMultipleOptions(pickedCourses)
-  )
+  const [coursesInfo, setCoursesInfo] = useState(StorageAPI.getCoursesInfoStorage());
+  const [pickedCourses, setPickedCourses] = useState(StorageAPI.getPickedCoursesStorage());
 
   const [conflicts, setConflicts] = useState(
     JSON.parse(localStorage.getItem('niaefeup-tts.conflict-info')) || []
@@ -67,21 +59,6 @@ const TimeTableSchedulerPage = () => {
   useEffect(() => {
     if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
   }, [pickedCourses]);
-
-  const totalSelected = useMemo(
-    () => multipleOptions.map((co) => co.course_options.filter((option) => option.picked_class_id !== null)).flat(),
-    //() => multipleOptions_.options.map((co: CourseOption[]) => co.filter((item) => item.option !== null)).flat(),
-    [multipleOptions]
-  )
-
-  const [selectedOption, setSelectedOption] = useState(
-    JSON.parse(localStorage.getItem('niaefeup-tts.selected-option')) || 0
-  )
-
-  useEffect(() => {
-    if (totalSelected.length === 0) return
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions, totalSelected])
 
   useEffect(() => {
     BackendAPI.getCourses(selectedMajor).then((courses) => {
@@ -365,32 +342,23 @@ const TimeTableSchedulerPage = () => {
   }, [pickedCourses])
 
   useEffect(() => {
-    console.log(multipleOptions[selectedOption])
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions])
-
-  useEffect(() => {
     StorageAPI.setConflictsStorage(conflicts)
   }, [conflicts]);
 
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
       <CourseContext.Provider value={{ pickedCourses, setPickedCourses, coursesInfo, setCoursesInfo, choosingNewCourse, setChoosingNewCourse }}>
-        <MultipleOptionsContext.Provider
-          value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}
-        >
-          <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-            {/* Schedule Preview */}
-            <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-              <div className="h-full w-full">
-                <Schedule />
-              </div>
+        <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+          {/* Schedule Preview */}
+          <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+            <div className="h-full w-full">
+              <Schedule />
             </div>
-
-            {/* Sidebar */}
-            <Sidebar />
           </div>
-        </MultipleOptionsContext.Provider>
+
+          {/* Sidebar */}
+          <Sidebar />
+        </div>
       </CourseContext.Provider>
     </MajorContext.Provider>
   )

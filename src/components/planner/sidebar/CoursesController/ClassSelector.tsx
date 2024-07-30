@@ -110,11 +110,14 @@ const ClassSelector = ({ course }: Props) => {
     }
   }, [isDropdownOpen])
 
-  const classInfoHasFilteredTeacher = (classInfo: ClassInfo) => classInfo.slots.some((slot) => slot.professors.some((professor) => !filteredTeachers.includes(professor.id)));
-
+  //(thePeras): Classes options should be a new state
+  /**
+   * Return the classes options filtered by the selected teachers
+   * Classes with at least one of its teachers selected will be returned
+   */
   const getOptions = (): Array<ClassInfo> => {
     return course.classes?.filter((c) => {
-      return c.filteredTeachers?.every((element) => filteredTeachers.includes(element));
+      return c.filteredTeachers?.some((element) => filteredTeachers.includes(element));
     })
   }
 
@@ -194,23 +197,6 @@ const ClassSelector = ({ course }: Props) => {
       setFilteredTeachers(teachers.flatMap((t) => t.id))
     }
   }
-
-  // useEffect(() => {
-
-  //   setMultipleOptions((prev) => {
-  //     let newMultipleOptions = prev
-  //     let newSelectedOption = prev[selectedOption]
-
-  //     newSelectedOption['picked_class_id'] = preview ? preview : display
-  //     newSelectedOption['filteredTeachers'] = filteredTeachers
-  //     newSelectedOption['locked'] = locked
-  //     newSelectedOption['hide'] = hide
-
-  //     newMultipleOptions[selectedOption] = newSelectedOption
-  //     return [...newMultipleOptions]
-  //   })
-  //   StorageAPI.setOptionsStorage(multipleOptions)
-  // }, [preview, display, filteredTeachers, locked, hide, selectedOption, setMultipleOptions, multipleOptions])
 
   return (
     <div className="relative text-sm" key={`course-option-${course.acronym}`}>
@@ -317,48 +303,6 @@ const ClassSelector = ({ course }: Props) => {
           )}
         </Button>
       </div>
-
-      {/* Show/Hide Checkboxes */}
-      {/* <div className="mt-1 flex items-center justify-start space-x-4">
-        <div
-          title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
-          className="flex items-center justify-center space-x-1"
-        >
-          <input
-            type="checkbox"
-            checked={showTheoretical}
-            id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-            className="checkbox-small disabled:hidden"
-            disabled={courseOption.option === null}
-            onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
-          />
-          <label
-            className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-            htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-          >
-            <span>Teóricas</span>
-          </label>
-        </div>
-        <div
-          title={`${showPractical ? 'Esconder' : 'Mostrar'} Aulas Práticas de ${courseOption.course.info.name}`}
-          className="flex items-center justify-center space-x-1"
-        >
-          <input
-            type="checkbox"
-            checked={showPractical}
-            id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-            className="checkbox-small disabled:hidden"
-            disabled={courseOption.option === null}
-            onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
-          />
-          <label
-            className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-            htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-          >
-            <span>Práticas</span>
-          </label>
-        </div>
-      </div> */}
     </div>
   )
 }

@@ -11,6 +11,7 @@ import {
   schedulesConflict,
   conflictsSeverity,
 } from '../../../utils'
+
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { ClassInfo, SlotInfo, CourseInfo, ConflictInfo, ClassDescriptor, Conflicts } from '../../../@types/new_index'
