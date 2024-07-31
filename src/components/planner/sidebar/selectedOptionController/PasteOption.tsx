@@ -111,7 +111,6 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
         option.course_options = option.course_options.concat(
           courses.map((course) => convertCourseInfoToCourseOption(course))
         )
-        console.log("skill issue 2: ", option.course_options);
       });
 
 

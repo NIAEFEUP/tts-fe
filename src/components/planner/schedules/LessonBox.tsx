@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useState, useMemo, useContext, useEffect } from 'react'
+import { Lesson } from '../../../@types'
 import {
   getClassTypeClassName,
   getLessonTypeLongName,
@@ -7,21 +8,27 @@ import {
   getLessonBoxTime,
   maxHour,
   minHour,
+  schedulesConflict,
+  conflictsSeverity,
 } from '../../../utils'
-import { ClassInfo, SlotInfo, CourseInfo, ConflictInfo } from '../../../@types/new_index'
+
+import LessonPopover from './LessonPopover'
+import ConflictsPopover from './ConflictsPopover'
+import { ClassInfo, SlotInfo, CourseInfo, ConflictInfo, ClassDescriptor, Conflicts } from '../../../@types/new_index'
+import ConflictContext from '../../../contexts/ConflictContext'
 
 type Props = {
   courseInfo: CourseInfo
   classInfo: ClassInfo
   slotInfo: SlotInfo
-  conflictsInfo: Array<ConflictInfo>
+  classes: ClassDescriptor[]
 }
 
 const LessonBox = ({ 
   courseInfo,
   classInfo,
   slotInfo,
-  conflictsInfo
+  classes
  }: Props) => {
   const classTitle = classInfo.name
   const lessonType = slotInfo.lesson_type
@@ -37,24 +44,43 @@ const LessonBox = ({
     slotInfo.professors
       .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
       .join('\n')
-
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
-  // const severe = useMemo(() => {
-  //   if (slotInfo.type === 'T') return false
-  //   return conflictsInfo.some((conflict) => conflict.slotInfo.type !== 'T')
-  // }, [conflictsInfo, slotInfo.type])
+  const {conflicts, setConflicts} = useContext(ConflictContext);
+  const conflict = conflicts[slotInfo.id];
+  const hasConflict = conflict?.conflictingClasses?.length > 1;
 
-  // const conflictTitle = conflict && isHovered ? 'Aulas Sobrepostas' : ''
-  // const conflictedLessonsInfo = useMemo(() => {
-  //   if (!conflicts) return []
+  // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
+  useEffect(() => {
+    const newConflicts = conflicts;
+    const aux : ConflictInfo = {
+      severe: false,
+      conflictingClasses: [{
+        classInfo: classInfo,
+        courseInfo: courseInfo,
+        slotInfo: slotInfo
+      }]
+    };
 
-  //   return conflicts.map((conflictLesson) => ({
-  //     name: conflictLesson.course.acronym,
-  //     type: conflictLesson.schedule.lesson_type,
-  //   }))
-  // }, [conflicts])
+    for (let i = 0; i < classes.length; i++) {                                // classes
+      const classDescriptor = classes[i];
+      for (let j = 0; j < classDescriptor.classInfo.slots.length; j++) {      // slots
+        const slot = classDescriptor.classInfo.slots[j];
+        if (schedulesConflict(slotInfo, slot)) {
+          aux.severe = conflictsSeverity(slotInfo, slot) || aux.severe;
+          const newClassDescriptor = {
+            classInfo: classDescriptor.classInfo,
+            courseInfo: classDescriptor.courseInfo,
+            slotInfo: slot
+          }
+          aux.conflictingClasses.push(newClassDescriptor);
+        }
+      }
+    }
+    newConflicts[slotInfo.id] = aux;
+    setConflicts(newConflicts);
+  }, [classInfo, classes]);
 
   const showConflicts = () => {
     setConflictsShown(true)
@@ -64,60 +90,64 @@ const LessonBox = ({
     setInspectShown(true)
   }
 
+  const conflictTitle = hasConflict && isHovered ? 'Aulas Sobrepostas' : ''
+
   return (
     <>
-      {/* {inspectShown && <LessonPopover info={info} isOpenHook={[inspectShown, setInspectShown]} />}
-      {conflictsInfo.length > 0 && (
-        <ConflictsPopover info={info} conflictsInfo={conflictsInfo} isOpenHook={[conflictsShown, setConflictsShown]} />
-      )} */}
+      {inspectShown && <LessonPopover courseInfo={courseInfo} classInfo={classInfo} slotInfo={slotInfo} isOpenHook={[inspectShown, setInspectShown]} />}
+      {hasConflict && (
+        <ConflictsPopover conflictsInfo={conflict} isOpenHook={[conflictsShown, setConflictsShown]} />
+      )}
       {
         <button
-          onClick={conflictsInfo.length > 0 ? showConflicts : inspectLesson}
+          onClick={hasConflict ? showConflicts : inspectLesson}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{
             ...getLessonBoxStyles(slotInfo, maxHour, minHour),
-            // backgroundColor: conflict && isHovered ? 'rgb(200,200,200)' : '',
+            backgroundColor: hasConflict && isHovered ? 'rgb(200,200,200)' : '',
           }}
           className={classNames(
             'schedule-class group',
             getClassTypeClassName(lessonType),
-            // conflict
-            //   ? severe
-            //     ? isHovered
-            //       ? 'schedule-class-conflict-info'
-            //       : 'schedule-class-conflict'
-            //     : isHovered
-            //     ? 'schedule-class-conflict-warn-info'
-            //     : 'schedule-class-conflict-warn'
-            //   : ''
+            hasConflict
+              ? conflict.severe
+                ? isHovered
+                  ? 'schedule-class-conflict-info'
+                  : 'schedule-class-conflict'
+                : isHovered
+                ? 'schedule-class-conflict-warn-info'
+                : 'schedule-class-conflict-warn'
+              : '',
+            'overflow-hidden'
           )}
         >
           <span>
-            {/* <div
+            {hasConflict && isHovered && <div
               className={`absolute top-0 left-0 w-full py-2 text-center text-xs font-extrabold xl:text-sm ${
-                severe ? 'text-red-600' : 'text-amber-500'
+                conflict.severe ? 'text-red-600' : 'text-amber-500'
               }`}
             >
               {conflictTitle}
-              <div className="px-1 py-1 text-center text-xs font-normal text-white xl:text-sm">
-                <ul className="flex flex-wrap justify-center gap-2">
-                  {conflictedLessonsInfo.map((conflictInfo, index) => (
-                    <li key={index}>
-                      {`${conflictInfo.name} (${conflictInfo.type})`}
-                      {index < conflictedLessonsInfo.length - 1 ? ',' : ''}
-                    </li>
+              <div className="px-1 py-1 font-normal text-white">
+                <ul className="flex flex-wrap justify-center gap-1">
+                  {conflict.conflictingClasses
+                    .sort((a, b) => (a.classInfo.name.length + a.courseInfo.acronym.length) - (b.classInfo.name.length + b.courseInfo.acronym.length))
+                    .map((conflictingClass, index) => (
+                      <li key={index}>
+                        {`${conflictingClass.classInfo.name} (${conflictingClass.courseInfo.acronym})`}
+                        {index < conflict.conflictingClasses.length - 1 ? ',' : ''}
+                      </li>
                   ))}
                 </ul>
               </div>
-            </div> */}
+            </div>}
+            
 
             {lgLesson && (
               <div
                 className={`flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white 
-                  lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs`}
-              //   className={`flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white 
-              // ${conflictTitle ? 'group-hover:blur-md' : ''} lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs`}
+              ${conflictTitle ? 'group-hover:blur-md' : ''} lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs`}
               >
                 {/* Top */}
                 <div className="flex w-full items-center justify-between">
@@ -151,11 +181,10 @@ const LessonBox = ({
             )}
             {mdLesson && (
               <div
-              //   className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${
-              //     conflictTitle ? 'group-hover:blur-md' : ''
-              //   } 
-              // xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
-                className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
+                className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${
+                  conflictTitle ? 'group-hover:blur-md' : ''
+                } 
+              xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
               >
                 <div className="flex w-full items-center justify-between gap-1">
                   <span title="Duração">
@@ -177,9 +206,8 @@ const LessonBox = ({
             )}
             {smLesson && (
               <div
-                className={`flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-[0.6rem]`}
-                // className={`flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter 
-                // ${conflictTitle ? 'group-hover:blur-md' : ''} xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-[0.6rem]`}
+                className={`flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter 
+                ${conflictTitle ? 'group-hover:blur-md' : ''} xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-[0.6rem]`}
               >
                 <span title="Duração">{timeSpan}</span>
                 <span title="Sala">{slotInfo.location}</span>

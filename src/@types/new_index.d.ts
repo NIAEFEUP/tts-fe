@@ -21,6 +21,7 @@ export type Major = {
 export type CourseInfo = {
   id: number,
   course_unit_year: number,
+  course_unit_id: number,
   ects: number,
   acronym: string,
   name: string,
@@ -41,6 +42,7 @@ export type ClassInfo = {
 }
 
 export type SlotInfo = {
+  id: number,
   lesson_type: string,
   day: number,
   start_time: number,
@@ -76,37 +78,28 @@ export type CourseOption = {
   hide: Array<lesson_type>,
 }
 
+// export type ClassDescriptor = {
+//   classInfo: ClassInfo
+//   courseInfo: CourseInfo
+// }
 
+// export type ConflictInfo = {
+//     classDescriptor: ClassDescriptor
+//     slotInfo: SlotInfo
+// }
 
+export type ClassDescriptor = {
+  classInfo: ClassInfo
+  courseInfo: CourseInfo
+  slotInfo?: SlotInfo
+}
 
+export type ConflictInfo = {
+  severe: boolean
+  conflictingClasses: ClassDescriptor[]
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export type Conflicts = Map<number, ConflictInfo>
 
 // |=============================================================|
 // |         Ver se nao podemos apagar daqui para baixo:         |
@@ -125,9 +118,4 @@ export type Lesson = {
 
 export type ImportedCourses = {
   [key: string]: string
-}
-
-export type ConflictInfo = {
-  courseInfo: CourseInfo
-  classInfo: ClassInfo
 }

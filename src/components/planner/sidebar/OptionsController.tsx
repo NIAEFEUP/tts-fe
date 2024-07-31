@@ -13,8 +13,6 @@ type Props = {
 }
 
 const OptionButton = ({ option, multipleOptions, selectedOption, setSelectedOption }: Props) => {
-  console.log("ITEM IS: ", multipleOptions[selectedOption]);
-
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>

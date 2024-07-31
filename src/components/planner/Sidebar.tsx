@@ -16,7 +16,7 @@ type Props = {
 /**
  * Sidebar with all the main schedule interactions
  */
-const Sidebar = ({ /*multipleOptionsHook */}: Props) => {
+const Sidebar = () => {
   const [isImportedOption, setImportedOption] = useState<boolean>(false)
   const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
 

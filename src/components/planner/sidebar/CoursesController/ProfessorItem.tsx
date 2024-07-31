@@ -24,15 +24,4 @@ const ProfessorItem = ({ professorInformation, filtered, onSelect }: Props) => {
   )
 }
 
-// <DropdownMenuCheckboxItem
-//     key={`teacher-${option.acronym}`}
-//     checked={isSelected}
-//     onSelect={(e) => {
-//     e.preventDefault()
-//     toggleTeacher(option)
-//     }}
-// >
-//     <span className="group-hover:hidden">{option.acronym}</span>
-//     <span className="hidden truncate group-hover:block">{option.name}</span>
-// </DropdownMenuCheckboxItem>
 export default ProfessorItem

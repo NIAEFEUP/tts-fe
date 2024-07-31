@@ -48,8 +48,6 @@ const ClassSelector = ({ course }: Props) => {
   const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
   courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
 
-  console.log("Bloat course option is: ", courseOption.filteredTeachers, " and bloat 2 is: ", courseOption);
-
   /**
    * This is used to retrieve the teachers from a course and to populate the filter of the teachers
    * which is the dropdown menu that appears by clicking on "Professores" on the class selector dropdown
@@ -72,8 +70,17 @@ const ClassSelector = ({ course }: Props) => {
   const [locked, setLocked] = useState(courseOption.locked)
   const [hide, setHide] = useState(courseOption.hide)
 
-  const [preview, setPreview] = useState(null)
+  const [preview, setPreview] = useState<number | null>(null)
   const [display, setDisplay] = useState(courseOption.picked_class_id)
+
+
+  const deleteOption = () => {
+    console.log("delete option called");
+    const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.picked_class_id === selectedClassId);
+    multipleOptionsEntry.picked_class_id = null;
+    setSelectedClassId(null);
+    setMultipleOptions([...multipleOptions]);
+  }
 
   useEffect(() => {
     const course_options = multipleOptions[selectedOption].course_options;
@@ -84,7 +91,7 @@ const ClassSelector = ({ course }: Props) => {
       return;
     }
 
-    setSelectedClassId(option[0].picked_class_id);
+    if (!preview) setSelectedClassId(option[0].picked_class_id);
     setDisplay(option[0].picked_class_id);
   }, [selectedOption, multipleOptions, course.id]);
 
@@ -118,9 +125,6 @@ const ClassSelector = ({ course }: Props) => {
     setFilteredTeachers(courseOption.filteredTeachers);
   }, [choosingNewCourse])
 
-  console.log("current hell filtered teachers", filteredTeachers);
-  console.log("current hell teacher filters", teacherFilters);
-
   // Checks if any of the selected classes have time conflicts with the classInfo
   // This is used to display a warning icon in each class of the dropdown in case of conflicts
   const timesCollideWithSelected = (classInfo: ClassInfo) => {
@@ -139,16 +143,43 @@ const ClassSelector = ({ course }: Props) => {
   const hasCommonProfessorWith = (profs1, profs2) =>
     profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
 
-  // const getOptionDisplayText = (option: CourseInfo, selectedClassId: number) => {
-  //   option === null || !option.course_unit_id ? <>&nbsp;</> : getScheduleOptionDisplayText(option)
-  // }
-
+  // Puts inside the preview the actual selected class so we can then restore it later after the user stops
+  // previewing
   const showPreview = (classInfo: ClassInfo) => {
-    setPreview(classInfo.id)
+    const newMultipleOptions = [...multipleOptions];
+    const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
+      if (c.course_id === course.id) {
+        setPreview(classInfo.id)
+        c.picked_class_id = classInfo.id
+      }
+
+      return c;
+    });
+
+    newMultipleOptions[selectedOption].course_options = newCourseOptions;
+    setMultipleOptions(newMultipleOptions)
   }
 
+  // Restores into multiple options the picked_class_id prior to when the user started previewing
   const removePreview = () => {
-    setPreview(null)
+    const newMultipleOptions = [...multipleOptions];
+
+    console.log("course unit id: ", course.course_unit_id)
+
+    console.log("selected class id: ", selectedClassId)
+
+    const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
+      if (c.course_id === course.course_unit_id) {
+        c.picked_class_id = selectedClassId
+      }
+
+      return c;
+    });
+
+    newMultipleOptions[selectedOption].course_options = newCourseOptions;
+    setMultipleOptions(newMultipleOptions);
+
+    setPreview(null);
   }
 
   function toggleTeacher(id: number) {
@@ -166,25 +197,6 @@ const ClassSelector = ({ course }: Props) => {
       setFilteredTeachers(teachers.flatMap((t) => t.id))
     }
   }
-
-  // useEffect(() => {
-
-  //   setMultipleOptions((prev) => {
-  //     let newMultipleOptions = prev
-  //     let newSelectedOption = prev[selectedOption]
-
-  //     newSelectedOption['picked_class_id'] = preview ? preview : display
-  //     newSelectedOption['filteredTeachers'] = filteredTeachers
-  //     newSelectedOption['locked'] = locked
-  //     newSelectedOption['hide'] = hide
-
-  //     newMultipleOptions[selectedOption] = newSelectedOption
-  //     return [...newMultipleOptions]
-  //   })
-  //   StorageAPI.setOptionsStorage(multipleOptions)
-  // }, [preview, display, filteredTeachers, locked, hide, selectedOption, setMultipleOptions, multipleOptions])
-
-  console.log("flying hell: ", course);
 
   return (
     <div className="relative text-sm" key={`course-option-${course.acronym}`}>
@@ -253,7 +265,7 @@ const ClassSelector = ({ course }: Props) => {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup className="max-h-96 overflow-y-auto">
-                  <DropdownMenuItem onSelect={() => setDisplay(null)}>
+                  <DropdownMenuItem onSelect={() => deleteOption()}>
                     <span className="text-sm tracking-tighter">Remover Seleção</span>
                   </DropdownMenuItem>
                   {course.classes &&
@@ -264,6 +276,7 @@ const ClassSelector = ({ course }: Props) => {
                         classInfo={classInfo}
                         displayed={display === classInfo.id}
                         checked={selectedOption === classInfo.id}
+                        preview={preview}
                         conflict={timesCollideWithSelected(classInfo)}
                         onSelect={() => setSelectedClassId(classInfo.id)}
                         onMouseEnter={() => showPreview(classInfo)}
@@ -290,48 +303,6 @@ const ClassSelector = ({ course }: Props) => {
           )}
         </Button>
       </div>
-
-      {/* Show/Hide Checkboxes */}
-      {/* <div className="mt-1 flex items-center justify-start space-x-4">
-        <div
-          title={`${showTheoretical ? 'Esconder' : 'Mostrar'} Aulas Teóricas de ${courseOption.course.info.name}`}
-          className="flex items-center justify-center space-x-1"
-        >
-          <input
-            type="checkbox"
-            checked={showTheoretical}
-            id={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-            className="checkbox-small disabled:hidden"
-            disabled={courseOption.option === null}
-            onChange={(event) => updateShown(event.target.checked, 'T', courseOption)}
-          />
-          <label
-            className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-            htmlFor={`checkbox-classes-t-${courseOption.course.info.acronym}`}
-          >
-            <span>Teóricas</span>
-          </label>
-        </div>
-        <div
-          title={`${showPractical ? 'Esconder' : 'Mostrar'} Aulas Práticas de ${courseOption.course.info.name}`}
-          className="flex items-center justify-center space-x-1"
-        >
-          <input
-            type="checkbox"
-            checked={showPractical}
-            id={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-            className="checkbox-small disabled:hidden"
-            disabled={courseOption.option === null}
-            onChange={(event) => updateShown(event.target.checked, 'TP', courseOption)}
-          />
-          <label
-            className="cursor-pointer text-[0.67rem] font-medium capitalize tracking-tight"
-            htmlFor={`checkbox-classes-tp-${courseOption.course.info.acronym}`}
-          >
-            <span>Práticas</span>
-          </label>
-        </div>
-      </div> */}
     </div>
   )
 }

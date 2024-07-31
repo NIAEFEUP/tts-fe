@@ -49,6 +49,10 @@ const TimeTableSchedulerPage = () => {
   const [coursesInfo, setCoursesInfo] = useState(StorageAPI.getCoursesInfoStorage());
   const [pickedCourses, setPickedCourses] = useState(StorageAPI.getPickedCoursesStorage());
 
+  const [conflicts, setConflicts] = useState(
+    JSON.parse(localStorage.getItem('niaefeup-tts.conflict-info')) || []
+  )
+
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
 
   //TODO (thePeras): Looks suspicious
@@ -337,6 +341,9 @@ const TimeTableSchedulerPage = () => {
     StorageAPI.setPickedCoursesStorage(pickedCourses)
   }, [pickedCourses])
 
+  useEffect(() => {
+    StorageAPI.setConflictsStorage(conflicts)
+  }, [conflicts]);
 
   return (
     <MajorContext.Provider value={{ majors, setMajors, selectedMajor, setSelectedMajor }}>
@@ -350,12 +357,7 @@ const TimeTableSchedulerPage = () => {
           </div>
 
           {/* Sidebar */}
-          <Sidebar
-            coursesHook={[checkedCourses, setCheckedCourses]}
-            sourceBufferHook={[selectionModalCoursesBuffer, setSelectionModalCoursesBuffer]}
-            destBufferHook={[extraCoursesModalBuffer, setExtraCoursesModalBuffer]}
-            repeatedCourseControlHook={[chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra]}
-          />
+          <Sidebar />
         </div>
       </CourseContext.Provider>
     </MajorContext.Provider>

@@ -1,10 +1,11 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
 import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ClassDescriptor, Conflicts } from '../@types/new_index'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { teacherIdsFromCourseInfo } from './CourseInfo'
+import { Hash } from 'crypto'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -75,13 +76,17 @@ const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
   return parseFloat(second.start_time) < parseFloat(first.start_time) + parseFloat(first.duration)
 }
 
-const schedulesConflict = (first, second) => {
+const conflictsSeverity = (first: SlotInfo, second: SlotInfo) => {
+  return first.lesson_type === "TP" && second.lesson_type === "TP"
+}
+
+const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
   if (first.day !== second.day) return false
 
-  const firstStart = parseFloat(first.start_time)
-  const secondStart = parseFloat(second.start_time)
-  const firstDuration = parseFloat(first.duration)
-  const secondDuration = parseFloat(second.duration)
+  const firstStart = first.start_time
+  const secondStart = second.start_time
+  const firstDuration = first.duration
+  const secondDuration = second.duration
   const firstEnd = firstStart + firstDuration
   const secondEnd = secondStart + secondDuration
 
@@ -292,11 +297,7 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
 const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions => {
   return multipleOptions.map((option) => {
     const currentOption = createDefaultCourseOption(course);
-    console.log("I'm so lost: ", course);
-    console.log("hoje vou ma: ", course["classes"]);
-    console.log("hoje vou m: ", course.classes);
     currentOption.filteredTeachers = teacherIdsFromCourseInfo(course);
-    console.log("CURRENT OPTION: ", teacherIdsFromCourseInfo(course));
     option.course_options.push(currentOption)
     return option
   })
@@ -309,7 +310,14 @@ const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions
   })
 )
 
-const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions): MultipleOptions => {
+const removeAllCourseOptions = (multipleOptions: MultipleOptions) : MultipleOptions => (
+  multipleOptions.map((option) => {
+    option.course_options = []
+    return option
+  })
+)
+
+const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
   const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
@@ -325,10 +333,11 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
     const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
-    // console.log("Course: ", courseInfo.name)
+
     return classInfo.slots
   })
 }
+
 
 export {
   config,
@@ -360,5 +369,7 @@ export {
   replaceCourseOptions,
   getAllPickedSlots,
   getClassType,
-  convertCourseInfoToCourseOption
+  removeAllCourseOptions,
+  convertCourseInfoToCourseOption,
+  conflictsSeverity,
 }

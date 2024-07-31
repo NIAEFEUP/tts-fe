@@ -160,6 +160,11 @@ const setPickedCoursesStorage = (pickedCourses: any): void => {
   writeStorage(key, pickedCourses)
 }
 
+const setConflictsStorage = (conflicts: any): void => {
+  const key = 'niaefeup-tts.conflict-info'
+  writeStorage(key, conflicts)
+}
+
 const getCoursesInfoStorage = (): CourseInfo[] => {
   const key = 'niaefeup-tts.courses-info';
   return JSON.parse(localStorage.getItem(key)) || [];
@@ -185,6 +190,7 @@ const StorageAPI = {
   removeOptionsStorage,
   getMajorsStorage,
   setMajorsStorage,
+  setConflictsStorage,
   updateScrappeInfo,
   getSelectedMajorStorage,
   setSelectedMajorStorage,
