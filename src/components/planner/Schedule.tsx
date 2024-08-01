@@ -35,6 +35,7 @@ const Schedule = () => {
 
     for (let i = 0; i < option.course_options.length; i++) {
       const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
+      if (!course_info) continue;
       const class_info = course_info.classes?.find(
         (class_info) => class_info.id === option.course_options[i].picked_class_id
       )
@@ -45,7 +46,7 @@ const Schedule = () => {
         classInfo: class_info,
       })
     }
-    
+
     //setConflictInfo(computeConflicts(newClasses))
     setClasses(newClasses)
   }, [multipleOptions, pickedCourses, selectedOption])

@@ -40,10 +40,10 @@ const CoursePicker = () => {
     setChoosingNewCourse((prev) => !prev);
     setOpen(!open)
     if (open === false) return
-    const newPickedCourses = [...pickedCourses];
-    await api.getCoursesClasses(newPickedCourses); // (thePeras): not using the return value and modifying the parameter directly???
-    setPickedCourses(newPickedCourses);
-    StorageAPI.setPickedCoursesStorage(newPickedCourses)
+    // // const newPickedCourses = [...pickedCourses];
+    // await api.getCoursesClasses(pickedCourses); // (thePeras): not using the return value and modifying the parameter directly???
+    // // setPickedCourses(newPickedCourses);
+    // StorageAPI.setPickedCoursesStorage(pickedCourses)
   }
 
   return (

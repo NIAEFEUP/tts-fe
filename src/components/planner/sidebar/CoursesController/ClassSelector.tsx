@@ -61,11 +61,17 @@ const ClassSelector = ({ course }: Props) => {
   // This is used to store the ids of the teachers so it is easy to verify if a teacher is filtered or not
   const [filteredTeachers, setFilteredTeachers] = useState(teacherIdsFromCourseInfo(course));
 
+  useEffect(() => {
+    setFilteredTeachers(teacherIdsFromCourseInfo(course));
+  }, [pickedCourses])
+
   // This is used as an object with the teacher properties in order for us to being able
   // to show teacher information on the filter dropdown menu
   const [teacherFilters, setTeacherFilters] = useState(() => {
     return buildTeacherFilters(teachers, filteredTeachers);
   });
+
+  console.log("Course name: ", course.name, "; Filtered teachers: ", filteredTeachers);
 
   const [locked, setLocked] = useState(courseOption.locked)
   const [hide, setHide] = useState(courseOption.hide)
@@ -116,8 +122,12 @@ const ClassSelector = ({ course }: Props) => {
    * Classes with at least one of its teachers selected will be returned
    */
   const getOptions = (): Array<ClassInfo> => {
+    console.log("current fucking classes: ", course.classes);
     return course.classes?.filter((c) => {
-      return c.filteredTeachers?.some((element) => filteredTeachers.includes(element));
+      console.log("what the hell: ", c.filteredTeachers);
+      console.log("c is: ", c);
+      return c.slots.some((slot) => slot.professors.filter((prof) => filteredTeachers.includes(prof.id)).length > 0)
+      // return c.filteredTeachers?.some((element) => filteredTeachers.includes(element));
     })
   }
 
