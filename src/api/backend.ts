@@ -5,7 +5,7 @@ import { getSemester, config, dev_config } from '../utils'
 const prod_val = process.env.REACT_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
-const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
+const SEMESTER = 2 || process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
  * Make a request to the backend server.
@@ -52,16 +52,20 @@ const getCourseClass = async (course: CourseInfo) => {
 }
 
 const getCoursesClasses = async (courses: CourseInfo[]) => {
-  return courses.map(async (course) => {
-    course.classes = await getCourseClass(course)
+  const result = [];
+  for (let course of courses) {
+    course.classes = await getCourseClass(course);
     course.classes = course.classes.map((c) => {
       return {
         ...c,
         filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
       }
     })
-    return course
-  })
+
+    result.push(course);
+  }
+
+  return result;
 }
 
 /**

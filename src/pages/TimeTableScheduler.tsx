@@ -56,9 +56,9 @@ const TimeTableSchedulerPage = () => {
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
 
   //TODO (thePeras): Looks suspicious
-  useEffect(() => {
-    if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
-  }, [pickedCourses]);
+  // useEffect(() => {
+  //   if (pickedCourses.length !== 0) api.getCoursesClasses(pickedCourses)
+  // }, [pickedCourses]);
 
   useEffect(() => {
     BackendAPI.getCourses(selectedMajor).then((courses) => {
