@@ -1,10 +1,10 @@
-import { useContext, useMemo, useState } from 'react'
-import { ClassInfo } from '../../../../@types/new_index'
+import { useContext, useMemo } from 'react'
+import { ClassInfo } from '../../../../@types/index'
 import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
 import { ExclamationTriangleIcon, EyeIcon } from '@heroicons/react/20/solid'
-import { getLessonBoxTime, convertWeekday, conflictsSeverity, timesCollide, schedulesConflict } from '../../../../utils'
+import { schedulesConflict } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import CourseContext from "../../../../contexts/CourseContext"
+import CourseContext from '../../../../contexts/CourseContext'
 
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
 }
 
 const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect, onMouseEnter, onMouseLeave }: Props) => {
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
+  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses } = useContext(CourseContext);
 
   const selectOption = () => {

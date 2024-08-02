@@ -1,8 +1,5 @@
-import { useContext, useState } from 'react'
-import { ProfessorInfo } from '../../../../@types/new_index'
-import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
-import { ExclamationTriangleIcon, EyeIcon } from '@heroicons/react/20/solid'
-import { getLessonBoxTime, convertWeekday } from '../../../../utils'
+import { ProfessorInfo } from "../../../../@types"
+import { DropdownMenuCheckboxItem } from "../../../ui/dropdown-menu"
 
 type Props = {
   professorInformation: ProfessorInfo

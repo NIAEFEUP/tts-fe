@@ -1,21 +1,12 @@
 import classNames from 'classnames'
-import { useState, useMemo, useContext, useEffect } from 'react'
-import { Lesson } from '../../../@types'
-import {
-  getClassTypeClassName,
-  getLessonTypeLongName,
-  getLessonBoxStyles,
-  getLessonBoxTime,
-  maxHour,
-  minHour,
-  schedulesConflict,
-  conflictsSeverity,
-} from '../../../utils'
+import { useState, useContext, useEffect } from 'react'
+
 
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
-import { ClassInfo, SlotInfo, CourseInfo, ConflictInfo, ClassDescriptor, Conflicts } from '../../../@types/new_index'
+import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
 import ConflictContext from '../../../contexts/ConflictContext'
+import { getLessonBoxTime, schedulesConflict, conflictsSeverity, getLessonBoxStyles, maxHour, minHour, getClassTypeClassName, getLessonTypeLongName } from '../../../utils'
 
 type Props = {
   courseInfo: CourseInfo

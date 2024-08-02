@@ -7,9 +7,9 @@ import LinkedinIcon from './Linkedin'
 import TidyIcon from './fancy/Tidy'
 import ConsultIcon from './fancy/Consult'
 import SelectIcon from './fancy/Select'
-import NitSigIcon from './NitSigIcon'
-import NoCourseSelected from './NoCourseSelected'
-import NoMajorSelected from './NoMajorSelected'
+import NitSigIconSVG from './NitSigIcon'
+import NoCourseSelectedSVG from './NoCourseSelected'
+import NoMajorSelectedSVG from './NoMajorSelected' 
 import Desert from './Desert'
 
 export {
@@ -22,8 +22,8 @@ export {
   TidyIcon,
   ConsultIcon,
   SelectIcon,
-  NitSigIcon,
-  NoCourseSelected,
-  NoMajorSelected,
+  NitSigIconSVG,
+  NoCourseSelectedSVG,
+  NoMajorSelectedSVG,
   Desert
 }

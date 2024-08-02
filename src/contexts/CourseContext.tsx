@@ -1,5 +1,5 @@
 import { Context, Dispatch, createContext, SetStateAction } from 'react'
-import { CourseInfo } from '../@types/new_index'
+import { CourseInfo } from '../@types'
 
 interface CoursesContextContent {
   pickedCourses: CourseInfo[]

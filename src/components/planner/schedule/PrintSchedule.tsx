@@ -6,7 +6,7 @@ import { toPng } from 'html-to-image'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
 
 const PrintSchedule = ({ component }) => {
-  const { enabled, setEnabled } = useContext(ThemeContext)
+  const { enabled } = useContext(ThemeContext)
 
   const takeScreenshot = useCallback(
     (isThemeEnabled) => {

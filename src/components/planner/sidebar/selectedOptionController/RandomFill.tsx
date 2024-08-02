@@ -1,5 +1,5 @@
 import { BoltIcon } from '@heroicons/react/24/outline'
-import { CourseOption, CourseSchedule, MultipleOptions } from '../../../../@types'
+import { CourseOption, MultipleOptions } from '../../../../@types'
 import { useContext, useEffect, useState } from 'react'
 // import { removeDuplicatesFromCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'

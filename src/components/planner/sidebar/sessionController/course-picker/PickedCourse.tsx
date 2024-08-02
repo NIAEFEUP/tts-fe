@@ -1,11 +1,11 @@
 import { useContext } from 'react'
+import { XMarkIcon } from '@heroicons/react/24/solid'
+import { CourseInfo } from '../../../../../@types'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { removeCourseOption } from '../../../../../utils'
-import { CourseInfo } from '../../../../../@types/new_index'
-import { Separator } from '../../../../ui/separator'
 import { Button } from '../../../../ui/button'
-import { XMarkIcon } from '@heroicons/react/24/solid'
+import { Separator } from '../../../../ui/separator'
 
 type Props = {
   course: CourseInfo

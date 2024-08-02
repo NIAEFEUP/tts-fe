@@ -1,11 +1,11 @@
-import Layout from './components/layout'
-import StorageAPI from './api/storage'
+
+import { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AboutPage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pages'
-import { getPath, config } from './utils'
-import CombinedProvider from './contexts/CombinedProvider'
-import { Toaster } from './components/ui/toaster'
 import './app.css'
+import CombinedProvider from './contexts/CombinedProvider'
+import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pages'
+import { getPath, config } from './utils'
+import Layout from './components/layout'
 
 // Configures the path for pages.
 const pages = [
@@ -22,7 +22,8 @@ const redirects = [
 ]
 
 const App = () => {
-  StorageAPI.updateScrappeInfo()
+  //TODO(thePeras): Should this be used? Or should this invalidate the storage
+  //StorageAPI.updateBackendDataVersion()
 
   return (
     <BrowserRouter>

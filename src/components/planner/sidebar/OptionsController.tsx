@@ -1,18 +1,46 @@
-import { MultipleOptions, Option } from '../../../@types/new_index'
+import { Option } from '../../../@types/index'
 import { ReactSortable } from 'react-sortablejs'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip'
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import { useContext } from 'react'
-import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip';
+
+/**
+ * Sortable list of schedule options
+ * Each option can be selected by clicking on it
+ */
+const OptionsController = () => {
+  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+
+  return (
+    <ReactSortable
+      className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start"
+      list={multipleOptions}
+      setList={setMultipleOptions}
+      group="groupName"
+      animation={200}
+      delay={2}
+      multiDrag
+    >
+      {multipleOptions.map((option: Option) => (
+        <OptionButton
+          key={option.id}
+          option={option}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+      ))}
+    </ReactSortable>
+  )
+}
 
 type Props = {
   option: Option
-  multipleOptions: MultipleOptions
   selectedOption: number
   setSelectedOption: (id: number) => void
 }
 
-const OptionButton = ({ option, multipleOptions, selectedOption, setSelectedOption }: Props) => {
+const OptionButton = ({ option, selectedOption, setSelectedOption }: Props) => {
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
@@ -40,36 +68,6 @@ const OptionButton = ({ option, multipleOptions, selectedOption, setSelectedOpti
       </Tooltip>
     </TooltipProvider>
   );
-}
-
-/**
- * Sortable list of schedule options
- * Each option can be selected by clicking on it
- */
-const OptionsController = () => {
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
-
-  return (
-    <ReactSortable
-      className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start"
-      list={multipleOptions}
-      setList={setMultipleOptions}
-      group="groupName"
-      animation={200}
-      delay={2}
-      multiDrag
-    >
-      {multipleOptions.map((option: Option) => (
-        <OptionButton
-          key={option.id}
-          option={option}
-          multipleOptions={multipleOptions}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-        />
-      ))}
-    </ReactSortable>
-  )
 }
 
 export default OptionsController

@@ -1,11 +1,8 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
-import { CourseSchedule, Lesson } from '../@types'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ClassDescriptor, Conflicts } from '../@types/new_index'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo } from '../@types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { teacherIdsFromCourseInfo } from './CourseInfo'
-import { Hash } from 'crypto'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -69,11 +66,6 @@ const convertHour = (hourNumber: string) => {
   const minutes = split[1] === '0' || !split[1] ? '00' : '30'
 
   return `${hour}:${minutes}`
-}
-
-const timesCollide = (first: CourseSchedule, second: CourseSchedule) => {
-  if (first.day !== second.day) return false
-  return parseFloat(second.start_time) < parseFloat(first.start_time) + parseFloat(first.duration)
 }
 
 const conflictsSeverity = (first: SlotInfo, second: SlotInfo) => {
@@ -218,37 +210,6 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
   }
 }
 
-// const getCourseTeachers = (courseOption: CourseOption) => {
-//   let teachers = []
-//   courseOption.schedules.forEach((schedule, idx) => {
-//     if (schedule.lesson_type !== 'T') {
-//       schedule.professor_information.forEach((prof_info) => {
-//         if (!teachers.some((other) => other.acronym === prof_info.acronym)) {
-//           teachers.push(prof_info)
-//         }
-//       })
-//     }
-//   })
-
-//   return teachers
-// }
-
-// const removeDuplicatesFromCourseOption = (courses: CourseOption[]): CourseOption[] => {
-//   if (!courses) return []
-
-//   let frequency: Map<number, number> = new Map()
-//   let newCourseOptions: CourseOption[] = []
-
-//   for (let courseOption of courses) {
-//     if (!frequency.has(courseOption.course.info.id)) {
-//       newCourseOptions.push(courseOption)
-//       frequency.set(courseOption.course.info.id, 1)
-//     }
-//   }
-
-//   return newCourseOptions
-// }
-
 /**
  * Considering that the yearCourses is sorted by the course_unit_year field in ascending order, the function groups the major courses by year.
  * @param yearCourses All the courses in a major.
@@ -338,6 +299,35 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
   })
 }
 
+const teachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] => {
+  const classes = courseInfo.classes;
+  if (!classes) return [];
+
+  return courseInfo.classes.flatMap((c) => c.slots.flatMap((s) => s.professors));
+}
+
+const uniqueTeachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] => {
+  const uniqueIds = new Set();
+  return teachersFromCourseInfo(courseInfo).filter(item => {
+    if (!uniqueIds.has(item.id)) {
+      uniqueIds.add(item.id);
+      return true;
+    }
+    return false;
+  });
+}
+
+const teacherIdsFromCourseInfo = (courseInfo: CourseInfo): number[] => {
+  const teacherIds = [];
+  const uniqueTeachers = uniqueTeachersFromCourseInfo(courseInfo);
+
+  uniqueTeachers.forEach((teacher: ProfessorInfo) => {
+    teacherIds.push(teacher.id);
+  });
+
+  return teacherIds;
+}
+
 
 export {
   config,
@@ -353,7 +343,6 @@ export {
   convertWeekday,
   convertWeekdayLong,
   convertHour,
-  timesCollide,
   schedulesConflict,
   getClassDisplayText,
   getLessonBoxTime,
@@ -372,4 +361,7 @@ export {
   removeAllCourseOptions,
   convertCourseInfoToCourseOption,
   conflictsSeverity,
+  teachersFromCourseInfo,
+  uniqueTeachersFromCourseInfo,
+  teacherIdsFromCourseInfo
 }

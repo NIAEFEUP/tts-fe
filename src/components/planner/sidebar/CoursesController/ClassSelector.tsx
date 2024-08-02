@@ -1,26 +1,14 @@
 import { useEffect, useMemo, useRef, useState, useContext } from 'react'
 import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
 import { User } from 'lucide-react'
-import { getAllPickedSlots, getClassDisplayText, schedulesConflict } from '../../../../utils'
-import { Button } from '../../../ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '../../../ui/dropdown-menu'
-import { CourseInfo, ClassInfo, ProfessorInfo, CourseOption } from '../../../../@types/new_index'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import CourseContext from '../../../../contexts/CourseContext'
-import ProfessorItem from './ProfessorItem'
 import ClassItem from './ClassItem'
-import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils/CourseInfo'
+import { CourseInfo, CourseOption, ClassInfo, ProfessorInfo } from '../../../../@types'
+import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo, getAllPickedSlots, schedulesConflict, getClassDisplayText } from '../../../../utils'
+import { Button } from '../../../ui/button'
+import ProfessorItem from './ProfessorItem'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
 
 type Props = {
   course: CourseInfo
@@ -35,18 +23,20 @@ const buildTeacherFilters = (teachers, filteredTeachers) => {
   })
 }
 
+//TODO: Check this code, not too good. A lot of missing useEffect dependencies
 const ClassSelector = ({ course }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
+  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses, choosingNewCourse } = useContext(CourseContext)
 
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
   const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
+  if(courseOption)
+    courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
 
   /**
    * This is used to retrieve the teachers from a course and to populate the filter of the teachers
@@ -71,17 +61,13 @@ const ClassSelector = ({ course }: Props) => {
     return buildTeacherFilters(teachers, filteredTeachers);
   });
 
-  console.log("Course name: ", course.name, "; Filtered teachers: ", filteredTeachers);
-
   const [locked, setLocked] = useState(courseOption.locked)
-  const [hide, setHide] = useState(courseOption.hide)
 
   const [preview, setPreview] = useState<number | null>(null)
   const [display, setDisplay] = useState(courseOption.picked_class_id)
 
 
   const deleteOption = () => {
-    console.log("delete option called");
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.picked_class_id === selectedClassId);
     multipleOptionsEntry.picked_class_id = null;
     setSelectedClassId(null);
@@ -122,12 +108,8 @@ const ClassSelector = ({ course }: Props) => {
    * Classes with at least one of its teachers selected will be returned
    */
   const getOptions = (): Array<ClassInfo> => {
-    console.log("current fucking classes: ", course.classes);
     return course.classes?.filter((c) => {
-      console.log("what the hell: ", c.filteredTeachers);
-      console.log("c is: ", c);
       return c.slots.some((slot) => slot.professors.filter((prof) => filteredTeachers.includes(prof.id)).length > 0)
-      // return c.filteredTeachers?.some((element) => filteredTeachers.includes(element));
     })
   }
 
@@ -139,14 +121,7 @@ const ClassSelector = ({ course }: Props) => {
   // This is used to display a warning icon in each class of the dropdown in case of conflicts
   const timesCollideWithSelected = (classInfo: ClassInfo) => {
     const pickedSlots = getAllPickedSlots(pickedCourses, multipleOptions[selectedOption])
-    // console.log(pickedSlots)
     return pickedSlots.some((slot) => classInfo.slots.some((currentSlot) => schedulesConflict(slot, currentSlot)))
-
-    // const currentClass = course.classes.find((c) => c.id === display)
-    // if (currentClass)
-    //   return classInfo.slots.some((slot) =>
-    //     currentClass.slots.some((currentSlot) => schedulesConflict(slot, currentSlot))
-    //   )
   }
 
   // Checks if two arrays of professors have a common professor
@@ -173,10 +148,6 @@ const ClassSelector = ({ course }: Props) => {
   // Restores into multiple options the picked_class_id prior to when the user started previewing
   const removePreview = () => {
     const newMultipleOptions = [...multipleOptions];
-
-    console.log("course unit id: ", course.course_unit_id)
-
-    console.log("selected class id: ", selectedClassId)
 
     const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
       if (c.course_id === course.course_unit_id) {
@@ -316,4 +287,5 @@ const ClassSelector = ({ course }: Props) => {
     </div>
   )
 }
+
 export default ClassSelector

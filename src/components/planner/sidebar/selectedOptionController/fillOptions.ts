@@ -1,5 +1,4 @@
-import { ImportedCourses } from "../../../../@types";
-import { MultipleOptions } from "../../../../@types/new_index";
+import { ImportedCourses, MultipleOptions } from "../../../../@types";
 
 const fillOptions = (
     importedCourses: ImportedCourses,

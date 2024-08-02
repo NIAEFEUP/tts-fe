@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { PlannerFaqs, HeaderFaqs } from '../components/faqs'
+import { HeaderFaqs, PlannerFaqs } from '../components/faqs'
 
 const FaqsPage = () => {
   useEffect(() => {

@@ -1,9 +1,9 @@
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
-import { MultipleOptions } from '../../../../@types/new_index'
 import { useContext } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 
+//TODO: utils??
 const csvEncode = (text: string | null | undefined) => {
   if (!text)
     return ''

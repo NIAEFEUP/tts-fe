@@ -1,11 +1,11 @@
-import { Major, CourseInfo } from '../@types/new_index'
-import { getSemester, config, dev_config } from '../utils'
+import { Major, CourseInfo } from "../@types"
+import { dev_config, getSemester, config} from "../utils"
 
 
 const prod_val = process.env.REACT_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
-const SEMESTER = 2 || process.env.REACT_APP_SEMESTER || getSemester()
+const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
 
 /**
  * Make a request to the backend server.

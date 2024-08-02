@@ -1,11 +1,12 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 import { useEffect, useContext } from 'react'
-import { ScheduleLightImage, ScheduleDarkImage, StampNIAEFEUPImage, BackStampNIAEFEUPImage } from '../../images'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import { getPath, config } from '../../utils'
 import FeatureCards from './FeatureCards';
 import { ThemeContext } from '../../contexts/ThemeContext';
+import { ScheduleDarkImage, ScheduleLightImage, StampNIAEFEUPImage, BackStampNIAEFEUPImage } from '../../images';
+import { getPath, config} from '../../utils';
+
 
 
 type Card = {
@@ -19,14 +20,13 @@ type Card = {
 
 const HeroPlanner = () => {
   const { enabled } = useContext(ThemeContext); 
-  const ScheduleImage = enabled ? ScheduleDarkImage : ScheduleLightImage;
   const data: Card[] = [
     {
       id: 'intro',
       reverse: false,
       title: 'O que é o TTS?',
       subtitle: 'O teu melhor amigo para escolher e gerir o teu horário na UPorto.',
-      image: ScheduleImage,
+      image: enabled ? ScheduleDarkImage : ScheduleLightImage,
       content: (
         <div className="space-y-3">
           <p>
@@ -51,6 +51,7 @@ const HeroPlanner = () => {
     },
   ]
 
+  //TODO(thePeras): Use useRef instead of getElementById
   const id = 'planner'
   const scrollToComponentTop = () => document.getElementById(id).scrollIntoView()
   const scrollToComponentSection = (id: string) => {
@@ -58,6 +59,7 @@ const HeroPlanner = () => {
     window.location.href = window.location.href.split('#')[0] + '#' + id
   }
 
+  //TODO(thePeras): Looks weird
   useEffect(() => {
     if (window.location.href.split('#')[1] === id) scrollToComponentTop()
   }, [])

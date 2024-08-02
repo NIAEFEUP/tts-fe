@@ -113,6 +113,7 @@ const PlannerFaqs = () => {
   const id = 'planner'
   const scrollToComponentTop = () => document.getElementById(id).scrollIntoView()
 
+  //TODO(thePeras): What is this??
   useEffect(() => {
     if (window.location.href.split('#')[1] === id) scrollToComponentTop()
   }, [])

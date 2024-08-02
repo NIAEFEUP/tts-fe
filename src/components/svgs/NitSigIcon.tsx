@@ -2,7 +2,7 @@ type Props = {
   className?: string
 }
 
-const NitSigIcon = ({ className }: Props) => (
+const NitSigIconSVG = ({ className }: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="188.871"
@@ -97,4 +97,4 @@ const NitSigIcon = ({ className }: Props) => (
   </svg>
 )
 
-export default NitSigIcon
+export default NitSigIconSVG

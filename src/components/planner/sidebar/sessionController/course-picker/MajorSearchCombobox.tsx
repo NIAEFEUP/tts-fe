@@ -1,19 +1,24 @@
-import { Major } from '../../../../../@types/new_index'
 import { useState, useContext } from 'react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
+import { Command, CommandEmpty, CommandList, CommandItem, CommandInput } from '../../../../ui/command'
+import { Major } from '../../../../../@types'
 import MajorContext from '../../../../../contexts/MajorContext'
 import { cn } from '../../../../../utils'
-import { Button } from '../../../../../components/ui/button'
-import { Command, CommandEmpty, CommandList, CommandInput, CommandItem } from '../../../../../components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '../../../../../components/ui/popover'
+import { Button } from '../../../../ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/popover'
+
+interface Props {
+  selectedMajor: Major | null
+  setSelectedMajor: (major: Major | null) => void
+}
 
 /**
  * Combobox also with a searchbar in which the user will be able to write the major he / she
  * wants to select courses from. They can type the major or click on the rightmost corner to open
  * the list of possible majors.
  */
-const MajorSearchCombobox = () => {
-  const { majors, selectedMajor, setSelectedMajor } = useContext(MajorContext)
+const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
+  const { majors } = useContext(MajorContext)
   const [open, setOpen] = useState(false)
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined)
 

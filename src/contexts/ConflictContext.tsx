@@ -1,6 +1,6 @@
 import { Context, Dispatch, SetStateAction } from 'react'
 import { createContext } from 'react'
-import { Conflicts } from '../@types/new_index'
+import { Conflicts } from '../@types'
 
 interface ConflictContextContent {
     conflicts: Conflicts

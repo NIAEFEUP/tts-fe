@@ -1,19 +1,13 @@
+import { Button } from '../../../ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
 import CsvExport from './CsvExport'
 import NitSigExport from './NitSigExport'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
-import { Button } from '../../../ui/button'
-
-import { MultipleOptions } from '../../../../@types/new_index'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
-
-type Props = {
-  multipleOptions: MultipleOptions
-}
 
 /**
  * Sidebar with all the main schedule interactions
  */
-const Export = ({ multipleOptions }: Props) => {
+const Export = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

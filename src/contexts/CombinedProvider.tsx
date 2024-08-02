@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { MultipleOptions } from "../@types/new_index";
-import { useDarkMode } from "../hooks";
-import { ThemeContext } from "./ThemeContext";
-import MultipleOptionsContext from "./MultipleOptionsContext";
+import { MultipleOptions } from "../@types";
 import StorageAPI from "../api/storage";
+import MultipleOptionsContext from "./MultipleOptionsContext";
+import { ThemeContext } from "./ThemeContext";
+import { useDarkMode } from "../hooks";
 
 const CombinedProvider = ({ children }) => {
   const [enabled, setEnabled] = useDarkMode()  // TODO (Process-ing): Stop using a hook (who smoked here?)

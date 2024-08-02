@@ -1,9 +1,8 @@
 import { Fragment } from 'react'
-import { Lesson } from '../../../@types'
 import { Dialog, Transition } from '@headlessui/react'
 import Alert, { AlertType } from '../Alert'
 import InspectLessonBox from './InspectLessonBox'
-import { ClassInfo, SlotInfo, CourseInfo } from '../../../@types/new_index'
+import { ClassInfo, CourseInfo, SlotInfo } from '../../../@types'
 
 type Props = {
   courseInfo: CourseInfo

@@ -4,7 +4,7 @@ import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
-import { CourseOption } from '../../../../@types/new_index'
+import { CourseOption } from '../../../../@types'
 
 type Props = {
   currentOption: CourseOption[]

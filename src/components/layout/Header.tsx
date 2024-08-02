@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-import { LogoNIAEFEUPImage } from '../../images'
-import { config, getPath } from '../../utils'
+
 import {
   Bars3Icon,
   XMarkIcon,
@@ -10,6 +9,8 @@ import {
   RectangleStackIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
+import { LogoNIAEFEUPImage } from '../../images'
+import { getPath, config } from '../../utils'
 
 const navigation = [
   {

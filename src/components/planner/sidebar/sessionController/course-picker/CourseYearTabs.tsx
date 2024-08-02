@@ -1,21 +1,21 @@
 import { useContext, useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../../ui/tabs'
 import { CourseYearCheckboxes } from './CourseYearCheckboxes'
-import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
-import CourseContext from '../../../../../contexts/CourseContext'
-import { groupCoursesByYear, replaceCourseOptions } from '../../../../../utils'
 import { ScrollArea } from '../../../../ui/scroll-area'
-import { isSubset } from '../../../../../utils'
-import { NoMajorSelected } from '../../../../svgs'
 import api from '../../../../../api/backend'
+import CourseContext from '../../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
+import { groupCoursesByYear, isSubset, replaceCourseOptions } from '../../../../../utils'
+import { NoMajorSelectedSVG } from '../../../../svgs'
+import { Tabs, TabsList, TabsTrigger, TabsContent  } from '../../../../ui/tabs'
 
+//TODO: Check this code, too ugly
 const CourseYearTabs = () => {
   const { coursesInfo, pickedCourses, setPickedCourses } = useContext(CourseContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [selectedTab, setSelectedTab] = useState('1')
   const coursesByYear = groupCoursesByYear(coursesInfo)
-  const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 
+  //TODO: This is a bad practice, should be removed
   const [getPickedCourseClasses, setGetPickedCourseClasses] = useState<boolean>(false);
 
   /*
@@ -47,6 +47,7 @@ const CourseYearTabs = () => {
     setGetPickedCourseClasses(true);
   }
 
+  //TODO(thePeras): This can be removed if the options already came from api previous
   useEffect(() => {
     let componentUmounted = false;
 
@@ -95,7 +96,7 @@ const CourseYearTabs = () => {
     </Tabs>
   ) : (
     <div className="flex items-center justify-center">
-      <NoMajorSelected />
+      <NoMajorSelectedSVG />
     </div>
   )
 }

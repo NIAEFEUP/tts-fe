@@ -1,6 +1,6 @@
 import classNames from 'classnames'
-import { CourseInfo, ClassInfo, SlotInfo } from '../../../@types/new_index'
-import { convertWeekdayLong, getClassTypeClassName, getLessonBoxTime, getLessonTypeLongName } from '../../../utils'
+import { CourseInfo, ClassInfo, SlotInfo } from '../../../@types'
+import { getClassTypeClassName, convertWeekdayLong, getLessonTypeLongName, getLessonBoxTime } from '../../../utils'
 
 type Props = {
   courseInfo: CourseInfo

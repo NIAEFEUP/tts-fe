@@ -1,4 +1,4 @@
-import { MultipleOptions, CourseInfo, Major, PickedCourses } from '../@types/new_index'
+import { MultipleOptions, Major, PickedCourses } from '../@types/index'
 import API from './backend'
 
 const isStorageValid = (key: string, daysElapsed: number) => {
@@ -125,21 +125,6 @@ const setSelectedOptionStorage = (selectedOption: number) => {
   writeStorage(key, selectedOption);
 }
 
-const removeOptionsStorage = () => {
-  const key = 'niaefeup-tts.multiple-options'
-  writeStorageInvalid(key)
-}
-
-const setMajorsStorage = (majors : Major[]) => {
-  const key = 'niaefeup-tts.majors'
-  writeStorage(key, majors)
-}
-
-const getMajorsStorage = (): Major[] => {
-  const key = 'niaefeup-tts.majors'
-  return JSON.parse(localStorage.getItem(key))
-}
-
 const getSelectedMajorStorage = (): Major => {
   const key = 'niaefeup-tts.selected-major';
   return JSON.parse(localStorage.getItem(key)) || null;
@@ -160,44 +145,26 @@ const setPickedCoursesStorage = (pickedCourses: any): void => {
   writeStorage(key, pickedCourses)
 }
 
-const setConflictsStorage = (conflicts: any): void => {
-  const key = 'niaefeup-tts.conflict-info'
-  writeStorage(key, conflicts)
-}
-
-const getCoursesInfoStorage = (): CourseInfo[] => {
-  const key = 'niaefeup-tts.courses-info';
-  return JSON.parse(localStorage.getItem(key)) || [];
-}
-
-const setCoursesInfoStorage = (coursesInfo: CourseInfo[]): void => {
-  const key = 'niaefeup-tts.courses-info';
-  writeStorage(key, coursesInfo)
-}
-
-const updateScrappeInfo = async (): Promise<void> => {
+//TODO: Implement this function
+const updateBackendDataVersion = async (): Promise<void> => {
   const key = 'niaefeup-tts.info'
-  const info = await API.getInfo()
-  writeStorage(key, info)
+
+  //const currentVersion = ;
+  const liveVersion = await API.getInfo()
+  // If != versions, invalidate the others storages
+  writeStorage(key, liveVersion);
 }
 
 const StorageAPI = {
-  // getOptionsStorage,
   getMultipleOptionsStorage,
   setMultipleOptionsStorage,
   getSelectedOptionStorage,
   setSelectedOptionStorage,
-  removeOptionsStorage,
-  getMajorsStorage,
-  setMajorsStorage,
-  setConflictsStorage,
-  updateScrappeInfo,
+  updateBackendDataVersion,
   getSelectedMajorStorage,
   setSelectedMajorStorage,
   getPickedCoursesStorage,
   setPickedCoursesStorage,
-  getCoursesInfoStorage,
-  setCoursesInfoStorage,
 }
 
 export default StorageAPI

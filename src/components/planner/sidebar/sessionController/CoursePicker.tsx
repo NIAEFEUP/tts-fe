@@ -1,49 +1,44 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose,
-} from '../../../ui/dialog'
-import StorageAPI from '../../../../api/storage'
-import CourseContext from '../../../../contexts/CourseContext'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import MajorContext from '../../../../contexts/MajorContext'
-import { Button } from '../../../ui/button'
-import { Separator } from '../../../ui/separator'
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/24/outline'
-import api from '../../../../api/backend'
-import { Desert } from '../../../svgs'
+import StorageAPI from '../../../../api/storage'
+import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { removeAllCourseOptions } from '../../../../utils'
+import { Desert } from '../../../svgs'
+import { Button } from '../../../ui/button'
+import { DialogHeader, DialogFooter, Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import BackendAPI from '../../../../api/backend'
+import { Separator } from '../../../ui/separator'
+
+//TODO: absolute imports with @
+
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
   const { multipleOptions } = useContext(MultipleOptionsContext)
-  const { pickedCourses, setPickedCourses, setChoosingNewCourse } = useContext(CourseContext)
-  const { selectedMajor } = useContext(MajorContext)
+  const { pickedCourses, setPickedCourses, setChoosingNewCourse, setCoursesInfo } = useContext(CourseContext)
+
+  const [selectedMajor, setSelectedMajor] = useState(StorageAPI.getSelectedMajorStorage());
   const showContent = selectedMajor || pickedCourses.length > 0
+
+  useEffect(() => {
+    if (!selectedMajor) return
+    //TODO(thePeras): Takes time and a shimmer effect should be added
+    BackendAPI.getCourses(selectedMajor).then((courses) => {
+      setCoursesInfo(courses);
+    })
+    StorageAPI.setSelectedMajorStorage(selectedMajor);
+  }, [selectedMajor, setCoursesInfo])
 
   useEffect(() => {
     StorageAPI.setPickedCoursesStorage(pickedCourses)
   }, [pickedCourses])
 
-  useEffect(() => {
-    StorageAPI.setSelectedMajorStorage(selectedMajor)
-  }, [selectedMajor])
-
   const handleOpenChange = async () => {
     setChoosingNewCourse((prev) => !prev);
     setOpen(!open)
     if (open === false) return
-    // // const newPickedCourses = [...pickedCourses];
-    // await api.getCoursesClasses(pickedCourses); // (thePeras): not using the return value and modifying the parameter directly???
-    // // setPickedCourses(newPickedCourses);
-    // StorageAPI.setPickedCoursesStorage(pickedCourses)
   }
 
   return (
@@ -62,7 +57,7 @@ const CoursePicker = () => {
             escolheste.
           </DialogDescription>
         </DialogHeader>
-        <MajorSearchCombobox />
+        <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor}/>
         <Separator />
         {showContent ? (
           <>

@@ -1,11 +1,12 @@
 import { useContext, useState, useEffect } from 'react'
-import { CourseInfo } from '../../../../../@types/new_index'
+import { CourseInfo } from '../../../../../@types'
+import api from '../../../../../api/backend'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
+import { removeCourseOption, addCourseOption } from '../../../../../utils'
 import { Checkbox } from '../../../../ui/checkbox'
 import { Label } from '../../../../ui/label'
-import { addCourseOption, removeCourseOption } from '../../../../../utils'
-import api from '../../../../../api/backend'
+
 
 type Props = {
   courses: CourseInfo[]

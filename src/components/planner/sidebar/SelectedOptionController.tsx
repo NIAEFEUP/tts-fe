@@ -1,27 +1,24 @@
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
+//TODO(thePeras): Check this package, its extremely heavy (231.2k, gzipped: 50.8k)
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
-import { ThemeContext } from '../../../contexts/ThemeContext'
 import { useState, useContext, useRef } from 'react'
 import CopyOption from './selectedOptionController/CopyOption'
 import PasteOption from './selectedOptionController/PasteOption'
-import { CourseOption } from '../../../@types/new_index'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
+import { CourseOption } from '../../../@types'
+import { ThemeContext } from '../../../contexts/ThemeContext'
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 
 type Props = {
-  selectedOptionHook: [number, React.Dispatch<React.SetStateAction<number>>]
   currentOption: CourseOption[]
-  isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
 /**
  * Interactions with the currently selected option
  */
 const SelectedOptionController = ({
-  selectedOptionHook,
   currentOption,
-  isImportedOptionHook,
 }: Props) => {
-  const { enabled, setEnabled } = useContext(ThemeContext)
+  const { enabled } = useContext(ThemeContext)
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
@@ -29,6 +26,8 @@ const SelectedOptionController = ({
   let isScrollingBack = false
   const textarea = useRef(null)
 
+  //TODO(thePeras): Fix Input max length and scroll
+  // make it value={state}
   const startScroll = () => {
     if (document.activeElement === textarea.current) return
     isHovered = true
@@ -63,6 +62,7 @@ const SelectedOptionController = ({
 
   const renameOptionName = (event) => {
     const newName = event.target.value.trim()
+    if(newName.length > 40) return;
     event.target.value = newName
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
@@ -94,13 +94,13 @@ const SelectedOptionController = ({
           </PopoverTrigger>
           <PopoverContent side="bottom" className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
             <EmojiPicker
-              width={'100%'}
+              width="100%"
               searchDisabled={true}
               previewConfig={{ showPreview: false }}
               theme={enabled ? Theme.DARK : Theme.LIGHT}
               suggestedEmojisMode={SuggestionMode.RECENT}
               emojiStyle={EmojiStyle.APPLE}
-              onEmojiClick={(emojiData, event) => {
+              onEmojiClick={(emojiData, e) => {
                 changeOptionIcon(emojiData.imageUrl)
                 setEmojiPickerOpen(false)
               }}
@@ -108,15 +108,12 @@ const SelectedOptionController = ({
           </PopoverContent>
         </Popover>
 
-        <textarea
+        <input
           key={selectedOption}
           id="option-name"
           spellCheck="false"
           ref={textarea}
-          rows={1}
-          cols={40}
           maxLength={40}
-          wrap="off"
           defaultValue={getOptionById(selectedOption)?.name}
           className="w-full resize-none overflow-x-auto scroll-smooth rounded border-none bg-inherit p-1 font-bold transition-all focus:font-normal"
           onBlur={renameOptionName}
@@ -134,7 +131,7 @@ const SelectedOptionController = ({
       </div>
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        <PasteOption isImportedOptionHook={isImportedOptionHook} />
+        <PasteOption />
         {/*<RandomFill className="sm:py-0 xl:p-1" />*/}
       </div>
     </div>
