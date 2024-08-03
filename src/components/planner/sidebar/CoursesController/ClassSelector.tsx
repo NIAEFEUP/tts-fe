@@ -101,6 +101,18 @@ const ClassSelector = ({ course }: Props) => {
     }
   }, [isDropdownOpen])
 
+  useEffect(() => {
+    const newMultipleOptions = [...multipleOptions];
+    const courseOptions = newMultipleOptions[selectedOption].course_options.map(opt => {
+      if (opt.course_id === course.id) {
+        return { ...opt, locked: locked };
+      }
+      return opt;
+    });
+    newMultipleOptions[selectedOption].course_options = courseOptions;
+    setMultipleOptions(newMultipleOptions);
+  }, [locked, selectedOption]);  
+
   //(thePeras): Classes options should be a new state
   /**
    * Return the classes options filtered by the selected teachers

@@ -98,10 +98,10 @@ const RandomFill = ({ className }: Props) => {
 
   const getSchedulesGenerator = () => {
     const allSchedules = courseOptions.map((course) => {
-      if (course.locked) {
-        return pickedCourses.find((picked) => picked.id === course.course_id).classes.find(
+      if (course.locked && course.picked_class_id) {
+        return [pickedCourses.find((picked) => picked.id === course.course_id).classes.find(
           (cls) => cls.id === course.picked_class_id
-        )
+        )]
       }
 
       const availableClasses = classes.filter((class_info) => {
@@ -112,7 +112,8 @@ const RandomFill = ({ className }: Props) => {
         .filter((class_info) => class_info.course_info.id === course.course_id)
         .map((class_info) => class_info.class_info)
     })
-
+    
+    console.log("all schedules: ", allSchedules);
     return cartesianGenerator(...allSchedules)
   }
 
