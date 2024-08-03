@@ -2,7 +2,7 @@ import { UsersIcon } from '@heroicons/react/24/outline'
 import { Button } from '../../../ui/button'
 
 /**
- * Start
+ * 
  */
 const CollaborativeSession = () => {
   return (

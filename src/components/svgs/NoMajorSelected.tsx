@@ -2,7 +2,7 @@ type Props = {
   className?: string
 }
 
-const NoMajorSelectedPlaceholder = ({ className }: Props) => (
+const NoMajorSelectedPlaceholderSVG = ({ className }: Props) => (
   <svg
     width="183"
     height="153"
@@ -247,4 +247,4 @@ const NoMajorSelectedPlaceholder = ({ className }: Props) => (
   </svg>
 )
 
-export default NoMajorSelectedPlaceholder
+export default NoMajorSelectedPlaceholderSVG

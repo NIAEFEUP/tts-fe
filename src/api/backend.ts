@@ -1,6 +1,5 @@
-import { Major } from '../@types'
-import { CourseInfo } from '../@types/new_index'
-import { getSemester, config, dev_config } from '../utils'
+import { Major, CourseInfo } from "../@types"
+import { dev_config, getSemester, config} from "../utils"
 
 
 const prod_val = process.env.REACT_APP_PROD
@@ -52,11 +51,21 @@ const getCourseClass = async (course: CourseInfo) => {
   return await apiRequest(`/class/${course.id}/`)
 }
 
-const getCoursesClasses = async (courses : CourseInfo[]) => {
-  return courses.map(async (course) => {
-    course['classes'] = await getCourseClass(course)
-    return course
-  })
+const getCoursesClasses = async (courses: CourseInfo[]) => {
+  const result = [];
+  for (let course of courses) {
+    course.classes = await getCourseClass(course);
+    course.classes = course.classes.map((c) => {
+      return {
+        ...c,
+        filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
+      }
+    })
+
+    result.push(course);
+  }
+
+  return result;
 }
 
 /**
@@ -66,7 +75,7 @@ const getCoursesClasses = async (courses : CourseInfo[]) => {
  */
 const getCourseUnit = async (id: number) => {
   if (id === null) return []
-  const class_info = (await apiRequest(`course_unit/${id}/`))[0];
+  const class_info = (await apiRequest(`course_unit/${id}/`));
   class_info['classes'] = await getCourseClass(class_info);
   return class_info;
 }
@@ -88,53 +97,3 @@ const api = {
 }
 
 export default api
-
-
-
-// DEPRECATED
-// TODO: remove
-// /**
-//  * Retrieves all schedule options for a given course unit
-//  * @param course course of which to retrieve schedule
-//  * @returns array of schedule options
-//  */
-// const getCourseSchedule = async (course: CheckedCourse) => {
-//   if (course === null) return []
-//   return await apiRequest(`/schedule/${course.info.id}/`)
-// }
-// /**
-//  * Retrieves all schedule options for a given course unit
-//  * @param courses course of which to retrieve schedule
-//  * @returns array of schedule options
-//  */
-// const getCoursesSchedules = async (courses: CheckedCourse[]) => {
-//   if (!courses || courses.length === 0) return []
-
-//   let schedules = []
-//   for (let course of courses) {
-//     const schedule = await getCourseSchedule(course)
-//     schedules.push(schedule)
-//   }
-
-//   return schedules
-// }
-// /**
-//  * Retrieves all schedule options for a given course unit
-//  * @param courses course of which to retrieve schedule
-//  * @returns array of schedule options
-//  */
-// const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
-//   if (!courses || courses.length === 0) return []
-
-//   let schedules = []
-//   for (let yearCourses of courses) {
-//     let yearSchedules = []
-//     for (let course of yearCourses) {
-//       const schedule = await getCourseSchedule(course)
-//       yearSchedules.push(schedule)
-//     }
-//     schedules.push(yearSchedules)
-//   }
-
-//   return schedules
-// }

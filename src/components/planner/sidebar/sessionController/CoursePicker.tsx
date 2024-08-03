@@ -1,56 +1,48 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose,
-} from '../../../ui/dialog'
-import StorageAPI from '../../../../api/storage'
-import CourseContext from '../../../../contexts/CourseContext'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import MajorContext from '../../../../contexts/MajorContext'
-import { Button } from '../../../ui/button'
-import { Separator } from '../../../ui/separator'
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
 import { CheckIcon } from '@heroicons/react/24/outline'
-import api from '../../../../api/backend'
+import StorageAPI from '../../../../api/storage'
+import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { removeAllCourseOptions } from '../../../../utils'
 import { Desert } from '../../../svgs'
+import { Button } from '../../../ui/button'
+import { DialogHeader, DialogFooter, Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import BackendAPI from '../../../../api/backend'
+import { Separator } from '../../../ui/separator'
+
+//TODO: absolute imports with @
 
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
-  const { selectedMajor } = useContext(MajorContext)
   const { multipleOptions } = useContext(MultipleOptionsContext)
+  const { pickedCourses, setPickedCourses, setChoosingNewCourse, setCoursesInfo } = useContext(CourseContext)
+
+  const [selectedMajor, setSelectedMajor] = useState(StorageAPI.getSelectedMajorStorage());
   const showContent = selectedMajor || pickedCourses.length > 0
 
   useEffect(() => {
-    console.log("Multiple options have changed!");
-    StorageAPI.setOptionsStorage(multipleOptions)
-  }, [multipleOptions])
+    if (!selectedMajor) return
+    //TODO(thePeras): Takes time and a shimmer effect should be added
+    BackendAPI.getCourses(selectedMajor).then((courses) => {
+      setCoursesInfo(courses);
+    })
+    StorageAPI.setSelectedMajorStorage(selectedMajor);
+  }, [selectedMajor, setCoursesInfo])
 
   useEffect(() => {
     StorageAPI.setPickedCoursesStorage(pickedCourses)
   }, [pickedCourses])
 
-  useEffect(() => {
-    StorageAPI.setSelectedMajorStorage(selectedMajor)
-  }, [selectedMajor])
-
-  const handleOpenChange = () => {
+  const handleOpenChange = async () => {
+    setChoosingNewCourse((prev) => !prev);
     setOpen(!open)
     if (open === false) return
-    api.getCoursesClasses(pickedCourses) // (thePeras): not using the return value and modifying the parameter directly???
-    console.log("Picked courses are fd: ", pickedCourses);
-    StorageAPI.setPickedCoursesStorage(pickedCourses)
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={async () => { await handleOpenChange() }}>
       <DialogTrigger asChild>
         <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares">
           <span className="hidden md:block lg:hidden xl:block">Escolher UCs</span>
@@ -65,7 +57,7 @@ const CoursePicker = () => {
             escolheste.
           </DialogDescription>
         </DialogHeader>
-        <MajorSearchCombobox />
+        <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor}/>
         <Separator />
         {showContent ? (
           <>
@@ -80,7 +72,10 @@ const CoursePicker = () => {
                 <Ects />
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => setPickedCourses([])}
+                    onClick={() => {
+                      setPickedCourses([])
+                      removeAllCourseOptions(multipleOptions)
+                    }}
                     variant="icon"
                     className="gap-2 bg-lightish text-darkish"
                   >

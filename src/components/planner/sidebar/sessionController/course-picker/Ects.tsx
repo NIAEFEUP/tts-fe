@@ -1,8 +1,7 @@
 import { useContext } from 'react'
-import CourseContext from '../../../../../contexts/CourseContext'
 import { InformationCircleIcon } from '@heroicons/react/24/solid'
-import { Tooltip, TooltipContent, TooltipProvider } from '../../../../ui/tooltip'
-import { TooltipTrigger } from '@radix-ui/react-tooltip'
+import CourseContext from '../../../../../contexts/CourseContext'
+import { TooltipTrigger, TooltipContent, TooltipProvider, Tooltip } from '../../../../ui/tooltip'
 
 const Ects = () => {
   const { pickedCourses } = useContext(CourseContext)

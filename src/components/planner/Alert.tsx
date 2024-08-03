@@ -26,6 +26,7 @@ const Alert = ({ children, type }: Props) => {
     } else return ''
   }, [type])
 
+  //TODO(thePeras): Improvements can be made
   return (
     <div
       role="alert"

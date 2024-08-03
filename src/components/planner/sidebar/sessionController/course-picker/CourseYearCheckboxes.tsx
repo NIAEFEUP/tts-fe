@@ -1,10 +1,12 @@
 import { useContext, useState, useEffect } from 'react'
-import { CourseInfo } from '../../../../../@types/new_index'
+import { CourseInfo } from '../../../../../@types'
+import api from '../../../../../api/backend'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
+import { removeCourseOption, addCourseOption } from '../../../../../utils'
 import { Checkbox } from '../../../../ui/checkbox'
 import { Label } from '../../../../ui/label'
-import { addCourseOption, removeCourseOption } from '../../../../../utils'
+
 
 type Props = {
   courses: CourseInfo[]
@@ -15,20 +17,23 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 
-  const toggleCourse = (idx: number) => {
+  const toggleCourse = async (idx: number) => {
     // Toggle the checkbox
     setCheckboxList((prev) => {
       const newCheckboxList = [...prev]
       newCheckboxList[idx] = !newCheckboxList[idx]
       return newCheckboxList
     })
+
     // Add or remove the course from the pickedCourses list
     if (pickedCourses.some((pickedCourse) => pickedCourse.id === courses[idx].id)) {
       setMultipleOptions(removeCourseOption(courses[idx], multipleOptions))
       setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse.id !== courses[idx].id))
     } else {
+      const pickedCoursesWithExtra = [...pickedCourses, courses[idx]];
+      const newPickedCourses = await api.getCoursesClasses(pickedCoursesWithExtra);
+      setPickedCourses(newPickedCourses)
       setMultipleOptions(addCourseOption(courses[idx], multipleOptions))
-      setPickedCourses([...pickedCourses, courses[idx]])
     }
   }
 
@@ -48,7 +53,7 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
             id={`checkbox-${courseIdx}`}
             title={course.name}
             checked={checkboxList[courseIdx]}
-            onCheckedChange={() => toggleCourse(courseIdx)}
+            onCheckedChange={async () => { await toggleCourse(courseIdx) }}
           />
           <Label htmlFor={`checkbox-${courseIdx}`} className="text-wrap leading-normal hover:cursor-pointer">
             {course.name + ' (' + course.acronym + ')'}

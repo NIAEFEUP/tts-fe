@@ -1,39 +1,21 @@
-import {
-  MultipleOptions,
-  CheckedCourse,
-  Major,
-  CourseSchedule,
-  ImportedCourses,
-} from '../../../../@types'
-import { convertCourseInfoToCourseOption, getCourseTeachers } from '../../../../utils'
-import { Button } from '../../../ui/button'
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
-import { useToast } from '../../../ui/use-toast'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
-import React, { useContext, useEffect, useState } from 'react'
-import ConfirmationModal from './ConfirmationModal'
+import { useContext, useEffect, useState } from 'react'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { CourseInfo, CourseOption } from '../../../../@types/new_index'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from '../../../ui/dropdown-menu'
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/tooltip'
+import { ImportedCourses, CourseOption, CourseInfo } from '../../../../@types'
 import api from '../../../../api/backend'
 import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { convertCourseInfoToCourseOption } from '../../../../utils'
+import { Button } from '../../../ui/button'
+import { useToast } from '../../../ui/use-toast'
 
-type Props = {
-  isImportedOptionHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-}
-
-const PasteOption = ({ isImportedOptionHook }: Props) => {
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
-  const [modalOpen, setModalOpen] = useState(false)
-  const [_, setIsImportedOption] = isImportedOptionHook
+const PasteOption = () => {
+  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
   const { toast } = useToast()
-
-  // Temporary state to store the schedule tokens to be imported from clipboard between modal open and confirmation
-  const [importingCoursesUnitOptions, setImportingCoursesUnitOptions] = useState<ImportedCourses>(null)
-  const [importingMajor, setImportingMajor] = useState<Major>(null)
 
   const [isClipboardSupported, setIsClipboardSupported] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -50,7 +32,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
   const importSchedule = async (value) => {
     const url = value
     const decoded_url = Buffer.from(url, 'base64').toString()
-    const isImporteFromClipboard : boolean = value;
+    const isImporteFromClipboard: boolean = value
 
     if (!isValidURL(decoded_url)) {
       const description = isImporteFromClipboard
@@ -77,7 +59,6 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
     })
 
     // Unchecked imported courses units
-
     const checkedCoursesIds = multipleOptions[selectedOption].course_options.map((courseOption: CourseOption) => {
       return courseOption.course_id
     })
@@ -86,41 +67,30 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       return !checkedCoursesIds.includes(Number(course_unit_id))
     })
 
-
     if (uncheckedCoursesIds.length > 0) {
-      const courses: CourseInfo[] = (await Promise.all(uncheckedCoursesIds.map(async (course_unit_id) => {
-        return await api.getCourseUnit(Number(course_unit_id))
-      }))).flat();
+      const courses: CourseInfo[] = (
+        await Promise.all(
+          uncheckedCoursesIds.map(async (course_unit_id) => {
+            return await api.getCourseUnit(Number(course_unit_id))
+          })
+        )
+      ).flat()
 
-      //append option to multipleOptions
-      // const newMultipleOptions = [...multipleOptions];
-      // newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(courses)
-      // // newMultipleOptions[selectedOption].course_options.concat(courses);
-      // // currentCourseOptions = currentCourseOptions.concat(courses)
-      // setMultipleOptions(newMultipleOptions);
+      const newPickedCourses = [...pickedCourses]
+      setPickedCourses(newPickedCourses.concat(courses))
 
-      const newPickedCourses = [...pickedCourses];
-      setPickedCourses(newPickedCourses.concat(courses));
+      let newMultipleOptions = [...multipleOptions]
+      newMultipleOptions.forEach((option) => {
+        option.course_options = option.course_options.concat(
+          courses.map((course) => convertCourseInfoToCourseOption(course))
+        )
+      })
 
-      const newMultipleOptions = [...multipleOptions];
-      newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.concat(
-        courses.map((course) => convertCourseInfoToCourseOption(course))
-      );
-      setMultipleOptions(newMultipleOptions);
-
-      /*
-      //check the unCheckedCourses and fill the options
-      setImportingCoursesUnitOptions(importedCourses)
-      const unCheckedCoursesIds = unCheckedCourses.map((course_unit_id) => Number(course_unit_id))
-      setIsImportedOption(true)
-      // TODO (diogotvf7): this function and probably component will need a fix due to the refactor
-      // as the whole data structure has changed
-      // checkCourses(unCheckedCoursesIds, importedCourses)
-      return*/
+      setMultipleOptions(newMultipleOptions)
     }
 
-    //setIsImportedOption(true)
-    fillOptions(importedCourses, selectedOption, multipleOptions, setMultipleOptions);
+    fillOptions(importedCourses, multipleOptions, setMultipleOptions, selectedOption)
+    
     toast({
       title: 'Horário colado!',
       description: 'A opção foi colada com sucesso',
@@ -144,7 +114,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
       if (isNaN(Number(course[0])) || isNaN(Number(course[1]))) return false
     })
 
-    return true
+    return true;
   }
 
   return (
@@ -188,7 +158,7 @@ const PasteOption = ({ isImportedOptionHook }: Props) => {
                   autoFocus
                   type="text"
                   placeholder="Colar aqui opção"
-                  className="text-slate-950 w-full rounded border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
+                  className="w-full rounded border border-slate-200 p-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
                   onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {

@@ -1,6 +1,6 @@
 import { Context, Dispatch, SetStateAction } from 'react'
 import { createContext } from 'react'
-import { MultipleOptions } from '../@types/new_index'
+import { MultipleOptions } from '../@types'
 
 interface MultipleOptionsContent {
   multipleOptions: MultipleOptions
@@ -14,6 +14,6 @@ const MultipleOptionsContext: Context<MultipleOptionsContent> = createContext({
   setMultipleOptions: (multipleOptions: MultipleOptions) => {},
   selectedOption: 0,
   setSelectedOption: (selectedOption: number) => {},
-})
+});
 
 export default MultipleOptionsContext

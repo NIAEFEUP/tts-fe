@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { HeroPlanner } from '../components/home'
+import HeroPlanner from '../components/home/HeroPlanner'
 
 const AboutPage = () => {
   useEffect(() => {

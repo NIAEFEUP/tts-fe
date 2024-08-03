@@ -1,17 +1,26 @@
-import { Fragment, useMemo } from 'react'
-import { Lesson } from '../../../@types'
+import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import Alert, { AlertType } from '../Alert'
 import InspectLessonBox from './InspectLessonBox'
+import { ConflictInfo, ClassDescriptor } from '../../../@types'
+
 
 type Props = {
-  lessons: Lesson[]
+  conflictsInfo: ConflictInfo,
   isOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
+const ConflictsPopover = ({ 
+  conflictsInfo,
+  isOpenHook 
+}: Props) => {
   const [isOpen, setIsOpen] = isOpenHook
-  const severe = useMemo(() => lessons.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [lessons])
+  
+  // 1. Find better way to see the severe conflicts which are conflicts between tp and other tp classes.
+  // We need to find a better way since before we were receiving a Lesson[] array, and now we are receiving an array
+  // of conflict infos, which is far more intuitive
+  //const severe = useMemo(() => lessons.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [lessons])
+  const severe = conflictsInfo.severe;
 
   const closeModal = () => {
     setIsOpen(false)
@@ -53,22 +62,22 @@ const ConflictsPopover = ({ lessons, isOpenHook }: Props) => {
                   </h3>
                   <Alert type={severe ? AlertType.error : AlertType.warning}>
                     <p>
-                      Um horário com colisões de <strong>aulas teóricas</strong> é geralmente permitido na maioria dos
-                      casos. O mesmo <strong>não</strong> se verifica para <strong>aulas práticas</strong>.
+                      Colisões com <strong>aulas teóricas</strong> são geralmente permitidas na maioria dos
+                      casos. O mesmo <strong>não</strong> se verifica quando colidem <strong>aulas práticas</strong>.
                     </p>
                   </Alert>
                 </Dialog.Title>
 
                 <div className="flex h-full w-full items-center justify-start gap-4">
-                  {lessons.map((lesson: Lesson, lessonIdx: number) => (
+                  {conflictsInfo.conflictingClasses.map((classDescriptor: ClassDescriptor, lessonIdx: number) => (
                     <InspectLessonBox
                       key={`conflict-inspect-lesson-box-${lessonIdx}`}
-                      lesson={lesson}
-                      conflict={true}
+                      courseInfo={classDescriptor.courseInfo}
+                      classInfo={classDescriptor.classInfo}
+                      slotInfo={classDescriptor.slotInfo} 
                     />
                   ))}
                 </div>
-
                 <footer className="flex justify-end">
                   <button
                     type="button"

@@ -2,7 +2,7 @@ type Props = {
   className?: string
 }
 
-const NoCourseSelectedPlaceholder = ({ className }: Props) => (
+const NoCourseSelectedPlaceholderSVG = ({ className }: Props) => (
   <svg
     width="183"
     height="153"
@@ -247,4 +247,4 @@ const NoCourseSelectedPlaceholder = ({ className }: Props) => (
   </svg>
 )
 
-export default NoCourseSelectedPlaceholder
+export default NoCourseSelectedPlaceholderSVG
