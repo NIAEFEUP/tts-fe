@@ -72,7 +72,7 @@ const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
-            {majors.map((major) => (
+            {majors && majors.map((major) => (
               <CommandItem
                 key={major.id}
                 value={major.id.toString()}

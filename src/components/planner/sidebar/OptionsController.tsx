@@ -21,6 +21,10 @@ const OptionsController = () => {
       animation={200}
       delay={2}
       multiDrag
+      //set cursor-grabbing when dragging
+      onStart={() => document.body.style.cursor = 'grabbing'}
+      //set cursor-grab when not dragging
+      onEnd={() => document.body.style.cursor = 'grab'}
     >
       {multipleOptions.map((option: Option) => (
         <OptionButton
@@ -49,9 +53,9 @@ const OptionButton = ({ option, selectedOption, setSelectedOption }: Props) => {
             setSelectedOption(option.id)
           }}
           className={`
-            group relative box-border flex aspect-square h-10 w-10 cursor-pointer flex-col
+            group relative box-border flex aspect-square h-10 w-15 cursor-pointer flex-col
             items-center justify-center rounded border-2 border-transparent p-2
-            dark:shadow hover:dark:border-primary/50 md:h-14 md:w-14 lg:h-10 lg:w-10 xl:h-14 xl:w-14
+            dark:shadow hover:dark:border-primary/50
             ${selectedOption === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
             `}
         >
@@ -60,9 +64,9 @@ const OptionButton = ({ option, selectedOption, setSelectedOption }: Props) => {
               selectedOption === option.id ? 'group-hover:text-white' : 'group-hover:text-slate-700'
             }`}
           >
-            <EllipsisHorizontalIcon className="m-auto h-5 w-5" />
+            <EllipsisHorizontalIcon className="m-auto h-5 w-5 cursor-grab" />
           </div>
-          <img src={option.icon} className="h-8 w-8 transform duration-200 ease-in-out group-hover:mt-3" alt={option.name} />
+          <img src={option.icon} className="h-9 w-9 transform duration-200 ease-in-out group-hover:mt-3" alt={option.name} />
         </TooltipTrigger>
         <TooltipContent className="w-32 truncate">{option.name}</TooltipContent>
       </Tooltip>
