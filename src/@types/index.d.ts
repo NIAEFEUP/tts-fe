@@ -25,7 +25,7 @@ export type CourseInfo = {
   acronym: string,
   name: string,
   url: string,
-  classes: Array<ClassInfo>
+  classes?: Array<ClassInfo>
 }
 
 export type ClassInfo = {
@@ -91,6 +91,6 @@ export type Lesson = {
   schedule: CourseSchedule
 }
 
-export type ImportedCourses = { 
-  [key: string]: string 
+export type ImportedCourses = {
+  [key: string]: string
 }

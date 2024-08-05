@@ -11,23 +11,34 @@ import { Button } from '../../../ui/button'
 import { DialogHeader, DialogFooter, Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import BackendAPI from '../../../../api/backend'
 import { Separator } from '../../../ui/separator'
+import useCourseUnits from '../../../../hooks/useCourseUnits'
+import { CourseInfo, Major } from '../../../../@types'
+import { Skeleton } from '../../../ui/skeleton'
+import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 
 //TODO: absolute imports with @
 
 const CoursePicker = () => {
   const [open, setOpen] = useState(false)
-  const { multipleOptions } = useContext(MultipleOptionsContext)
-  const { pickedCourses, setPickedCourses, setChoosingNewCourse, setCoursesInfo } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo } = useContext(CourseContext)
 
-  const [selectedMajor, setSelectedMajor] = useState(StorageAPI.getSelectedMajorStorage());
+  const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
+  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
   const showContent = selectedMajor || pickedCourses.length > 0
 
   useEffect(() => {
-    if (!selectedMajor) return
-    //TODO(thePeras): Takes time and a shimmer effect should be added
-    BackendAPI.getCourses(selectedMajor).then((courses) => {
-      setCoursesInfo(courses);
+    if (!courseUnits) return;
+    setCoursesInfo(courseUnits);
+  }, [courseUnits])
+
+  useEffect(() => {
+    BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
+      setPickedCourses(courseWithClasses);
     })
+  }, [checkboxedCourses])
+
+  useEffect(() => {
+    if (!selectedMajor) return
     StorageAPI.setSelectedMajorStorage(selectedMajor);
   }, [selectedMajor, setCoursesInfo])
 
@@ -57,12 +68,24 @@ const CoursePicker = () => {
             escolheste.
           </DialogDescription>
         </DialogHeader>
-        <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor}/>
+        <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
         <Separator />
         {showContent ? (
           <>
             <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
-              <CourseYearTabs />
+              {!loadingCourseUnits
+                ? <CourseYearTabs />
+                : <div className="flex flex-col space-y-3">
+                  <Skeleton className="h-8 rounded-xl" />
+                  <div className="space-y-4">
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                  </div>
+                </div>
+              }
               <Separator orientation="vertical" className="mx-5" />
               <PickedCoursesList />
             </div>
@@ -71,23 +94,7 @@ const CoursePicker = () => {
               <div className="flex items-center justify-between pr-4 dark:text-white">
                 <Ects />
                 <div className="flex gap-2">
-                  <Button
-                    onClick={() => {
-                      setPickedCourses([])
-                      removeAllCourseOptions(multipleOptions)
-                    }}
-                    variant="icon"
-                    className="gap-2 bg-lightish text-darkish"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                    <span>Limpar</span>
-                  </Button>
-                  <DialogClose asChild>
-                    <Button variant="icon" className="gap-2 bg-lightish text-darkish">
-                      <CheckIcon className="h-5 w-5" />
-                      <span>Pronto</span>
-                    </Button>
-                  </DialogClose>
+                  <ClearAllCoursesButton />
                 </div>
               </div>
             </DialogFooter>

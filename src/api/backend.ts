@@ -1,5 +1,5 @@
 import { Major, CourseInfo } from "../@types"
-import { dev_config, getSemester, config} from "../utils"
+import { dev_config, getSemester, config } from "../utils"
 
 
 const prod_val = process.env.REACT_APP_PROD
@@ -38,7 +38,11 @@ const getMajors = async () => {
  */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`)
+  return getCoursesByMajorId(major.id);
+}
+
+const getCoursesByMajorId = async (id: number) => {
+  return await apiRequest(`/course_units/${id}/${config.api.year}/${SEMESTER}/`)
 }
 
 /**
@@ -90,10 +94,12 @@ const getInfo = async () => {
 const api = {
   getMajors,
   getCourses,
+  getCoursesByMajorId,
   getCourseClass,
   getCoursesClasses,
   getCourseUnit,
-  getInfo
+  getInfo,
+  BACKEND_URL
 }
 
 export default api
