@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
-import { HeroPlanner } from '../components/home'
+import HeroPlanner from '../components/home/HeroPlanner'
+import { scrollToTop } from '../utils'
 
 const AboutPage = () => {
   useEffect(() => {
-    if (!window.location.href.split('#')[1]) document.getElementById('layout').scrollIntoView()
+    scrollToTop()
   }, [])
 
   return (

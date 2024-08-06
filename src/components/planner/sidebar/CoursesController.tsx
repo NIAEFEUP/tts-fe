@@ -1,23 +1,24 @@
-import { removeDuplicatesFromCourseOption } from '../../../utils/utils'
-import ClassSelector from './ClassSelector'
+import { useContext } from 'react'
+import ClassSelector from './CoursesController/ClassSelector'
+import CourseContext from '../../../contexts/CourseContext'
+import { NoMajorSelectedSVG } from '../../svgs'
 
-const CoursesController = ({ multilpleOptionsHook, isImportedOptionHook }) => {
-  const [multipleOptions, setMultipleOptions] = multilpleOptionsHook
-  const [isImportedOption, setIsImportedOption] = isImportedOptionHook
+const CoursesController = () => {
+  const { pickedCourses } = useContext(CourseContext)
+
+  const noCoursesPicked = pickedCourses.length === 0
 
   return (
-    <div className="flex w-full flex-col gap-4 px-0 py-2">
-      {multipleOptions.selected.length > 0 &&
-        removeDuplicatesFromCourseOption(multipleOptions.options[multipleOptions.index])
-          .sort((a, b) => a.course.info.sigarra_id - b.course.info.sigarra_id)
-          .map((courseOption, courseOptionIdx) => (
-            <ClassSelector
-              courseOption={courseOption}
-              multipleOptionsHook={[multipleOptions, setMultipleOptions]}
-              isImportedOptionHook={[isImportedOption, setIsImportedOption]}
-              key={`course-schedule-${multipleOptions.index}-${courseOption.course.info.id}`}
-            />
-          ))}
+    <div className={`flex ${noCoursesPicked ? 'h-max justify-center' : ''} w-full flex-col gap-4 px-0 py-2`}>
+      {noCoursesPicked ? (
+        <NoMajorSelectedSVG className="my-20 h-40 w-full" />
+      ) : (
+        pickedCourses
+          .sort((course1, course2) => course1.id - course2.id) // Same order as Sigarra
+          .map((course, courseIdx) => (
+            <ClassSelector course={course} key={`course-schedule-${courseIdx}-${course.id}`} />
+          ))
+      )}
     </div>
   )
 }
