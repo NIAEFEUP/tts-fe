@@ -58,8 +58,6 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
           }
   }, []);
 
-  console.log("prevewing is: ", preview)
-
   return (
     <DropdownMenuCheckboxItem
       onSelect={() => selectOption()}

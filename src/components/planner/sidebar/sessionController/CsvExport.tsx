@@ -24,7 +24,6 @@ const CsvExport = () => {
     multipleOptions.forEach((option) => header.push(option.name))
     const lines = []
 
-    console.log(multipleOptions)
     pickedCourses.forEach(course => {
       const line = [course.course_unit_year, csvEncode(course.name), course.acronym]
       multipleOptions.forEach(option => {

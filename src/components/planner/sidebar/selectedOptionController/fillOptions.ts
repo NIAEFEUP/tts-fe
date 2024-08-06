@@ -8,8 +8,6 @@ const fillOptions = (
 ) => {
     const newMultipleOptions = [...multipleOptions];
 
-    console.log("Imported courses are: ", importedCourses);
-
     // This handles
     newMultipleOptions[selectedOption].course_options = newMultipleOptions[selectedOption].course_options.map((option) => {
         const importedOption = importedCourses[option.course_id];
