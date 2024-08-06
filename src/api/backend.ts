@@ -1,11 +1,11 @@
 import { Major, CourseInfo } from "../@types"
-import { dev_config, getSemester, config} from "../utils"
+import { dev_config, getSemester, config } from "../utils"
+// import meta.env.VITE_APP_PROD
 
-
-const prod_val = process.env.REACT_APP_PROD
+const prod_val = import.meta.env.VITE_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
-const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
+const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
+const SEMESTER = import.meta.env.VITE_APP_SEMESTER || getSemester()
 
 /**
  * Make a request to the backend server.
