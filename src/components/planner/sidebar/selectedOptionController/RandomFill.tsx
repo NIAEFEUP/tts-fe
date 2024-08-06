@@ -113,7 +113,6 @@ const RandomFill = ({ className }: Props) => {
         .map((class_info) => class_info.class_info)
     })
     
-    console.log("all schedules: ", allSchedules);
     return cartesianGenerator(...allSchedules)
   }
 
@@ -161,7 +160,7 @@ const RandomFill = ({ className }: Props) => {
 
   const applyRandomSchedule = () => {
     let newPermutations = [...permutations]
-    const STEP = 10000;
+    const STEP = 2500;
     for (let i = 0; i < STEP; i++) {
       const permutation = generator.next().value
       if (!permutation) break
@@ -188,7 +187,7 @@ const RandomFill = ({ className }: Props) => {
 
       const newCourseOptions = selectedOptionCopy.course_options.map((course) => {
         if (course.locked) return course
-    
+
         for (const classInfo of schedules) {
           const pickedCourse = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id);
           
