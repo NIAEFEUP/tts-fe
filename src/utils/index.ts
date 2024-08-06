@@ -197,7 +197,7 @@ const getClassType = (type: string) => {
 const getCourseTeachers = (courseInfo: CourseInfo) => {
   return courseInfo.classes.reduce((acc, classInfo) =>
     [...acc, ...classInfo.slots.map(slot => slot.professors)],
-  []);
+    []);
 }
 
 const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
@@ -271,14 +271,14 @@ const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions
   })
 )
 
-const removeAllCourseOptions = (multipleOptions: MultipleOptions) : MultipleOptions => (
+const removeAllCourseOptions = (multipleOptions: MultipleOptions): MultipleOptions => (
   multipleOptions.map((option) => {
     option.course_options = []
     return option
   })
 )
 
-const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
+const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions): MultipleOptions => {
   const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
@@ -328,6 +328,10 @@ const teacherIdsFromCourseInfo = (courseInfo: CourseInfo): number[] => {
   return teacherIds;
 }
 
+const scrollToTop = () => {
+  if (!window.location.href.split('#')[1]) document.getElementById('layout').scrollIntoView();
+}
+
 
 export {
   config,
@@ -363,5 +367,6 @@ export {
   conflictsSeverity,
   teachersFromCourseInfo,
   uniqueTeachersFromCourseInfo,
-  teacherIdsFromCourseInfo
+  teacherIdsFromCourseInfo,
+  scrollToTop
 }
