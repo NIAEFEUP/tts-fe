@@ -1,27 +1,36 @@
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
-import { MultipleOptions } from '../../../../@types'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
+import { useContext } from 'react'
+import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 
-type Props = {
-  multipleOptions: MultipleOptions
-  optionsList: any
+//TODO: utils??
+const csvEncode = (text: string | null | undefined) => {
+  if (!text)
+    return ''
+  if (text.includes(','))
+    return `"${text}"`
+  return text
 }
 
 /**
  * Sidebar with all the main schedule interactions
  */
-const CsvExport = ({ multipleOptions, optionsList }: Props) => {
+const CsvExport = () => {
+  const { pickedCourses } = useContext(CourseContext);
+  const { multipleOptions } = useContext(MultipleOptionsContext);
+
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
-    optionsList.forEach((option) => header.push(option.name))
+    multipleOptions.forEach((option) => header.push(option.name))
     const lines = []
 
-    multipleOptions.selected.forEach((uc, i) => {
-      const info = uc.course.info
-      const line = [info.course_unit_year, info.name, info.acronym]
-      optionsList.forEach((option) => {
-        const fullOption = multipleOptions.options[option.id - 1]
-        line.push(fullOption[i]?.option?.class_name || '')
+    pickedCourses.forEach(course => {
+      const line = [course.course_unit_year, csvEncode(course.name), course.acronym]
+      multipleOptions.forEach(option => {
+        const courseOption = option.course_options.find(courseOption => courseOption.course_id === course.id)
+        const pickedClass = course.classes.find(c => c.id === courseOption?.picked_class_id);
+
+        line.push(csvEncode(pickedClass?.name))
       })
       lines.push(line.join(','))
     })

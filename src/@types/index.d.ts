@@ -1,113 +1,94 @@
-/* General */
-export type Student = {
-  id: number
-  name: string
-  email: string
-  picture?: string
-}
-
-/* Courses */
-export type Course = {
-  id: number
-  course_id: number
-  course_unit_id: number
-  sigarra_id: number
-  course: string
-  name: string
-  acronym: string
-  url: stringid
-  course_unit_year: number
-  semester: number
-  year: number
-  schedule_url: string
-  ects: number
-  last_updated: string
-}
-
-export type CheckedCourse = {
-  checked: boolean
-  info: Course
+enum lesson_type {
+  T = "T",
+  TP = "TP",
+  P = "P",
+  PL = "PL",
+  OT = "OT",
+  O = "O",
+  E = "E"
 }
 
 /* Majors */
 export type Major = {
   id: number
-  name: string
-  sigarra_id: number
   faculty: number
   acronym: string
-  course_type: string
-  year: number
+  name: string
   url: string
-  plan_url: string
-  last_updated: string
 }
 
-/* Schedule */
-// export type CourseSchedule = {
-//   day: number
-//   duration: string
-//   start_time: string
-//   location: string
-//   lesson_type: string
-//   teacher_acronym: string
-//   course_unit_id: number
-//   last_updated: string
-//   class_name: string // e.g. 1MIEIC01
-//   composed_class_name: string // e.g. COMP752
-// }
+export type CourseInfo = {
+  id: number,
+  course_unit_year: number,
+  course_unit_id: number,
+  ects: number,
+  acronym: string,
+  name: string,
+  url: string,
+  classes: Array<ClassInfo>
+}
 
-export type ProfessorInformation = {
+export type ClassInfo = {
+  // course_unit_id: number, // é mesmo necessário ??
+  // composed_name: string,
+  id: number,
+  name: string,
+  filteredTeachers: Array<number>,
+  slots: Array<SlotInfo>
+}
+
+export type SlotInfo = {
+  id: number,
+  lesson_type: string,
+  day: number,
+  start_time: number,
+  duration: number,
+  location: string,
+  professors_link: string,
+  professors: Array<ProfessorInfo>,
+}
+
+export type ProfessorInfo = {
+  id: number
   acronym: string
   name: string
 }
 
-export type CourseSchedule = {
-  day: number
-  duration: string
-  start_time: string
-  location: string
-  lesson_type: string
-  is_composed: boolean
-  course_unit_id: number
-  last_updated: string
-  class_name: string // e.g. 1MIEIC01
-  composed_class_name: string // e.g. COMP752
-  // professor_sigarra_id: string
-  // professor_acronyms: Array<string>                           // eliminar
-  professors_link: string
-  professor_information: Array<ProfessorInformation> // new
+export type PickedCourses = Array<CourseInfo>
+
+export type MultipleOptions = Array<Option>
+
+export type Option = {
+  id: number,
+  icon: string,
+  name: string,
+  course_options: Array<CourseOption>
 }
 
-/* Options */
 export type CourseOption = {
-  shown?: {
-    T: boolean
-    TP: boolean
-  }
-  locked: boolean
-  course: CheckedCourse
-  option: CourseSchedule | null
-  schedules: CourseSchedule[]
-  teachers: ProfessorInformation[]
-  filteredTeachers: ProfessorInformation[]
+  course_id: number,
+  picked_class_id: number,
+  locked: boolean,
+  filteredTeachers: Array<number>,
+  hide: Array<lesson_type>,
 }
 
-export type Subject = {
-  course: Course
-  practicalLesson: CourseSchedule[]
-  theoreticalLessons: CourseSchedule[]
+export type ClassDescriptor = {
+  classInfo: ClassInfo
+  courseInfo: CourseInfo
+  slotInfo?: SlotInfo
 }
+
+export type ConflictInfo = {
+  severe: boolean
+  conflictingClasses: ClassDescriptor[]
+}
+
+export type Conflicts = Map<number, ConflictInfo>
 
 export type Lesson = {
   course: Course
   schedule: CourseSchedule
-}
-
-export type MultipleOptions = {
-  index: number
-  selected: CourseOption[]
-  options: CourseOption[][]
 }
 
 export type ImportedCourses = { 

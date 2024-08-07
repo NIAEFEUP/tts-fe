@@ -1,7 +1,5 @@
-import { NitSigIcon } from '../../../svgs'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
-
-type Props = {}
+import { NitSigIconSVG } from "../../../svgs"
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent  } from "../../../ui/tooltip"
 
 /**
  * Future feature that allows the user to export his schedule options to NitSig
@@ -16,7 +14,7 @@ const NitSigExport = () => {
             className="group flex w-full items-center gap-2 rounded-md p-1 text-sm text-white-900 disabled:cursor-not-allowed disabled:opacity-50"
             disabled
           >
-            <NitSigIcon className="h-4 w-4 black:brightness-150 rounded" />
+            <NitSigIconSVG className="h-4 w-4 black:brightness-150 rounded" />
             <span className=" dark:text-white">Exportar para o Sigarra</span>
           </button>
         </TooltipTrigger>

@@ -1,7 +1,6 @@
 import { Button } from '../ui/button'
 import { BoltIcon, FunnelIcon, CameraIcon, ShareIcon, HashtagIcon, PencilIcon } from '@heroicons/react/24/outline'
 
-// Define features with title, description, and the Icon component
 const features = [
   {
     title: 'Reordenar e personalizar as opções de horário',

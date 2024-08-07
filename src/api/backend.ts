@@ -1,6 +1,5 @@
-import { CheckedCourse, Major } from '../@types'
-import { extraCoursesData } from '../utils/data'
-import { getSemester, config, dev_config } from '../utils/utils'
+import { Major, CourseInfo } from "../@types"
+import { dev_config, getSemester, config} from "../utils"
 
 
 const prod_val = process.env.REACT_APP_PROD
@@ -47,57 +46,38 @@ const getCourses = async (major: Major) => {
  * @param course course of which to retrieve schedule
  * @returns array of schedule options
  */
-const getCourseSchedule = async (course: CheckedCourse) => {
+const getCourseClass = async (course: CourseInfo) => {
   if (course === null) return []
-  return await apiRequest(`/schedule/${course.info.id}/`)
+  return await apiRequest(`/class/${course.id}/`)
 }
 
-/**
- * Retrieves all schedule options for a given course unit
- * @param courses course of which to retrieve schedule
- * @returns array of schedule options
- */
-const getCoursesSchedules = async (courses: CheckedCourse[]) => {
-  if (!courses || courses.length === 0) return []
-
-  let schedules = []
+const getCoursesClasses = async (courses: CourseInfo[]) => {
+  const result = [];
   for (let course of courses) {
-    const schedule = await getCourseSchedule(course)
-    schedules.push(schedule)
+    course.classes = await getCourseClass(course);
+    course.classes = course.classes.map((c) => {
+      return {
+        ...c,
+        filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
+      }
+    })
+
+    result.push(course);
   }
 
-  return schedules
+  return result;
 }
 
 /**
- * Retrieves all schedule options for a given course unit
- * @param courses course of which to retrieve schedule
- * @returns array of schedule options
+ * Retrieves full class information with classes
+ * @param id class id
+ * @returns CourseInfo
  */
-const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
-  if (!courses || courses.length === 0) return []
-
-  let schedules = []
-  for (let yearCourses of courses) {
-    let yearSchedules = []
-    for (let course of yearCourses) {
-      const schedule = await getCourseSchedule(course)
-      yearSchedules.push(schedule)
-    }
-    schedules.push(yearSchedules)
-  }
-
-  return schedules
-}
-
-/**
- * Retrieves all course units outside of a given major
- * @param major major to exclude course units from
- * @returns array of course units
- */
-const getExtraCourses = (major: Major) => {
-  // TODO: implement
-  return extraCoursesData
+const getCourseUnit = async (id: number) => {
+  if (id === null) return []
+  const class_info = (await apiRequest(`course_unit/${id}/`));
+  class_info['classes'] = await getCourseClass(class_info);
+  return class_info;
 }
 
 /**
@@ -110,10 +90,9 @@ const getInfo = async () => {
 const api = {
   getMajors,
   getCourses,
-  getCourseSchedule,
-  getCoursesSchedules,
-  getMajorCoursesSchedules,
-  getExtraCourses,
+  getCourseClass,
+  getCoursesClasses,
+  getCourseUnit,
   getInfo
 }
 

@@ -6,7 +6,7 @@ import { toPng } from 'html-to-image'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
 
 const PrintSchedule = ({ component }) => {
-  const { enabled, setEnabled } = useContext(ThemeContext)
+  const { enabled } = useContext(ThemeContext)
 
   const takeScreenshot = useCallback(
     (isThemeEnabled) => {
@@ -32,7 +32,11 @@ const PrintSchedule = ({ component }) => {
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="icon" className="bg-lightish text-black" onClick={() => takeScreenshot(enabled)}>
+          <Button
+            variant="icon"
+            className="bg-lightish text-black dark:bg-darkish dark:text-white"
+            onClick={() => takeScreenshot(enabled)}
+          >
             <CameraIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
