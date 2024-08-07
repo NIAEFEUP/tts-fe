@@ -48,11 +48,11 @@ const CsvExport = () => {
   return (
     <button
       onClick={exportCSV}
-      className="group flex w-full items-center gap-2 rounded-md p-1 text-sm text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+      className="group flex w-full items-center gap-2n dark:text-white rounded-md p-1 text-gray text-sm  disabled:cursor-not-allowed disabled:opacity-50"
     >
-      <ArrowUpOnSquareIcon className="h-5 w-5 text-secondary" />
-      <span>Exportar Opções (CSV)</span>
-    </button>
+      <ArrowUpOnSquareIcon className="h-5 w-5 text-secondary black:hover:brightness-200" />
+      <span className="pl-1"> Exportar Opções (CSV)</span>
+    </button> 
   )
 }
 
