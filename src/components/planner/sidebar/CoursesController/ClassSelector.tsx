@@ -78,7 +78,7 @@ const ClassSelector = ({ course }: Props) => {
     const course_options = multipleOptions[selectedOption].course_options;
     const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
 
-    if (!option[0]) {
+    if (option.length === 0) {
       setSelectedClassId(null);
       return;
     }
@@ -159,7 +159,7 @@ const ClassSelector = ({ course }: Props) => {
 
     newMultipleOptions[selectedOption].course_options = newCourseOptions;
     setMultipleOptions(newMultipleOptions);
-
+    
     setPreview(null);
   }
 
@@ -259,7 +259,10 @@ const ClassSelector = ({ course }: Props) => {
                         checked={selectedOption === classInfo.id}
                         preview={preview}
                         conflict={timesCollideWithSelected(classInfo)}
-                        onSelect={() => setSelectedClassId(classInfo.id)}
+                        onSelect={() => {
+                          setSelectedClassId(classInfo.id)
+                          setPreview(null)
+                        }}
                         onMouseEnter={() => showPreview(classInfo)}
                         onMouseLeave={() => removePreview()}
                       />
