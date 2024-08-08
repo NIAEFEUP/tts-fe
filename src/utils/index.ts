@@ -336,7 +336,7 @@ const scrollToTop = () => {
 const plausible = Plausible({
   domain: import.meta.env.VITE_APP_PLAUSIBLE_DOMAIN,
   apiHost: import.meta.env.VITE_APP_PLAUSIBLE_HOST,
-  trackLocalhost: true//!Number(import.meta.env.VITE_APP_PROD),
+  trackLocalhost: !Number(import.meta.env.VITE_APP_PROD),
 })
 
 export {
