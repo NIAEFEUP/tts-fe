@@ -84,6 +84,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
 
                     const { trackEvent } = plausible
                     trackEvent('Major Selected', { props: { major: currentMajor.name } })
+                    trackEvent('Faculty', { props: { faculty: currentMajor.faculty_id.toUpperCase() } })
                   }}
                 >
                   {getDisplayMajorText(major)}
