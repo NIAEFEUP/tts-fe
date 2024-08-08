@@ -1,10 +1,9 @@
-
 import { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
 import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pages'
-import { getPath, config } from './utils'
+import { getPath, config, plausible } from './utils'
 import Layout from './components/layout'
 
 // Configures the path for pages.
@@ -24,6 +23,9 @@ const redirects = [
 const App = () => {
   //TODO(thePeras): Should this be used? Or should this invalidate the storage
   //StorageAPI.updateBackendDataVersion()
+
+  const { enableAutoPageviews } = plausible
+  enableAutoPageviews()
 
   return (
     <BrowserRouter>
