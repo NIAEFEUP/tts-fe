@@ -3,6 +3,7 @@ import dev_config from '../config/local.json'
 import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo } from '../@types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import Plausible from 'plausible-tracker'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -332,6 +333,11 @@ const scrollToTop = () => {
   if (!window.location.href.split('#')[1]) document.getElementById('layout').scrollIntoView();
 }
 
+const plausible = Plausible({
+  domain: process.env.REACT_APP_PLAUSIBLE_DOMAIN,
+  apiHost: process.env.REACT_APP_PLAUSIBLE_HOST,
+  trackLocalhost: !Number(process.env.REACT_APP_PROD),
+})
 
 export {
   config,
@@ -368,5 +374,6 @@ export {
   teachersFromCourseInfo,
   uniqueTeachersFromCourseInfo,
   teacherIdsFromCourseInfo,
-  scrollToTop
+  scrollToTop,
+  plausible
 }

@@ -3,7 +3,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
 import { Command, CommandEmpty, CommandList, CommandItem, CommandInput } from '../../../../ui/command'
 import { Major } from '../../../../../@types'
 import MajorContext from '../../../../../contexts/MajorContext'
-import { cn } from '../../../../../utils'
+import { cn, plausible } from '../../../../../utils'
 import { Button } from '../../../../ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/popover'
 
@@ -17,7 +17,7 @@ interface Props {
  * wants to select courses from. They can type the major or click on the rightmost corner to open
  * the list of possible majors.
  */
-const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
+const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   const { majors } = useContext(MajorContext)
   const [open, setOpen] = useState(false)
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined)
@@ -72,22 +72,27 @@ const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
-            {majors && majors.map((major) => (
-              <CommandItem
-                key={major.id}
-                value={major.id.toString()}
-                onSelect={(currentMajorId) => {
-                  const currentMajor = majors.find((major) => major.id === parseInt(currentMajorId))
-                  setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
-                  setOpen(false)
-                }}
-              >
-                {getDisplayMajorText(major)}
-                <CheckIcon
-                  className={cn('ml-auto h-4 w-4', selectedMajor?.id === major.id ? 'opacity-100' : 'opacity-0')}
-                />
-              </CommandItem>
-            ))}
+            {majors &&
+              majors.map((major) => (
+                <CommandItem
+                  key={major.id}
+                  value={major.id.toString()}
+                  onSelect={(currentMajorId) => {
+                    const currentMajor = majors.find((major) => major.id === parseInt(currentMajorId))
+                    setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
+                    setOpen(false)
+
+                    const { trackEvent } = plausible
+                    trackEvent('Major Selected', { props: { major: currentMajor.name } })
+                    trackEvent('Faculty', { props: { faculty: currentMajor.faculty_id.toUpperCase() } })
+                  }}
+                >
+                  {getDisplayMajorText(major)}
+                  <CheckIcon
+                    className={cn('ml-auto h-4 w-4', selectedMajor?.id === major.id ? 'opacity-100' : 'opacity-0')}
+                  />
+                </CommandItem>
+              ))}
           </CommandList>
         </Command>
       </PopoverContent>
