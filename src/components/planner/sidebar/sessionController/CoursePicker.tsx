@@ -35,16 +35,13 @@ const CoursePicker = () => {
     BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
       setPickedCourses(courseWithClasses);
     })
+    StorageAPI.setPickedCoursesStorage(pickedCourses)
   }, [checkboxedCourses])
 
   useEffect(() => {
     if (!selectedMajor) return
     StorageAPI.setSelectedMajorStorage(selectedMajor);
   }, [selectedMajor, setCoursesInfo])
-
-  useEffect(() => {
-    StorageAPI.setPickedCoursesStorage(pickedCourses)
-  }, [pickedCourses])
 
   const handleOpenChange = async () => {
     setChoosingNewCourse((prev) => !prev);

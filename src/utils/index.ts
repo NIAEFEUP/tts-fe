@@ -3,6 +3,7 @@ import dev_config from '../config/local.json'
 import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo } from '../@types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { create } from 'domain'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -278,13 +279,31 @@ const removeAllCourseOptions = (multipleOptions: MultipleOptions): MultipleOptio
   })
 )
 
-const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions): MultipleOptions => {
-  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
+const courseHasClassPicked = (course: CourseInfo, option: Option): CourseOption | null =>  {
+  const candidateOption = option.course_options.filter((courseOption) => courseOption.picked_class_id && (courseOption.course_id === course.course_unit_id));
+
+  if(!candidateOption) return null;
+
+  return candidateOption[0];
+}
+
+const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
+  //  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
+    const newCourseOptions = [];
+    for(const course of courses) {
+      const existingOption = courseHasClassPicked(course, option);
+      if(existingOption) {
+        newCourseOptions.push({...existingOption});
+        console.log(`${course.acronym} has picked class`);
+      } else {
+        newCourseOptions.push(createDefaultCourseOption(course));
+      }
+    }
     // We have to use JSON.parse as well as JSON.stringify in order to create a copy for each option. Otherwise, they would
     // all have the same reference to the same object
-    option.course_options = [...JSON.parse(JSON.stringify(courseOptions))]
+    option.course_options = [...JSON.parse(JSON.stringify(newCourseOptions))]
     return option
   })
 }

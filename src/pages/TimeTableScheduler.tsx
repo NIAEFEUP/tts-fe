@@ -10,7 +10,7 @@ const TimeTableSchedulerPage = () => {
   const [majors, setMajors] = useState<Major[]>([])
   const [coursesInfo, setCoursesInfo] = useState([]);
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
-  const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>([]);
+  const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
 
   //TODO: Looks suspicious
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
