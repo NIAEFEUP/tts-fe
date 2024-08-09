@@ -3,13 +3,14 @@ import PickedCourse from './PickedCourse'
 import CourseContext from '../../../../../contexts/CourseContext'
 import { NoCourseSelectedSVG } from '../../../../svgs'
 import { ScrollArea } from '../../../../ui/scroll-area'
+import { CourseInfo } from '../../../../../@types'
 
 const PickedCoursesList = () => {
-  const { pickedCourses } = useContext(CourseContext)
+  const { checkboxedCourses } = useContext(CourseContext)
 
-  return pickedCourses.length > 0 ? (
+  return checkboxedCourses.length > 0 ? (
     <ScrollArea className="h-64 w-full pr-4">
-      {pickedCourses.map((course) => (
+      {checkboxedCourses.map((course: CourseInfo) => (
         <PickedCourse course={course} key={course.id} />
       ))}
     </ScrollArea>

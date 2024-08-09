@@ -1,6 +1,5 @@
 import { Major, CourseInfo } from "../@types"
 import { dev_config, getSemester, config } from "../utils"
-// import meta.env.VITE_APP_PROD
 
 const prod_val = import.meta.env.VITE_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
@@ -38,7 +37,11 @@ const getMajors = async () => {
  */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`)
+  return getCoursesByMajorId(major.id);
+}
+
+const getCoursesByMajorId = async (id: number) => {
+  return await apiRequest(`/course_units/${id}/${config.api.year}/${SEMESTER}/`)
 }
 
 /**
@@ -51,21 +54,29 @@ const getCourseClass = async (course: CourseInfo) => {
   return await apiRequest(`/class/${course.id}/`)
 }
 
-const getCoursesClasses = async (courses: CourseInfo[]) => {
-  const result = [];
-  for (let course of courses) {
-    course.classes = await getCourseClass(course);
-    course.classes = course.classes.map((c) => {
-      return {
-        ...c,
-        filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
-      }
-    })
+const createCourseClass = async (course: CourseInfo) => {
+  if (course.classes) return course;
 
-    result.push(course);
-  }
+  course.classes = await getCourseClass(course);
+  course.classes = course.classes.map((c) => {
+    return {
+      ...c,
+      filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
+    }
+  })
+  return course;
+}
 
-  return result;
+const getCoursesClasses = async (courses: CourseInfo[]): Promise<CourseInfo[]> => {
+  const newCourses = [...courses];
+
+  Promise.all(newCourses.map(course => createCourseClass(course))).then((values) => {
+    return newCourses;
+  }).catch((e) => {
+    console.error(e);
+  })
+
+  return newCourses;
 }
 
 /**
@@ -90,10 +101,12 @@ const getInfo = async () => {
 const api = {
   getMajors,
   getCourses,
+  getCoursesByMajorId,
   getCourseClass,
   getCoursesClasses,
   getCourseUnit,
-  getInfo
+  getInfo,
+  BACKEND_URL
 }
 
 export default api
