@@ -55,7 +55,6 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "prod": "node ./build",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "check": "npx prettier --check .",
