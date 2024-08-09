@@ -93,11 +93,13 @@ In order to run the production build, we need to use the `tts-frontend-prod` con
 
 In the production build we are serving a static page with minified html, css and javascript files, greatly reducing the load of the page.
 
-Firstly, you have to create an `.env.production` file in order for the app to receive environment variables.
+Firstly, you have to create an `.env` file in order for the app to receive environment variables.
 
 ```bash
-cp .env.example .env.production
+cp .env.example .env
 ```
+
+Internally, when the production build runs with vite, it creates an `.env.production` file from the `.env` file to be used by the `vite build` command. This was done to ease the development process, since running `./dev.sh` complained that the `.env.production` was not found.
 
 To build the application run:
 

@@ -22,5 +22,5 @@ services:
     ports:
       - 3100:80
     env_file:
-      - .env.production
+      - .env
 
