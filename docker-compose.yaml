@@ -1,4 +1,3 @@
-version: '3'
 services:
   tts-frontend:
     container_name: tts_frontend
@@ -8,7 +7,20 @@ services:
       - ./src:/usr/src/tts-fe/src
       - ./public:/usr/src/tts-fe/public
     ports:
-      - 3100:3000
+      - 3100:3100
+    env_file:
+      - .env
+
+  tts-frontend-prod:
+    container_name: tts_frontend_prod
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./src:/usr/src/tts-fe/src
+      - ./public:/usr/src/tts-fe/public
+    ports:
+      - 3100:80
     env_file:
       - .env
 

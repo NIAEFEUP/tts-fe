@@ -12,9 +12,15 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "types": ["vite/client"],
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["cypress", "./src/declaration.d.ts", "./src/**/*.ts", "./src/**/*.tsx"]
+  "include": [
+    "cypress",
+    "./src/declaration.d.ts", 
+    "./src/**/*.ts", 
+    "./src/**/*.tsx",
+  ],
 }

@@ -21,3 +21,5 @@ describe('Cypress end-to-end test example', () => {
     cy.get(".schedule-classes").children().should('have.length', 2)
   })
 })
+
+export {}

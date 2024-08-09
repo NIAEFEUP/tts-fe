@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   darkMode : 'class',
-  content : ['./src/**/*.{js,jsx,ts,tsx}', './src/styles/safelist.txt'],
+  content : ['./index.html', './src/**/*.{js,jsx,ts,tsx}', './src/styles/safelist.txt'],
   theme : {
     extend : {
       colors : {
@@ -87,12 +87,16 @@ module.exports = {
           from : {height : 'var(--radix-accordion-content-height)'},
           to : {height : '0'},
         },
+        shine : {
+          '100%' : {left : '125%'},
+        },
       },
       animation : {
         'accordion-down' : 'accordion-down 0.2s ease-out',
         'accordion-up' : 'accordion-up 0.2s ease-out',
         fade : 'fade 1000ms ease-in-out infinite',
         wiggle : 'wiggle 700ms ease-in-out',
+        shine : 'shine 1s',
         'wiggle-infinity' : 'wiggle 700ms infinite ease-in-out',
       },
       backgroundSize : {

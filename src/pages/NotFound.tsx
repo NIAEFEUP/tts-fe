@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { config } from '../utils/utils'
+import { config } from '../utils'
 
 const NotFoundPage = () => (
   <div className="flex flex-col items-center justify-between space-y-4 py-8 md:flex">

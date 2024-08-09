@@ -1,15 +1,6 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '../../components/ui/alert-dialog'
+
 import BackendAPI from '../../api/backend'
+import { AlertDialogHeader, AlertDialogFooter, AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from '../ui/alert-dialog'
 
 const dataIsUpdated = async () => {
   const { info } = await BackendAPI.getInfo()
@@ -18,7 +9,8 @@ const dataIsUpdated = async () => {
   return info.date <= localInfo.date
 }
 
-const ResetDataModal = ({}) => {
+//TODO(thePeras): Discuss this
+const ResetDataModal = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger />
