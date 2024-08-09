@@ -49,6 +49,8 @@ This allows us to preview what the production build will look like but `Vite` do
 
 # Running the project
 
+In local development, after you run the project you can access it at `localhost:3100/tts`. If you just go to `localhost:3100/` you will be greeted by a blank screen.
+
 ## Docker
 
 This is the recommended approach since it uniformizes the way the application behaves since the developers do not have the same computer hardware nor the same operating system.
@@ -64,7 +66,13 @@ cp .env.example .env
 Then, to build the application run:
 
 ```bash
-docker-compose build tts-frontend
+./build.sh dev
+
+```
+Or directly with `Docker` (although `build.sh` also uses docker)
+
+```bash
+docker compose build tts-frontend
 ```
 
 After build, run to execute:
@@ -104,7 +112,13 @@ Internally, when the production build runs with vite, it creates an `.env.produc
 To build the application run:
 
 ```bash
-docker-compose build tts-frontend-prod
+./build.sh prod
+```
+
+Or directly with `Docker` (although `build.sh` also uses docker)
+
+```bash
+docker compose build tts-frontend-prod
 ```
 
 After build, run to execute:
