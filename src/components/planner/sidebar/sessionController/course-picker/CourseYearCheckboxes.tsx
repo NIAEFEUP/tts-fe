@@ -13,11 +13,11 @@ type Props = {
 }
 
 export const CourseYearCheckboxes = ({ courses }: Props) => {
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses, setCheckboxedCourses, checkboxedCourses } = useContext(CourseContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 
-  const toggleCourse = async (idx: number) => {
+  const toggleCourse = (idx: number) => {
     // Toggle the checkbox
     setCheckboxList((prev) => {
       const newCheckboxList = [...prev]
@@ -26,14 +26,12 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
     })
 
     // Add or remove the course from the pickedCourses list
-    if (pickedCourses.some((pickedCourse) => pickedCourse.id === courses[idx].id)) {
+    if (checkboxedCourses.some((checkedCourse: CourseInfo) => checkedCourse.id === courses[idx].id)) {
       setMultipleOptions(removeCourseOption(courses[idx], multipleOptions))
-      setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse.id !== courses[idx].id))
+      setCheckboxedCourses(checkboxedCourses.filter((checkedCourse: CourseInfo) => checkedCourse.id !== courses[idx].id))
     } else {
-      const pickedCoursesWithExtra = [...pickedCourses, courses[idx]];
-      const newPickedCourses = await api.getCoursesClasses(pickedCoursesWithExtra);
-      setPickedCourses(newPickedCourses)
-      setMultipleOptions(addCourseOption(courses[idx], multipleOptions))
+      setCheckboxedCourses([...checkboxedCourses, courses[idx]]);
+      setMultipleOptions(addCourseOption(courses[idx], multipleOptions));
     }
   }
 
@@ -42,8 +40,8 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
    * This happends when the user removes a course from the pickedCourses list
    */
   useEffect(() => {
-    setCheckboxList(courses.map((course) => pickedCourses.some((pickedCourse) => pickedCourse.id === course.id)))
-  }, [courses, pickedCourses])
+    setCheckboxList(courses.map((course: CourseInfo) => checkboxedCourses.some((pickedCourse) => pickedCourse.id === course.id)))
+  }, [courses, checkboxedCourses])
 
   return (
     <div className="flex flex-col justify-start gap-2 p-2">
@@ -53,7 +51,7 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
             id={`checkbox-${courseIdx}`}
             title={course.name}
             checked={checkboxList[courseIdx]}
-            onCheckedChange={async () => { await toggleCourse(courseIdx) }}
+            onCheckedChange={() => toggleCourse(courseIdx)}
           />
           <Label htmlFor={`checkbox-${courseIdx}`} className="text-wrap leading-normal hover:cursor-pointer">
             {course.name + ' (' + course.acronym + ')'}
