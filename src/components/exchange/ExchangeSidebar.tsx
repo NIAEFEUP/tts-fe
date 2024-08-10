@@ -1,9 +1,6 @@
-import { PlusIcon } from "@heroicons/react/24/outline"
 import { useState } from "react";
-import { Button } from "../ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
-import { IssueRequests } from "./requests/IssueRequests";
-import { SeeRequests } from "./requests/SeeRequests";
+import { CreateRequest } from "./requests/issue/CreateRequest";
+import { ViewRequests } from "./requests/view/ViewRequests";
 
 export const ExchangeSidebar = () => {
   const [creatingRequest, setCreatingRequest] = useState<boolean>(false);
@@ -12,8 +9,8 @@ export const ExchangeSidebar = () => {
     <div className="space-y-2">
       {
         creatingRequest
-          ? <IssueRequests setCreatingRequest={setCreatingRequest} />
-          : <SeeRequests setCreatingRequest={setCreatingRequest} />
+          ? <CreateRequest setCreatingRequest={setCreatingRequest} />
+          : <ViewRequests setCreatingRequest={setCreatingRequest} />
       }
     </div>
   </div>

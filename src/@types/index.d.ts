@@ -94,3 +94,16 @@ export type ImportedCourses = {
   [key: string]: string
 }
 
+// Exchange
+
+export type MarketplaceExchangeOption = {
+  acronym: string,
+  name: string,
+  classNameRequesterGoesFrom: string
+  classNameRequesterGoesTo: string,
+}
+
+export type Student = {
+  name: string,
+  mecNumber: string
+}
