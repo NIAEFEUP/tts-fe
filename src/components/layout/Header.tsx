@@ -9,6 +9,8 @@ import {
   RectangleStackIcon,
   QuestionMarkCircleIcon,
   ArrowsRightLeftIcon,
+  ArrowDownIcon,
+  ArrowLeftEndOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
@@ -93,10 +95,10 @@ const Header = ({ siteTitle, location }: Props) => {
                     ))}
                 </div>
 
-                <div className="hidden self-center md:inline-flex">
 
-
+                <div className="hidden self-center md:inline-flex items-center gap-x-2">
                   <DarkModeSwitch />
+                  <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
                 </div>
               </div>
             </div>
