@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-
 import {
   Bars3Icon,
   XMarkIcon,
@@ -10,13 +9,15 @@ import {
   QuestionMarkCircleIcon,
   ArrowsRightLeftIcon,
   ArrowDownIcon,
+  ArrowLeftStartOnRectangleIcon,
   ArrowLeftEndOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
 import useVerifyCourseUnitHashes from '../../hooks/useVerifyCourseUnitHashes'
 import CourseContext from '../../contexts/CourseContext'
-import { useContext, useEffect } from 'react'
+import SessionContext from '../../contexts/SessionContext'
+import { useContext } from 'react'
 
 const navigation = [
   {
@@ -48,6 +49,7 @@ type Props = {
 const Header = ({ siteTitle, location }: Props) => {
   const { pickedCourses,} =useContext(CourseContext);
   const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
+  const { signedIn } = useContext(SessionContext);
 
   return (
     <Disclosure
@@ -98,15 +100,22 @@ const Header = ({ siteTitle, location }: Props) => {
 
                 <div className="hidden self-center md:inline-flex items-center gap-x-2">
                   <DarkModeSwitch />
-                  <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
+                  {signedIn ?
+                    <a href="index.html">
+                      <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
+                    </a>
+                    : <a href="http://localhost/Shibboleth.sso/Login">
+                      <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
+                    </a>
+                  }
                 </div>
               </div>
-            </div>
+            </div >
             <Mobile location={location} />
           </>
         )
       }}
-    </Disclosure>
+    </Disclosure >
   )
 }
 

@@ -6,6 +6,8 @@ import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pag
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import Exchange from './pages/Exchange'
+import { useEffect } from 'react'
+import api from './api/backend'
 
 const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
 
@@ -31,6 +33,11 @@ const App = () => {
 
   const { enableAutoPageviews } = plausible
   enableAutoPageviews()
+
+  useEffect(() => {
+    fetch(`${api.BACKEND_URL}/csrf/`, { credentials: "include" }).then((res) => {
+    })
+  });
 
   return (
     <BrowserRouter>
