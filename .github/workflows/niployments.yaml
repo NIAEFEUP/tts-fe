@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Upload to NIployments register
-      uses: NIAEFEUP/push-to-nipoloyments@v2.2
+      uses: NIAEFEUP/push-to-niployments@v2.2
       with:
         docker_dockerfile: Dockerfile
         docker_context: .
