@@ -1,5 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { MarketplaceRequest } from "../../../../@types";
 import { Badge } from "../../../ui/badge";
 import { Button } from "../../../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
@@ -13,6 +14,42 @@ type Props = {
 export const ViewRequests = ({
   setCreatingRequest
 }: Props) => {
+  const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
+  const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<string>>(new Set());
+
+  const requests: Array<MarketplaceRequest> = [
+    {
+      id: 1,
+      options: [
+        {
+          acronym: "IA",
+          name: "Inteligência Artifical",
+          classNameRequesterGoesFrom: "3LEIC09",
+          classNameRequesterGoesTo: "3LEIC05"
+        },
+        {
+          acronym: "CG",
+          name: "Computação Gráfica",
+          classNameRequesterGoesFrom: "3LEIC09",
+          classNameRequesterGoesTo: "3LEIC05"
+        }
+      ],
+      student: { name: "Tozé Manuel", mecNumber: "202108880" }
+    },
+    {
+      id: 2,
+      options: [
+        {
+          acronym: "CPD",
+          name: "Computação Paralela e Distribuída",
+          classNameRequesterGoesFrom: "3LEIC09",
+          classNameRequesterGoesTo: "3LEIC05"
+        },
+      ],
+      student: { name: "Armindo Santos", mecNumber: "202108881" }
+    }
+  ]
+
   return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
     <div className="flex flex-row justify-between items-center w-full">
       <h1 className="font-bold text-xl">Pedidos</h1>
@@ -32,31 +69,22 @@ export const ViewRequests = ({
         <TabsTrigger value="recebidos">Recebidos</TabsTrigger>
       </TabsList>
       <TabsContent value="todos">
-        <ViewRequestsFilters />
+        <ViewRequestsFilters
+          enrolledCourseUnits={["CG", "CPD", "IA"]}
+          availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
+          filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
+        />
         <div className="mt-4 flex flex-col gap-y-2">
-          <RequestCard requesterStudent={{ name: "Tozé Manuel", mecNumber: "202108880" }} exchangeOptions={[
-            {
-              acronym: "IA",
-              name: "Inteligência Artifical",
-              classNameRequesterGoesFrom: "3LEIC09",
-              classNameRequesterGoesTo: "3LEIC05"
-            },
-            {
-              acronym: "CG",
-              name: "Computação Gráfica",
-              classNameRequesterGoesFrom: "3LEIC09",
-              classNameRequesterGoesTo: "3LEIC05"
-            }
-          ]} />
-          <RequestCard requesterStudent={{ name: "Armindo Santos", mecNumber: "202108881" }} exchangeOptions={[
-            {
-              acronym: "CPD",
-              name: "Computação Paralela e Distribuída",
-              classNameRequesterGoesFrom: "3LEIC09",
-              classNameRequesterGoesTo: "3LEIC05"
-            },
-          ]} />
-
+          {
+            requests.map((request) => (
+              <RequestCard
+                key={request.id}
+                request={request}
+                hiddenRequests={hiddenRequests}
+                setHiddenRequests={setHiddenRequests}
+              />
+            ))
+          }
         </div>
       </TabsContent>
       <TabsContent value="meus-pedidos"></TabsContent>

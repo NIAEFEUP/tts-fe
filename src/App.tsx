@@ -50,8 +50,8 @@ const App = () => {
               element={
                 <Layout location={page.location} title={page.location} liquid={page.liquid}>
                   <div>
-                    <page.element />
                     <Toaster />
+                    <page.element />
                   </div>
                 </Layout>
               }

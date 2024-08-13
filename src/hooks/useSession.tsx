@@ -6,13 +6,13 @@ const useSession = () => {
 
   const trySession = async (key) => {
     try {
-      const res = await fetch(`${api.BACKEND_URL}/${key}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "X-CSRFToken": Cookies.get('csrftoken')
-        }
-      });
+      // const res = await fetch(`${api.BACKEND_URL}/${key}`, {
+      //   method: "POST",
+      //   credentials: "include",
+      //   headers: {
+      //     "X-CSRFToken": Cookies.get('csrftoken')
+      //   }
+      // });
     } catch (e) {
       console.error(e);
     }

@@ -1,7 +1,7 @@
 import { ArchiveBoxIcon, ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { ChevronUpIcon } from "@heroicons/react/24/solid"
-import { useState } from "react"
-import { MarketplaceExchangeOption, Student } from "../../../../../@types"
+import { Dispatch, SetStateAction, useState } from "react"
+import { MarketplaceRequest } from "../../../../../@types"
 import { Badge } from "../../../../ui/badge"
 import { Button } from "../../../../ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card"
@@ -10,29 +10,36 @@ import { Separator } from "../../../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
 
 type Props = {
-  exchangeOptions: Array<MarketplaceExchangeOption>
-  requesterStudent: Student
+  request: MarketplaceRequest
+  hiddenRequests: Set<number>
+  setHiddenRequests: Dispatch<SetStateAction<Set<number>>>
 }
 
 export const RequestCard = ({
-  exchangeOptions,
-  requesterStudent
+  request,
+  hiddenRequests,
+  setHiddenRequests
 }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
 
+  const hide = () => {
+    const newHidden = new Set(hiddenRequests);
+    newHidden.add(request.id);
+    setHiddenRequests(newHidden);
+  }
 
-  return <Card key="h">
+  return <Card key={request.id} className={`shadow-md ${hiddenRequests.has(request.id) ? "hidden" : ""}`}>
     <CardHeader className="flex flex-row gap-x-2 items-center p-4">
-      <img className="w-10 h-10 rounded-full" src="https://media.discordapp.net/attachments/835966721831075840/1271795585455886470/images.png?ex=66b8a370&is=66b751f0&hm=11a977a507482e37bf299eb0c7c5347cf0a3cfc2e31e5b88d26aa732bfa2b49f&=&format=webp&quality=lossless&width=338&height=232"></img>
+      <img className="w-10 h-10 rounded-full shadow-md" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"></img>
       <div className="flex flex-row justify-between items-center w-full">
         <div className="flex flex-col gap-y-1">
-          <CardTitle>{requesterStudent.name}</CardTitle>
+          <CardTitle>{request.student.name}</CardTitle>
           <CardDescription>
             {open
-              ? <p>{requesterStudent.mecNumber}</p>
+              ? <p>{request.student.mecNumber}</p>
               :
               <div className="flex flex-row space-x-1">
-                {exchangeOptions.map((option) => (
+                {request.options.map((option) => (
                   <Badge>{option.acronym}</Badge>
                 ))}
               </div>
@@ -44,7 +51,7 @@ export const RequestCard = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="icon" className="text-black">
+                <Button variant="icon" className="text-black" onClick={() => hide()}>
                   <ArchiveBoxIcon className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -67,7 +74,7 @@ export const RequestCard = ({
       </div>
     </CardHeader>
     <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
-      {exchangeOptions?.map((option) => (
+      {request.options?.map((option) => (
         <div>
           <Separator className="my-2" />
           <div className="flex flex-row gap-x-4 items-center w-full mb-2">
