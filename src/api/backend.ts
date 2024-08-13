@@ -6,6 +6,9 @@ const BE_CONFIG = Number(prod_val) ? config : dev_config
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
 const SEMESTER = import.meta.env.VITE_APP_SEMESTER || getSemester()
 
+// If we are in september 2024 we use 2024, if we are january 2025 we use 2024 because the first year of the academic year (2024/2025)
+const CURRENT_YEAR = ((new Date()).getMonth() + 1) < 8 ? (new Date()).getFullYear() - 1 : (new Date()).getFullYear()
+
 /**
  * Make a request to the backend server.
  * @param route route to be appended to backend url
@@ -27,7 +30,7 @@ const apiRequest = async (route: string) => {
  * @returns all majors from the backend
  */
 const getMajors = async () => {
-  return await apiRequest(`/course/${config.api.year}`)
+  return await apiRequest(`/course/${CURRENT_YEAR}`)
 }
 
 /**
@@ -41,7 +44,7 @@ const getCourses = async (major: Major) => {
 }
 
 const getCoursesByMajorId = async (id: number) => {
-  return await apiRequest(`/course_units/${id}/${config.api.year}/${SEMESTER}/`)
+  return await apiRequest(`/course_units/${id}/${CURRENT_YEAR}/${SEMESTER}/`)
 }
 
 /**
