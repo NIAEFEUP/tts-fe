@@ -26,23 +26,23 @@ EXPOSE $PORT
 CMD ["npm", "run", "dev"]
 
 # prod-build-with-dotenv
-FROM build as prod-build-with-dotenv
+FROM build AS prod-build-with-dotenv
 
 ARG TTS_FE_DOTENV_FILE=.env.production
 COPY ${TTS_DOTENV_FILE} .env.production
 
 # prod-build-with-var
-FROM build as prod-build-with-content-var
+FROM build AS prod-build-with-content-var
 
 ARG TTS_FE_VARS_CONTENT
-RUN echo "${TTS_FE_VARS}" > .env.production
+RUN echo "${TTS_FE_VARS_CONTENT}" | base64 -d > .env.production
 
 # prod-build
-FROM prod-build-with-${TTS_FE_VARS_METHOD} as prod-build
+FROM prod-build-with-${TTS_FE_VARS_METHOD} AS prod-build
 RUN npm run build
 
 # prod
-FROM nginx:alpine as prod
+FROM nginx:alpine AS prod
 
 COPY --from=prod-build /usr/src/tts-fe/build /usr/share/nginx/html
 COPY nginx.tts.conf /etc/nginx/conf.d/default.conf
