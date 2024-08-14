@@ -3,6 +3,7 @@ services:
     container_name: tts_frontend
     build:
       context: .
+      target: dev
     volumes:
       - ./src:/usr/src/tts-fe/src
       - ./public:/usr/src/tts-fe/public
@@ -15,12 +16,12 @@ services:
     container_name: tts_frontend_prod
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      target: prod
+      args:
+        - TTS_FE_VARS_METHOD=dotenv
+        - TTS_FE_DOTENV_FILE=.env
     volumes:
       - ./src:/usr/src/tts-fe/src
       - ./public:/usr/src/tts-fe/public
     ports:
       - 3100:80
-    env_file:
-      - .env
-
