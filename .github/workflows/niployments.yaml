@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Upload to NIployments register
+      uses: NIAEFEUP/push-to-niployments@v2.2
+      with:
+        docker_dockerfile: Dockerfile
+        docker_context: .
+        docker_target: prod
+        docker_build_args: |
+          TTS_FE_VARS_METHOD=content-var
+          TTS_FE_VARS_CONTENT=${{ secrets.TTS_FE_VARS_CONTENT }}
+        NIPLOYMENTS_REGISTRY_URL: ${{ vars.NIPLOYMENTS_REGISTRY_URL }}
+        NIPLOYMENTS_REGISTRY_USERNAME: ${{ vars.NIPLOYMENTS_REGISTRY_USERNAME }}
+        NIPLOYMENTS_REGISTRY_PASSWORD: ${{ secrets.NIPLOYMENTS_REGISTRY_PASSWORD }}
