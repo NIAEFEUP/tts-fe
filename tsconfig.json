@@ -24,4 +24,7 @@
     "./src/**/*.tsx",
     "./tests/setup.ts"
   ],
+  "exclude": [
+    "./tests"
+  ]
 }
