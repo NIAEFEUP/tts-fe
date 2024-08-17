@@ -1,11 +1,9 @@
 import classNames from 'classnames'
 import { useState, useContext, useEffect } from 'react'
 
-
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
-import ConflictContext from '../../../contexts/ConflictContext'
 import { getLessonBoxTime, schedulesConflict, conflictsSeverity, getLessonBoxStyles, maxHour, minHour, getClassTypeClassName, getLessonTypeLongName } from '../../../utils'
 
 type Props = {
@@ -15,12 +13,12 @@ type Props = {
   classes: ClassDescriptor[]
 }
 
-const LessonBox = ({ 
+const LessonBox = ({
   courseInfo,
   classInfo,
   slotInfo,
   classes
- }: Props) => {
+}: Props) => {
   const classTitle = classInfo.name
   const lessonType = slotInfo.lesson_type
   const timeSpan = getLessonBoxTime(slotInfo)
@@ -36,16 +34,15 @@ const LessonBox = ({
       .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
       .join('\n')
   const [inspectShown, setInspectShown] = useState(false)
-  const [conflictsShown, setConflictsShown] = useState(false)
+  const [conflictsShown, setConflictsShown] = useState(false) // Controls if the popover showing the conflicts appear
   const [isHovered, setIsHovered] = useState(false)
-  const {conflicts, setConflicts} = useContext(ConflictContext);
-  const conflict = conflicts[slotInfo.id];
+  const [conflicts, setConflicts] = useState([]);
+  const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
-    const newConflicts = conflicts;
-    const aux : ConflictInfo = {
+    const newConflictInfo: ConflictInfo = {
       severe: false,
       conflictingClasses: [{
         classInfo: classInfo,
@@ -59,18 +56,19 @@ const LessonBox = ({
       for (let j = 0; j < classDescriptor.classInfo.slots.length; j++) {      // slots
         const slot = classDescriptor.classInfo.slots[j];
         if (schedulesConflict(slotInfo, slot)) {
-          aux.severe = conflictsSeverity(slotInfo, slot) || aux.severe;
+          // The highest severity of the all the conflicts is the overall severity
+          newConflictInfo.severe = conflictsSeverity(slotInfo, slot) || newConflictInfo.severe;
           const newClassDescriptor = {
             classInfo: classDescriptor.classInfo,
             courseInfo: classDescriptor.courseInfo,
             slotInfo: slot
           }
-          aux.conflictingClasses.push(newClassDescriptor);
+          newConflictInfo.conflictingClasses.push(newClassDescriptor);
         }
       }
     }
-    newConflicts[slotInfo.id] = aux;
-    setConflicts(newConflicts);
+
+    setConflict(newConflictInfo);
   }, [classInfo, classes]);
 
   const showConflicts = () => {
@@ -107,17 +105,16 @@ const LessonBox = ({
                   ? 'schedule-class-conflict-info'
                   : 'schedule-class-conflict'
                 : isHovered
-                ? 'schedule-class-conflict-warn-info'
-                : 'schedule-class-conflict-warn'
+                  ? 'schedule-class-conflict-warn-info'
+                  : 'schedule-class-conflict-warn'
               : '',
             'overflow-hidden'
           )}
         >
           <span>
             {hasConflict && isHovered && <div
-              className={`absolute top-0 left-0 w-full py-2 text-center text-xs font-extrabold xl:text-sm ${
-                conflict.severe ? 'text-red-600' : 'text-amber-500'
-              }`}
+              className={`absolute top-0 left-0 w-full py-2 text-center text-xs font-extrabold xl:text-sm ${conflict.severe ? 'text-red-600' : 'text-amber-500'
+                }`}
             >
               {conflictTitle}
               <div className="px-1 py-1 font-normal text-white">
@@ -129,11 +126,11 @@ const LessonBox = ({
                         {`${conflictingClass.classInfo.name} (${conflictingClass.courseInfo.acronym})`}
                         {index < conflict.conflictingClasses.length - 1 ? ',' : ''}
                       </li>
-                  ))}
+                    ))}
                 </ul>
               </div>
             </div>}
-            
+
 
             {lgLesson && (
               <div
@@ -156,7 +153,7 @@ const LessonBox = ({
                       {
                         // You won't believe what was here before
                         classTitle
-                      } 
+                      }
                     </span>
                   }
                 </div>
@@ -172,9 +169,8 @@ const LessonBox = ({
             )}
             {mdLesson && (
               <div
-                className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${
-                  conflictTitle ? 'group-hover:blur-md' : ''
-                } 
+                className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${conflictTitle ? 'group-hover:blur-md' : ''
+                  } 
               xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
               >
                 <div className="flex w-full items-center justify-between gap-1">
