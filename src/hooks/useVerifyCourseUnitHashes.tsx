@@ -17,28 +17,20 @@ const fetchAndVerifyCourseUnitHashes = async (courseUnits: CourseInfo[]) => {
   console.log('Fetching and verifying course unit hashes for IDs:', ids);
 
   try {
-    // Fetch the current hashes from the backend
+
     const response = await api.getCourseUnitHashes(ids);
     const currentHashes: Record<number, string> = response;
 
-    // Initialize hash validation map
     const hashValidationMap: Record<number, boolean> = {};
 
-    // Validate the fetched hashes against expected hashes
+
     courseUnits.forEach(course => {
       const backendHash = currentHashes[course.id];
       const isValid = backendHash === course.hash;
       hashValidationMap[course.id] = isValid;
 
-      // Detailed log for each course unit
-      console.log(`Course ID: ${course.id}`);
-      console.log(`Expected hash: ${course.hash}`);
-      console.log(`Backend hash: ${backendHash}`);
-      console.log(`Hash match: ${isValid}`);
-    });
 
-    // Log the complete validation map
-    console.log('Hash Validation Map:', hashValidationMap);
+    });
 
     return {
       currentHashes,
@@ -58,19 +50,19 @@ const fetchAndVerifyCourseUnitHashes = async (courseUnits: CourseInfo[]) => {
  */
 const useVerifyCourseUnitHashes = (courseUnits: CourseInfo[]) => {
   const { data, error, mutate } = useSWR(
-    courseUnits.length > 0 ? courseUnits : null, // Use courseUnits as the key
-    fetchAndVerifyCourseUnitHashes,              // Fetcher function
+    courseUnits.length > 0 ? courseUnits : null,
+    fetchAndVerifyCourseUnitHashes,
     {
-      refreshInterval: 10000,                    // Periodically refresh data every 10 seconds
-      revalidateOnFocus: true,                   // Revalidate when window gains focus
-      revalidateOnReconnect: true,               // Revalidate when reconnecting
+      refreshInterval: 10000,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
     }
   );
 
   return {
-    hashValidationMap: data?.hashValidationMap ?? {}, // Map of course unit ID to boolean indicating hash validity
-    error,                                          // Any error that occurred during the fetch
-    mutate,                                         // Function to manually trigger revalidation
+    hashValidationMap: data?.hashValidationMap ?? {},
+    error,
+    mutate,
   };
 };
 
