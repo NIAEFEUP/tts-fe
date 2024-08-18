@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react"
-import { CourseInfo, CreateRequestCardMetadata, ExchangeOption } from "../../../../@types"
+import { CourseInfo, CreateRequestCardMetadata, CreateRequestData, ExchangeOption } from "../../../../@types"
+import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { Button } from "../../../ui/button"
 import { Separator } from "../../../ui/separator"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
@@ -11,14 +12,22 @@ type Props = {
 export const CreateRequest = ({
   setCreatingRequest
 }: Props) => {
-  const [requests, setRequests] = useState<Map<string, ExchangeOption>>(new Map());
+  const [requests, setRequests] = useState<Map<string, CreateRequestData>>(new Map());
   const requestEligbleCourseUnits: Array<CreateRequestCardMetadata> = [{
     courseUnitName: "Inteligência Artifical",
     courseUnitAcronym: "IA",
     requesterClassName: "3LEIC09",
     availableClasses: [
       "3LEIC01",
-      "3LEIC02"
+      "3LEIC02",
+      "3LEIC03",
+      "3LEIC04",
+      "3LEIC05",
+      "3LEIC06",
+      "3LEIC07",
+      "3LEIC08",
+      "3LEIC09",
+      "3LEIC10"
     ]
   }];
 
@@ -47,7 +56,18 @@ export const CreateRequest = ({
       >
         Voltar
       </Button>
-      <Button className="w-full border border-green-800 bg-green-500" disabled>Submeter pedido</Button>
+      {
+        requests.size > 0 ?
+          <Button
+            className="w-full border border-green-800 bg-green-500"
+            onClick={async () => {
+              await exchangeRequestService.submitExchangeRequest(requests);
+            }}
+          >
+            Submeter pedido
+          </Button>
+          : <></>
+      }
     </div>
   </div>
 }

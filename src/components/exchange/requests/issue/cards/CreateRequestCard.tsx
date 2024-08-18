@@ -1,15 +1,15 @@
-import { ArrowRightIcon, MinusIcon } from "@heroicons/react/24/outline"
-import { SelectContent } from "@radix-ui/react-select"
+import { ArrowLeftIcon, ArrowRightIcon, MinusIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction, useState } from "react"
-import { CreateRequestCardMetadata, ExchangeOption } from "../../../../../@types"
+import { CreateRequestCardMetadata, CreateRequestData, ExchangeOption } from "../../../../../@types"
 import { Button } from "../../../../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../ui/card"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../ui/dropdown-menu"
 import { Select, SelectItem, SelectTrigger, SelectValue } from "../../../../ui/select"
 import { Switch } from "../../../../ui/switch"
 
 type Props = {
   requestMetadata: CreateRequestCardMetadata
-  requestsHook: [Map<string, ExchangeOption>, Dispatch<SetStateAction<Map<string, ExchangeOption>>>]
+  requestsHook: [Map<string, CreateRequestData>, Dispatch<SetStateAction<Map<string, CreateRequestData>>>]
 }
 
 export const CreateRequestCard = ({
@@ -19,9 +19,24 @@ export const CreateRequestCard = ({
   const [expanded, setExpanded] = useState<boolean>(false);
   const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const [requests, setRequests] = requestsHook;
+  const [selectedDestinationClass, setSelectedDestinationClass] = useState<string | null>(null);
+  const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<string | null>(null);
 
   const excludeClass = () => {
     setExpanded(false);
+    if (requests.get(requestMetadata.courseUnitName)) {
+      const newRequests = new Map(requests);
+      newRequests.delete(requestMetadata.courseUnitName)
+      setRequests(newRequests);
+    }
+
+    restoreDefaults();
+  }
+
+  const restoreDefaults = () => {
+    setSelectedDestinationStudent(null);
+    setSelectedDestinationClass(null);
+    setHasStudentToExchange(false);
   }
 
   const includeClass = () => {
@@ -32,14 +47,32 @@ export const CreateRequestCard = ({
     setHasStudentToExchange(checked);
   }
 
+  const addRequest = () => {
+    const currentRequest: CreateRequestData = {
+      classNameRequesterGoesFrom: requestMetadata.requesterClassName,
+      classNameRequesterGoesTo: selectedDestinationClass
+    }
+
+    if (selectedDestinationStudent) currentRequest.other_student = Number(selectedDestinationStudent);
+
+    const newRequests = new Map(requests);
+    newRequests.set(requestMetadata.courseUnitName, currentRequest);
+    setRequests(newRequests);
+  }
+
   return <Card key={requestMetadata.courseUnitName} className="shadow-md">
     <CardHeader className="flex flex-row justify-between items-center">
       <CardTitle className="text-xl">{requestMetadata.courseUnitName}</CardTitle>
       {
         expanded ?
-          <Button variant="destructive" className="px-2 py-1 h-7" onClick={() => excludeClass()}>
-            <MinusIcon className="w-5 h-5" />
-          </Button>
+          <div className="flex flex-row items-center gap-x-2">
+            <Button variant="destructive" className="p-4 h-7" onClick={() => excludeClass()}>
+              -
+            </Button>
+            <Button className="p-4 h-7" onClick={() => addRequest()}>
+              +
+            </Button>
+          </div>
           : <Button className="bg-gray-200 text-black hover:bg-gray-100" onClick={() => includeClass()}>
             <p>Alterar</p>
           </Button>
@@ -49,21 +82,23 @@ export const CreateRequestCard = ({
       <div className="flex flex-row items-center gap-x-2">
         <p>{requestMetadata.requesterClassName}</p>
         <ArrowRightIcon className="w-5 h-5" />
-        <Select>
-          <div className="flex flex-col w-full">
-            <SelectTrigger>
-              <SelectValue placeholder="Escolher turma..." />
-            </SelectTrigger>
-            <SelectContent>
-              {requestMetadata.availableClasses.map((availableClassName: string) => (
-                <SelectItem key={availableClassName} value={availableClassName}>
-                  {availableClassName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </div>
-        </Select>
-
+        <div className="p-2 rounded-md w-full">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full">
+              <Button variant="outline" className="w-full">
+                {selectedDestinationClass ?? "Escolher turma..."}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-full">
+              {requestMetadata.availableClasses.filter((className) => className !== requestMetadata.requesterClassName)
+                .map((className: string) => (
+                  <DropdownMenuItem className="w-full" onSelect={() => { setSelectedDestinationClass(className) }}>
+                    <p className="w-full">{className}</p>
+                  </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="flex flex-col gap-y-4">
         <div className="flex flex-row gap-2">
@@ -73,13 +108,20 @@ export const CreateRequestCard = ({
           </label>
         </div>
         <div className={`${hasStudentToExchange ? "" : "hidden"}`}>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Escolher estudante..." />
-            </SelectTrigger>
-            <SelectContent>
-            </SelectContent>
-          </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full">
+              <Button variant="outline" className="w-full">
+                {selectedDestinationStudent ?? "Escolher estudante..."}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-full">
+              {requestMetadata.availableClasses.map((className: string) => (
+                <DropdownMenuItem className="w-full" onSelect={() => { setSelectedDestinationClass(className) }}>
+                  <p className="w-full">{className}</p>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </CardContent>

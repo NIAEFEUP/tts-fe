@@ -111,6 +111,12 @@ export type CreateRequestCardMetadata = {
   availableClasses: Array<string> // Classes from the course unit
 }
 
+export type CreateRequestData = {
+  classNameRequesterGoesFrom: string,
+  classNameRequesterGoesTo: string,
+  other_student?: number
+}
+
 export type MarketplaceRequest = {
   id: number,
   student: Student,
