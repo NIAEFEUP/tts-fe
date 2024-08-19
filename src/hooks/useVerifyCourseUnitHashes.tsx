@@ -5,48 +5,41 @@ import { CourseInfo } from '../@types';
 /**
  * Fetcher function to get course unit hashes and verify them.
  * @param courseUnits Array of course units with expected hashes
- * @returns Object with course unit IDs, their hashes, and validity
+ * @returns Set of course unit IDs with mismatched hashes
  */
 const fetchAndVerifyCourseUnitHashes = async (courseUnits: CourseInfo[]) => {
   if (!courseUnits || courseUnits.length === 0) {
     console.log('No course units provided');
-    return { currentHashes: {}, hashValidationMap: {} };
+    return new Set<number>();
   }
 
   const ids = courseUnits.map(course => course.id);
   console.log('Fetching and verifying course unit hashes for IDs:', ids);
 
   try {
-
     const response = await api.getCourseUnitHashes(ids);
     const currentHashes: Record<number, string> = response;
 
-    const hashValidationMap: Record<number, boolean> = {};
-
+    const mismatchedIds = new Set<number>();
 
     courseUnits.forEach(course => {
       const backendHash = currentHashes[course.id];
-      const isValid = backendHash === course.hash;
-      hashValidationMap[course.id] = isValid;
-
-
+      if (backendHash !== course.hash) {
+        mismatchedIds.add(course.id);
+      }
     });
 
-    return {
-      currentHashes,
-      hashValidationMap,
-    };
+    return mismatchedIds;
   } catch (error) {
     console.error('Failed to fetch or verify course unit hashes:', error);
     throw error;
   }
 };
 
-
 /**
  * Hook to fetch and verify course unit hashes using SWR for periodic revalidation.
  * @param courseUnits Array of course units to verify
- * @returns Object containing the hash validation map, any error, and a function to manually trigger revalidation
+ * @returns Object containing the set of IDs with mismatched hashes, any error, and a function to manually trigger revalidation
  */
 const useVerifyCourseUnitHashes = (courseUnits: CourseInfo[]) => {
   const { data, error, mutate } = useSWR(
@@ -60,7 +53,7 @@ const useVerifyCourseUnitHashes = (courseUnits: CourseInfo[]) => {
   );
 
   return {
-    hashValidationMap: data?.hashValidationMap ?? {},
+    mismatchedIds: data ?? new Set<number>(),
     error,
     mutate,
   };

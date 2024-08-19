@@ -5,7 +5,6 @@ import { Schedule, Sidebar } from '../components/planner'
 import { CourseInfo, Major } from '../@types'
 import MajorContext from '../contexts/MajorContext'
 import CourseContext from '../contexts/CourseContext'
-import useVerifyCourseUnitHashes from '../hooks/useVerifyCourseUnitHashes'
 
 const TimeTableSchedulerPage = () => {
   const [majors, setMajors] = useState<Major[]>([])
