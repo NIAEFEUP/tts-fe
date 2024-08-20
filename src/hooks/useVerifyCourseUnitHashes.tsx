@@ -9,13 +9,10 @@ import { CourseInfo } from '../@types';
  */
 const fetchAndVerifyCourseUnitHashes = async (courseUnits: CourseInfo[]) => {
   if (!courseUnits || courseUnits.length === 0) {
-    console.log('No course units provided');
     return new Set<number>();
   }
 
   const ids = courseUnits.map(course => course.id);
-  console.log('Fetching and verifying course unit hashes for IDs:', ids);
-
   try {
     const response = await api.getCourseUnitHashes(ids);
     const currentHashes: Record<number, string> = response;

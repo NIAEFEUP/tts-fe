@@ -33,9 +33,9 @@ const CoursePicker = () => {
 
   useEffect(() => {
     BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
+      StorageAPI.setPickedCoursesStorage(courseWithClasses);
       setPickedCourses(courseWithClasses);
     })
-    StorageAPI.setPickedCoursesStorage(pickedCourses)
   }, [checkboxedCourses])
 
   useEffect(() => {

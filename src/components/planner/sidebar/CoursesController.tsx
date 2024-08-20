@@ -13,29 +13,35 @@ const CoursesController = () => {
   const noCoursesPicked = pickedCourses.length === 0
   const { mismatchedIds, error } = useVerifyCourseUnitHashes(pickedCourses);
   useEffect(() => {
+    console.log('mismatchedIds:', mismatchedIds);
     const updateCourses = async () => {
       if (mismatchedIds.size > 0) {
         console.log('Invalid courses detected:', mismatchedIds);
-
         const updatedCourses = await Promise.all(
           pickedCourses.map(async (course) => {
             if (mismatchedIds.has(course.id)) {
-              const updatedCourse = await BackendAPI.getCourseUnit(course.id);
-              const updatedCoursesWithClasses = await BackendAPI.getCoursesClasses([updatedCourse]);
-              return updatedCoursesWithClasses[0]; // Assuming getCoursesClasses returns an array
+              return await BackendAPI.getCourseUnit(course.id);
             }
-            return course; // Return the original course if it's valid
+            return course;
           })
         );
-
-        setPickedCourses(updatedCourses);
-        StorageAPI.setPickedCoursesStorage(updatedCourses);
+        const coursesToUpdate = updatedCourses.filter((course) =>
+          mismatchedIds.has(course.id)
+        );
+        const updatedCoursesWithClasses = await BackendAPI.getCoursesClasses(coursesToUpdate);
+        const finalCourses = pickedCourses.map((course) =>
+          mismatchedIds.has(course.id)
+            ? updatedCoursesWithClasses.find((updated) => updated.id === course.id) || course
+            : course
+        );
+        setPickedCourses(finalCourses);
+        console.log('Final courses:', finalCourses);
+        StorageAPI.setPickedCoursesStorage(finalCourses);
+       
       }
     };
-
     updateCourses();
   }, [mismatchedIds]);
-
 
   return (
     <div className={`flex ${noCoursesPicked ? 'h-max justify-center' : ''} w-full flex-col gap-4 px-0 py-2`}>
