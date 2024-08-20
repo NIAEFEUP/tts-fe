@@ -46,7 +46,7 @@ const useVerifyCourseUnitHashes = (courseUnits: CourseInfo[]) => {
     courseUnits.length > 0 ? courseUnits : null,
     fetchAndVerifyCourseUnitHashes,
     {
-      refreshInterval: 10000,
+      refreshInterval: 300000,
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
     }
