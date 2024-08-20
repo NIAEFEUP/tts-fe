@@ -83,7 +83,7 @@ const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
   const firstEnd = firstStart + firstDuration
   const secondEnd = secondStart + secondDuration
 
-  return (firstStart < secondStart && firstEnd > secondStart) || (firstStart >= secondStart && firstStart < secondEnd)
+  return firstEnd > secondStart && firstStart < secondEnd;
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
