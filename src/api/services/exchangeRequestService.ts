@@ -1,4 +1,6 @@
-import { CreateRequestData } from "../../@types";
+import { BareFetcher } from "swr";
+import { SWRInfiniteConfiguration } from "swr/dist/infinite";
+import { CreateRequestData, MarketplaceRequest } from "../../@types";
 import api from "../backend";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
@@ -17,7 +19,7 @@ const submitExchangeRequest = async (requests: Map<string, CreateRequestData>) =
   }
 
   await fetch(
-    `${api.BACKEND_URL}/${isDirectExchange(requests.values()) ? "direct_exchange/" : "marketplace_exchange/"}`,
+    `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
     {
       method: "POST",
       credentials: "include",
@@ -26,8 +28,19 @@ const submitExchangeRequest = async (requests: Map<string, CreateRequestData>) =
   );
 }
 
+const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceRequest[]> => {
+  return fetch(url).then(async (res) => {
+    const json = await res.json();
+    return json.data;
+  }).catch((e) => {
+    console.error(e);
+    return [];
+  })
+}
+
 const exchangeRequestService = {
-  submitExchangeRequest
+  submitExchangeRequest,
+  retrieveMarketplaceRequest
 }
 
 export default exchangeRequestService;

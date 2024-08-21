@@ -1,10 +1,9 @@
 import { ArrowLeftIcon, ArrowRightIcon, MinusIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction, useState } from "react"
-import { CreateRequestCardMetadata, CreateRequestData, ExchangeOption } from "../../../../../@types"
+import { CreateRequestCardMetadata, CreateRequestData } from "../../../../../@types"
 import { Button } from "../../../../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../ui/dropdown-menu"
-import { Select, SelectItem, SelectTrigger, SelectValue } from "../../../../ui/select"
 import { Switch } from "../../../../ui/switch"
 
 type Props = {

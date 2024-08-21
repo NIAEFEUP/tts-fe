@@ -1,6 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useState } from "react";
 import { MarketplaceRequest } from "../../../../@types";
+import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
 import { Badge } from "../../../ui/badge";
 import { Button } from "../../../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
@@ -17,38 +18,44 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<string>>(new Set());
 
-  const requests: Array<MarketplaceRequest> = [
-    {
-      id: 1,
-      options: [
-        {
-          acronym: "IA",
-          name: "Inteligência Artifical",
-          classNameRequesterGoesFrom: "3LEIC09",
-          classNameRequesterGoesTo: "3LEIC05"
-        },
-        {
-          acronym: "CG",
-          name: "Computação Gráfica",
-          classNameRequesterGoesFrom: "3LEIC09",
-          classNameRequesterGoesTo: "3LEIC05"
-        }
-      ],
-      student: { name: "Tozé Manuel", mecNumber: "202108880" }
-    },
-    {
-      id: 2,
-      options: [
-        {
-          acronym: "CPD",
-          name: "Computação Paralela e Distribuída",
-          classNameRequesterGoesFrom: "3LEIC09",
-          classNameRequesterGoesTo: "3LEIC05"
-        },
-      ],
-      student: { name: "Armindo Santos", mecNumber: "202108881" }
-    }
-  ]
+  const { data, setSize, isLoading } = useMarketplaceRequests();
+  const requests = data ? [].concat(...data) : [];
+
+  console.log("current requests are: ", requests);
+  console.log("current wanabee requests are: ", data);
+
+  // const requests: Array<MarketplaceRequest> = [
+  //   {
+  //     id: 1,
+  //     options: [
+  //       {
+  //         acronym: "IA",
+  //         name: "Inteligência Artifical",
+  //         classNameRequesterGoesFrom: "3LEIC09",
+  //         classNameRequesterGoesTo: "3LEIC05"
+  //       },
+  //       {
+  //         acronym: "CG",
+  //         name: "Computação Gráfica",
+  //         classNameRequesterGoesFrom: "3LEIC09",
+  //         classNameRequesterGoesTo: "3LEIC05"
+  //       }
+  //     ],
+  //     student: { name: "Tozé Manuel", mecNumber: "202108880" }
+  //   },
+  //   {
+  //     id: 2,
+  //     options: [
+  //       {
+  //         acronym: "CPD",
+  //         name: "Computação Paralela e Distribuída",
+  //         classNameRequesterGoesFrom: "3LEIC09",
+  //         classNameRequesterGoesTo: "3LEIC05"
+  //       },
+  //     ],
+  //     student: { name: "Armindo Santos", mecNumber: "202108881" }
+  //   }
+  // ]
 
   return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
     <div className="flex flex-row justify-between items-center w-full">
@@ -74,18 +81,22 @@ export const ViewRequests = ({
           availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
         />
-        <div className="mt-4 flex flex-col gap-y-2">
-          {
-            requests.map((request) => (
-              <RequestCard
-                key={request.id}
-                request={request}
-                hiddenRequests={hiddenRequests}
-                setHiddenRequests={setHiddenRequests}
-              />
-            ))
-          }
-        </div>
+        {
+          isLoading
+            ? <></>
+            : <div className="mt-4 flex flex-col gap-y-2">
+              {
+                requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
+                  <RequestCard
+                    key={request.id}
+                    request={request}
+                    hiddenRequests={hiddenRequests}
+                    setHiddenRequests={setHiddenRequests}
+                  />
+                ))
+              }
+            </div>
+        }
       </TabsContent>
       <TabsContent value="meus-pedidos"></TabsContent>
       <TabsContent value="recebidos"></TabsContent>

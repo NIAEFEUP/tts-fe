@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react"
-import { CourseInfo, CreateRequestCardMetadata, CreateRequestData, ExchangeOption } from "../../../../@types"
+import { CourseInfo, CreateRequestCardMetadata, CreateRequestData } from "../../../../@types"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { Button } from "../../../ui/button"
-import { Separator } from "../../../ui/separator"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 
 type Props = {

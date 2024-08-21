@@ -6,24 +6,28 @@ const useSession = () => {
 
   const trySession = async (key) => {
     try {
-      // const res = await fetch(`${api.BACKEND_URL}/${key}`, {
-      //   method: "POST",
-      //   credentials: "include",
-      //   headers: {
-      //     "X-CSRFToken": Cookies.get('csrftoken')
-      //   }
-      // });
+      const res = await fetch(`${api.BACKEND_URL}/${key}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": Cookies.get('csrftoken')
+        }
+      });
+
+      if (res.ok) {
+        return "something"
+      }
     } catch (e) {
       console.error(e);
     }
   }
 
-  const { data, error, mutate } = useSwr("login/federated/", trySession, {
-    refreshInterval: 500
+  const { data, error, mutate } = useSwr("login/", trySession, {
+    refreshInterval: 3600000000
   });
 
   return {
-    signedIn: false //!data
+    signedIn: !data
   }
 }
 

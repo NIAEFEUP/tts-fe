@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Checkbox } from "../../../../ui/checkbox"
 import { Separator } from "../../../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
+import RequestCardClassBadge from "./RequestCardClassBadge"
 
 type Props = {
   request: MarketplaceRequest
@@ -33,14 +34,14 @@ export const RequestCard = ({
       <img className="w-10 h-10 rounded-full shadow-md" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"></img>
       <div className="flex flex-row justify-between items-center w-full">
         <div className="flex flex-col gap-y-1">
-          <CardTitle>{request.student.name}</CardTitle>
+          <CardTitle>{request.issuer_name}</CardTitle>
           <CardDescription>
             {open
-              ? <p>{request.student.mecNumber}</p>
+              ? <p>{request.issuer_nmec}</p>
               :
               <div className="flex flex-row space-x-1">
-                {request.options.map((option) => (
-                  <Badge>{option.acronym}</Badge>
+                {request.options?.map((option) => (
+                  <RequestCardClassBadge option={option} />
                 ))}
               </div>
 
@@ -78,14 +79,14 @@ export const RequestCard = ({
         <div>
           <Separator className="my-2" />
           <div className="flex flex-row gap-x-4 items-center w-full mb-2">
-            <Checkbox id={option.acronym} className="flex-grow w-1/12 h-8" />
-            <label htmlFor={option.acronym} className="w-11/12">
+            <Checkbox id={option.course_unit_acronym} className="flex-grow w-1/12 h-8" />
+            <label htmlFor={option.course_unit_acronym} className="w-11/12">
               <div className="flex flex-col">
-                <p>{option.acronym} - {option.name}</p>
+                <p>{option.course_unit_acronym} - {option.course_unit_name}</p>
                 <div className="flex flex-row gap-x-2 items-center font-bold">
-                  <p>{option.classNameRequesterGoesFrom}</p>
+                  <p>{option.class_issuer_goes_from}</p>
                   <ArrowRightIcon className="w-5 h-5" />
-                  <p>{option.classNameRequesterGoesTo}</p>
+                  <p>{option.class_issuer_goes_to}</p>
                 </div>
               </div>
             </label>
