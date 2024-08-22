@@ -7,7 +7,7 @@ import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
-import { RandomFill } from './selectedOptionController'
+import RandomFill from './selectedOptionController/RandomFill'
 
 type Props = {
   currentOption: CourseOption[]
@@ -33,21 +33,21 @@ const SelectedOptionController = ({
 
   //TODO(thePeras): Fix these functions using states and setInterval
   const startScroll = () => {
-    if(inputIsActive()) return; 
+    if (inputIsActive()) return;
 
     isHovered = true
     input.current.scrollLeft += 5
   }
 
   const stopScroll = () => {
-    if(inputIsActive()) return; 
+    if (inputIsActive()) return;
 
     isHovered = false
     input.current.scrollLeft = 0
   }
 
   const scroll = () => {
-    if(inputIsActive()) return; 
+    if (inputIsActive()) return;
 
     if (isHovered) {
       if (isScrollingBack) {
@@ -67,7 +67,7 @@ const SelectedOptionController = ({
     return multipleOptions.find((elem) => elem.id === id)
   }
 
-  const [optionName , setOptionName] = useState(multipleOptions.find((elem) => elem.id === selectedOption).name ?? '');
+  const [optionName, setOptionName] = useState(multipleOptions.find((elem) => elem.id === selectedOption).name ?? '');
 
   useEffect(() => {
     setOptionName(multipleOptions.find((elem) => elem.id === selectedOption).name)
@@ -75,7 +75,7 @@ const SelectedOptionController = ({
 
   const renameOptionName = (event) => {
     const newName = event.target.value;
-    if(newName.length > 35) return;
+    if (newName.length > 35) return;
     event.target.value = newName
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>

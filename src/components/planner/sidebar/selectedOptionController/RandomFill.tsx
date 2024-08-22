@@ -19,55 +19,47 @@ type SlotMetadata = {
   duration: number
 }
 
-
 const RandomFill = ({ className }: Props) => {
   const { pickedCourses } = useContext(CourseContext)
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
+  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const courseOptions = multipleOptions[selectedOption].course_options
   const [permutations, setPermutations] = useState([])
   const [lockedCourses, setLockedCourses] = useState(
     courseOptions.filter((course) => course.locked).map((course) => course.course_id)
   )
 
-  const getClasses = () => {
-    let aux = []
-    const option = multipleOptions[selectedOption]
-
-    if (option){
-      for (let i = 0; i < option.course_options.length; i++) {
-        const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
-  
-        if (course_info && course_info.classes) {
-          course_info.classes.forEach((class_info) => {
-            aux.push({
-              course_info: course_info,
-              class_info: class_info,
-            })
-          })
+  // Get all course_unit-class combinations
+  const getClassesCombinations = () => {
+    return pickedCourses.map((course) => {
+      if (!course.classes) return []
+      return course.classes.map((cls) => {
+        return {
+          course_info: course,
+          class_info: cls,
         }
-      }
-    }
-
-    return aux
+      })
+    }).flat()
   }
 
-  const [classes, setClasses] = useState(getClasses());
+  const [classesCombinations, setClassesCombinations] = useState([]);
   useEffect(() => {
-    setClasses(getClasses());
-  }, [multipleOptions, pickedCourses, selectedOption]);
+    const combinations = getClassesCombinations()
+    setClassesCombinations(combinations);
+  }, [pickedCourses, selectedOption]);
 
+  const getUniqueClasses = () => {
+    return Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name)))
+  }
 
-  const [randomClasses, setRandomClasses] = useState(
-    Array.from(new Set(classes.map((class_info) => class_info.class_info.name)))
-  )
-
+  // not a good name
+  const [uniqueClasses, setUniqueClasses] = useState(getUniqueClasses())
   useEffect(() => {
-    setRandomClasses(Array.from(new Set(classes.map((class_info) => class_info.class_info.name))))
-  }, [classes])
+    setUniqueClasses(getUniqueClasses())
+  }, [classesCombinations])
 
   /* 
   Usage:
-
+   
   ~~~~~~~~~~~~~~~~~~~~~~~~~
     const generator = cartesianGenerator(...schedules); 
     const combination = generator.next().value;
@@ -99,25 +91,27 @@ const RandomFill = ({ className }: Props) => {
   const getSchedulesGenerator = () => {
     const allSchedules = courseOptions.map((course) => {
       if (course.locked && course.picked_class_id) {
-        return [pickedCourses.find((picked) => picked.id === course.course_id).classes.find(
+        return [pickedCourses.find((picked) => picked.id === course.course_id)?.classes.find(
           (cls) => cls.id === course.picked_class_id
         )]
       }
 
-      const availableClasses = classes.filter((class_info) => {
-        return randomClasses.includes(class_info.class_info.name)
+      const availableClasses = classesCombinations.filter((class_info) => {
+        return uniqueClasses.includes(class_info.class_info.name)
       })
 
       return availableClasses
         .filter((class_info) => class_info.course_info.id === course.course_id)
         .map((class_info) => class_info.class_info)
     })
-    
+
     return cartesianGenerator(...allSchedules)
   }
 
+  const [generator, setGenerator] = useState(getSchedulesGenerator())
+
   /*
-    Function to check if a schedule is valid (no overlapping classes)
+    Function to check if a schedule is valid (no overlapping classesCombinations)
   */
   const isValidSchedule = (courses: ClassInfo[]) => {
     const schedules = courses
@@ -133,7 +127,7 @@ const RandomFill = ({ className }: Props) => {
       }).flat()
       .sort((a: SlotMetadata, b: SlotMetadata) => {
         if (a.day == b.day) return a.start_time - b.start_time
-          return a.day - b.day
+        return a.day - b.day
       })
 
     for (let i = 0; i < schedules.length; i++) {
@@ -159,22 +153,23 @@ const RandomFill = ({ className }: Props) => {
   }
 
   const applyRandomSchedule = () => {
-    let newPermutations = [...permutations]
-    const STEP = 2500;
+    // Add more 2500 permutations
+    const newPermutations = [...permutations]
+    const STEP = 1000;
     for (let i = 0; i < STEP; i++) {
       const permutation = generator.next().value
       if (!permutation) break
       newPermutations.push(permutation)
     }
-
-    const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
-
-    applySchedule(newPermutations[randomNumber])
     setPermutations(newPermutations)
+
+    // Choose a random permutation
+    const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
+    applySchedule(newPermutations[randomNumber])
   }
 
-  const applySchedule = (schedules: ClassInfo[]) => {
-    if (schedules.length <= 0) return
+  const applySchedule = (classesCombinations: ClassInfo[]) => {
+    if (classesCombinations.length <= 0) return
 
     setMultipleOptions((prevMultipleOptions) => {
       const newMultipleOptions = [...prevMultipleOptions]
@@ -188,11 +183,12 @@ const RandomFill = ({ className }: Props) => {
       const newCourseOptions = selectedOptionCopy.course_options.map((course) => {
         if (course.locked) return course
 
-        for (const classInfo of schedules) {
-          const pickedCourse = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id);
-          
-          const matchedClassInfo = pickedCourse.classes.find((otherClassInfo) => classInfo.id === otherClassInfo.id);
-          if(matchedClassInfo) {
+        for (const classInfo of classesCombinations) {
+          if (!classInfo) continue
+
+          const courseUnit = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id);
+          const matchedClassInfo = courseUnit.classes.find((courseUnitClass) => courseUnitClass.id === classInfo.id);
+          if (matchedClassInfo) {
             return {
               ...course,
               picked_class_id: matchedClassInfo.id,
@@ -212,7 +208,7 @@ const RandomFill = ({ className }: Props) => {
 
   const toggleRandomClasses = (event) => {
     const className = event.target.id
-    setRandomClasses((prevRandomClasses) => {
+    setUniqueClasses((prevRandomClasses) => {
       if (prevRandomClasses.includes(className)) {
         return prevRandomClasses.filter((name) => name !== className)
       } else {
@@ -243,15 +239,13 @@ const RandomFill = ({ className }: Props) => {
   /**
    * Reseting generator and permutations when:
    * - Selected option changes
-   * - Selected classes for random generations change
+   * - Selected classesCombinations for random generations change
    * - Picked courses change
    */
   useEffect(() => {
     setPermutations([])
     setGenerator(getSchedulesGenerator())
-  }, [selectedOption, pickedCourses, randomClasses])
-
-  const [generator, setGenerator] = useState(getSchedulesGenerator())
+  }, [pickedCourses, uniqueClasses])
 
   return (
     <TooltipProvider>
@@ -269,12 +263,12 @@ const RandomFill = ({ className }: Props) => {
           <ScrollArea className="mx-5 h-72 rounded px-3">
             <div className="p-1">Preenchimento aleatório</div>
             <Separator />
-            {Array.from(new Set(classes.map((class_info) => class_info.class_info.name))).map((key) => (
+            {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
               <div
                 key={key}
                 className="mt-1 flex items-center space-x-2 rounded p-1 hover:cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-700"
               >
-                <Checkbox id={key} checked={randomClasses.includes(key)} onClick={toggleRandomClasses} />
+                <Checkbox id={key} checked={uniqueClasses.includes(key)} onClick={toggleRandomClasses} />
                 <label
                   htmlFor={key}
                   className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
