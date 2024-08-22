@@ -133,7 +133,7 @@ const SelectedOptionController = ({
             if (e.key === 'Enter') {
               e.preventDefault()
               renameOptionName(e)
-              e.target.blur()
+              e.currentTarget.blur() // currentTarget is the element the event handler was attached to
             }
           }}
           onMouseMove={startScroll}

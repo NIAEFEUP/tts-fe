@@ -11,10 +11,12 @@ enum lesson_type {
 /* Majors */
 export type Major = {
   id: number
-  faculty: number
+  faculty_id: string
+  course_type: string
   acronym: string
   name: string
   url: string
+  year: number
 }
 
 export type CourseInfo = {
@@ -25,7 +27,7 @@ export type CourseInfo = {
   acronym: string,
   name: string,
   url: string,
-  classes: Array<ClassInfo>
+  classes?: Array<ClassInfo>
 }
 
 export type ClassInfo = {
@@ -91,8 +93,8 @@ export type Lesson = {
   schedule: CourseSchedule
 }
 
-export type ImportedCourses = { 
-  [key: string]: string 
+export type ImportedCourses = {
+  [key: string]: string
 }
 
 export type CourseSchedule = {

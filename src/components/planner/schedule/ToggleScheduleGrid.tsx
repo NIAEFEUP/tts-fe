@@ -9,7 +9,11 @@ const ToggleScheduleGrid = ({ showGridHook }) => {
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="icon" className="bg-lightish text-black" onClick={() => setShowGrid(!showGrid)}>
+          <Button
+            variant="icon"
+            className="bg-lightish text-black dark:bg-darkish dark:text-white"
+            onClick={() => setShowGrid(!showGrid)}
+          >
             <ViewColumnsIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>

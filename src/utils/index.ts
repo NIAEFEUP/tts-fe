@@ -3,6 +3,7 @@ import dev_config from '../config/local.json'
 import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo } from '../@types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import Plausible from 'plausible-tracker'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -82,7 +83,7 @@ const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
   const firstEnd = firstStart + firstDuration
   const secondEnd = secondStart + secondDuration
 
-  return (firstStart < secondStart && firstEnd > secondStart) || (firstStart >= secondStart && firstStart < secondEnd)
+  return firstEnd > secondStart && firstStart < secondEnd;
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
@@ -197,7 +198,7 @@ const getClassType = (type: string) => {
 const getCourseTeachers = (courseInfo: CourseInfo) => {
   return courseInfo.classes.reduce((acc, classInfo) =>
     [...acc, ...classInfo.slots.map(slot => slot.professors)],
-  []);
+    []);
 }
 
 const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
@@ -271,20 +272,38 @@ const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions
   })
 )
 
-const removeAllCourseOptions = (multipleOptions: MultipleOptions) : MultipleOptions => (
+const removeAllCourseOptions = (multipleOptions: MultipleOptions): MultipleOptions => (
   multipleOptions.map((option) => {
     option.course_options = []
     return option
   })
 )
 
+const courseHasClassPicked = (course: CourseInfo, option: Option): CourseOption | null =>  {
+  const candidateOption = option.course_options.filter((courseOption) => courseOption.picked_class_id && (courseOption.course_id === course.course_unit_id));
+
+  if(!candidateOption) return null;
+
+  return candidateOption[0];
+}
+
 const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
-  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
+  //  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
+    const newCourseOptions = [];
+    for(const course of courses) {
+      const existingOption = courseHasClassPicked(course, option);
+      if(existingOption) {
+        newCourseOptions.push({...existingOption});
+        console.log(`${course.acronym} has picked class`);
+      } else {
+        newCourseOptions.push(createDefaultCourseOption(course));
+      }
+    }
     // We have to use JSON.parse as well as JSON.stringify in order to create a copy for each option. Otherwise, they would
     // all have the same reference to the same object
-    option.course_options = [...JSON.parse(JSON.stringify(courseOptions))]
+    option.course_options = [...JSON.parse(JSON.stringify(newCourseOptions))]
     return option
   })
 }
@@ -328,6 +347,15 @@ const teacherIdsFromCourseInfo = (courseInfo: CourseInfo): number[] => {
   return teacherIds;
 }
 
+const scrollToTop = () => {
+  if (!window.location.href.split('#')[1]) document.getElementById('layout').scrollIntoView();
+}
+
+const plausible = Plausible({
+  domain: import.meta.env.VITE_APP_PLAUSIBLE_DOMAIN,
+  apiHost: import.meta.env.VITE_APP_PLAUSIBLE_HOST,
+  trackLocalhost: !Number(import.meta.env.VITE_APP_PROD),
+})
 
 export {
   config,
@@ -363,5 +391,7 @@ export {
   conflictsSeverity,
   teachersFromCourseInfo,
   uniqueTeachersFromCourseInfo,
-  teacherIdsFromCourseInfo
+  teacherIdsFromCourseInfo,
+  scrollToTop,
+  plausible
 }

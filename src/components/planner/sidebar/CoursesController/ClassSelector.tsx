@@ -15,6 +15,8 @@ type Props = {
 }
 
 const buildTeacherFilters = (teachers, filteredTeachers) => {
+  if (!filteredTeachers) return [];
+
   return teachers.map((teacher) => {
     return {
       ...teacher,
@@ -35,7 +37,7 @@ const ClassSelector = ({ course }: Props) => {
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
   const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  if(courseOption)
+  if (courseOption)
     courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
 
   /**
@@ -61,10 +63,10 @@ const ClassSelector = ({ course }: Props) => {
     return buildTeacherFilters(teachers, filteredTeachers);
   });
 
-  const [locked, setLocked] = useState(courseOption.locked)
+  const [locked, setLocked] = useState(courseOption?.locked)
 
   const [preview, setPreview] = useState<number | null>(null)
-  const [display, setDisplay] = useState(courseOption.picked_class_id)
+  const [display, setDisplay] = useState(courseOption?.picked_class_id)
 
   const deleteOption = () => {
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.picked_class_id === selectedClassId);
@@ -77,7 +79,7 @@ const ClassSelector = ({ course }: Props) => {
     const course_options = multipleOptions[selectedOption].course_options;
     const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
 
-    if (!option[0]) {
+    if (option.length === 0) {
       setSelectedClassId(null);
       return;
     }
@@ -111,7 +113,7 @@ const ClassSelector = ({ course }: Props) => {
     });
     newMultipleOptions[selectedOption].course_options = courseOptions;
     setMultipleOptions(newMultipleOptions);
-  }, [locked, selectedOption]);  
+  }, [locked, selectedOption]);
 
   //(thePeras): Classes options should be a new state
   /**
@@ -120,12 +122,12 @@ const ClassSelector = ({ course }: Props) => {
    */
   const getOptions = (): Array<ClassInfo> => {
     return course.classes?.filter((c) => {
-      return c.slots.some((slot) => slot.professors.filter((prof) => filteredTeachers.includes(prof.id)).length > 0)
+      return c.slots.some((slot) => slot.professors.filter((prof) => filteredTeachers?.includes(prof.id)).length > 0)
     })
   }
 
   useEffect(() => {
-    setFilteredTeachers(courseOption.filteredTeachers);
+    setFilteredTeachers(courseOption?.filteredTeachers);
   }, [choosingNewCourse])
 
   // Checks if any of the selected classes have time conflicts with the classInfo
@@ -201,14 +203,14 @@ const ClassSelector = ({ course }: Props) => {
       <div className="flex items-center">
         {/* Dropdown Menu */}
         <DropdownMenu onOpenChange={setIsDropdownOpen}>
-          <DropdownMenuTrigger asChild disabled={courseOption.locked} ref={classSelectorTriggerRef}>
+          <DropdownMenuTrigger asChild disabled={courseOption?.locked} ref={classSelectorTriggerRef}>
             <Button
               variant="outline"
               size="sm"
               className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
             >
               <span>{getClassDisplayText(course, selectedClassId)} </span>
-              {!courseOption.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
+              {!courseOption?.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -270,7 +272,10 @@ const ClassSelector = ({ course }: Props) => {
                         checked={selectedOption === classInfo.id}
                         preview={preview}
                         conflict={timesCollideWithSelected(classInfo)}
-                        onSelect={() => setSelectedClassId(classInfo.id)}
+                        onSelect={() => {
+                          setSelectedClassId(classInfo.id)
+                          setPreview(null)
+                        }}
                         onMouseEnter={() => showPreview(classInfo)}
                         onMouseLeave={() => removePreview()}
                       />
@@ -288,7 +293,7 @@ const ClassSelector = ({ course }: Props) => {
           onClick={() => setLocked(!locked)}
           disabled={display === null}
         >
-          {courseOption.locked ? (
+          {courseOption?.locked ? (
             <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />
           ) : (
             <LockOpenIcon className="h-6 w-6 text-darkish dark:text-lightish" />

@@ -34,6 +34,7 @@ const ResponsiveLessonBox = ({
         <div className='flex w-full justify-between gap-2'>
           <strong title="Sigla da Unidade Curricular" className='text-lg'>{courseInfo.acronym}</strong>
           <span title={getLessonTypeLongName(lessonType)} className='text-lg'>{lessonType}</span>
+
         </div>
 
         <div className="flex flex-col">

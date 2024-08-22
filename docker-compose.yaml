@@ -1,9 +1,9 @@
-version: '3'
 services:
   tts-frontend:
     container_name: tts_frontend
     build:
       context: .
+      target: dev
     volumes:
       - ./src:/usr/src/tts-fe/src
       - ./public:/usr/src/tts-fe/public
@@ -12,3 +12,16 @@ services:
     env_file:
       - .env
 
+  tts-frontend-prod:
+    container_name: tts_frontend_prod
+    build:
+      context: .
+      target: prod
+      args:
+        - TTS_FE_VARS_METHOD=dotenv
+        - TTS_FE_DOTENV_FILE=.env
+    volumes:
+      - ./src:/usr/src/tts-fe/src
+      - ./public:/usr/src/tts-fe/public
+    ports:
+      - 3100:80

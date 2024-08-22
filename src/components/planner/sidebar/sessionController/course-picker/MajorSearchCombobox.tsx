@@ -3,7 +3,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
 import { Command, CommandEmpty, CommandList, CommandItem, CommandInput } from '../../../../ui/command'
 import { Major } from '../../../../../@types'
 import MajorContext from '../../../../../contexts/MajorContext'
-import { cn } from '../../../../../utils'
+import { cn, plausible } from '../../../../../utils'
 import { Button } from '../../../../ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/popover'
 
@@ -17,24 +17,21 @@ interface Props {
  * wants to select courses from. They can type the major or click on the rightmost corner to open
  * the list of possible majors.
  */
-const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
+const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   const { majors } = useContext(MajorContext)
   const [open, setOpen] = useState(false)
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined)
 
-  const match = (str: string, query: string, simple?: boolean) =>
-    simple
-      ? str.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
-      : str
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/\p{Diacritic}/gu, '')
-          .replace(/\s+/g, '')
-          .replace('.', '')
-          .replace(':', '')
-          .includes(query.toLowerCase().replace(/\s+/g, ''))
-
-  const getDisplayMajorText = (major: Major) => (major === null ? '' : `${major?.name} (${major?.acronym})`)
+  const match = (string: string, query: string) =>
+    string.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
+    || string
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .replace(/\s+/g, '')
+      .replace('.', '')
+      .replace(':', '')
+      .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -48,7 +45,7 @@ const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
           aria-expanded={open}
           className="w-full justify-between dark:bg-darker dark:text-slate-50"
         >
-          {selectedMajor ? majors?.find((major) => major.id === selectedMajor.id)?.name : 'Seleciona um curso...'}
+          {selectedMajor ? selectedMajor.name : 'Seleciona um curso...'}
           <ChevronUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -57,13 +54,9 @@ const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
           className="dark:bg-darker"
           filter={(value, search) => {
             if (value === 'remove') return 1
-            const major = majors?.find((major) => major.id === parseInt(value))
-            return match(major?.name, search, true) ||
-              match(major?.name, search, false) ||
-              match(major?.acronym, search, true) ||
-              match(major?.acronym, search, false)
-              ? 1
-              : 0
+            const major = majors.find((major) => major.id === parseInt(value))
+            if (!major) return 0;
+            return Number(match(major.name, search) || match(major?.name, search) || match(major?.acronym, search) || match(major?.acronym, search))
           }}
         >
           <CommandInput placeholder="Procurar curso..." className="h-9" />
@@ -72,22 +65,27 @@ const MajorSearchCombobox = ({selectedMajor, setSelectedMajor}: Props) => {
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
-            {majors && majors.map((major) => (
-              <CommandItem
-                key={major.id}
-                value={major.id.toString()}
-                onSelect={(currentMajorId) => {
-                  const currentMajor = majors?.find((major) => major.id === parseInt(currentMajorId))
-                  setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
-                  setOpen(false)
-                }}
-              >
-                {getDisplayMajorText(major)}
-                <CheckIcon
-                  className={cn('ml-auto h-4 w-4', selectedMajor?.id === major.id ? 'opacity-100' : 'opacity-0')}
-                />
-              </CommandItem>
-            ))}
+            {majors &&
+              majors.map((major) => (
+                <CommandItem
+                  key={major.id}
+                  value={major.id.toString()}
+                  onSelect={(currentMajorId) => {
+                    const currentMajor = majors.find((major) => major.id === parseInt(currentMajorId))
+                    setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
+                    setOpen(false)
+
+                    const { trackEvent } = plausible
+                    trackEvent('Major Selected', { props: { major: currentMajor.name } })
+                    trackEvent('Faculty', { props: { faculty: currentMajor.faculty_id.toUpperCase() } })
+                  }}
+                >
+                  {`${major.name} (${major.acronym}) - ${major.faculty_id.toUpperCase()}`}
+                  <CheckIcon
+                    className={cn('ml-auto h-4 w-4', selectedMajor?.id === major.id ? 'opacity-100' : 'opacity-0')}
+                  />
+                </CommandItem>
+              ))}
           </CommandList>
         </Command>
       </PopoverContent>

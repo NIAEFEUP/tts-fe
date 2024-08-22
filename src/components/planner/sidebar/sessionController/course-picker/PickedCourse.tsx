@@ -12,12 +12,12 @@ type Props = {
 }
 
 const PickedCourse = ({ course }: Props) => {
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
+  const { checkboxedCourses, setCheckboxedCourses } = useContext(CourseContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
-  
+
   const removeCourse = () => {
     setMultipleOptions(removeCourseOption(course, multipleOptions))
-    setPickedCourses(pickedCourses.filter((pickedCourse) => pickedCourse.id !== course.id))
+    setCheckboxedCourses(checkboxedCourses.filter((pickedCourse) => pickedCourse.id !== course.id))
   }
 
   return (
