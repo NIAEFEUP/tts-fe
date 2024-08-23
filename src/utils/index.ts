@@ -296,7 +296,6 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
       const existingOption = courseHasClassPicked(course, option);
       if (existingOption) {
         newCourseOptions.push({ ...existingOption });
-        console.log(`${course.acronym} has picked class`);
       } else {
         newCourseOptions.push(createDefaultCourseOption(course));
       }
