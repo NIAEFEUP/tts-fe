@@ -10,9 +10,11 @@ const PickedCoursesList = () => {
 
   return checkboxedCourses.length > 0 ? (
     <ScrollArea className="h-64 w-full pr-4">
-      {checkboxedCourses.map((course: CourseInfo) => (
-        <PickedCourse course={course} key={course.id} />
-      ))}
+      <div className="flex flex-col gap-2">
+        {checkboxedCourses.map((course: CourseInfo) => (
+          <PickedCourse course={course} key={course.id} />
+        ))}
+      </div>
     </ScrollArea>
   ) : (
     <div className="flex h-64 items-center justify-center">
