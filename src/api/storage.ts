@@ -142,7 +142,6 @@ const getPickedCoursesStorage = (): PickedCourses => {
 
 const setPickedCoursesStorage = (pickedCourses: any): void => {
   const key = 'niaefeup-tts.picked-courses'
-  console.log("in store",pickedCourses)
   writeStorage(key, pickedCourses)
 }
 

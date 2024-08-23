@@ -112,7 +112,6 @@ const getCourseUnitHashes = async (ids: number[]) => {
 
   try {
     const queryString = ids.join(',');
-    console.log('Fetching course unit hashes for IDs:', queryString);
     const response = await fetch(`${BACKEND_URL}/course_unit/hash?ids=${queryString}`);
     if (!response.ok) throw new Error('Network response was not ok');
     return await response.json();
