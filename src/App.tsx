@@ -1,12 +1,10 @@
-import Layout from './components/layout'
-import StorageAPI from './api/storage'
+import { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AboutPage, TimeTableSchedulerPage, NotFoundPage, FaqsPage } from './pages'
-import { getPath, config } from './utils/utils'
-import { useDarkMode } from './hooks'
-import { ThemeContext } from './contexts/ThemeContext'
-import { Toaster } from './components/ui/toaster'
 import './app.css'
+import CombinedProvider from './contexts/CombinedProvider'
+import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pages'
+import { getPath, config, plausible } from './utils'
+import Layout from './components/layout'
 
 // Configures the path for pages.
 const pages = [
@@ -17,18 +15,22 @@ const pages = [
 ]
 
 const redirects = [
+  { from: "/", to: getPath(config.paths.planner) },
   { from: config.pathPrefix, to: getPath(config.paths.planner) },
   { from: config.pathPrefix.slice(0, -1), to: getPath(config.paths.planner) },
   { from: getPath(config.paths.home), to: getPath(config.paths.about) },
 ]
 
 const App = () => {
-  const [enabled, setEnabled] = useDarkMode()
-  StorageAPI.updateScrappeInfo()
+  //TODO(thePeras): Should this be used? Or should this invalidate the storage
+  //StorageAPI.updateBackendDataVersion()
+
+  const { enableAutoPageviews } = plausible
+  enableAutoPageviews()
 
   return (
     <BrowserRouter>
-      <ThemeContext.Provider value={{ enabled, setEnabled }}>
+      <CombinedProvider>
         <Routes>
           {pages.map((page, pageIdx) => (
             <Route
@@ -52,7 +54,7 @@ const App = () => {
             />
           ))}
         </Routes>
-      </ThemeContext.Provider>
+      </CombinedProvider>
     </BrowserRouter>
   )
 }

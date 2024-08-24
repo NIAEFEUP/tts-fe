@@ -1,12 +1,13 @@
-import { CheckedCourse, Major } from '../@types'
-import { extraCoursesData } from '../utils/data'
-import { getSemester, config, dev_config } from '../utils/utils'
+import { Major, CourseInfo } from "../@types"
+import { dev_config, getSemester, config } from "../utils"
 
-
-const prod_val = process.env.REACT_APP_PROD
+const prod_val = import.meta.env.VITE_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
-const SEMESTER = process.env.REACT_APP_SEMESTER || getSemester()
+const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
+const SEMESTER = import.meta.env.VITE_APP_SEMESTER || getSemester()
+
+// If we are in september 2024 we use 2024, if we are january 2025 we use 2024 because the first year of the academic year (2024/2025)
+const CURRENT_YEAR = ((new Date()).getMonth() + 1) < 8 ? (new Date()).getFullYear() - 1 : (new Date()).getFullYear()
 
 /**
  * Make a request to the backend server.
@@ -29,7 +30,7 @@ const apiRequest = async (route: string) => {
  * @returns all majors from the backend
  */
 const getMajors = async () => {
-  return await apiRequest(`/course/${config.api.year}`)
+  return await apiRequest(`/course/${CURRENT_YEAR}`)
 }
 
 /**
@@ -39,7 +40,11 @@ const getMajors = async () => {
  */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  return await apiRequest(`/course_units/${major.id}/${config.api.year}/${SEMESTER}/`)
+  return getCoursesByMajorId(major.id);
+}
+
+const getCoursesByMajorId = async (id: number) => {
+  return await apiRequest(`/course_units/${id}/${CURRENT_YEAR}/${SEMESTER}/`)
 }
 
 /**
@@ -47,74 +52,63 @@ const getCourses = async (major: Major) => {
  * @param course course of which to retrieve schedule
  * @returns array of schedule options
  */
-const getCourseSchedule = async (course: CheckedCourse) => {
+const getCourseClass = async (course: CourseInfo) => {
   if (course === null) return []
-  return await apiRequest(`/schedule/${course.info.id}/`)
+  return await apiRequest(`/class/${course.id}/`)
 }
 
-/**
- * Retrieves all schedule options for a given course unit
- * @param courses course of which to retrieve schedule
- * @returns array of schedule options
- */
-const getCoursesSchedules = async (courses: CheckedCourse[]) => {
-  if (!courses || courses.length === 0) return []
+const createCourseClass = async (course: CourseInfo) => {
+  if (course.classes) return course;
 
-  let schedules = []
-  for (let course of courses) {
-    const schedule = await getCourseSchedule(course)
-    schedules.push(schedule)
-  }
-
-  return schedules
-}
-
-/**
- * Retrieves all schedule options for a given course unit
- * @param courses course of which to retrieve schedule
- * @returns array of schedule options
- */
-const getMajorCoursesSchedules = async (courses: CheckedCourse[][]) => {
-  if (!courses || courses.length === 0) return []
-
-  let schedules = []
-  for (let yearCourses of courses) {
-    let yearSchedules = []
-    for (let course of yearCourses) {
-      const schedule = await getCourseSchedule(course)
-      yearSchedules.push(schedule)
+  course.classes = await getCourseClass(course);
+  course.classes = course.classes.map((c) => {
+    return {
+      ...c,
+      filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
     }
-    schedules.push(yearSchedules)
-  }
+  })
+  return course;
+}
 
-  return schedules
+const getCoursesClasses = async (courses: CourseInfo[]): Promise<CourseInfo[]> => {
+  const newCourses = [...courses];
+
+  return Promise.all(newCourses.map(course => createCourseClass(course))).then(() => {
+    return newCourses;
+  }).catch((e) => {
+    console.error(e);
+    return []
+  })
 }
 
 /**
- * Retrieves all course units outside of a given major
- * @param major major to exclude course units from
- * @returns array of course units
+ * Retrieves full class information with classes
+ * @param id class id
+ * @returns CourseInfo
  */
-const getExtraCourses = (major: Major) => {
-  // TODO: implement
-  return extraCoursesData
+const getCourseUnit = async (id: number) => {
+  if (id === null) return []
+  const class_info = (await apiRequest(`course_unit/${id}/`));
+  class_info['classes'] = await getCourseClass(class_info);
+  return class_info;
 }
 
 /**
  * Retrieves the scrappe info from the backend
  */
 const getInfo = async () => {
-  return await apiRequest('/info')
+  return await apiRequest('/info/')
 }
 
 const api = {
   getMajors,
   getCourses,
-  getCourseSchedule,
-  getCoursesSchedules,
-  getMajorCoursesSchedules,
-  getExtraCourses,
-  getInfo
+  getCoursesByMajorId,
+  getCourseClass,
+  getCoursesClasses,
+  getCourseUnit,
+  getInfo,
+  BACKEND_URL
 }
 
 export default api

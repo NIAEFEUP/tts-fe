@@ -1,498 +1,105 @@
-import classNames from 'classnames'
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useState } from 'react'
-import Alert, { AlertType } from '../../Alert'
-import { CheckedCourse, Course, Major } from '../../../../@types'
-import { getSchoolYear, getSemester } from '../../../../utils/utils'
-import { AcademicCapIcon, CheckCircleIcon, PencilSquareIcon, PlusIcon, XCircleIcon } from '@heroicons//react/24/solid'
-import { controlCoursesGroupCheckbox, is_null_or_undefined } from '../../../../pages/TimeTableScheduler'
-import { MajorSearchCombobox } from '../../MajorSearchCombobox'
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
+import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
+import { useContext, useEffect, useState } from 'react'
+import StorageAPI from '../../../../api/storage'
+import CourseContext from '../../../../contexts/CourseContext'
+import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/button'
+import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import BackendAPI from '../../../../api/backend'
+import { Separator } from '../../../ui/separator'
+import useCourseUnits from '../../../../hooks/useCourseUnits'
+import { Major } from '../../../../@types'
+import { Skeleton } from '../../../ui/skeleton'
+import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 
-type Props = {
-  majors: Major[]
-  openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  majorHook: [Major, React.Dispatch<React.SetStateAction<Major>>]
-  coursesHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  extraCoursesActiveHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  extraCoursesModalOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  sourceBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  destBufferHook: [CheckedCourse[][], React.Dispatch<React.SetStateAction<CheckedCourse[][]>>]
-  repeatedCourseControlHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-}
+//TODO: absolute imports with @
 
-/**
- * Main modal where a user can select the courses for their main major
- */
-const SelectionModal = ({
-  majors,
-  openHook,
-  majorHook,
-  coursesHook,
-  extraCoursesActiveHook,
-  extraCoursesModalOpenHook,
-  sourceBufferHook,
-  destBufferHook,
-  repeatedCourseControlHook,
-}: Props) => {
-  const [major, setMajor] = majorHook
-  const [isThisOpen, setIsThisOpen] = openHook
-  const [courses, setCourses] = coursesHook
-  const [extraCoursesActive, setExtraCoursesActive] = extraCoursesActiveHook
-  const [isExtraUcsModelOpen, setIsExtraUcsModalOpen] = extraCoursesModalOpenHook
-  const [selectionModalCoursesBuffer, setSelectionModalCoursesBuffer] = sourceBufferHook
-  const [extraCoursesModalBuffer, setExtraCoursesModalBuffer] = destBufferHook
-  const [chosenMajorMainModalEqualToExtra, setChosenMajorMainModalEqualToExtra] = repeatedCourseControlHook
-  const [coursesAlreadyTaken, setCoursesAlreadyTaken] = useState<boolean>(false)
-  const [mainMajorAlreadyAnExtra, setMainMajorAlreadyAnExtra] = useState<boolean>(false)
-  //const [extraCoursesQuery, setExtraCoursesQuery] = useState<string>('')
-  const [alertLevel, setAlertLevel] = useState<AlertType>(AlertType.info)
-  const atLeastOneCourse = courses.some((item) => item?.some((course) => course.checked))
+const CoursePicker = () => {
+  const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo, ucsModalOpen, setUcsModalOpen } = useContext(CourseContext)
 
-  const closeModal = () => {
-    if (major?.name !== '' && atLeastOneCourse) {
-      setIsThisOpen(false)
-    } else {
-      setAlertLevel(AlertType.warning)
-    }
-  }
+  const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
+  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
+  const showContent = selectedMajor || pickedCourses.length > 0
 
-  const openModal = () => {
-    setIsThisOpen(true)
-  }
+  useEffect(() => {
+    if (!courseUnits) return;
+    setCoursesInfo(courseUnits);
+  }, [courseUnits])
 
-  const getDisplayExtraCourseText = (course: Course) =>
-    course === null ? '' : `${course?.name} (${course?.acronym}, ${course?.course})`
-
-  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, year: number, courseIdx: number) => {
-    if (is_null_or_undefined(year)) return
-
-    courses[year + 1][courseIdx].checked = event.target.checked
-    setCourses([...courses])
-
-    setSelectionModalCoursesBuffer([...courses])
-  }
-
-  const handleCheckGroup = (event: React.ChangeEvent<HTMLInputElement>, year: number) => {
-    if (is_null_or_undefined(year)) return
-
-    let newGroupEntry: CheckedCourse[] = []
-    courses[year + 1].forEach((course: CheckedCourse) => {
-      course.checked = event.target.checked
-      newGroupEntry.push(course)
+  useEffect(() => {
+    BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
+      StorageAPI.setPickedCoursesStorage(courseWithClasses);
+      setPickedCourses(courseWithClasses);
     })
-    courses[year + 1] = newGroupEntry
-
-    setCourses([...courses])
-    setSelectionModalCoursesBuffer([...courses])
-  }
-
-  const openExtraCoursesModal = () => {
-    setSelectionModalCoursesBuffer([...courses.slice(1)])
-
-    setCourses([courses[0], ...extraCoursesModalBuffer.slice(1)])
-
-    setIsExtraUcsModalOpen(true)
-  }
-
-  const ExtraCoursesButton = () => (
-    <button
-      type="button"
-      title="Edit extra ucs"
-      className={classNames(
-        'flex w-full items-center justify-center space-x-1 rounded border-2 px-2 py-2 text-sm font-medium transition md:px-4 lg:w-auto',
-        'hover:text-white disabled:hidden disabled:cursor-not-allowed disabled:opacity-50',
-        extraCoursesActive
-          ? 'border-red-800/70 bg-red-50 text-red-800 hover:bg-red-900'
-          : 'border-sky-800/70 bg-sky-50 text-sky-800 hover:bg-sky-800'
-      )}
-      onClick={() => {
-        openExtraCoursesModal()
-      }}
-    >
-      {extraCoursesActive ? (
-        <PencilSquareIcon className="h-4 w-4" />
-      ) : (
-        <PlusIcon className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
-      )}
-
-      <span className="hidden md:flex">UCs de outros cursos</span>
-    </button>
-  )
-
-  const replaceExtraCourseCheckbox = (checkboxId: string, XMarkIconId: string) => {
-    const checkbox: HTMLElement = document.getElementById(checkboxId)
-    const removalIcon: HTMLElement = document.getElementById(XMarkIconId)
-
-    if (!checkbox || !removalIcon) return
-
-    checkbox.style.display = 'none'
-    removalIcon.style.display = 'block'
-  }
-
-  const recoverExtraCourseCheckbox = (checkboxId: string, XMarkIconId: string) => {
-    const checkbox = document.getElementById(checkboxId)
-    const removalIcon: HTMLElement = document.getElementById(XMarkIconId)
-
-    if (!checkbox || !removalIcon) return
-
-    checkbox.style.display = 'block'
-    removalIcon.style.display = 'none'
-  }
-
-  const removeCourseFromExtraCourses = (courseIdx: number) => {
-    courses[0].splice(courseIdx, 1)
-    setCourses([...courses])
-
-    if (courses[0].length === 0) {
-      extraCoursesModalBuffer[0] = []
-      extraCoursesModalBuffer.forEach((courseArray: CheckedCourse[]) => {
-        courseArray.forEach((course) => (course.checked = false))
-      })
-    }
-  }
-
-  const removeExtraCourses = () => {
-    courses[0] = []
-    setCourses([...courses])
-
-    extraCoursesModalBuffer[0] = []
-    extraCoursesModalBuffer.forEach((courseArray: CheckedCourse[]) => {
-      courseArray.forEach((course) => (course.checked = false))
-    })
-    setExtraCoursesActive(false)
-  }
-
-  /**
-   * Displays vertical list of the extra courses the user selected
-   */
-  const showUcsExtra = () => {
-    return (
-      <>
-        {/* Courses checkboxes */}
-        <div className="checkboxes col-span-6">
-          <div key={`ucsextra`}>
-            {/* Parent checkbox */}
-            <div
-              title={`ucsExtra`}
-              className="flex items-center transition"
-              onMouseEnter={() => {
-                replaceExtraCourseCheckbox('extraCourseGroupCheckbox', 'remove-extra-courses-icon')
-              }}
-              onMouseLeave={() => {
-                recoverExtraCourseCheckbox('extraCourseGroupCheckbox', 'remove-extra-courses-icon')
-              }}
-            >
-              <XCircleIcon
-                className="remove-extra-uc-icon hidden h-5 w-5 cursor-pointer text-primary"
-                id="remove-extra-courses-icon"
-                onClick={removeExtraCourses}
-              />
-              <input type="checkbox" className="checkbox" id="extraCourseGroupCheckbox" defaultChecked={true} />
-              <label className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white">
-                UCs de outros cursos
-              </label>
-            </div>
-
-            <div className="mt-2 ml-4 flex grid grid-flow-col grid-rows-8 flex-wrap items-center justify-center gap-x-1 gap-y-1.5 p-1">
-              {courses[0] !== null && courses[0] !== undefined ? (
-                courses[0].map((course: CheckedCourse, courseIdx: number) => (
-                  <div
-                    title={course?.info.name}
-                    key={`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`}
-                    className="flex items-center transition"
-                    onMouseEnter={() => {
-                      replaceExtraCourseCheckbox(
-                        `added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`,
-                        `XMarkIcon-for-${course?.info.course_unit_year}-${courseIdx}`
-                      )
-                    }}
-                    onMouseLeave={() => {
-                      recoverExtraCourseCheckbox(
-                        `added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`,
-                        `XMarkIcon-for-${course?.info.course_unit_year}-${courseIdx}`
-                      )
-                    }}
-                  >
-                    <XCircleIcon
-                      className="remove-extra-uc-icon hidden h-5 w-5 cursor-pointer text-primary"
-                      id={`XMarkIcon-for-${course?.info.course_unit_year}-${courseIdx}`}
-                      onClick={() => {
-                        removeCourseFromExtraCourses(courseIdx)
-                      }}
-                    />
-                    <input
-                      type="checkbox"
-                      className="checkbox"
-                      defaultChecked={course.checked}
-                      id={`added-extra-course-checkbox-${course?.info.course_unit_year}-${courseIdx}`}
-                    />
-                    <label className="ml-1.5 block cursor-pointer text-sm dark:text-white">{course.info.acronym}</label>
-                  </div>
-                ))
-              ) : (
-                <></>
-              )}
-            </div>
-          </div>
-        </div>
-      </>
-    )
-  }
-
-  const alreadyInExtraCourses = (course: CheckedCourse[][]) => {
-    if (
-      is_null_or_undefined(course[1]) ||
-      is_null_or_undefined(course[0]) ||
-      is_null_or_undefined(course[0][0]) ||
-      is_null_or_undefined(course[1][0])
-    ) {
-      return false
-    }
-
-    return course[0][0]?.info.course_unit_id === course[1][0]?.info.course_unit_id
-  }
+  }, [checkboxedCourses])
 
   useEffect(() => {
-    if (major?.name !== '' && atLeastOneCourse) setAlertLevel(AlertType.success)
-    else setAlertLevel(AlertType.info)
-  }, [major, courses, atLeastOneCourse])
+    if (!selectedMajor) return
+    StorageAPI.setSelectedMajorStorage(selectedMajor);
+  }, [selectedMajor, setCoursesInfo])
 
-  const warnIfMajorIsTheSameBetween = (courseLeft: CheckedCourse[], courseRight: CheckedCourse[][]) => {
-    if (is_null_or_undefined(courseLeft) || is_null_or_undefined(courseLeft[0])) return false
-
-    let areLeftAndRightMajorsEqual: boolean =
-      courseRight
-        .flat()
-        .findIndex((extra_course) => extra_course.info.course_unit_id === courseLeft[0].info.course_unit_id) !== -1
-
-    areLeftAndRightMajorsEqual ? setMainMajorAlreadyAnExtra(true) : setMainMajorAlreadyAnExtra(false)
+  const handleOpenChange = () => {
+    setChoosingNewCourse((prev) => !prev);
+    if (ucsModalOpen === false) return
+    setUcsModalOpen(false)
   }
-
-  useEffect(() => {
-    // Regular courses
-    for (let year = 1; year < courses.length; year++) {
-      controlCoursesGroupCheckbox(courses[year], `year-checkbox-${year - 1}`)
-    }
-
-    // Extra courses
-    if (courses[0] !== undefined && courses[0] !== null) {
-      controlCoursesGroupCheckbox(courses[0], 'extraCourseGroupCheckbox')
-    }
-
-    warnIfMajorIsTheSameBetween(courses[0], courses.slice(1))
-  }, [courses])
-
-  useEffect(() => {
-    alreadyInExtraCourses(courses.slice(1)) ? setCoursesAlreadyTaken(true) : setCoursesAlreadyTaken(false)
-  }, [courses])
 
   return (
-    <>
-      {/* Edit button 
-        //TODO: Create and change to text variant
-      */}
-      <Button
-        variant="icon"
-        className="flex-grow gap-2 bg-primary"
-        onClick={openModal}
-        title="Editar Unidades Curriculares"
-      >
-        <span className="hidden md:block lg:hidden xl:block">Escolher UCs</span>
-        <PencilSquareIcon className="h-5 w-5 text-white" />
-      </Button>
-
-      <Transition appear show={isThisOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <OuterMask />
-          <div className="fixed inset-0 bottom-0 overflow-y-auto xl:bottom-12">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <InnerCustomTransition>
-                <Dialog.Panel
-                  className={classNames(
-                    'w-full max-w-6xl transform space-y-2 rounded-2xl p-4 text-left lg:space-y-3 lg:p-6',
-                    'bg-lightest align-middle shadow-xl transition-all dark:bg-dark'
-                  )}
-                >
-                  {/* Header */}
-                  <Dialog.Title
-                    as="header"
-                    className="mb-2 flex w-full items-center justify-between space-x-2 text-center font-medium lg:mb-3"
-                  >
-                    <div className="flex items-center justify-start space-x-1">
-                      <AcademicCapIcon className="h-6 w-6 text-feup" aria-hidden="true" />
-                      <h3 className="flex text-xl font-semibold leading-6 tracking-tight dark:text-white lg:hidden">
-                        UCs
-                      </h3>
-                      <h3 className="hidden text-xl font-semibold leading-6 tracking-tight dark:text-white lg:flex">
-                        Escolha de UCs
-                      </h3>
-                    </div>
-
-                    <div className="flex items-center justify-start space-x-2">
-                      <span
-                        title="Semestre"
-                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
-                      >
-                        {`${getSemester()}ºS`}
-                      </span>
-                      <span
-                        title="Ano Letivo"
-                        className="rounded bg-feup px-3 py-1 text-sm text-white transition-all duration-500"
-                      >
-                        {getSchoolYear()}
-                      </span>
-                    </div>
-                  </Dialog.Title>
-
-                  {/* Credits banner */}
-                  {/* <CreditsBanner courses={courses.flat().filter((course) => course.checked)} /> */}
-
-                  {/* Alert banner */}
-                  <Alert type={alertLevel}>
-                    Selecione o seu <strong>curso principal</strong>, seguido das <strong>Unidades Curriculares</strong>{' '}
-                    pretendidas.
-                  </Alert>
-
-                  {/* Select major dropdown */}
-                  <MajorSearchCombobox majors={majors} majorHook={[major, setMajor]} />
-
-                  <div className={classNames(extraCoursesActive ? 'grid grid-cols-8 divide-x-2' : '')}>
-                    {extraCoursesActive ? <div className="col-span-2">{showUcsExtra()}</div> : <></>}
-
-                    {chosenMajorMainModalEqualToExtra ? (
-                      <div className="checkboxes col-span-6">
-                        <p className="m-4 text-center font-semibold">
-                          Já tens este curso selecionado no menu de seleção de outros cursos
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="checkboxes col-span-6">
-                        {coursesAlreadyTaken ? (
-                          <></>
-                        ) : (
-                          major &&
-                          courses.slice(1).map((year: CheckedCourse[], yearIdx: number) => (
-                            <div key={`year-${yearIdx}`}>
-                              {/* Parent checkbox */}
-                              <div
-                                title={`${major?.acronym} ${yearIdx + 1}º ano`}
-                                className="flex items-center transition"
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="checkbox"
-                                  checked={courses[yearIdx + 1]?.every((course) => course.checked)}
-                                  id={`year-checkbox-${yearIdx}`}
-                                  onChange={(event) => handleCheckGroup(event, yearIdx)}
-                                />
-                                <label
-                                  className="ml-2 block cursor-pointer text-sm font-semibold dark:text-white"
-                                  htmlFor={`year-checkbox-${yearIdx}`}
-                                >
-                                  <span>{yearIdx + 1}º Ano</span>
-                                </label>
-                              </div>
-
-                              {/* Children checkboxes */}
-                              <div className="mt-2 ml-4 grid grid-flow-col grid-rows-8 gap-x-1 gap-y-1.5 p-1">
-                                {year.map((course: CheckedCourse, courseIdx: number) => (
-                                  <div
-                                    title={course?.info.name}
-                                    key={`checkbox-${yearIdx}-${courseIdx}`}
-                                    className="flex items-center transition"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      className="checkbox"
-                                      checked={courses[yearIdx + 1][courseIdx].checked}
-                                      id={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                      onChange={(event) => handleCheck(event, yearIdx, courseIdx)}
-                                    />
-                                    <label
-                                      className="ml-1.5 block cursor-pointer text-sm dark:text-white"
-                                      htmlFor={`course-checkbox-${yearIdx}-${courseIdx}`}
-                                    >
-                                      {course.info.acronym}
-                                    </label>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    )}
+    <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares" onClick={() => setUcsModalOpen(true)}>
+          <span className="hidden md:block lg:hidden xl:block">Unidades Curriculares</span>
+          <PencilSquareIcon className="h-5 w-5 text-white" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="h-fit min-w-fit">
+        <DialogHeader>
+          <DialogTitle>Seleciona as tuas unidades curriculares</DialogTitle>
+          <DialogDescription className="mt-2">
+            Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
+          </DialogDescription>
+        </DialogHeader>
+        <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
+        <Separator />
+        {showContent ? (
+          <>
+            <div className="grid w-[60rem] grid-cols-[1fr_2.5rem_1fr]">
+              {!loadingCourseUnits
+                ? <CourseYearTabs />
+                : <div className="flex flex-col space-y-3">
+                  <Skeleton className="h-8 rounded-xl" />
+                  <div className="space-y-4">
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
                   </div>
-
-                  {/* Bottom action buttons */}
-                  <footer className="flex flex-col items-center justify-between gap-y-2 lg:flex-row lg:gap-y-0">
-                    {/* Left side buttons */}
-                    <div className="order-last flex w-full flex-col space-x-0 space-y-2 lg:order-first lg:flex-row lg:space-x-3 lg:space-y-0">
-                      {/* Add / edit extra ucs */}
-                      {major && <ExtraCoursesButton />}
-                    </div>
-
-                    {/* Right side buttons */}
-                    <div className="order-first flex w-full flex-col items-center justify-center space-x-0 space-y-2 lg:order-last lg:flex-row lg:justify-end lg:space-y-0 lg:space-x-3">
-                      {/* Confirm options button */}
-                      <button
-                        type="button"
-                        title="Avançar para seleção de horários"
-                        className={classNames(
-                          'flex w-full items-center justify-center space-x-1 rounded border-2 px-4 py-2 text-sm font-medium transition lg:w-auto',
-                          'border-teal-700/50 bg-green-50 text-teal-700 dark:border-teal-700',
-                          major?.name === '' || !atLeastOneCourse
-                            ? 'cursor-not-allowed opacity-50'
-                            : 'hover:bg-teal-700 hover:text-white'
-                        )}
-                        onClick={closeModal}
-                        disabled={major?.name === '' || !atLeastOneCourse}
-                      >
-                        <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                        <span>Confirmar</span>
-                      </button>
-                    </div>
-                  </footer>
-                </Dialog.Panel>
-              </InnerCustomTransition>
+                </div>
+              }
+              <Separator orientation="vertical" className="mx-5" />
+              <PickedCoursesList />
             </div>
+            <DialogFooter className="grid grid-cols-2">
+              <div />
+              <div className="flex items-center justify-between dark:text-white pr-4 pb-4">
+                <Ects />
+                <div className="flex gap-2">
+                  <ClearAllCoursesButton />
+                </div>
+              </div>
+            </DialogFooter>
+          </>
+        ) : (
+          <div className="flex h-64 w-[55rem] flex-col items-center justify-center text-center text-sm dark:text-white">
+            <Desert />
+            <span>Seleciona um curso primeiro.</span>
           </div>
-        </Dialog>
-      </Transition>
-    </>
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }
 
-/* Masks outer background */
-const OuterMask = () => (
-  <Transition.Child
-    as={Fragment}
-    enter="ease-out duration-300"
-    enterFrom="opacity-0"
-    enterTo="opacity-100"
-    leave="ease-in duration-200"
-    leaveFrom="opacity-100"
-    leaveTo="opacity-0"
-  >
-    <div className="fixed inset-0 bg-black/50 dark:bg-black/50" />
-  </Transition.Child>
-)
-
-/* Modal inner content custom transition */
-const InnerCustomTransition = ({ children, ...props }: any) => (
-  <Transition.Child
-    as={Fragment}
-    enter="ease-out duration-300"
-    enterFrom="opacity-0 scale-95"
-    enterTo="opacity-100 scale-100"
-    leave="ease-in duration-200"
-    leaveFrom="opacity-100 scale-100"
-    leaveTo="opacity-0 scale-95"
-    {...props}
-  >
-    {children}
-  </Transition.Child>
-)
-
-export default SelectionModal
+export default CoursePicker

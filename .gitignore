@@ -14,9 +14,11 @@
 # misc
 .DS_Store
 .env
+.env.production
+.vscode/
+
+dist/
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-.github/workflows/github-actions.yaml

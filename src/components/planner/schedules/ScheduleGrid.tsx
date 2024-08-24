@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { maxHour, minHour } from '../../../utils/utils'
+import { maxHour, minHour } from '../../../utils'
 
 type Props = {
   showGrid: boolean

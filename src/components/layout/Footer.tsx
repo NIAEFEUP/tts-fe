@@ -47,8 +47,8 @@ const Footer = () => {
         {/* Direitos */}
         <div className="order-3 flex flex-col items-center justify-center">
           <p className="text-base font-medium text-white dark:text-gray-300 sm:text-center">
-            © 2023{' '}
-            <a href="https://ni.fe.up.pt" className="hover:underline">
+            © {new Date().getFullYear()+' '}
+            <a href="https://niaefeup.pt" className="hover:underline">
               NIAEFEUP
             </a>
             ™. All Rights Reserved.
