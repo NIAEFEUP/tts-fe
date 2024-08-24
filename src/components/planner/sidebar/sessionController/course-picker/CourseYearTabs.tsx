@@ -61,7 +61,7 @@ const CourseYearTabs = () => {
       {coursesByYear.map((yearCourses, idx) => {
         return (
           <TabsContent key={idx} value={`${idx + 1}`}>
-            <ScrollArea className="h-[200px] px-3">
+            <ScrollArea className="h-[200px]">
               <CourseYearCheckboxes courses={yearCourses} />
             </ScrollArea>
           </TabsContent>

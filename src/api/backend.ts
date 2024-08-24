@@ -73,13 +73,12 @@ const createCourseClass = async (course: CourseInfo) => {
 const getCoursesClasses = async (courses: CourseInfo[]): Promise<CourseInfo[]> => {
   const newCourses = [...courses];
 
-  Promise.all(newCourses.map(course => createCourseClass(course))).then((values) => {
+  return Promise.all(newCourses.map(course => createCourseClass(course))).then(() => {
     return newCourses;
   }).catch((e) => {
     console.error(e);
+    return []
   })
-
-  return newCourses;
 }
 
 /**

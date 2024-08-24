@@ -7,6 +7,9 @@ import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
+import { Button } from '../../ui/button'
+import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import { CheckIcon } from 'lucide-react'
 
 type Props = {
   currentOption: CourseOption[]
@@ -32,21 +35,21 @@ const SelectedOptionController = ({
 
   //TODO(thePeras): Fix these functions using states and setInterval
   const startScroll = () => {
-    if(inputIsActive()) return; 
+    if (inputIsActive()) return;
 
     isHovered = true
     input.current.scrollLeft += 5
   }
 
   const stopScroll = () => {
-    if(inputIsActive()) return; 
+    if (inputIsActive()) return;
 
     isHovered = false
     input.current.scrollLeft = 0
   }
 
   const scroll = () => {
-    if(inputIsActive()) return; 
+    if (inputIsActive()) return;
 
     if (isHovered) {
       if (isScrollingBack) {
@@ -66,7 +69,7 @@ const SelectedOptionController = ({
     return multipleOptions.find((elem) => elem.id === id)
   }
 
-  const [optionName , setOptionName] = useState(multipleOptions.find((elem) => elem.id === selectedOption).name ?? '');
+  const [optionName, setOptionName] = useState(multipleOptions.find((elem) => elem.id === selectedOption).name ?? '');
 
   useEffect(() => {
     setOptionName(multipleOptions.find((elem) => elem.id === selectedOption).name)
@@ -74,7 +77,7 @@ const SelectedOptionController = ({
 
   const renameOptionName = (event) => {
     const newName = event.target.value;
-    if(newName.length > 35) return;
+    if (newName.length > 35) return;
     event.target.value = newName
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
@@ -97,7 +100,7 @@ const SelectedOptionController = ({
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between xl:gap-5">
       <div className="order-2 flex flex-grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="aspect-square h-10 w-15 rounded p-1 px-2 text-xl hover:bg-lightish hover:dark:bg-darkish">
+          <PopoverTrigger className="aspect-square h-10 w-15 rounded-md p-1 px-2 text-xl bg-lightish dark:bg-darkish border border-slate-200 dark:border-slate-800">
             <img
               src={getOptionById(selectedOption)?.icon}
               alt={multipleOptions[selectedOption].name}

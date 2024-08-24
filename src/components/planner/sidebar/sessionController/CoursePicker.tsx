@@ -1,26 +1,22 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
-import { CheckIcon } from '@heroicons/react/24/outline'
 import StorageAPI from '../../../../api/storage'
 import CourseContext from '../../../../contexts/CourseContext'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { removeAllCourseOptions } from '../../../../utils'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/button'
-import { DialogHeader, DialogFooter, Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import BackendAPI from '../../../../api/backend'
 import { Separator } from '../../../ui/separator'
 import useCourseUnits from '../../../../hooks/useCourseUnits'
-import { CourseInfo, Major } from '../../../../@types'
+import { Major } from '../../../../@types'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 
 //TODO: absolute imports with @
 
 const CoursePicker = () => {
-  const [open, setOpen] = useState(false)
-  const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo, ucsModalOpen, setUcsModalOpen } = useContext(CourseContext)
 
   const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
   const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
@@ -43,33 +39,32 @@ const CoursePicker = () => {
     StorageAPI.setSelectedMajorStorage(selectedMajor);
   }, [selectedMajor, setCoursesInfo])
 
-  const handleOpenChange = async () => {
+  const handleOpenChange = () => {
     setChoosingNewCourse((prev) => !prev);
-    setOpen(!open)
-    if (open === false) return
+    if (ucsModalOpen === false) return
+    setUcsModalOpen(false)
   }
 
   return (
-    <Dialog open={open} onOpenChange={async () => { await handleOpenChange() }}>
+    <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares">
-          <span className="hidden md:block lg:hidden xl:block">Escolher UCs</span>
+        <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares" onClick={() => setUcsModalOpen(true)}>
+          <span className="hidden md:block lg:hidden xl:block">Unidades Curriculares</span>
           <PencilSquareIcon className="h-5 w-5 text-white" />
         </Button>
       </DialogTrigger>
       <DialogContent className="h-fit min-w-fit">
         <DialogHeader>
-          <DialogTitle>Seleciona as tuas Unidades Curriculares</DialogTitle>
+          <DialogTitle>Seleciona as tuas unidades curriculares</DialogTitle>
           <DialogDescription className="mt-2">
-            Escolhe um curso e unidades curriculares à esquerda. À direita aparecem as unidades curriculares que
-            escolheste.
+            Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
           </DialogDescription>
         </DialogHeader>
         <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
         <Separator />
         {showContent ? (
           <>
-            <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
+            <div className="grid w-[60rem] grid-cols-[1fr_2.5rem_1fr]">
               {!loadingCourseUnits
                 ? <CourseYearTabs />
                 : <div className="flex flex-col space-y-3">
@@ -88,7 +83,7 @@ const CoursePicker = () => {
             </div>
             <DialogFooter className="grid grid-cols-2">
               <div />
-              <div className="flex items-center justify-between pr-4 dark:text-white">
+              <div className="flex items-center justify-between dark:text-white pr-4 pb-4">
                 <Ects />
                 <div className="flex gap-2">
                   <ClearAllCoursesButton />
