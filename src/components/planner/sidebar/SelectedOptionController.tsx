@@ -7,6 +7,9 @@ import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
+import { Button } from '../../ui/button'
+import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import { CheckIcon } from 'lucide-react'
 
 type Props = {
   currentOption: CourseOption[]
