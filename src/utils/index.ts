@@ -88,7 +88,7 @@ const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
-  if (!classInfo) return ' '
+  if (!classInfo) return 'Selecionar Opção...'
 
   const classTitle = classInfo.name
   //const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
@@ -279,24 +279,23 @@ const removeAllCourseOptions = (multipleOptions: MultipleOptions): MultipleOptio
   })
 )
 
-const courseHasClassPicked = (course: CourseInfo, option: Option): CourseOption | null =>  {
+const courseHasClassPicked = (course: CourseInfo, option: Option): CourseOption | null => {
   const candidateOption = option.course_options.filter((courseOption) => courseOption.picked_class_id && (courseOption.course_id === course.course_unit_id));
 
-  if(!candidateOption) return null;
+  if (!candidateOption) return null;
 
   return candidateOption[0];
 }
 
-const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
+const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions): MultipleOptions => {
   //  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
     const newCourseOptions = [];
-    for(const course of courses) {
+    for (const course of courses) {
       const existingOption = courseHasClassPicked(course, option);
-      if(existingOption) {
-        newCourseOptions.push({...existingOption});
-        console.log(`${course.acronym} has picked class`);
+      if (existingOption) {
+        newCourseOptions.push({ ...existingOption });
       } else {
         newCourseOptions.push(createDefaultCourseOption(course));
       }

@@ -28,61 +28,61 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
   const defaultValue = [
     {
       id: 0,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0031-fe0f-20e3.png',
       name: 'Horário 1',
       course_options: [],
     },
     {
       id: 1,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f929.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0032-fe0f-20e3.png',
       name: 'Horário 2',
       course_options: [],
     },
     {
       id: 2,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f973.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0033-fe0f-20e3.png',
       name: 'Horário 3',
       course_options: [],
     },
     {
       id: 3,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f9d0.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0034-fe0f-20e3.png',
       name: 'Horário 4',
       course_options: [],
     },
     {
       id: 4,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f525.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0035-fe0f-20e3.png',
       name: 'Horário 5',
       course_options: [],
     },
     {
       id: 5,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f483.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0036-fe0f-20e3.png',
       name: 'Horário 6',
       course_options: [],
     },
     {
       id: 6,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f976.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0037-fe0f-20e3.png',
       name: 'Horário 7',
       course_options: [],
     },
     {
       id: 7,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f47b.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0038-fe0f-20e3.png',
       name: 'Horário 8',
       course_options: [],
     },
     {
       id: 8,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f425.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/0039-fe0f-20e3.png',
       name: 'Horário 9',
       course_options: [],
     },
     {
       id: 9,
-      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1fae1.png',
+      icon: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f51f.png',
       name: 'Horário 10',
       course_options: [],
     },
@@ -110,7 +110,7 @@ const setMultipleOptionsStorage = (multipleOptions: MultipleOptions) => {
 
 const getSelectedOptionStorage = () => {
   const key = 'niaefeup-tts.selected-option';
-  
+
   let selectedOption = parseInt(localStorage.getItem(key));
   if (isNaN(selectedOption)) {
     selectedOption = 0;
