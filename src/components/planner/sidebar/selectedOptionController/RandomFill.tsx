@@ -153,9 +153,8 @@ const RandomFill = ({ className }: Props) => {
   }
 
   const applyRandomSchedule = () => {
-    // Add more 2500 permutations
     const newPermutations = [...permutations]
-    const STEP = 1000;
+    const STEP = 1000; //TODO(thePeras): Not a good number for a big number of pickedCourses
     for (let i = 0; i < STEP; i++) {
       const permutation = generator.next().value
       if (!permutation) break
