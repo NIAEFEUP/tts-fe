@@ -9,45 +9,9 @@ import { Button } from '../../ui/button'
 
 
 const CoursesController = () => {
-  const { pickedCourses, setPickedCourses,setUcsModalOpen } = useContext(CourseContext);
+  const { pickedCourses,setUcsModalOpen } = useContext(CourseContext);
 
   const noCoursesPicked = pickedCourses.length === 0;
-  const { mismatchedMap, error } = useVerifyCourseUnitHashes(pickedCourses);
-
-  const updateCourses = async () => {
-    if (mismatchedMap.size > 0) {
-      const coursesToUpdate = pickedCourses.filter((course) =>
-        mismatchedMap.has(course.id)
-      );
-      const updatedCoursesWithClasses = await Promise.all(
-        coursesToUpdate.map(async (course) => {
-          const updatedClasses = await BackendAPI.getCourseClass(course);
-          return {
-            ...course,
-            hash: mismatchedMap.get(course.id) as string,
-            classes: updatedClasses,
-          };
-        })
-      );
-      const finalCourses = pickedCourses.map((course) =>
-        mismatchedMap.has(course.id)
-          ? updatedCoursesWithClasses.find(
-              (updated) => updated.id === course.id
-            ) || course
-          : course
-      );
-      StorageAPI.setPickedCoursesStorage(finalCourses);
-      setPickedCourses(finalCourses);
-      mismatchedMap.clear();
-    }
-  };
-
-  useEffect(() => {
-    if (!noCoursesPicked) {
-      updateCourses();
-    }
-  }, [mismatchedMap, pickedCourses, setPickedCourses]);
-
   return (
     <div className={`flex ${noCoursesPicked ? 'h-max justify-center' : ''} w-full flex-col gap-4 px-0 py-2`}>
       {noCoursesPicked ? (

@@ -8,6 +8,7 @@ import { CourseInfo } from '../@types';
  * @returns Map of course unit IDs with correct hashes for mismatched ones
  */
 const fetchAndVerifyCourseUnitHashes = async (courseUnits: CourseInfo[]) => {
+  console.log('Fetching and verifying course unit hashes...');
   if (!courseUnits || courseUnits.length === 0) {
     return new Map<number, string>();
   }
