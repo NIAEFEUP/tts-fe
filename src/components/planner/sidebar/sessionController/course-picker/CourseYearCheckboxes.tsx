@@ -44,7 +44,7 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
 
   return (
     <div className="flex flex-col justify-start gap-2 p-2">
-      {courses.map((course: CourseInfo, courseIdx: number) => (
+      {courses.sort((a, b) => b.ects - a.ects).map((course: CourseInfo, courseIdx: number) => (
         <div key={`course-checkbox-${course.course_unit_year}-${course.id}`} className="flex items-center space-x-2">
           <Checkbox
             id={`checkbox-${courseIdx}`}

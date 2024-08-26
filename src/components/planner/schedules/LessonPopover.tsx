@@ -12,11 +12,11 @@ type Props = {
   isOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const LessonPopover = ({ 
-    courseInfo,
-    classInfo,
-    slotInfo,
-    isOpenHook 
+const LessonPopover = ({
+  courseInfo,
+  classInfo,
+  slotInfo,
+  isOpenHook
 }: Props) => {
   const [isOpen, setIsOpen] = isOpenHook
 
@@ -68,6 +68,7 @@ const LessonPopover = ({
                 </div>
 
                 <footer className="flex justify-end">
+                  {/* TODO: Change to shadcn button */}
                   <button
                     type="button"
                     onClick={closeModal}

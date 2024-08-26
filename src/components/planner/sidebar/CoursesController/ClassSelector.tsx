@@ -210,7 +210,7 @@ const ClassSelector = ({ course }: Props) => {
               size="sm"
               className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
             >
-              <span>{getClassDisplayText(course, selectedClassId)} </span>
+              <span className={`${selectedClassId === null ? "opacity-50" : ""}`}>{getClassDisplayText(course, selectedClassId)}</span>
               {!courseOption?.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
             </Button>
           </DropdownMenuTrigger>

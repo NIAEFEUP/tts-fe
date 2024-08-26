@@ -46,7 +46,7 @@ const Schedule = () => {
   }, [multipleOptions, pickedCourses, selectedOption])
 
   // TODO: Improvements by functional programming
-  const slotTypes: String[] = useMemo(() => {
+  const slotTypes: string[] = useMemo(() => {
     let aux = new Set()
 
     for (const currentClass of classes) {
@@ -61,11 +61,12 @@ const Schedule = () => {
   }, [classes])
 
   // Bottom Bar Configurations
-  const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<String[]>([])
+  const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<string[]>([])
   const [showGrid, setShowGrid] = useShowGrid()
 
   return (
     <>
+      {/*Schedule desktop*/}
       <div ref={scheduleRef} className="schedule-area gap-2">
         {/* Days Column Names */}
         <div className="schedule-top">
@@ -108,6 +109,7 @@ const Schedule = () => {
           </div>
         </div>
 
+
         {/* Bottom bar */}
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
@@ -119,6 +121,27 @@ const Schedule = () => {
           </div>
         </div>
       </div>
+
+      {/*Schedule mobile*/}
+      <div className="flex h-full w-full flex-col items-center justify-start space-y-2 lg:hidden">
+        <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${""}`}>
+          <div className="h-full w-1 rounded bg-primary" />
+          <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
+            {classes
+              .filter((c) => c.classInfo !== undefined)
+              .map((c) => (
+                <ClassBox
+                  key={`course[${c.courseInfo.id}]-class[${c.classInfo.id}]`}
+                  courseInfo={c.courseInfo}
+                  classInfo={c.classInfo ?? null}
+                  classes={classes}
+                  hiddenLessonsTypes={hiddenLessonsTypes}
+                />
+              ))}
+          </div>
+        </div>
+      </div>
+
     </>
   )
 }

@@ -46,23 +46,6 @@ const SelectedOptionController = ({
     input.current.scrollLeft = 0
   }
 
-  const scroll = () => {
-    if (inputIsActive()) return;
-
-    if (isHovered) {
-      if (isScrollingBack) {
-        if (input.current.scrollLeft === 0) isScrollingBack = false
-        else return
-      }
-      if (input.current.scrollLeft >= input.current.scrollWidth - input.current.clientWidth) {
-        setScrollDirection(-1)
-        input.current.scrollLeft = 0
-      } else {
-        input.current.scrollLeft += 5
-      }
-    }
-  }
-
   const getOptionById = (id: number) => {
     return multipleOptions.find((elem) => elem.id === id)
   }
@@ -98,7 +81,7 @@ const SelectedOptionController = ({
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between xl:gap-5">
       <div className="order-2 flex flex-grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="aspect-square h-10 w-15 rounded p-1 px-2 text-xl hover:bg-lightish hover:dark:bg-darkish">
+          <PopoverTrigger className="aspect-square h-10 w-15 rounded-md p-1 px-2 text-xl bg-lightish dark:bg-darkish border border-slate-200 dark:border-slate-800">
             <img
               src={getOptionById(selectedOption)?.icon}
               alt={multipleOptions[selectedOption].name}
@@ -143,7 +126,7 @@ const SelectedOptionController = ({
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
         <PasteOption />
-        {<RandomFill className="sm:py-0 xl:p-1" />}
+        <RandomFill className="sm:py-0 xl:p-1" />
       </div>
     </div>
   )

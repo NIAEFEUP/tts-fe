@@ -88,7 +88,7 @@ const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
-  if (!classInfo) return ' '
+  if (!classInfo) return 'Selecionar Opção...'
 
   const classTitle = classInfo.name
   //const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
@@ -174,7 +174,7 @@ const getClassTypeClassName = (type: string) => {
   }
 }
 
-const getClassType = (type: String) => {
+const getClassType = (type: string) => {
   switch (type) {
     case 'T': return 'Teórica';
     case 'TP': return 'Teórico-Prática';
@@ -296,7 +296,6 @@ const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOp
       const existingOption = courseHasClassPicked(course, option);
       if (existingOption) {
         newCourseOptions.push({ ...existingOption });
-        console.log(`${course.acronym} has picked class`);
       } else {
         newCourseOptions.push(createDefaultCourseOption(course));
       }

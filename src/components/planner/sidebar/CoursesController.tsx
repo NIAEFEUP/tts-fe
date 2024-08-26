@@ -2,16 +2,25 @@ import { useContext } from 'react'
 import ClassSelector from './CoursesController/ClassSelector'
 import CourseContext from '../../../contexts/CourseContext'
 import { NoMajorSelectedSVG } from '../../svgs'
+import { Button } from '../../ui/button'
 
 const CoursesController = () => {
-  const { pickedCourses } = useContext(CourseContext)
+  const { pickedCourses, setUcsModalOpen } = useContext(CourseContext)
 
   const noCoursesPicked = pickedCourses.length === 0
 
   return (
     <div className={`flex ${noCoursesPicked ? 'h-max justify-center' : ''} w-full flex-col gap-4 px-0 py-2`}>
       {noCoursesPicked ? (
-        <NoMajorSelectedSVG className="my-20 h-40 w-full" />
+        <div className="my-20 w-full flex flex-col items-center gap-3 justify-center mt-5">
+          <NoMajorSelectedSVG className="h-32" />
+          <div className="text-center text-md">
+            Ainda sem nenhuma unidade curricular selecionada
+          </div>
+          <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Selecionar Unidades Curriculares" onClick={() => setUcsModalOpen(true)}>
+            <span>Selecionar</span>
+          </Button>
+        </div>
       ) : (
         pickedCourses
           .sort((course1, course2) => course1.id - course2.id) // Same order as Sigarra

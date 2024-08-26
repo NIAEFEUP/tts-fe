@@ -1,11 +1,10 @@
 import { useContext } from 'react'
-import { XMarkIcon } from '@heroicons/react/24/solid'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import { CourseInfo } from '../../../../../@types'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { removeCourseOption } from '../../../../../utils'
 import { Button } from '../../../../ui/button'
-import { Separator } from '../../../../ui/separator'
 
 type Props = {
   course: CourseInfo
@@ -21,17 +20,12 @@ const PickedCourse = ({ course }: Props) => {
   }
 
   return (
-    <div className="flex items-stretch justify-between gap-2">
-      <div className="my-2 flex h-full grow items-center justify-between rounded bg-lightish p-2">
-        <span className="">{course.ects}</span>
-        <Separator orientation="vertical" className="mx-2" />
-        <div className="grow text-lg font-bold">
-          {course.name} <span className="w-full text-sm font-light">({course.acronym})</span>
-        </div>
+    <div className="flex h-full gap-2 grow items-center rounded-md bg-lightish p-2 px-3 justify-between">
+      <span className="font-light align-top self-start text-sm w-5 text-center">{course.ects}</span>
+      <div className="grow text-sm font-medium leading-tight max-w-5/6">
+        {course.name} <span className="w-full text-sm font-light">({course.acronym})</span>
       </div>
-      <Button variant="icon" onClick={removeCourse} className="my-2 h-auto bg-lightish">
-        <XMarkIcon className="h-5 w-5 text-primary" />
-      </Button>
+      <XMarkIcon className="w-5 hover:cursor-pointer hover:opacity-70 self-center justify-end" onClick={removeCourse} />
     </div>
   )
 }

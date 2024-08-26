@@ -1,11 +1,9 @@
-import { EyeSlashIcon } from '@heroicons/react/24/outline'
-import { EyeIcon } from 'lucide-react'
 import { getClassType } from '../../utils'
 
 type Props = {
-  types: String[],
-  hiddenLessonsTypes: String[],
-  setHiddenLessonsTypes: (hiddenLessonsTypes: String[]) => void
+  types: string[],
+  hiddenLessonsTypes: string[],
+  setHiddenLessonsTypes: (hiddenLessonsTypes: string[]) => void
 }
 
 const ScheduleTypes = ({ types, hiddenLessonsTypes, setHiddenLessonsTypes }: Props) => {
