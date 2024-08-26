@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
 
     steps:
     - name: Upload to NIployments register
