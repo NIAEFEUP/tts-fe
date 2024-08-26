@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-import  RefreshWarning from './RefreshWarning'
 
 import {
   Bars3Icon,
@@ -40,7 +39,6 @@ type Props = {
 const Header = ({ siteTitle, location }: Props) => {
   const { pickedCourses,} =useContext(CourseContext);
   const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
-console.log("Inside Header: ", mismatchedMap);
 
   return (
     <Disclosure
@@ -90,7 +88,7 @@ console.log("Inside Header: ", mismatchedMap);
                 </div>
 
                 <div className="hidden self-center md:inline-flex">
-                    <RefreshWarning />
+
 
                   <DarkModeSwitch />
                 </div>

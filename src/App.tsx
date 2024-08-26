@@ -1,8 +1,7 @@
-import { Toaster } from 'react-hot-toast'
+import { Toaster } from './components/ui/toaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
-import {WarningProvider} from './contexts/WarningContext'
 import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pages'
 import { getPath, config, plausible } from './utils'
 import Layout from './components/layout'
@@ -32,31 +31,29 @@ const App = () => {
   return (
     <BrowserRouter>
       <CombinedProvider>
-        <WarningProvider>
-          <Routes>
-            {pages.map((page, pageIdx) => (
-              <Route
-                path={page.path}
-                key={`page-${pageIdx}`}
-                element={
-                  <Layout location={page.location} title={page.location} liquid={page.liquid}>
-                    <div>
-                      <page.element />
-                      <Toaster />
-                    </div>
-                  </Layout>
-                }
-              />
-            ))}
-            {redirects.map((redirect, redirectIdx) => (
-              <Route
-                path={redirect.from}
-                key={`redirect-${redirectIdx}`}
-                element={<Navigate replace to={redirect.to} />}
-              />
-            ))}
-          </Routes>
-        </WarningProvider>
+        <Routes>
+          {pages.map((page, pageIdx) => (
+            <Route
+              path={page.path}
+              key={`page-${pageIdx}`}
+              element={
+                <Layout location={page.location} title={page.location} liquid={page.liquid}>
+                  <div>
+                    <page.element />
+                    <Toaster />
+                  </div>
+                </Layout>
+              }
+            />
+          ))}
+          {redirects.map((redirect, redirectIdx) => (
+            <Route
+              path={redirect.from}
+              key={`redirect-${redirectIdx}`}
+              element={<Navigate replace to={redirect.to} />}
+            />
+          ))}
+        </Routes>
       </CombinedProvider>
     </BrowserRouter>
   )

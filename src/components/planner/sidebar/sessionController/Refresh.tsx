@@ -5,16 +5,19 @@ import StorageAPI from '../../../../api/storage';
 import { Button } from '../../../ui/button';
 import CourseContext from '../../../../contexts/CourseContext';
 import useVerifyCourseUnitHashes from '../../../../hooks/useVerifyCourseUnitHashes';
-import { useWarning } from '../../../../contexts/WarningContext';
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '../../../ui/tooltip';
+import { useToast } from '../../../ui/use-toast';
 
 const Refresh = () => {
   const { pickedCourses, setPickedCourses } = useContext(CourseContext);
   const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsWarningVisible } = useWarning();
-  if (mismatchedMap.size !==0) {
-    setIsWarningVisible(true);
-  }
+  const { toast } = useToast();
 
   const updateCourses = async () => {
     setIsLoading(true);
@@ -42,22 +45,43 @@ const Refresh = () => {
       StorageAPI.setPickedCoursesStorage(finalCourses);
       setPickedCourses(finalCourses);
       mismatchedMap.clear();
+
+      toast({
+        title: 'Informação atualizada',
+        description: 'A informação das UCs foi atualizada com sucesso!',
+        position: 'top-right',
+      });
     }
     setIsLoading(false);
-    setIsWarningVisible(false);
   };
 
+  if (mismatchedMap.size === 0) {
+    return null;
+  }
+
   return (
-    <Button
-      variant="icon"
-      className="bg-emerald-800"
-      onClick={updateCourses}
-      disabled={isLoading || mismatchedMap.size === 0}
-    >
-      <ArrowPathIcon
-        className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`}
-      />
-    </Button>
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="relative group">
+            <Button
+              variant="icon"
+              className="bg-emerald-800 relative"
+              onClick={updateCourses}
+              disabled={isLoading}
+            >
+              <span className="absolute -top-1 -right-1 block h-3 w-3 rounded-full bg-red-600 border border-white"></span>
+              <ArrowPathIcon
+                className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`}
+              />
+            </Button>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          Existem informações desatualizadas, clica aqui para atualizares.
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
