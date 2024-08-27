@@ -221,7 +221,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
 const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
   let majorCourses: CourseInfo[][] = []
   let currYear = 0
-  for (let i = 0; i < yearCourses.length; i++) {
+  for (let i = 0; i < yearCourses?.length; i++) {
     if (yearCourses[i].course_unit_year !== currYear) {
       currYear += 1
       majorCourses.push([yearCourses[i]])

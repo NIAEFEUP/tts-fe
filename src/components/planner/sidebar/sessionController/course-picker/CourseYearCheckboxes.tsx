@@ -12,7 +12,7 @@ type Props = {
 }
 
 export const CourseYearCheckboxes = ({ courses }: Props) => {
-  const { pickedCourses, setPickedCourses, setCheckboxedCourses, checkboxedCourses } = useContext(CourseContext)
+  const { setCheckboxedCourses, checkboxedCourses } = useContext(CourseContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 

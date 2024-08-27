@@ -46,7 +46,7 @@ const Schedule = () => {
   }, [multipleOptions, pickedCourses, selectedOption])
 
   // TODO: Improvements by functional programming
-  const slotTypes = useMemo(() => {
+  const slotTypes: string[] = useMemo(() => {
     let aux = new Set()
 
     for (const currentClass of classes) {
@@ -60,6 +60,8 @@ const Schedule = () => {
     return Array.from(aux) as string[]
   }, [classes])
 
+  // Bottom Bar Configurations
+  const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<string[]>([])
   const [showGrid, setShowGrid] = useShowGrid()
 
   return (
@@ -99,6 +101,7 @@ const Schedule = () => {
                       courseInfo={c.courseInfo}
                       classInfo={c.classInfo ?? null}
                       classes={classes}
+                      hiddenLessonsTypes={hiddenLessonsTypes}
                     />
                   ))}
               </div>
@@ -110,7 +113,7 @@ const Schedule = () => {
         {/* Bottom bar */}
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
-            <ScheduleTypes types={slotTypes} />
+            <ScheduleTypes types={slotTypes} hiddenLessonsTypes={hiddenLessonsTypes} setHiddenLessonsTypes={setHiddenLessonsTypes} />
           </div>
           <div className="flex gap-2">
             <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
@@ -132,6 +135,7 @@ const Schedule = () => {
                   courseInfo={c.courseInfo}
                   classInfo={c.classInfo ?? null}
                   classes={classes}
+                  hiddenLessonsTypes={hiddenLessonsTypes}
                 />
               ))}
           </div>

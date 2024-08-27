@@ -1,4 +1,4 @@
-import { Toaster } from 'react-hot-toast'
+import { Toaster } from './components/ui/toaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'

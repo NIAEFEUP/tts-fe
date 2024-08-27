@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { ClassInfo } from '../../../../@types/index'
 import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
-import { ExclamationTriangleIcon, EyeIcon } from '@heroicons/react/20/solid'
+import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import { schedulesConflict } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import CourseContext from '../../../../contexts/CourseContext'
@@ -81,7 +81,6 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
         </div>
       </div>
       <ExclamationTriangleIcon className={`h-5 w-5 ${conflict ? 'block' : 'hidden'} ${conflict == 2 ? 'text-red-600' : 'text-amber-500'}`} aria-hidden="true" />
-      <EyeIcon className={`h-5 w-5 ${preview === classInfo.id ? 'block' : 'hidden'}`} aria-hidden="true" />
     </DropdownMenuCheckboxItem>
   )
 }

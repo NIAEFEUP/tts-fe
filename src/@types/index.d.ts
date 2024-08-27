@@ -88,11 +88,7 @@ export type ConflictInfo = {
 
 export type Conflicts = Map<number, ConflictInfo>
 
-export type Lesson = {
-  course: Course
-  schedule: CourseSchedule
-}
-
 export type ImportedCourses = {
   [key: string]: string
 }
+
