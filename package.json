@@ -57,10 +57,11 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "tsc && npm run generate:protobuf && vite build",
     "preview": "vite preview",
     "check": "npx prettier --check .",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "generate:protobuf": "protoc -I=./src/proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/proto/generated --ts_out=service=grpc-web:./src/proto/generated ./src/proto/*.proto"
   },
   "eslintConfig": {
     "extends": [
