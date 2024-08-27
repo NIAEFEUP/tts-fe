@@ -88,28 +88,7 @@ export type ConflictInfo = {
 
 export type Conflicts = Map<number, ConflictInfo>
 
-export type Lesson = {
-  course: Course
-  schedule: CourseSchedule
-}
-
 export type ImportedCourses = {
   [key: string]: string
 }
 
-export type CourseSchedule = {
-  day: number
-  duration: string
-  start_time: string
-  location: string
-  lesson_type: string
-  is_composed: boolean
-  course_unit_id: number
-  last_updated: string
-  class_name: string // e.g. 1MIEIC01
-  composed_class_name: string // e.g. COMP752
-  // professor_sigarra_id: string
-  // professor_acronyms: Array<string>                           // eliminar
-  professors_link: string
-  professor_information: Array<ProfessorInformation> // new
-}
