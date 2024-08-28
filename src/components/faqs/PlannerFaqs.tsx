@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { Transition, Disclosure } from '@headlessui/react'
 import { ChevronUpIcon } from '@heroicons/react/24/outline'
+import { AnalyticsTracker } from '../../utils/AnalyticsTracker'
 
 const PlannerFaqs = () => {
   const data = [
@@ -158,7 +159,14 @@ const PlannerFaqs = () => {
             as="div"
             defaultOpen={faqIdx === 0}
             key={`planner-faq-${faqIdx}`}
-            className="rounded-2xl bg-white p-3 dark:bg-dark"
+            className={`rounded-2xl bg-white p-3 dark:bg-dark faq-disclosure-${faqIdx}`}
+            onClick={() => {
+              const disclosure = document.querySelector(`.faq-disclosure-${faqIdx}`);
+              const isOpen = disclosure?.getAttribute('data-headlessui-state') !== 'open';
+              if (isOpen && faq.question.type === 'span') {
+                AnalyticsTracker.trackFaq(faq.question.props.children)
+              }
+            }}
           >
             {({ open }) => (
               <>

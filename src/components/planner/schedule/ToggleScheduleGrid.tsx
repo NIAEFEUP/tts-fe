@@ -1,6 +1,7 @@
 import { Button } from '../../ui/button'
 import { ViewColumnsIcon } from '@heroicons/react/24/outline'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
+import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 
 const ToggleScheduleGrid = ({ showGridHook }) => {
   const [showGrid, setShowGrid] = showGridHook
@@ -12,7 +13,10 @@ const ToggleScheduleGrid = ({ showGridHook }) => {
           <Button
             variant="icon"
             className="bg-lightish text-black dark:bg-darkish dark:text-white"
-            onClick={() => setShowGrid(!showGrid)}
+            onClick={() => {
+              setShowGrid(!showGrid)
+              AnalyticsTracker.trackFeature(Feature.GRID)
+            }}
           >
             <ViewColumnsIcon className="h-5 w-5" />
           </Button>

@@ -8,6 +8,7 @@ import { CourseOption } from '../../../@types'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import RandomFill from './selectedOptionController/RandomFill'
+import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 
 type Props = {
   currentOption: CourseOption[]
@@ -66,15 +67,18 @@ const SelectedOptionController = ({
       )
       return updatedMultipleOptions;
     })
+    AnalyticsTracker.trackFeature(Feature.OPTION_RENAME);
   }
 
   const changeOptionIcon = (newIcon) => {
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
-        item.id === selectedOption ? { ...item, icon: newIcon } : item
+        item.id === selectedOption ? { ...item, icon: newIcon.imageUrl } : item
       )
       return updatedMultipleOptions;
     })
+    AnalyticsTracker.trackFeature(Feature.OPTION_EMOJI);
+    AnalyticsTracker.emoji(newIcon.emoji);
   }
 
   return (
@@ -96,7 +100,7 @@ const SelectedOptionController = ({
               suggestedEmojisMode={SuggestionMode.RECENT}
               emojiStyle={EmojiStyle.APPLE}
               onEmojiClick={(emojiData, e) => {
-                changeOptionIcon(emojiData.imageUrl)
+                changeOptionIcon(emojiData)
                 setEmojiPickerOpen(false)
               }}
             />

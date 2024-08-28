@@ -6,6 +6,7 @@ import MajorContext from '../../../../../contexts/MajorContext'
 import { cn, plausible } from '../../../../../utils'
 import { Button } from '../../../../ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/popover'
+import { AnalyticsTracker } from '../../../../../utils/AnalyticsTracker'
 
 interface Props {
   selectedMajor: Major | null
@@ -77,9 +78,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
                     setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
                     setOpen(false)
 
-                    const { trackEvent } = plausible
-                    trackEvent('Major Selected', { props: { major: currentMajor.name } })
-                    trackEvent('Faculty', { props: { faculty: currentMajor.faculty_id.toUpperCase() } })
+                    AnalyticsTracker.majorSelected(currentMajor)
                   }}
                 >
                   {`${major.name} (${major.acronym}) - ${major.faculty_id.toUpperCase()}`}

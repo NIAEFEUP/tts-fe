@@ -8,6 +8,7 @@ import { Checkbox } from '../../../ui/checkbox'
 import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
 type Props = {
   className?: string
@@ -165,6 +166,8 @@ const RandomFill = ({ className }: Props) => {
     // Choose a random permutation
     const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
     applySchedule(newPermutations[randomNumber])
+
+    AnalyticsTracker.trackFeature(Feature.RANDOM_FILL);
   }
 
   const applySchedule = (classesCombinations: ClassInfo[]) => {
