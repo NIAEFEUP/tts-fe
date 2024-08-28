@@ -79,7 +79,7 @@ export type CourseOption = {
 export type ClassDescriptor = {
   classInfo: ClassInfo
   courseInfo: CourseInfo
-  slotInfo?: SlotInfo
+  slotInfo?: SlotInfo // used for conflict calculation
 }
 
 export type ConflictInfo = {
