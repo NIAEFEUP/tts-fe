@@ -45,13 +45,15 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
           aria-expanded={open}
           className="w-full justify-between dark:bg-darker dark:text-slate-50"
         >
-          {selectedMajor ? selectedMajor.name : 'Seleciona um curso...'}
+          <p className="truncate">
+            {selectedMajor ? selectedMajor.name : 'Seleciona um curso...'}
+          </p>
           <ChevronUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent style={{ width: triggerWidth }} className="p-0">
         <Command
-          className="dark:bg-darker"
+          className="dark:bg-darker w-full"
           filter={(value, search) => {
             if (value === 'remove') return 1
             const major = majors.find((major) => major.id === parseInt(value))

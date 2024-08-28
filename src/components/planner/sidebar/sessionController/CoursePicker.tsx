@@ -53,8 +53,8 @@ const CoursePicker = () => {
           <PencilSquareIcon className="h-5 w-5 text-white" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-fit min-w-fit">
-        <DialogHeader>
+      <DialogContent className="flex flex-col h-fit w-screen lg:min-w-fit">
+        <DialogHeader className="mx-4">
           <DialogTitle>Seleciona as tuas unidades curriculares</DialogTitle>
           <DialogDescription className="mt-2">
             Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
@@ -64,26 +64,29 @@ const CoursePicker = () => {
         <Separator />
         {showContent ? (
           <>
-            <div className="grid w-[60rem] grid-cols-[1fr_2.5rem_1fr]">
-              {!loadingCourseUnits
-                ? <CourseYearTabs />
-                : <div className="flex flex-col space-y-3">
-                  <Skeleton className="h-8 rounded-xl" />
-                  <div className="space-y-4">
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
+            <div className="flex flex-col lg:flex-row flex-grow w-full lg:w-[60rem]">
+              <div className="w-full lg:w-1/2">
+                {!loadingCourseUnits
+                  ? <CourseYearTabs />
+                  : <div className="flex flex-col space-y-3">
+                    <Skeleton className="h-8 rounded-xl" />
+                    <div className="space-y-4">
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                    </div>
                   </div>
-                </div>
-              }
-              <Separator orientation="vertical" className="mx-5" />
-              <PickedCoursesList />
+                }
+              </div>
+              <div className="flex flex-row w-full lg:w-1/2 mt-4">
+                <Separator orientation="vertical" className="mx-5 hidden lg:block" />
+                <PickedCoursesList />
+              </div>
             </div>
-            <DialogFooter className="grid grid-cols-2">
-              <div />
-              <div className="flex items-center justify-between dark:text-white pr-4 pb-4">
+            <DialogFooter className="flex flex-row justify-center">
+              <div className="flex flex-row items-center justify-between dark:text-white pr-4 pb-4">
                 <Ects />
                 <div className="flex gap-2">
                   <ClearAllCoursesButton />
@@ -92,13 +95,13 @@ const CoursePicker = () => {
             </DialogFooter>
           </>
         ) : (
-          <div className="flex h-64 w-[55rem] flex-col items-center justify-center text-center text-sm dark:text-white">
-            <Desert />
-            <span>Seleciona um curso primeiro.</span>
+          <div className="flex flex-col items-center flex-grow w-full lg:w-[60rem]">
+            <Desert className="h-64 w-full" />
+            <p>Seleciona um curso primeiro.</p>
           </div>
         )}
       </DialogContent>
-    </Dialog>
+    </Dialog >
   )
 }
 

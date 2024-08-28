@@ -138,6 +138,7 @@ const Schedule = () => {
                   hiddenLessonsTypes={hiddenLessonsTypes}
                 />
               ))}
+            {classes.length === 0 && <p>Ainda não foram selecionadas turmas!</p>}
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ const Ects = () => {
   const warning = totalEcts > 42 ? 2 : totalEcts > 36 ? 1 : 0
 
   return (
-    <div className="mx-2 flex gap-1 items-center">
+    <div className="mx-2 flex flex-row gap-1 items-center">
       <div className="text-sm">Total ECTS:</div>
       <div className="font-semibold text-sm">{totalEcts}</div>
       {warning ? (
