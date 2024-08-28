@@ -203,7 +203,12 @@ const ClassSelector = ({ course }: Props) => {
       </p>
       <div className="flex items-center">
         {/* Dropdown Menu */}
-        <DropdownMenu onOpenChange={setIsDropdownOpen}>
+        <DropdownMenu onOpenChange={(open: boolean) => {
+          setIsDropdownOpen(open);
+          if (!open) {
+            removePreview();
+          }
+        }}>
           <DropdownMenuTrigger asChild disabled={courseOption?.locked} ref={classSelectorTriggerRef}>
             <Button
               variant="outline"
