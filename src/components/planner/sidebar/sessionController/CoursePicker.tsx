@@ -53,7 +53,7 @@ const CoursePicker = () => {
           <PencilSquareIcon className="h-5 w-5 text-white" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex flex-col h-fit w-screen lg:min-w-fit">
+      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-scroll">
         <DialogHeader className="mx-4">
           <DialogTitle>Seleciona as tuas unidades curriculares</DialogTitle>
           <DialogDescription className="mt-2">
@@ -88,7 +88,7 @@ const CoursePicker = () => {
             <DialogFooter className="flex flex-row justify-center">
               <div className="flex flex-row items-center justify-between dark:text-white pr-4 pb-4">
                 <Ects />
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-4">
                   <ClearAllCoursesButton />
                 </div>
               </div>
