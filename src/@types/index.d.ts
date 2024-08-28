@@ -27,6 +27,7 @@ export type CourseInfo = {
   acronym: string,
   name: string,
   url: string,
+  hash: string,
   classes?: Array<ClassInfo>
 }
 

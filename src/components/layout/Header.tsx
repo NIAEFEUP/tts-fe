@@ -11,6 +11,9 @@ import {
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
+import useVerifyCourseUnitHashes from '../../hooks/useVerifyCourseUnitHashes'
+import CourseContext from '../../contexts/CourseContext'
+import { useContext, useEffect } from 'react'
 
 const navigation = [
   {
@@ -34,6 +37,9 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
+  const { pickedCourses,} =useContext(CourseContext);
+  const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
+
   return (
     <Disclosure
       as="nav"
@@ -82,6 +88,8 @@ const Header = ({ siteTitle, location }: Props) => {
                 </div>
 
                 <div className="hidden self-center md:inline-flex">
+
+
                   <DarkModeSwitch />
                 </div>
               </div>
@@ -125,7 +133,9 @@ const Hamburger = ({ open }: HamburgerProps) => (
     </Link>
 
     <div className="flex items-center space-x-1">
+
       <DarkModeSwitch />
+
       <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
         <span className="sr-only">Open nav menu</span>
         {open ? (
