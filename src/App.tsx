@@ -3,22 +3,24 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
 import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pages'
-import { getPath, config, plausible } from './utils'
+import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
+
+const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
 
 // Configures the path for pages.
 const pages = [
-  { path: getPath(config.paths.about), location: 'Sobre', element: AboutPage, liquid: true },
-  { path: getPath(config.paths.planner), location: 'Horários', element: TimeTableSchedulerPage, liquid: true },
-  { path: getPath(config.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
-  { path: getPath(config.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
+  { path: getPath(configToUse.paths.about), location: 'Sobre', element: AboutPage, liquid: true },
+  { path: getPath(configToUse.paths.planner), location: 'Horários', element: TimeTableSchedulerPage, liquid: true },
+  { path: getPath(configToUse.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
+  { path: getPath(configToUse.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
 ]
 
 const redirects = [
-  { from: "/", to: getPath(config.paths.planner) },
-  { from: config.pathPrefix, to: getPath(config.paths.planner) },
-  { from: config.pathPrefix.slice(0, -1), to: getPath(config.paths.planner) },
-  { from: getPath(config.paths.home), to: getPath(config.paths.about) },
+  { from: "/", to: getPath(configToUse.paths.planner) },
+  { from: configToUse.pathPrefix, to: getPath(configToUse.paths.planner) },
+  { from: configToUse.pathPrefix.slice(0, -1), to: getPath(configToUse.paths.planner) },
+  { from: getPath(configToUse.paths.home), to: getPath(configToUse.paths.about) },
 ]
 
 const App = () => {
