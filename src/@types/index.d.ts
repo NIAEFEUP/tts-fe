@@ -27,6 +27,7 @@ export type CourseInfo = {
   acronym: string,
   name: string,
   url: string,
+  hash: string,
   classes?: Array<ClassInfo>
 }
 
@@ -78,7 +79,7 @@ export type CourseOption = {
 export type ClassDescriptor = {
   classInfo: ClassInfo
   courseInfo: CourseInfo
-  slotInfo?: SlotInfo
+  slotInfo?: SlotInfo // used for conflict calculation
 }
 
 export type ConflictInfo = {
@@ -88,11 +89,7 @@ export type ConflictInfo = {
 
 export type Conflicts = Map<number, ConflictInfo>
 
-export type Lesson = {
-  course: Course
-  schedule: CourseSchedule
-}
-
 export type ImportedCourses = {
   [key: string]: string
 }
+

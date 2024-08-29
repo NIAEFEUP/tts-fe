@@ -27,6 +27,7 @@ const CopyOption = ({ currentOption, className }: Props) => {
   //TODO (thePeras): Add link here
   const optionToString = (selectedOption: CourseOption[]) => {
     const copyOption = selectedOption.map((element) => {
+      if (!element.picked_class_id) return '';
       return element.course_id + '#' + element.picked_class_id;
     }).join(';');
 

@@ -25,7 +25,7 @@ const buildTeacherFilters = (teachers, filteredTeachers) => {
   })
 }
 
-//TODO: Check this code, not too good. A lot of missing useEffect dependencies
+//TODO: Check this code, not too good
 const ClassSelector = ({ course }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
@@ -103,6 +103,23 @@ const ClassSelector = ({ course }: Props) => {
     }
   }, [isDropdownOpen])
 
+  const toggleLocker = () => {
+    const newMultipleOptions = [...multipleOptions];
+    const courseOptions = newMultipleOptions[selectedOption].course_options.map(opt => {
+      if (opt.course_id === course.id) {
+        return { ...opt, locked: !locked };
+      }
+      return opt;
+    });
+    newMultipleOptions[selectedOption].course_options = courseOptions;
+    setMultipleOptions(newMultipleOptions);
+    setLocked(!locked)
+  }
+
+  useEffect(() => {
+    setLocked(courseOption?.locked)
+  }, [selectedOption]);
+
   //(thePeras): Classes options should be a new state
   /**
    * Return the classes options filtered by the selected teachers
@@ -124,10 +141,6 @@ const ClassSelector = ({ course }: Props) => {
     const pickedSlots = getAllPickedSlots(pickedCourses, multipleOptions[selectedOption])
     return pickedSlots.some((slot) => classInfo.slots.some((currentSlot) => schedulesConflict(slot, currentSlot)))
   }
-
-  // Checks if two arrays of professors have a common professor
-  const hasCommonProfessorWith = (profs1, profs2) =>
-    profs1.some((prof_info1) => profs2.some((prof_info2) => prof_info1.acronym === prof_info2.acronym))
 
   // Puts inside the preview the actual selected class so we can then restore it later after the user stops
   // previewing
@@ -190,7 +203,12 @@ const ClassSelector = ({ course }: Props) => {
       </p>
       <div className="flex items-center">
         {/* Dropdown Menu */}
-        <DropdownMenu onOpenChange={setIsDropdownOpen}>
+        <DropdownMenu onOpenChange={(open: boolean) => {
+          setIsDropdownOpen(open);
+          if (!open) {
+            removePreview();
+          }
+        }}>
           <DropdownMenuTrigger asChild disabled={courseOption?.locked} ref={classSelectorTriggerRef}>
             <Button
               variant="outline"
@@ -277,8 +295,8 @@ const ClassSelector = ({ course }: Props) => {
         {/* Lock Button */}
         <Button
           variant="icon"
-          title="Bloquear/Desbloquear Horário"
-          onClick={() => setLocked(!locked)}
+          title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
+          onClick={toggleLocker}
           disabled={display === null}
         >
           {courseOption?.locked ? (

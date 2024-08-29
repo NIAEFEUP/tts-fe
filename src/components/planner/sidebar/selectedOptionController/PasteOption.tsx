@@ -35,9 +35,11 @@ const PasteOption = () => {
     const isImporteFromClipboard: boolean = value
 
     if (!isValidURL(decoded_url)) {
+
       const description = isImporteFromClipboard
         ? 'O texto do clipboard não é uma opção válida'
         : 'O texto inserido não é uma opção válida'
+      console.log(description)
       toast({
         title: 'Erro ao colar opção',
         description,
@@ -90,7 +92,7 @@ const PasteOption = () => {
     }
 
     fillOptions(importedCourses, multipleOptions, setMultipleOptions, selectedOption)
-    
+
     toast({
       title: 'Horário colado!',
       description: 'A opção foi colada com sucesso',
@@ -104,6 +106,7 @@ const PasteOption = () => {
    * @returns true if the url is valid
    */
   const isValidURL = (url: string) => {
+    if (url.length === 0) return false
     const tokens = url.split(';')
     if (tokens.length < 1) return false //At leat one course
 

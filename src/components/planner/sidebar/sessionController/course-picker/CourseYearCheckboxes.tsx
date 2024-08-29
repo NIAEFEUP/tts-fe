@@ -12,7 +12,7 @@ type Props = {
 }
 
 export const CourseYearCheckboxes = ({ courses }: Props) => {
-  const { pickedCourses, setPickedCourses, setCheckboxedCourses, checkboxedCourses } = useContext(CourseContext)
+  const { setCheckboxedCourses, checkboxedCourses } = useContext(CourseContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 
@@ -43,9 +43,9 @@ export const CourseYearCheckboxes = ({ courses }: Props) => {
   }, [courses, checkboxedCourses])
 
   return (
-    <div className="flex flex-col justify-start gap-2 p-2">
+    <div className="flex flex-col justify-center gap-2 p-4">
       {courses.sort((a, b) => b.ects - a.ects).map((course: CourseInfo, courseIdx: number) => (
-        <div key={`course-checkbox-${course.course_unit_year}-${course.id}`} className="flex items-center space-x-2">
+        <div key={`course-checkbox-${course.course_unit_year}-${course.id}`} className="flex flex-row items-center space-x-2">
           <Checkbox
             id={`checkbox-${courseIdx}`}
             title={course.name}

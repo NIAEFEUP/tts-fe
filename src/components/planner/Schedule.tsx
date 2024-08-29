@@ -1,17 +1,18 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ScheduleGrid, } from './schedules'
+import { LessonBox, ScheduleGrid, } from './schedules'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
 import { useContext } from 'react'
-import ClassBox from './schedules/ClassBox'
+import SlotBox from './schedules/SlotBox'
 import ScheduleTypes from './ScheduleType'
-import { ClassDescriptor } from '../../@types'
+import { ClassDescriptor, SlotInfo } from '../../@types'
 import CourseContext from '../../contexts/CourseContext'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import { useShowGrid } from '../../hooks'
 import { maxHour, minHour, convertWeekdayLong, convertHour } from '../../utils'
+import SlotBoxes from './schedules/SlotBoxes'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -21,6 +22,7 @@ const Schedule = () => {
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
 
   const [classes, setClasses] = useState<ClassDescriptor[]>([])
+  const [slots, setSlots] = useState<SlotInfo[]>([])
   const scheduleRef = useRef(null)
 
   useEffect(() => {
@@ -43,10 +45,11 @@ const Schedule = () => {
     }
 
     setClasses(newClasses)
+    setSlots(newClasses.map((newClass) => newClass.classInfo.slots).flat())
   }, [multipleOptions, pickedCourses, selectedOption])
 
   // TODO: Improvements by functional programming
-  const slotTypes = useMemo(() => {
+  const slotTypes: string[] = useMemo(() => {
     let aux = new Set()
 
     for (const currentClass of classes) {
@@ -60,6 +63,14 @@ const Schedule = () => {
     return Array.from(aux) as string[]
   }, [classes])
 
+  const slotsOrderedByDay = (slots: Array<SlotInfo>): Array<SlotInfo> => {
+    return slots.sort((slot1, slot2) => (
+      slot1.day - slot2.day
+    ));
+  }
+
+  // Bottom Bar Configurations
+  const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<string[]>([])
   const [showGrid, setShowGrid] = useShowGrid()
 
   return (
@@ -91,26 +102,20 @@ const Schedule = () => {
             <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
-                {classes
-                  .filter((c) => c.classInfo !== undefined)
-                  .map((c) => (
-                    <ClassBox
-                      key={`course[${c.courseInfo.id}]-class[${c.classInfo.id}]`}
-                      courseInfo={c.courseInfo}
-                      classInfo={c.classInfo ?? null}
-                      classes={classes}
-                    />
-                  ))}
+                <SlotBoxes
+                  slots={slots}
+                  hiddenLessonsTypes={hiddenLessonsTypes}
+                  classes={classes}
+                />
               </div>
             </div>
           </div>
         </div>
 
-
         {/* Bottom bar */}
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
-            <ScheduleTypes types={slotTypes} />
+            <ScheduleTypes types={slotTypes} hiddenLessonsTypes={hiddenLessonsTypes} setHiddenLessonsTypes={setHiddenLessonsTypes} />
           </div>
           <div className="flex gap-2">
             <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
@@ -124,16 +129,12 @@ const Schedule = () => {
         <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${""}`}>
           <div className="h-full w-1 rounded bg-primary" />
           <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
-            {classes
-              .filter((c) => c.classInfo !== undefined)
-              .map((c) => (
-                <ClassBox
-                  key={`course[${c.courseInfo.id}]-class[${c.classInfo.id}]`}
-                  courseInfo={c.courseInfo}
-                  classInfo={c.classInfo ?? null}
-                  classes={classes}
-                />
-              ))}
+            {slots.length === 0 && <p>Ainda não foram selecionadas turmas!</p>}
+            <SlotBoxes
+              slots={slotsOrderedByDay(slots)}
+              classes={classes}
+              hiddenLessonsTypes={hiddenLessonsTypes}
+            />
           </div>
         </div>
       </div>
