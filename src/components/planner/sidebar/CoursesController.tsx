@@ -9,7 +9,7 @@ import { Button } from '../../ui/button'
 
 
 const CoursesController = () => {
-  const { pickedCourses,setUcsModalOpen } = useContext(CourseContext);
+  const { pickedCourses, setUcsModalOpen } = useContext(CourseContext);
 
   const noCoursesPicked = pickedCourses.length === 0;
   return (
