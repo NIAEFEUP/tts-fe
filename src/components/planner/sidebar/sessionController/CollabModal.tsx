@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { XMarkIcon, PlayIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon, PlayCircleIcon } from '@heroicons/react/24/solid';
 import { UserGroupIcon } from '@heroicons/react/24/solid';
 
 const CollabModal = ({ isOpen, closeModal }) => {
@@ -54,7 +54,7 @@ const CollabModal = ({ isOpen, closeModal }) => {
                     type="button"
                     className="mt-4 pass inline-flex items-center px-4 py-4 bg-primary text-white text-sm font-medium rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
                   >
-                    <PlayIcon className="h-5 w-5 mr-2" />
+                    <PlayCircleIcon className="h-8 w-8 mr-2" />
                     Iniciar sessão
                   </button>
                 </div>
