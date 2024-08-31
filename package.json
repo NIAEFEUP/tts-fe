@@ -60,7 +60,7 @@
     "preview": "vite preview",
     "check": "npx prettier --check .",
     "format": "npx prettier --write .",
-    "generate:protobuf": "protoc -I=./tts-protobufs/protos --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./tts-protobufs/generated/tts-fe --ts_out=service=grpc-web:./tts-protobufs/generated/tts-fe ./tts-protobufs/protos/*.proto"
+    "generate:protobuf": "protoc -I=./tts-protobufs/protos --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/protos --ts_out=service=grpc-web:./src/protos ./tts-protobufs/protos/*.proto"
   },
   "eslintConfig": {
     "extends": [
