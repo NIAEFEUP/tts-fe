@@ -49,10 +49,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
       for (const slot1 of pickedClass.slots)
         for (const slot2 of classInfo.slots)
           if (schedulesConflict(slot1, slot2)) {
-            if (conflictsSeverity(slot1, slot2))
-              return 2
-            else
-              return 1
+            return conflictsSeverity(slot1, slot2);
           }
   }, []);
 
