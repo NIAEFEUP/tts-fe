@@ -46,14 +46,10 @@ const SelectedOptionController = ({
     input.current.scrollLeft = 0
   }
 
-  const getOptionById = (id: number) => {
-    return multipleOptions.find((elem) => elem.id === id)
-  }
-
-  const [optionName, setOptionName] = useState(multipleOptions.find((elem) => elem.id === selectedOption).name ?? '');
+  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '');
 
   useEffect(() => {
-    setOptionName(multipleOptions.find((elem) => elem.id === selectedOption).name)
+    setOptionName(multipleOptions[selectedOption].name)
   }, [selectedOption, multipleOptions])
 
   const renameOptionName = (event) => {
@@ -62,7 +58,7 @@ const SelectedOptionController = ({
     event.target.value = newName
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
-        item.id === selectedOption ? { ...item, name: newName } : item
+        item.id === multipleOptions[selectedOption].id ? { ...item, name: newName } : item
       )
       return updatedMultipleOptions;
     })
@@ -71,7 +67,7 @@ const SelectedOptionController = ({
   const changeOptionIcon = (newIcon) => {
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
-        item.id === selectedOption ? { ...item, icon: newIcon } : item
+        item.id === multipleOptions[selectedOption].id ? { ...item, icon: newIcon } : item
       )
       return updatedMultipleOptions;
     })
@@ -83,7 +79,7 @@ const SelectedOptionController = ({
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <PopoverTrigger className="aspect-square h-10 w-15 rounded-md p-1 px-2 text-xl bg-lightish dark:bg-darkish border border-slate-200 dark:border-slate-800">
             <img
-              src={getOptionById(selectedOption)?.icon}
+              src={multipleOptions[selectedOption]?.icon}
               alt={multipleOptions[selectedOption].name}
             />
           </PopoverTrigger>

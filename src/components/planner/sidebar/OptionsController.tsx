@@ -10,13 +10,20 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../
  * Each option can be selected by clicking on it
  */
 const OptionsController = () => {
-  const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
+  const { multipleOptions, selectedOption, setSelectedOption, setMultipleOptions } = useContext(MultipleOptionsContext);
 
   return (
     <ReactSortable
       className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start"
       list={multipleOptions}
-      setList={setMultipleOptions}
+      setList={(newMultipleOptions) => {
+        const prevId = multipleOptions[selectedOption].id;
+        setMultipleOptions(newMultipleOptions);
+        if (newMultipleOptions[selectedOption].id !== prevId) {
+          setSelectedOption(newMultipleOptions.findIndex((currentOption) => currentOption.id === prevId));
+        }
+      }
+      }
       group="groupName"
       animation={200}
       delay={2}
