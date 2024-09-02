@@ -64,9 +64,13 @@ const Schedule = () => {
   }, [classes])
 
   const slotsOrderedByDay = (slots: Array<SlotInfo>): Array<SlotInfo> => {
-    return slots.sort((slot1, slot2) => (
-      slot1.day - slot2.day
-    ));
+    return slots.sort((slot1, slot2) => {
+      if (slot1.day === slot2.day) {
+        return slot1.start_time - slot2.start_time;
+      }
+
+      return slot1.day - slot2.day
+    });
   }
 
   // Bottom Bar Configurations
