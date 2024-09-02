@@ -70,7 +70,7 @@ const convertHour = (hourNumber: string) => {
 }
 
 const conflictsSeverity = (first: SlotInfo, second: SlotInfo) => {
-  return first.lesson_type === "TP" && second.lesson_type === "TP"
+  return first.lesson_type !== "T" && second.lesson_type !== "T"
 }
 
 const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
