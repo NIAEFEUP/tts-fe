@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../
  * Each option can be selected by clicking on it
  */
 const OptionsController = () => {
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+  const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
 
   return (
     <ReactSortable
@@ -24,10 +24,8 @@ const OptionsController = () => {
     >
       {multipleOptions.map((option: Option) => (
         <OptionButton
-          key={option.id}
+          key={multipleOptions.findIndex((currentOption) => currentOption.id === option.id)}
           option={option}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
         />
       ))}
     </ReactSortable>
@@ -36,23 +34,25 @@ const OptionsController = () => {
 
 type Props = {
   option: Option
-  selectedOption: number
-  setSelectedOption: (id: number) => void
 }
 
-const OptionButton = ({ option, selectedOption, setSelectedOption }: Props) => {
+const OptionButton = ({ option }: Props) => {
+  const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger
           onClick={() => {
-            setSelectedOption(option.id)
+            setSelectedOption(multipleOptions.findIndex((currentOption) => currentOption.id === option.id));
           }}
           className={`
             group relative box-border flex aspect-square h-10 w-15 cursor-pointer flex-col
             items-center justify-center rounded-md border-2 border-transparent p-2
             dark:shadow hover:dark:border-primary/50
-            ${selectedOption === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
+            ${multipleOptions[selectedOption].id === option.id
+              ? 'bg-primary/75 dark:bg-primary/50'
+              : 'bg-lightish dark:bg-darkish'}
             `}
         >
           <div
