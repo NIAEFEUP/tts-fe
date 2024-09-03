@@ -69,8 +69,12 @@ const convertHour = (hourNumber: string) => {
   return `${hour}:${minutes}`
 }
 
-const conflictsSeverity = (first: SlotInfo, second: SlotInfo) => {
-  return first.lesson_type === "TP" && second.lesson_type === "TP"
+const isMandatory = (slot: SlotInfo): boolean => {
+  return slot.lesson_type !== "T" && slot.lesson_type !== "O";
+}
+
+const conflictsSeverity = (first: SlotInfo, second: SlotInfo): number => {
+  return (isMandatory(first) && isMandatory(second)) ? 2 : 1;
 }
 
 const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {

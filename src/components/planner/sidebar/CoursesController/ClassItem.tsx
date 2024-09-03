@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { ClassInfo } from '../../../../@types/index'
 import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
-import { schedulesConflict } from '../../../../utils'
+import { conflictsSeverity, schedulesConflict } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import CourseContext from '../../../../contexts/CourseContext'
 
@@ -49,12 +49,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
       for (const slot1 of pickedClass.slots)
         for (const slot2 of classInfo.slots)
           if (schedulesConflict(slot1, slot2)) {
-            if (slot1.lesson_type == "TP" && slot2.lesson_type == "TP")
-              return 2
-            else if (slot1.lesson_type == "TP" || slot2.lesson_type == "TP")
-              return 1
-            else
-              return 0
+            return conflictsSeverity(slot1, slot2);
           }
   }, []);
 

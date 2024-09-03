@@ -36,10 +36,10 @@ const PasteOption = () => {
     const isImporteFromClipboard: boolean = value
 
     if (!isValidURL(decoded_url)) {
-
       const description = isImporteFromClipboard
         ? 'O texto do clipboard não é uma opção válida'
         : 'O texto inserido não é uma opção válida'
+
       toast({
         title: 'Erro ao colar opção',
         description,
