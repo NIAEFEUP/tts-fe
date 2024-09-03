@@ -1,29 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
-import { XMarkIcon, PlayCircleIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
 import CollabSession from './CollabSession';
+import CollabCreateSession from './CollabCreateSession'; // Assuming you have this component
 
 const dummySessions = [
   { id: 1, name: 'asdipuhaosd', edited: 'há 3 dias', expires: 'em 1 semana', username: 'Ancient Mongoose', sessionLink: 'https://ni.fe.up.pt/tts/#room=d8750cf5...' },
   { id: 2, name: 'uyavfiuya8gf3', edited: 'há 1 semana', expires: 'em 14 dias', username: 'msantos', sessionLink: 'https://ni.fe.up.pt/tts/#room=d8750cf5...' },
 ];
 
+const PICK_SESSION = 'PICK_SESSION';
+const CREATE_SESSION = 'CREATE_SESSION';
+const SESSION = 'SESSION';
 const CollabModal = ({ isOpen, closeModal }) => {
+  const [currentView, setCurrentView] = useState(PICK_SESSION);
   const [currentSession, setCurrentSession] = useState(null);
+  const [sessions, setSessions] = useState(dummySessions);
 
   const handleStartSession = (session) => {
     setCurrentSession(session);
+    setCurrentView(SESSION);
   };
 
   const handleExitSession = () => {
     setCurrentSession(null);
+    setCurrentView(PICK_SESSION);
+  };
+
+  const handleCreateSession = () => {
+    setCurrentView(CREATE_SESSION);
+  };
+
+  const handleReturnToPickSession = () => {
+    setCurrentView(PICK_SESSION);
+  };
+
+  const handleDeleteSession = (sessionId) => {
+    setSessions((prevSessions) => prevSessions.filter(session => session.id !== sessionId));
   };
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Dialog as="div" className="relative z-2" onClose={closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -58,10 +77,23 @@ const CollabModal = ({ isOpen, closeModal }) => {
                   </button>
                 </div>
 
-                {currentSession === null ? (
-                  <CollabPickSession sessions={dummySessions} onStartSession={handleStartSession} />
-                ) : (
-                  <CollabSession session={currentSession} onExitSession={handleExitSession} />
+                {currentView === PICK_SESSION && (
+                  <CollabPickSession
+                    sessions={sessions}
+                    onStartSession={handleStartSession}
+                    onDeleteSession={handleDeleteSession}
+                  />
+                )}
+
+                {currentView === CREATE_SESSION && (
+                  <CollabCreateSession />
+                )}
+
+                {currentView === SESSION && (
+                  <CollabSession
+                    session={currentSession}
+                    onExitSession={handleExitSession}
+                  />
                 )}
               </Dialog.Panel>
             </Transition.Child>
@@ -71,6 +103,5 @@ const CollabModal = ({ isOpen, closeModal }) => {
     </Transition>
   );
 };
-
 
 export default CollabModal;
