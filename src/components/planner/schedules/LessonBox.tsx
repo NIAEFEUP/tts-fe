@@ -57,7 +57,7 @@ const LessonBox = ({
         const slot = classDescriptor.classInfo.slots[j];
         if (schedulesConflict(slotInfo, slot)) {
           // The highest severity of the all the conflicts is the overall severity
-          newConflictInfo.severe = conflictsSeverity(slotInfo, slot) || newConflictInfo.severe;
+          newConflictInfo.severe = conflictsSeverity(slotInfo, slot) == 2 || newConflictInfo.severe;
           const newClassDescriptor = {
             classInfo: classDescriptor.classInfo,
             courseInfo: classDescriptor.courseInfo,
