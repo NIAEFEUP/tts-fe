@@ -7,9 +7,8 @@ import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { ThemeContext } from '../../../contexts/ThemeContext'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
-import { Button } from '../../ui/button'
-import { ArrowPathIcon } from '@heroicons/react/24/outline'
-import { CheckIcon } from 'lucide-react'
+import RandomFill from './selectedOptionController/RandomFill'
+import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 
 type Props = {
   currentOption: CourseOption[]
@@ -48,31 +47,10 @@ const SelectedOptionController = ({
     input.current.scrollLeft = 0
   }
 
-  const scroll = () => {
-    if (inputIsActive()) return;
-
-    if (isHovered) {
-      if (isScrollingBack) {
-        if (input.current.scrollLeft === 0) isScrollingBack = false
-        else return
-      }
-      if (input.current.scrollLeft >= input.current.scrollWidth - input.current.clientWidth) {
-        setScrollDirection(-1)
-        input.current.scrollLeft = 0
-      } else {
-        input.current.scrollLeft += 5
-      }
-    }
-  }
-
-  const getOptionById = (id: number) => {
-    return multipleOptions.find((elem) => elem.id === id)
-  }
-
-  const [optionName, setOptionName] = useState(multipleOptions.find((elem) => elem.id === selectedOption).name ?? '');
+  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '');
 
   useEffect(() => {
-    setOptionName(multipleOptions.find((elem) => elem.id === selectedOption).name)
+    setOptionName(multipleOptions[selectedOption].name)
   }, [selectedOption, multipleOptions])
 
   const renameOptionName = (event) => {
@@ -81,19 +59,22 @@ const SelectedOptionController = ({
     event.target.value = newName
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
-        item.id === selectedOption ? { ...item, name: newName } : item
+        item.id === multipleOptions[selectedOption].id ? { ...item, name: newName } : item
       )
       return updatedMultipleOptions;
     })
+    AnalyticsTracker.trackFeature(Feature.OPTION_RENAME);
   }
 
   const changeOptionIcon = (newIcon) => {
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
-        item.id === selectedOption ? { ...item, icon: newIcon } : item
+        item.id === multipleOptions[selectedOption].id ? { ...item, icon: newIcon.imageUrl } : item
       )
       return updatedMultipleOptions;
     })
+    AnalyticsTracker.trackFeature(Feature.OPTION_EMOJI);
+    AnalyticsTracker.emoji(newIcon.emoji);
   }
 
   return (
@@ -102,7 +83,7 @@ const SelectedOptionController = ({
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <PopoverTrigger className="aspect-square h-10 w-15 rounded-md p-1 px-2 text-xl bg-lightish dark:bg-darkish border border-slate-200 dark:border-slate-800">
             <img
-              src={getOptionById(selectedOption)?.icon}
+              src={multipleOptions[selectedOption]?.icon}
               alt={multipleOptions[selectedOption].name}
             />
           </PopoverTrigger>
@@ -115,7 +96,7 @@ const SelectedOptionController = ({
               suggestedEmojisMode={SuggestionMode.RECENT}
               emojiStyle={EmojiStyle.APPLE}
               onEmojiClick={(emojiData, e) => {
-                changeOptionIcon(emojiData.imageUrl)
+                changeOptionIcon(emojiData)
                 setEmojiPickerOpen(false)
               }}
             />
@@ -145,7 +126,7 @@ const SelectedOptionController = ({
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
         <PasteOption />
-        {/*<RandomFill className="sm:py-0 xl:p-1" />*/}
+        <RandomFill className="sm:py-0 xl:p-1" />
       </div>
     </div>
   )

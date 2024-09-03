@@ -1,12 +1,13 @@
 enum lesson_type {
-  T = "T",
-  TP = "TP",
-  P = "P",
-  PL = "PL",
-  OT = "OT",
-  O = "O",
-  E = "E"
+  T = "T",    // Ensino teórico
+  TP = "TP",  // Ensino teórico-prático
+  P = "P",    // Ensino prático
+  PL = "PL",  // Ensino prático e laboratorial
+  OT = "OT",  // Orientação tutorial
+  O = "O",    // Outra
+  E = "E"     // Estágio
 }
+// https://sigarra.up.pt/feup/pt/web_base.gera_pagina?p_pagina=h_ds_func_relatorios.querylist
 
 /* Majors */
 export type Major = {
@@ -27,6 +28,7 @@ export type CourseInfo = {
   acronym: string,
   name: string,
   url: string,
+  hash: string,
   classes?: Array<ClassInfo>
 }
 
@@ -78,7 +80,7 @@ export type CourseOption = {
 export type ClassDescriptor = {
   classInfo: ClassInfo
   courseInfo: CourseInfo
-  slotInfo?: SlotInfo
+  slotInfo?: SlotInfo // used for conflict calculation
 }
 
 export type ConflictInfo = {
@@ -88,11 +90,7 @@ export type ConflictInfo = {
 
 export type Conflicts = Map<number, ConflictInfo>
 
-export type Lesson = {
-  course: Course
-  schedule: CourseSchedule
-}
-
 export type ImportedCourses = {
   [key: string]: string
 }
+

@@ -15,15 +15,12 @@ const TimeTableSchedulerPage = () => {
 
   //TODO: Looks suspicious
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
-
-  // // fetch majors when component is ready
   useEffect(() => {
     document.getElementById('layout').scrollIntoView()
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
   }, [])
-
   return (
     <MajorContext.Provider value={{ majors, setMajors }}>
       <CourseContext.Provider value={

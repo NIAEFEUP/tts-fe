@@ -69,8 +69,12 @@ const convertHour = (hourNumber: string) => {
   return `${hour}:${minutes}`
 }
 
-const conflictsSeverity = (first: SlotInfo, second: SlotInfo) => {
-  return first.lesson_type === "TP" && second.lesson_type === "TP"
+const isMandatory = (slot: SlotInfo): boolean => {
+  return slot.lesson_type !== "T" && slot.lesson_type !== "O";
+}
+
+const conflictsSeverity = (first: SlotInfo, second: SlotInfo): number => {
+  return (isMandatory(first) && isMandatory(second)) ? 2 : 1;
 }
 
 const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
@@ -221,7 +225,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
 const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
   let majorCourses: CourseInfo[][] = []
   let currYear = 0
-  for (let i = 0; i < yearCourses.length; i++) {
+  for (let i = 0; i < yearCourses?.length; i++) {
     if (yearCourses[i].course_unit_year !== currYear) {
       currYear += 1
       majorCourses.push([yearCourses[i]])
@@ -312,7 +316,7 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
     const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
-
+    if( !classInfo ) return [];
     return classInfo.slots
   })
 }

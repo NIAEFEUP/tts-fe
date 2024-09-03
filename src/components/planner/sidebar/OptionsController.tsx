@@ -4,30 +4,39 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import { useContext } from 'react'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip';
+import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker';
 
 /**
  * Sortable list of schedule options
  * Each option can be selected by clicking on it
  */
 const OptionsController = () => {
-  const { multipleOptions, setMultipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+  const { multipleOptions, selectedOption, setSelectedOption, setMultipleOptions } = useContext(MultipleOptionsContext);
 
   return (
     <ReactSortable
       className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start"
       list={multipleOptions}
-      setList={setMultipleOptions}
+      setList={(newMultipleOptions) => {
+        const prevId = multipleOptions[selectedOption].id;
+        setMultipleOptions(newMultipleOptions);
+        if (newMultipleOptions[selectedOption].id !== prevId) {
+          setSelectedOption(newMultipleOptions.findIndex((currentOption) => currentOption.id === prevId));
+        }
+      }
+      }
       group="groupName"
       animation={200}
       delay={2}
       multiDrag
+      onEnd={() => {
+        AnalyticsTracker.trackFeature(Feature.OPTION_REORDER);
+      }}
     >
       {multipleOptions.map((option: Option) => (
         <OptionButton
-          key={option.id}
+          key={multipleOptions.findIndex((currentOption) => currentOption.id === option.id)}
           option={option}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
         />
       ))}
     </ReactSortable>
@@ -36,23 +45,25 @@ const OptionsController = () => {
 
 type Props = {
   option: Option
-  selectedOption: number
-  setSelectedOption: (id: number) => void
 }
 
-const OptionButton = ({ option, selectedOption, setSelectedOption }: Props) => {
+const OptionButton = ({ option }: Props) => {
+  const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext);
+
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger
           onClick={() => {
-            setSelectedOption(option.id)
+            setSelectedOption(multipleOptions.findIndex((currentOption) => currentOption.id === option.id));
           }}
           className={`
             group relative box-border flex aspect-square h-10 w-15 cursor-pointer flex-col
             items-center justify-center rounded-md border-2 border-transparent p-2
             dark:shadow hover:dark:border-primary/50
-            ${selectedOption === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}
+            ${multipleOptions[selectedOption].id === option.id
+              ? 'bg-primary/75 dark:bg-primary/50'
+              : 'bg-lightish dark:bg-darkish'}
             `}
         >
           <div
