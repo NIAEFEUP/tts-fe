@@ -34,7 +34,6 @@
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
     "emoji-picker-react": "^4.6.4",
-    "grpc-web": "^1.5.0",
     "html-to-image": "^1.11.11",
     "lucide-react": "^0.307.0",
     "node-fetch": "^3.2.8",
@@ -60,7 +59,7 @@
     "preview": "vite preview",
     "check": "npx prettier --check .",
     "format": "npx prettier --write .",
-    "generate:protobuf": "protoc -I=./tts-protobufs/protos --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./src/protos --ts_out=service=grpc-web:./src/protos ./tts-protobufs/protos/*.proto"
+    "generate:protobuf": "protoc -I=./tts-protobufs/protos --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=./src/protos --ts_out=./src/protos ./tts-protobufs/protos/*.proto"
   },
   "eslintConfig": {
     "extends": [
