@@ -4,6 +4,7 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import { useContext } from 'react'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip';
+import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker';
 
 /**
  * Sortable list of schedule options
@@ -28,6 +29,9 @@ const OptionsController = () => {
       animation={200}
       delay={2}
       multiDrag
+      onEnd={() => {
+        AnalyticsTracker.trackFeature(Feature.OPTION_REORDER);
+      }}
     >
       {multipleOptions.map((option: Option) => (
         <OptionButton

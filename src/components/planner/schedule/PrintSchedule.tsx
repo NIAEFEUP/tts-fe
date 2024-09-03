@@ -4,6 +4,7 @@ import { Button } from '../../ui/button'
 import { CameraIcon } from '@heroicons/react/24/outline'
 import { toPng } from 'html-to-image'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
+import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 
 const PrintSchedule = ({ component }) => {
   const { enabled } = useContext(ThemeContext)
@@ -24,6 +25,8 @@ const PrintSchedule = ({ component }) => {
         .catch((err) => {
           console.log(err)
         })
+
+      AnalyticsTracker.trackFeature(Feature.SCREENSHOT)
     },
     [component]
   )

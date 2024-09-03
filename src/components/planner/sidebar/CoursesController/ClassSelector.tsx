@@ -9,6 +9,7 @@ import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo, getAllPickedSlo
 import { Button } from '../../../ui/button'
 import ProfessorItem from './ProfessorItem'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
+import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
 
 type Props = {
@@ -58,6 +59,8 @@ const ClassSelector = ({ course }: Props) => {
     newMultipleOptions[selectedOption].course_options = courseOptions;
     setMultipleOptions(newMultipleOptions);
     setLocked(!locked)
+
+    AnalyticsTracker.trackFeature(Feature.LOCK_TOGGLE);
   }
 
   useEffect(() => {

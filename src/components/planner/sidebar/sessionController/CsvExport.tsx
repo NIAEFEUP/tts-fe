@@ -2,6 +2,7 @@ import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
 import { useContext } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
 //TODO: utils??
 const csvEncode = (text: string | null | undefined) => {
@@ -43,6 +44,8 @@ const CsvExport = () => {
     a.download = 'schedule.csv'
     a.click()
     URL.revokeObjectURL(url)
+
+    AnalyticsTracker.trackFeature(Feature.EXPORT_TO_CSV)
   }
 
   return (
@@ -52,7 +55,7 @@ const CsvExport = () => {
     >
       <ArrowUpOnSquareIcon className="h-5 w-5 text-secondary black:hover:brightness-200" />
       <span className="pl-1"> Exportar Opções (CSV)</span>
-    </button> 
+    </button>
   )
 }
 

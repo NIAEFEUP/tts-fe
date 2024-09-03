@@ -11,6 +11,7 @@ import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { convertCourseInfoToCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { useToast } from '../../../ui/use-toast'
+import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
 const PasteOption = () => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
@@ -97,6 +98,8 @@ const PasteOption = () => {
       description: 'A opção foi colada com sucesso',
       duration: 1500,
     })
+
+    AnalyticsTracker.trackFeature(Feature.PASTE);
   }
 
   /**
