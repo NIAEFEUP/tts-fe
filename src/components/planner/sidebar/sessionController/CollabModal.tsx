@@ -1,22 +1,18 @@
-import React, { useState, Fragment } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
 import CollabSession from './CollabSession';
-import CollabCreateSession from './CollabCreateSession'; // Assuming you have this component
-
-const dummySessions = [
-  { id: 1, name: 'asdipuhaosd', edited: 'há 3 dias', expires: 'em 1 semana', username: 'Ancient Mongoose', sessionLink: 'https://ni.fe.up.pt/tts/#room=d8750cf5...' },
-  { id: 2, name: 'uyavfiuya8gf3', edited: 'há 1 semana', expires: 'em 14 dias', username: 'msantos', sessionLink: 'https://ni.fe.up.pt/tts/#room=d8750cf5...' },
-];
+import CollabCreateSession from './CollabCreateSession';
+import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 
 const PICK_SESSION = 'PICK_SESSION';
 const CREATE_SESSION = 'CREATE_SESSION';
 const SESSION = 'SESSION';
+
 const CollabModal = ({ isOpen, closeModal }) => {
+  const { sessions, setSessions, currentSession, setCurrentSession } = useContext(CollabSessionContext);
   const [currentView, setCurrentView] = useState(PICK_SESSION);
-  const [currentSession, setCurrentSession] = useState(null);
-  const [sessions, setSessions] = useState(dummySessions);
 
   const handleStartSession = (session) => {
     setCurrentSession(session);
@@ -42,7 +38,7 @@ const CollabModal = ({ isOpen, closeModal }) => {
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-2" onClose={closeModal}>
+      <Dialog as="div" className="relative z-10" onClose={closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

@@ -20,7 +20,7 @@ const CollabSession = ({ session, onExitSession }) => {
         <label className="block text-sm font-medium text-gray-700 mb-1">O teu nome</label>
         <input
           type="text"
-          value={session.username}
+          value={session.currentUser}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           readOnly
         />
@@ -31,7 +31,7 @@ const CollabSession = ({ session, onExitSession }) => {
         <div className="flex items-center mt-1">
           <input
             type="text"
-            value={session.sessionLink}
+            value={session.link}
             className="flex-1 block w-full rounded-md bg-red-50 border-gray-300 shadow-sm sm:text-sm"
             readOnly
           />
@@ -49,8 +49,14 @@ const CollabSession = ({ session, onExitSession }) => {
       <div className="mt-6">
         <h4 className="text-md font-medium text-gray-900 mb-2">Participantes</h4>
         <div className="flex space-x-2">
-          <div className="rounded-full bg-orange-200 h-10 w-10 flex items-center justify-center text-orange-700">O</div>
-          <div className="rounded-full bg-blue-200 h-10 w-10 flex items-center justify-center">D</div>
+          {session.participants.map((user, index) => (
+            <div
+              key={index}
+              className={`rounded-full h-10 w-10 flex items-center justify-center ${index % 2 === 0 ? 'bg-orange-200 text-orange-700' : 'bg-blue-200 text-blue-700'}`}
+            >
+              {user[0]}
+            </div>
+          ))}
         </div>
       </div>
 

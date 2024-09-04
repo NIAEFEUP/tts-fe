@@ -35,8 +35,8 @@ const CollabPickSession = ({ sessions, onStartSession, onDeleteSession }) => (
         {sessions.map((session) => (
           <li key={session.id} className="grid grid-cols-7 items-center text-sm text-gray-800 gap-4">
             <span className="col-span-2 truncate whitespace-nowrap font-bold">{session.name}</span>
-            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">editado {session.edited}</span>
-            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">expira {session.expires}</span>
+            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">editado {session.lastEdited}</span>
+            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">expira {session.lifeSpan} dias</span>
             <div className="col-span-1 flex justify-end space-x-4">
               <a
                 href="#"
