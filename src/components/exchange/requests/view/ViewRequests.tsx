@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { MarketplaceRequest } from "../../../../@types";
 import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
 import { Badge } from "../../../ui/badge";
@@ -12,14 +12,38 @@ type Props = {
   setCreatingRequest: Dispatch<SetStateAction<boolean>>
 }
 
+const requestTypeFilters = ["all", "mine", "received"];
+
 export const ViewRequests = ({
   setCreatingRequest
 }: Props) => {
+  const requestCardsContainerRef = useRef(null);
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
+  const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<string>>(new Set());
 
-  const { data, setSize, isLoading } = useMarketplaceRequests();
+  const { data, size, setSize, isLoading } = useMarketplaceRequests(requestTypeFilters[currentRequestTypeFilter]);
+
   const requests = data ? [].concat(...data) : [];
+
+  const onScroll = () => {
+    if (!requestCardsContainerRef.current) return;
+
+    if ((requestCardsContainerRef.current.scrollHeight - requestCardsContainerRef.current.scrollTop)
+      <= requestCardsContainerRef.current.clientHeight + 100
+    ) {
+      setSize(size + 1);
+    }
+  }
+
+  useEffect(() => {
+    if (!requestCardsContainerRef.current) return;
+
+    requestCardsContainerRef.current.addEventListener('scroll', onScroll);
+    return () => {
+      if (requestCardsContainerRef.current) requestCardsContainerRef.current.removeEventListener('scroll', onScroll);
+    }
+  }, []);
 
   return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
     <div className="flex flex-row justify-between items-center w-full">
@@ -35,9 +59,9 @@ export const ViewRequests = ({
 
     <Tabs defaultValue="todos" className="mt-2 w-full">
       <TabsList className="flex flex-row justify-between">
-        <TabsTrigger value="todos">Todos</TabsTrigger>
-        <TabsTrigger value="meus-pedidos">Meus pedidos</TabsTrigger>
-        <TabsTrigger value="recebidos">Recebidos</TabsTrigger>
+        <TabsTrigger onClick={() => setCurrentRequestTypeFilter(0)} value="todos">Todos</TabsTrigger>
+        <TabsTrigger onClick={() => setCurrentRequestTypeFilter(1)} value="meus-pedidos">Meus pedidos</TabsTrigger>
+        <TabsTrigger onClick={() => setCurrentRequestTypeFilter(2)} value="recebidos">Recebidos</TabsTrigger>
       </TabsList>
       <TabsContent value="todos">
         <ViewRequestsFilters
@@ -45,26 +69,29 @@ export const ViewRequests = ({
           availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
         />
-        {
-          isLoading
-            ? <></>
-            : <div className="mt-4 flex flex-col gap-y-2">
-              {
-                requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
-                  <RequestCard
-                    key={request.id}
-                    request={request}
-                    hiddenRequests={hiddenRequests}
-                    setHiddenRequests={setHiddenRequests}
-                  />
-                ))
-              }
-            </div>
-        }
+
+        <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
+          {
+            isLoading
+              ? <></>
+              : <>
+                {
+                  requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
+                    <RequestCard
+                      key={request.id}
+                      request={request}
+                      hiddenRequests={hiddenRequests}
+                      setHiddenRequests={setHiddenRequests}
+                    />
+                  ))
+                }
+              </>
+          }
+        </div>
       </TabsContent>
       <TabsContent value="meus-pedidos"></TabsContent>
       <TabsContent value="recebidos"></TabsContent>
     </Tabs>
-  </div>
+  </div >
     ;
 }

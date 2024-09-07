@@ -10,13 +10,15 @@ const ExchangeSchedule = () => {
   const [slots, setSlots] = useState<SlotInfo[]>([]);
 
   useEffect(() => {
-    if (!classes) setSlots([]);
-    else setSlots(classes.map((currentClass: ClassDescriptor) => currentClass.classInfo.slots).flat())
+    // setSlots(classes
+    //   ? classes.map((currentClass: ClassDescriptor) => currentClass.classInfo.slots).flat()
+    //   : []
+    // )
   }, [classes])
 
   return <Schedule
-    classes={classes ?? []}
-    slots={slots}
+    classes={[]}
+    slots={slots ?? []}
   />;
 }
 
