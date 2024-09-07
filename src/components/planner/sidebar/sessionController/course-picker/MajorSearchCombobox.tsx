@@ -64,7 +64,13 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
         >
           <CommandInput placeholder="Procurar curso..." className="h-9" />
           <CommandEmpty>Nenhum curso corresponde à tua pesquisa.</CommandEmpty>
-          <CommandList>
+          <CommandList
+            className="min-h-fit overflow-y-auto"
+            // This is needed to allow scroll of the result contents with the mouse wheel. Without this,
+            // the event would be handled by the <Popover> component, not allowing the <CommandList> to
+            // handle that event and actually be scrollable with the mouse wheel
+            onWheel={(e) => e.stopPropagation()}
+          >
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
