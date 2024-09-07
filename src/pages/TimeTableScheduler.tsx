@@ -3,6 +3,7 @@ import { useEffect, useContext } from 'react'
 import { Schedule, Sidebar } from '../components/planner'
 import { Major } from '../@types'
 import MajorContext from '../contexts/MajorContext'
+import PlannerSchedule from '../components/planner/schedule/PlannerSchedule'
 
 const TimeTableSchedulerPage = () => {
   const { setMajors } = useContext(MajorContext);
@@ -19,7 +20,7 @@ const TimeTableSchedulerPage = () => {
       {/* Schedule Preview */}
       <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
-          <Schedule />
+          <PlannerSchedule />
         </div>
       </div>
 

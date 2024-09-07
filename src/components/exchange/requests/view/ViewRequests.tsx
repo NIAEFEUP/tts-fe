@@ -21,42 +21,6 @@ export const ViewRequests = ({
   const { data, setSize, isLoading } = useMarketplaceRequests();
   const requests = data ? [].concat(...data) : [];
 
-  console.log("current requests are: ", requests);
-  console.log("current wanabee requests are: ", data);
-
-  // const requests: Array<MarketplaceRequest> = [
-  //   {
-  //     id: 1,
-  //     options: [
-  //       {
-  //         acronym: "IA",
-  //         name: "Inteligência Artifical",
-  //         classNameRequesterGoesFrom: "3LEIC09",
-  //         classNameRequesterGoesTo: "3LEIC05"
-  //       },
-  //       {
-  //         acronym: "CG",
-  //         name: "Computação Gráfica",
-  //         classNameRequesterGoesFrom: "3LEIC09",
-  //         classNameRequesterGoesTo: "3LEIC05"
-  //       }
-  //     ],
-  //     student: { name: "Tozé Manuel", mecNumber: "202108880" }
-  //   },
-  //   {
-  //     id: 2,
-  //     options: [
-  //       {
-  //         acronym: "CPD",
-  //         name: "Computação Paralela e Distribuída",
-  //         classNameRequesterGoesFrom: "3LEIC09",
-  //         classNameRequesterGoesTo: "3LEIC05"
-  //       },
-  //     ],
-  //     student: { name: "Armindo Santos", mecNumber: "202108881" }
-  //   }
-  // ]
-
   return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
     <div className="flex flex-row justify-between items-center w-full">
       <h1 className="font-bold text-xl">Pedidos</h1>

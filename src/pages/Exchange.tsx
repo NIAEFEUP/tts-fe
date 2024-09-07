@@ -1,4 +1,5 @@
 import { ExchangeSidebar } from "../components/exchange/ExchangeSidebar";
+import ExchangeSchedule from "../components/exchange/schedule/ExchangeSchedule";
 import { Schedule } from "../components/planner";
 
 const ExchangePage = () => {
@@ -6,7 +7,7 @@ const ExchangePage = () => {
     {/* Schedule Preview */}
     <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
       <div className="h-full w-full">
-        <Schedule />
+        <ExchangeSchedule />
       </div>
     </div>
 
