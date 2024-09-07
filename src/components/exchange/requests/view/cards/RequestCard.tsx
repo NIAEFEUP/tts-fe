@@ -22,6 +22,7 @@ export const RequestCard = ({
   setHiddenRequests
 }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [hovered, setHovered] = useState<boolean>(false);
 
   const hide = () => {
     const newHidden = new Set(hiddenRequests);
@@ -29,48 +30,58 @@ export const RequestCard = ({
     setHiddenRequests(newHidden);
   }
 
-  return <Card key={request.id} className={`shadow-md ${hiddenRequests.has(request.id) ? "hidden" : ""}`}>
+  return <Card
+    onMouseOver={() => { setHovered(true) }}
+    onMouseLeave={() => { setHovered(false) }}
+    key={request.id}
+    className={`shadow-md ${hiddenRequests.has(request.id) ? "hidden" : ""}`}
+  >
     <CardHeader className="flex flex-row gap-x-2 items-center p-4">
       <img className="w-10 h-10 rounded-full shadow-md" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"></img>
       <div className="flex flex-row justify-between items-center w-full">
-        <div className="flex flex-col gap-y-1">
-          <CardTitle>{request.issuer_name}</CardTitle>
+        <div className="flex flex-col w-full">
+          <div className="flex flex-row justify-between w-full items-center">
+            <CardTitle>{request.issuer_name}</CardTitle>
+            <div className="flex flex-row items-center">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="icon" className="text-black" onClick={() => hide()}>
+                      <ArchiveBoxIcon className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Esconder</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              {open
+                ?
+                <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
+                  <ChevronUpIcon className="h-5 w-5" />
+                </Button>
+                : <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
+                  <ChevronDownIcon className="h-5 w-5" />
+                </Button>
+              }
+            </div>
+          </div>
           <CardDescription>
             {open
               ? <p>{request.issuer_nmec}</p>
               :
-              <div className="flex flex-row space-x-1">
+              <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
                 {request.options?.map((option) => (
-                  <RequestCardClassBadge option={option} />
+                  <RequestCardClassBadge
+                    option={option}
+                    requestCardHovered={hovered}
+                  />
                 ))}
               </div>
 
             }
           </CardDescription>
-        </div>
-        <div className="flex flex-row items-center">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="icon" className="text-black" onClick={() => hide()}>
-                  <ArchiveBoxIcon className="h-5 w-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Esconder</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          {open
-            ?
-            <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
-              <ChevronUpIcon className="h-5 w-5" />
-            </Button>
-            : <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
-              <ChevronDownIcon className="h-5 w-5" />
-            </Button>
-          }
         </div>
       </div>
     </CardHeader>
