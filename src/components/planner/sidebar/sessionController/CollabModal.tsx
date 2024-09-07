@@ -1,47 +1,71 @@
-import React, { useContext, useState, Fragment } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
 import CollabSession from './CollabSession';
-import CollabCreateSession from './CollabCreateSession';
 import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 
 const PICK_SESSION = 'PICK_SESSION';
-const CREATE_SESSION = 'CREATE_SESSION';
 const SESSION = 'SESSION';
-
+const generateUniqueId = () => Date.now();
 const CollabModal = ({ isOpen, closeModal }) => {
-  const { sessions, setSessions, currentSession, setCurrentSession } = useContext(CollabSessionContext);
+  const { sessions, setSessions, currentSessionIndex, setCurrentSessionIndex } = useContext(CollabSessionContext);
   const [currentView, setCurrentView] = useState(PICK_SESSION);
 
-  const handleStartSession = (session) => {
-    setCurrentSession(session);
+  useEffect(() => {
+    if (isOpen) {
+      if (currentSessionIndex !== null && sessions.find(s => s.id === currentSessionIndex)) {
+        setCurrentView(SESSION);
+      } else {
+        setCurrentView(PICK_SESSION);
+      }
+    }
+  }, [isOpen, currentSessionIndex, sessions]);
+
+  const currentSession = sessions.find(s => s.id === currentSessionIndex) || null;
+
+  const handleStartSession = (sessionId) => {
+    setCurrentSessionIndex(sessionId);
     setCurrentView(SESSION);
   };
 
   const handleCreateSession = () => {
-    //how am I supposed to create a new session? is this even frontend or backend? create here and then store elsewhere idk xd
-    const newSession= {
-      id: Date.now().toString(),
+    const newSession = {
+      id: generateUniqueId(),
       name: Math.random().toString(36).substr(2, 9),
       lastEdited: new Date().toLocaleDateString(),
       lifeSpan: 30,
-      currentUser: 'TheCreater',
+      currentUser: 'TheCreator',
       link: `https://collab.app/session/${Date.now().toString()}`,
       participants: ['T'],
     };
-    setSessions([...sessions, newSession]);
-    setCurrentSession(newSession);
+    console.log('CollabModal -> newSession', newSession);
+    setSessions(prevSessions => [...prevSessions, newSession]);
+    setCurrentSessionIndex(newSession.id);
     setCurrentView(SESSION);
   };
 
   const handleExitSession = () => {
-    setCurrentSession(null);
+    setCurrentSessionIndex(null);
     setCurrentView(PICK_SESSION);
   };
 
   const handleDeleteSession = (sessionId) => {
-    setSessions((prevSessions) => prevSessions.filter(session => session.id !== sessionId));
+    setSessions(prevSessions => prevSessions.filter(session => session.id !== sessionId));
+    if (currentSession?.id === sessionId) {
+      handleExitSession();
+    }
+  };
+
+  const handleUpdateUser = (updatedUser) => {
+    if (currentSession) {
+      const updatedSession = { ...currentSession, currentUser: updatedUser };
+      setSessions(prevSessions =>
+        prevSessions.map(session =>
+          session.id === currentSession.id ? updatedSession : session
+        )
+      );
+    }
   };
 
   return (
@@ -84,20 +108,17 @@ const CollabModal = ({ isOpen, closeModal }) => {
                 {currentView === PICK_SESSION && (
                   <CollabPickSession
                     sessions={sessions}
-                    onStartSession={handleStartSession}  // For entering an existing session
-                    onCreateSession={handleCreateSession}  // For creating a new session
+                    onStartSession={handleStartSession}
+                    onCreateSession={handleCreateSession}
                     onDeleteSession={handleDeleteSession}
                   />
                 )}
 
-                {currentView === CREATE_SESSION && (
-                  <CollabCreateSession />
-                )}
-
-                {currentView === SESSION && (
+                {currentView === SESSION && currentSession && (
                   <CollabSession
                     session={currentSession}
                     onExitSession={handleExitSession}
+                    onUpdateUser={handleUpdateUser}
                   />
                 )}
               </Dialog.Panel>

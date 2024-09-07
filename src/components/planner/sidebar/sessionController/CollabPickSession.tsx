@@ -20,7 +20,7 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
       <Button
         variant="icon"
         className="flex items-center rounded-lg bg-primary py-6"
-        onClick={onCreateSession}  // Changed to onCreateSession for starting a new session
+        onClick={onCreateSession}
       >
         <PlayCircleIcon className="h-8 w-8 mr-2 " />
         Iniciar nova sessão
@@ -32,9 +32,9 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
       <p className="text-sm text-gray-600">
         As sessões têm um tempo de vida, pelo que se não quiseres perder as tuas opções, terás de guardar para o teu dispositivo localmente.
       </p>
-      <ul className="mt-4 grid grid-cols-1 gap-y-4">
+      <ul className="mt-4 flex flex-col sm:grid sm:grid-cols-1 sm:gap-y-4">
         {sessions.map((session) => (
-          <li key={session.id} className="grid grid-cols-7 items-center text-sm text-gray-800 gap-4">
+          <li key={session.id} className="sm:grid sm:grid-cols-7 flex flex-col sm:mt-0  mt-6 items-center text-sm text-gray-800 gap-4">
             <span className="col-span-2 truncate whitespace-nowrap font-bold">{session.name}</span>
             <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">editado {session.lastEdited}</span>
             <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">expira {session.lifeSpan} dias</span>
@@ -42,12 +42,12 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
               <a
                 href="#"
                 className="text-primary hover:underline"
-                onClick={() => onStartSession(session)}  // Existing session handler
+                onClick={() => onStartSession(session.id)}
               >
                 Entrar
               </a>
               <button
-                className="text-primary hover:text-red-800" 
+                className="text-primary hover:text-red-800"
                 onClick={() => onDeleteSession(session.id)}
               >
                 &times;

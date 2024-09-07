@@ -5,9 +5,11 @@ import CollabModal from './CollabModal';
 import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 import { CollabSession } from '../../../../@types';
 
+
+
 const dummySessions: CollabSession[] = [
   { 
-    id: '1', 
+    id: 1, 
     name: 'asdipuhaosd', 
     lastEdited: 'há 3 dias', 
     currentUser: 'Jota Mongoose', 
@@ -16,7 +18,7 @@ const dummySessions: CollabSession[] = [
     participants: ['Duarte', 'Olivia']  
   },
   { 
-    id: '2', 
+    id: 2, 
     name: 'uyavfiuya8gf3', 
     lastEdited: 'há 1 semana', 
     currentUser: 'msantos', 
@@ -26,17 +28,16 @@ const dummySessions: CollabSession[] = [
   },
 ];
 
-
 const Collab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sessions, setSessions] = useState(dummySessions);
-  const [currentSession, setCurrentSession] = useState(null);
+  const [currentSessionIndex, setCurrentSessionIndex] = useState<number | null>(null); 
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <CollabSessionContext.Provider value={{ sessions, setSessions, currentSession, setCurrentSession }}>
+    <CollabSessionContext.Provider value={{ sessions, setSessions, currentSessionIndex, setCurrentSessionIndex }}>
       <div>
         <Button variant="icon" className="bg-primary" onClick={openModal}>
           <UsersIcon className="h-5 w-5" />
