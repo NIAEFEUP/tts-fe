@@ -19,16 +19,24 @@ const CollabModal = ({ isOpen, closeModal }) => {
     setCurrentView(SESSION);
   };
 
+  const handleCreateSession = () => {
+    //how am I supposed to create a new session? is this even frontend or backend? create here and then store elsewhere idk xd
+    const newSession= {
+      id: Date.now().toString(),
+      name: Math.random().toString(36).substr(2, 9),
+      lastEdited: new Date().toLocaleDateString(),
+      lifeSpan: 30,
+      currentUser: 'TheCreater',
+      link: `https://collab.app/session/${Date.now().toString()}`,
+      participants: ['T'],
+    };
+    setSessions([...sessions, newSession]);
+    setCurrentSession(newSession);
+    setCurrentView(SESSION);
+  };
+
   const handleExitSession = () => {
     setCurrentSession(null);
-    setCurrentView(PICK_SESSION);
-  };
-
-  const handleCreateSession = () => {
-    setCurrentView(CREATE_SESSION);
-  };
-
-  const handleReturnToPickSession = () => {
     setCurrentView(PICK_SESSION);
   };
 
@@ -76,7 +84,8 @@ const CollabModal = ({ isOpen, closeModal }) => {
                 {currentView === PICK_SESSION && (
                   <CollabPickSession
                     sessions={sessions}
-                    onStartSession={handleStartSession}
+                    onStartSession={handleStartSession}  // For entering an existing session
+                    onCreateSession={handleCreateSession}  // For creating a new session
                     onDeleteSession={handleDeleteSession}
                   />
                 )}

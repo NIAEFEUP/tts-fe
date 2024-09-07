@@ -1,18 +1,27 @@
-import React from 'react';
-import { DocumentDuplicateIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
+import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { StopIcon } from '@heroicons/react/24/solid';
 import { Button } from '../../../ui/button';
-import { useToast } from '../../../ui/use-toast'
+import { useToast } from '../../../ui/use-toast';
+
 const CollabSession = ({ session, onExitSession }) => {
-  const {toast} =useToast()
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(session.sessionLink);
+    navigator.clipboard.writeText(session.link);
     toast({ title: 'Link copiado', description: 'Podes partilhar o link com amigos para colaborar contigo.' });
+    setCopied(true);
+
+    // Reset the button state after 2 seconds
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
 
   return (
     <div className="text-left">
-      <h3 className="text-xl font-bold leading-6 mb-6 ">
+      <h3 className="text-xl font-bold leading-6 mb-6">
         Colaboração ao vivo...
       </h3>
 
@@ -35,14 +44,19 @@ const CollabSession = ({ session, onExitSession }) => {
             className="flex-1 block w-full rounded-md bg-red-50 border-gray-300 shadow-sm sm:text-sm"
             readOnly
           />
-          <Button
-            variant="icon"
-            className="ml-2 px-3 py-1 flex items-center bg-primary hover:bg-primary-dark text-white text-sm font-medium rounded-lg"
-            onClick={handleCopyLink}
-          >
-            <DocumentDuplicateIcon className="h-5 w-5 mr-1" />
-            Copiar link
-          </Button>
+        <Button
+        variant="icon"
+        className={`ml-2 px-3 py-1 flex items-center ${copied ? 'bg-green-200 text-white' : 'bg-primary text-white'} text-sm font-medium rounded-lg min-w-[120px]`} // min-width added here
+        onClick={handleCopyLink}
+      >
+        {copied ? (
+          <CheckIcon className="h-5 w-5 text-green-700" />
+        ) : (
+          <DocumentDuplicateIcon className="h-5 w-5" />
+        )}
+        {copied ? '' : ' Copiar link'}
+      </Button>
+
         </div>
       </div>
 

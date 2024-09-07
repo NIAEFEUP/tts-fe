@@ -2,7 +2,7 @@ import React from 'react';
 import { PlayCircleIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { Button } from '../../../ui/button';
 
-const CollabPickSession = ({ sessions, onStartSession, onDeleteSession }) => (
+const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDeleteSession }) => (
   <div className="text-center">
     <UserGroupIcon className="h-40 w-40 mx-auto text-primary" />
     <h3 className="text-xl font-bold leading-6 text-primary">
@@ -16,13 +16,14 @@ const CollabPickSession = ({ sessions, onStartSession, onDeleteSession }) => (
       Não te preocupes, todas as tuas opções continuam a guardar localmente no teu dispositivo.
     </p>
 
-    <div className="flex justify-center mt-6 space-x-4">
+    <div className="flex justify-center mt-6 space-x-4 ">
       <Button
         variant="icon"
-        className="flex items-center bg-primary"
+        className="flex items-center rounded-lg bg-primary py-6"
+        onClick={onCreateSession}  // Changed to onCreateSession for starting a new session
       >
-        <PlayCircleIcon className="h-8 w-8 mr-2" />
-        Iniciar sessão
+        <PlayCircleIcon className="h-8 w-8 mr-2 " />
+        Iniciar nova sessão
       </Button>
     </div>
 
@@ -41,11 +42,11 @@ const CollabPickSession = ({ sessions, onStartSession, onDeleteSession }) => (
               <a
                 href="#"
                 className="text-primary hover:underline"
-                onClick={() => onStartSession(session)}
+                onClick={() => onStartSession(session)}  // Existing session handler
               >
                 Entrar
               </a>
-              <button 
+              <button
                 className="text-primary hover:text-red-800" 
                 onClick={() => onDeleteSession(session.id)}
               >
