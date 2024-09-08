@@ -1,33 +1,27 @@
 import useSwr from "swr";
 import api from "../api/backend";
-import Cookies from 'js-cookie';
 
 const useSession = () => {
 
   const trySession = async (key) => {
     try {
       const res = await fetch(`${api.BACKEND_URL}/${key}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "X-CSRFToken": Cookies.get('csrftoken')
-        }
+        method: "GET",
       });
 
-      if (res.ok) {
-        return "something"
-      }
+      return await res.json();
     } catch (e) {
       console.error(e);
     }
   }
 
-  const { data, error, mutate } = useSwr("login/", trySession, {
+  const { data, error, mutate } = useSwr("auth/info/", trySession, {
     refreshInterval: 3600000000
   });
 
   return {
-    signedIn: !data
+    signedIn: data ? data.signed : false,
+    user: data ? data : null
   }
 }
 

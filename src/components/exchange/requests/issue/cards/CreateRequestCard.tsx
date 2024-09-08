@@ -1,31 +1,44 @@
 import { ArrowLeftIcon, ArrowRightIcon, MinusIcon } from "@heroicons/react/24/outline"
-import { Dispatch, SetStateAction, useState } from "react"
-import { CreateRequestCardMetadata, CreateRequestData } from "../../../../../@types"
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
+import { ClassDescriptor, CourseInfo, CreateRequestCardMetadata, CreateRequestData } from "../../../../../@types"
+import ScheduleContext from "../../../../../contexts/ScheduleContext"
 import { Button } from "../../../../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../ui/dropdown-menu"
 import { Switch } from "../../../../ui/switch"
 
 type Props = {
-  requestMetadata: CreateRequestCardMetadata
+  courseInfo: CourseInfo
   requestsHook: [Map<string, CreateRequestData>, Dispatch<SetStateAction<Map<string, CreateRequestData>>>]
 }
 
 export const CreateRequestCard = ({
-  requestMetadata,
+  courseInfo,
   requestsHook
 }: Props) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const [requests, setRequests] = requestsHook;
+  const [issuerOriginClass, setIssuerOriginClass] = useState<string | null>(null);
   const [selectedDestinationClass, setSelectedDestinationClass] = useState<string | null>(null);
   const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<string | null>(null);
+  const { schedule } = useContext(ScheduleContext);
+
+  // agora é necessário ir buscar a metadata
+
+  useEffect(() => {
+    if (schedule) {
+      setIssuerOriginClass(
+        schedule.find((scheduleItem: ClassDescriptor) => scheduleItem.courseInfo.id === courseInfo.id).classInfo.name
+      );
+    }
+  }, [schedule]);
 
   const excludeClass = () => {
     setExpanded(false);
-    if (requests.get(requestMetadata.courseUnitName)) {
+    if (requests.get(courseInfo.name)) {
       const newRequests = new Map(requests);
-      newRequests.delete(requestMetadata.courseUnitName)
+      newRequests.delete(courseInfo.name)
       setRequests(newRequests);
     }
 
@@ -46,29 +59,29 @@ export const CreateRequestCard = ({
     setHasStudentToExchange(checked);
   }
 
-  const addRequest = () => {
-    const currentRequest: CreateRequestData = {
-      classNameRequesterGoesFrom: requestMetadata.requesterClassName,
-      classNameRequesterGoesTo: selectedDestinationClass
-    }
+  // const addRequest = () => {
+  //   const currentRequest: CreateRequestData = {
+  //     classNameRequesterGoesFrom: requestMetadata.requesterClassName,
+  //     classNameRequesterGoesTo: selectedDestinationClass
+  //   }
+  //
+  //   if (selectedDestinationStudent) currentRequest.other_student = Number(selectedDestinationStudent);
+  //
+  //   const newRequests = new Map(requests);
+  //   newRequests.set(requestMetadata.courseUnitName, currentRequest);
+  //   setRequests(newRequests);
+  // }
 
-    if (selectedDestinationStudent) currentRequest.other_student = Number(selectedDestinationStudent);
-
-    const newRequests = new Map(requests);
-    newRequests.set(requestMetadata.courseUnitName, currentRequest);
-    setRequests(newRequests);
-  }
-
-  return <Card key={requestMetadata.courseUnitName} className="shadow-md">
+  return <Card key={courseInfo.name} className="shadow-md">
     <CardHeader className="flex flex-row justify-between items-center">
-      <CardTitle className="text-xl">{requestMetadata.courseUnitName}</CardTitle>
+      <CardTitle className="text-xl">{courseInfo.name}</CardTitle>
       {
         expanded ?
           <div className="flex flex-row items-center gap-x-2">
             <Button variant="destructive" className="p-4 h-7" onClick={() => excludeClass()}>
               -
             </Button>
-            <Button className="p-4 h-7" onClick={() => addRequest()}>
+            <Button className="p-4 h-7" onClick={() => { }}>
               +
             </Button>
           </div>
@@ -79,7 +92,7 @@ export const CreateRequestCard = ({
     </CardHeader>
     <CardContent className={`flex flex-col gap-y-4 ${expanded ? "" : "hidden"}`}>
       <div className="flex flex-row items-center gap-x-2">
-        <p>{requestMetadata.requesterClassName}</p>
+        <p>{issuerOriginClass}</p>
         <ArrowRightIcon className="w-5 h-5" />
         <div className="p-2 rounded-md w-full">
           <DropdownMenu>
@@ -89,12 +102,12 @@ export const CreateRequestCard = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full">
-              {requestMetadata.availableClasses.filter((className) => className !== requestMetadata.requesterClassName)
+              {/*requestMetadata.availableClasses.filter((className) => className !== requestMetadata.requesterClassName)
                 .map((className: string) => (
                   <DropdownMenuItem className="w-full" onSelect={() => { setSelectedDestinationClass(className) }}>
                     <p className="w-full">{className}</p>
                   </DropdownMenuItem>
-                ))}
+                ))*/}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -114,11 +127,11 @@ export const CreateRequestCard = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full">
-              {requestMetadata.availableClasses.map((className: string) => (
+              {/*requestMetadata.availableClasses.map((className: string) => (
                 <DropdownMenuItem className="w-full" onSelect={() => { setSelectedDestinationClass(className) }}>
                   <p className="w-full">{className}</p>
                 </DropdownMenuItem>
-              ))}
+              ))*/}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

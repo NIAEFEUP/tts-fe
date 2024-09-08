@@ -22,10 +22,12 @@ export default () => {
   }
 
   const { data, error, mutate } = useSWR("schedule", getSchedule, {});
-  const classes = useMemo(() => data ? data : null, [data]);
+  const schedule = useMemo(() => data ? data.schedule : null, [data]);
+  const sigarraSynced = data ? data.noChanges : null;
 
   return {
-    classes,
+    schedule,
+    sigarraSynced,
     error,
     loading: !data,
     mutate,

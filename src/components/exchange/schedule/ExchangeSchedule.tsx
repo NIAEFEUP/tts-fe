@@ -1,23 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { ClassDescriptor, SlotInfo } from "../../../@types";
-import CourseContext from "../../../contexts/CourseContext";
-import MultipleOptionsContext from "../../../contexts/MultipleOptionsContext";
+import ScheduleContext from "../../../contexts/ScheduleContext";
 import useSchedule from "../../../hooks/useSchedule";
 import { Schedule } from "../../planner";
 
 const ExchangeSchedule = () => {
-  const { classes, loading } = useSchedule();
+  const { schedule } = useContext(ScheduleContext);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
 
   useEffect(() => {
-    // setSlots(classes
-    //   ? classes.map((currentClass: ClassDescriptor) => currentClass.classInfo.slots).flat()
-    //   : []
-    // )
-  }, [classes])
+    if (!schedule) return;
+
+    setSlots(schedule.map((currentClass: ClassDescriptor) => currentClass.classInfo.slots).flat())
+  }, [schedule])
 
   return <Schedule
-    classes={[]}
+    classes={schedule ?? []}
     slots={slots ?? []}
   />;
 }

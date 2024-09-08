@@ -18,6 +18,8 @@ import useVerifyCourseUnitHashes from '../../hooks/useVerifyCourseUnitHashes'
 import CourseContext from '../../contexts/CourseContext'
 import SessionContext from '../../contexts/SessionContext'
 import { useContext } from 'react'
+import api from '../../api/backend'
+import { Button } from '../ui/button'
 
 const navigation = [
   {
@@ -47,7 +49,7 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const { pickedCourses,} =useContext(CourseContext);
+  const { pickedCourses, } = useContext(CourseContext);
   const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
   const { signedIn } = useContext(SessionContext);
 
@@ -101,10 +103,14 @@ const Header = ({ siteTitle, location }: Props) => {
                 <div className="hidden self-center md:inline-flex items-center gap-x-2">
                   <DarkModeSwitch />
                   {signedIn ?
-                    <a href="index.html">
-                      <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
-                    </a>
-                    : <a href="http://localhost/Shibboleth.sso/Login">
+                    <Button variant="icon" onClick={async () => {
+                      await fetch(`${api.OIDC_LOGOUT_URL}/`, { method: "POST", credentials: 'include' });
+                    }}>
+                      <a>
+                        <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
+                      </a>
+                    </Button>
+                    : <a href={`${api.OIDC_LOGIN_URL}`}>
                       <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
                     </a>
                   }

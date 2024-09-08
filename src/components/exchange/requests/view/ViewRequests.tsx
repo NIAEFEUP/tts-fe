@@ -1,7 +1,8 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { MarketplaceRequest } from "../../../../@types";
+import { ClassDescriptor, MarketplaceRequest } from "../../../../@types";
 import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
+import useSchedule from "../../../../hooks/useSchedule";
 import { Badge } from "../../../ui/badge";
 import { Button } from "../../../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
@@ -21,6 +22,7 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<string>>(new Set());
+  const { classes, loading } = useSchedule();
 
   const { data, size, setSize, isLoading } = useMarketplaceRequests(requestTypeFilters[currentRequestTypeFilter]);
 
@@ -65,7 +67,6 @@ export const ViewRequests = ({
       </TabsList>
       <TabsContent value="todos">
         <ViewRequestsFilters
-          enrolledCourseUnits={["CG", "CPD", "IA"]}
           availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
         />

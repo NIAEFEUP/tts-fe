@@ -14,6 +14,7 @@ const CombinedProvider = ({ children }) => {
   const [coursesInfo, setCoursesInfo] = useState([]);
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
   const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
+  const [ucsModalOpen, setUcsModalOpen] = useState<boolean>(false);
 
   //TODO: Looks suspicious
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
@@ -48,7 +49,8 @@ const CombinedProvider = ({ children }) => {
               pickedCourses, setPickedCourses,
               coursesInfo, setCoursesInfo,
               checkboxedCourses, setCheckboxedCourses,
-              choosingNewCourse, setChoosingNewCourse
+              choosingNewCourse, setChoosingNewCourse,
+              ucsModalOpen, setUcsModalOpen
             }
           }>
             <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>

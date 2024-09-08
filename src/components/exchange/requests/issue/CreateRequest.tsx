@@ -1,6 +1,9 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { CourseInfo, CreateRequestCardMetadata, CreateRequestData } from "../../../../@types"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
+import ScheduleContext from "../../../../contexts/ScheduleContext"
+import useSchedule from "../../../../hooks/useSchedule"
+import useStudentCourseUnits from "../../../../hooks/useStudentCourseUnits"
 import { Button } from "../../../ui/button"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 
@@ -12,6 +15,9 @@ export const CreateRequest = ({
   setCreatingRequest
 }: Props) => {
   const [requests, setRequests] = useState<Map<string, CreateRequestData>>(new Map());
+  const { schedule } = useContext(ScheduleContext);
+  const enrolledCourseUnits = useStudentCourseUnits(schedule);
+
   const requestEligbleCourseUnits: Array<CreateRequestCardMetadata> = [{
     courseUnitName: "Inteligência Artifical",
     courseUnitAcronym: "IA",
@@ -34,10 +40,10 @@ export const CreateRequest = ({
     <div className="flex flex-col gap-y-4">
       <h1 className="font-bold text-xl">Criar pedido</h1>
       <div className="flex flex-col gap-y-2">
-        {requestEligbleCourseUnits.map((metadata: CreateRequestCardMetadata) => (
+        {Array.from(enrolledCourseUnits).map((courseInfo: CourseInfo) => (
           <CreateRequestCard
             requestsHook={[requests, setRequests]}
-            requestMetadata={metadata}
+            courseInfo={courseInfo}
           />
         ))}
 
