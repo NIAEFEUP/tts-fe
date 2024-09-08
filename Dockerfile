@@ -6,6 +6,9 @@ FROM node:21-alpine3.19 AS build
 RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
 
+# Install protobuf compiler
+RUN apk add --no-cache protobuf
+
 COPY .*rc ./
 COPY *.json ./
 COPY .prettier* ./
@@ -46,4 +49,3 @@ FROM nginx:alpine AS prod
 
 COPY --from=prod-build /usr/src/tts-fe/build /usr/share/nginx/html
 COPY nginx.tts.conf /etc/nginx/conf.d/default.conf
-
