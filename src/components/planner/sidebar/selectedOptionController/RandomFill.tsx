@@ -9,6 +9,8 @@ import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
+import { toast } from '../../../ui/use-toast'
+import { Desert } from '../../../svgs'
 
 type Props = {
   className?: string
@@ -171,7 +173,13 @@ const RandomFill = ({ className }: Props) => {
   }
 
   const applySchedule = (classesCombinations: ClassInfo[]) => {
-    if (classesCombinations.length <= 0) return
+    if (!classesCombinations || classesCombinations.length <= 0) {
+      toast({
+        title: 'Não foi possível gerar turmas!',
+        description: 'Não encontramos uma combinação com as turmas das disciplinas selecionadas sem conflitos',
+        position: 'top-right',
+      });
+    }
 
     setMultipleOptions((prevMultipleOptions) => {
       const newMultipleOptions = [...prevMultipleOptions]
@@ -252,7 +260,7 @@ const RandomFill = ({ className }: Props) => {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger>
           <Button
             onClick={applyRandomSchedule}
             variant="icon"
@@ -261,8 +269,8 @@ const RandomFill = ({ className }: Props) => {
             <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" asChild>
-          <ScrollArea className="mx-5 h-72 rounded px-3">
+        <TooltipContent side="bottom" >
+          <ScrollArea className="max-h-fit rounded px-3 w-full">
             <div className="p-1">Preenchimento aleatório</div>
             <Separator />
             {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
@@ -279,6 +287,12 @@ const RandomFill = ({ className }: Props) => {
                 </label>
               </div>
             ))}
+
+            {classesCombinations.length === 0 &&
+              <div className="flex flex-col mx-auto m-4 w-full">
+                <Desert className="w-full h-24" />
+                <p className="mt-2 text-sm text-center">Não foi encontrada nenhuma turma</p>
+              </div>}
           </ScrollArea>
         </TooltipContent>
       </Tooltip>
