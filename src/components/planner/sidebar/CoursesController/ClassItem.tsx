@@ -41,9 +41,13 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
         // retrieve class with the picked class id of the course option
         const pickedClass = pickedCourse.classes.find(c => c.id === course_option.picked_class_id);
 
-        classes.push(pickedClass);
+        if (pickedClass) classes.push(pickedClass);
       }
     }
+
+    console.log("multiple options: ", { ...multipleOptions });
+    console.log("picked courses: ", [...pickedCourses]);
+    console.log("classes: ", classes);
 
     for (const pickedClass of classes)
       for (const slot1 of pickedClass.slots)
