@@ -45,10 +45,6 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
       }
     }
 
-    console.log("multiple options: ", { ...multipleOptions });
-    console.log("picked courses: ", [...pickedCourses]);
-    console.log("classes: ", classes);
-
     for (const pickedClass of classes)
       for (const slot1 of pickedClass.slots)
         for (const slot2 of classInfo.slots)
