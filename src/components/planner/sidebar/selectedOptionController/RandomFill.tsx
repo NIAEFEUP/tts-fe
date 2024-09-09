@@ -260,7 +260,7 @@ const RandomFill = ({ className }: Props) => {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <Button
             onClick={applyRandomSchedule}
             variant="icon"
@@ -269,8 +269,8 @@ const RandomFill = ({ className }: Props) => {
             <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" >
-          <ScrollArea className="max-h-fit rounded px-3 w-full">
+        <TooltipContent side="bottom" asChild>
+          <ScrollArea className="max-h-72 rounded px-3 w-full overflow-y-auto">
             <div className="p-1">Preenchimento aleatório</div>
             <Separator />
             {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
