@@ -47,6 +47,7 @@ const Refresh = () => {
       );
 
       const classIdMap: Record<number, number> = {}; //Maps old class ids to new class ids and is used to update the picked classes in multiple options
+
       pickedCourses.forEach((course) => {
         const oldClasses = course.classes || [];
         const newClasses = finalCourses.find((finalCourse) => finalCourse.id === course.id)?.classes || [];
