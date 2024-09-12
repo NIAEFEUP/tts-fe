@@ -9,7 +9,7 @@ import { ScrollArea } from "../../../ui/scroll-area"
 
 type Props = {
   availableClasses: Array<string>
-  filterCourseUnitsHook: [Set<string>, Dispatch<SetStateAction<Set<string>>>]
+  filterCourseUnitsHook: [Set<number>, Dispatch<SetStateAction<Set<number>>>]
 }
 
 export const ViewRequestsFilters = ({
@@ -17,8 +17,8 @@ export const ViewRequestsFilters = ({
   filterCourseUnitsHook
 }: Props) => {
   const [filterCourseUnits, setFilterCourseUnits] = filterCourseUnitsHook
-  const { schedule } = useContext(ScheduleContext);
-  const enrolledCourseUnits = useStudentCourseUnits(schedule);
+  const { exchangeSchedule } = useContext(ScheduleContext);
+  const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
   return <div className="flex flex-row justify-between w-full">
     {/* Course unit filters */}
@@ -26,12 +26,12 @@ export const ViewRequestsFilters = ({
       {Array.from(enrolledCourseUnits).map((courseUnit: CourseInfo) => (
         <div>
           <Badge
-            className={`${filterCourseUnits.has(courseUnit.acronym) ? "bg-black text-white" : "bg-gray-200 text-gray-700"} cursor-pointer hover:text-white`}
+            className={`${filterCourseUnits.has(courseUnit.id) ? "bg-black text-white" : "bg-gray-200 text-gray-700"} cursor-pointer hover:text-white`}
             onClick={() => {
               const newFilterCourseUnits = new Set(filterCourseUnits);
 
-              if (newFilterCourseUnits.has(courseUnit.acronym)) newFilterCourseUnits.delete(courseUnit.acronym);
-              else newFilterCourseUnits.add(courseUnit.acronym);
+              if (newFilterCourseUnits.has(courseUnit.id)) newFilterCourseUnits.delete(courseUnit.id);
+              else newFilterCourseUnits.add(courseUnit.id);
 
               setFilterCourseUnits(newFilterCourseUnits);
             }}

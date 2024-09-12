@@ -128,5 +128,5 @@ export type MarketplaceRequest = {
 
 export type Student = {
   name: string,
-  mecNumber: string
+  mecNumber: number
 }

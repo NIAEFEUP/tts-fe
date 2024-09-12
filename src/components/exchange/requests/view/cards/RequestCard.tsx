@@ -1,7 +1,8 @@
 import { ArchiveBoxIcon, ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { ChevronUpIcon } from "@heroicons/react/24/solid"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { MarketplaceRequest } from "../../../../../@types"
+import ScheduleContext from "../../../../../contexts/ScheduleContext"
 import { Badge } from "../../../../ui/badge"
 import { Button } from "../../../../ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card"
@@ -21,6 +22,7 @@ export const RequestCard = ({
   hiddenRequests,
   setHiddenRequests
 }: Props) => {
+  const { setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
 
@@ -114,9 +116,22 @@ export const RequestCard = ({
             Selecionar todas
           </label>
         </div>
-        <Button>
-          Propôr troca
-        </Button>
+        <div className="flex flex-row gap-2">
+          <Button onClick={() => {
+            setExchangeSchedule((prev) => {
+              const newExchangeSchedule = [...prev];
+              request?.options.forEach((option) => {
+                // newExchangeSchedule.push()
+              });
+              return [];
+            })
+          }}>
+            Prever
+          </Button>
+          <Button>
+            Propôr troca
+          </Button>
+        </div>
       </div>
     </CardFooter>
   </Card >

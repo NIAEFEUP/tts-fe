@@ -21,10 +21,10 @@ export const ViewRequests = ({
   const requestCardsContainerRef = useRef(null);
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
-  const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<string>>(new Set());
+  const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
   const { classes, loading } = useSchedule();
 
-  const { data, size, setSize, isLoading } = useMarketplaceRequests(requestTypeFilters[currentRequestTypeFilter]);
+  const { data, size, setSize, isLoading } = useMarketplaceRequests(filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter]);
 
   const requests = data ? [].concat(...data) : [];
 
@@ -46,6 +46,8 @@ export const ViewRequests = ({
       if (requestCardsContainerRef.current) requestCardsContainerRef.current.removeEventListener('scroll', onScroll);
     }
   }, []);
+
+  console.log("current requests: ", requests);
 
   return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
     <div className="flex flex-row justify-between items-center w-full">
@@ -70,7 +72,6 @@ export const ViewRequests = ({
           availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
         />
-
         <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {
             isLoading
@@ -90,8 +91,18 @@ export const ViewRequests = ({
           }
         </div>
       </TabsContent>
-      <TabsContent value="meus-pedidos"></TabsContent>
-      <TabsContent value="recebidos"></TabsContent>
+      <TabsContent value="meus-pedidos">
+        <ViewRequestsFilters
+          availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
+          filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
+        />
+      </TabsContent>
+      <TabsContent value="recebidos">
+        <ViewRequestsFilters
+          availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
+          filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
+        />
+      </TabsContent>
     </Tabs>
   </div >
     ;
