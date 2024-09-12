@@ -3,12 +3,14 @@ import { createContext } from 'react'
 import { ClassDescriptor, CourseInfo, MultipleOptions } from '../@types'
 
 interface ScheduleContent {
-  schedule: Array<ClassDescriptor>
+  exchangeSchedule: Array<ClassDescriptor>
+  setExchangeSchedule: Dispatch<SetStateAction<Array<ClassDescriptor>>>
   enrolledCourseUnits: Array<CourseInfo>
 }
 
 const ScheduleContext: Context<ScheduleContent> = createContext({
-  schedule: [],
+  exchangeSchedule: [],
+  setExchangeSchedule: () => { },
   enrolledCourseUnits: []
 });
 

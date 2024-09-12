@@ -1,4 +1,4 @@
-import { BareFetcher } from "swr";
+import { BareFetcher, Key } from "swr";
 import { SWRInfiniteConfiguration } from "swr/dist/infinite";
 import { CreateRequestData, MarketplaceRequest } from "../../@types";
 import api from "../backend";
@@ -11,7 +11,7 @@ const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
   return true;
 }
 
-const submitExchangeRequest = async (requests: Map<string, CreateRequestData>) => {
+const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) => {
   const formData = new FormData();
 
   for (const request of requests.values()) {
@@ -38,9 +38,23 @@ const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceReque
   })
 }
 
+const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
+  return fetch(`${api.BACKEND_URL}/course_unit/${courseUnitId}/exchange/metadata`).then(async (res) => {
+    if (res.ok) {
+      return await res.json();
+    }
+
+    return [];
+  }).catch((e) => {
+    console.error(e);
+    return [];
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
-  retrieveMarketplaceRequest
+  retrieveMarketplaceRequest,
+  retrieveRequestCardMetadata
 }
 
 export default exchangeRequestService;

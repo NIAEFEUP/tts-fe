@@ -20,6 +20,7 @@ import SessionContext from '../../contexts/SessionContext'
 import { useContext } from 'react'
 import api from '../../api/backend'
 import { Button } from '../ui/button'
+import { LoginButton } from '../auth/LoginButton'
 
 const navigation = [
   {
@@ -103,16 +104,13 @@ const Header = ({ siteTitle, location }: Props) => {
                 <div className="hidden self-center md:inline-flex items-center gap-x-2">
                   <DarkModeSwitch />
                   {signedIn ?
-                    <Button variant="icon" onClick={async () => {
-                      await fetch(`${api.OIDC_LOGOUT_URL}/`, { method: "POST", credentials: 'include' });
-                    }}>
-                      <a>
+                    <Button>
+                      <a href={`${api.OIDC_LOGIN_URL}`} className="flex flex-row gap-1">
+                        <p>Sair</p>
                         <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
                       </a>
                     </Button>
-                    : <a href={`${api.OIDC_LOGIN_URL}`}>
-                      <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
-                    </a>
+                    : <LoginButton />
                   }
                 </div>
               </div>

@@ -14,30 +14,12 @@ type Props = {
 export const CreateRequest = ({
   setCreatingRequest
 }: Props) => {
-  const [requests, setRequests] = useState<Map<string, CreateRequestData>>(new Map());
-  const { schedule } = useContext(ScheduleContext);
-  const enrolledCourseUnits = useStudentCourseUnits(schedule);
-
-  const requestEligbleCourseUnits: Array<CreateRequestCardMetadata> = [{
-    courseUnitName: "Inteligência Artifical",
-    courseUnitAcronym: "IA",
-    requesterClassName: "3LEIC09",
-    availableClasses: [
-      "3LEIC01",
-      "3LEIC02",
-      "3LEIC03",
-      "3LEIC04",
-      "3LEIC05",
-      "3LEIC06",
-      "3LEIC07",
-      "3LEIC08",
-      "3LEIC09",
-      "3LEIC10"
-    ]
-  }];
+  const [requests, setRequests] = useState<Map<number, CreateRequestData>>(new Map());
+  const { exchangeSchedule } = useContext(ScheduleContext);
+  const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
   return <div className="flex flex-col">
-    <div className="flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-4 max-h-screen overflow-y-auto">
       <h1 className="font-bold text-xl">Criar pedido</h1>
       <div className="flex flex-col gap-y-2">
         {Array.from(enrolledCourseUnits).map((courseInfo: CourseInfo) => (
@@ -48,7 +30,7 @@ export const CreateRequest = ({
         ))}
 
         {
-          requestEligbleCourseUnits.length === 0
+          enrolledCourseUnits.length === 0
             ? <p className="text-center">Não foram encontradas cadeiras com inscrição tua!</p>
             : <></>
         }

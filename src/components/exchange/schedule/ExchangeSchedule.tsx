@@ -5,17 +5,17 @@ import useSchedule from "../../../hooks/useSchedule";
 import { Schedule } from "../../planner";
 
 const ExchangeSchedule = () => {
-  const { schedule } = useContext(ScheduleContext);
+  const { exchangeSchedule } = useContext(ScheduleContext);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
 
   useEffect(() => {
-    if (!schedule) return;
+    if (!exchangeSchedule) return;
 
-    setSlots(schedule.map((currentClass: ClassDescriptor) => currentClass.classInfo.slots).flat())
-  }, [schedule])
+    setSlots(exchangeSchedule.map((currentClass: ClassDescriptor) => currentClass.classInfo.slots).flat())
+  }, [exchangeSchedule])
 
   return <Schedule
-    classes={schedule ?? []}
+    classes={exchangeSchedule ?? []}
     slots={slots ?? []}
   />;
 }
