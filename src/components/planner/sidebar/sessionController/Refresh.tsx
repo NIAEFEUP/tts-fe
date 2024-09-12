@@ -5,6 +5,7 @@ import StorageAPI from '../../../../api/storage';
 import { Button } from '../../../ui/button';
 import CourseContext from '../../../../contexts/CourseContext';
 import useVerifyCourseUnitHashes from '../../../../hooks/useVerifyCourseUnitHashes';
+import  MultipleOptionsContext  from '../../../../contexts/MultipleOptionsContext';
 import {
   TooltipProvider,
   Tooltip,
@@ -16,6 +17,7 @@ import { useToast } from '../../../ui/use-toast';
 const Refresh = () => {
   const { pickedCourses, setPickedCourses } = useContext(CourseContext);
   const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
+  const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -30,11 +32,12 @@ const Refresh = () => {
           const updatedClasses = await BackendAPI.getCourseClass(course);
           return {
             ...course,
-            hash: mismatchedMap.get(course.id) as string,
+            hash: mismatchedMap.get(course.id),
             classes: updatedClasses,
           };
         })
       );
+
       const finalCourses = pickedCourses.map((course) =>
         mismatchedMap.has(course.id)
           ? updatedCoursesWithClasses.find(
@@ -42,18 +45,47 @@ const Refresh = () => {
             ) || course
           : course
       );
+
+      const classIdMap: Record<number, number> = {}; //Maps old class ids to new class ids and is used to update the picked classes in multiple options
+
+      pickedCourses.forEach((course) => {
+        const oldClasses = course.classes || [];
+        const newClasses = finalCourses.find((finalCourse) => finalCourse.id === course.id)?.classes || [];
+        oldClasses.forEach((oldClass) => {
+          const newClass = newClasses.find((cls) => cls.name === oldClass.name);
+          if (newClass) {
+            classIdMap[oldClass.id] = newClass.id;
+          }else{
+            classIdMap[oldClass.id] = null;
+          }
+        });
+      });
+
+      let updatedMultipleOptions = [...multipleOptions];
+      for (let i = 0; i < updatedMultipleOptions.length; i++) {
+        for (let j = 0; j < updatedMultipleOptions[i].course_options.length; j++) {
+          const courseOption = updatedMultipleOptions[i].course_options[j];
+          const oldClassId = courseOption.picked_class_id;
+          if (classIdMap[oldClassId] !== undefined ) {
+            updatedMultipleOptions[i].course_options[j].picked_class_id = classIdMap[oldClassId];
+          }
+        }
+      }
+      setMultipleOptions(updatedMultipleOptions);
+      StorageAPI.setMultipleOptionsStorage(updatedMultipleOptions);
       StorageAPI.setPickedCoursesStorage(finalCourses);
       setPickedCourses(finalCourses);
       mismatchedMap.clear();
-
       toast({
         title: 'Informação atualizada',
         description: 'A informação das UCs foi atualizada com sucesso!',
         position: 'top-right',
       });
     }
+
     setIsLoading(false);
   };
+
 
   if (mismatchedMap.size === 0) {
     return null;

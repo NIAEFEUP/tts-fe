@@ -316,7 +316,6 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
     const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
-    if (!classInfo) return [];
     return classInfo.slots
   })
 }
