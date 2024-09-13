@@ -7,7 +7,7 @@ RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
 
 # Install protobuf compiler
-RUN apk add --no-cache protobuf
+RUN apk add --no-cache protoc
 
 COPY .*rc ./
 COPY *.json ./
