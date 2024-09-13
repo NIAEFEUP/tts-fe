@@ -94,3 +94,39 @@ export type ImportedCourses = {
   [key: string]: string
 }
 
+/* Exchange data types */
+
+export type ExchangeOption = {
+  course_unit_acronym: string,
+  course_unit_name: string,
+  course_unit_id: number,
+  class_issuer_goes_from: string
+  class_issuer_goes_to: string,
+  other_student?: number // The current student will be determined by the backend depending on session data
+}
+
+export type CreateRequestCardMetadata = {
+  courseUnitName: string,
+  courseUnitAcronym: string,
+  requesterClassName: string,
+  availableClasses: Array<string> // Classes from the course unit
+}
+
+export type CreateRequestData = {
+  classNameRequesterGoesFrom: string,
+  classNameRequesterGoesTo: string,
+  other_student?: number
+}
+
+export type MarketplaceRequest = {
+  id: number,
+  issuer_name: string,
+  issuer_nmec: number,
+  date: string,
+  options?: Array<ExchangeOption>
+}
+
+export type Student = {
+  name: string,
+  mecNumber: number
+}

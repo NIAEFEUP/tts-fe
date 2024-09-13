@@ -5,15 +5,19 @@ import CombinedProvider from './contexts/CombinedProvider'
 import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pages'
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
+import Exchange from './pages/Exchange'
+import { useEffect } from 'react'
+import api from './api/backend'
 
 const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
 
 // Configures the path for pages.
 const pages = [
-  { path: getPath(configToUse.paths.about), location: 'Sobre', element: AboutPage, liquid: true },
-  { path: getPath(configToUse.paths.planner), location: 'Horários', element: TimeTableSchedulerPage, liquid: true },
-  { path: getPath(configToUse.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
-  { path: getPath(configToUse.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
+  { path: getPath(config.paths.about), location: 'Sobre', element: AboutPage, liquid: true },
+  { path: getPath(config.paths.planner), location: 'Horários', element: TimeTableSchedulerPage, liquid: true },
+  { path: getPath(config.paths.exchange), location: 'Exchange', element: Exchange, liquid: true },
+  { path: getPath(config.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
+  { path: getPath(config.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
 ]
 
 const redirects = [
@@ -30,6 +34,11 @@ const App = () => {
   const { enableAutoPageviews } = plausible
   enableAutoPageviews()
 
+  useEffect(() => {
+    fetch(`${api.BACKEND_URL}/csrf/`, { credentials: "include" }).then((res) => {
+    })
+  });
+
   return (
     <BrowserRouter>
       <CombinedProvider>
@@ -41,8 +50,8 @@ const App = () => {
               element={
                 <Layout location={page.location} title={page.location} liquid={page.liquid}>
                   <div>
-                    <page.element />
                     <Toaster />
+                    <page.element />
                   </div>
                 </Layout>
               }
