@@ -4,15 +4,15 @@ import { CollabSession } from '../@types';
 interface CollabSessionContextContent {
   sessions: CollabSession[];
   setSessions: Dispatch<SetStateAction<CollabSession[]>>;
-  currentSessionIndex: number | null;  // Use index instead of the full session object
-  setCurrentSessionIndex: Dispatch<SetStateAction<number | null>>;
+  currentSessionId: number | null;  // Use index instead of the full session object
+  setcurrentSessionId: Dispatch<SetStateAction<number | null>>;
 }
 
 const CollabSessionContext: Context<CollabSessionContextContent> = createContext({
   sessions: [],
   setSessions: () => {},
-  currentSessionIndex: null,  // Initially no session is selected
-  setCurrentSessionIndex: () => {},
+  currentSessionId: null,  // Initially no session is selected
+  setcurrentSessionId: () => {},
 });
 
 export default CollabSessionContext;

@@ -9,23 +9,23 @@ const PICK_SESSION = 'PICK_SESSION';
 const SESSION = 'SESSION';
 const generateUniqueId = () => Date.now();
 const CollabModal = ({ isOpen, closeModal }) => {
-  const { sessions, setSessions, currentSessionIndex, setCurrentSessionIndex } = useContext(CollabSessionContext);
+  const { sessions, setSessions, currentSessionId, setcurrentSessionId } = useContext(CollabSessionContext);
   const [currentView, setCurrentView] = useState(PICK_SESSION); //Defines in which modal we are
 
   useEffect(() => {
     if (isOpen) {
-      if (currentSessionIndex !== null && sessions.find(s => s.id === currentSessionIndex)) {
+      if (currentSessionId !== null && sessions.find(s => s.id === currentSessionId)) {
         setCurrentView(SESSION);
       } else {
         setCurrentView(PICK_SESSION);
       }
     }
-  }, [isOpen, currentSessionIndex, sessions]);
+  }, [isOpen, currentSessionId, sessions]);
 
-  const currentSession = sessions.find(s => s.id === currentSessionIndex) || null;
+  const currentSession = sessions.find(s => s.id === currentSessionId) || null;
 
   const handleStartSession = (sessionId) => {
-    setCurrentSessionIndex(sessionId);
+    setcurrentSessionId(sessionId);
     setCurrentView(SESSION);
   };
 
@@ -41,12 +41,12 @@ const CollabModal = ({ isOpen, closeModal }) => {
     };
     console.log('CollabModal -> newSession', newSession);
     setSessions(prevSessions => [...prevSessions, newSession]);
-    setCurrentSessionIndex(newSession.id);
+    setcurrentSessionId(newSession.id);
     setCurrentView(SESSION);
   };
 
   const handleExitSession = () => {
-    setCurrentSessionIndex(null);
+    setcurrentSessionId(null);
     setCurrentView(PICK_SESSION);
   };
 
