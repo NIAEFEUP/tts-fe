@@ -10,7 +10,7 @@ const SESSION = 'SESSION';
 const generateUniqueId = () => Date.now();
 const CollabModal = ({ isOpen, closeModal }) => {
   const { sessions, setSessions, currentSessionIndex, setCurrentSessionIndex } = useContext(CollabSessionContext);
-  const [currentView, setCurrentView] = useState(PICK_SESSION);
+  const [currentView, setCurrentView] = useState(PICK_SESSION); //Defines in which modal we are
 
   useEffect(() => {
     if (isOpen) {
@@ -29,7 +29,7 @@ const CollabModal = ({ isOpen, closeModal }) => {
     setCurrentView(SESSION);
   };
 
-  const handleCreateSession = () => {
+  const handleCreateSession = () => { //Dummy function to create a session...
     const newSession = {
       id: generateUniqueId(),
       name: Math.random().toString(36).substr(2, 9),
@@ -37,7 +37,7 @@ const CollabModal = ({ isOpen, closeModal }) => {
       lifeSpan: 30,
       currentUser: 'TheCreator',
       link: `https://collab.app/session/${Date.now().toString()}`,
-      participants: ['T'],
+      participants: ['TheCreator'],
     };
     console.log('CollabModal -> newSession', newSession);
     setSessions(prevSessions => [...prevSessions, newSession]);
@@ -59,7 +59,13 @@ const CollabModal = ({ isOpen, closeModal }) => {
 
   const handleUpdateUser = (updatedUser) => {
     if (currentSession) {
-      const updatedSession = { ...currentSession, currentUser: updatedUser };
+      const updatedSession = {
+        ...currentSession,
+        currentUser: updatedUser,
+        participants: currentSession.participants.map(participant =>
+          participant === currentSession.currentUser ? updatedUser : participant
+        )
+      };
       setSessions(prevSessions =>
         prevSessions.map(session =>
           session.id === currentSession.id ? updatedSession : session
@@ -67,7 +73,6 @@ const CollabModal = ({ isOpen, closeModal }) => {
       );
     }
   };
-
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>

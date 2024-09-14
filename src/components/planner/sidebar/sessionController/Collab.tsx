@@ -6,32 +6,32 @@ import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 import { CollabSession } from '../../../../@types';
 
 
-
+// dummySessions are just dummy default sessions to help visualize them until we actually have sessions where participants can join and stuff...
 const dummySessions: CollabSession[] = [
-  { 
-    id: 1, 
-    name: 'asdipuhaosd', 
-    lastEdited: 'há 3 dias', 
-    currentUser: 'Jota Mongoose', 
-    link: 'https://ni.fe.up.pt/tts/#room=d8750cf5...', 
+  {
+    id: 1,
+    name: 'asdipuhaosd',
+    lastEdited: 'há 3 dias',
+    currentUser: 'Jota Mongoose',
+    link: 'https://ni.fe.up.pt/tts/#room=d8750cf5...',
     lifeSpan: 7,
-    participants: ['Duarte', 'Olivia']  
+    participants: ['Jota Mongoose','Duarte', 'Olivia', 'Ricardo', 'Miguel', 'João', 'Mariana', 'Ana']
   },
-  { 
-    id: 2, 
-    name: 'uyavfiuya8gf3', 
-    lastEdited: 'há 1 semana', 
-    currentUser: 'msantos', 
-    link: 'https://ni.fe.up.pt/tts/#room=d8750cf5...', 
+  {
+    id: 2,
+    name: 'uyavfiuya8gf3',
+    lastEdited: 'há 1 semana',
+    currentUser: 'msantos',
+    link: 'https://ni.fe.up.pt/tts/#room=d8750cf5...',
     lifeSpan: 14,
-    participants: ['Fabio', 'Luisa']
+    participants: [ 'msantos','Fabio', 'Luisa']
   },
 ];
 
 const Collab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sessions, setSessions] = useState(dummySessions);
-  const [currentSessionIndex, setCurrentSessionIndex] = useState<number | null>(null); 
+  const [currentSessionIndex, setCurrentSessionIndex] = useState<number | null>(null);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

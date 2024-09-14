@@ -1,15 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { StopIcon } from '@heroicons/react/24/solid';
 import { Button } from '../../../ui/button';
 import { useToast } from '../../../ui/use-toast';
-import CollabSessionContext from '../../../../contexts/CollabSessionContext';
+
+const pastelColors = [ //Colors for the participants
+  'bg-orange-200 text-orange-700',
+  'bg-blue-200 text-blue-800',
+  'bg-yellow-200 text-yellow-800',
+  'bg-green-200 text-green-800',
+  'bg-purple-200 text-purple-800',
+];
 
 const CollabSession = ({ session, onExitSession, onUpdateUser }) => {
-  console.log("here")
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
-  console.log('CollabSession -> session', session);
+  const [lastValidUser, setLastValidUser] = useState(session.currentUser);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(session.link);
@@ -23,6 +29,22 @@ const CollabSession = ({ session, onExitSession, onUpdateUser }) => {
     }, 2000);
   };
 
+  const handleUserChange = (e) => {
+    const newValue = e.target.value.trim();
+    if (newValue !== '') {
+      setLastValidUser(newValue);
+    }
+  };
+
+  const handleUserBlur = (e) => {
+    const newValue = e.target.value.trim();
+    if (newValue !== '') {
+      onUpdateUser(newValue);
+    } else {
+      onUpdateUser(lastValidUser);
+    }
+  };
+
   return (
     <div className="text-left">
       <h3 className="text-xl font-bold leading-6 mb-6">Colaboração ao vivo...</h3>
@@ -31,8 +53,9 @@ const CollabSession = ({ session, onExitSession, onUpdateUser }) => {
         <label className="block text-sm font-medium text-gray-700 mb-1">O teu nome</label>
         <input
           type="text"
-          value={session.currentUser}
-          onChange={(e) => onUpdateUser(e.target.value)}
+          defaultValue={session.currentUser}
+          onChange={handleUserChange}
+          onBlur={handleUserBlur}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
         />
       </div>
@@ -60,22 +83,28 @@ const CollabSession = ({ session, onExitSession, onUpdateUser }) => {
           </Button>
         </div>
       </div>
-
       <div className="mt-6">
         <h4 className="text-md font-medium text-gray-900 mb-2">Participantes</h4>
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap space-x-2">
           {session.participants.map((user, index) => (
-            <div
-              key={index}
-              className={`rounded-full h-10 w-10 flex items-center justify-center ${
-                index % 2 === 0 ? 'bg-orange-200 text-orange-700' : 'bg-blue-200 text-blue-700'
-              }`}
-            >
-              {user[0]}
+            <div key={index} className="relative group mb-2">
+              <div
+                className={`rounded-full h-10 w-10 flex items-center justify-center ${
+                  pastelColors[index % pastelColors.length]
+                }`}
+              >
+                {user[0]}
+              </div>
+              {user && (
+                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-opacity duration-200 bg-gray-900 text-white text-xs rounded-md px-2 py-1">
+                  {user}
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
+
 
       <p className="mt-6 text-sm text-gray-600">
         Interromper a sessão irá desconectá-lo da sala, mas você poderá continuar trabalhando com a cena, localmente.
