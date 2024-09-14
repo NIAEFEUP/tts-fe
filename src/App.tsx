@@ -2,7 +2,7 @@ import { Toaster } from './components/ui/toaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
-import { AboutPage, TimeTableSchedulerPage, FaqsPage, NotFoundPage } from './pages'
+import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage } from './pages'
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 
@@ -11,7 +11,7 @@ const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
 // Configures the path for pages.
 const pages = [
   { path: getPath(configToUse.paths.about), location: 'Sobre', element: AboutPage, liquid: true },
-  { path: getPath(configToUse.paths.planner), location: 'Horários', element: TimeTableSchedulerPage, liquid: true },
+  { path: getPath(configToUse.paths.planner), location: 'Horários', element: TimeTableSelectorPage, liquid: true },
   { path: getPath(configToUse.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
   { path: getPath(configToUse.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
 ]

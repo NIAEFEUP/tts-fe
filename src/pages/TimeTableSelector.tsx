@@ -1,4 +1,4 @@
-import BackendAPI from '../api//backend'
+import BackendAPI from '../api/backend'
 import StorageAPI from '../api/storage'
 import { useState, useEffect } from 'react'
 import { Schedule, Sidebar } from '../components/planner'
@@ -6,7 +6,7 @@ import { CourseInfo, Major } from '../@types'
 import MajorContext from '../contexts/MajorContext'
 import CourseContext from '../contexts/CourseContext'
 
-const TimeTableSchedulerPage = () => {
+const TimeTableSelectorPage = () => {
   const [majors, setMajors] = useState<Major[]>([])
   const [coursesInfo, setCoursesInfo] = useState([]);
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
@@ -47,4 +47,4 @@ const TimeTableSchedulerPage = () => {
   )
 }
 
-export default TimeTableSchedulerPage
+export default TimeTableSelectorPage;
