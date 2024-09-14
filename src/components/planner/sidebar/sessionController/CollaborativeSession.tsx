@@ -28,7 +28,7 @@ const dummySessions: CollabSession[] = [
   },
 ];
 
-const Collab = () => {
+const CollaborativeSession = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sessions, setSessions] = useState(dummySessions);
   const [currentSessionId, setcurrentSessionId] = useState<number | null>(null);
@@ -49,4 +49,4 @@ const Collab = () => {
   );
 };
 
-export default Collab;
+export default CollaborativeSession;
