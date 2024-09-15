@@ -12,7 +12,7 @@ const RequestCardClassBadge = ({ option, requestCardHovered }: Props) => {
     <Badge
       className="bg-gray-100 text-black"
     >
-      {option.course_unit_acronym}
+      {option.course_info?.acronym}
     </Badge>
     <Badge
       className={`relative right-2 bg-gray-300 text-black ${requestCardHovered ? "block" : "hidden"} transition-all delay-1000`}

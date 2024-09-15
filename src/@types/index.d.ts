@@ -97,8 +97,7 @@ export type ImportedCourses = {
 /* Exchange data types */
 
 export type ExchangeOption = {
-  course_unit_acronym: string,
-  course_unit_name: string,
+  course_info: CourseInfo,
   course_unit_id: number,
   class_issuer_goes_from: string
   class_issuer_goes_to: string,
@@ -123,7 +122,8 @@ export type MarketplaceRequest = {
   issuer_name: string,
   issuer_nmec: number,
   date: string,
-  options?: Array<ExchangeOption>
+  options?: Array<ExchangeOption>,
+  classes?: Array<ClassInfo>
 }
 
 export type Student = {

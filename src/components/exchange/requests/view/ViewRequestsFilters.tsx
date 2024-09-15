@@ -20,6 +20,8 @@ export const ViewRequestsFilters = ({
   const { exchangeSchedule } = useContext(ScheduleContext);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
+  console.log("enrolled ourse units: ", enrolledCourseUnits);
+
   return <div className="flex flex-row justify-between w-full">
     {/* Course unit filters */}
     <div className="flex flex-row gap-2 w-2/3 flex-wrap">

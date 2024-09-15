@@ -28,6 +28,8 @@ const Schedule = ({
 }: Props) => {
   const scheduleRef = useRef(null);
 
+  console.log("currently classes: ", classes);
+
   // TODO: Improvements by functional programming
   const slotTypes: string[] = useMemo(() => {
     let aux = new Set()

@@ -1,7 +1,7 @@
 import { ArchiveBoxIcon, ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { ChevronUpIcon } from "@heroicons/react/24/solid"
 import { Dispatch, SetStateAction, useContext, useState } from "react"
-import { MarketplaceRequest } from "../../../../../@types"
+import { ClassInfo, ExchangeOption, MarketplaceRequest } from "../../../../../@types"
 import ScheduleContext from "../../../../../contexts/ScheduleContext"
 import { Badge } from "../../../../ui/badge"
 import { Button } from "../../../../ui/button"
@@ -22,7 +22,7 @@ export const RequestCard = ({
   hiddenRequests,
   setHiddenRequests
 }: Props) => {
-  const { setExchangeSchedule } = useContext(ScheduleContext);
+  const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
 
@@ -31,6 +31,8 @@ export const RequestCard = ({
     newHidden.add(request.id);
     setHiddenRequests(newHidden);
   }
+
+  console.log("what? ", request?.options);
 
   return <Card
     onMouseOver={() => { setHovered(true) }}
@@ -92,10 +94,10 @@ export const RequestCard = ({
         <div>
           <Separator className="my-2" />
           <div className="flex flex-row gap-x-4 items-center w-full mb-2">
-            <Checkbox id={option.course_unit_acronym} className="flex-grow w-1/12 h-8" />
-            <label htmlFor={option.course_unit_acronym} className="w-11/12">
+            <Checkbox id={option.course_info?.acronym} className="flex-grow w-1/12 h-8" />
+            <label htmlFor={option.course_info?.acronym} className="w-11/12">
               <div className="flex flex-col">
-                <p>{option.course_unit_acronym} - {option.course_unit_name}</p>
+                <p>{option.course_info?.acronym} - {option.course_info?.name}</p>
                 <div className="flex flex-row gap-x-2 items-center font-bold">
                   <p>{option.class_issuer_goes_from}</p>
                   <ArrowRightIcon className="w-5 h-5" />
@@ -118,13 +120,15 @@ export const RequestCard = ({
         </div>
         <div className="flex flex-row gap-2">
           <Button onClick={() => {
-            setExchangeSchedule((prev) => {
-              const newExchangeSchedule = [...prev];
-              request?.options.forEach((option) => {
-                // newExchangeSchedule.push()
-              });
-              return [];
-            })
+            const newExchangeSchedule = [...exchangeSchedule];
+            request?.options.forEach((option: ExchangeOption, idx: number) => {
+              newExchangeSchedule.push(
+                {
+                  courseInfo: option.course_info,
+                  classInfo: request.classes[idx]
+                });
+            });
+            setExchangeSchedule(newExchangeSchedule);
           }}>
             Prever
           </Button>
