@@ -107,7 +107,7 @@ const CollabSession = ({ session, onExitSession, onUpdateUser }) => {
 
 
       <p className="mt-6 text-sm text-gray-600">
-        Interromper a sessão irá desconectar-te da sala, mas podes continuar a trabalhar com a cena, localmente.
+        Interromper a sessão irá desconectar-te da sala, mas podes continuar a criar e ver mais combinações de horários localmente
       </p>
 
       <div className="mt-6 text-center">
