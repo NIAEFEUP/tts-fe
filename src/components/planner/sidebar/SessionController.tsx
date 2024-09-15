@@ -11,7 +11,7 @@ const SessionController = () => {
     <div className="flex w-full gap-1">
       <CoursePicker />
       <Refresh />
-      <CollaborativeSession />
+      {import.meta.env.VITE_APP_PROD == 0 && <CollaborativeSession />}
       <Export />
     </div>
   )
