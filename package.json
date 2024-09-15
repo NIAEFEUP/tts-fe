@@ -55,10 +55,11 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "tsc && npm run generate:protobuf && vite build",
     "preview": "vite preview",
     "check": "npx prettier --check .",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "generate:protobuf": "protoc -I=./tts-protobufs/protos --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=./src/protos --ts_out=./src/protos ./tts-protobufs/protos/*.proto"
   },
   "eslintConfig": {
     "extends": [
@@ -84,6 +85,7 @@
     "postcss": "^8.4.41",
     "prettier": "^2.6.2",
     "prettier-plugin-tailwindcss": "^0.1.10",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "ts-protoc-gen": "^0.15.0"
   }
 }
