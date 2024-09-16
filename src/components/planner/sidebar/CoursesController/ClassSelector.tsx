@@ -111,8 +111,7 @@ const ClassSelector = ({ course }: Props) => {
               <ClassSelectorDropdownController
                 course={course}
                 selectedClassIdHook={[selectedClassId, setSelectedClassId]}
-                previewHook={[preview, setPreview]}
-                display={display}
+                setPreview={setPreview}
                 removePreview={removePreview}
                 contentRef={classSelectorContentRef}
                 triggerRef={classSelectorTriggerRef}

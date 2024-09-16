@@ -21,7 +21,7 @@ export default [
     },
   },
   {
-    ignores: ["src/components/ui/*", "src/components/svgs/*"],
+    ignores: ["src/components/ui/*", "src/components/svgs/*", "build/"],
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
