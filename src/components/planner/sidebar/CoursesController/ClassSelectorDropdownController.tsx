@@ -1,6 +1,7 @@
 import { User } from "lucide-react";
 import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from "../../../../@types";
+import StorageAPI from "../../../../api/storage";
 import CourseContext from "../../../../contexts/CourseContext";
 import MultipleOptionsContext from "../../../../contexts/MultipleOptionsContext";
 import { getAllPickedSlots, schedulesConflict, teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from "../../../../utils";
@@ -55,12 +56,20 @@ const ClassSelectorDropdownController = ({
   triggerRef
 }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
-  const { pickedCourses, setPickedCourses, choosingNewCourse } = useContext(CourseContext);
+  const { pickedCourses } = useContext(CourseContext);
   const [selectedClassId, setSelectedClassId] = selectedClassIdHook;
   const [preview, setPreview] = previewHook;
 
   // This is used to store the ids of the teachers so it is easy to verify if a teacher is filtered or not
-  const [filteredTeachers, setFilteredTeachers] = useState(teacherIdsFromCourseInfo(course));
+  const [filteredTeachers, setFilteredTeachers] = useState<Array<number>>(() => {
+    return StorageAPI.getCourseFilteredTeachersStorage(selectedOption, course.id) ?? teacherIdsFromCourseInfo(course)
+  });
+
+  useEffect(() => {
+    const newMultipleOptions = [...multipleOptions];
+    newMultipleOptions[selectedOption].course_options.find((option) => option.course_id === course.id).filteredTeachers = filteredTeachers;
+    setMultipleOptions(newMultipleOptions);
+  }, [filteredTeachers]);
 
   /**
       * This is used to retrieve the teachers from a course and to populate the filter of the teachers
@@ -78,10 +87,6 @@ const ClassSelectorDropdownController = ({
     return buildTeacherFilters(teachers, filteredTeachers);
   });
 
-  const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  if (courseOption)
-    courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
-
   //(thePeras): Classes options should be a new state
   /**
    * Return the classes options filtered by the selected teachers
@@ -95,7 +100,9 @@ const ClassSelectorDropdownController = ({
   }
 
   useEffect(() => {
-    setFilteredTeachers(teacherIdsFromCourseInfo(course));
+    if (filteredTeachers.length === 0) {
+      setFilteredTeachers(teacherIdsFromCourseInfo(course));
+    }
   }, [pickedCourses])
 
   useEffect(() => {
@@ -103,10 +110,6 @@ const ClassSelectorDropdownController = ({
       return buildTeacherFilters(teachers, filteredTeachers);
     });
   }, [filteredTeachers])
-
-  useEffect(() => {
-    setFilteredTeachers(courseOption?.filteredTeachers);
-  }, [choosingNewCourse])
 
   useEffect(() => {
     if (triggerRef.current && contentRef.current) {

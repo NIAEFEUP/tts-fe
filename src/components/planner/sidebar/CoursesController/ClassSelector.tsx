@@ -16,7 +16,6 @@ type Props = {
   course: CourseInfo
 }
 
-//TODO: Check this code, not too good
 const ClassSelector = ({ course }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
@@ -27,8 +26,6 @@ const ClassSelector = ({ course }: Props) => {
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
   const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  if (courseOption)
-    courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
 
   const [locked, setLocked] = useState(courseOption?.locked)
 
