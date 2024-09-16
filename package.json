@@ -57,6 +57,7 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "check": "npx prettier --check .",
     "format": "npx prettier --write ."

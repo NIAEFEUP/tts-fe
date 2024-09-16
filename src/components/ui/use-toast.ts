@@ -17,14 +17,12 @@ type ToasterToast = ToastProps & {
   position?: string
 }
 
-/* eslint-disable */
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
   DISMISS_TOAST: "DISMISS_TOAST",
   REMOVE_TOAST: "REMOVE_TOAST",
 } as const
-/* eslint-enable */
 
 let count = 0
 
@@ -33,7 +31,6 @@ function genId() {
   return count.toString()
 }
 
-// eslint-disable-next-line no-console
 type ActionType = typeof actionTypes
 
 type Action =
