@@ -210,7 +210,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }
@@ -255,7 +255,7 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }
