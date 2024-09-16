@@ -4,7 +4,6 @@ import { CourseInfo } from '../../../../../@types'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { removeCourseOption } from '../../../../../utils'
-import { Button } from '../../../../ui/button'
 
 type Props = {
   course: CourseInfo

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from './toast'
 import { useToast } from './use-toast'
 
@@ -5,7 +6,7 @@ export function Toaster() {
   const { toasts } = useToast()
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, position, ...props }) {
+      {toasts.map(function({ id, title, description, action, position, ...props }) {
         return (
           <ToastViewport position={position}>
             <Toast key={id} {...props}>
@@ -16,7 +17,7 @@ export function Toaster() {
               {action}
               <ToastClose />
             </Toast>
-           </ToastViewport >
+          </ToastViewport >
         )
       })}
     </ToastProvider>

@@ -24,11 +24,7 @@ const SelectedOptionController = ({
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
-  let isHovered = false
-  let isScrollingBack = false
-
   const input = useRef(null)
-  const [scrollDirection, setScrollDirection] = useState(1); // 1 is right, -1 is left
 
   const inputIsActive = () => document.activeElement === input.current;
 
@@ -36,14 +32,12 @@ const SelectedOptionController = ({
   const startScroll = () => {
     if (inputIsActive()) return;
 
-    isHovered = true
     input.current.scrollLeft += 5
   }
 
   const stopScroll = () => {
     if (inputIsActive()) return;
 
-    isHovered = false
     input.current.scrollLeft = 0
   }
 
@@ -95,7 +89,7 @@ const SelectedOptionController = ({
               theme={enabled ? Theme.DARK : Theme.LIGHT}
               suggestedEmojisMode={SuggestionMode.RECENT}
               emojiStyle={EmojiStyle.APPLE}
-              onEmojiClick={(emojiData, e) => {
+              onEmojiClick={(emojiData) => {
                 changeOptionIcon(emojiData)
                 setEmojiPickerOpen(false)
               }}

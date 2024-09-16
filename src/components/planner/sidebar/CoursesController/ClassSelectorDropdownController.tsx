@@ -16,7 +16,7 @@ type Props = {
   selectedClassIdHook: [number | null, Dispatch<SetStateAction<number | null>>]
   previewHook: [number | null, Dispatch<SetStateAction<number | null>>]
   display: number
-  removePreview: Function
+  removePreview: () => void,
   contentRef: any
   triggerRef: any
 }

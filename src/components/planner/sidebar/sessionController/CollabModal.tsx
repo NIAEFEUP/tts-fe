@@ -8,7 +8,13 @@ import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 const PICK_SESSION = 'PICK_SESSION';
 const SESSION = 'SESSION';
 const generateUniqueId = () => Date.now();
-const CollabModal = ({ isOpen, closeModal }) => {
+
+type Props = {
+  isOpen: boolean,
+  closeModal: () => void
+}
+
+const CollabModal = ({ isOpen, closeModal }: Props) => {
   const { sessions, setSessions, currentSessionId, setcurrentSessionId } = useContext(CollabSessionContext);
   const [currentView, setCurrentView] = useState(PICK_SESSION); //Defines in which modal we are
 
@@ -39,7 +45,6 @@ const CollabModal = ({ isOpen, closeModal }) => {
       link: `https://collab.app/session/${Date.now().toString()}`,
       participants: ['TheCreator'],
     };
-    console.log('CollabModal -> newSession', newSession);
     setSessions(prevSessions => [...prevSessions, newSession]);
     setcurrentSessionId(newSession.id);
     setCurrentView(SESSION);
@@ -50,14 +55,14 @@ const CollabModal = ({ isOpen, closeModal }) => {
     setCurrentView(PICK_SESSION);
   };
 
-  const handleDeleteSession = (sessionId) => {
+  const handleDeleteSession = (sessionId: number | null) => {
     setSessions(prevSessions => prevSessions.filter(session => session.id !== sessionId));
     if (currentSession?.id === sessionId) {
       handleExitSession();
     }
   };
 
-  const handleUpdateUser = (updatedUser) => {
+  const handleUpdateUser = (updatedUser: string) => {
     if (currentSession) {
       const updatedSession = {
         ...currentSession,

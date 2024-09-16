@@ -21,6 +21,7 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
           if (!classDescriptor) return <></>;
 
           return <SlotBox
+            key={`${classDescriptor.courseInfo.id}-${classDescriptor.classInfo.id}`}
             courseInfo={classDescriptor.courseInfo}
             classInfo={classDescriptor.classInfo}
             classes={classes}

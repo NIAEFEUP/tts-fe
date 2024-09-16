@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import SessionController from './sidebar/SessionController'
 import OptionsController from './sidebar/OptionsController'
 import SelectedOptionController from './sidebar/SelectedOptionController'

@@ -1,11 +1,10 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { LessonBox, ScheduleGrid, } from './schedules'
+import { ScheduleGrid, } from './schedules'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
 import { useContext } from 'react'
-import SlotBox from './schedules/SlotBox'
 import ScheduleTypes from './ScheduleType'
 import { ClassDescriptor, SlotInfo } from '../../@types'
 import CourseContext from '../../contexts/CourseContext'
@@ -27,7 +26,7 @@ const Schedule = () => {
 
   useEffect(() => {
     //TODO: Improvements by functional programming
-    let newClasses = []
+    const newClasses = []
     const option = multipleOptions[selectedOption]
 
     for (let i = 0; i < option.course_options.length; i++) {
@@ -50,7 +49,7 @@ const Schedule = () => {
 
   // TODO: Improvements by functional programming
   const slotTypes: string[] = useMemo(() => {
-    let aux = new Set()
+    const aux = new Set()
 
     for (const currentClass of classes) {
       const class_info = currentClass?.classInfo

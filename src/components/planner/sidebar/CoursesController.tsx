@@ -1,10 +1,7 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import ClassSelector from './CoursesController/ClassSelector'
 import CourseContext from '../../../contexts/CourseContext'
 import { NoMajorSelectedSVG } from '../../svgs'
-import useVerifyCourseUnitHashes from '../../../hooks/useVerifyCourseUnitHashes'
-import BackendAPI from '../../../api/backend'
-import StorageAPI from '../../../api/storage'
 import { Button } from '../../ui/button'
 
 
