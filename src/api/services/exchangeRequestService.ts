@@ -1,6 +1,7 @@
 import { BareFetcher, Key } from "swr";
 import { SWRInfiniteConfiguration } from "swr/dist/infinite";
 import { CreateRequestData, MarketplaceRequest } from "../../@types";
+import Cookies from 'js-cookie';
 import api from "../backend";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
@@ -23,6 +24,10 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) =
     {
       method: "POST",
       credentials: "include",
+      headers: {
+          "X-CSRFToken": Cookies.get('csrftoken')
+      },
+
       body: formData
     },
   );

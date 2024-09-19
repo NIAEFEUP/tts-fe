@@ -25,12 +25,33 @@ export const RequestCard = ({
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
+  const [previewing, setPreviewing] = useState<boolean>(false);
 
   const hide = () => {
     const newHidden = new Set(hiddenRequests);
     newHidden.add(request.id);
     setHiddenRequests(newHidden);
   }
+  const togglePreview = () => {
+    if (previewing) {
+      const newExchangeSchedule = exchangeSchedule.filter(
+        (item) => !request.options.some(
+          (option, idx) => item.classInfo === request.classes[idx]
+        )
+      );
+      setExchangeSchedule(newExchangeSchedule);
+    } else {
+      const newExchangeSchedule = [...exchangeSchedule];
+      request.options.forEach((option, idx) => {
+        newExchangeSchedule.push({
+          courseInfo: option.course_info,
+          classInfo: request.classes[idx],
+        });
+      });
+      setExchangeSchedule(newExchangeSchedule);
+    }
+    setPreviewing(!previewing);
+  };
 
   console.log("what? ", request?.options);
 
@@ -119,19 +140,12 @@ export const RequestCard = ({
           </label>
         </div>
         <div className="flex flex-row gap-2">
-          <Button onClick={() => {
-            const newExchangeSchedule = [...exchangeSchedule];
-            request?.options.forEach((option: ExchangeOption, idx: number) => {
-              newExchangeSchedule.push(
-                {
-                  courseInfo: option.course_info,
-                  classInfo: request.classes[idx]
-                });
-            });
-            setExchangeSchedule(newExchangeSchedule);
-          }}>
-            Prever
-          </Button>
+        <Button
+          className={`w-28 ${previewing ? "bg-red-500 text-white hover:bg-red-600" : ""}`}
+          onClick={togglePreview}
+        >
+          {previewing ? "Remover" : "Prever"}
+        </Button>
           <Button>
             Propôr troca
           </Button>
