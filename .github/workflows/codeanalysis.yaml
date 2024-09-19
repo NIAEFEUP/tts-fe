@@ -5,9 +5,11 @@ on:
     branches:
       - develop
       - main
+    types: [ready_for_review, synchronize, opened, reopened]
 
 jobs:
   lint:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     name: Lint
 
