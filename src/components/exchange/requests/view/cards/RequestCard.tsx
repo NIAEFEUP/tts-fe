@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Checkbox } from "../../../../ui/checkbox"
 import { Separator } from "../../../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
+import { toast } from "../../../../ui/use-toast"
 import RequestCardClassBadge from "./RequestCardClassBadge"
 
 type Props = {
@@ -50,7 +51,14 @@ export const RequestCard = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="icon" className="text-black" onClick={() => hide()}>
+                    <Button variant="icon" className="text-black" onClick={() => {
+                      hide();
+                      toast({
+                        title: "Pedido escondido",
+                        description: "O pedido foi escondido da lista de pedidos.",
+                        position: "top-right",
+                      });
+                    }}>
                       <ArchiveBoxIcon className="h-5 w-5" />
                     </Button>
                   </TooltipTrigger>
