@@ -1,8 +1,16 @@
 import React from 'react';
 import { PlayCircleIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { Button } from '../../../ui/button';
+import { CollabSession } from '../../../../@types';
 
-const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDeleteSession }) => (
+type Props = {
+  sessions: Array<CollabSession>,
+  onStartSession: (arg: number | null) => void
+  onCreateSession: () => void
+  onDeleteSession: (arg: number | null) => void
+}
+
+const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDeleteSession }: Props) => (
   <div className="text-center">
     <UserGroupIcon className="h-40 w-40 mx-auto text-primary" />
     <h3 className="text-xl font-bold leading-6 text-primary">

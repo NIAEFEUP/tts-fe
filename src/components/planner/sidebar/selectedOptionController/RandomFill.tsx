@@ -1,6 +1,6 @@
 import { BoltIcon } from '@heroicons/react/24/outline'
-import { ClassInfo, SlotInfo } from '../../../../@types'
-import { useContext, useEffect, useState, useMemo } from 'react'
+import { ClassInfo } from '../../../../@types'
+import { useContext, useEffect, useState } from 'react'
 import { Button } from '../../../ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { ScrollArea } from '../../../ui/scroll-area'

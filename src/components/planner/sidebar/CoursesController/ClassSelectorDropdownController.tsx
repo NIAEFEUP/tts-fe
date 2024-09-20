@@ -14,9 +14,8 @@ import ProfessorItem from "./ProfessorItem";
 type Props = {
   course: CourseInfo
   selectedClassIdHook: [number | null, Dispatch<SetStateAction<number | null>>]
-  previewHook: [number | null, Dispatch<SetStateAction<number | null>>]
-  display: number
-  removePreview: Function
+  setPreview: Dispatch<SetStateAction<number | null>>
+  removePreview: () => void,
   contentRef: any
   triggerRef: any
 }
@@ -49,8 +48,7 @@ const NoOptionsFound = ({ mobile }: { mobile: boolean }) => {
 const ClassSelectorDropdownController = ({
   course,
   selectedClassIdHook,
-  previewHook,
-  display,
+  setPreview,
   removePreview,
   contentRef,
   triggerRef
@@ -58,7 +56,6 @@ const ClassSelectorDropdownController = ({
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
   const { pickedCourses } = useContext(CourseContext);
   const [selectedClassId, setSelectedClassId] = selectedClassIdHook;
-  const [preview, setPreview] = previewHook;
 
   // This is used to store the ids of the teachers so it is easy to verify if a teacher is filtered or not
   const [filteredTeachers, setFilteredTeachers] = useState<Array<number>>(() => {
@@ -227,9 +224,6 @@ const ClassSelectorDropdownController = ({
                         key={`schedule-${classInfo.name}`}
                         course_id={course.id}
                         classInfo={classInfo}
-                        displayed={display === classInfo.id}
-                        checked={selectedOption === classInfo.id}
-                        preview={preview}
                         conflict={timesCollideWithSelected(classInfo)}
                         onSelect={() => {
                           setSelectedClassId(classInfo.id)
@@ -264,9 +258,6 @@ const ClassSelectorDropdownController = ({
                             key={`schedule-${classInfo.name}`}
                             course_id={course.id}
                             classInfo={classInfo}
-                            displayed={display === classInfo.id}
-                            checked={selectedOption === classInfo.id}
-                            preview={preview}
                             conflict={timesCollideWithSelected(classInfo)}
                             onSelect={() => {
                               setSelectedClassId(classInfo.id)

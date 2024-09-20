@@ -3,6 +3,7 @@ import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { StopIcon } from '@heroicons/react/24/solid';
 import { Button } from '../../../ui/button';
 import { useToast } from '../../../ui/use-toast';
+import { CollabSession } from '../../../../@types';
 
 const pastelColors = [ //Colors for the participants
   'bg-orange-200 text-orange-700',
@@ -12,7 +13,13 @@ const pastelColors = [ //Colors for the participants
   'bg-purple-200 text-purple-800',
 ];
 
-const CollabSession = ({ session, onExitSession, onUpdateUser }) => {
+type Props = {
+  session: CollabSession
+  onExitSession: () => void
+  onUpdateUser: (arg: string) => void
+}
+
+const CollabSession = ({ session, onExitSession, onUpdateUser }: Props) => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [lastValidUser, setLastValidUser] = useState(session.currentUser);
@@ -89,9 +96,8 @@ const CollabSession = ({ session, onExitSession, onUpdateUser }) => {
           {session.participants.map((user, index) => (
             <div key={index} className="relative group mb-2">
               <div
-                className={`rounded-full h-10 w-10 flex items-center justify-center ${
-                  pastelColors[index % pastelColors.length]
-                }`}
+                className={`rounded-full h-10 w-10 flex items-center justify-center ${pastelColors[index % pastelColors.length]
+                  }`}
               >
                 {user[0]}
               </div>

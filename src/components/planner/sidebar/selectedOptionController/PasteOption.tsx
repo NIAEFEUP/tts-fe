@@ -81,7 +81,7 @@ const PasteOption = () => {
       const newPickedCourses = [...pickedCourses]
       setPickedCourses(newPickedCourses.concat(courses))
 
-      let newMultipleOptions = [...multipleOptions]
+      const newMultipleOptions = [...multipleOptions]
       newMultipleOptions.forEach((option) => {
         option.course_options = option.course_options.concat(
           courses.map((course) => convertCourseInfoToCourseOption(course))

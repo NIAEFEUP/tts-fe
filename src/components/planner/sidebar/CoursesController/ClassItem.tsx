@@ -10,16 +10,13 @@ import CourseContext from '../../../../contexts/CourseContext'
 type Props = {
   course_id: number,
   classInfo: ClassInfo
-  displayed?: boolean
-  checked?: boolean
-  preview: number
   conflict?: boolean
   onSelect?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
 
-const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect, onMouseEnter, onMouseLeave }: Props) => {
+const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses } = useContext(CourseContext);
 
@@ -33,7 +30,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
   }
 
   const conflict: number = useMemo(() => {
-    let classes: ClassInfo[] = []
+    const classes: ClassInfo[] = []
 
     for (const course_option of multipleOptions[selectedOption].course_options) {
       if (course_option.picked_class_id && course_option.course_id !== course_id) {

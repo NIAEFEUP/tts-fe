@@ -5,11 +5,15 @@ import MultipleOptionsContext from "./MultipleOptionsContext";
 import { ThemeContext } from "./ThemeContext";
 import { useDarkMode } from "../hooks";
 
-const CombinedProvider = ({ children }) => {
+type Props = {
+  children: React.JSX.Element
+}
+
+const CombinedProvider = ({ children }: Props) => {
   const [enabled, setEnabled] = useDarkMode()  // TODO (Process-ing): Stop using a hook (who smoked here?)
   const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
-  
+
 
   const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
     if (newMultipleOptions instanceof Function)

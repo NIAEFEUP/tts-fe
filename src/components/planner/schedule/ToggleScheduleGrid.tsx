@@ -2,8 +2,13 @@ import { Button } from '../../ui/button'
 import { ViewColumnsIcon } from '@heroicons/react/24/outline'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
+import React from 'react'
 
-const ToggleScheduleGrid = ({ showGridHook }) => {
+type Props = {
+  showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+}
+
+const ToggleScheduleGrid = ({ showGridHook }: Props) => {
   const [showGrid, setShowGrid] = showGridHook
 
   return (
