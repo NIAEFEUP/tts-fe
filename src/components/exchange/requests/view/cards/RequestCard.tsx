@@ -10,6 +10,7 @@ import { Checkbox } from "../../../../ui/checkbox"
 import { Separator } from "../../../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
 import RequestCardClassBadge from "./RequestCardClassBadge"
+import useSchedule from "../../../../../hooks/useSchedule"
 
 type Props = {
   request: MarketplaceRequest
@@ -26,6 +27,8 @@ export const RequestCard = ({
   const [open, setOpen] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
   const [previewing, setPreviewing] = useState<boolean>(false);
+  const originalSchedule =  useSchedule();
+  console.log("original schedule: ", originalSchedule);
 
   const hide = () => {
     const newHidden = new Set(hiddenRequests);
@@ -34,24 +37,55 @@ export const RequestCard = ({
   }
   const togglePreview = () => {
     if (previewing) {
+      console.log("turn off");
       const newExchangeSchedule = exchangeSchedule.filter(
-        (item) => !request.options.some(
-          (option, idx) => item.classInfo === request.classes[idx]
+        (item) => !request.options?.some(
+          (option) => item.courseInfo.id === option.course_info.id
         )
       );
+
+      // Safeguard the `forEach` with null-checks:
+      console.log("request isss: ", request);
+      request.options?.forEach((option) => {
+        const matchingClasses = originalSchedule.schedule.filter(
+          (original) => original.course_id === option.course_info.course_unit_id
+        );
+      
+        if (matchingClasses.length > 0) {
+          console.log("Matching classes: ", matchingClasses);
+          matchingClasses.forEach((originalClass) => {
+            newExchangeSchedule.push({
+              courseInfo: option.course_info,
+              classInfo: originalClass.classInfo,
+            });
+          });
+        }
+      });
+      
+  
       setExchangeSchedule(newExchangeSchedule);
     } else {
-      const newExchangeSchedule = [...exchangeSchedule];
-      request.options.forEach((option, idx) => {
+      console.log("turn on");
+      const newExchangeSchedule = exchangeSchedule.filter(
+        (item) => !request.options?.some(
+          (option) => item.courseInfo.id === option.course_info.id
+        )
+      );
+      console.log("request: ", request);
+      request.options?.forEach((option, idx) => {
         newExchangeSchedule.push({
           courseInfo: option.course_info,
           classInfo: request.classes[idx],
         });
       });
+  
       setExchangeSchedule(newExchangeSchedule);
     }
+  
     setPreviewing(!previewing);
   };
+  
+  
 
   console.log("what? ", request?.options);
 

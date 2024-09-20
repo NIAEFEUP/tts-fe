@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { ClassDescriptor, MarketplaceRequest } from "../../../../@types";
@@ -8,6 +9,8 @@ import { Button } from "../../../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
+import ExchangeSchedule from "../../schedule/ExchangeSchedule";
+import ScheduleContext from "../../../../contexts/ScheduleContext";
 
 type Props = {
   setCreatingRequest: Dispatch<SetStateAction<boolean>>
@@ -22,11 +25,12 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
-  const { classes, loading } = useSchedule();
+  const originalSchedule = useSchedule();
 
   const { data, size, setSize, isLoading } = useMarketplaceRequests(filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter]);
 
   const requests = data ? [].concat(...data) : [];
+
 
   const onScroll = () => {
     if (!requestCardsContainerRef.current) return;
