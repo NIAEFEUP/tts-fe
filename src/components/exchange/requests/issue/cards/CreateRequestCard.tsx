@@ -19,7 +19,6 @@ export const CreateRequestCard = ({
   requestsHook
 }: Props) => {
   const { data: requestMetadata } = useRequestCardCourseMetadata(courseInfo);
-  const [expanded, setExpanded] = useState<boolean>(false);
   const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const [requests, setRequests] = requestsHook;
   const [issuerOriginClass, setIssuerOriginClass] = useState<string | null>(null);
@@ -30,13 +29,14 @@ export const CreateRequestCard = ({
   useEffect(() => {
     if (exchangeSchedule) {
       setIssuerOriginClass(
-        exchangeSchedule.find((scheduleItem: ClassDescriptor) => scheduleItem.courseInfo.id === courseInfo.id).classInfo.name
+        exchangeSchedule.filter(
+          (scheduleItem) => scheduleItem.classInfo.slots[0].lesson_type !== "T")
+          .find((scheduleItem: ClassDescriptor) => scheduleItem.courseInfo.id === courseInfo.id).classInfo.name
       );
     }
   }, [exchangeSchedule]);
 
   const excludeClass = () => {
-    setExpanded(false);
     if (requests.get(courseInfo.id)) {
       const newRequests = new Map(requests);
       newRequests.delete(courseInfo.id)
@@ -52,10 +52,6 @@ export const CreateRequestCard = ({
     setHasStudentToExchange(false);
   }
 
-  const includeClass = () => {
-    setExpanded(true);
-  }
-
   const handleHasStudentToExchangeSwitch = (checked: boolean) => {
     setHasStudentToExchange(checked);
   }
@@ -66,34 +62,20 @@ export const CreateRequestCard = ({
       classNameRequesterGoesTo: selectedDestinationClass
     }
 
-    if (selectedDestinationStudent) currentRequest.other_student = selectedDestinationStudent.mecNumber;
-
-    const newRequests = new Map(requests);
-    newRequests.set(courseInfo.id, currentRequest);
-    setRequests(newRequests);
-
-    console.log("current new requests: ", newRequests);
+    requests.set(courseInfo.id, currentRequest);
+    setRequests(new Map(requests));
   }
 
   return <Card key={courseInfo.name} className="shadow-md">
     <CardHeader className="flex flex-row justify-between items-center gap-4">
       <CardTitle className="text-md">{courseInfo.name}</CardTitle>
-      {
-        expanded ?
-          <div className="flex flex-row items-center gap-x-2">
-            <Button variant="destructive" className="p-4 h-7" onClick={() => excludeClass()}>
-              -
-            </Button>
-            <Button className="p-4 h-7" onClick={() => { addRequest() }}>
-              +
-            </Button>
-          </div>
-          : <Button className="bg-gray-200 text-black hover:bg-gray-100" onClick={() => includeClass()}>
-            <p>Alterar</p>
-          </Button>
-      }
+      <div className="flex flex-row items-center gap-x-2">
+        <Button variant="destructive" className="p-4 h-7" onClick={() => excludeClass()}>
+          -
+        </Button>
+      </div>
     </CardHeader>
-    <CardContent className={`flex flex-col gap-y-4 ${expanded ? "" : "hidden"}`}>
+    <CardContent className="flex flex-col gap-y-4">
       <div className="flex flex-row items-center gap-x-2">
         <p>{issuerOriginClass}</p>
         <ArrowRightIcon className="w-5 h-5" />
@@ -108,7 +90,10 @@ export const CreateRequestCard = ({
               <ScrollArea className="max-h-72 rounded overflow-y-auto">
                 {requestMetadata?.classes.filter((currentClass) => currentClass.name !== issuerOriginClass)
                   .map((currentClass) => (
-                    <DropdownMenuItem className="w-full" onSelect={() => { setSelectedDestinationClass(currentClass.name) }}>
+                    <DropdownMenuItem className="w-full" onSelect={() => {
+                      setSelectedDestinationClass(currentClass.name);
+                      addRequest();
+                    }}>
                       <p className="w-full">{currentClass.name}</p>
                     </DropdownMenuItem>
                   ))}
