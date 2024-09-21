@@ -11,22 +11,26 @@ import { Separator } from "../../../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
 import RequestCardClassBadge from "./RequestCardClassBadge"
 import useSchedule from "../../../../../hooks/useSchedule"
+import { previewMap } from "../../../../../contexts/PreviewContext"
 
 type Props = {
   request: MarketplaceRequest
   hiddenRequests: Set<number>
   setHiddenRequests: Dispatch<SetStateAction<Set<number>>>
+  previewMap: Record<number, boolean>
+  setPreviewMap: Dispatch<SetStateAction<Record<number, boolean>>>
 }
 
 export const RequestCard = ({
   request,
   hiddenRequests,
-  setHiddenRequests
+  setHiddenRequests,
+  previewMap,
+  setPreviewMap,
 }: Props) => {
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
-  const [previewing, setPreviewing] = useState<boolean>(false);
   const originalSchedule =  useSchedule();
   console.log("original schedule: ", originalSchedule);
 
@@ -36,23 +40,34 @@ export const RequestCard = ({
     setHiddenRequests(newHidden);
   }
   const togglePreview = () => {
-    if (previewing) {
+    if (previewMap[request.id]) {
       console.log("turn off");
+      
+      // Step 1: Filter out current options from the exchangeSchedule
       const newExchangeSchedule = exchangeSchedule.filter(
         (item) => !request.options?.some(
           (option) => item.courseInfo.id === option.course_info.id
         )
       );
-
+      console.log("newExchangeSchedule filter out: ", newExchangeSchedule);
+    
       // Safeguard the `forEach` with null-checks:
       console.log("request isss: ", request);
       request.options?.forEach((option) => {
+        console.log("option: ", option);
+        console.log("option.course_info.course_unit_id: ", option.course_info.id);
+        console.log("originalSchedule.schedule: ", originalSchedule.schedule);
+    
+        // Step 2: Find matching classes
         const matchingClasses = originalSchedule.schedule.filter(
-          (original) => original.course_id === option.course_info.course_unit_id
+          (original) => original.courseInfo.id=== option.course_info.id// Ensure this matches your logic
         );
-      
+    
+        console.log("matchingClasses: ", matchingClasses);
+        
         if (matchingClasses.length > 0) {
           console.log("Matching classes: ", matchingClasses);
+          // Step 3: Push the matching classes into the newExchangeSchedule
           matchingClasses.forEach((originalClass) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,
@@ -61,10 +76,13 @@ export const RequestCard = ({
           });
         }
       });
+    
+      console.log("newExchangeSchedule final: ", newExchangeSchedule);
       
-  
+      // Update the exchange schedule state
       setExchangeSchedule(newExchangeSchedule);
-    } else {
+    }
+     else {
       console.log("turn on");
       const newExchangeSchedule = exchangeSchedule.filter(
         (item) => !request.options?.some(
@@ -72,17 +90,30 @@ export const RequestCard = ({
         )
       );
       console.log("request: ", request);
-      request.options?.forEach((option, idx) => {
-        newExchangeSchedule.push({
-          courseInfo: option.course_info,
-          classInfo: request.classes[idx],
+      request.options?.forEach((option) => {
+        const matchingClasses = request.classes.filter(
+          (classInfo) => classInfo.name === option.class_issuer_goes_from
+        );
+      
+        matchingClasses.forEach((classInfo) => {
+          // For each slot in the class, push a separate entry into newExchangeSchedule
+          classInfo.slots.forEach((slot) => {
+            newExchangeSchedule.push({
+              courseInfo: option.course_info,
+              classInfo: {
+                ...classInfo,
+                slots: [slot]
+              },
+            });
+          });
         });
       });
+      
   
       setExchangeSchedule(newExchangeSchedule);
     }
   
-    setPreviewing(!previewing);
+    setPreviewMap(!previewMap[request.id] ? { ...previewMap, [request.id]: true } : { ...previewMap, [request.id]: false });
   };
   
   
@@ -175,10 +206,10 @@ export const RequestCard = ({
         </div>
         <div className="flex flex-row gap-2">
         <Button
-          className={`w-28 ${previewing ? "bg-red-500 text-white hover:bg-red-600" : ""}`}
+          className={`w-28 ${previewMap[request.id]? "bg-red-500 text-white hover:bg-red-600" : ""}`}
           onClick={togglePreview}
         >
-          {previewing ? "Remover" : "Prever"}
+          {previewMap[request.id]? "Remover" : "Prever"}
         </Button>
           <Button>
             Propôr troca
