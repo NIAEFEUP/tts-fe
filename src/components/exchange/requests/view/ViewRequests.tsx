@@ -22,9 +22,8 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
-  const { classes, loading } = useSchedule();
 
-  const { data, size, setSize, isLoading } = useMarketplaceRequests(filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter]);
+  const { data, size, setSize, isLoading, isValidating } = useMarketplaceRequests(filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter]);
 
   const requests = data ? [].concat(...data) : [];
 
@@ -47,7 +46,7 @@ export const ViewRequests = ({
     }
   }, []);
 
-  console.log("current requests: ", requests);
+  console.log("isValidating: ", isValidating);
 
   return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
     <div className="flex flex-row justify-between items-center w-full">

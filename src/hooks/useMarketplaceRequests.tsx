@@ -12,7 +12,7 @@ export default (courseUnitNameFilter: Set<number>, typeFilter: string) => {
     return `${api.BACKEND_URL}/exchange/marketplace/?page=${pageIndex + 1}&limit=10&${filters}`;
   }
 
-  const { data, size, setSize, isLoading } = useSWRInfinite<Promise<MarketplaceRequest[]>>(
+  const { data, size, setSize, isLoading, isValidating } = useSWRInfinite<Promise<MarketplaceRequest[]>>(
     getKey,
     exchangeRequestService.retrieveMarketplaceRequest
   );
@@ -21,6 +21,7 @@ export default (courseUnitNameFilter: Set<number>, typeFilter: string) => {
     data,
     isLoading,
     size,
+    isValidating,
     setSize
   }
 };

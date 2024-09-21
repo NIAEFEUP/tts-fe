@@ -23,6 +23,9 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) =
     {
       method: "POST",
       credentials: "include",
+      headers: {
+        "X-CSRFToken": api.getCSRFToken(),
+      },
       body: formData
     },
   );

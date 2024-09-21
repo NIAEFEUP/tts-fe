@@ -1,5 +1,6 @@
 import { Major, CourseInfo } from "../@types"
 import { dev_config, getSemester, config } from "../utils"
+import Cookies from 'js-cookie'
 
 const prod_val = import.meta.env.VITE_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
@@ -122,7 +123,13 @@ const getCourseUnitHashes = async (ids: number[]) => {
   }
 };
 
+const getCSRFToken = () => {
+  return Cookies.get('csrftoken');
+}
 
+const csrfTokenName = (): string => {
+  return "X-CSRFToken";
+}
 
 const api = {
   getMajors,
@@ -133,6 +140,8 @@ const api = {
   getCourseUnit,
   getInfo,
   getCourseUnitHashes,
+  getCSRFToken,
+  csrfTokenName,
   BACKEND_URL,
   OIDC_LOGIN_URL,
   OIDC_LOGOUT_URL
