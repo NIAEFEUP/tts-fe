@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
-import CollabSession from './CollabSession';
+import CollabSessionModal from './CollabSessionModal';
 import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 
 const PICK_SESSION = 'PICK_SESSION';
@@ -125,7 +125,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
                 )}
 
                 {currentView === SESSION && currentSession && (
-                  <CollabSession
+                  <CollabSessionModal
                     session={currentSession}
                     onExitSession={handleExitSession}
                     onUpdateUser={handleUpdateUser}
