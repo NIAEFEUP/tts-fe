@@ -19,7 +19,7 @@ type Props = {
   onUpdateUser: (arg: string) => void
 }
 
-const CollabSession = ({ session, onExitSession, onUpdateUser }: Props) => {
+const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [lastValidUser, setLastValidUser] = useState(session.currentUser);
@@ -130,4 +130,4 @@ const CollabSession = ({ session, onExitSession, onUpdateUser }: Props) => {
   );
 };
 
-export default CollabSession;
+export default CollabSessionModal;
