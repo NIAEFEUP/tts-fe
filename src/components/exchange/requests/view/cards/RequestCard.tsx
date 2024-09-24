@@ -13,6 +13,7 @@ import RequestCardClassBadge from "./RequestCardClassBadge"
 import useSchedule from "../../../../../hooks/useSchedule"
 import { previewMap } from "../../../../../contexts/PreviewContext"
 
+
 type Props = {
   request: MarketplaceRequest
   hiddenRequests: Set<number>
@@ -31,43 +32,34 @@ export const RequestCard = ({
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
-  const originalSchedule =  useSchedule();
-  console.log("original schedule: ", originalSchedule);
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>({});
+  const originalSchedule = useSchedule();
 
   const hide = () => {
     const newHidden = new Set(hiddenRequests);
     newHidden.add(request.id);
     setHiddenRequests(newHidden);
-  }
+  };
+
   const togglePreview = () => {
+    if (!Object.values(selectedOptions).some((isChecked) => isChecked)) {
+      console.log("No options selected for preview");
+      return;
+    }
+  
+    console.log("Previewing exchange schedule", selectedOptions);
+  
     if (previewMap[request.id]) {
-      console.log("turn off");
-      
-      // Step 1: Filter out current options from the exchangeSchedule
       const newExchangeSchedule = exchangeSchedule.filter(
         (item) => !request.options?.some(
-          (option) => item.courseInfo.id === option.course_info.id
+          (option) => selectedOptions[option.course_info.acronym] && item.courseInfo.id === option.course_info.id
         )
       );
-      console.log("newExchangeSchedule filter out: ", newExchangeSchedule);
-    
-      // Safeguard the `forEach` with null-checks:
-      console.log("request isss: ", request);
       request.options?.forEach((option) => {
-        console.log("option: ", option);
-        console.log("option.course_info.course_unit_id: ", option.course_info.id);
-        console.log("originalSchedule.schedule: ", originalSchedule.schedule);
-    
-        // Step 2: Find matching classes
-        const matchingClasses = originalSchedule.schedule.filter(
-          (original) => original.courseInfo.id=== option.course_info.id// Ensure this matches your logic
-        );
-    
-        console.log("matchingClasses: ", matchingClasses);
-        
-        if (matchingClasses.length > 0) {
-          console.log("Matching classes: ", matchingClasses);
-          // Step 3: Push the matching classes into the newExchangeSchedule
+        if (selectedOptions[option.course_info.acronym]) {
+          const matchingClasses = originalSchedule.schedule.filter(
+            (original) => original.courseInfo.id === option.course_info.id
+          );
           matchingClasses.forEach((originalClass) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,
@@ -76,146 +68,148 @@ export const RequestCard = ({
           });
         }
       });
-    
-      console.log("newExchangeSchedule final: ", newExchangeSchedule);
-      
-      // Update the exchange schedule state
       setExchangeSchedule(newExchangeSchedule);
-    }
-     else {
-      console.log("turn on");
+    } else {
       const newExchangeSchedule = exchangeSchedule.filter(
         (item) => !request.options?.some(
-          (option) => item.courseInfo.id === option.course_info.id
+          (option) => selectedOptions[option.course_info.acronym] && item.courseInfo.id === option.course_info.id
         )
       );
-      console.log("request: ", request);
+      console.log("newExchangeSchedule after rm", newExchangeSchedule);
+      console.log("request.options", request.options);
+  
       request.options?.forEach((option) => {
-        const matchingClasses = request.classes.filter(
-          (classInfo) => classInfo.name === option.class_issuer_goes_from
-        );
-      
-        matchingClasses.forEach((classInfo) => {
-          // For each slot in the class, push a separate entry into newExchangeSchedule
-          classInfo.slots.forEach((slot) => {
-            newExchangeSchedule.push({
-              courseInfo: option.course_info,
-              classInfo: {
-                ...classInfo,
-                slots: [slot]
-              },
+        if (selectedOptions[option.course_info.acronym]) {
+          console.log("option", option);
+          console.log("classes", request.classes);
+          const matchingClasses = request.classes.filter(
+            (classInfo) => classInfo.name === option.class_issuer_goes_from 
+          );
+          console.log("matchingClasses", matchingClasses);
+          matchingClasses.forEach((classInfo) => {
+            classInfo.slots.forEach((slot) => {
+              newExchangeSchedule.push({
+                courseInfo: option.course_info,
+                classInfo: { ...classInfo, slots: [slot] },
+              });
             });
           });
-        });
+        }
       });
-      
-  
       setExchangeSchedule(newExchangeSchedule);
     }
   
     setPreviewMap(!previewMap[request.id] ? { ...previewMap, [request.id]: true } : { ...previewMap, [request.id]: false });
   };
   
-  
 
-  console.log("what? ", request?.options);
+  const handleOptionChange = (acronym: string) => {
+    setSelectedOptions((prevState) => ({
+      ...prevState,
+      [acronym]: !prevState[acronym],
+    }));
+  };
 
-  return <Card
-    onMouseOver={() => { setHovered(true) }}
-    onMouseLeave={() => { setHovered(false) }}
-    key={request.id}
-    className={`shadow-md ${hiddenRequests.has(request.id) ? "hidden" : ""}`}
-  >
-    <CardHeader className="flex flex-row gap-x-2 items-center p-4">
-      <img className="w-10 h-10 rounded-full shadow-md" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"></img>
-      <div className="flex flex-row justify-between items-center w-full">
-        <div className="flex flex-col w-full">
-          <div className="flex flex-row justify-between w-full items-center">
-            <CardTitle>{request.issuer_name}</CardTitle>
-            <div className="flex flex-row items-center">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="icon" className="text-black" onClick={() => hide()}>
-                      <ArchiveBoxIcon className="h-5 w-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Esconder</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+  return (
+    <Card
+      onMouseOver={() => { setHovered(true) }}
+      onMouseLeave={() => { setHovered(false) }}
+      key={request.id}
+      className={`shadow-md ${hiddenRequests.has(request.id) ? "hidden" : ""}`}
+    >
+      <CardHeader className="flex flex-row gap-x-2 items-center p-4">
+        <img className="w-10 h-10 rounded-full shadow-md" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png" />
+        <div className="flex flex-row justify-between items-center w-full">
+          <div className="flex flex-col w-full">
+            <div className="flex flex-row justify-between w-full items-center">
+              <CardTitle>{request.issuer_name}</CardTitle>
+              <div className="flex flex-row items-center">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="icon" className="text-black" onClick={() => hide()}>
+                        <ArchiveBoxIcon className="h-5 w-5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Esconder</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
 
+                {open
+                  ? <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
+                    <ChevronUpIcon className="h-5 w-5" />
+                  </Button>
+                  : <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
+                    <ChevronDownIcon className="h-5 w-5" />
+                  </Button>
+                }
+              </div>
+            </div>
+            <CardDescription>
               {open
-                ?
-                <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
-                  <ChevronUpIcon className="h-5 w-5" />
-                </Button>
-                : <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
-                  <ChevronDownIcon className="h-5 w-5" />
-                </Button>
+                ? <p>{request.issuer_nmec}</p>
+                :
+                <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
+                  {request.options?.map((option) => (
+                    <RequestCardClassBadge
+                      option={option}
+                      requestCardHovered={hovered}
+                    />
+                  ))}
+                </div>
               }
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
+        {request.options?.map((option) => (
+          <div key={option.course_info.acronym}>
+            <Separator className="my-2" />
+            <div className="flex flex-row gap-x-4 items-center w-full mb-2">
+              <Checkbox
+                id={option.course_info.acronym}
+                className="flex-grow w-1/12 h-8"
+                onCheckedChange={() => handleOptionChange(option.course_info.acronym)}
+              />
+              <label htmlFor={option.course_info.acronym} className="w-11/12">
+                <div className="flex flex-col">
+                  <p>{option.course_info.acronym} - {option.course_info.name}</p>
+                  <div className="flex flex-row gap-x-2 items-center font-bold">
+                    <p>{option.class_issuer_goes_from}</p>
+                    <ArrowRightIcon className="w-5 h-5" />
+                    <p>{option.class_issuer_goes_to}</p>
+                  </div>
+                </div>
+              </label>
             </div>
           </div>
-          <CardDescription>
-            {open
-              ? <p>{request.issuer_nmec}</p>
-              :
-              <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
-                {request.options?.map((option) => (
-                  <RequestCardClassBadge
-                    option={option}
-                    requestCardHovered={hovered}
-                  />
-                ))}
-              </div>
-
-            }
-          </CardDescription>
-        </div>
-      </div>
-    </CardHeader>
-    <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
-      {request.options?.map((option) => (
-        <div>
-          <Separator className="my-2" />
-          <div className="flex flex-row gap-x-4 items-center w-full mb-2">
-            <Checkbox id={option.course_info?.acronym} className="flex-grow w-1/12 h-8" />
-            <label htmlFor={option.course_info?.acronym} className="w-11/12">
-              <div className="flex flex-col">
-                <p>{option.course_info?.acronym} - {option.course_info?.name}</p>
-                <div className="flex flex-row gap-x-2 items-center font-bold">
-                  <p>{option.class_issuer_goes_from}</p>
-                  <ArrowRightIcon className="w-5 h-5" />
-                  <p>{option.class_issuer_goes_to}</p>
-                </div>
-              </div>
+        ))}
+      </CardContent>
+      {open ? <Separator className="mb-2" /> : <></>}
+      <CardFooter className={open ? "" : "hidden"}>
+        <div className="flex flex-row justify-between w-full items-center">
+          <div className="flex flex-row items-center gap-x-2">
+            <Checkbox id="select-all" />
+            <label htmlFor="select-all">
+              Selecionar todas
             </label>
           </div>
+          <div className="flex flex-row gap-2">
+            <Button
+              className={`w-28 ${previewMap[request.id] ? "bg-red-500 text-white hover:bg-red-600" : ""}`}
+              onClick={togglePreview}
+            >
+              {previewMap[request.id] ? "Remover" : "Prever"}
+            </Button>
+            <Button>
+              Propôr troca
+            </Button>
+          </div>
         </div>
-      ))}
-    </CardContent>
-    {open ? <Separator className="mb-2" /> : <></>}
-    <CardFooter className={open ? "" : "hidden"}>
-      <div className="flex flex-row justify-between w-full items-center">
-        <div className="flex flex-row items-center gap-x-2">
-          <Checkbox id="select-all" />
-          <label htmlFor="select-all">
-            Selecionar todas
-          </label>
-        </div>
-        <div className="flex flex-row gap-2">
-        <Button
-          className={`w-28 ${previewMap[request.id]? "bg-red-500 text-white hover:bg-red-600" : ""}`}
-          onClick={togglePreview}
-        >
-          {previewMap[request.id]? "Remover" : "Prever"}
-        </Button>
-          <Button>
-            Propôr troca
-          </Button>
-        </div>
-      </div>
-    </CardFooter>
-  </Card >
-}
+      </CardFooter>
+    </Card>
+  );
+};
