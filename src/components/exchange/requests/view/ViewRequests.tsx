@@ -25,7 +25,7 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
-  const [previewMap, setPreviewMap] = useState<Record<number, boolean>>({});
+  const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
   const { data, size, setSize, isLoading } = useMarketplaceRequests(filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter]);
 
@@ -88,8 +88,9 @@ export const ViewRequests = ({
                       request={request}
                       hiddenRequests={hiddenRequests}
                       setHiddenRequests={setHiddenRequests}
-                      previewMap={previewMap}
-                      setPreviewMap={setPreviewMap}
+                      chosenRequest={chosenRequest}
+                      setChosenRequest={setChosenRequest}
+
                     />
                   ))
                 }

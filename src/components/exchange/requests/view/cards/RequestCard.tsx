@@ -1,33 +1,32 @@
-import { ArchiveBoxIcon, ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
-import { ChevronUpIcon } from "@heroicons/react/24/solid"
-import { Dispatch, SetStateAction, useContext, useState } from "react"
-import { ClassInfo, ExchangeOption, MarketplaceRequest } from "../../../../../@types"
-import ScheduleContext from "../../../../../contexts/ScheduleContext"
-import { Badge } from "../../../../ui/badge"
-import { Button } from "../../../../ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card"
-import { Checkbox } from "../../../../ui/checkbox"
-import { Separator } from "../../../../ui/separator"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
-import RequestCardClassBadge from "./RequestCardClassBadge"
-import useSchedule from "../../../../../hooks/useSchedule"
-import { previewMap } from "../../../../../contexts/PreviewContext"
-
+import { ArchiveBoxIcon, ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronUpIcon } from "@heroicons/react/24/solid";
+import { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
+import { ClassInfo, ExchangeOption, MarketplaceRequest } from "../../../../../@types";
+import ScheduleContext from "../../../../../contexts/ScheduleContext";
+import { Badge } from "../../../../ui/badge";
+import { Button } from "../../../../ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card";
+import { Checkbox } from "../../../../ui/checkbox";
+import { Separator } from "../../../../ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip";
+import RequestCardClassBadge from "./RequestCardClassBadge";
+import useSchedule from "../../../../../hooks/useSchedule";
+import { previewMap } from "../../../../../contexts/PreviewContext";
 
 type Props = {
-  request: MarketplaceRequest
-  hiddenRequests: Set<number>
-  setHiddenRequests: Dispatch<SetStateAction<Set<number>>>
-  previewMap: Record<number, boolean>
-  setPreviewMap: Dispatch<SetStateAction<Record<number, boolean>>>
-}
+  request: MarketplaceRequest;
+  hiddenRequests: Set<number>;
+  setHiddenRequests: Dispatch<SetStateAction<Set<number>>>;
+  chosenRequest: MarketplaceRequest | null; // Only one request can be chosen
+  setChosenRequest: Dispatch<SetStateAction<MarketplaceRequest | null>>;
+};
 
 export const RequestCard = ({
   request,
   hiddenRequests,
   setHiddenRequests,
-  previewMap,
-  setPreviewMap,
+  chosenRequest,
+  setChosenRequest,
 }: Props) => {
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
@@ -35,59 +34,46 @@ export const RequestCard = ({
   const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>({});
   const originalSchedule = useSchedule();
 
+  // Hide the request
   const hide = () => {
     const newHidden = new Set(hiddenRequests);
     newHidden.add(request.id);
     setHiddenRequests(newHidden);
   };
 
-  const togglePreview = () => {
-    if (!Object.values(selectedOptions).some((isChecked) => isChecked)) {
-      console.log("No options selected for preview");
-      return;
+  // Handle option change (checkbox click)
+  const handleOptionChange = (acronym: string) => {
+    console.log("Option change", acronym);
+
+    // If this is not the chosen request, make it the chosen one
+    if (chosenRequest?.id !== request.id) {
+      setChosenRequest(request); // Set the current request as chosen
     }
-  
-    console.log("Previewing exchange schedule", selectedOptions);
-  
-    if (previewMap[request.id]) {
-      const newExchangeSchedule = exchangeSchedule.filter(
-        (item) => !request.options?.some(
-          (option) => selectedOptions[option.course_info.acronym] && item.courseInfo.id === option.course_info.id
-        )
+
+    setSelectedOptions(prevState => {
+      const updatedOptions = {
+        ...prevState,
+        [acronym]: !prevState[acronym],
+      };
+
+      togglePreview(updatedOptions);
+      return updatedOptions;
+    });
+  };
+
+  // Toggle the preview in the schedule based on selected options
+  const togglePreview = (updatedOptions: Record<string, boolean>) => {
+    if (updatedOptions[request.options[0].course_info.acronym]) { //just placeholder logic
+      console.log("Previewing exchange schedule", updatedOptions);
+      const newExchangeSchedule = originalSchedule.schedule.filter(item =>
+        !request.options?.some(option => updatedOptions[option.course_info.acronym] && item.courseInfo.id === option.course_info.id)
       );
-      request.options?.forEach((option) => {
-        if (selectedOptions[option.course_info.acronym]) {
-          const matchingClasses = originalSchedule.schedule.filter(
-            (original) => original.courseInfo.id === option.course_info.id
-          );
-          matchingClasses.forEach((originalClass) => {
-            newExchangeSchedule.push({
-              courseInfo: option.course_info,
-              classInfo: originalClass.classInfo,
-            });
-          });
-        }
-      });
-      setExchangeSchedule(newExchangeSchedule);
-    } else {
-      const newExchangeSchedule = exchangeSchedule.filter(
-        (item) => !request.options?.some(
-          (option) => selectedOptions[option.course_info.acronym] && item.courseInfo.id === option.course_info.id
-        )
-      );
-      console.log("newExchangeSchedule after rm", newExchangeSchedule);
-      console.log("request.options", request.options);
-  
-      request.options?.forEach((option) => {
-        if (selectedOptions[option.course_info.acronym]) {
-          console.log("option", option);
-          console.log("classes", request.classes);
-          const matchingClasses = request.classes.filter(
-            (classInfo) => classInfo.name === option.class_issuer_goes_from 
-          );
-          console.log("matchingClasses", matchingClasses);
-          matchingClasses.forEach((classInfo) => {
-            classInfo.slots.forEach((slot) => {
+
+      request.options?.forEach(option => {
+        if (updatedOptions[option.course_info.acronym]) {
+          const matchingClasses = request.classes.filter(classInfo => classInfo.name === option.class_issuer_goes_from);
+          matchingClasses.forEach(classInfo => {
+            classInfo.slots.forEach(slot => {
               newExchangeSchedule.push({
                 courseInfo: option.course_info,
                 classInfo: { ...classInfo, slots: [slot] },
@@ -96,24 +82,26 @@ export const RequestCard = ({
           });
         }
       });
-      setExchangeSchedule(newExchangeSchedule);
-    }
-  
-    setPreviewMap(!previewMap[request.id] ? { ...previewMap, [request.id]: true } : { ...previewMap, [request.id]: false });
-  };
-  
 
-  const handleOptionChange = (acronym: string) => {
-    setSelectedOptions((prevState) => ({
-      ...prevState,
-      [acronym]: !prevState[acronym],
-    }));
+      setExchangeSchedule(newExchangeSchedule);
+    } else {
+      setExchangeSchedule(originalSchedule.schedule);
+    }
   };
+
+  // Automatically uncheck and remove preview if this is not the chosen request
+  useEffect(() => {
+    console.log("Chosen request", chosenRequest);
+    if (chosenRequest?.id !== request.id) {
+      console.log("inside")
+      setSelectedOptions({}); // Uncheck all checkboxes
+    }
+  }, [chosenRequest]);
 
   return (
     <Card
-      onMouseOver={() => { setHovered(true) }}
-      onMouseLeave={() => { setHovered(false) }}
+      onMouseOver={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       key={request.id}
       className={`shadow-md ${hiddenRequests.has(request.id) ? "hidden" : ""}`}
     >
@@ -127,7 +115,7 @@ export const RequestCard = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="icon" className="text-black" onClick={() => hide()}>
+                      <Button variant="icon" className="text-black" onClick={hide}>
                         <ArchiveBoxIcon className="h-5 w-5" />
                       </Button>
                     </TooltipTrigger>
@@ -137,41 +125,42 @@ export const RequestCard = ({
                   </Tooltip>
                 </TooltipProvider>
 
-                {open
-                  ? <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
+                {open ? (
+                  <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
                     <ChevronUpIcon className="h-5 w-5" />
                   </Button>
-                  : <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
+                ) : (
+                  <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
                     <ChevronDownIcon className="h-5 w-5" />
                   </Button>
-                }
+                )}
               </div>
             </div>
             <CardDescription>
-              {open
-                ? <p>{request.issuer_nmec}</p>
-                :
+              {open ? <p>{request.issuer_nmec}</p> : (
                 <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
-                  {request.options?.map((option) => (
+                  {request.options?.map(option => (
                     <RequestCardClassBadge
+                      key={option.course_info.acronym}
                       option={option}
                       requestCardHovered={hovered}
                     />
                   ))}
                 </div>
-              }
+              )}
             </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
-        {request.options?.map((option) => (
+        {request.options?.map(option => (
           <div key={option.course_info.acronym}>
             <Separator className="my-2" />
             <div className="flex flex-row gap-x-4 items-center w-full mb-2">
               <Checkbox
                 id={option.course_info.acronym}
                 className="flex-grow w-1/12 h-8"
+                checked={selectedOptions[option.course_info.acronym] || false}
                 onCheckedChange={() => handleOptionChange(option.course_info.acronym)}
               />
               <label htmlFor={option.course_info.acronym} className="w-11/12">
@@ -188,25 +177,15 @@ export const RequestCard = ({
           </div>
         ))}
       </CardContent>
-      {open ? <Separator className="mb-2" /> : <></>}
+      {open && <Separator className="mb-2" />}
       <CardFooter className={open ? "" : "hidden"}>
         <div className="flex flex-row justify-between w-full items-center">
           <div className="flex flex-row items-center gap-x-2">
             <Checkbox id="select-all" />
-            <label htmlFor="select-all">
-              Selecionar todas
-            </label>
+            <label htmlFor="select-all">Selecionar todas</label>
           </div>
           <div className="flex flex-row gap-2">
-            <Button
-              className={`w-28 ${previewMap[request.id] ? "bg-red-500 text-white hover:bg-red-600" : ""}`}
-              onClick={togglePreview}
-            >
-              {previewMap[request.id] ? "Remover" : "Prever"}
-            </Button>
-            <Button>
-              Propôr troca
-            </Button>
+            <Button>Propôr troca</Button>
           </div>
         </div>
       </CardFooter>
