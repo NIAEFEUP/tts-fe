@@ -21,6 +21,7 @@ import { useContext } from 'react'
 import api from '../../api/backend'
 import { Button } from '../ui/button'
 import { LoginButton } from '../auth/LoginButton'
+import { HeaderProfileDropdown } from '../auth/HeaderProfileDropdown'
 
 const navigation = [
   {
@@ -104,13 +105,8 @@ const Header = ({ siteTitle, location }: Props) => {
                 <div className="hidden self-center md:inline-flex items-center gap-x-2">
                   <DarkModeSwitch />
                   {signedIn ?
-                    <Button>
-                      <a href={`${api.OIDC_LOGIN_URL}`} className="flex flex-row gap-1">
-                        <p>Sair</p>
-                        <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
-                      </a>
-                    </Button>
-                    : <LoginButton />
+                    <HeaderProfileDropdown />
+                    : <LoginButton expanded={false} />
                   }
                 </div>
               </div>

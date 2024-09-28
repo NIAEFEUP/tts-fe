@@ -7,8 +7,10 @@ import useStudentCourseUnits from "../../../../hooks/useStudentCourseUnits"
 import { Desert } from "../../../svgs"
 import { Button } from "../../../ui/button"
 import { Checkbox } from "../../../ui/checkbox"
+import { Switch } from "../../../ui/switch"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 import { IncludeCourseUnitCard } from "./cards/IncludeCourseUnitCard"
+import PreviewRequestForm from "./PreviewRequestForm"
 
 type Props = {
   setCreatingRequest: Dispatch<SetStateAction<boolean>>
@@ -18,43 +20,56 @@ export const CreateRequest = ({
   setCreatingRequest
 }: Props) => {
   const [requests, setRequests] = useState<Map<number, CreateRequestData | null>>(new Map());
+  const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const { exchangeSchedule } = useContext(ScheduleContext);
   const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
   const [selectingCourseUnits, setSelectingCourseUnits] = useState<boolean>(false);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
+  console.log("requests: ", requests);
+
   return <div className="flex flex-col">
-    <div className="flex flex-col gap-y-8 max-h-screen overflow-y-auto">
+    <div className="flex flex-col gap-y-4 max-h-screen overflow-y-auto">
       <div className="flex flex-row justify-between w-full items-center">
         <h1 className="font-bold text-xl">Criar pedido</h1>
         {!selectingCourseUnits &&
           <Button onClick={() => setSelectingCourseUnits(true)}>
-            Adicionar disciplina
+            Disciplina +
           </Button>
         }
       </div>
 
       {!selectingCourseUnits &&
-        <div className="mt-4 flex flex-row justify-between w-full gap-x-2">
-          <Button
-            className="w-full bg-gray-200 text-gray-800 hover:bg-gray-150"
-            onClick={() => { setCreatingRequest(false) }}
-          >
-            Voltar
-          </Button>
-
-          {
-            requests.size > 0 ?
+        <div className="flex flex-col">
+          {selectedCourseUnits.length > 0 && <div className="flex flex-row gap-2">
+            <Switch id="person-to-exchange" onCheckedChange={(checked) => {
+              setHasStudentToExchange(checked)
+              if (!checked) {
+                requests.forEach((request, key) => {
+                  request.other_student = null;
+                })
+                setRequests(new Map(requests));
+              }
+            }} />
+            <label htmlFor="person-to-exchange">
+              Tenho uma pessoa para trocar
+            </label>
+          </div>}
+          <div className="mt-4 flex flex-row justify-between w-full gap-x-2">
+            <div className="flex flex-row gap-x-2 w-full">
               <Button
-                className="w-full border border-green-800 bg-green-500"
-                onClick={async () => {
-                  await exchangeRequestService.submitExchangeRequest(requests);
-                }}
+                className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
+                onClick={() => { setCreatingRequest(false) }}
               >
-                Submeter pedido
+                Voltar
               </Button>
-              : <></>
-          }
+              {selectedCourseUnits.length > 0 &&
+                <PreviewRequestForm
+                  requests={requests}
+                />
+              }
+            </div>
+          </div>
         </div>
       }
 
@@ -77,6 +92,7 @@ export const CreateRequest = ({
         </div>
         {Array.from(enrolledCourseUnits).map((courseInfo: CourseInfo) => (
           <IncludeCourseUnitCard
+            key={"include-course-unit-" + courseInfo.id}
             courseInfo={courseInfo}
             selectedCourseUnitsHook={[selectedCourseUnits, setSelectedCourseUnits]}
           />
@@ -85,8 +101,11 @@ export const CreateRequest = ({
         : <div className="flex flex-col gap-y-2">
           {Array.from(selectedCourseUnits).map((courseInfo: CourseInfo) => (
             <CreateRequestCard
+              key={courseInfo.id}
+              hasStudentToExchange={hasStudentToExchange}
               requestsHook={[requests, setRequests]}
               courseInfo={courseInfo}
+              setSelectedCourseUnits={setSelectedCourseUnits}
             />
           ))}
 

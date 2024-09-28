@@ -5,6 +5,7 @@ import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
 import useSchedule from "../../../../hooks/useSchedule";
 import { Badge } from "../../../ui/badge";
 import { Button } from "../../../ui/button";
+import { Skeleton } from "../../../ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
@@ -46,8 +47,6 @@ export const ViewRequests = ({
     }
   }, []);
 
-  console.log("isValidating: ", isValidating);
-
   return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
     <div className="flex flex-row justify-between items-center w-full">
       <h1 className="font-bold text-xl">Pedidos</h1>
@@ -68,13 +67,17 @@ export const ViewRequests = ({
       </TabsList>
       <TabsContent value="todos">
         <ViewRequestsFilters
+          loading={isLoading}
+          validating={isValidating}
           availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
         />
         <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {
             isLoading
-              ? <></>
+              ? <div>
+                <Skeleton className="w-full h-full" />
+              </div>
               : <>
                 {
                   requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (

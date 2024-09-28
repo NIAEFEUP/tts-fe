@@ -15,7 +15,7 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) =
   const formData = new FormData();
 
   for (const request of requests.values()) {
-    formData.append("requestChoices[]", JSON.stringify(request));
+    formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
   await fetch(
