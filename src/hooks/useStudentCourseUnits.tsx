@@ -6,8 +6,6 @@ import { ClassDescriptor, CourseInfo } from "../@types";
 export default (schedule: Array<ClassDescriptor>): Array<CourseInfo> => {
   if (!schedule) return [];
 
-  console.log("current hell schedule: ", schedule);
-
   const duplicates = new Set<number>();
   const result = [];
 

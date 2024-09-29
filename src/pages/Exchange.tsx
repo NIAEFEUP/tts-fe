@@ -41,7 +41,7 @@ const ExchangePage = () => {
           Tens de iniciar sessão para acederes a esta funcionalidade.
         </p>
         <div className="justify-center mx-auto">
-          <LoginButton />
+          <LoginButton expanded={true} />
         </div>
       </article>}
   </>

@@ -1,11 +1,16 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { CourseInfo, CreateRequestCardMetadata, CreateRequestData } from "../../../../@types"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import ScheduleContext from "../../../../contexts/ScheduleContext"
 import useSchedule from "../../../../hooks/useSchedule"
 import useStudentCourseUnits from "../../../../hooks/useStudentCourseUnits"
+import { Desert } from "../../../svgs"
 import { Button } from "../../../ui/button"
+import { Checkbox } from "../../../ui/checkbox"
+import { Switch } from "../../../ui/switch"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
+import { IncludeCourseUnitCard } from "./cards/IncludeCourseUnitCard"
+import PreviewRequestForm from "./PreviewRequestForm"
 
 type Props = {
   setCreatingRequest: Dispatch<SetStateAction<boolean>>
@@ -14,47 +19,114 @@ type Props = {
 export const CreateRequest = ({
   setCreatingRequest
 }: Props) => {
-  const [requests, setRequests] = useState<Map<number, CreateRequestData>>(new Map());
+  const [requests, setRequests] = useState<Map<number, CreateRequestData | null>>(new Map());
+  const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const { exchangeSchedule } = useContext(ScheduleContext);
+  const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
+  const [selectingCourseUnits, setSelectingCourseUnits] = useState<boolean>(false);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
+
+  console.log("requests: ", requests);
 
   return <div className="flex flex-col">
     <div className="flex flex-col gap-y-4 max-h-screen overflow-y-auto">
-      <h1 className="font-bold text-xl">Criar pedido</h1>
-      <div className="flex flex-col gap-y-2">
-        {Array.from(enrolledCourseUnits).map((courseInfo: CourseInfo) => (
-          <CreateRequestCard
-            requestsHook={[requests, setRequests]}
-            courseInfo={courseInfo}
-          />
-        ))}
-
-        {
-          enrolledCourseUnits.length === 0
-            ? <p className="text-center">Não foram encontradas cadeiras com inscrição tua!</p>
-            : <></>
+      <div className="flex flex-row justify-between w-full items-center">
+        <h1 className="font-bold text-xl">Criar pedido</h1>
+        {!selectingCourseUnits &&
+          <Button onClick={() => setSelectingCourseUnits(true)}>
+            Disciplina +
+          </Button>
         }
       </div>
-    </div>
-    <div className="mt-4 flex flex-row justify-between w-full gap-x-2">
-      <Button
-        className="w-full bg-gray-200 text-gray-800 hover:bg-gray-150"
-        onClick={() => setCreatingRequest(false)}
-      >
-        Voltar
-      </Button>
-      {
-        requests.size > 0 ?
-          <Button
-            className="w-full border border-green-800 bg-green-500"
-            onClick={async () => {
-              await exchangeRequestService.submitExchangeRequest(requests);
-            }}
-          >
-            Submeter pedido
-          </Button>
-          : <></>
+
+      {!selectingCourseUnits &&
+        <div className="flex flex-col">
+          {selectedCourseUnits.length > 0 && <div className="flex flex-row gap-2">
+            <Switch id="person-to-exchange" onCheckedChange={(checked) => {
+              setHasStudentToExchange(checked)
+              if (!checked) {
+                requests.forEach((request, key) => {
+                  request.other_student = null;
+                })
+                setRequests(new Map(requests));
+              }
+            }} />
+            <label htmlFor="person-to-exchange">
+              Tenho uma pessoa para trocar
+            </label>
+          </div>}
+          <div className="mt-4 flex flex-row justify-between w-full gap-x-2">
+            <div className="flex flex-row gap-x-2 w-full">
+              <Button
+                className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
+                onClick={() => { setCreatingRequest(false) }}
+              >
+                Voltar
+              </Button>
+              {selectedCourseUnits.length > 0 &&
+                <PreviewRequestForm
+                  requests={requests}
+                />
+              }
+            </div>
+          </div>
+        </div>
       }
+
+      {selectingCourseUnits ? <div className="flex flex-col gap-y-2">
+        <div className="flex flex-row gap-2">
+          <Checkbox
+            id="selecting-course-units"
+            onCheckedChange={(checked) => {
+              if (!checked) {
+                setSelectedCourseUnits([]);
+              } else {
+                setSelectedCourseUnits(Array.from(enrolledCourseUnits));
+              }
+            }}
+            checked={selectedCourseUnits.length === enrolledCourseUnits.length}
+          />
+          <label htmlFor="selecting-course-units">
+            Selecionar todas as disciplinas
+          </label>
+        </div>
+        {Array.from(enrolledCourseUnits).map((courseInfo: CourseInfo) => (
+          <IncludeCourseUnitCard
+            key={"include-course-unit-" + courseInfo.id}
+            courseInfo={courseInfo}
+            selectedCourseUnitsHook={[selectedCourseUnits, setSelectedCourseUnits]}
+          />
+        ))}
+      </div>
+        : <div className="flex flex-col gap-y-2">
+          {Array.from(selectedCourseUnits).map((courseInfo: CourseInfo) => (
+            <CreateRequestCard
+              key={courseInfo.id}
+              hasStudentToExchange={hasStudentToExchange}
+              requestsHook={[requests, setRequests]}
+              courseInfo={courseInfo}
+              setSelectedCourseUnits={setSelectedCourseUnits}
+            />
+          ))}
+
+          {
+            selectedCourseUnits.length === 0
+              ? <>
+                <Desert className="w-full" />
+                <p className="text-center">Ainda não adicionaste nenhuma disciplina para fazer uma troca</p>
+              </>
+              : <></>
+          }
+        </div>
+      }
+
+      {selectingCourseUnits &&
+        <Button
+          className="w-full bg-gray-200 text-gray-800 hover:bg-gray-150"
+          onClick={() => { setSelectingCourseUnits(false) }}
+        >
+          Confirmar disciplinas
+        </Button>}
     </div>
-  </div>
+  </div >
 }

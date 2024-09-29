@@ -16,7 +16,7 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) =
   const formData = new FormData();
 
   for (const request of requests.values()) {
-    formData.append("requestChoices[]", JSON.stringify(request));
+    formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
   await fetch(
@@ -25,9 +25,8 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) =
       method: "POST",
       credentials: "include",
       headers: {
-          "X-CSRFToken": Cookies.get('csrftoken')
+        "X-CSRFToken": api.getCSRFToken(),
       },
-
       body: formData
     },
   );
