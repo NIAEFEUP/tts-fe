@@ -63,31 +63,50 @@ export const RequestCard = ({
 
   // Toggle the preview in the schedule based on selected options
   const togglePreview = (updatedOptions: Record<string, boolean>) => {
-    if (updatedOptions[request.options[0].course_info.acronym]) { //just placeholder logic
-      console.log("Previewing exchange schedule", updatedOptions);
+    // Filter selected options based on updatedOptions
+    const selectedOptions = request.options.filter(option => updatedOptions[option.course_info.acronym] === true);
+  
+    // If there are selected options, proceed to generate a new exchange schedule
+    if (selectedOptions.length > 0) {
+      console.log("Previewing exchange schedule with updated options:", updatedOptions);
+      
+      // Create a new exchange schedule by filtering out original schedule items that match selected options
       const newExchangeSchedule = originalSchedule.schedule.filter(item =>
-        !request.options?.some(option => updatedOptions[option.course_info.acronym] && item.courseInfo.id === option.course_info.id)
+        !request.options.some(option =>
+          updatedOptions[option.course_info.acronym] && item.courseInfo.id === option.course_info.id
+        )
       );
-
-      request.options?.forEach(option => {
-        if (updatedOptions[option.course_info.acronym]) {
-          const matchingClasses = request.classes.filter(classInfo => classInfo.name === option.class_issuer_goes_from);
-          matchingClasses.forEach(classInfo => {
-            classInfo.slots.forEach(slot => {
-              newExchangeSchedule.push({
-                courseInfo: option.course_info,
-                classInfo: { ...classInfo, slots: [slot] },
-              });
+      
+      console.log("Selected options:", selectedOptions);
+      console.log("Request classes:", request.classes);
+  
+      // Iterate over selected options and find matching classes to add to the new exchange schedule
+      selectedOptions.forEach(option => {
+        const matchingClass = option.class_issuer_goes_from; // Ensure class_issuer_goes_from is being used correctly
+        
+        if (matchingClass) {
+          console.log("Matching class:", matchingClass);
+          
+          // Add each slot from the matching class to the new exchange schedule
+          matchingClass.slots.forEach(slot => {
+            newExchangeSchedule.push({
+              courseInfo: option.course_info,
+              classInfo: { ...matchingClass, slots: [slot] }, // Add only the current slot
             });
           });
+        } else {
+          console.warn("No matching class found for option:", option.course_info.acronym);
         }
       });
-
+  
+      // Update the exchange schedule state with the new one
       setExchangeSchedule(newExchangeSchedule);
     } else {
+      // If no options are selected, revert to the original schedule
       setExchangeSchedule(originalSchedule.schedule);
     }
   };
+  
 
   // Automatically uncheck and remove preview if this is not the chosen request
   useEffect(() => {
@@ -167,9 +186,9 @@ export const RequestCard = ({
                 <div className="flex flex-col">
                   <p>{option.course_info.acronym} - {option.course_info.name}</p>
                   <div className="flex flex-row gap-x-2 items-center font-bold">
-                    <p>{option.class_issuer_goes_from}</p>
+                    <p>{option.class_issuer_goes_from.name}</p>
                     <ArrowRightIcon className="w-5 h-5" />
-                    <p>{option.class_issuer_goes_to}</p>
+                    <p>{option.class_issuer_goes_to.name}</p>
                   </div>
                 </div>
               </label>

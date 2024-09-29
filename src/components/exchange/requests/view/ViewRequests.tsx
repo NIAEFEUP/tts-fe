@@ -32,7 +32,9 @@ export const ViewRequests = ({
 
   const requests = data ? [].concat(...data) : [];
 
-
+  useEffect(() => {
+    console.log("Requests", requests);
+  }, [requests]);
   const onScroll = () => {
     if (!requestCardsContainerRef.current) return;
 
@@ -72,8 +74,6 @@ export const ViewRequests = ({
       </TabsList>
       <TabsContent value="todos">
         <ViewRequestsFilters
-          loading={isLoading}
-          validating={isValidating}
           availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
         />
