@@ -1,4 +1,5 @@
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
+import { BeatLoader } from "react-spinners";
 import { Dispatch, SetStateAction } from "react";
 import { CreateRequestData } from "../../../../@types";
 import exchangeRequestService from "../../../../api/services/exchangeRequestService";
@@ -15,9 +16,10 @@ type Props = {
   requests: Map<number, CreateRequestData>
   requestSubmitHandler: () => void
   previewingFormHook: [boolean, Dispatch<SetStateAction<boolean>>]
+  submittingRequest: boolean
 }
 
-const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook }: Props) => {
+const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook, submittingRequest }: Props) => {
   const [previewingForm, setPreviewingForm] = previewingFormHook;
 
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
@@ -54,18 +56,24 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
       </div>
 
       {requests.size > 0 &&
-        <form className="flex mx-auto">
+        <form className="flex flex-col gap-y-4 items-center mx-auto">
           <Button
             className="flex flex-row gap-x-2 bg-green-200 text-green-600 border border-green-600 hover:bg-white"
             type="submit"
             onClick={async (e) => {
               e.preventDefault();
-              await requestSubmitHandler(requests);
+              await requestSubmitHandler();
             }}
           >
-            Submeter pedido
-            <CheckBadgeIcon className="h-5 w-5" />
+            {submittingRequest
+              ? <p>A processar pedido...</p>
+              : <>
+                <p>Submeter pedido</p>
+                <CheckBadgeIcon className="h-5 w-5" />
+              </>
+            }
           </Button>
+          {submittingRequest && <BeatLoader size={10} />}
         </form>
       }
     </DialogContent>

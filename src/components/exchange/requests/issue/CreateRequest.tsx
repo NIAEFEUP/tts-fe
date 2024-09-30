@@ -22,6 +22,7 @@ export const CreateRequest = ({
   setCreatingRequest
 }: Props) => {
   const [requests, setRequests] = useState<Map<number, CreateRequestData | null>>(new Map());
+  const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
   const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const { exchangeSchedule } = useContext(ScheduleContext);
   const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
@@ -30,6 +31,7 @@ export const CreateRequest = ({
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
   const submitRequest = async () => {
+    setSubmittingRequest(true);
     const json = await exchangeRequestService.submitExchangeRequest(requests);
 
     if (json.success) {
@@ -40,6 +42,8 @@ export const CreateRequest = ({
         // position: 'top-right',
       });
     }
+
+    setSubmittingRequest(false);
   }
 
   return <div className="flex flex-col">
@@ -85,6 +89,7 @@ export const CreateRequest = ({
                   requests={requests}
                   requestSubmitHandler={submitRequest}
                   previewingFormHook={[previewingForm, setPreviewingForm]}
+                  submittingRequest={submittingRequest}
                 />
               }
             </div>
