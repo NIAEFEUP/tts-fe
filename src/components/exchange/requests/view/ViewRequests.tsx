@@ -36,6 +36,7 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
+  const [classesFilter, setClassesFilter] = useState<Map<string, string>>(new Map());
 
   // This is to keep track of the request of the request card that is currently open
   const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
@@ -44,9 +45,6 @@ export const ViewRequests = ({
 
   const requests = data ? [].concat(...data) : [];
 
-  useEffect(() => {
-    console.log("Requests", requests);
-  }, [requests]);
   const onScroll = () => {
     if (!requestCardsContainerRef.current) return;
 

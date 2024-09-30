@@ -3,7 +3,14 @@ import { MarketplaceRequest } from "../@types";
 import api from "../api/backend";
 import exchangeRequestService from "../api/services/exchangeRequestService";
 
-export default (courseUnitNameFilter: Set<number>, typeFilter: string) => {
+/**
+ * Hook to get the marketplace requests
+ * @param courseUnitNameFilter - Set of course unit names to filter the requests by
+ * @param typeFilter - Type of request                    
+ * @param classesFilter - Set of dest classes to filter (hash of class-id,class_name_1,...,class_name_n)
+ * 
+*/
+export default (courseUnitNameFilter: Set<number>, typeFilter: string, classesFilter: Set<string>) => {
   const filters = `typeFilter=${typeFilter}&courseUnitNameFilter=${Array.from(courseUnitNameFilter).join(",")}`
 
   const getKey = (pageIndex: number) => {
