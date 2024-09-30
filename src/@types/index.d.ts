@@ -125,7 +125,8 @@ export type MarketplaceRequest = {
   issuer_nmec: number,
   date: string,
   options?: Array<ExchangeOption>,
-  classes?: Array<ClassInfo>
+  classes?: Array<ClassInfo>,
+  accepted: boolean,
 }
 
 export type Student = {

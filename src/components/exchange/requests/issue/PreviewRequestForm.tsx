@@ -1,3 +1,5 @@
+import { CheckBadgeIcon } from "@heroicons/react/24/outline";
+import { Dispatch, SetStateAction } from "react";
 import { CreateRequestData } from "../../../../@types";
 import exchangeRequestService from "../../../../api/services/exchangeRequestService";
 import exchangeUtils, { exchangeHasAllTypes, exchangeHasDirectExchange, exchangeHasMarketplaceExchange, exchangeIsValid, isDirectExchange, isMarketplaceExchange } from "../../../../utils/exchange";
@@ -11,12 +13,16 @@ import { PreviewRequestsFormTabs } from "./PreviewRequestsFormTabs";
 
 type Props = {
   requests: Map<number, CreateRequestData>
+  requestSubmitHandler: () => void
+  previewingFormHook: [boolean, Dispatch<SetStateAction<boolean>>]
 }
 
-const PreviewRequestForm = ({ requests }: Props) => {
-  return <Dialog>
+const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook }: Props) => {
+  const [previewingForm, setPreviewingForm] = previewingFormHook;
+
+  return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
     <DialogTrigger asChild>
-      <Button className="w-1/2 bg-green-200 text-green-600 border border-green-600">
+      <Button className="w-1/2">
         Prever pedido
       </Button>
     </DialogTrigger>
@@ -46,16 +52,19 @@ const PreviewRequestForm = ({ requests }: Props) => {
           </div>
         }
       </div>
+
       {requests.size > 0 &&
         <form className="flex mx-auto">
           <Button
+            className="flex flex-row gap-x-2 bg-green-200 text-green-600 border border-green-600 hover:bg-white"
             type="submit"
             onClick={async (e) => {
               e.preventDefault();
-              await exchangeRequestService.submitExchangeRequest(requests);
+              await requestSubmitHandler(requests);
             }}
           >
             Submeter pedido
+            <CheckBadgeIcon className="h-5 w-5" />
           </Button>
         </form>
       }

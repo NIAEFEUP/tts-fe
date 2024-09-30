@@ -1,3 +1,4 @@
+import { ArrowLeftIcon, CheckBadgeIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { CourseInfo, CreateRequestCardMetadata, CreateRequestData } from "../../../../@types"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
@@ -8,6 +9,7 @@ import { Desert } from "../../../svgs"
 import { Button } from "../../../ui/button"
 import { Checkbox } from "../../../ui/checkbox"
 import { Switch } from "../../../ui/switch"
+import { toast } from "../../../ui/use-toast"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 import { IncludeCourseUnitCard } from "./cards/IncludeCourseUnitCard"
 import PreviewRequestForm from "./PreviewRequestForm"
@@ -24,9 +26,21 @@ export const CreateRequest = ({
   const { exchangeSchedule } = useContext(ScheduleContext);
   const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
   const [selectingCourseUnits, setSelectingCourseUnits] = useState<boolean>(false);
+  const [previewingForm, setPreviewingForm] = useState<boolean>(false);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
-  console.log("requests: ", requests);
+  const submitRequest = async () => {
+    const json = await exchangeRequestService.submitExchangeRequest(requests);
+
+    if (json.success) {
+      setPreviewingForm(false);
+      toast({
+        title: 'Pedido submetido com sucesso!',
+        // description: 'Não encontramos uma combinação com as turmas das disciplinas selecionadas sem conflitos',
+        // position: 'top-right',
+      });
+    }
+  }
 
   return <div className="flex flex-col">
     <div className="flex flex-col gap-y-4 max-h-screen overflow-y-auto">
@@ -61,11 +75,16 @@ export const CreateRequest = ({
                 className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
                 onClick={() => { setCreatingRequest(false) }}
               >
-                Voltar
+                <div className="flex flex-row gap-x-2">
+                  <ArrowLeftIcon className="h-5 w-5" />
+                  Voltar
+                </div>
               </Button>
               {selectedCourseUnits.length > 0 &&
                 <PreviewRequestForm
                   requests={requests}
+                  requestSubmitHandler={submitRequest}
+                  previewingFormHook={[previewingForm, setPreviewingForm]}
                 />
               }
             </div>
@@ -113,7 +132,7 @@ export const CreateRequest = ({
             selectedCourseUnits.length === 0
               ? <>
                 <Desert className="w-full" />
-                <p className="text-center">Ainda não adicionaste nenhuma disciplina para fazer uma troca</p>
+                <p className="text-center">Ainda não adicionaste nenhuma disciplina para fazer uma troca.</p>
               </>
               : <></>
           }
@@ -122,10 +141,11 @@ export const CreateRequest = ({
 
       {selectingCourseUnits &&
         <Button
-          className="w-full bg-gray-200 text-gray-800 hover:bg-gray-150"
+          className="w-full bg-gray-200 text-gray-800 hover:bg-gray-150 flex flex-row gap-x-2"
           onClick={() => { setSelectingCourseUnits(false) }}
         >
           Confirmar disciplinas
+          <CheckBadgeIcon className="h-5 w-5" />
         </Button>}
     </div>
   </div >

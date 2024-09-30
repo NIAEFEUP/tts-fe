@@ -46,6 +46,7 @@
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
     "react-sortablejs": "^6.1.4",
+    "react-spinners": "^0.14.1",
     "react-toastify": "^9.1.1",
     "sortablejs": "^1.15.2",
     "swr": "^2.2.5",

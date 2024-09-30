@@ -6,12 +6,6 @@ const useSession = () => {
 
   const trySession = async (key) => {
     try {
-      await fetch(`${api.BACKEND_URL}/login/`, {
-        method: "POST", credentials: "include", headers: {
-          "X-CSRFToken": Cookies.get('csrftoken')
-        }
-      });
-
       const res = await fetch(`${api.BACKEND_URL}/${key}`, {
         method: "GET",
       });
