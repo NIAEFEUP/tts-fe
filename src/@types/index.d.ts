@@ -99,8 +99,8 @@ export type ImportedCourses = {
 export type ExchangeOption = {
   course_info: CourseInfo,
   course_unit_id: number,
-  class_issuer_goes_from: string
-  class_issuer_goes_to: string,
+  class_issuer_goes_from: ClassInfo,
+  class_issuer_goes_to: ClassInfo,
   other_student?: number // The current student will be determined by the backend depending on session data
 }
 

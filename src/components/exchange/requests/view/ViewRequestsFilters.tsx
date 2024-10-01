@@ -10,15 +10,11 @@ import { Skeleton } from "../../../ui/skeleton"
 
 type Props = {
   availableClasses: Array<string>
-  loading: boolean
-  validating: boolean
   filterCourseUnitsHook: [Set<number>, Dispatch<SetStateAction<Set<number>>>]
 }
 
 export const ViewRequestsFilters = ({
   availableClasses,
-  loading,
-  validating,
   filterCourseUnitsHook
 }: Props) => {
   const [filterCourseUnits, setFilterCourseUnits] = filterCourseUnitsHook
@@ -56,7 +52,7 @@ export const ViewRequestsFilters = ({
               </div>
             ))
           }
-        </>}
+          </>}
     </div>
 
     {/* Classes filter */}
@@ -79,5 +75,6 @@ export const ViewRequestsFilters = ({
     {/*       ))} */}
     {/*   </ScrollArea> */}
     {/* </div> */}
-  </div>
+
+    </div>
 }
