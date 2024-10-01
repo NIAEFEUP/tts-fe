@@ -17,15 +17,12 @@ const ClassSelector = ({ course }: Props) => {
   const classSelectorContentRef = useRef(null)
 
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
-
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
-
   const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-
   const [locked, setLocked] = useState(courseOption?.locked)
-
   const [preview, setPreview] = useState<number | null>(null)
   const [display, setDisplay] = useState(courseOption?.picked_class_id)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const course_options = multipleOptions[selectedOption].course_options;
@@ -88,10 +85,9 @@ const ClassSelector = ({ course }: Props) => {
       </p>
       <div className="flex items-center">
         {/* Dropdown Menu */}
-        <DropdownMenu onOpenChange={(open: boolean) => {
-          if (!open) {
-            removePreview();
-          }
+        <DropdownMenu open={isDropdownOpen} onOpenChange={(open: boolean) => {
+          setIsDropdownOpen(open);
+          if (!open) removePreview();
         }}>
           <div className="w-full">
             <DropdownMenuTrigger asChild disabled={courseOption?.locked} ref={classSelectorTriggerRef}>
@@ -111,6 +107,7 @@ const ClassSelector = ({ course }: Props) => {
               <ClassSelectorDropdownController
                 course={course}
                 selectedClassIdHook={[selectedClassId, setSelectedClassId]}
+                isDropdownOpen={isDropdownOpen}
                 setPreview={setPreview}
                 removePreview={removePreview}
                 contentRef={classSelectorContentRef}

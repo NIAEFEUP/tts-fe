@@ -14,8 +14,9 @@ import ProfessorItem from "./ProfessorItem";
 type Props = {
   course: CourseInfo
   selectedClassIdHook: [number | null, Dispatch<SetStateAction<number | null>>]
+  isDropdownOpen: boolean
   setPreview: Dispatch<SetStateAction<number | null>>
-  removePreview: () => void,
+  removePreview: () => void
   contentRef: any
   triggerRef: any
 }
@@ -48,6 +49,7 @@ const NoOptionsFound = ({ mobile }: { mobile: boolean }) => {
 const ClassSelectorDropdownController = ({
   course,
   selectedClassIdHook,
+  isDropdownOpen,
   setPreview,
   removePreview,
   contentRef,
@@ -229,7 +231,7 @@ const ClassSelectorDropdownController = ({
                           setSelectedClassId(classInfo.id)
                           setPreview(null)
                         }}
-                        onMouseEnter={() => showPreview(classInfo)}
+                        onMouseEnter={() => { if (isDropdownOpen) showPreview(classInfo) }}
                         onMouseLeave={() => removePreview()}
                       />
                     ))}
@@ -263,7 +265,7 @@ const ClassSelectorDropdownController = ({
                               setSelectedClassId(classInfo.id)
                               setPreview(null)
                             }}
-                            onMouseEnter={() => showPreview(classInfo)}
+                            onMouseEnter={() => { if (isDropdownOpen) showPreview(classInfo) }}
                             onMouseLeave={() => removePreview()}
                           />
                         ))}
