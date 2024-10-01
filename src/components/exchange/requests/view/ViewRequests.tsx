@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { ClassDescriptor, MarketplaceRequest } from "../../../../@types";
@@ -9,6 +10,8 @@ import { Skeleton } from "../../../ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
+import ExchangeSchedule from "../../schedule/ExchangeSchedule";
+import ScheduleContext from "../../../../contexts/ScheduleContext";
 
 type Props = {
   setCreatingRequest: Dispatch<SetStateAction<boolean>>
@@ -23,11 +26,15 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
+  const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
   const { data, size, setSize, isLoading, isValidating } = useMarketplaceRequests(filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter]);
 
   const requests = data ? [].concat(...data) : [];
 
+  useEffect(() => {
+    console.log("Requests", requests);
+  }, [requests]);
   const onScroll = () => {
     if (!requestCardsContainerRef.current) return;
 
@@ -67,8 +74,6 @@ export const ViewRequests = ({
       </TabsList>
       <TabsContent value="todos">
         <ViewRequestsFilters
-          loading={isLoading}
-          validating={isValidating}
           availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
         />
@@ -86,6 +91,9 @@ export const ViewRequests = ({
                       request={request}
                       hiddenRequests={hiddenRequests}
                       setHiddenRequests={setHiddenRequests}
+                      chosenRequest={chosenRequest}
+                      setChosenRequest={setChosenRequest}
+
                     />
                   ))
                 }

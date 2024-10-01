@@ -7,9 +7,11 @@ import { Schedule } from "../../planner";
 const ExchangeSchedule = () => {
   const { exchangeSchedule } = useContext(ScheduleContext);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
+  console.log("exchangeSchedule: ", exchangeSchedule);
 
   useEffect(() => {
     if (!exchangeSchedule) return;
+    console.log("exchangeSchedule: ", exchangeSchedule);
 
     setSlots(exchangeSchedule.map((currentClass: ClassDescriptor) => currentClass.classInfo.slots).flat())
   }, [exchangeSchedule])
