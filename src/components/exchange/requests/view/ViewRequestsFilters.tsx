@@ -25,14 +25,17 @@ export const ViewRequestsFilters = ({
   const { exchangeSchedule } = useContext(ScheduleContext);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
-  console.log("enrolled ourse units: ", enrolledCourseUnits);
-
   return <div className="flex flex-row justify-between w-full">
     {/* Course unit filters */}
     <div className="flex flex-row gap-2 w-2/3 flex-wrap">
-      {(loading && !validating) ? <div>
-        <Skeleton className="w-full h-full" />
-      </div>
+      {enrolledCourseUnits.length === 0
+        ?
+        <div className="flex flex-row space-y-2 space-x-2 w-full items-center">
+          <Skeleton className="h-4 w-1/4 rounded-full" />
+          <Skeleton className="h-4 w-1/4 rounded-full" />
+          <Skeleton className="h-4 w-1/4 rounded-full" />
+          <Skeleton className="h-4 w-1/4 rounded-full" />
+        </div>
         : <>
           {
             Array.from(enrolledCourseUnits).map((courseUnit: CourseInfo) => (

@@ -75,22 +75,24 @@ export const CreateRequest = ({
           </div>}
           <div className="mt-4 flex flex-row justify-between w-full gap-x-2">
             <div className="flex flex-row gap-x-2 w-full">
-              <Button
-                className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
-                onClick={() => { setCreatingRequest(false) }}
-              >
-                <div className="flex flex-row gap-x-2">
-                  <ArrowLeftIcon className="h-5 w-5" />
-                  Voltar
-                </div>
-              </Button>
               {selectedCourseUnits.length > 0 &&
-                <PreviewRequestForm
-                  requests={requests}
-                  requestSubmitHandler={submitRequest}
-                  previewingFormHook={[previewingForm, setPreviewingForm]}
-                  submittingRequest={submittingRequest}
-                />
+                <>
+                  <Button
+                    className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
+                    onClick={() => { setCreatingRequest(false) }}
+                  >
+                    <div className="flex flex-row gap-x-2">
+                      <ArrowLeftIcon className="h-5 w-5" />
+                      Voltar
+                    </div>
+                  </Button>
+                  <PreviewRequestForm
+                    requests={requests}
+                    requestSubmitHandler={submitRequest}
+                    previewingFormHook={[previewingForm, setPreviewingForm]}
+                    submittingRequest={submittingRequest}
+                  />
+                </>
               }
             </div>
           </div>
@@ -135,10 +137,19 @@ export const CreateRequest = ({
 
           {
             selectedCourseUnits.length === 0
-              ? <>
+              ? <div className="flex flex-col gap-y-4">
                 <Desert className="w-full" />
                 <p className="text-center">Ainda não adicionaste nenhuma disciplina para fazer uma troca.</p>
-              </>
+                <Button
+                  className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
+                  onClick={() => { setCreatingRequest(false) }}
+                >
+                  <div className="flex flex-row gap-x-2">
+                    <ArrowLeftIcon className="h-5 w-5" />
+                    Voltar
+                  </div>
+                </Button>
+              </div>
               : <></>
           }
         </div>

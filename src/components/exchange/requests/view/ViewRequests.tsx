@@ -85,7 +85,7 @@ export const ViewRequests = ({
         <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {
             isLoading
-              ? <div>
+              ? <div className="w-full">
                 <Skeleton className="w-full h-full" />
               </div>
               : <>
