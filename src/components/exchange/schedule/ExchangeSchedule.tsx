@@ -12,10 +12,8 @@ const ExchangeSchedule = () => {
     if (!exchangeSchedule) return;
 
     const groupedClasses: Record<string, ClassDescriptor[]> = {};
-
     exchangeSchedule.forEach((currentClass: ClassDescriptor) => {
-      const courseUnitId = currentClass.courseInfo.course_unit_id;
-
+      const courseUnitId = currentClass.courseInfo.id;
       if (!groupedClasses[courseUnitId]) {
         groupedClasses[courseUnitId] = [];
       }

@@ -9,7 +9,7 @@ export default (schedule: Array<ClassDescriptor>): Array<CourseInfo> => {
   const duplicates = new Set<number>();
   const result = [];
 
-  schedule.forEach((scheduleItem: ClassDescriptor) => {
+  schedule?.forEach((scheduleItem: ClassDescriptor) => {
     if (!duplicates.has(scheduleItem.courseInfo.id)) {
       result.push(scheduleItem.courseInfo);
       duplicates.add(scheduleItem.courseInfo.id);

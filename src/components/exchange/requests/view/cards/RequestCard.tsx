@@ -1,7 +1,7 @@
 import { ArchiveBoxIcon, ArrowRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { ChevronUpIcon } from "@heroicons/react/24/solid";
 import { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
-import { MarketplaceRequest } from "../../../../../@types";
+import { ClassDescriptor, MarketplaceRequest } from "../../../../../@types";
 import ScheduleContext from "../../../../../contexts/ScheduleContext";
 import { Button } from "../../../../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card";
@@ -11,7 +11,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../
 import RequestCardClassBadge from "./RequestCardClassBadge";
 import useSchedule from "../../../../../hooks/useSchedule";
 import { toast } from "../../../../ui/use-toast";
-
 
 type Props = {
   request: MarketplaceRequest;
@@ -31,8 +30,8 @@ export const RequestCard = ({
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>({});
-  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [selectedOptions, setSelectedOptions] = useState<Map<string, boolean>>(new Map());
+  const [selectAll, setSelectAll] = useState<boolean>(true);
   const originalSchedule = useSchedule();
 
   const hide = () => {
@@ -46,71 +45,79 @@ export const RequestCard = ({
     });
   }
 
+  // When the request changes it updates the options it is selected 
+  // and the default is for all options to be set to true
+  useEffect(() => {
+    const ucs = new Set(request.options.map((option) => option.course_info.acronym));
+
+    const newSelectedOptions = new Map();
+    ucs.forEach((acronym) => {
+      newSelectedOptions.set(acronym, true);
+    });
+
+    setSelectedOptions(newSelectedOptions);
+  }, [request]);
+
+  useEffect(() => {
+    if (open) {
+      setChosenRequest(request);
+      togglePreview(selectedOptions);
+    } else {
+      setExchangeSchedule(originalSchedule.schedule);
+    }
+  }, [open]);
+
+  console.log("current open: ", open);
+
+  useEffect(() => {
+    if (chosenRequest?.id !== request.id) {
+      setOpen(false);
+    }
+  }, [chosenRequest]);
 
   const handleOptionChange = (acronym: string) => {
-    if (chosenRequest?.id !== request.id) {
-      setChosenRequest(request);
-    }
+    selectedOptions.set(acronym, !selectedOptions.get(acronym));
+    setSelectedOptions(new Map(selectedOptions));
 
-    setSelectedOptions((prevState) => {
-      const updatedOptions = {
-        ...prevState,
-        [acronym]: !prevState[acronym],
-      };
+    const allSelected = Array.from(selectedOptions.values()).every((value) => value);
+    setSelectAll(allSelected);
 
-
-      const allSelected = request.options.every(
-        (option) => updatedOptions[option.course_info.acronym]
-      );
-      setSelectAll(allSelected);
-
-      togglePreview(updatedOptions);
-      return updatedOptions;
-    });
+    togglePreview(selectedOptions);
   };
-
 
   const handleSelectAll = () => {
     const allSelected = !selectAll;
     setSelectAll(allSelected);
 
-    const newSelectedOptions = request.options.reduce((acc, option) => {
-      acc[option.course_info.acronym] = allSelected;
-      return acc;
-    }, {} as Record<string, boolean>);
+    for (const key of selectedOptions.keys()) {
+      selectedOptions.set(key, allSelected);
+    }
 
-
+    const newSelectedOptions = new Map(selectedOptions);
     setSelectedOptions(newSelectedOptions);
     togglePreview(newSelectedOptions);
-
-    setChosenRequest(request);
   };
 
-  const togglePreview = (updatedOptions: Record<string, boolean>) => {
-    const selectedOptions = request.options.filter(
-      (option) => updatedOptions[option.course_info.acronym] === true
+  const togglePreview = (updatedOptions: Map<string, boolean>) => {
+    const anySelected = Array.from(updatedOptions.values()).some((value) => value);
+
+    // Schedule with courses that are not selected
+    const newExchangeSchedule = originalSchedule?.schedule?.filter(
+      (classDescriptor: ClassDescriptor) => {
+        return !updatedOptions.get(classDescriptor.courseInfo.acronym);
+      }
     );
 
-    if (selectedOptions.length > 0) {
-      const newExchangeSchedule = originalSchedule.schedule.filter(
-        (item) =>
-          !request.options.some(
-            (option) =>
-              updatedOptions[option.course_info.acronym] &&
-              item.courseInfo.id === option.course_info.id
-          )
-      );
-
-      selectedOptions.forEach((option) => {
+    if (anySelected) {
+      request.options.forEach((option) => {
         const matchingClass = option.class_issuer_goes_from;
-        if (matchingClass) {
-          matchingClass.slots.forEach((slot) => {
-            newExchangeSchedule.push({
-              courseInfo: option.course_info,
-              classInfo: { ...matchingClass, slots: [slot] },
-            });
+        matchingClass.slots.forEach((slot) => {
+          console.log("what the hell option: ", option);
+          newExchangeSchedule.push({
+            courseInfo: option.course_info,
+            classInfo: { id: matchingClass.id, name: matchingClass.name, slots: [slot] },
           });
-        }
+        });
       });
 
       setExchangeSchedule(newExchangeSchedule);
@@ -118,14 +125,6 @@ export const RequestCard = ({
       setExchangeSchedule(originalSchedule.schedule);
     }
   };
-
-
-  useEffect(() => {
-    if (chosenRequest?.id !== request.id) {
-      setSelectedOptions({});
-      setSelectAll(false);
-    }
-  }, [chosenRequest]);
 
   return (
     <Card
@@ -194,7 +193,7 @@ export const RequestCard = ({
               <Checkbox
                 id={option.course_info.acronym}
                 className="flex-grow w-1/12 h-8"
-                checked={selectedOptions[option.course_info.acronym] || false}
+                checked={selectedOptions.get(option.course_info.acronym) || false}
                 onCheckedChange={() => handleOptionChange(option.course_info.acronym)}
               />
               <label htmlFor={option.course_info.acronym} className="w-11/12">
@@ -231,4 +230,4 @@ export const RequestCard = ({
       </CardFooter>
     </Card>
   );
-};
+}
