@@ -36,7 +36,7 @@ export const ViewRequestBadgeFilter = ({
     setClassesFilter(new Map(classesFilter));
   }
 
-  return <div className="flex flex-row items-center">
+  return <div className="flex flex-row items-center gap-x-2">
     <Badge
       className={
         `${filterCourseUnits.has(courseUnit.id) ? "bg-black text-white" : "bg-gray-200 text-gray-700"} 
@@ -59,7 +59,7 @@ export const ViewRequestBadgeFilter = ({
           <ChevronDownIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex flex-col gap-y-2">
+      <DropdownMenuContent className="flex flex-col gap-y-2 max-h-72 overflow-y-scroll">
         <p className="p-2">Turma de destino</p>
         {classes?.map((currentClass: ClassInfo) => (
           <DropdownMenuItem className="flex flex-row">

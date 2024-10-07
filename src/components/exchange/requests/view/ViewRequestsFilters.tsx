@@ -14,7 +14,6 @@ export const ViewRequestsFilters = ({
   filterCourseUnitsHook,
   classesFilterHook
 }: Props) => {
-  const [filterCourseUnits, setFilterCourseUnits] = filterCourseUnitsHook
   const { exchangeSchedule } = useContext(ScheduleContext);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
@@ -28,7 +27,7 @@ export const ViewRequestsFilters = ({
           <Skeleton className="h-4 w-1/4 rounded-full" />
           <Skeleton className="h-4 w-1/4 rounded-full" />
         </div>
-        : <div className="w-full flex flex-row flex-wrap gap-x-3 gap-y-3 items-center">
+        : <div className="w-full flex flex-row flex-wrap gap-x-3 gap-y-5 items-center">
           {
             Array.from(enrolledCourseUnits).map((courseUnit: CourseInfo) => (
               <ViewRequestBadgeFilter
