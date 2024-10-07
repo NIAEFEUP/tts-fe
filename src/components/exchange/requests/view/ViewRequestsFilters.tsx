@@ -14,7 +14,6 @@ export const ViewRequestsFilters = ({
   filterCourseUnitsHook,
   classesFilterHook
 }: Props) => {
-  const [filterCourseUnits, setFilterCourseUnits] = filterCourseUnitsHook
   const { exchangeSchedule } = useContext(ScheduleContext);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 

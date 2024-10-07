@@ -35,7 +35,9 @@ export const ViewRequests = ({
   // This is to keep track of the request of the request card that is currently open
   const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
-  const { data, size, setSize, isLoading, isValidating } = useMarketplaceRequests(filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter]);
+  const { data, size, setSize, isLoading, isValidating } = useMarketplaceRequests(
+    filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter], classesFilter
+  );
 
   const requests = data ? [].concat(...data) : [];
 
