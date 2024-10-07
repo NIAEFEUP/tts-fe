@@ -1,19 +1,14 @@
-import { useContext } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { ClassDescriptor, MarketplaceRequest } from "../../../../@types";
+import { MarketplaceRequest } from "../../../../@types";
 import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
-import useSchedule from "../../../../hooks/useSchedule";
 import { Desert } from "../../../svgs";
-import { Badge } from "../../../ui/badge";
 import { Button } from "../../../ui/button";
 import { Skeleton } from "../../../ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
 import { MineRequestCard } from "./cards/MineRequestCard";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
-import ExchangeSchedule from "../../schedule/ExchangeSchedule";
-import ScheduleContext from "../../../../contexts/ScheduleContext";
 
 type Props = {
   setCreatingRequest: Dispatch<SetStateAction<boolean>>
@@ -26,7 +21,6 @@ const EmptyRequestsWarning = () => {
     <Desert className="w-full" />
     <p className="text-center">Não existem pedidos.</p>
   </div>
-
 }
 
 export const ViewRequests = ({
@@ -36,7 +30,7 @@ export const ViewRequests = ({
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
-  const [classesFilter, setClassesFilter] = useState<Map<string, string>>(new Map());
+  const [classesFilter, setClassesFilter] = useState<Map<string, Set<string>>>(new Map());
 
   // This is to keep track of the request of the request card that is currently open
   const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
@@ -84,8 +78,8 @@ export const ViewRequests = ({
       </TabsList>
       <TabsContent value="todos" className="mt-4">
         <ViewRequestsFilters
-          availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
+          classesFilterHook={[classesFilter, setClassesFilter]}
         />
         <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {
@@ -115,8 +109,8 @@ export const ViewRequests = ({
       </TabsContent>
       <TabsContent value="meus-pedidos" className="mt-4">
         <ViewRequestsFilters
-          availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
+          classesFilterHook={[classesFilter, setClassesFilter]}
         />
         <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {requests.length === 0
@@ -133,8 +127,8 @@ export const ViewRequests = ({
       </TabsContent>
       <TabsContent value="recebidos">
         <ViewRequestsFilters
-          availableClasses={["3LEIC01", "3LEIC02", "3LEIC03"]}
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
+          classesFilterHook={[classesFilter, setClassesFilter]}
         />
         <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {requests.length === 0

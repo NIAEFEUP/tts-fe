@@ -10,11 +10,31 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 type Props = {
   courseUnit: CourseInfo
   filterCourseUnitsHook: [Set<number>, Dispatch<SetStateAction<Set<number>>>]
+  classesFilterHook: [Map<string, Set<string>>, Dispatch<SetStateAction<Map<string, Set<string>>>>]
 }
 
-export const ViewRequestBadgeFilter = ({ courseUnit, filterCourseUnitsHook }: Props) => {
+export const ViewRequestBadgeFilter = ({
+  courseUnit,
+  filterCourseUnitsHook,
+  classesFilterHook
+}: Props) => {
+  const [classesFilter, setClassesFilter] = classesFilterHook;
   const [filterCourseUnits, setFilterCourseUnits] = filterCourseUnitsHook
   const { classes } = useCourseUnitClasses(courseUnit.id);
+
+  const handleClassFilterChange = (className: string, checked: boolean) => {
+    const classFilterItem = classesFilter.get(courseUnit.acronym);
+
+    if (checked) {
+      if (classFilterItem) classFilterItem.add(className);
+      else classesFilter.set(courseUnit.acronym, new Set([className]));
+    } else {
+      classFilterItem.delete(className);
+      if (classFilterItem.size === 0) classesFilter.delete(courseUnit.acronym);
+    }
+
+    setClassesFilter(new Map(classesFilter));
+  }
 
   return <div className="flex flex-row items-center">
     <Badge
@@ -32,31 +52,38 @@ export const ViewRequestBadgeFilter = ({ courseUnit, filterCourseUnitsHook }: Pr
       }}
     >
       {courseUnit.acronym}
-      <DropdownMenu>
-        <DropdownMenuTrigger className="p-0 xl:p-0" asChild>
-          <Button variant="icon" className="p-0 h-5 w-5 text-black hover:text-white">
-            <ChevronDownIcon className="h-5 w-5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="flex flex-col gap-y-2">
-          <p className="p-2">Turma de destino</p>
-          {classes?.map((currentClass: ClassInfo) => (
-            <DropdownMenuItem className="flex flex-row">
-              <div className="flex flex-row items-center gap-x-2">
-                <Checkbox
-                  id={`from-${currentClass.id}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />
-                <label htmlFor={`from-${currentClass.id}`} className="ml-2 text-sm text-gray-700">
-                  {currentClass.name}
-                </label>
-              </div>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
     </Badge>
+    <DropdownMenu>
+      <DropdownMenuTrigger className="p-0 xl:p-0" asChild>
+        <Button variant="icon" className="p-0 h-5 w-5 text-black">
+          <ChevronDownIcon className="h-5 w-5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="flex flex-col gap-y-2">
+        <p className="p-2">Turma de destino</p>
+        {classes?.map((currentClass: ClassInfo) => (
+          <DropdownMenuItem className="flex flex-row">
+            <div className="flex flex-row items-center gap-x-2">
+              <Checkbox
+                id={`from-${currentClass.id}`}
+                checked={classesFilter.get(courseUnit.acronym)?.has(currentClass.name)}
+                onCheckedChange={(checked) => {
+                  handleClassFilterChange(currentClass.name, checked);
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <label
+                htmlFor={`from-${currentClass.id}`}
+                className="ml-2 text-sm text-gray-700"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {currentClass.name}
+              </label >
+            </div>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+
   </div>
 }
