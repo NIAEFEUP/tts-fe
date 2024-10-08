@@ -7,7 +7,6 @@ import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage } from './page
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import * as Sentry from "@sentry/react";
-import React from 'react'
 
 const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
 
