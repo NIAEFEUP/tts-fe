@@ -1,0 +1,50 @@
+name: Check Package Version
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Get PR package version
+        id: pr_version
+        run: |
+          PR_VERSION=$(jq -r .version < package.json)
+          echo "::set-output name=pr_version::$PR_VERSION"
+
+      - name: Fetch and checkout the main branch
+        run: |
+          git fetch origin main
+          git checkout origin/main
+
+      - name: Compare PR versions
+        run: |
+          PR_VERSION=${{ steps.pr_version.outputs.pr_version }}
+          MAIN_VERSION=$(jq -r .version < package.json)
+          echo "Main branch version: $MAIN_VERSION"
+          echo "PR version: $PR_VERSION"
+
+          version_greater() {
+            printf '%s\n%s' "$1" "$2" | sort -V | head -n1 | grep -q "$2"
+          }
+
+          if version_greater "$PR_VERSION" "$MAIN_VERSION"; then
+            echo "Version is correct!"
+          else
+            echo "Error: PR version ($PR_VERSION) is not greater than main version ($MAIN_VERSION)."
+            exit 1
+          fi
