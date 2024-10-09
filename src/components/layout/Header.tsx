@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
+import { FeedbackReport } from '../FeedbackReport'
 
 const navigation = [
   {
@@ -80,9 +81,7 @@ const Header = ({ siteTitle, location }: Props) => {
                     ))}
                 </div>
 
-                <div className="hidden self-center md:inline-flex">
-
-
+                <div className="hidden self-center md:inline-flex md:items-center">
                   <DarkModeSwitch />
                 </div>
               </div>
@@ -127,6 +126,7 @@ const Hamburger = ({ open }: HamburgerProps) => (
     <div className="flex items-center space-x-1">
 
       <DarkModeSwitch />
+      <FeedbackReport />
 
       <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
         <span className="sr-only">Open nav menu</span>
