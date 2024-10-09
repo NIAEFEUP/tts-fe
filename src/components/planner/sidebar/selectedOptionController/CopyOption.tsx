@@ -5,6 +5,7 @@ import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { CourseOption } from '../../../../@types'
+import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
 type Props = {
   currentOption: CourseOption[]
@@ -26,6 +27,8 @@ const CopyOption = ({ currentOption, className }: Props) => {
 
   //TODO (thePeras): Add link here
   const optionToString = (selectedOption: CourseOption[]) => {
+    if (selectedOption.filter((course) => !course.picked_class_id).length === selectedOption.length) return "";
+
     const copyOption = selectedOption.map((element) => {
       return element.course_id + '#' + element.picked_class_id;
     }).join(';');
@@ -34,12 +37,19 @@ const CopyOption = ({ currentOption, className }: Props) => {
   }
 
   const copyOption = () => {
-    navigator.clipboard.writeText(optionToString(currentOption))
-    setIcon(true)
-    toast({ title: 'Horário copiado', description: 'Podes colar o horário noutra opção ou enviar a um amigo.' })
+    const scheduleHash = optionToString(currentOption);
+    navigator.clipboard.writeText(scheduleHash);
+    setIcon(true);
+
+    if (scheduleHash === "") {
+      toast({ title: 'Horário não copiado', description: 'Não tens nenhuma aula selecionada para copiar.' })
+    } else {
+      toast({ title: 'Horário copiado', description: 'Podes colar o horário noutra opção ou enviar a um amigo.' })
+    }
     setTimeout(() => {
       setIcon(false)
     }, 1500)
+    AnalyticsTracker.trackFeature(Feature.COPY);
   }
 
   return (

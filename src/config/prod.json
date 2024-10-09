@@ -1,5 +1,5 @@
 {
-  "pathPrefix": "/tts/",
+  "pathPrefix": "/",
   "paths": {
     "about": "about",
     "profile": "profile",

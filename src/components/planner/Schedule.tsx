@@ -5,13 +5,13 @@ import { ScheduleGrid, } from './schedules'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
 import { useContext } from 'react'
-import ClassBox from './schedules/ClassBox'
 import ScheduleTypes from './ScheduleType'
-import { ClassDescriptor } from '../../@types'
+import { ClassDescriptor, SlotInfo } from '../../@types'
 import CourseContext from '../../contexts/CourseContext'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import { useShowGrid } from '../../hooks'
 import { maxHour, minHour, convertWeekdayLong, convertHour } from '../../utils'
+import SlotBoxes from './schedules/SlotBoxes'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -21,11 +21,12 @@ const Schedule = () => {
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
 
   const [classes, setClasses] = useState<ClassDescriptor[]>([])
+  const [slots, setSlots] = useState<SlotInfo[]>([])
   const scheduleRef = useRef(null)
 
   useEffect(() => {
     //TODO: Improvements by functional programming
-    let newClasses = []
+    const newClasses = []
     const option = multipleOptions[selectedOption]
 
     for (let i = 0; i < option.course_options.length; i++) {
@@ -43,11 +44,12 @@ const Schedule = () => {
     }
 
     setClasses(newClasses)
+    setSlots(newClasses.map((newClass) => newClass.classInfo.slots).flat())
   }, [multipleOptions, pickedCourses, selectedOption])
 
   // TODO: Improvements by functional programming
-  const slotTypes = useMemo(() => {
-    let aux = new Set()
+  const slotTypes: string[] = useMemo(() => {
+    const aux = new Set()
 
     for (const currentClass of classes) {
       const class_info = currentClass?.classInfo
@@ -60,10 +62,23 @@ const Schedule = () => {
     return Array.from(aux) as string[]
   }, [classes])
 
+  const slotsOrderedByDay = (slots: Array<SlotInfo>): Array<SlotInfo> => {
+    return slots.sort((slot1, slot2) => {
+      if (slot1.day === slot2.day) {
+        return slot1.start_time - slot2.start_time;
+      }
+
+      return slot1.day - slot2.day
+    });
+  }
+
+  // Bottom Bar Configurations
+  const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<string[]>([])
   const [showGrid, setShowGrid] = useShowGrid()
 
   return (
     <>
+      {/*Schedule desktop*/}
       <div ref={scheduleRef} className="schedule-area gap-2">
         {/* Days Column Names */}
         <div className="schedule-top">
@@ -90,16 +105,11 @@ const Schedule = () => {
             <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
-                {classes
-                  .filter((c) => c.classInfo !== undefined)
-                  .map((c) => (
-                    <ClassBox
-                      key={`course[${c.courseInfo.id}]-class[${c.classInfo.id}]`}
-                      courseInfo={c.courseInfo}
-                      classInfo={c.classInfo ?? null}
-                      classes={classes}
-                    />
-                  ))}
+                <SlotBoxes
+                  slots={slots}
+                  hiddenLessonsTypes={hiddenLessonsTypes}
+                  classes={classes}
+                />
               </div>
             </div>
           </div>
@@ -108,7 +118,7 @@ const Schedule = () => {
         {/* Bottom bar */}
         <div className="flex justify-between gap-5 pl-16">
           <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
-            <ScheduleTypes types={slotTypes} />
+            <ScheduleTypes types={slotTypes} hiddenLessonsTypes={hiddenLessonsTypes} setHiddenLessonsTypes={setHiddenLessonsTypes} />
           </div>
           <div className="flex gap-2">
             <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
@@ -116,6 +126,22 @@ const Schedule = () => {
           </div>
         </div>
       </div>
+
+      {/*Schedule mobile*/}
+      <div className="flex h-full w-full flex-col items-center justify-start space-y-2 lg:hidden">
+        <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${""}`}>
+          <div className="h-full w-1 rounded bg-primary" />
+          <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
+            {slots.length === 0 && <p>Ainda não foram selecionadas turmas!</p>}
+            <SlotBoxes
+              slots={slotsOrderedByDay(slots)}
+              classes={classes}
+              hiddenLessonsTypes={hiddenLessonsTypes}
+            />
+          </div>
+        </div>
+      </div>
+
     </>
   )
 }

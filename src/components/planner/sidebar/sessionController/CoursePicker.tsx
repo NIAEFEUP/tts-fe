@@ -1,26 +1,22 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
-import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
+import { PencilSquareIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
-import { CheckIcon } from '@heroicons/react/24/outline'
 import StorageAPI from '../../../../api/storage'
 import CourseContext from '../../../../contexts/CourseContext'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { removeAllCourseOptions } from '../../../../utils'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/button'
-import { DialogHeader, DialogFooter, Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
+import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import BackendAPI from '../../../../api/backend'
 import { Separator } from '../../../ui/separator'
 import useCourseUnits from '../../../../hooks/useCourseUnits'
-import { CourseInfo, Major } from '../../../../@types'
+import { Major } from '../../../../@types'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 
 //TODO: absolute imports with @
 
 const CoursePicker = () => {
-  const [open, setOpen] = useState(false)
-  const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo } = useContext(CourseContext)
+  const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo, ucsModalOpen, setUcsModalOpen } = useContext(CourseContext)
 
   const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
   const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
@@ -33,9 +29,9 @@ const CoursePicker = () => {
 
   useEffect(() => {
     BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
+      StorageAPI.setPickedCoursesStorage(courseWithClasses);
       setPickedCourses(courseWithClasses);
     })
-    StorageAPI.setPickedCoursesStorage(pickedCourses)
   }, [checkboxedCourses])
 
   useEffect(() => {
@@ -43,67 +39,69 @@ const CoursePicker = () => {
     StorageAPI.setSelectedMajorStorage(selectedMajor);
   }, [selectedMajor, setCoursesInfo])
 
-  const handleOpenChange = async () => {
+  const handleOpenChange = () => {
     setChoosingNewCourse((prev) => !prev);
-    setOpen(!open)
-    if (open === false) return
+    if (ucsModalOpen === false) return
+    setUcsModalOpen(false)
   }
 
   return (
-    <Dialog open={open} onOpenChange={async () => { await handleOpenChange() }}>
+    <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares">
-          <span className="hidden md:block lg:hidden xl:block">Escolher UCs</span>
+        <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Editar Unidades Curriculares" onClick={() => setUcsModalOpen(true)}>
+          <span className="hidden md:block lg:hidden xl:block">Unidades Curriculares</span>
           <PencilSquareIcon className="h-5 w-5 text-white" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-fit min-w-fit">
-        <DialogHeader>
-          <DialogTitle>Seleciona as tuas Unidades Curriculares</DialogTitle>
+      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-scroll">
+        <DialogHeader className="mx-4">
+          <DialogTitle>Seleciona as tuas unidades curriculares</DialogTitle>
           <DialogDescription className="mt-2">
-            Escolhe um curso e unidades curriculares à esquerda. À direita aparecem as unidades curriculares que
-            escolheste.
+            Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
           </DialogDescription>
         </DialogHeader>
         <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
         <Separator />
         {showContent ? (
           <>
-            <div className="grid w-[55rem] grid-cols-[1fr_3rem_1fr]">
-              {!loadingCourseUnits
-                ? <CourseYearTabs />
-                : <div className="flex flex-col space-y-3">
-                  <Skeleton className="h-8 rounded-xl" />
-                  <div className="space-y-4">
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-5 w-full" />
+            <div className="flex flex-col lg:flex-row flex-grow w-full lg:w-[60rem]">
+              <div className="w-full lg:w-1/2">
+                {!loadingCourseUnits
+                  ? <CourseYearTabs />
+                  : <div className="flex flex-col space-y-3">
+                    <Skeleton className="h-8 rounded-xl" />
+                    <div className="space-y-4">
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-full" />
+                    </div>
                   </div>
-                </div>
-              }
-              <Separator orientation="vertical" className="mx-5" />
-              <PickedCoursesList />
+                }
+              </div>
+              <div className="flex flex-row w-full lg:w-1/2 mt-4">
+                <Separator orientation="vertical" className="mx-5 hidden lg:block" />
+                <PickedCoursesList />
+              </div>
             </div>
-            <DialogFooter className="grid grid-cols-2">
-              <div />
-              <div className="flex items-center justify-between pr-4 dark:text-white">
+            <DialogFooter className="flex flex-row justify-center">
+              <div className="flex flex-row items-center justify-between dark:text-white pr-4 pb-4">
                 <Ects />
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-4">
                   <ClearAllCoursesButton />
                 </div>
               </div>
             </DialogFooter>
           </>
         ) : (
-          <div className="flex h-64 w-[55rem] flex-col items-center justify-center text-center text-sm dark:text-white">
-            <Desert />
-            <span>Seleciona um curso primeiro.</span>
+          <div className="flex flex-col items-center flex-grow w-full lg:w-[60rem]">
+            <Desert className="h-64 w-full" />
+            <p>Seleciona um curso primeiro.</p>
           </div>
         )}
       </DialogContent>
-    </Dialog>
+    </Dialog >
   )
 }
 

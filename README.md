@@ -1,5 +1,5 @@
 <p align="center"> 
-  <h3 align="center"> TimeTableScheduler - Frontend </h3> 
+  <h3 align="center"> Time Table Selector - Frontend </h3> 
   <p align="center"> A platform where students can experiment with the possible combination of schedule options they can pick at the start of the semester  </p> 
   <p align="center"> 
     <a href="https://reactjs.org/"> 

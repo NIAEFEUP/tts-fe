@@ -9,9 +9,9 @@ const Ects = () => {
   const warning = totalEcts > 42 ? 2 : totalEcts > 36 ? 1 : 0
 
   return (
-    <div className="mx-2 flex">
-      <div className="font-bold">Total ECTS:&nbsp;</div>
-      <div className="font-bold">{totalEcts}</div>
+    <div className="mx-2 flex flex-row gap-1 items-center">
+      <div className="text-sm">Total ECTS:</div>
+      <div className="font-semibold text-sm">{totalEcts}</div>
       {warning ? (
         <TooltipProvider delayDuration={300}>
           <Tooltip>
@@ -22,8 +22,8 @@ const Ects = () => {
             </TooltipTrigger>
             <TooltipContent>
               {warning === 1
-                ? 'O NIAEFEUP recomenda escolher 36 ou menos ECTS.'
-                : 'O limite de créditos por semestre, por norma, é 42 ECTS'}
+                ? "Nós recomendamos escolher 36 ou menos ECTS."
+                : "Por norma, o limite de créditos por semestre é 42 ECTS."}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

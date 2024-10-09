@@ -10,17 +10,21 @@ interface CoursesContextContent {
   setCheckboxedCourses: Dispatch<SetStateAction<CourseInfo[]>>
   choosingNewCourse: boolean
   setChoosingNewCourse: Dispatch<SetStateAction<boolean>>
+  ucsModalOpen: boolean
+  setUcsModalOpen: Dispatch<SetStateAction<boolean>>
 }
 
 const CourseContext: Context<CoursesContextContent> = createContext({
   pickedCourses: [],
-  setPickedCourses: (pickedCourses: CourseInfo[]) => { },
+  setPickedCourses: () => { },
   coursesInfo: [],
-  setCoursesInfo: (courseInfo: CourseInfo[]) => { },
+  setCoursesInfo: () => { },
   checkboxedCourses: [],
-  setCheckboxedCourses: (courses: CourseInfo[]) => { },
+  setCheckboxedCourses: () => { },
   choosingNewCourse: false,
-  setChoosingNewCourse: (choosingCourse: boolean) => { }
+  setChoosingNewCourse: () => { },
+  ucsModalOpen: false,
+  setUcsModalOpen: () => { },
 })
 
 export default CourseContext

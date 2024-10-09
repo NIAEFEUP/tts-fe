@@ -73,13 +73,12 @@ const createCourseClass = async (course: CourseInfo) => {
 const getCoursesClasses = async (courses: CourseInfo[]): Promise<CourseInfo[]> => {
   const newCourses = [...courses];
 
-  Promise.all(newCourses.map(course => createCourseClass(course))).then((values) => {
+  return Promise.all(newCourses.map(course => createCourseClass(course))).then(() => {
     return newCourses;
   }).catch((e) => {
     console.error(e);
+    return []
   })
-
-  return newCourses;
 }
 
 /**
@@ -101,6 +100,28 @@ const getInfo = async () => {
   return await apiRequest('/info/')
 }
 
+
+/**
+ * Retrieves hashes for a list of course unit IDs.
+ * @param ids Array of course unit IDs
+ * @returns Object mapping course unit IDs to their hashes
+ */
+const getCourseUnitHashes = async (ids: number[]) => {
+  if (ids.length === 0) return {};
+
+  try {
+    const queryString = ids.join(',');
+    const response = await fetch(`${BACKEND_URL}/course_unit/hash?ids=${queryString}`);
+    if (!response.ok) throw new Error('Network response was not ok');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching course unit hashes:', error);
+    throw error;
+  }
+};
+
+
+
 const api = {
   getMajors,
   getCourses,
@@ -109,6 +130,7 @@ const api = {
   getCoursesClasses,
   getCourseUnit,
   getInfo,
+  getCourseUnitHashes,
   BACKEND_URL
 }
 

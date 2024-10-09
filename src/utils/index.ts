@@ -69,8 +69,12 @@ const convertHour = (hourNumber: string) => {
   return `${hour}:${minutes}`
 }
 
-const conflictsSeverity = (first: SlotInfo, second: SlotInfo) => {
-  return first.lesson_type === "TP" && second.lesson_type === "TP"
+const isMandatory = (slot: SlotInfo): boolean => {
+  return slot.lesson_type !== "T" && slot.lesson_type !== "O";
+}
+
+const conflictsSeverity = (first: SlotInfo, second: SlotInfo): number => {
+  return (isMandatory(first) && isMandatory(second)) ? 2 : 1;
 }
 
 const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
@@ -83,12 +87,12 @@ const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
   const firstEnd = firstStart + firstDuration
   const secondEnd = secondStart + secondDuration
 
-  return (firstStart < secondStart && firstEnd > secondStart) || (firstStart >= secondStart && firstStart < secondEnd)
+  return firstEnd > secondStart && firstStart < secondEnd;
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
   const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
-  if (!classInfo) return ' '
+  if (!classInfo) return 'Selecionar Opção...'
 
   const classTitle = classInfo.name
   //const professor_acronyms = classInfo.slots.flatMap((slot) => slot.professors.map((prof) => prof.acronym))
@@ -206,7 +210,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }
@@ -219,9 +223,9 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
  * @example output: [[{ course: 1, year: 1 }, { course: 3, year: 1 }], [{ course: 2, year: 2 }]]
  */
 const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
-  let majorCourses: CourseInfo[][] = []
+  const majorCourses: CourseInfo[][] = []
   let currYear = 0
-  for (let i = 0; i < yearCourses.length; i++) {
+  for (let i = 0; i < yearCourses?.length; i++) {
     if (yearCourses[i].course_unit_year !== currYear) {
       currYear += 1
       majorCourses.push([yearCourses[i]])
@@ -233,9 +237,9 @@ const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
 }
 
 const isSubset = (set1, set2, same) => {
-  for (let elem1 of set1) {
+  for (const elem1 of set1) {
     let found = false
-    for (let elem2 of set2) {
+    for (const elem2 of set2) {
       if (same(elem1, elem2)) {
         found = true
         break
@@ -251,7 +255,7 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }
@@ -279,24 +283,23 @@ const removeAllCourseOptions = (multipleOptions: MultipleOptions): MultipleOptio
   })
 )
 
-const courseHasClassPicked = (course: CourseInfo, option: Option): CourseOption | null =>  {
+const courseHasClassPicked = (course: CourseInfo, option: Option): CourseOption | null => {
   const candidateOption = option.course_options.filter((courseOption) => courseOption.picked_class_id && (courseOption.course_id === course.course_unit_id));
 
-  if(!candidateOption) return null;
+  if (!candidateOption) return null;
 
   return candidateOption[0];
 }
 
-const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions) : MultipleOptions => {
+const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions): MultipleOptions => {
   //  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
     const newCourseOptions = [];
-    for(const course of courses) {
+    for (const course of courses) {
       const existingOption = courseHasClassPicked(course, option);
-      if(existingOption) {
-        newCourseOptions.push({...existingOption});
-        console.log(`${course.acronym} has picked class`);
+      if (existingOption) {
+        newCourseOptions.push({ ...existingOption });
       } else {
         newCourseOptions.push(createDefaultCourseOption(course));
       }
@@ -313,7 +316,6 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
     const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
-
     return classInfo.slots
   })
 }

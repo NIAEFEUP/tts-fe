@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { CourseYearCheckboxes } from './CourseYearCheckboxes'
 import { ScrollArea } from '../../../../ui/scroll-area'
-import api from '../../../../../api/backend'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { groupCoursesByYear, isSubset, replaceCourseOptions } from '../../../../../utils'
@@ -61,7 +60,7 @@ const CourseYearTabs = () => {
       {coursesByYear.map((yearCourses, idx) => {
         return (
           <TabsContent key={idx} value={`${idx + 1}`}>
-            <ScrollArea className="h-[200px] px-3">
+            <ScrollArea className="h-[200px]">
               <CourseYearCheckboxes courses={yearCourses} />
             </ScrollArea>
           </TabsContent>

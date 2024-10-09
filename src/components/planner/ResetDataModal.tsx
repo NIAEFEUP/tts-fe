@@ -1,13 +1,11 @@
-
-import BackendAPI from '../../api/backend'
 import { AlertDialogHeader, AlertDialogFooter, AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from '../ui/alert-dialog'
 
-const dataIsUpdated = async () => {
-  const { info } = await BackendAPI.getInfo()
-  const localInfo = JSON.parse(localStorage.getItem('info'))
-
-  return info.date <= localInfo.date
-}
+// const dataIsUpdated = async () => {
+//   const { info } = await BackendAPI.getInfo()
+//   const localInfo = JSON.parse(localStorage.getItem('info'))
+//
+//   return info.date <= localInfo.date
+// }
 
 //TODO(thePeras): Discuss this
 const ResetDataModal = () => {
