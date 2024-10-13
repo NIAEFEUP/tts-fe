@@ -11,7 +11,7 @@ export const HeaderProfileDropdown = () => {
   return <DropdownMenu>
     <DropdownMenuTrigger className="w-full">
       <Avatar className="border shadow-sm">
-        <AvatarImage src="" />
+        <AvatarImage src={`${api.BACKEND_URL}/student/${user?.username}/photo`} />
         <AvatarFallback>{user ? user.name.charAt(0) : ""}</AvatarFallback>
       </Avatar>
     </DropdownMenuTrigger>

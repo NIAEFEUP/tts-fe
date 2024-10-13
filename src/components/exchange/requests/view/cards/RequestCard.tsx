@@ -135,7 +135,7 @@ export const RequestCard = ({
     >
       <CardHeader className="flex flex-row gap-x-2 items-center p-4">
         <img
-          className="w-10 h-10 rounded-full shadow-md"
+          className="w-10 h-10 rounded-full shadow-md border dark:border-white"
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"
         />
         <div className="flex flex-row justify-between items-center w-full">
