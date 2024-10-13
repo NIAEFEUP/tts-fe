@@ -16,11 +16,37 @@ type Props = {
 
 const requestTypeFilters = ["all", "mine", "received"];
 
-const EmptyRequestsWarning = () => {
-  return <div className="flex flex-col">
-    <Desert className="w-full" />
-    <p className="text-center">Não existem pedidos.</p>
-  </div>
+const EmptyRequestGuard = ({ requests, children }) => {
+  return <>
+    {requests.length === 0 ?
+      <div className="flex flex-col">
+        <Desert className="w-full" />
+        <p className="text-center">Não existem pedidos.</p>
+      </div>
+      : <>
+        {children}
+      </>
+    }
+  </>
+}
+
+const RequestCardSkeletons = () => {
+  const skeletons = Array.from({ length: 3 }, () => (
+    <div className="flex flex-row w-full space-x-4 items-center">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="flex flex-col w-full space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <div className="w-1/2 flex flex-row space-x-2">
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+      </div>
+    </div>
+  ))
+
+  return <>
+    {skeletons}
+  </>
 }
 
 export const ViewRequests = ({
@@ -86,25 +112,21 @@ export const ViewRequests = ({
         <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {
             isLoading
-              ? <div className="w-full">
-                <Skeleton className="w-full h-full" />
-              </div>
-              : <>
+              ? <RequestCardSkeletons /> : <>
                 {
-                  requests.length > 0 ?
-                    <>
-                      {requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
-                        <RequestCard
-                          key={request.id}
-                          request={request}
-                          hiddenRequests={hiddenRequests}
-                          setHiddenRequests={setHiddenRequests}
-                          setChosenRequest={setChosenRequest}
-                          chosenRequest={chosenRequest}
-                        />
-                      ))}
-                    </>
-                    : <EmptyRequestsWarning />}
+                  <EmptyRequestGuard requests={requests}>
+                    {requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
+                      <RequestCard
+                        key={request.id}
+                        request={request}
+                        hiddenRequests={hiddenRequests}
+                        setHiddenRequests={setHiddenRequests}
+                        setChosenRequest={setChosenRequest}
+                        chosenRequest={chosenRequest}
+                      />
+                    ))}
+                  </EmptyRequestGuard>
+                }
               </>
           }
         </div>
@@ -115,15 +137,15 @@ export const ViewRequests = ({
           classesFilterHook={[classesFilter, setClassesFilter]}
         />
         <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
-          {requests.length === 0
-            ? <EmptyRequestsWarning />
-            : <>
+          {isLoading
+            ? <RequestCardSkeletons />
+            : <EmptyRequestGuard requests={requests}>
               {requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
                 <MineRequestCard
                   request={request}
                 />
               ))}
-            </>
+            </EmptyRequestGuard>
           }
         </div>
       </TabsContent>
@@ -133,9 +155,11 @@ export const ViewRequests = ({
           classesFilterHook={[classesFilter, setClassesFilter]}
         />
         <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
-          {requests.length === 0
-            ? <EmptyRequestsWarning />
-            : <></>
+          {isLoading
+            ? <RequestCardSkeletons />
+            : <EmptyRequestGuard requests={requests}>
+              <></>
+            </EmptyRequestGuard>
           }
         </div>
       </TabsContent>

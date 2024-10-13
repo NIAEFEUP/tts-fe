@@ -1,6 +1,3 @@
-import { useMemo } from "react";
-import api from "../api/backend";
-import useSWR from "swr";
 import { ClassDescriptor, CourseInfo } from "../@types";
 
 export default (schedule: Array<ClassDescriptor>): Array<CourseInfo> => {

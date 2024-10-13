@@ -6,10 +6,12 @@ interface ScheduleContent {
   exchangeSchedule: Array<ClassDescriptor>
   setExchangeSchedule: Dispatch<SetStateAction<Array<ClassDescriptor>>>
   enrolledCourseUnits: Array<CourseInfo>
+  loadingSchedule: boolean
 }
 
 const ScheduleContext: Context<ScheduleContent> = createContext({
   exchangeSchedule: [],
+  loadingSchedule: false,
   setExchangeSchedule: () => { },
   enrolledCourseUnits: []
 });

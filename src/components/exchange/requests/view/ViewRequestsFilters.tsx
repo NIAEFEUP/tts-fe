@@ -10,24 +10,28 @@ type Props = {
   classesFilterHook: [Map<string, Set<string>>, Dispatch<SetStateAction<Map<string, Set<string>>>>]
 }
 
+const ViewRequestsFiltersSkeletons = () => {
+  return <div className="flex flex-row w-full space-x-4 items-center">
+    {
+      Array.from({ length: 5 }).map((_, i) => (
+        <Skeleton key={i} className="h-4 w-1/5 rounded-md" />
+      ))
+    }
+  </div>
+}
+
 export const ViewRequestsFilters = ({
   filterCourseUnitsHook,
   classesFilterHook
 }: Props) => {
-  const { exchangeSchedule } = useContext(ScheduleContext);
+  const { exchangeSchedule, loadingSchedule } = useContext(ScheduleContext);
   const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
 
   return <div className="flex flex-row justify-between w-full">
     {/* Course unit filters */}
-    <div className="flex flex-row gap-2 w-full flex-wrap">
-      {enrolledCourseUnits.length === 0 ?
-        <div>
-          <Skeleton className="h-4 w-1/4 rounded-full" />
-          <Skeleton className="h-4 w-1/4 rounded-full" />
-          <Skeleton className="h-4 w-1/4 rounded-full" />
-          <Skeleton className="h-4 w-1/4 rounded-full" />
-        </div>
-        : <div className="w-full flex flex-row flex-wrap gap-x-3 gap-y-5 items-center">
+    {loadingSchedule ? <ViewRequestsFiltersSkeletons />
+      : <div className="flex flex-row gap-2 w-full flex-wrap">
+        <div className="w-full flex flex-row flex-wrap gap-x-3 gap-y-5 items-center">
           {
             Array.from(enrolledCourseUnits).map((courseUnit: CourseInfo) => (
               <ViewRequestBadgeFilter
@@ -37,7 +41,7 @@ export const ViewRequestsFilters = ({
               />
             ))
           }
-        </div>}
-    </div>
+        </div>
+      </div>}
   </div>
 }
