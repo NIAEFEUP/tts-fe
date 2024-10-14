@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon, MinusIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { ClassDescriptor, CourseInfo, CreateRequestCardMetadata, CreateRequestData, Student } from "../../../../../@types"
+import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestCardMetadata, CreateRequestData, Student } from "../../../../../@types"
 import { ScrollArea } from '../../../../ui/scroll-area'
 import ScheduleContext from "../../../../../contexts/ScheduleContext"
 import useRequestCardCourseMetadata from "../../../../../hooks/useRequestCardCourseMetadata"
@@ -26,7 +26,7 @@ export const CreateRequestCard = ({
   const [issuerOriginClass, setIssuerOriginClass] = useState<string | null>(null);
   const [selectedDestinationClass, setSelectedDestinationClass] = useState<string | null>(null);
   const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<Student | null>(null);
-  const { exchangeSchedule } = useContext(ScheduleContext);
+  const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
 
   useEffect(() => {
     if (exchangeSchedule) {
@@ -60,7 +60,23 @@ export const CreateRequestCard = ({
     setRequests(new Map(requests));
   }
 
-  console.log("destinationStudent: ", selectedDestinationStudent);
+  const togglePreview = (destinationClass: ClassInfo, slots: SlotInfo[]) => {
+    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id !== courseInfo.id);
+
+    for (const slot of slots) {
+      newExchangeSchedule.push({
+        courseInfo: courseInfo,
+        classInfo: {
+          id: destinationClass.id,
+          name: destinationClass.name,
+          slots: [slot],
+          filteredTeachers: []
+        }
+      })
+    }
+
+    setExchangeSchedule(newExchangeSchedule);
+  }
 
   return <Card key={courseInfo.name} className="shadow-md">
     <CardHeader className="flex flex-row justify-between items-center gap-4">
@@ -91,6 +107,8 @@ export const CreateRequestCard = ({
                       className="w-full"
                       onSelect={() => {
                         setSelectedDestinationClass(currentClass.name);
+                        togglePreview(currentClass, currentClass.slots);
+
                         addRequest(currentClass.name);
                       }
                       }>
