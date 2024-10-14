@@ -10,18 +10,28 @@ import useSchedule from "../hooks/useSchedule";
 import useStudentCourseUnits from "../hooks/useStudentCourseUnits";
 
 const ExchangePage = () => {
+  const [loads, setLoads] = useState<number>(-1);
   const { schedule, loading: loadingSchedule } = useSchedule();
-  const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>();
+  const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
+  const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const { signedIn, isLoading } = useSession();
   const enrolledCourseUnits = useStudentCourseUnits(schedule);
 
   useEffect(() => {
+    setLoads(prev => prev + 1);
+  }, [setLoads]);
+
+  useEffect(() => {
     setExchangeSchedule(schedule ? schedule : []);
+
+    if (loads <= 0) {
+      setOriginalExchangeSchedule(schedule ? schedule : []);
+    }
   }, [schedule]);
 
   return <>
     {!isLoading && signedIn ?
-      <ScheduleContext.Provider value={{ exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
+      <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
         <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
           {/* Schedule Preview */}
           <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">

@@ -1,3 +1,3 @@
 export const ReceivedRequestCard = () => {
-  return <></>
+  return <p></p>
 }

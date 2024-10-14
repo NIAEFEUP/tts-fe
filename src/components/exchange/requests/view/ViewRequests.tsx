@@ -1,12 +1,14 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { MarketplaceRequest } from "../../../../@types";
+import ScheduleContext from "../../../../contexts/ScheduleContext";
 import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
 import { Desert } from "../../../svgs";
 import { Button } from "../../../ui/button";
 import { Skeleton } from "../../../ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
 import { MineRequestCard } from "./cards/MineRequestCard";
+import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
 
@@ -52,6 +54,7 @@ const RequestCardSkeletons = () => {
 export const ViewRequests = ({
   setCreatingRequest
 }: Props) => {
+  const { originalExchangeSchedule, exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const requestCardsContainerRef = useRef(null);
   const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
   const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
@@ -91,7 +94,10 @@ export const ViewRequests = ({
       <h1 className="font-bold text-xl">Pedidos</h1>
       <Button
         className="bg-white text-black border shadow-md mr-0 hover:bg-gray-50 flex flex-row gap-x-1"
-        onClick={() => setCreatingRequest(true)}
+        onClick={() => {
+          setCreatingRequest(true);
+          setExchangeSchedule(originalExchangeSchedule);
+        }}
       >
         Criar pedido
         <PlusIcon className="h-5 w-5" />
@@ -149,7 +155,7 @@ export const ViewRequests = ({
           }
         </div>
       </TabsContent>
-      <TabsContent value="recebidos">
+      <TabsContent value="recebidos" className="mt-4">
         <ViewRequestsFilters
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
           classesFilterHook={[classesFilter, setClassesFilter]}
@@ -158,7 +164,7 @@ export const ViewRequests = ({
           {isLoading
             ? <RequestCardSkeletons />
             : <EmptyRequestGuard requests={requests}>
-              <></>
+              <ReceivedRequestCard />
             </EmptyRequestGuard>
           }
         </div>
