@@ -102,6 +102,7 @@ export const RequestCard = ({
   };
 
   const togglePreview = (updatedOptions: Map<string, boolean>) => {
+    console.log("current updated options: ", updatedOptions);
     const anySelected = Array.from(updatedOptions.values()).some((value) => value);
 
     // Schedule with courses that are not selected
@@ -113,14 +114,15 @@ export const RequestCard = ({
 
     if (anySelected) {
       request.options.forEach((option) => {
-        const matchingClass = option.class_issuer_goes_from;
-        matchingClass.slots.forEach((slot) => {
-          console.log("what the hell option: ", option);
-          newExchangeSchedule.push({
-            courseInfo: option.course_info,
-            classInfo: { id: matchingClass.id, name: matchingClass.name, slots: [slot] },
+        if (updatedOptions.get(option.course_info.acronym) === true) {
+          const matchingClass = option.class_issuer_goes_from;
+          matchingClass.slots.forEach((slot) => {
+            newExchangeSchedule.push({
+              courseInfo: option.course_info,
+              classInfo: { id: matchingClass.id, name: matchingClass.name, slots: [slot] },
+            });
           });
-        });
+        }
       });
 
       setExchangeSchedule(newExchangeSchedule);
