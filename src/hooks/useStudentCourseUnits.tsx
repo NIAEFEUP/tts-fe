@@ -13,6 +13,6 @@ export default (schedule: Array<ClassDescriptor>): Array<CourseInfo> => {
     }
   });
 
-  return result;
+  return result.sort((a: CourseInfo, b: CourseInfo) => Number(a.acronym < b.acronym));
 };
 

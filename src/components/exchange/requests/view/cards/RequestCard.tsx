@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../
 import RequestCardClassBadge from "./RequestCardClassBadge";
 import useSchedule from "../../../../../hooks/useSchedule";
 import { toast } from "../../../../ui/use-toast";
+import exchangeRequestService from "../../../../../api/services/exchangeRequestService";
 
 type Props = {
   request: MarketplaceRequest;
@@ -33,6 +34,8 @@ export const RequestCard = ({
   const [selectedOptions, setSelectedOptions] = useState<Map<string, boolean>>(new Map());
   const [selectAll, setSelectAll] = useState<boolean>(true);
   const originalSchedule = useSchedule();
+
+  console.log("currently selected options are: ", selectedOptions);
 
   const hide = () => {
     const newHidden = new Set(hiddenRequests);
@@ -126,6 +129,32 @@ export const RequestCard = ({
     }
   };
 
+  const submitExchange = async (e) => {
+    e.preventDefault();
+
+    const exchangeRequests = new Map();
+    for (const option of request.options) {
+      console.log("current option is: ", option);
+      if (selectedOptions.get(option.course_info.acronym)) {
+        exchangeRequests.set(
+          option.course_info.id,
+          {
+            courseUnitId: option.course_info.id,
+            courseUnitName: option.course_info.name,
+            classNameRequesterGoesFrom: option.class_issuer_goes_from.name,
+            classNameRequesterGoesTo: option.class_issuer_goes_to.name,
+            other_student: {
+              name: request.issuer_name,
+              mecNumber: request.issuer_nmec
+            }
+          }
+        );
+      }
+    }
+
+    await exchangeRequestService.submitExchangeRequest(exchangeRequests);
+  };
+
   return (
     <Card
       onMouseOver={() => setHovered(true)}
@@ -202,9 +231,9 @@ export const RequestCard = ({
                     {option.course_info.acronym} - {option.course_info.name}
                   </p>
                   <div className="flex flex-row gap-x-2 items-center font-bold">
-                    <p>{option.class_issuer_goes_from.name}</p>
-                    <ArrowRightIcon className="w-5 h-5" />
                     <p>{option.class_issuer_goes_to.name}</p>
+                    <ArrowRightIcon className="w-5 h-5" />
+                    <p>{option.class_issuer_goes_from.name}</p>
                   </div>
                 </div>
               </label>
@@ -223,9 +252,9 @@ export const RequestCard = ({
             />
             <label htmlFor="select-all">Selecionar todas</label>
           </div>
-          <div className="flex flex-row gap-2">
-            <Button>Propôr troca</Button>
-          </div>
+          <form className="flex flex-row gap-2">
+            <Button type="submit" onClick={submitExchange}>Propôr troca</Button>
+          </form>
         </div>
       </CardFooter>
     </Card>

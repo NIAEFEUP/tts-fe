@@ -48,7 +48,10 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
           : <div>
             {
               Array.from(requests.values()).map((request) => (
-                <PreviewRequestCard request={request} />
+                <PreviewRequestCard
+                  key={request.courseUnitId}
+                  request={request}
+                />
               ))
             }
           </div>

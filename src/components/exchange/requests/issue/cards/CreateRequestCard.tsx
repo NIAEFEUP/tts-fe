@@ -84,7 +84,7 @@ export const CreateRequestCard = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full">
               <ScrollArea className="max-h-72 rounded overflow-y-auto">
-                {requestMetadata?.classes.filter((currentClass) => currentClass.name !== issuerOriginClass)
+                {requestMetadata?.classes?.filter((currentClass) => currentClass.name !== issuerOriginClass)
                   .map((currentClass) => (
                     <DropdownMenuItem
                       key={"dropdown-class-" + currentClass.name}
@@ -115,7 +115,7 @@ export const CreateRequestCard = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full max-h-fit overflow-scroll">
               <ScrollArea className="max-h-72 overflow-y-auto rounded">
-                {requestMetadata?.students.map((student) => (
+                {requestMetadata?.students?.map((student) => (
                   <DropdownMenuItem
                     key={"dropdown-student-" + student.nome}
                     className="w-full"
