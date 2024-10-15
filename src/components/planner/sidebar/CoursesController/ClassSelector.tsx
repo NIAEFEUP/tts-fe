@@ -30,6 +30,7 @@ const ClassSelector = ({ course }: Props) => {
 
     if (option.length === 0) {
       setSelectedClassId(null);
+      setDisplay(null);
       return;
     }
 
