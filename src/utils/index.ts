@@ -1,6 +1,6 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo } from '../@types'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo, ClassInfo } from '../@types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import Plausible from 'plausible-tracker'
@@ -75,6 +75,20 @@ const isMandatory = (slot: SlotInfo): boolean => {
 
 const conflictsSeverity = (first: SlotInfo, second: SlotInfo): number => {
   return (isMandatory(first) && isMandatory(second)) ? 2 : 1;
+}
+
+const classesConflictSeverity = (first: ClassInfo, second: ClassInfo): number => {
+  let maxSeverity = 0;
+
+  for (const slot of first.slots) {
+    for (const otherSlot of second.slots) {
+      if (schedulesConflict(slot, otherSlot)) {
+        maxSeverity = Math.max(maxSeverity, conflictsSeverity(slot, otherSlot));
+      }
+    }
+  }
+
+  return maxSeverity;
 }
 
 const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
@@ -395,5 +409,6 @@ export {
   uniqueTeachersFromCourseInfo,
   teacherIdsFromCourseInfo,
   scrollToTop,
+  classesConflictSeverity,
   plausible
 }
