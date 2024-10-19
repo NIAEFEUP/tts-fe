@@ -61,7 +61,7 @@ const Refresh = () => {
         });
       });
 
-      let updatedMultipleOptions = [...multipleOptions];
+      const updatedMultipleOptions = [...multipleOptions];
       for (let i = 0; i < updatedMultipleOptions.length; i++) {
         for (let j = 0; j < updatedMultipleOptions[i].course_options.length; j++) {
           const courseOption = updatedMultipleOptions[i].course_options[j];

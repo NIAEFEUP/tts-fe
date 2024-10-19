@@ -210,7 +210,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }
@@ -223,7 +223,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
  * @example output: [[{ course: 1, year: 1 }, { course: 3, year: 1 }], [{ course: 2, year: 2 }]]
  */
 const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
-  let majorCourses: CourseInfo[][] = []
+  const majorCourses: CourseInfo[][] = []
   let currYear = 0
   for (let i = 0; i < yearCourses?.length; i++) {
     if (yearCourses[i].course_unit_year !== currYear) {
@@ -237,9 +237,9 @@ const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
 }
 
 const isSubset = (set1, set2, same) => {
-  for (let elem1 of set1) {
+  for (const elem1 of set1) {
     let found = false
-    for (let elem2 of set2) {
+    for (const elem2 of set2) {
       if (same(elem1, elem2)) {
         found = true
         break
@@ -255,7 +255,7 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }

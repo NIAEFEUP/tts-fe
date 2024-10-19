@@ -13,7 +13,7 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
   return (
     <>
       {
-        filteredSlots.map((slot: SlotInfo) => {
+        filteredSlots.map((slot: SlotInfo, idx: number) => {
           const classDescriptor = classes.find((classDescriptor) => (
             classDescriptor.classInfo.slots.filter((otherSlot) => otherSlot.id === slot.id).length > 0
           ))
@@ -21,6 +21,7 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
           if (!classDescriptor) return <></>;
 
           return <SlotBox
+            key={`${classDescriptor.courseInfo.id}-${classDescriptor.classInfo.id}-${idx}`}
             courseInfo={classDescriptor.courseInfo}
             classInfo={classDescriptor.classInfo}
             classes={classes}

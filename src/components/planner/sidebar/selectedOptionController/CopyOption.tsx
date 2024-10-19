@@ -5,7 +5,6 @@ import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
 import { CourseOption } from '../../../../@types'
-import { plausible } from '../../../../utils'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
 type Props = {

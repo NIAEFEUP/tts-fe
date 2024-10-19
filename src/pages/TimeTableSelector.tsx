@@ -1,14 +1,14 @@
-import BackendAPI from '../api//backend'
+import BackendAPI from '../api/backend'
 import { useEffect, useContext } from 'react'
-import { Schedule, Sidebar } from '../components/planner'
+import { Sidebar } from '../components/planner'
 import { Major } from '../@types'
 import MajorContext from '../contexts/MajorContext'
 import PlannerSchedule from '../components/planner/schedule/PlannerSchedule'
 
-const TimeTableSchedulerPage = () => {
-  const { setMajors } = useContext(MajorContext);
+const TimeTableSelectorPage = () => {
+  const {setMajors} = useContext(MajorContext);
 
-  // // fetch majors when component is ready
+  // fetch majors when component is ready
   useEffect(() => {
     document.getElementById('layout').scrollIntoView()
     BackendAPI.getMajors().then((majors: Major[]) => {
@@ -29,4 +29,4 @@ const TimeTableSchedulerPage = () => {
   )
 }
 
-export default TimeTableSchedulerPage
+export default TimeTableSelectorPage;

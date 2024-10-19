@@ -1,6 +1,7 @@
 import { User } from "lucide-react";
 import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from "../../../../@types";
+import StorageAPI from "../../../../api/storage";
 import CourseContext from "../../../../contexts/CourseContext";
 import MultipleOptionsContext from "../../../../contexts/MultipleOptionsContext";
 import { getAllPickedSlots, schedulesConflict, teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from "../../../../utils";
@@ -13,9 +14,9 @@ import ProfessorItem from "./ProfessorItem";
 type Props = {
   course: CourseInfo
   selectedClassIdHook: [number | null, Dispatch<SetStateAction<number | null>>]
-  previewHook: [number | null, Dispatch<SetStateAction<number | null>>]
-  display: number
-  removePreview: Function
+  isDropdownOpen: boolean
+  setPreview: Dispatch<SetStateAction<number | null>>
+  removePreview: () => void
   contentRef: any
   triggerRef: any
 }
@@ -48,19 +49,26 @@ const NoOptionsFound = ({ mobile }: { mobile: boolean }) => {
 const ClassSelectorDropdownController = ({
   course,
   selectedClassIdHook,
-  previewHook,
-  display,
+  isDropdownOpen,
+  setPreview,
   removePreview,
   contentRef,
   triggerRef
 }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
-  const { pickedCourses, setPickedCourses, choosingNewCourse } = useContext(CourseContext);
+  const { pickedCourses } = useContext(CourseContext);
   const [selectedClassId, setSelectedClassId] = selectedClassIdHook;
-  const [preview, setPreview] = previewHook;
 
   // This is used to store the ids of the teachers so it is easy to verify if a teacher is filtered or not
-  const [filteredTeachers, setFilteredTeachers] = useState(teacherIdsFromCourseInfo(course));
+  const [filteredTeachers, setFilteredTeachers] = useState<Array<number>>(() => {
+    return StorageAPI.getCourseFilteredTeachersStorage(selectedOption, course.id) ?? teacherIdsFromCourseInfo(course)
+  });
+
+  useEffect(() => {
+    const newMultipleOptions = [...multipleOptions];
+    newMultipleOptions[selectedOption].course_options.find((option) => option.course_id === course.id).filteredTeachers = filteredTeachers;
+    setMultipleOptions(newMultipleOptions);
+  }, [filteredTeachers]);
 
   /**
       * This is used to retrieve the teachers from a course and to populate the filter of the teachers
@@ -78,10 +86,6 @@ const ClassSelectorDropdownController = ({
     return buildTeacherFilters(teachers, filteredTeachers);
   });
 
-  const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  if (courseOption)
-    courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
-
   //(thePeras): Classes options should be a new state
   /**
    * Return the classes options filtered by the selected teachers
@@ -95,7 +99,9 @@ const ClassSelectorDropdownController = ({
   }
 
   useEffect(() => {
-    setFilteredTeachers(teacherIdsFromCourseInfo(course));
+    if (filteredTeachers.length === 0) {
+      setFilteredTeachers(teacherIdsFromCourseInfo(course));
+    }
   }, [pickedCourses])
 
   useEffect(() => {
@@ -103,10 +109,6 @@ const ClassSelectorDropdownController = ({
       return buildTeacherFilters(teachers, filteredTeachers);
     });
   }, [filteredTeachers])
-
-  useEffect(() => {
-    setFilteredTeachers(courseOption?.filteredTeachers);
-  }, [choosingNewCourse])
 
   useEffect(() => {
     if (triggerRef.current && contentRef.current) {
@@ -224,15 +226,12 @@ const ClassSelectorDropdownController = ({
                         key={`schedule-${classInfo.name}`}
                         course_id={course.id}
                         classInfo={classInfo}
-                        displayed={display === classInfo.id}
-                        checked={selectedOption === classInfo.id}
-                        preview={preview}
                         conflict={timesCollideWithSelected(classInfo)}
                         onSelect={() => {
                           setSelectedClassId(classInfo.id)
                           setPreview(null)
                         }}
-                        onMouseEnter={() => showPreview(classInfo)}
+                        onMouseEnter={() => { if (isDropdownOpen) showPreview(classInfo) }}
                         onMouseLeave={() => removePreview()}
                       />
                     ))}
@@ -261,15 +260,12 @@ const ClassSelectorDropdownController = ({
                             key={`schedule-${classInfo.name}`}
                             course_id={course.id}
                             classInfo={classInfo}
-                            displayed={display === classInfo.id}
-                            checked={selectedOption === classInfo.id}
-                            preview={preview}
                             conflict={timesCollideWithSelected(classInfo)}
                             onSelect={() => {
                               setSelectedClassId(classInfo.id)
                               setPreview(null)
                             }}
-                            onMouseEnter={() => showPreview(classInfo)}
+                            onMouseEnter={() => { if (isDropdownOpen) showPreview(classInfo) }}
                             onMouseLeave={() => removePreview()}
                           />
                         ))}

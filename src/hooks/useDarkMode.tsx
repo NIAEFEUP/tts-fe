@@ -35,6 +35,7 @@ const useDarkMode = () => {
     const className = 'dark'
     const bodyClass = window.document.body.classList
 
+    // eslint-disable-next-line 
     isEnabled ? bodyClass.add(className) : bodyClass.remove(className)
   }, [enabled, isEnabled])
 

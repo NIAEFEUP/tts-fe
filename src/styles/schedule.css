@@ -158,7 +158,7 @@
 }
 
 .schedule-class-conflict {
-  @apply z-20 border-2 opacity-75 border-red-600 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1;
+  @apply z-30 border-2 opacity-75 border-red-600 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1;
 }
 
 .schedule-class-conflict-warn {
@@ -166,7 +166,7 @@
 }
 
 .schedule-class-conflict-info {
-  @apply z-20 border-2  border-red-600 opacity-75 ring-red-500 hover:z-30 hover:opacity-100;
+  @apply z-30 border-2  border-red-600 opacity-75 ring-red-500 hover:z-30 hover:opacity-100;
 }
 
 .schedule-class-conflict-warn-info {

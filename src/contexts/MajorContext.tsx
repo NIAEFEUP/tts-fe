@@ -9,7 +9,7 @@ interface MajorContextContent {
 
 const MajorContext: Context<MajorContextContent> = createContext({
   majors: [],
-  setMajors: (majors: Major[]) => {}
+  setMajors: () => { }
 })
 
 export default MajorContext

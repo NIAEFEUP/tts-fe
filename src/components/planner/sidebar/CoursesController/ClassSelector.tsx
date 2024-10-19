@@ -1,14 +1,10 @@
-import { useEffect, useMemo, useRef, useState, useContext } from 'react'
+import { useEffect, useRef, useState, useContext } from 'react'
 import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
-import { User } from 'lucide-react'
-import ClassItem from './ClassItem'
-import { CourseInfo, CourseOption, ClassInfo, ProfessorInfo } from '../../../../@types'
-import CourseContext from '../../../../contexts/CourseContext'
+import { CourseInfo, CourseOption } from '../../../../@types'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo, getAllPickedSlots, schedulesConflict, getClassDisplayText } from '../../../../utils'
+import { getClassDisplayText } from '../../../../utils'
 import { Button } from '../../../ui/button'
-import ProfessorItem from './ProfessorItem'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
 
@@ -16,24 +12,17 @@ type Props = {
   course: CourseInfo
 }
 
-//TODO: Check this code, not too good
 const ClassSelector = ({ course }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
-
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
-
   const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  if (courseOption)
-    courseOption.filteredTeachers = [...teacherIdsFromCourseInfo(course)];
-
   const [locked, setLocked] = useState(courseOption?.locked)
-
   const [preview, setPreview] = useState<number | null>(null)
   const [display, setDisplay] = useState(courseOption?.picked_class_id)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const course_options = multipleOptions[selectedOption].course_options;
@@ -41,6 +30,7 @@ const ClassSelector = ({ course }: Props) => {
 
     if (option.length === 0) {
       setSelectedClassId(null);
+      setDisplay(null);
       return;
     }
 
@@ -96,11 +86,9 @@ const ClassSelector = ({ course }: Props) => {
       </p>
       <div className="flex items-center">
         {/* Dropdown Menu */}
-        <DropdownMenu onOpenChange={(open: boolean) => {
+        <DropdownMenu open={isDropdownOpen} onOpenChange={(open: boolean) => {
           setIsDropdownOpen(open);
-          if (!open) {
-            removePreview();
-          }
+          if (!open) removePreview();
         }}>
           <div className="w-full">
             <DropdownMenuTrigger asChild disabled={courseOption?.locked} ref={classSelectorTriggerRef}>
@@ -120,8 +108,8 @@ const ClassSelector = ({ course }: Props) => {
               <ClassSelectorDropdownController
                 course={course}
                 selectedClassIdHook={[selectedClassId, setSelectedClassId]}
-                previewHook={[preview, setPreview]}
-                display={display}
+                isDropdownOpen={isDropdownOpen}
+                setPreview={setPreview}
                 removePreview={removePreview}
                 contentRef={classSelectorContentRef}
                 triggerRef={classSelectorTriggerRef}

@@ -16,15 +16,15 @@ interface CoursesContextContent {
 
 const CourseContext: Context<CoursesContextContent> = createContext({
   pickedCourses: [],
-  setPickedCourses: (pickedCourses: CourseInfo[]) => { },
+  setPickedCourses: () => { },
   coursesInfo: [],
-  setCoursesInfo: (courseInfo: CourseInfo[]) => { },
+  setCoursesInfo: () => { },
   checkboxedCourses: [],
-  setCheckboxedCourses: (courses: CourseInfo[]) => { },
+  setCheckboxedCourses: () => { },
   choosingNewCourse: false,
-  setChoosingNewCourse: (choosingCourse: boolean) => { },
+  setChoosingNewCourse: () => { },
   ucsModalOpen: false,
-  setUcsModalOpen: (ucsModalOpen: boolean) => { },
+  setUcsModalOpen: () => { },
 })
 
 export default CourseContext

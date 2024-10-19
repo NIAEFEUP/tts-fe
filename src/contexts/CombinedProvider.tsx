@@ -9,7 +9,11 @@ import SessionContext from "./SessionContext";
 import MajorContext from "./MajorContext";
 import CourseContext from "./CourseContext";
 
-const CombinedProvider = ({ children }) => {
+type Props = {
+  children: React.JSX.Element
+}
+
+const CombinedProvider = ({ children }: Props) => {
   const [majors, setMajors] = useState<Major[]>([])
   const [coursesInfo, setCoursesInfo] = useState([]);
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());

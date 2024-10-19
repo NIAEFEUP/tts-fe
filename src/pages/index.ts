@@ -1,7 +1,7 @@
 import AboutPage from './About'
-import TimeTableSchedulerPage from './TimeTableScheduler'
+import TimeTableSelectorPage from './TimeTableSelector'
 import NotFoundPage from './NotFound'
 import FaqsPage from './Faqs'
 import ExchangePage from './Exchange'
 
-export { AboutPage, TimeTableSchedulerPage, NotFoundPage, FaqsPage, ExchangePage }
+export { AboutPage, TimeTableSelectorPage, NotFoundPage, FaqsPage, ExchangePage }
