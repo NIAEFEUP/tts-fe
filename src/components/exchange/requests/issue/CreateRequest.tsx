@@ -17,7 +17,7 @@ export const CreateRequest = ({
   const { exchangeSchedule } = useContext(ScheduleContext);
   const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
   const [selectingCourseUnits, setSelectingCourseUnits] = useState<boolean>(false);
-  const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
+  const { enrolledCourseUnits } = useStudentCourseUnits();
 
   return <div className="flex flex-col">
     <div className="flex flex-col gap-y-4 max-h-screen overflow-y-auto">

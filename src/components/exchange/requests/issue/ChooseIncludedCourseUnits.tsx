@@ -25,7 +25,7 @@ export const ChooseIncludedCourseUnits = ({
           if (!checked) {
             setSelectedCourseUnits([]);
           } else {
-            setSelectedCourseUnits(Array.from(enrolledCourseUnits));
+            setSelectedCourseUnits(enrolledCourseUnits);
           }
         }}
         checked={selectedCourseUnits.length === enrolledCourseUnits.length}
@@ -34,7 +34,7 @@ export const ChooseIncludedCourseUnits = ({
         Selecionar todas as disciplinas
       </label>
     </div>
-    {Array.from(enrolledCourseUnits).map((courseInfo: CourseInfo) => (
+    {enrolledCourseUnits?.map((courseInfo: CourseInfo) => (
       <IncludeCourseUnitCard
         key={"include-course-unit-" + courseInfo.id}
         courseInfo={courseInfo}

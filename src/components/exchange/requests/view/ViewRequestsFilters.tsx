@@ -24,8 +24,7 @@ export const ViewRequestsFilters = ({
   filterCourseUnitsHook,
   classesFilterHook
 }: Props) => {
-  const { exchangeSchedule, loadingSchedule } = useContext(ScheduleContext);
-  const enrolledCourseUnits = useStudentCourseUnits(exchangeSchedule);
+  const { enrolledCourseUnits, exchangeSchedule, loadingSchedule } = useContext(ScheduleContext);
 
   return <div className="flex flex-row justify-between w-full">
     {/* Course unit filters */}
@@ -33,7 +32,7 @@ export const ViewRequestsFilters = ({
       : <div className="flex flex-row gap-2 w-full flex-wrap">
         <div className="w-full flex flex-row flex-wrap gap-x-3 gap-y-5 items-center">
           {
-            Array.from(enrolledCourseUnits).map((courseUnit: CourseInfo) => (
+            enrolledCourseUnits?.map((courseUnit: CourseInfo) => (
               <ViewRequestBadgeFilter
                 courseUnit={courseUnit}
                 filterCourseUnitsHook={filterCourseUnitsHook}
