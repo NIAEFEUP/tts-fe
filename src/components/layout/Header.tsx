@@ -1,22 +1,39 @@
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-
 import {
   Bars3Icon,
   XMarkIcon,
   AtSymbolIcon,
   RectangleStackIcon,
   QuestionMarkCircleIcon,
+  ArrowsRightLeftIcon,
+  ArrowDownIcon,
+  ArrowLeftStartOnRectangleIcon,
+  ArrowLeftEndOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
+import useVerifyCourseUnitHashes from '../../hooks/useVerifyCourseUnitHashes'
+import CourseContext from '../../contexts/CourseContext'
+import SessionContext from '../../contexts/SessionContext'
+import { useContext } from 'react'
+import api from '../../api/backend'
+import { Button } from '../ui/button'
+import { LoginButton } from '../auth/LoginButton'
+import { HeaderProfileDropdown } from '../auth/HeaderProfileDropdown'
 
 const navigation = [
   {
     title: 'Horários',
     location: getPath(config.paths.planner),
     icon: <RectangleStackIcon className="h-5 w-5" />,
+    wip: false,
+  },
+  {
+    title: 'Exchange',
+    location: getPath(config.paths.exchange),
+    icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
     wip: false,
   },
   { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
@@ -34,6 +51,10 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
+  const { pickedCourses, } = useContext(CourseContext);
+  const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
+  const { signedIn } = useContext(SessionContext);
+
   return (
     <Disclosure
       as="nav"
@@ -80,18 +101,21 @@ const Header = ({ siteTitle, location }: Props) => {
                     ))}
                 </div>
 
-                <div className="hidden self-center md:inline-flex">
 
-
+                <div className="hidden self-center md:inline-flex items-center gap-x-2">
                   <DarkModeSwitch />
+                  {signedIn ?
+                    <HeaderProfileDropdown />
+                    : <LoginButton expanded={false} />
+                  }
                 </div>
               </div>
-            </div>
+            </div >
             <Mobile location={location} />
           </>
         )
       }}
-    </Disclosure>
+    </Disclosure >
   )
 }
 
