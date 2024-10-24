@@ -57,7 +57,7 @@ export const ViewRequestBadgeFilter = ({
     </Badge>
     <DropdownMenu>
       <DropdownMenuTrigger className="p-0 xl:p-0" asChild>
-        <Button variant="icon" className="p-0 h-5 w-5 text-black">
+        <Button variant="icon" className="p-0 h-5 w-5 text-black dark:text-white">
           <ChevronDownIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
@@ -76,7 +76,7 @@ export const ViewRequestBadgeFilter = ({
               />
               <label
                 htmlFor={`from-${currentClass.id}`}
-                className="ml-2 text-sm text-gray-700"
+                className="ml-2 text-sm text-gray-700 dark:text-white"
                 onClick={(e) => e.stopPropagation()}
               >
                 {currentClass.name}

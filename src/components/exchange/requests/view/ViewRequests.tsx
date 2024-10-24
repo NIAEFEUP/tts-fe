@@ -7,10 +7,13 @@ import { Desert } from "../../../svgs";
 import { Button } from "../../../ui/button";
 import { Skeleton } from "../../../ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
+import { CommonRequestCard } from "./cards/CommonRequestCard";
 import { MineRequestCard } from "./cards/MineRequestCard";
 import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 import { RequestCard } from "./cards/RequestCard";
+import { ViewReceivedRequests } from "./ViewReceivedRequests";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
+import { ViewSentRequests } from "./ViewSentRequests";
 
 type Props = {
   setCreatingRequest: Dispatch<SetStateAction<boolean>>
@@ -122,14 +125,16 @@ export const ViewRequests = ({
                 {
                   <EmptyRequestGuard requests={requests}>
                     {requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
-                      <RequestCard
+                      <CommonRequestCard
                         key={request.id}
                         request={request}
                         hiddenRequests={hiddenRequests}
                         setHiddenRequests={setHiddenRequests}
                         setChosenRequest={setChosenRequest}
                         chosenRequest={chosenRequest}
-                      />
+                      >
+                        <RequestCard />
+                      </CommonRequestCard>
                     ))}
                   </EmptyRequestGuard>
                 }
@@ -142,6 +147,7 @@ export const ViewRequests = ({
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
           classesFilterHook={[classesFilter, setClassesFilter]}
         />
+        {/* <ViewSentRequests /> */}
         <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
           {isLoading
             ? <RequestCardSkeletons />
@@ -160,13 +166,8 @@ export const ViewRequests = ({
           filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
           classesFilterHook={[classesFilter, setClassesFilter]}
         />
-        <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
-          {isLoading
-            ? <RequestCardSkeletons />
-            : <EmptyRequestGuard requests={requests}>
-              <ReceivedRequestCard />
-            </EmptyRequestGuard>
-          }
+        <div className="mt-4">
+          <ViewReceivedRequests />
         </div>
       </TabsContent>
     </Tabs>

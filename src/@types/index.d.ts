@@ -129,6 +129,26 @@ export type MarketplaceRequest = {
   accepted: boolean,
 }
 
+export type DirectExchangeRequest = {
+  id: number,
+  issuer_name: string,
+  issuer_nmec: string,
+  accepted: boolean,
+  options: DirectExchangeParticipant[],
+  date: string
+}
+
+export type DirectExchangeParticipant = {
+  participant_name: string,
+  participant_nmec: string,
+  old_class: string,
+  new_class: string
+  course_unit: string,
+  course_unit_id: string,
+  accepted: boolean
+  date: string
+}
+
 export type Student = {
   name: string,
   mecNumber: number
@@ -140,6 +160,6 @@ export type CollabSession = {
   lastEdited: string
   lifeSpan: number
   currentUser: string
-  link : string
+  link: string
   participants: Array<string>
 }

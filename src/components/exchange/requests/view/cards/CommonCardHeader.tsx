@@ -48,7 +48,7 @@ export const CommonCardHeader = ({ name, username, hovered, request, openHook, h
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="icon" className="text-black" onClick={() => {
+                  <Button variant="icon" className="text-black dark:text-white" onClick={() => {
                     hideHandler();
                   }}>
                     <ArchiveBoxIcon className="h-5 w-5" />
@@ -62,10 +62,10 @@ export const CommonCardHeader = ({ name, username, hovered, request, openHook, h
 
             {open
               ?
-              <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
+              <Button variant="icon" className="text-black dark:text-white" onClick={() => setOpen(false)}>
                 <ChevronUpIcon className="h-5 w-5" />
               </Button>
-              : <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
+              : <Button variant="icon" className="text-black dark:text-white" onClick={() => setOpen(true)}>
                 <ChevronDownIcon className="h-5 w-5" />
               </Button>
             }
