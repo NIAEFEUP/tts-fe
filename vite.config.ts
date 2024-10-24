@@ -14,6 +14,10 @@ export default defineConfig({
     project: "tts"
   })],
   server: {
+    host: '0.0.0.0',
+    hmr: {
+      host: 'tts-dev.niaefeup.pt',
+    },
     port: 3100,
   },
   build: {

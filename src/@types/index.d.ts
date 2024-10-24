@@ -94,12 +94,72 @@ export type ImportedCourses = {
   [key: string]: string
 }
 
+/* Exchange data types */
+
+export type ExchangeOption = {
+  course_info: CourseInfo,
+  course_unit_id: number,
+  class_issuer_goes_from: ClassInfo,
+  class_issuer_goes_to: ClassInfo,
+  other_student?: number // The current student will be determined by the backend depending on session data
+}
+
+export type CreateRequestCardMetadata = {
+  courseUnitName: string,
+  courseUnitAcronym: string,
+  requesterClassName: string,
+  availableClasses: Array<string> // Classes from the course unit
+}
+
+export type CreateRequestData = {
+  courseUnitId: number,
+  courseUnitName: string,
+  classNameRequesterGoesFrom: string,
+  classNameRequesterGoesTo: string,
+  other_student?: Student
+}
+
+export type MarketplaceRequest = {
+  id: number,
+  issuer_name: string,
+  issuer_nmec: number,
+  date: string,
+  options?: Array<ExchangeOption>,
+  classes?: Array<ClassInfo>,
+  accepted: boolean,
+}
+
+export type DirectExchangeRequest = {
+  id: number,
+  issuer_name: string,
+  issuer_nmec: string,
+  accepted: boolean,
+  options: DirectExchangeParticipant[],
+  date: string
+}
+
+export type DirectExchangeParticipant = {
+  participant_name: string,
+  participant_nmec: string,
+  old_class: string,
+  new_class: string
+  course_unit: string,
+  course_unit_id: string,
+  accepted: boolean
+  date: string
+}
+
+export type Student = {
+  name: string,
+  mecNumber: number
+}
+
 export type CollabSession = {
   id: number
   name: string
   lastEdited: string
   lifeSpan: number
   currentUser: string
-  link : string
+  link: string
   participants: Array<string>
 }
