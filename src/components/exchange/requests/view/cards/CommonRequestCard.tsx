@@ -12,6 +12,7 @@ type Props = {
   setHiddenRequests: Dispatch<SetStateAction<Set<number>>>;
   chosenRequest: MarketplaceRequest | DirectExchangeRequest | null;
   setChosenRequest: Dispatch<SetStateAction<MarketplaceRequest | DirectExchangeRequest | null>>;
+  type: string
 }
 
 export const CommonRequestCard = ({
@@ -21,6 +22,7 @@ export const CommonRequestCard = ({
   setHiddenRequests,
   chosenRequest,
   setChosenRequest,
+  type
 }: Props) => {
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
@@ -41,6 +43,7 @@ export const CommonRequestCard = ({
   }
 
   useEffect(() => {
+    console.log("OPEN: ", open);
     if (open) {
       setChosenRequest(request);
       togglePreview(selectedOptions);
@@ -48,6 +51,17 @@ export const CommonRequestCard = ({
       setExchangeSchedule(originalSchedule.schedule);
     }
   }, [open]);
+
+  useEffect(() => {
+    const ucs = new Set(request.options?.map((option) => option.course_info.acronym));
+
+    const newSelectedOptions = new Map();
+    ucs.forEach((acronym) => {
+      newSelectedOptions.set(acronym, true);
+    });
+
+    setSelectedOptions(newSelectedOptions);
+  }, [request]);
 
   const handleSelectAll = () => {
     const allSelected = !selectAll;
@@ -75,8 +89,8 @@ export const CommonRequestCard = ({
     if (anySelected) {
       request.options.forEach((option) => {
         if (updatedOptions.get(option.course_info.acronym) === true) {
-          const matchingClass = option.class_issuer_goes_from;
-          matchingClass.slots.forEach((slot) => {
+          const matchingClass = (type === "directexchange" ? option.class_participant_goes_to : option.class_issuer_goes_from);
+          matchingClass?.slots.forEach((slot) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,
               classInfo: { id: matchingClass.id, name: matchingClass.name, slots: [slot] },
@@ -104,7 +118,9 @@ export const CommonRequestCard = ({
     setSelectedOptions: setSelectedOptions,
     open: open,
     setOpen: setOpen,
-    hide: hide
+    togglePreview: togglePreview,
+    hide: hide,
+    handleSelectAll: handleSelectAll,
   }}>
     {children}
   </ExchangeRequestCommonContext.Provider>

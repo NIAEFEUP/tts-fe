@@ -9,13 +9,15 @@ type Props = {
   selectedOptionsHook: [Map<string, boolean>, Dispatch<SetStateAction<Map<string, boolean>>>]
   setSelectAll: Dispatch<SetStateAction<boolean>>
   togglePreview: (selectedOptions: Map<string, boolean>) => void
+  type: string
 }
 
 export const ListRequestChanges = ({
   option,
   selectedOptionsHook,
   setSelectAll,
-  togglePreview
+  togglePreview,
+  type
 }) => {
   const [selectedOptions, setSelectedOptions] = selectedOptionsHook;
 
@@ -29,9 +31,8 @@ export const ListRequestChanges = ({
     togglePreview(selectedOptions);
   };
 
-
   return <>
-    <div key={option.course_info.acronym}>
+    <div key={`option.course_info.acronym`}>
       <Separator className="my-2" />
       <div className="flex flex-row gap-x-4 items-center w-full mb-2">
         <Checkbox
@@ -46,9 +47,9 @@ export const ListRequestChanges = ({
               {option.course_info.acronym} - {option.course_info.name}
             </p>
             <div className="flex flex-row gap-x-2 items-center font-bold">
-              <p>{option.class_issuer_goes_to.name}</p>
+              <p>{type === "directexchange" ? option.class_participant_goes_from.name : option.class_issuer_goes_to.name}</p>
               <ArrowRightIcon className="w-5 h-5" />
-              <p>{option.class_issuer_goes_from.name}</p>
+              <p>{type === "directexchange" ? option.class_participant_goes_to.name : option.class_issuer_goes_from.name}</p>
             </div>
           </div>
         </label>

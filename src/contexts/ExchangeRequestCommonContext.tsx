@@ -15,7 +15,9 @@ interface ExchangeRequestCommonContext {
   setSelectedOptions: Dispatch<SetStateAction<Map<string, boolean>>>
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
+  togglePreview: (updatedOptions: Map<string, boolean>) => void
   hide: () => void
+  handleSelectAll: () => void
 }
 
 const ExchangeRequestCommonContext: Context<ExchangeRequestCommonContext> = createContext({
@@ -31,7 +33,9 @@ const ExchangeRequestCommonContext: Context<ExchangeRequestCommonContext> = crea
   setSelectedOptions: (param) => { },
   open: false,
   setOpen: (param) => { },
+  togglePreview: (param) => { },
   hide: () => { },
+  handleSelectAll: () => { }
 });
 
 export default ExchangeRequestCommonContext;

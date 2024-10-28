@@ -19,23 +19,9 @@ export const RequestCard = ({ }) => {
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const {
     chosenRequest, hiddenRequests, request, open, setOpen, selectedOptions, setSelectedOptions,
-    selectAll, setSelectAll, hide
+    selectAll, setSelectAll, hide, togglePreview
   } = useContext(ExchangeRequestCommonContext);
   const [hovered, setHovered] = useState<boolean>(false);
-  const originalSchedule = useSchedule();
-
-  // When the request changes it updates the options it is selected 
-  // and the default is for all options to be set to true
-  useEffect(() => {
-    const ucs = new Set(request.options?.map((option) => option.course_info.acronym));
-
-    const newSelectedOptions = new Map();
-    ucs.forEach((acronym) => {
-      newSelectedOptions.set(acronym, true);
-    });
-
-    setSelectedOptions(newSelectedOptions);
-  }, [request]);
 
   useEffect(() => {
     if (chosenRequest?.id !== request.id) {
@@ -54,35 +40,6 @@ export const RequestCard = ({ }) => {
     const newSelectedOptions = new Map(selectedOptions);
     setSelectedOptions(newSelectedOptions);
     togglePreview(newSelectedOptions);
-  };
-
-  const togglePreview = (updatedOptions: Map<string, boolean>) => {
-    const anySelected = Array.from(updatedOptions.values()).some((value) => value);
-
-    // Schedule with courses that are not selected
-    const newExchangeSchedule = originalSchedule?.schedule?.filter(
-      (classDescriptor: ClassDescriptor) => {
-        return !updatedOptions.get(classDescriptor.courseInfo.acronym);
-      }
-    );
-
-    if (anySelected) {
-      request.options.forEach((option) => {
-        if (updatedOptions.get(option.course_info.acronym) === true) {
-          const matchingClass = option.class_issuer_goes_from;
-          matchingClass.slots.forEach((slot) => {
-            newExchangeSchedule.push({
-              courseInfo: option.course_info,
-              classInfo: { id: matchingClass.id, name: matchingClass.name, slots: [slot] },
-            });
-          });
-        }
-      });
-
-      if (open) setExchangeSchedule(newExchangeSchedule);
-    } else {
-      if (open) setExchangeSchedule(originalSchedule.schedule);
-    }
   };
 
   const submitExchange = async (e) => {
@@ -111,91 +68,95 @@ export const RequestCard = ({ }) => {
     await exchangeRequestService.submitExchangeRequest(exchangeRequests);
   };
 
-  return (
-    <Card
-      onMouseOver={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      key={request.id}
-      className={`shadow-md ${hiddenRequests.has(request.id) ? "hidden" : ""}`}
-    >
-      <CardHeader className="flex flex-row gap-x-2 items-center p-4">
-        <img
-          className="w-10 h-10 rounded-full shadow-md border dark:border-white"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"
-        />
-        <div className="flex flex-row justify-between items-center w-full">
-          <div className="flex flex-col w-full">
-            <div className="flex flex-row justify-between w-full items-center">
-              <CardTitle>{request.issuer_name}</CardTitle>
-              <div className="flex flex-row items-center">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="icon" className="text-black" onClick={hide}>
-                        <ArchiveBoxIcon className="h-5 w-5" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Esconder</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                {open ? (
-                  <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
-                    <ChevronUpIcon className="h-5 w-5" />
-                  </Button>
-                ) : (
-                  <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
-                    <ChevronDownIcon className="h-5 w-5" />
-                  </Button>
-                )}
-              </div>
-            </div>
-            <CardDescription>
-              {open ? (
-                <p>{request.issuer_nmec}</p>
-              ) : (
-                <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
-                  {request.options?.map((option) => (
-                    <RequestCardClassBadge
-                      key={option.course_info.acronym}
-                      option={option}
-                      requestCardHovered={hovered}
-                    />
-                  ))}
-                </div>
-              )}
-            </CardDescription>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
-        {request.options?.map((option) => (
-          <ListRequestChanges
-            option={option}
-            selectedOptionsHook={[selectedOptions, setSelectedOptions]}
-            setSelectAll={setSelectAll}
-            togglePreview={togglePreview}
+  return <>
+    {request.type === "marketplaceexchange" &&
+      <Card
+        onMouseOver={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        key={request.id}
+        className={`shadow-md exchange-request-card ${hiddenRequests.has(request.id) ? "hidden" : ""}`}
+      >
+        <CardHeader className="flex flex-row gap-x-2 items-center p-4">
+          <img
+            className="w-10 h-10 rounded-full shadow-md"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"
           />
-        ))}
-      </CardContent>
-      {open && <Separator className="mb-2" />}
-      <CardFooter className={open ? "" : "hidden"}>
-        <div className="flex flex-row justify-between w-full items-center">
-          <div className="flex flex-row items-center gap-x-2">
-            <Checkbox
-              id="select-all"
-              checked={selectAll}
-              onCheckedChange={handleSelectAll}
-            />
-            <label htmlFor="select-all">Selecionar todas</label>
+          <div className="flex flex-row justify-between items-center w-full">
+            <div className="flex flex-col w-full">
+              <div className="flex flex-row justify-between w-full items-center">
+                <CardTitle>{request.issuer_name}</CardTitle>
+                <div className="flex flex-row items-center">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="icon" className="text-black" onClick={hide}>
+                          <ArchiveBoxIcon className="h-5 w-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Esconder</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  {open ? (
+                    <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
+                      <ChevronUpIcon className="h-5 w-5" />
+                    </Button>
+                  ) : (
+                    <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
+                      <ChevronDownIcon className="h-5 w-5" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <CardDescription>
+                {open ? (
+                  <p>{request.issuer_nmec}</p>
+                ) : (
+                  <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
+                    {request.options?.map((option) => (
+                      <RequestCardClassBadge
+                        key={option.course_info.acronym}
+                        option={option}
+                        requestCardHovered={hovered}
+                        classUserGoesToName={option.class_issuer_goes_from.name}
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardDescription>
+            </div>
           </div>
-          <form className="flex flex-row gap-2">
-            <Button type="submit" onClick={submitExchange}>Propôr troca</Button>
-          </form>
-        </div>
-      </CardFooter>
-    </Card>
-  );
+        </CardHeader>
+        <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
+          {request.options?.map((option) => (
+            <ListRequestChanges
+              option={option}
+              selectedOptionsHook={[selectedOptions, setSelectedOptions]}
+              setSelectAll={setSelectAll}
+              togglePreview={togglePreview}
+              type={"marketplaceexchange"}
+            />
+          ))}
+        </CardContent>
+        {open && <Separator className="mb-2" />}
+        <CardFooter className={open ? "" : "hidden"}>
+          <div className="flex flex-row justify-between w-full items-center">
+            <div className="flex flex-row items-center gap-x-2">
+              <Checkbox
+                id="select-all"
+                checked={selectAll}
+                onCheckedChange={handleSelectAll}
+              />
+              <label htmlFor="select-all">Selecionar todas</label>
+            </div>
+            <form className="flex flex-row gap-2">
+              <Button type="submit" onClick={submitExchange}>Propôr troca</Button>
+            </form>
+          </div>
+        </CardFooter>
+      </Card>
+    }
+  </>;
 }

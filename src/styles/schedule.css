@@ -53,6 +53,11 @@
   @apply absolute top-0 w-full h-full;
 }
 
+.exchange-request-card {
+  @apply dark:border dark:border-white dark:bg-gray-800;
+}
+
+
 /* Columns */
 .schedule-column {
   @apply absolute top-0 w-1/6 h-full;

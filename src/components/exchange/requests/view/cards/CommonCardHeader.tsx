@@ -16,9 +16,13 @@ type Props = {
   showRequestStatus?: boolean
   hideAbility?: boolean
   hideHandler: () => void
+  classUserGoesToName: string
 }
 
-export const CommonCardHeader = ({ name, username, hovered, request, openHook, hideAbility = true, showRequestStatus = false, hideHandler }: Props) => {
+export const CommonCardHeader = ({
+  name, username, hovered, request, openHook, hideAbility = true, showRequestStatus = false, hideHandler,
+  classUserGoesToName
+}: Props) => {
   const [open, setOpen] = openHook;
 
   return <CardHeader
@@ -76,12 +80,13 @@ export const CommonCardHeader = ({ name, username, hovered, request, openHook, h
             ? <p>{username}</p>
             :
             <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
-              {request.options?.map((option) => (
-                <RequestCardClassBadge
+              {request.options?.map((option) => {
+                return (<RequestCardClassBadge
                   option={option}
                   requestCardHovered={hovered}
-                />
-              ))}
+                  classUserGoesToName={option[classUserGoesToName].name}
+                />)
+              })}
             </div>
           }
         </CardDescription>

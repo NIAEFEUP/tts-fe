@@ -108,7 +108,7 @@ export const ViewRequests = ({
     </div>
 
     <Tabs defaultValue="todos" className="mt-2 w-full">
-      <TabsList className="flex flex-row justify-between">
+      <TabsList className="flex flex-row justify-between dark:text-white">
         <TabsTrigger onClick={() => setCurrentRequestTypeFilter(0)} value="todos">Todos</TabsTrigger>
         <TabsTrigger onClick={() => setCurrentRequestTypeFilter(1)} value="meus-pedidos">Enviados</TabsTrigger>
         <TabsTrigger onClick={() => setCurrentRequestTypeFilter(2)} value="recebidos">Recebidos</TabsTrigger>
@@ -167,7 +167,20 @@ export const ViewRequests = ({
           classesFilterHook={[classesFilter, setClassesFilter]}
         />
         <div className="mt-4">
-          <ViewReceivedRequests />
+          {requests.map((request) => (
+            <CommonRequestCard
+              key={request.id}
+              request={request}
+              hiddenRequests={hiddenRequests}
+              setHiddenRequests={setHiddenRequests}
+              setChosenRequest={setChosenRequest}
+              chosenRequest={chosenRequest}
+            >
+              <ReceivedRequestCard
+                request={request}
+              />
+            </CommonRequestCard>
+          ))}
         </div>
       </TabsContent>
     </Tabs>

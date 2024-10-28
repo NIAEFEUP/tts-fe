@@ -121,6 +121,7 @@ export type CreateRequestData = {
 
 export type MarketplaceRequest = {
   id: number,
+  type: string,
   issuer_name: string,
   issuer_nmec: number,
   date: string,
@@ -131,6 +132,7 @@ export type MarketplaceRequest = {
 
 export type DirectExchangeRequest = {
   id: number,
+  type: string,
   issuer_name: string,
   issuer_nmec: string,
   accepted: boolean,
@@ -139,10 +141,11 @@ export type DirectExchangeRequest = {
 }
 
 export type DirectExchangeParticipant = {
+  course_info: CourseInfo,
   participant_name: string,
   participant_nmec: string,
-  old_class: string,
-  new_class: string
+  class_participant_goes_from: ClassInfo,
+  class_participant_goes_to: ClassInfo,
   course_unit: string,
   course_unit_id: string,
   accepted: boolean
