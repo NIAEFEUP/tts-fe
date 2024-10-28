@@ -36,8 +36,6 @@ export const ViewRequestBadgeFilter = ({
     setClassesFilter(new Map(classesFilter));
   }
 
-  console.log("current classes: ", { ...classes });
-
   return <div className="flex flex-row items-center gap-x-2">
     <Badge
       className={

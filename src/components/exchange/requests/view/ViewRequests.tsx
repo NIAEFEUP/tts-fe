@@ -132,6 +132,7 @@ export const ViewRequests = ({
                         setHiddenRequests={setHiddenRequests}
                         setChosenRequest={setChosenRequest}
                         chosenRequest={chosenRequest}
+                        type={request.type}
                       >
                         <RequestCard />
                       </CommonRequestCard>
@@ -175,6 +176,7 @@ export const ViewRequests = ({
               setHiddenRequests={setHiddenRequests}
               setChosenRequest={setChosenRequest}
               chosenRequest={chosenRequest}
+              type={request.type}
             >
               <ReceivedRequestCard
                 request={request}

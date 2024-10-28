@@ -43,7 +43,6 @@ export const CommonRequestCard = ({
   }
 
   useEffect(() => {
-    console.log("OPEN: ", open);
     if (open) {
       setChosenRequest(request);
       togglePreview(selectedOptions);
@@ -90,7 +89,7 @@ export const CommonRequestCard = ({
       request.options.forEach((option) => {
         if (updatedOptions.get(option.course_info.acronym) === true) {
           const matchingClass = (type === "directexchange" ? option.class_participant_goes_to : option.class_issuer_goes_from);
-          matchingClass?.slots.forEach((slot) => {
+          matchingClass.slots.forEach((slot) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,
               classInfo: { id: matchingClass.id, name: matchingClass.name, slots: [slot] },

@@ -12,9 +12,6 @@ export default (courseId: number) => {
       if (res.ok) {
         const json = await res.json();
 
-        console.log("res was: ", res);
-        console.log("json: ", json);
-
         return json;
       }
 

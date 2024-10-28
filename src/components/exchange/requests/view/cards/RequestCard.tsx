@@ -47,7 +47,6 @@ export const RequestCard = ({ }) => {
 
     const exchangeRequests = new Map();
     for (const option of request.options) {
-      console.log("current option is: ", option);
       if (selectedOptions.get(option.course_info.acronym)) {
         exchangeRequests.set(
           option.course_info.id,
