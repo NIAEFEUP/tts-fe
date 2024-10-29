@@ -8,7 +8,6 @@ import { Button } from '../../../ui/button'
 import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import BackendAPI from '../../../../api/backend'
 import { Separator } from '../../../ui/separator'
-import useCourseUnits from '../../../../hooks/useCourseUnits'
 import { Major } from '../../../../@types'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
@@ -19,7 +18,7 @@ const CoursePicker = () => {
   const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo, ucsModalOpen, setUcsModalOpen } = useContext(CourseContext)
 
   const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
-  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
+  const [courseUnits, loadingCourseUnits] = [[], false];
   const showContent = selectedMajor || pickedCourses.length > 0
 
   useEffect(() => {

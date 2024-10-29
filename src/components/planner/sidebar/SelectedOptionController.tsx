@@ -43,10 +43,6 @@ const SelectedOptionController = ({
 
   const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '');
 
-  useEffect(() => {
-    setOptionName(multipleOptions[selectedOption].name)
-  }, [selectedOption, multipleOptions])
-
   const renameOptionName = (event) => {
     const newName = event.target.value;
     if (newName.length > 35) return;
