@@ -14,6 +14,7 @@ import { toast } from "../../../../ui/use-toast";
 import exchangeRequestService from "../../../../../api/services/exchangeRequestService";
 import { ListRequestChanges } from "./ListRequestChanges";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
+import { CommonCardHeader } from "./CommonCardHeader";
 
 export const RequestCard = ({ }) => {
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
@@ -75,59 +76,18 @@ export const RequestCard = ({ }) => {
         key={request.id}
         className={`shadow-md exchange-request-card ${hiddenRequests.has(request.id) ? "hidden" : ""}`}
       >
-        <CardHeader className="flex flex-row gap-x-2 items-center p-4">
-          <img
-            className="w-10 h-10 rounded-full shadow-md"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"
-          />
-          <div className="flex flex-row justify-between items-center w-full">
-            <div className="flex flex-col w-full">
-              <div className="flex flex-row justify-between w-full items-center">
-                <CardTitle>{request.issuer_name}</CardTitle>
-                <div className="flex flex-row items-center">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="icon" className="text-black" onClick={hide}>
-                          <ArchiveBoxIcon className="h-5 w-5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Esconder</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+        <CommonCardHeader
+          name={request.issuer_name}
+          username={request.issuer_nmec}
+          hovered={hovered}
+          request={request}
+          openHook={[open, setOpen]}
+          showRequestStatus={true}
+          hideAbility={false}
+          hideHandler={hide}
+          classUserGoesToName="class_issuer_goes_to"
+        />
 
-                  {open ? (
-                    <Button variant="icon" className="text-black" onClick={() => setOpen(false)}>
-                      <ChevronUpIcon className="h-5 w-5" />
-                    </Button>
-                  ) : (
-                    <Button variant="icon" className="text-black" onClick={() => setOpen(true)}>
-                      <ChevronDownIcon className="h-5 w-5" />
-                    </Button>
-                  )}
-                </div>
-              </div>
-              <CardDescription>
-                {open ? (
-                  <p>{request.issuer_nmec}</p>
-                ) : (
-                  <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
-                    {request.options?.map((option) => (
-                      <RequestCardClassBadge
-                        key={option.course_info.acronym}
-                        option={option}
-                        requestCardHovered={hovered}
-                        classUserGoesToName={option.class_issuer_goes_from.name}
-                      />
-                    ))}
-                  </div>
-                )}
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
         <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
           {request.options?.map((option) => (
             <ListRequestChanges

@@ -82,6 +82,7 @@ export const CommonCardHeader = ({
             <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
               {request.options?.map((option) => {
                 return (<RequestCardClassBadge
+                  key={option.course_info.acronym}
                   option={option}
                   requestCardHovered={hovered}
                   classUserGoesToName={option[classUserGoesToName].name}
