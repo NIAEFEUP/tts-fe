@@ -1,23 +1,14 @@
-import { ArchiveBoxIcon, ArrowRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import { ChevronUpIcon } from "@heroicons/react/24/solid";
 import { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
-import { ClassDescriptor, MarketplaceRequest } from "../../../../../@types";
-import ScheduleContext from "../../../../../contexts/ScheduleContext";
 import { Button } from "../../../../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card";
 import { Checkbox } from "../../../../ui/checkbox";
 import { Separator } from "../../../../ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip";
-import RequestCardClassBadge from "./RequestCardClassBadge";
-import useSchedule from "../../../../../hooks/useSchedule";
-import { toast } from "../../../../ui/use-toast";
 import exchangeRequestService from "../../../../../api/services/exchangeRequestService";
 import { ListRequestChanges } from "./ListRequestChanges";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import { CommonCardHeader } from "./CommonCardHeader";
 
 export const RequestCard = ({ }) => {
-  const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const {
     chosenRequest, hiddenRequests, request, open, setOpen, selectedOptions, setSelectedOptions,
     selectAll, setSelectAll, hide, togglePreview
@@ -82,7 +73,7 @@ export const RequestCard = ({ }) => {
           hovered={hovered}
           request={request}
           openHook={[open, setOpen]}
-          showRequestStatus={true}
+          showRequestStatus={false}
           hideAbility={false}
           hideHandler={hide}
           classUserGoesToName="class_issuer_goes_to"
