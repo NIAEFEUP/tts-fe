@@ -25,42 +25,27 @@ jobs:
       - name: Build project
         run: yarn build
 
-      - name: Determine release version
+      - name: Determine release version (default to commit hash)
         id: get_version
         run: |
-          VERSION=$(jq -r .version < package.json)
+          VERSION=$(git rev-parse --short HEAD)
 
-          # If the branch is develop, use the commit hash as the version
-          if [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            VERSION=$(git rev-parse --short HEAD)
+          # Override version if on main branch to use package.json version
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            VERSION=$(jq -r .version < package.json)
           fi
 
           echo "Version to be released: $VERSION"
           echo "::set-output name=release_version::$VERSION"
 
-      - name: Install Sentry CLI
-        run: npm install -g @sentry/cli
-
-      - name: Create Sentry release
+      - name: Create and Finalize Sentry Release
+        uses: getsentry/action-release@v1
+        with:
+          environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+          version: ${{ steps.get_version.outputs.release_version }}
+          sourcemaps: ./build
+          finalize: true
         env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: |
-          sentry-cli releases new ${{ steps.get_version.outputs.release_version }}
-          sentry-cli releases set-commits --auto ${{ steps.get_version.outputs.release_version }}
-
-      - name: Upload source maps to Sentry
-        env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: |
-          sentry-cli releases files ${{ steps.get_version.outputs.release_version }} upload-sourcemaps ./build
-
-      - name: Finalize Sentry release
-        env:
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: sentry-cli releases finalize ${{ steps.get_version.outputs.release_version }}
