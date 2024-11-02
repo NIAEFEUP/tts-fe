@@ -3,9 +3,9 @@ import api from "../api/backend";
 import useSWR from "swr";
 
 export default (courseId: number | null) => {
-  const getCourseUnit = async (id) => {
+  const getCourseUnit = async () => {
     try {
-      if (courseId) return await api.getCoursesByMajorId(Number(id));
+      if (courseId) return await api.getCoursesByMajorId(Number(courseId));
     } catch (error) {
       console.error(error);
     }

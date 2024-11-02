@@ -23,7 +23,7 @@ export const CreateRequest = ({
       <div className="flex flex-row justify-between w-full items-center">
         <h1 className="font-bold text-xl">Criar pedido</h1>
         {!selectingCourseUnits &&
-          <Button onClick={() => setSelectingCourseUnits(true)}>
+          <Button className="add-item-button" onClick={() => setSelectingCourseUnits(true)}>
             Disciplina +
           </Button>
         }

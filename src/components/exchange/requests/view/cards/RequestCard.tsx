@@ -102,7 +102,9 @@ export const RequestCard = ({ }) => {
               <label htmlFor="select-all">Selecionar todas</label>
             </div>
             <form className="flex flex-row gap-2">
-              <Button type="submit" onClick={submitExchange}>Propôr troca</Button>
+              <Button type="submit" onClick={submitExchange} className="success-button hover:bg-white">
+                Propôr troca
+              </Button>
             </form>
           </div>
         </CardFooter>

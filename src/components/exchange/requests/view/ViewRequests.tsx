@@ -96,7 +96,7 @@ export const ViewRequests = ({
     <div className="flex flex-row justify-between items-center w-full">
       <h1 className="font-bold text-xl">Pedidos</h1>
       <Button
-        className="bg-white text-black border shadow-md mr-0 hover:bg-gray-50 flex flex-row gap-x-1"
+        className="add-item-button"
         onClick={() => {
           setCreatingRequest(true);
           setExchangeSchedule(originalExchangeSchedule);

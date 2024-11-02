@@ -9,6 +9,7 @@ import { useSession } from "../hooks";
 import useEligibleExchange from "../hooks/useEligibleExchange";
 import useSchedule from "../hooks/useSchedule";
 import useStudentCourseUnits from "../hooks/useStudentCourseUnits";
+import '../styles/exchange.css';
 
 const ExchangeGuard = ({ children }) => {
   return (

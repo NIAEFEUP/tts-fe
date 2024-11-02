@@ -1,7 +1,5 @@
-import { Dispatch, SetStateAction } from "react"
-import { CourseInfo, CreateRequestData } from "../../../../../@types"
-import { Button } from "../../../../ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card"
+import { CourseInfo } from "../../../../../@types"
+import { Card, CardHeader, CardTitle } from "../../../../ui/card"
 import { Checkbox } from "../../../../ui/checkbox"
 
 type Props = {
@@ -22,7 +20,6 @@ export const IncludeCourseUnitCard = ({ courseInfo, selectedCourseUnitsHook }: P
             setSelectedCourseUnits([...selectedCourseUnits, courseInfo]);
           } else {
             setSelectedCourseUnits(selectedCourseUnits.filter((currentCourseInfo) => currentCourseInfo.id !== courseInfo.id));
-
           }
         }}
         checked={selectedCourseUnits.some((currentCourseInfo) => currentCourseInfo.id === courseInfo.id)}

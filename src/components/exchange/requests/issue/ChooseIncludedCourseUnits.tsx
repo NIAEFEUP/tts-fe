@@ -18,7 +18,7 @@ export const ChooseIncludedCourseUnits = ({
   setSelectingCourseUnits
 }: Props) => {
   return <div className="flex flex-col gap-y-2">
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row gap-2 mb-2">
       <Checkbox
         id="selecting-course-units"
         onCheckedChange={(checked) => {
@@ -43,7 +43,7 @@ export const ChooseIncludedCourseUnits = ({
     ))}
 
     <Button
-      className="w-full bg-gray-200 text-gray-800 hover:bg-gray-150 flex flex-row gap-x-2"
+      className="w-full success-button hover:bg-white flex flex-row gap-x-2"
       onClick={() => { setSelectingCourseUnits(false) }}
     >
       Confirmar disciplinas

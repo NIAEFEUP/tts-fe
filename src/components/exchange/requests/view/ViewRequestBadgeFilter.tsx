@@ -6,6 +6,7 @@ import { Badge } from "../../../ui/badge"
 import { Button } from "../../../ui/button"
 import { Checkbox } from "../../../ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../ui/dropdown-menu"
+import { Separator } from "../../../ui/separator"
 
 type Props = {
   courseUnit: CourseInfo
@@ -21,8 +22,6 @@ export const ViewRequestBadgeFilter = ({
   const [classesFilter, setClassesFilter] = classesFilterHook;
   const [filterCourseUnits, setFilterCourseUnits] = filterCourseUnitsHook
   const { classes } = useCourseUnitClasses(courseUnit.id);
-
-  console.log("CURRENT HELL CLASSES: ", classes);
 
   const handleClassFilterChange = (className: string, checked: boolean) => {
     const classFilterItem = classesFilter.get(courseUnit.acronym);
@@ -41,8 +40,8 @@ export const ViewRequestBadgeFilter = ({
   return <div className="flex flex-row items-center gap-x-2">
     <Badge
       className={
-        `${filterCourseUnits.has(courseUnit.id) ? "bg-black text-white" : "bg-gray-200 text-gray-700"} 
-                    cursor-pointer hover:text-white flex flex-row items-center gap-x-1`
+        `${filterCourseUnits.has(courseUnit.id) ? "bg-primary text-white" : "bg-gray-200 text-gray-700"} 
+                    cursor-pointer hover:text-white hover:bg-primary flex flex-row items-center gap-x-1`
       }
       onClick={() => {
         const newFilterCourseUnits = new Set(filterCourseUnits);
@@ -69,7 +68,7 @@ export const ViewRequestBadgeFilter = ({
               <Checkbox
                 id={`from-${currentClass.id}`}
                 checked={classesFilter.get(courseUnit.acronym)?.has(currentClass.name)}
-                onCheckedChange={(checked) => {
+                onCheckedChange={(checked: boolean) => {
                   handleClassFilterChange(currentClass.name, checked);
                 }}
                 onClick={(e) => e.stopPropagation()}

@@ -125,7 +125,7 @@ export type MarketplaceRequest = {
   id: number,
   type: string,
   issuer_name: string,
-  issuer_nmec: number,
+  issuer_nmec: string,
   date: string,
   options?: Array<ExchangeOption>,
   classes?: Array<ClassInfo>,

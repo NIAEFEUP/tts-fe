@@ -3,9 +3,9 @@ import api from "../api/backend";
 import useSWR from "swr";
 
 export default (courseId: number) => {
-  const getClasses = async (id) => {
+  const getClasses = async () => {
     try {
-      const res = await fetch(`${api.BACKEND_URL}/class/${id}/`, {
+      const res = await fetch(`${api.BACKEND_URL}/class/${courseId}/`, {
         credentials: "include"
       });
 

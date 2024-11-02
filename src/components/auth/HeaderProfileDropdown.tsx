@@ -4,9 +4,27 @@ import useSession from "../../hooks/useSession";
 import { Button } from "../ui/button";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import api from "../../api/backend";
+import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 
 export const HeaderProfileDropdown = () => {
+  const [loggingOut, setLoggingOut] = useState(false);
+
   const { user } = useSession();
+
+  const logout = async () => {
+    setLoggingOut(true);
+
+    fetch(`${api.OIDC_LOGOUT_URL}/`, {
+      method: "POST", credentials: "include", headers: {
+        "X-CSRFToken": api.getCSRFToken()
+      }
+    }).then(() => {
+      setLoggingOut(false);
+    }).catch((e) => {
+      console.error(e);
+    });
+  }
 
   return <DropdownMenu>
     <DropdownMenuTrigger className="w-full">
@@ -26,14 +44,18 @@ export const HeaderProfileDropdown = () => {
           variant="ghost"
           className="w-full flex flex-row justify-between"
           onClick={async () => {
-            await fetch(`${api.OIDC_LOGOUT_URL}/`, {
-              method: "POST", credentials: "include", headers: {
-                "X-CSRFToken": api.getCSRFToken()
-              }
-            });
+            await logout();
           }}
         >
-          Sair
+          <div>
+            <ClipLoader
+              className="w-full h-2"
+              loading={loggingOut}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </div>
+          {!loggingOut && <span>Sair</span>}
           <ChevronRightIcon className="w-5 h-5" />
         </Button>
       </div>

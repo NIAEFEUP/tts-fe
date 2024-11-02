@@ -2,15 +2,11 @@ import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import { Dispatch, SetStateAction } from "react";
 import { CreateRequestData } from "../../../../@types";
-import exchangeRequestService from "../../../../api/services/exchangeRequestService";
-import exchangeUtils, { exchangeHasAllTypes, exchangeHasDirectExchange, exchangeHasMarketplaceExchange, exchangeIsValid, isDirectExchange, isMarketplaceExchange } from "../../../../utils/exchange";
+import exchangeUtils from "../../../../utils/exchange";
 import { Desert } from "../../../svgs";
 import { Button } from "../../../ui/button";
-import { Card, CardContent, CardHeader } from "../../../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../../ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
 import PreviewRequestCard from "./cards/PreviewRequestCard";
-import { PreviewRequestsFormTabs } from "./PreviewRequestsFormTabs";
 
 type Props = {
   requests: Map<number, CreateRequestData>
@@ -61,7 +57,7 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
       {requests.size > 0 &&
         <form className="flex flex-col gap-y-4 items-center mx-auto">
           <Button
-            className="flex flex-row gap-x-2 bg-green-200 text-green-600 border border-green-600 hover:bg-white"
+            className="flex flex-row gap-x-2 success-button"
             type="submit"
             onClick={async (e) => {
               e.preventDefault();
