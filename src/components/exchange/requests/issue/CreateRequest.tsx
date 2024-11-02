@@ -14,7 +14,6 @@ export const CreateRequest = ({
   setCreatingRequest
 }: Props) => {
   const [requests, setRequests] = useState<Map<number, CreateRequestData | null>>(new Map());
-  const { exchangeSchedule } = useContext(ScheduleContext);
   const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
   const [selectingCourseUnits, setSelectingCourseUnits] = useState<boolean>(false);
   const { enrolledCourseUnits } = useStudentCourseUnits();

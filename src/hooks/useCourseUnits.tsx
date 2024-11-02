@@ -11,10 +11,10 @@ export default (courseId: number | null) => {
     }
   };
 
-  const { data, error, mutate } = useSWR(String(courseId), getCourseUnit, {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
+  const { data, error, mutate } = useSWR(`course-units-of-${String(courseId)}`, getCourseUnit, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false
   });
   const courseUnits = useMemo(() => data ? data : null, [data]);
 

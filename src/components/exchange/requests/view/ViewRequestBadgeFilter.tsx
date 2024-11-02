@@ -22,6 +22,8 @@ export const ViewRequestBadgeFilter = ({
   const [filterCourseUnits, setFilterCourseUnits] = filterCourseUnitsHook
   const { classes } = useCourseUnitClasses(courseUnit.id);
 
+  console.log("CURRENT HELL CLASSES: ", classes);
+
   const handleClassFilterChange = (className: string, checked: boolean) => {
     const classFilterItem = classesFilter.get(courseUnit.acronym);
 
