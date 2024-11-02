@@ -23,20 +23,24 @@ export const CreateRequestCard = ({
 }: Props) => {
   const { data: requestMetadata } = useRequestCardCourseMetadata(courseInfo);
   const [requests, setRequests] = requestsHook;
-  const [issuerOriginClass, setIssuerOriginClass] = useState<string | null>(null);
-  const [selectedDestinationClass, setSelectedDestinationClass] = useState<string | null>(null);
+  const [issuerOriginClass, setIssuerOriginClass] = useState<ClassInfo | null>(null);
+  const [issuerOriginClassName, setIssuerOriginClassName] = useState<string | null>(null); 
+  const [selectedDestinationClass, setSelectedDestinationClass] = useState<ClassInfo | null>(null);
   const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<Student | null>(null);
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
 
   useEffect(() => {
     if (exchangeSchedule) {
-      setIssuerOriginClass(
+      setIssuerOriginClassName(
         exchangeSchedule.filter(
           (scheduleItem) => scheduleItem.classInfo.slots[0].lesson_type !== "T")
           .find((scheduleItem: ClassDescriptor) => scheduleItem.courseInfo.id === courseInfo.id).classInfo.name
       );
+      setIssuerOriginClass(
+        requestMetadata?.classes?.find((classInfo : ClassInfo) => classInfo.name === issuerOriginClassName)
+      );
     }
-  }, [exchangeSchedule]);
+  }, []);
 
   const excludeClass = () => {
     if (requests.get(courseInfo.id)) {
@@ -52,7 +56,7 @@ export const CreateRequestCard = ({
     const currentRequest: CreateRequestData = {
       courseUnitId: courseInfo.id,
       courseUnitName: courseInfo.name,
-      classNameRequesterGoesFrom: issuerOriginClass,
+      classNameRequesterGoesFrom: issuerOriginClassName,
       classNameRequesterGoesTo: destinationClassName
     }
 
@@ -89,26 +93,30 @@ export const CreateRequestCard = ({
     </CardHeader>
     <CardContent className="flex flex-col gap-y-4">
       <div className="flex flex-row items-center gap-x-2">
-        <p>{issuerOriginClass}</p>
+        <p>{issuerOriginClassName}</p>
         <ArrowRightIcon className="w-5 h-5" />
         <div className="p-2 rounded-md w-full">
           <DropdownMenu>
             <DropdownMenuTrigger className="w-full">
               <Button variant="outline" className="w-full">
-                {selectedDestinationClass ?? "Escolher turma..."}
+                {selectedDestinationClass?.name ?? "Escolher turma..."}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full">
               <ScrollArea className="max-h-72 rounded overflow-y-auto">
-                {requestMetadata?.classes?.filter((currentClass) => currentClass.name !== issuerOriginClass)
+                {requestMetadata?.classes?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
                   .map((currentClass) => (
                     <DropdownMenuItem
                       key={"dropdown-class-" + currentClass.name}
                       className="w-full"
+                      onMouseEnter={() => togglePreview(currentClass, currentClass.slots)}
+                      onMouseLeave={() => {
+                        const persistentClass = selectedDestinationClass || issuerOriginClass;
+                        togglePreview(persistentClass, persistentClass?.slots);
+                      }}
                       onSelect={() => {
-                        setSelectedDestinationClass(currentClass.name);
+                        setSelectedDestinationClass(currentClass);
                         togglePreview(currentClass, currentClass.slots);
-
                         addRequest(currentClass.name);
                       }
                       }>
