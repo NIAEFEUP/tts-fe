@@ -9,6 +9,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    environment:
+      name: sentry
 
     steps:
       - name: Checkout code
