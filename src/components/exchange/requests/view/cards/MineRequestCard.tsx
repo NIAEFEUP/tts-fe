@@ -28,6 +28,7 @@ export const MineRequestCard = ({ request }: Props) => {
       request={request}
       hovered={hovered}
       openHook={[open, setOpen]}
+      classUserGoesToName={request.type === "marketplaceexchange" ? "class_issuer_goes_to" : "class_participant_goes_to"}
       showRequestStatus={true}
       hideAbility={false}
       hideHandler={() => { }}

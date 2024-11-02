@@ -12,6 +12,11 @@ const isDirectExchange = (exchanges: Array<CreateRequestData>) => {
   return exchanges.every((exchange) => exchange.other_student);
 }
 
+export enum DirectExchangePendingMotive {
+  USER_DID_NOT_ACCEPT = 1,
+  OTHERS_DID_NOT_ACCEPT = 2
+}
+
 const exchangeUtils = {
   exchangeIsValid,
   isDirectExchange,

@@ -1,3 +1,5 @@
+import { DirectExchangePendingMotive } from "../utils/exchange"
+
 enum lesson_type {
   T = "T",    // Ensino teórico
   TP = "TP",  // Ensino teórico-prático
@@ -136,11 +138,13 @@ export type DirectExchangeRequest = {
   issuer_name: string,
   issuer_nmec: string,
   accepted: boolean,
+  pending_motive: DirectExchangePendingMotive,
   options: DirectExchangeParticipant[],
   date: string
 }
 
 export type DirectExchangeParticipant = {
+  id: number,
   course_info: CourseInfo,
   participant_name: string,
   participant_nmec: string,

@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { DirectExchangeRequest } from "../../../../../@types"
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import { useSession } from "../../../../../hooks";
+import { DirectExchangePendingMotive } from "../../../../../utils/exchange";
+import { Button } from "../../../../ui/button";
 import { Card, CardContent, CardFooter } from "../../../../ui/card";
 import { Checkbox } from "../../../../ui/checkbox";
 import { CommonCardHeader } from "./CommonCardHeader";
@@ -72,7 +74,9 @@ export const ReceivedRequestCard = ({
               <label htmlFor="select-all">Selecionar todas</label>
             </div>
             <form className="flex flex-row gap-2">
-              {/* <Button type="submit" onClick={submitExchange}>Propôr troca</Button> */}
+              {!request.accepted && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
+                <Button type="submit">Aceitar</Button>
+              }
             </form>
           </div>
 
