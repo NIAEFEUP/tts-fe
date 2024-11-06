@@ -217,9 +217,11 @@ const ClassSelectorDropdownController = ({
               {!course.classes || course.classes.length === 0
                 ? <NoOptionsFound mobile={false} />
                 : <>
+                {selectedClassId && (
                   <DropdownMenuItem onSelect={() => deleteOption()}>
                     <span className="text-sm tracking-tighter">Remover Seleção</span>
                   </DropdownMenuItem>
+                )}
                   {course.classes &&
                     getOptions().map((classInfo) => (
                       <ClassItem
