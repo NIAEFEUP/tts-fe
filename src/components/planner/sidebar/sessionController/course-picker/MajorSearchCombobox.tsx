@@ -71,9 +71,11 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
             // handle that event and actually be scrollable with the mouse wheel
             onWheel={(e) => e.stopPropagation()}
           >
+          {selectedMajor && (
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
+          )}
             {majors &&
               majors.map((major) => (
                 <CommandItem
