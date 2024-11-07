@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CourseInfo, Major, MultipleOptions } from "../@types";
 import StorageAPI from "../api/storage";
 import MultipleOptionsContext from "./MultipleOptionsContext";
@@ -26,7 +26,13 @@ const CombinedProvider = ({ children }: Props) => {
   const [enabled, setEnabled] = useDarkMode()  // TODO (Process-ing): Stop using a hook (who smoked here?)
   const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
-  const { signedIn } = useSession();
+
+  const { signedIn: userSignedIn, user, isLoading: isSessionLoading } = useSession();
+
+  const [signedIn, setSignedIn] = useState<boolean>(userSignedIn);
+  useEffect(() => {
+    setSignedIn(userSignedIn);
+  }, [userSignedIn]);
 
   const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
     if (newMultipleOptions instanceof Function)
@@ -45,7 +51,7 @@ const CombinedProvider = ({ children }: Props) => {
   }
 
   return (
-    <SessionContext.Provider value={{ signedIn }}>
+    <SessionContext.Provider value={{ signedIn, setSignedIn, user, isSessionLoading }}>
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
           <CourseContext.Provider value={

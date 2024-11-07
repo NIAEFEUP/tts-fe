@@ -4,13 +4,14 @@ import useSession from "../../hooks/useSession";
 import { Button } from "../ui/button";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import api from "../../api/backend";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ClipLoader } from "react-spinners";
+import SessionContext from "../../contexts/SessionContext";
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false);
 
-  const { user } = useSession();
+  const { user, setSignedIn } = useContext(SessionContext);
 
   const logout = async () => {
     setLoggingOut(true);
@@ -20,6 +21,7 @@ export const HeaderProfileDropdown = () => {
         "X-CSRFToken": api.getCSRFToken()
       }
     }).then(() => {
+      setSignedIn(false);
       setLoggingOut(false);
     }).catch((e) => {
       console.error(e);

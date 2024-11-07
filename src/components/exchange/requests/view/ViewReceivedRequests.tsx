@@ -11,11 +11,6 @@ export const ViewReceivedRequests = () => {
 
   const requests = data ? [].concat(...data) : [];
 
-  const [hovered, setHovered] = useState<boolean>(false);
-  const [open, setOpen] = useState<boolean>(false);
-
-  const { user } = useSession();
-
   return <>
     {requests.map((request) => (
       <ReceivedRequestCard

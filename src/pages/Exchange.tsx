@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ClassDescriptor } from "../@types";
 import { LoginButton } from "../components/auth/LoginButton";
 import { ExchangeSidebar } from "../components/exchange/ExchangeSidebar";
 import ExchangeSchedule from "../components/exchange/schedule/ExchangeSchedule";
 import { Schedule } from "../components/planner";
 import ScheduleContext from "../contexts/ScheduleContext";
+import SessionContext from "../contexts/SessionContext";
 import { useSession } from "../hooks";
 import useEligibleExchange from "../hooks/useEligibleExchange";
 import useSchedule from "../hooks/useSchedule";
@@ -27,7 +28,7 @@ const ExchangePage = () => {
   const { schedule, loading: loadingSchedule } = useSchedule();
   const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
-  const { signedIn, isLoading, user } = useSession();
+  const { signedIn, isSessionLoading: isLoading, user } = useContext(SessionContext);
   const { enrolledCourseUnits } = useStudentCourseUnits();
 
   useEffect(() => {

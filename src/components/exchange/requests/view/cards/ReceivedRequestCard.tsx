@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { DirectExchangeRequest } from "../../../../../@types"
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
+import SessionContext from "../../../../../contexts/SessionContext";
 import { useSession } from "../../../../../hooks";
 import { DirectExchangePendingMotive } from "../../../../../utils/exchange";
 import { Button } from "../../../../ui/button";
@@ -19,7 +20,7 @@ export const ReceivedRequestCard = ({
   const { open, setOpen, selectedOptions, setSelectedOptions, selectAll, setSelectAll, togglePreview, handleSelectAll } = useContext(ExchangeRequestCommonContext);
   const [hovered, setHovered] = useState<boolean>(false);
 
-  const { user } = useSession();
+  const { user } = useContext(SessionContext);
 
   useEffect(() => {
     if (request.type === "directexchange") request.options = request.options.filter((option) => option.participant_nmec === user?.username);

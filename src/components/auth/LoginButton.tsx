@@ -7,7 +7,10 @@ type Props = {
 }
 
 export const LoginButton = ({ expanded = false }: Props) => {
-  return <Button variant={`${expanded ? "default" : "ghost"}`}>
+  return <Button
+    variant={`${expanded ? "default" : "ghost"}`}
+    onClick={() => window.location.href = api.OIDC_LOGIN_URL}
+  >
     < a href={`${api.OIDC_LOGIN_URL}`
     } className="flex flex-row gap-1" >
       {expanded && "Entrar"}

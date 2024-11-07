@@ -1,7 +1,8 @@
 import { ArchiveBoxIcon, ChevronDoubleDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { MarketplaceRequest } from "../../../../../@types";
+import SessionContext from "../../../../../contexts/SessionContext";
 import { useSession } from "../../../../../hooks";
 import { Button } from "../../../../ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "../../../../ui/card"
@@ -16,7 +17,7 @@ export const MineRequestCard = ({ request }: Props) => {
   const [hovered, setHovered] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { user } = useSession();
+  const { user } = useContext(SessionContext);
 
   return <Card
     onMouseOver={() => { setHovered(true) }}
