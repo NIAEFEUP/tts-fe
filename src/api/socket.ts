@@ -42,14 +42,11 @@ class SessionsSocket {
             }
         });
         this.socket.set(newSocket);
-        console.log('Connected to socket');
     }
 
     disconnect() {
         this.socket.use(socket => socket.disconnect());
         this.socket.unset();
-
-        console.log('Disconnected from socket');
     }
 
     on(event: string, callback: (...args: any[]) => void) {
