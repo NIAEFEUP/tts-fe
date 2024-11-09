@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import backendApi from "./backend";
 
-const SOCKET_URL = 'ws://' + backendApi.BACKEND_URL.split('//')[1];
+const SOCKET_URL = (import.meta.env.VITE_APP_PROD == 0 ? 'ws://' : 'wss://') + backendApi.BACKEND_URL.split('//')[1];
 
 class OptionalSocket {
     private socket: Socket | null;
