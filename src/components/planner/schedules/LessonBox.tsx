@@ -1,6 +1,7 @@
 import classNames from 'classnames'
-import { useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 
+import ConflictsContext from '../../../contexts/ConflictsContext'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
@@ -40,6 +41,7 @@ const LessonBox = ({
   const [isHovered, setIsHovered] = useState(false)
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
+  const { setConflictsExist } = useContext(ConflictsContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
@@ -71,6 +73,10 @@ const LessonBox = ({
 
     setConflict(newConflictInfo);
   }, [classInfo, classes]);
+
+  useEffect(() => {
+    setConflictsExist(hasConflict);
+  },[hasConflict]);
 
   const showConflicts = () => {
     setConflictsShown(true)
