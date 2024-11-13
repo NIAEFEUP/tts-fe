@@ -16,7 +16,7 @@ export const RequestCard = ({ }) => {
   } = useContext(ExchangeRequestCommonContext);
   const [hovered, setHovered] = useState<boolean>(false);
 
-  const { conflictsExist } = useContext(ConflictsContext);
+  const { conflictsSeverity } = useContext(ConflictsContext);
 
   useEffect(() => {
     if (chosenRequest?.id !== request.id) {
@@ -107,9 +107,9 @@ export const RequestCard = ({ }) => {
             <form className="flex flex-row gap-2">
               <Button
                 type="submit"
-                onClick={!conflictsExist ? submitExchange : () => { }}
-                className={conflictsExist ? "disabled:bg-red-400" : "success-button hover:bg-white"}
-                disabled={conflictsExist}
+                onClick={!conflictsSeverity ? submitExchange : () => { }}
+                className={conflictsSeverity ? "disabled:bg-red-400" : "success-button hover:bg-white"}
+                disabled={conflictsSeverity}
               >
                 Propôr troca
               </Button>

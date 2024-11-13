@@ -41,7 +41,7 @@ const LessonBox = ({
   const [isHovered, setIsHovered] = useState(false)
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
-  const { setConflictsExist } = useContext(ConflictsContext);
+  const { setConflictsSeverity } = useContext(ConflictsContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
@@ -75,8 +75,8 @@ const LessonBox = ({
   }, [classInfo, classes]);
 
   useEffect(() => {
-    setConflictsExist(hasConflict);
-  },[hasConflict]);
+    setConflictsSeverity(conflict?.severe);
+  }, [hasConflict]);
 
   const showConflicts = () => {
     setConflictsShown(true)
