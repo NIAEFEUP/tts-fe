@@ -7,6 +7,7 @@ import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage } from './page
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import * as Sentry from "@sentry/react";
+import { SidebarProvider } from "./components/layout/SidebarPosition";
 
 const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
 
@@ -60,33 +61,35 @@ const App = () => {
   const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
   return (
-    <BrowserRouter>
-      <CombinedProvider>
-        <SentryRoutes>
-          {pages.map((page, pageIdx) => (
-            <Route
-              path={page.path}
-              key={`page-${pageIdx}`}
-              element={
-                <Layout location={page.location} title={page.location} liquid={page.liquid}>
-                  <div>
-                    <page.element />
-                    <Toaster/>
-                  </div>
-                </Layout>
-              }
-            />
-          ))}
-          {redirects.map((redirect, redirectIdx) => (
-            <Route
-              path={redirect.from}
-              key={`redirect-${redirectIdx}`}
-              element={<Navigate replace to={redirect.to} />}
-            />
-          ))}
-        </SentryRoutes>
-      </CombinedProvider>
-    </BrowserRouter>
+    <SidebarProvider>
+      <BrowserRouter>
+        <CombinedProvider>
+          <SentryRoutes>
+            {pages.map((page, pageIdx) => (
+              <Route
+                path={page.path}
+                key={`page-${pageIdx}`}
+                element={
+                  <Layout location={page.location} title={page.location} liquid={page.liquid}>
+                    <div>
+                      <page.element />
+                      <Toaster/>
+                    </div>
+                  </Layout>
+                }
+              />
+            ))}
+            {redirects.map((redirect, redirectIdx) => (
+              <Route
+                path={redirect.from}
+                key={`redirect-${redirectIdx}`}
+                element={<Navigate replace to={redirect.to} />}
+              />
+            ))}
+          </SentryRoutes>
+        </CombinedProvider>
+      </BrowserRouter>
+    </SidebarProvider>
   )
 }
 
