@@ -37,17 +37,17 @@ const App = () => {
   // Enable Error Tracking, Performance Monitoring and Session Replay
   Sentry.init({
     environment: Number(import.meta.env.VITE_APP_PROD) ? "production" : "development",
-    dsn: "https://01f0882e6aa029a125426e4ad32e6c18@o553498.ingest.us.sentry.io/4507775325437952",
+    dsn: import.meta.env.VITE_APP_SENTRY_DSN,
     integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
-      Sentry.reactRouterV6BrowserTracingIntegration({
+      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.browserTracingIntegration() : null,
+      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.replayIntegration() : null,
+      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.reactRouterV6BrowserTracingIntegration({
         useEffect: React.useEffect,
         useLocation,
         useNavigationType,
         createRoutesFromChildren,
         matchRoutes,
-      }),
+      }) : null,
     ],
 
     // Performance monitoring

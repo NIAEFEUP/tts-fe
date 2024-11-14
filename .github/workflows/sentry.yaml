@@ -1,0 +1,53 @@
+name: Sentry Release
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment:
+      name: sentry
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build project
+        run: yarn build
+
+      - name: Determine release version (default to commit hash)
+        id: get_version
+        run: |
+          VERSION=$(git rev-parse --short HEAD)
+
+          # Override version if on main branch to use package.json version
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            VERSION=$(jq -r .version < package.json)
+          fi
+
+          echo "Version to be released: $VERSION"
+          echo "::set-output name=release_version::$VERSION"
+
+      - name: Create and Finalize Sentry Release
+        uses: getsentry/action-release@v1
+        with:
+          environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+          version: ${{ steps.get_version.outputs.release_version }}
+          sourcemaps: ./build
+          finalize: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
