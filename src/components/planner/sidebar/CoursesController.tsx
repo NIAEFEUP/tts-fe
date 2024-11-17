@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import ClassSelector from './CoursesController/ClassSelector'
 import CourseContext from '../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { TrashIcon } from "@heroicons/react/24/outline"
 import { NoMajorSelectedSVG } from '../../svgs'
 import { Button } from '../../ui/button'
@@ -8,10 +9,26 @@ import { Button } from '../../ui/button'
 
 const CoursesController = () => {
   const { pickedCourses, setUcsModalOpen } = useContext(CourseContext);
+  const { multipleOptions, selectedOption, setMultipleOptions } = useContext(MultipleOptionsContext);
 
   const noCoursesPicked = pickedCourses.length === 0;
 
-  const eraseClasses = () => {  };
+  const eraseClasses = () => {
+    const currentOption = multipleOptions[selectedOption];
+  
+    const updatedCourseOptions = currentOption.course_options.map(courseOption => ({
+      ...courseOption,
+      picked_class_id: null,
+    }));
+  
+    const updatedMultipleOptions = [...multipleOptions];
+    updatedMultipleOptions[selectedOption] = {
+      ...currentOption,
+      course_options: updatedCourseOptions,
+    };
+  
+    setMultipleOptions(updatedMultipleOptions);
+  };
 
   return (
     <div className={`flex ${noCoursesPicked ? 'h-max justify-center' : ''} w-full flex-col gap-4 px-0 py-2`}>
