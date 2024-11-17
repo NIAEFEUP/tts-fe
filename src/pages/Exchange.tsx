@@ -28,7 +28,7 @@ const ExchangePage = () => {
   const { schedule, loading: loadingSchedule } = useSchedule();
   const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
-  const { signedIn, isSessionLoading: isLoading, user } = useContext(SessionContext);
+  const { signedIn, user } = useContext(SessionContext);
   const { enrolledCourseUnits } = useStudentCourseUnits();
 
   useEffect(() => {
@@ -44,10 +44,10 @@ const ExchangePage = () => {
   }, [schedule]);
 
   return <>
-    {!isLoading && signedIn ?
+    {signedIn ?
       <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
         {
-          user.eligible_exchange ?
+          user?.eligible_exchange ?
             <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
               {/* Schedule Preview */}
               <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">

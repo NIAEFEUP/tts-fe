@@ -16,9 +16,13 @@ const useSession = () => {
     }
   }
 
-  const { data, isLoading, error, mutate } = useSwr("auth/info/", trySession, {
-    refreshInterval: 3600000000
+  const { data, isLoading } = useSwr("auth/info/", trySession, {
+    refreshInterval: 3600000000,
   });
+
+  if (data) {
+    localStorage.setItem("signedIn", (true).toString());
+  }
 
   return {
     signedIn: data ? data.signed : false,

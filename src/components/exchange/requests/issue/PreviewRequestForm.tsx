@@ -21,7 +21,7 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
     <DialogTrigger asChild>
       <Button className="w-1/2">
-        Prever pedido
+        Submeter pedido
       </Button>
     </DialogTrigger>
     <DialogContent className="flex flex-col">

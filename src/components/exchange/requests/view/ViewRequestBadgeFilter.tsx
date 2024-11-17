@@ -30,8 +30,8 @@ export const ViewRequestBadgeFilter = ({
       if (classFilterItem) classFilterItem.add(className);
       else classesFilter.set(courseUnit.acronym, new Set([className]));
     } else {
-      classFilterItem.delete(className);
-      if (classFilterItem.size === 0) classesFilter.delete(courseUnit.acronym);
+      classFilterItem?.delete(className);
+      if (classFilterItem?.size === 0) classesFilter?.delete(courseUnit.acronym);
     }
 
     setClassesFilter(new Map(classesFilter));

@@ -76,7 +76,7 @@ export const RequestCard = ({ }) => {
           showRequestStatus={false}
           hideAbility={false}
           hideHandler={hide}
-          classUserGoesToName="class_issuer_goes_to"
+          classUserGoesToName="class_issuer_goes_from"
         />
 
         <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>

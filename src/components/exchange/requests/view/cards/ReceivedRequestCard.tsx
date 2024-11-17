@@ -11,79 +11,72 @@ import { CommonCardHeader } from "./CommonCardHeader";
 import { ListRequestChanges } from "./ListRequestChanges";
 
 type Props = {
-  request: DirectExchangeRequest
+    request: DirectExchangeRequest
 }
 
 export const ReceivedRequestCard = ({
-  request
+    request
 }: Props) => {
-  const { open, setOpen, selectedOptions, setSelectedOptions, selectAll, setSelectAll, togglePreview, handleSelectAll } = useContext(ExchangeRequestCommonContext);
-  const [hovered, setHovered] = useState<boolean>(false);
+    const { open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview } = useContext(ExchangeRequestCommonContext);
+    const [hovered, setHovered] = useState<boolean>(false);
 
-  const { user } = useContext(SessionContext);
+    const { user } = useContext(SessionContext);
 
-  useEffect(() => {
-    if (request.type === "directexchange") request.options = request.options.filter((option) => option.participant_nmec === user?.username);
-  }, [request]);
+    useEffect(() => {
+        if (request.type === "directexchange") request.options = request.options.filter((option) => option.participant_nmec === user?.username);
+    }, [request]);
 
-  return <>
-    {request.type === "directexchange" &&
-      <Card
-        className="exchange-request-card"
-        onMouseOver={() => { setHovered(true) }}
-        onMouseLeave={() => { setHovered(false) }}
-      >
-        <CommonCardHeader
-          name={request.issuer_name}
-          username={request.issuer_nmec}
-          request={request}
-          hovered={hovered}
-          openHook={[open, setOpen]}
-          showRequestStatus={true}
-          hideAbility={false}
-          hideHandler={() => { }}
-          classUserGoesToName="class_participant_goes_to"
-        />
-        <CardContent>
-          {/*
-        Show the changes that will be made for the auth user only.
-        The other changes that do not change the class of the student
-        should not be shown
-      */}
-          {open && (
-            <>
-              {request.options.map((option) => (
-                <ListRequestChanges
-                  option={option}
-                  selectedOptionsHook={[selectedOptions, setSelectedOptions]}
-                  setSelectAll={setSelectAll}
-                  togglePreview={togglePreview}
-                  type={"directexchange"}
+    return <>
+        {request.type === "directexchange" &&
+            <Card
+                className="exchange-request-card"
+                onMouseOver={() => { setHovered(true) }}
+                onMouseLeave={() => { setHovered(false) }}
+            >
+                <CommonCardHeader
+                    name={request.issuer_name}
+                    username={request.issuer_nmec}
+                    request={request}
+                    hovered={hovered}
+                    openHook={[open, setOpen]}
+                    showRequestStatus={true}
+                    hideAbility={false}
+                    hideHandler={() => { }}
+                    classUserGoesToName="class_participant_goes_to"
                 />
-              ))}
-            </>
-          )}
-        </CardContent>
-        <CardFooter className={open ? "" : "hidden"}>
-          <div className="flex flex-row justify-between w-full items-center">
-            <div className="flex flex-row items-center gap-x-2">
-              <Checkbox
-                id="select-all"
-                checked={selectAll}
-                onCheckedChange={handleSelectAll}
-              />
-              <label htmlFor="select-all">Selecionar todas</label>
-            </div>
-            <form className="flex flex-row gap-2">
-              {!request.accepted && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
-                <Button type="submit">Aceitar</Button>
-              }
-            </form>
-          </div>
+                <CardContent>
+                    {open && (
+                        <>
+                            {request.options.map((option) => (
+                                <ListRequestChanges
+                                    option={option}
+                                    selectedOptionsHook={[selectedOptions, setSelectedOptions]}
+                                    setSelectAll={setSelectAll}
+                                    togglePreview={togglePreview}
+                                    type={"directexchange"}
+                                    showChooseCheckbox={false}
+                                />
+                            ))}
+                        </>
+                    )}
+                </CardContent>
+                <CardFooter className={open ? "" : "hidden"}>
+                    <div className="flex flex-row justify-between w-full items-center">
+                        <form className="flex flex-row gap-2">
+                            {!request.accepted && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
+                                <Button
+                                    type="submit"
+                                    className="success-button hover:bg-white"
+                                >
+                                    Aceitar
+                                </Button>
+                            }
+                        </form>
+                    </div>
 
-        </CardFooter>
-      </Card>}
-  </>
+                </CardFooter>
+            </Card>}
+    </>
 
 
 }

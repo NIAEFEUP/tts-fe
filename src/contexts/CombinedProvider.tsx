@@ -28,8 +28,7 @@ const CombinedProvider = ({ children }: Props) => {
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading } = useSession();
-
-  const [signedIn, setSignedIn] = useState<boolean>(userSignedIn);
+  const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
   useEffect(() => {
     setSignedIn(userSignedIn);
   }, [userSignedIn]);
