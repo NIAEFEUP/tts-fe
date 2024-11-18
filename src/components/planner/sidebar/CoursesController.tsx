@@ -19,6 +19,7 @@ const CoursesController = () => {
     const updatedCourseOptions = currentOption.course_options.map(courseOption => ({
       ...courseOption,
       picked_class_id: null,
+      locked: false,
     }));
   
     const updatedMultipleOptions = [...multipleOptions];
