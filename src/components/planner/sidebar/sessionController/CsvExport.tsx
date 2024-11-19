@@ -3,15 +3,8 @@ import { useContext } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
+import { csvEncode } from './IOUtils'
 
-//TODO: utils??
-const csvEncode = (text: string | null | undefined) => {
-  if (!text)
-    return ''
-  if (text.includes(','))
-    return `"${text}"`
-  return text
-}
 
 /**
  * Sidebar with all the main schedule interactions
