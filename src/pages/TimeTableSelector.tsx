@@ -13,7 +13,7 @@ const TimeTableSelectorPage = () => {
   const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
   const [ucsModalOpen, setUcsModalOpen] = useState<boolean>(false);
 
-  //TODO: Looks suspicious
+  //TODO: Looks suspicious ඞ
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
   useEffect(() => {
     document.getElementById('layout').scrollIntoView()
