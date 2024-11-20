@@ -29,7 +29,7 @@ const CombinedProvider = ({ children }: Props) => {
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
   const { signedIn } = useSession();
 
-  const [conflictsSeverity, setConflictsSeverity] = useState<number>(0);
+  const [isConflictSevere, setConflictSeverity] = useState<boolean>(false);
 
   const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
     if (newMultipleOptions instanceof Function)
@@ -61,7 +61,7 @@ const CombinedProvider = ({ children }: Props) => {
             }
           }>
             <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
-              <ConflictsContext.Provider value={{ conflictsSeverity, setConflictsSeverity }}>
+              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity }}>
                 {children}
               </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>
