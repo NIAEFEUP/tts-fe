@@ -24,24 +24,37 @@ export const CreateRequestCard = ({
   const { data: requestMetadata } = useRequestCardCourseMetadata(courseInfo);
   const [requests, setRequests] = requestsHook;
   const [issuerOriginClass, setIssuerOriginClass] = useState<ClassInfo | null>(null);
-  const [issuerOriginClassName, setIssuerOriginClassName] = useState<string | null>(null); 
+  const [issuerOriginClassName, setIssuerOriginClassName] = useState<string | null>(null);
   const [selectedDestinationClass, setSelectedDestinationClass] = useState<ClassInfo | null>(null);
   const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<Student | null>(null);
-  const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
+  const { exchangeSchedule, originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
 
   useEffect(() => {
-    if (exchangeSchedule) {
-      setIssuerOriginClassName(
-        exchangeSchedule.filter(
-          (scheduleItem) => scheduleItem.classInfo.slots[0].lesson_type !== "T")
-          .find((scheduleItem: ClassDescriptor) => scheduleItem.courseInfo.id === courseInfo.id).classInfo.name
-      );
-      setIssuerOriginClass(
-        requestMetadata?.classes?.find((classInfo : ClassInfo) => classInfo.name === issuerOriginClassName)
-      );
+    if (!originalExchangeSchedule || !courseInfo) return;
+    const originClassName = findIssuerOriginClassName();
+    
+    setIssuerOriginClassName(originClassName);
+    setIssuerOriginClass(findClassInfoByName(originClassName));
+  
+    const request = requests.get(courseInfo.id);
+    if (request) {
+      const destinationClass = findClassInfoByName(request.classNameRequesterGoesTo);
+      setSelectedDestinationClass(destinationClass);
     }
-  }, []);
+  }, [originalExchangeSchedule, courseInfo, requestMetadata]);
+  
+  const findIssuerOriginClassName = (): string | null => {
+    const scheduleItem = originalExchangeSchedule
+      .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== "T")
+      .find((item: ClassDescriptor) => item.courseInfo.id === courseInfo.id);
 
+    return scheduleItem?.classInfo.name || null;
+  };
+
+  const findClassInfoByName = (className: string | null): ClassInfo | null => {
+    return requestMetadata?.classes?.find((classInfo: ClassInfo) => classInfo.name === className) || null;
+  };
+  
   const excludeClass = () => {
     if (requests.get(courseInfo.id)) {
       const newRequests = new Map(requests);
