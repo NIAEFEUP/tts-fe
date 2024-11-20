@@ -8,11 +8,9 @@ import {
   AtSymbolIcon,
   RectangleStackIcon,
   QuestionMarkCircleIcon,
-  ArrowsRightLeftIcon,
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
-import { useSidebarContext } from './SidebarPosition'
 
 const navigation = [
   {
@@ -36,8 +34,6 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const { toggleSidebarPosition } = useSidebarContext();
-
   return (
     <Disclosure
       as="nav"
@@ -84,20 +80,10 @@ const Header = ({ siteTitle, location }: Props) => {
                     ))}
                 </div>
 
-                <div className='flex items-center space-x-2 relative top-1'>
-                  <button
-                    onClick={toggleSidebarPosition}
-                    className="hidden md:inline-flex items-center justify-center w-8 h-8 bg-primary text-white rounded hover:text-opacity-75"
-                  >
-                    <ArrowsRightLeftIcon className='h-4 w-4' />
-                  </button>
+                <div className="hidden self-center md:inline-flex">
 
 
-                  <div className="hidden self-center md:inline-flex">
-
-
-                    <DarkModeSwitch />
-                </div>
+                  <DarkModeSwitch />
                 </div>
               </div>
             </div>
