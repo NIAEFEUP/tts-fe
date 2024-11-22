@@ -11,11 +11,11 @@ export const LoginButton = ({ expanded = false }: Props) => {
     variant={`${expanded ? "default" : "ghost"}`}
     onClick={() => window.location.href = api.OIDC_LOGIN_URL}
   >
-    < a href={`${api.OIDC_LOGIN_URL}`
+    <a href={`${api.OIDC_LOGIN_URL}`
     } className="flex flex-row gap-1" >
       {expanded && "Entrar"}
       <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
-    </a >
+    </a>
   </Button >
 
 }

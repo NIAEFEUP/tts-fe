@@ -60,10 +60,26 @@ const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
   });
 }
 
+const acceptDirectExchangeRequest = async (id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/direct/${id}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+  }).then(async (res) => {
+    const json = await res.json();
+    return json;
+  }).catch((e) => {
+    console.error(e);
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
-  retrieveRequestCardMetadata
+  retrieveRequestCardMetadata,
+  acceptDirectExchangeRequest
 }
 
 export default exchangeRequestService;

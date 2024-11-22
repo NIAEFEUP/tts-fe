@@ -85,6 +85,8 @@ export const CommonRequestCard = ({
       }
     );
 
+    if(!exchangeSchedule) return;
+
     if (anySelected) {
       request.options.forEach((option) => {
         if (updatedOptions.get(option.course_info.acronym) === true) {

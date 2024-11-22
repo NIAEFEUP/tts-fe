@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter } from "../../../../ui/card";
 import { Checkbox } from "../../../../ui/checkbox";
 import { CommonCardHeader } from "./CommonCardHeader";
 import { ListRequestChanges } from "./ListRequestChanges";
+import exchangeRequestService from "../../../../../api/services/exchangeRequestService";
 
 type Props = {
     request: DirectExchangeRequest
@@ -67,6 +68,11 @@ export const ReceivedRequestCard = ({
                                 <Button
                                     type="submit"
                                     className="success-button hover:bg-white"
+                                    onClick={async (e) => {
+                                        e.preventDefault();
+                                        
+                                        await exchangeRequestService.acceptDirectExchangeRequest(request.id);
+                                    }}  
                                 >
                                     Aceitar
                                 </Button>
