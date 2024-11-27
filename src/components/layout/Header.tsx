@@ -31,7 +31,7 @@ const navigation = [
     wip: false,
   },
   {
-    title: 'Exchange',
+    title: 'Trocas',
     location: getPath(config.paths.exchange),
     icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
     wip: false,
