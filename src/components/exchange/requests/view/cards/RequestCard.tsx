@@ -7,6 +7,7 @@ import exchangeRequestService from "../../../../../api/services/exchangeRequestS
 import { ListRequestChanges } from "./ListRequestChanges";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import { CommonCardHeader } from "./CommonCardHeader";
+import ConflictsContext from "../../../../../contexts/ConflictsContext";
 
 export const RequestCard = ({ }) => {
   const {
@@ -14,6 +15,8 @@ export const RequestCard = ({ }) => {
     selectAll, setSelectAll, hide, togglePreview
   } = useContext(ExchangeRequestCommonContext);
   const [hovered, setHovered] = useState<boolean>(false);
+
+  const { isConflictSevere } = useContext(ConflictsContext);
 
   useEffect(() => {
     if (chosenRequest?.id !== request.id) {
@@ -102,7 +105,12 @@ export const RequestCard = ({ }) => {
               <label htmlFor="select-all">Selecionar todas</label>
             </div>
             <form className="flex flex-row gap-2">
-              <Button type="submit" onClick={submitExchange} className="success-button hover:bg-white">
+              <Button
+                type="submit"
+                onClick={!isConflictSevere ? submitExchange : () => { }}
+                className={isConflictSevere ? "disabled:bg-red-400" : "success-button hover:bg-white"}
+                disabled={isConflictSevere}
+              >
                 Propôr troca
               </Button>
             </form>

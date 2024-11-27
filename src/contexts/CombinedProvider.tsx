@@ -8,6 +8,7 @@ import useSession from "../hooks/useSession";
 import SessionContext from "./SessionContext";
 import MajorContext from "./MajorContext";
 import CourseContext from "./CourseContext";
+import ConflictsContext from "./ConflictsContext";
 
 type Props = {
   children: React.JSX.Element
@@ -32,6 +33,8 @@ const CombinedProvider = ({ children }: Props) => {
   useEffect(() => {
     setSignedIn(userSignedIn);
   }, [userSignedIn]);
+
+  const [isConflictSevere, setConflictSeverity] = useState<boolean>(false);
 
   const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
     if (newMultipleOptions instanceof Function)
@@ -63,7 +66,9 @@ const CombinedProvider = ({ children }: Props) => {
             }
           }>
             <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
-              {children}
+              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity }}>
+                {children}
+              </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>
           </CourseContext.Provider>
         </MajorContext.Provider>
