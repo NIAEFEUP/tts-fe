@@ -148,7 +148,7 @@ export const CreateRequestCard = ({
               <div className="flex flex-col gap-y-2">
                 <p className="text-left font-bold">Estudante</p>
                 <Button variant="outline" className="w-full">
-                  {selectedDestinationStudent ? selectedDestinationStudent.nome : "Escolher estudante..."}
+                  {selectedDestinationStudent ? selectedDestinationStudent.name : "Escolher estudante..."}
                 </Button>
               </div>
             </DropdownMenuTrigger>

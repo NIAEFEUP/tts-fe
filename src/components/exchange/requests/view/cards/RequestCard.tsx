@@ -8,6 +8,7 @@ import { ListRequestChanges } from "./ListRequestChanges";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import { CommonCardHeader } from "./CommonCardHeader";
 import ConflictsContext from "../../../../../contexts/ConflictsContext";
+import { ExchangeOption } from "../../../../../@types";
 
 export const RequestCard = ({ }) => {
   const {
@@ -48,8 +49,8 @@ export const RequestCard = ({ }) => {
           {
             courseUnitId: option.course_info.id,
             courseUnitName: option.course_info.name,
-            classNameRequesterGoesFrom: option.class_issuer_goes_from.name,
-            classNameRequesterGoesTo: option.class_issuer_goes_to.name,
+            classNameRequesterGoesFrom: (option as ExchangeOption).class_issuer_goes_from.name,
+            classNameRequesterGoesTo: (option as ExchangeOption).class_issuer_goes_to.name,
             other_student: {
               name: request.issuer_name,
               mecNumber: request.issuer_nmec

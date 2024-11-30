@@ -1,7 +1,7 @@
 import { ArchiveBoxIcon, CheckCircleIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
 import { Hourglass } from "lucide-react"
 import { useState } from "react"
-import { MarketplaceRequest } from "../../../../../@types"
+import { DirectExchangeRequest, MarketplaceRequest } from "../../../../../@types"
 import { Button } from "../../../../ui/button"
 import { CardDescription, CardHeader, CardTitle } from "../../../../ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
@@ -11,7 +11,7 @@ type Props = {
     name: string
     username: string
     hovered: boolean
-    request: MarketplaceRequest
+    request: MarketplaceRequest | DirectExchangeRequest
     openHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
     showRequestStatus?: boolean
     hideAbility?: boolean

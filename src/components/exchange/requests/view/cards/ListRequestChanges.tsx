@@ -51,9 +51,9 @@ export const ListRequestChanges = ({
                             {option.course_info.acronym} - {option.course_info.name}
                         </p>
                         <div className="flex flex-row gap-x-2 items-center font-bold">
-                            <p>{type === "directexchange" ? option.class_participant_goes_from.name : option.class_issuer_goes_from.name}</p>
+                            <p>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_from.name : (option as ExchangeOption).class_issuer_goes_from.name}</p>
                             <ArrowRightIcon className="w-5 h-5" />
-                            <p>{type === "directexchange" ? option.class_participant_goes_to.name : option.class_issuer_goes_to.name}</p>
+                            <p>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_to.name : (option as ExchangeOption).class_issuer_goes_to.name}</p>
                         </div>
                     </div>
                 </label>
