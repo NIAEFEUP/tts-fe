@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator } from "../ui/dropdown-menu"
-import useSession from "../../hooks/useSession";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator } from "../ui/dropdown-menu"
 import { Button } from "../ui/button";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import api from "../../api/backend";

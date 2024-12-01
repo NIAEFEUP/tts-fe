@@ -1,6 +1,5 @@
-import { ArchiveBoxIcon, CheckCircleIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
+import { ArchiveBoxIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
 import { Hourglass } from "lucide-react"
-import { useState } from "react"
 import { DirectExchangeRequest, MarketplaceRequest } from "../../../../../@types"
 import { Button } from "../../../../ui/button"
 import { CardDescription, CardHeader, CardTitle } from "../../../../ui/card"
@@ -72,7 +71,6 @@ export const CommonCardHeader = ({
                             </Button>
                             : <Button variant="icon" className="text-black dark:text-white" onClick={() => {
                                 setOpen(true);
-                                console.log("what: ", open);
                             }}>
                                 <ChevronDownIcon className="h-5 w-5" />
                             </Button>

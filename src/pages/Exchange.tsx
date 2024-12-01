@@ -3,16 +3,13 @@ import { ClassDescriptor } from "../@types";
 import { LoginButton } from "../components/auth/LoginButton";
 import { ExchangeSidebar } from "../components/exchange/ExchangeSidebar";
 import ExchangeSchedule from "../components/exchange/schedule/ExchangeSchedule";
-import { Schedule } from "../components/planner";
 import ScheduleContext from "../contexts/ScheduleContext";
 import SessionContext from "../contexts/SessionContext";
-import { useSession } from "../hooks";
-import useEligibleExchange from "../hooks/useEligibleExchange";
 import useSchedule from "../hooks/useSchedule";
 import useStudentCourseUnits from "../hooks/useStudentCourseUnits";
 import '../styles/exchange.css';
 
-const ExchangeGuard = ({ children }) => {
+const ExchangeGuard = ({ children }: { children: React.ReactNode }) => {
   return (
     <article className="flex flex-col mx-auto w-full gap-4">
       <h1 className="text-center text-3xl font-bold">

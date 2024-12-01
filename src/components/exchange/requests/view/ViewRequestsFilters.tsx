@@ -1,7 +1,6 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react"
+import { Dispatch, SetStateAction, useContext } from "react"
 import { CourseInfo } from "../../../../@types"
 import ScheduleContext from "../../../../contexts/ScheduleContext"
-import useStudentCourseUnits from "../../../../hooks/useStudentCourseUnits"
 import { Skeleton } from "../../../ui/skeleton"
 import { ViewRequestBadgeFilter } from "./ViewRequestBadgeFilter"
 
@@ -24,7 +23,7 @@ export const ViewRequestsFilters = ({
   filterCourseUnitsHook,
   classesFilterHook
 }: Props) => {
-  const { enrolledCourseUnits, exchangeSchedule, loadingSchedule } = useContext(ScheduleContext);
+  const { enrolledCourseUnits, loadingSchedule } = useContext(ScheduleContext);
 
   return <div className="flex flex-row justify-between w-full">
     {/* Course unit filters */}
@@ -33,7 +32,8 @@ export const ViewRequestsFilters = ({
         <div className="w-full flex flex-row flex-wrap gap-x-3 gap-y-5 items-center">
           {
             enrolledCourseUnits?.map((courseUnit: CourseInfo) => (
-              <ViewRequestBadgeFilter
+              <ViewRequestBadgeFilter 
+                key={courseUnit.id}
                 courseUnit={courseUnit}
                 filterCourseUnitsHook={filterCourseUnitsHook}
                 classesFilterHook={classesFilterHook}

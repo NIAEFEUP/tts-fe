@@ -1,6 +1,5 @@
 import useSwr from "swr";
 import api from "../api/backend";
-import Cookies from 'js-cookie';
 
 const useSession = () => {
 

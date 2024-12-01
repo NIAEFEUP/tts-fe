@@ -1,6 +1,6 @@
-import { ArrowLeftIcon, ArrowRightIcon, MinusIcon, TrashIcon } from "@heroicons/react/24/outline"
+import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestCardMetadata, CreateRequestData, Student } from "../../../../../@types"
+import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from "../../../../../@types"
 import { ScrollArea } from '../../../../ui/scroll-area'
 import ScheduleContext from "../../../../../contexts/ScheduleContext"
 import useRequestCardCourseMetadata from "../../../../../hooks/useRequestCardCourseMetadata"

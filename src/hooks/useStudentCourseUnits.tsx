@@ -1,4 +1,3 @@
-import { ClassDescriptor, CourseInfo } from "../@types";
 import { useMemo } from "react";
 import api from "../api/backend";
 import useSWR from "swr";

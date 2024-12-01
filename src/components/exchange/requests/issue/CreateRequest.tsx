@@ -1,6 +1,5 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { CourseInfo, CreateRequestData } from "../../../../@types"
-import ScheduleContext from "../../../../contexts/ScheduleContext"
 import useStudentCourseUnits from "../../../../hooks/useStudentCourseUnits"
 import { Button } from "../../../ui/button"
 import { ChooseIncludedCourseUnits } from "./ChooseIncludedCourseUnits"

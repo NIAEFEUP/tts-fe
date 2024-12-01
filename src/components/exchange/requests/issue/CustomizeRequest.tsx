@@ -89,7 +89,7 @@ export const CustomizeRequest = ({
           <Switch id="person-to-exchange" onCheckedChange={(checked) => {
             setHasStudentToExchange(checked)
             if (!checked) {
-              requests.forEach((request, key) => {
+              requests.forEach((request) => {
                 request.other_student = null;
               })
               setRequests(new Map(requests));

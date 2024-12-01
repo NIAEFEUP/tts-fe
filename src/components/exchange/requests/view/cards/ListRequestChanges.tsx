@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction } from "react"
-import { DirectExchangeParticipant, DirectExchangeRequest, ExchangeOption, MarketplaceRequest } from "../../../../../@types"
+import { DirectExchangeParticipant, ExchangeOption } from "../../../../../@types"
 import { Checkbox } from "../../../../ui/checkbox"
 import { Separator } from "../../../../ui/separator"
 

@@ -1,6 +1,6 @@
-import { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button } from "../../../../ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card";
+import { Card, CardContent, CardFooter } from "../../../../ui/card";
 import { Checkbox } from "../../../../ui/checkbox";
 import { Separator } from "../../../../ui/separator";
 import exchangeRequestService from "../../../../../api/services/exchangeRequestService";
@@ -10,7 +10,7 @@ import { CommonCardHeader } from "./CommonCardHeader";
 import ConflictsContext from "../../../../../contexts/ConflictsContext";
 import { ExchangeOption } from "../../../../../@types";
 
-export const RequestCard = ({ }) => {
+export const RequestCard = () => {
   const {
     chosenRequest, hiddenRequests, request, open, setOpen, selectedOptions, setSelectedOptions,
     selectAll, setSelectAll, hide, togglePreview
@@ -86,6 +86,7 @@ export const RequestCard = ({ }) => {
         <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
           {request.options?.map((option) => (
             <ListRequestChanges
+              key={"marketplace-request-card" + option.course_info.id}
               option={option}
               selectedOptionsHook={[selectedOptions, setSelectedOptions]}
               setSelectAll={setSelectAll}

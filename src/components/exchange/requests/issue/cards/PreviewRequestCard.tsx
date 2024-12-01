@@ -1,7 +1,6 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { CreateRequestData } from "../../../../../@types";
-import { Card, CardContent, CardHeader } from "../../../../ui/card";
-import { Separator } from "../../../../ui/separator";
+import { Card, CardContent } from "../../../../ui/card";
 
 type Props = {
   request: CreateRequestData

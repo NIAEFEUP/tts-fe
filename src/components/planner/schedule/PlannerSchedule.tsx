@@ -12,7 +12,7 @@ const PlannerSchedule = () => {
 
   useEffect(() => {
     //TODO: Improvements by functional programming
-    let newClasses = []
+    const newClasses = []
     const option = multipleOptions[selectedOption]
 
     for (let i = 0; i < option.course_options.length; i++) {

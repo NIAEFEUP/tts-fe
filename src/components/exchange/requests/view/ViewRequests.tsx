@@ -11,9 +11,7 @@ import { CommonRequestCard } from "./cards/CommonRequestCard";
 import { MineRequestCard } from "./cards/MineRequestCard";
 import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 import { RequestCard } from "./cards/RequestCard";
-import { ViewReceivedRequests } from "./ViewReceivedRequests";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
-import { ViewSentRequests } from "./ViewSentRequests";
 
 type Props = {
     setCreatingRequest: Dispatch<SetStateAction<boolean>>
@@ -21,7 +19,7 @@ type Props = {
 
 const requestTypeFilters = ["all", "mine", "received"];
 
-const EmptyRequestGuard = ({ requests, children }) => {
+const EmptyRequestGuard = ({ requests, children }: { requests: Array<MarketplaceRequest | DirectExchangeRequest>, children: React.ReactNode }) => {
     return <>
         {requests.length === 0 ?
             <div className="flex flex-col">
@@ -36,8 +34,8 @@ const EmptyRequestGuard = ({ requests, children }) => {
 }
 
 const RequestCardSkeletons = () => {
-    const skeletons = Array.from({ length: 3 }, () => (
-        <div className="flex flex-row w-full space-x-4 items-center">
+    const skeletons = Array.from({ length: 3 }, (_, i) => (
+        <div className="flex flex-row w-full space-x-4 items-center" key={`view-request-skeleton-${i}`}>
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className="flex flex-col w-full space-y-2">
                 <Skeleton className="h-4 w-full" />
@@ -57,7 +55,7 @@ const RequestCardSkeletons = () => {
 export const ViewRequests = ({
     setCreatingRequest
 }: Props) => {
-    const { originalExchangeSchedule, exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
+    const { originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
     const requestCardsContainerRef = useRef(null);
     const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
     const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
@@ -67,7 +65,7 @@ export const ViewRequests = ({
     // This is to keep track of the request of the request card that is currently open
     const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
-    const { data, size, setSize, isLoading, isValidating } = useMarketplaceRequests(
+    const { data, size, setSize, isLoading } = useMarketplaceRequests(
         filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter], classesFilter
     );
 

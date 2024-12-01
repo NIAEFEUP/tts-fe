@@ -1,7 +1,5 @@
-import { BareFetcher, Key } from "swr";
-import { SWRInfiniteConfiguration } from "swr/dist/infinite";
+import { Key } from "swr";
 import { CreateRequestData, MarketplaceRequest } from "../../@types";
-import Cookies from 'js-cookie';
 import api from "../backend";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {

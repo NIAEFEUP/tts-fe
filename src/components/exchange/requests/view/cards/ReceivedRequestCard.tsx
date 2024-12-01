@@ -2,11 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { DirectExchangeRequest } from "../../../../../@types"
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import SessionContext from "../../../../../contexts/SessionContext";
-import { useSession } from "../../../../../hooks";
 import { DirectExchangePendingMotive } from "../../../../../utils/exchange";
 import { Button } from "../../../../ui/button";
 import { Card, CardContent, CardFooter } from "../../../../ui/card";
-import { Checkbox } from "../../../../ui/checkbox";
 import { CommonCardHeader } from "./CommonCardHeader";
 import { ListRequestChanges } from "./ListRequestChanges";
 
@@ -49,6 +47,7 @@ export const ReceivedRequestCard = ({
                         <>
                             {request.options.map((option) => (
                                 <ListRequestChanges
+                                    key={option.course_info.id}
                                     option={option}
                                     selectedOptionsHook={[selectedOptions, setSelectedOptions]}
                                     setSelectAll={setSelectAll}
