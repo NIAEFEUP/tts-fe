@@ -1,6 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
-import { MarketplaceRequest } from "../../../../@types";
+import { DirectExchangeRequest, MarketplaceRequest } from "../../../../@types";
 import ScheduleContext from "../../../../contexts/ScheduleContext";
 import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
 import { Desert } from "../../../svgs";
