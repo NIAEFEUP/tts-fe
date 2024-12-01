@@ -7,19 +7,12 @@ import {
   AtSymbolIcon,
   RectangleStackIcon,
   QuestionMarkCircleIcon,
-  ArrowsRightLeftIcon,
-  ArrowDownIcon,
-  ArrowLeftStartOnRectangleIcon,
-  ArrowLeftEndOnRectangleIcon,
+  ArrowsRightLeftIcon
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
-import useVerifyCourseUnitHashes from '../../hooks/useVerifyCourseUnitHashes'
-import CourseContext from '../../contexts/CourseContext'
 import SessionContext from '../../contexts/SessionContext'
 import { useContext } from 'react'
-import api from '../../api/backend'
-import { Button } from '../ui/button'
 import { LoginButton } from '../auth/LoginButton'
 import { HeaderProfileDropdown } from '../auth/HeaderProfileDropdown'
 
@@ -29,12 +22,11 @@ const navigation = [
     location: getPath(config.paths.planner),
     icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
-  },
-  {
+  },{
     title: 'Trocas',
     location: getPath(config.paths.exchange),
     icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
-    wip: false,
+    wip: true,
   },
   { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
   {
@@ -51,8 +43,6 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const { pickedCourses, } = useContext(CourseContext);
-  const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
   const { signedIn } = useContext(SessionContext);
 
   return (
@@ -79,7 +69,7 @@ const Header = ({ siteTitle, location }: Props) => {
 
                 <div className="hidden space-x-8 self-center md:inline-flex">
                   {navigation
-                    .filter((link) => !link.wip)
+                    .filter((link) => (!link.wip || (link.wip && (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1'))))
                     .map((link, index) => (
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button

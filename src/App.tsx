@@ -38,9 +38,10 @@ const App = () => {
   enableAutoPageviews()
 
   useEffect(() => {
-    fetch(`${api.BACKEND_URL}/csrf/`, { credentials: "include" }).then((res) => {
-    })
+    fetch(`${api.BACKEND_URL}/csrf/`, { credentials: "include" }).then(() => {
+    }).catch((e) => console.error(e));
   });
+  
   // Enable Error Tracking, Performance Monitoring and Session Replay
   Sentry.init({
     environment: Number(import.meta.env.VITE_APP_PROD) ? "production" : "development",
