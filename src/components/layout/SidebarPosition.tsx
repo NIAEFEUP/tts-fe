@@ -1,5 +1,4 @@
-import { createCheckboxScope } from "@radix-ui/react-checkbox";
-import { Children, createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 type SidebarContextType = {
     sidebarPosition: 'left' | 'right';
