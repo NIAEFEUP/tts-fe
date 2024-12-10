@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 type SidebarContextType = {
     sidebarPosition: 'left' | 'right';
@@ -8,10 +8,17 @@ type SidebarContextType = {
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>('right');
+    const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>(() => {
+    const storedPosition = window.localStorage.getItem("sidebar-position");
+    return storedPosition === "left" || storedPosition === "right" ? storedPosition : "right";
+    });
 
     const toggleSidebarPosition = () => {
-        setSidebarPosition((prev) => (prev === 'right' ? 'left' : 'right'));
+        setSidebarPosition((prev) => {
+            const newPosition = prev === "right" ? "left" : "right";
+            window.localStorage.setItem("sidebar-position", newPosition);
+            return newPosition;
+        });
     };
 
     return (
