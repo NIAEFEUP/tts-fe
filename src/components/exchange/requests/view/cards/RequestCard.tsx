@@ -26,8 +26,7 @@ export const RequestCard = () => {
   }, [chosenRequest]);
 
   const handleSelectAll = () => {
-    const allSelected = !selectAll;
-    setSelectAll(allSelected);
+    setSelectAll(!selectAll);
 
     for (const key of selectedOptions.keys()) {
       selectedOptions.set(key, allSelected);
