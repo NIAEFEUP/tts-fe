@@ -47,11 +47,8 @@ const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceReque
 
 const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
   return fetch(`${api.BACKEND_URL}/course_unit/${courseUnitId}/exchange/metadata`).then(async (res) => {
-    if (res.ok) {
-      return await res.json();
-    }
-
-    return [];
+    if (!res.ok) return [];
+    return await res.json();
   }).catch((e) => {
     console.error(e);
     return [];

@@ -36,8 +36,6 @@ export const CustomizeRequest = ({
       setPreviewingForm(false);
       toast({
         title: 'Pedido submetido com sucesso!',
-        // description: 'Não encontramos uma combinação com as turmas das disciplinas selecionadas sem conflitos',
-        // position: 'top-right',
       });
     }
 

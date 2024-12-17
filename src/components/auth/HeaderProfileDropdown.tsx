@@ -6,6 +6,8 @@ import api from "../../api/backend";
 import { useContext, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import SessionContext from "../../contexts/SessionContext";
+import authService from "../../api/services/authService";
+import studentInfoService from "../../api/services/studentInfo";
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -14,23 +16,13 @@ export const HeaderProfileDropdown = () => {
 
   const logout = async () => {
     setLoggingOut(true);
-
-    fetch(`${api.OIDC_LOGOUT_URL}/`, {
-      method: "POST", credentials: "include", headers: {
-        "X-CSRFToken": api.getCSRFToken()
-      }
-    }).then(() => {
-      setSignedIn(false);
-      setLoggingOut(false);
-    }).catch((e) => {
-      console.error(e);
-    });
+    await authService.logout(user.token, setSignedIn, setLoggingOut);   
   }
 
   return <DropdownMenu>
     <DropdownMenuTrigger className="w-full">
       <Avatar className="border shadow-sm">
-        <AvatarImage src={`${api.BACKEND_URL}/student/${user?.username}/photo`} />
+        <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
         <AvatarFallback>{user ? user.name.charAt(0) : ""}</AvatarFallback>
       </Avatar>
     </DropdownMenuTrigger>
