@@ -29,7 +29,7 @@ export const RequestCard = () => {
     setSelectAll(!selectAll);
 
     for (const key of selectedOptions.keys()) {
-      selectedOptions.set(key, allSelected);
+      selectedOptions.set(key, !selectAll);
     }
 
     const newSelectedOptions = new Map(selectedOptions);
