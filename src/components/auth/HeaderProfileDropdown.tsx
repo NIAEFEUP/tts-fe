@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator } from "../ui/dropdown-menu"
 import { Button } from "../ui/button";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
-import api from "../../api/backend";
 import { useContext, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import SessionContext from "../../contexts/SessionContext";
