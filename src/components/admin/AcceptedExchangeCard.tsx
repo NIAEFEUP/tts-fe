@@ -1,16 +1,15 @@
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs"
 import { useState } from "react"
 import { DirectExchangeParticipant } from "../../@types"
 import ExchangeSchedule from "../exchange/schedule/ExchangeSchedule"
 import ScheduleContext from "../../contexts/ScheduleContext"
 
-
 type Props = {
     participant_nmec: number
     participant_name: string
+    date: string
     exchanges: Array<DirectExchangeParticipant>
     schedule: any
 }
@@ -18,6 +17,7 @@ type Props = {
 export const AcceptedExchangeCard = ({
     participant_name,
     participant_nmec,
+    date,
     exchanges,
     schedule
 }: Props) => {
@@ -26,17 +26,21 @@ export const AcceptedExchangeCard = ({
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between items-center">
-                <div>
-                    <CardTitle>
-                        {participant_name}
-                    </CardTitle>
-                    <CardDescription>
-                        {participant_nmec}
-                    </CardDescription>
+                <div className="flex flex-row gap-x-4">
+                    <div className="flex flex-col">
+                        <CardTitle>
+                            {participant_name}
+                        </CardTitle>
+                        <CardDescription>
+                            {participant_nmec}
+                        </CardDescription>
+                    </div>
+                    <p>{new Date(date).toLocaleDateString()}</p>
                 </div>
                 <div>
                     <Button
                         onClick={() => setOpen(prev => !prev)}
+                        className="bg-white text-black border-2 border-black hover:text-white"
                     >
                         {open
                             ? <ChevronUpIcon className="w-5 h-5" />
@@ -48,14 +52,14 @@ export const AcceptedExchangeCard = ({
 
             <CardContent>
                 {open &&
-                    <div className="flex flex-row">
+                    <div className="flex flex-row gap-x-4">
                         <div className="w-1/3">
                             <h2 className="font-bold mb-2">Trocas feitas</h2>
                             {
                                 exchanges.map((exchange) => (
-                                    <div 
+                                    <div
                                         key={crypto.randomUUID()}
-                                        className="flex flex-col gap-y-2 items-center border-gray-500 border-2 rounded-md p-2 w-1/2"
+                                        className="flex flex-col gap-y-2 items-center border-gray-200 border-2 rounded-md p-2 w-full"
                                     >
                                         <h2 className="font-bold">{exchange.course_unit}</h2>
                                         <div className="flex flex-row gap-x-2 items-center">
@@ -73,7 +77,7 @@ export const AcceptedExchangeCard = ({
                                 "exchangeSchedule": schedule,
                                 "originalExchangeSchedule": [],
                                 "loadingSchedule": false,
-                                "setExchangeSchedule": () => {},
+                                "setExchangeSchedule": () => { },
                                 "enrolledCourseUnits": []
                             }}>
                                 <ExchangeSchedule />
