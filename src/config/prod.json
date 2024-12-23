@@ -8,7 +8,7 @@
     "faqs": "faqs",
     "notfound": "*",
     "home": "home",
-    "faloginvalidate": "login/federated/validate"
+    "admin": "admin"
   },
   "api": {
     "port": 443,
