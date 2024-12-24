@@ -12,11 +12,11 @@ export const AdminSidebar = () => {
         <ul className="flex flex-col gap-y-8 mt-4">
             <li className="flex flex-row gap-x-2">
                 <SendHorizonal />
-                Pedidos
+                <a href="/admin" className="hover:underline">Pedidos</a>
             </li>
             <li className="flex flex-row gap-x-2">
                 <Settings />
-                Definições
+                <a href="/admin/settings" className="hover:underline">Definições</a>
             </li>
         </ul>
     </div>
