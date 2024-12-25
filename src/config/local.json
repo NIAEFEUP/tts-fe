@@ -8,8 +8,7 @@
     "faqs": "faqs",
     "notfound": "*",
     "home": "home",
-    "faloginvalidate": "login/federated/validate",
-    "test": "test"
+    "privacypolicy": "privacy-policy"
   },
   "api": {
     "port": 8100,

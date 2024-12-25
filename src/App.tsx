@@ -3,7 +3,7 @@ import { Toaster } from './components/ui/toaster'
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
-import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage } from './pages'
+import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage, PrivacyPolicyPage } from './pages'
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import Exchange from './pages/Exchange'
@@ -20,6 +20,7 @@ const pages = [
   { path: getPath(configToUse.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
   { path: getPath(configToUse.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
   { path: getPath(config.paths.exchange), location: 'Trocas', element: Exchange, liquid: true },
+  { path: getPath(config.paths.privacypolicy), location: 'Privacidade', element: PrivacyPolicyPage, liquid: true },
 ]
 
 const redirects = [
