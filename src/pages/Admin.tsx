@@ -1,10 +1,9 @@
-import { BrowserRouter, Route, Router } from "react-router-dom";
 import { AdminMainContent } from "../components/admin/AdminMainContent";
 import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminSettings } from "../components/admin/AdminSettings";
 import SessionContext from '../contexts/SessionContext'
 import { useContext } from "react";
-
+import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
 
 type Props = {
     page: string;
@@ -22,9 +21,9 @@ const AdminPage = ({ page }: Props) => {
             <div className="w-2/12">
                 <AdminSidebar />
             </div>
-            <div className="w-10/12">
+            <div className="w-10/12 m-8">
                 {page === "pedidos" && <AdminMainContent />}
-                {page === "settings" && <AdminSettings />}
+                {page === "settings" && <AdminExchangeSettings />}
             </div>
         </div>
     )
