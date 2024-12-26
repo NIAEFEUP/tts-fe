@@ -7,7 +7,8 @@ import {
   AtSymbolIcon,
   RectangleStackIcon,
   QuestionMarkCircleIcon,
-  ArrowsRightLeftIcon
+  ArrowsRightLeftIcon,
+  WrenchScrewdriverIcon
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
@@ -35,6 +36,12 @@ const navigation = [
     icon: <QuestionMarkCircleIcon className="h-5 w-5" />,
     wip: false,
   },
+  {
+    title: 'Admin',
+    location: getPath(config.paths.admin),
+    icon: <WrenchScrewdriverIcon className="h-5 w-5" />,
+    wip: false,
+  },
 ]
 
 type Props = {
@@ -43,7 +50,7 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const { signedIn } = useContext(SessionContext);
+  const { signedIn, user } = useContext(SessionContext);
 
   return (
     <Disclosure
@@ -70,6 +77,7 @@ const Header = ({ siteTitle, location }: Props) => {
                 <div className="hidden space-x-8 self-center md:inline-flex">
                   {navigation
                     .filter((link) => (!link.wip || (link.wip && (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1'))))
+                    .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin)) 
                     .map((link, index) => (
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button
@@ -88,7 +96,7 @@ const Header = ({ siteTitle, location }: Props) => {
                           <span className="absolute bottom-0 h-1 w-full rounded-t bg-primary dark:bg-primary" />
                         ) : null}
                       </Link>
-                    ))}
+                    ))}    
                 </div>
 
 
@@ -164,28 +172,35 @@ type MobileProps = {
   location: string
 }
 
-const Mobile = ({ location }: MobileProps) => (
-  <Disclosure.Panel className="flex flex-col space-y-3 py-2 md:hidden">
-    {navigation
-      .filter((link) => !link.wip)
-      .map((link, index) => (
-        <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
-          <button
-            type="button"
-            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
-              ? 'text-primary dark:text-white'
-              : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
+const Mobile = ({ location }: MobileProps) => {
+  const { signedIn, user} = useContext(SessionContext);
+  
+  return (
+    <Disclosure.Panel className="flex flex-col space-y-3 py-2 md:hidden">
+      {navigation
+        .filter((link) => !link.wip)
+        .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin)) 
+        .map((link, index) => (
+          <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
+            <button
+              type="button"
+              className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
+                location === link.title
+                  ? 'text-primary dark:text-white'
+                  : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
               }`}
-          >
-            <span className="flex items-center justify-center space-x-2">
-              <span>{link.icon}</span>
-              <span>{link.title}</span>
-            </span>
-            {location === link.title ? (
-              <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
-            ) : null}
-          </button>
-        </Link>
-      ))}
-  </Disclosure.Panel>
-)
+            >
+              <span className="flex items-center justify-center space-x-2">
+                <span>{link.icon}</span>
+                <span>{link.title}</span>
+              </span>
+              {location === link.title && (
+                <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
+              )}
+            </button>
+          </Link>
+        ))}
+    </Disclosure.Panel>
+  );
+};
+
