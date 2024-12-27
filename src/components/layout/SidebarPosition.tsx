@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import PropTypes from "prop-types";
 
 type SidebarContextType = {
     sidebarPosition: 'left' | 'right';
@@ -27,6 +28,10 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ child
         </SidebarContext.Provider>
     );
 };
+
+SidebarProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+}
 
 export const useSidebarContext = () => {
     const context = useContext(SidebarContext);
