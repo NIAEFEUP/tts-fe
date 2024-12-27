@@ -53,8 +53,8 @@ export const AcceptedExchangeCard = ({
                 </div>
             </CardHeader>
 
-            <CardContent>
-                {open &&
+            {open &&
+              <CardContent>
                     <div className="flex flex-row gap-x-4">
                         <div className="w-1/3">
                             <h2 className="font-bold mb-2">Trocas feitas</h2>
@@ -87,8 +87,9 @@ export const AcceptedExchangeCard = ({
                             </ScheduleContext.Provider>
                         </div>
                     </div>
-                }
+                
             </CardContent>
+            }  
         </Card>
     )
 }
