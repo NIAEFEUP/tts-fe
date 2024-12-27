@@ -3,7 +3,7 @@ import api from "../../api/backend";
 import useSWR from "swr";
 
 export default () => {
-  const getPeriods = async (courses, idx: number) => {
+  const getPeriods = async (courses) => {
     try {
         const res = await fetch(`${api.BACKEND_URL}/exchange/admin/course/periods`, {
             credentials: "include"

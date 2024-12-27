@@ -5,6 +5,7 @@ import { useState } from "react"
 import { DirectExchangeParticipant } from "../../@types"
 import ExchangeSchedule from "../exchange/schedule/ExchangeSchedule"
 import ScheduleContext from "../../contexts/ScheduleContext"
+import api from "../../api/backend"
 
 type Props = {
     participant_nmec: number
@@ -29,7 +30,9 @@ export const AcceptedExchangeCard = ({
                 <div className="flex flex-row gap-x-4">
                     <div className="flex flex-col">
                         <CardTitle>
-                            {participant_name}
+                            <a className="hover:underline" href={`https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=${participant_nmec}`}>
+                                {participant_name}
+                            </a>
                         </CardTitle>
                         <CardDescription>
                             {participant_nmec}

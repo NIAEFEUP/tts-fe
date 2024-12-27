@@ -126,3 +126,7 @@ button {
 .success-button {
   @apply bg-green-200 text-green-600 border border-green-600 hover:bg-white;
 }
+
+.rdp-caption {
+  @apply flex flex-row gap-x-2;
+}

@@ -1,5 +1,6 @@
-import { LayoutDashboard, SendHorizonal, Settings } from "lucide-react"
+import { FileDown, LayoutDashboard, SendHorizonal, Settings } from "lucide-react"
 import { Separator } from "../ui/separator"
+import api from "../../api/backend"
 
 export const AdminSidebar = () => {  
    return (
@@ -17,6 +18,19 @@ export const AdminSidebar = () => {
             <li className="flex flex-row gap-x-2">
                 <Settings />
                 <a href="/admin/settings" className="hover:underline">Definições</a>
+            </li>
+            <li className="flex flex-row gap-x-2">
+                <FileDown />
+                <a href="" className="hover:underline" onClick={async (e) => {
+                    e.preventDefault();
+                    const res = await fetch(`${api.BACKEND_URL}/exchange/export/csv`, {credentials: "include"});
+                    if(res.ok) {
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(await res.blob());
+                        link.download = "exchange_data.csv";
+                        link.click();
+                    }
+                }} >Exportar CSV</a>
             </li>
         </ul>
     </div>
