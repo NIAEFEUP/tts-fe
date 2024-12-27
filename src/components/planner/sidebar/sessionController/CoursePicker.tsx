@@ -15,9 +15,9 @@ import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 
 //TODO: absolute imports with @
 
+
 const CoursePicker = () => {
   const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo, ucsModalOpen, setUcsModalOpen } = useContext(CourseContext)
-
   const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
   const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
   const showContent = selectedMajor || pickedCourses.length > 0
