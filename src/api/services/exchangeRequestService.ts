@@ -17,22 +17,26 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) =
     formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
-  return fetch(
-    `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
-    {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "X-CSRFToken": api.getCSRFToken(),
-      },
-      body: formData
-    },
-  ).then(async (res) => {
-    const json = await res.json();
-    return json;
-  }).catch((e) => {
-    console.error(e);
-  });
+  try {
+    const res = await fetch(
+      `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": api.getCSRFToken(),
+        },
+        body: formData
+      }
+    );
+
+    return res;
+  } 
+  catch (error) 
+  {
+    console.error(error);
+    throw new Error("Network error");
+  }
 }
 
 const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceRequest[]> => {

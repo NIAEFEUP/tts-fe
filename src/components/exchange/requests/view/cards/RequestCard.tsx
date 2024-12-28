@@ -9,6 +9,7 @@ import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeReques
 import { CommonCardHeader } from "./CommonCardHeader";
 import ConflictsContext from "../../../../../contexts/ConflictsContext";
 import { ExchangeOption } from "../../../../../@types";
+import { useToast } from "../../../../ui/use-toast";
 
 export const RequestCard = () => {
   const {
@@ -18,6 +19,7 @@ export const RequestCard = () => {
   const [hovered, setHovered] = useState<boolean>(false);
 
   const { isConflictSevere } = useContext(ConflictsContext);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (chosenRequest?.id !== request.id) {
@@ -59,7 +61,30 @@ export const RequestCard = () => {
       }
     }
 
-    await exchangeRequestService.submitExchangeRequest(exchangeRequests);
+    try {
+      const response = await exchangeRequestService.submitExchangeRequest(exchangeRequests);
+      if (response && response.ok) {
+        toast({
+          title: "Troca proposta com sucesso!",
+          description: "A proposta de troca foi realizada com sucesso.",
+          variant: "default",
+        });
+      }
+      else {
+        toast({
+          title: "Erro ao propor troca.",
+          description: "Houve um erro ao tentar propor a troca. Tente novamente.",
+          variant: "destructive",
+        });
+      }
+    }
+    catch (error) {
+      toast({
+        title: "Erro ao propor a troca.",
+        description: `Houve um erro desconhecido: ${error.message}`,
+        variant: "destructive",
+      });
+    }
   };
 
   return <>
