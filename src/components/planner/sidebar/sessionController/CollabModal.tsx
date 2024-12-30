@@ -5,6 +5,7 @@ import CollabPickSession from './CollabPickSession';
 import CollabSessionModal from './CollabSessionModal';
 import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 import { sessionsSocket } from '../../../../api/socket';
+import { toast } from '../../../ui/use-toast';
 
 const PICK_SESSION = 'PICK_SESSION';
 const SESSION = 'SESSION';
@@ -51,11 +52,14 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       setCurrentSessionId(newSession.id);
       setSessions(prevSessions => [...prevSessions, newSession]);
       setCurrentView(SESSION);
+
+      toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
     });
   };
 
   const handleExitSession = () => {
     sessionsSocket.disconnect();
+    toast({ title: 'Sessão abandonada', description: 'Podes voltar a ela mais tarde, ou iniciar/entrar noutra sessão.'});
     setCurrentView(PICK_SESSION);
   };
 
