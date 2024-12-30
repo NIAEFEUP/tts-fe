@@ -22,13 +22,13 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
 
   useEffect(() => {
     if (searchParams.has('session')) {
-      const sessionId = parseInt(searchParams.get('session')!);
+      const sessionId = searchParams.get('session')!;
       handleStartSession(sessionId);
     }
   }, []);
 
   const handleStartSession = (sessionId) => {
-    sessionsSocket.connect();
+    sessionsSocket.connect(sessionId);
 
     sessionsSocket.on('connected', data => {
       const newSession = {
