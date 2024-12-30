@@ -40,12 +40,20 @@ class SessionsSocket {
         return this._roomId;
     }
 
-    connect() {
+    connect(room_id?: string) {
         const newSocket = io(this.url, {
+            ...room_id ? { query: { room_id: room_id } } : {},
             auth: {
                 token: 'dummy',  // TODO: Replace with actual federated authentication token
             }
         });
+
+        console.log({
+            ...room_id ? { query: { room_id: room_id } } : {},
+            auth: {
+                token: 'dummy',  // TODO: Replace with actual federated authentication token
+            }
+        })
 
         this.socket.set(newSocket);
         newSocket.on('connected', data => {
