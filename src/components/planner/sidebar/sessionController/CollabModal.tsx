@@ -4,6 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
 import CollabSessionModal from './CollabSessionModal';
 import CollabSessionContext from '../../../../contexts/CollabSessionContext';
+import { sessionsSocket } from '../../../../api/socket';
 
 const PICK_SESSION = 'PICK_SESSION';
 const SESSION = 'SESSION';
@@ -15,43 +16,46 @@ type Props = {
 }
 
 const CollabModal = ({ isOpen, closeModal }: Props) => {
-  const { sessions, setSessions, currentSessionId, setcurrentSessionId } = useContext(CollabSessionContext);
+  const { sessions, setSessions, currentSessionId, setCurrentSessionId } = useContext(CollabSessionContext);
   const [currentView, setCurrentView] = useState(PICK_SESSION); //Defines in which modal we are
+  const currentSession = sessions.find(s => s.id === currentSessionId) || null;
 
   useEffect(() => {
     if (isOpen) {
-      if (currentSessionId !== null && sessions.find(s => s.id === currentSessionId)) {
+      if (currentSession !== null) {
         setCurrentView(SESSION);
       } else {
         setCurrentView(PICK_SESSION);
       }
     }
-  }, [isOpen, currentSessionId, sessions]);
-
-  const currentSession = sessions.find(s => s.id === currentSessionId) || null;
+  }, [isOpen, currentSessionId]);
 
   const handleStartSession = (sessionId) => {
-    setcurrentSessionId(sessionId);
     setCurrentView(SESSION);
   };
 
   const handleCreateSession = () => { //Dummy function to create a session...
-    const newSession = {
-      id: generateUniqueId(),
-      name: Math.random().toString(36).substr(2, 9),
-      lastEdited: new Date().toLocaleDateString(),
-      lifeSpan: 30,
-      currentUser: 'TheCreator',
-      link: `https://collab.app/session/${Date.now().toString()}`,
-      participants: ['TheCreator'],
-    };
-    setSessions(prevSessions => [...prevSessions, newSession]);
-    setcurrentSessionId(newSession.id);
-    setCurrentView(SESSION);
+    sessionsSocket.connect();
+
+    sessionsSocket.on('connected', data => {
+      const newSession = {
+        id: generateUniqueId(),
+        name: Math.random().toString(36).substr(2, 9),
+        lastEdited: new Date().toLocaleDateString(),
+        lifeSpan: 30,
+        currentUser: 'TheCreator',
+        link: `https://collab.app/session/${data['room_id']}`,
+        participants: ['TheCreator'],
+      }
+
+      setCurrentSessionId(newSession.id);
+      setSessions(prevSessions => [...prevSessions, newSession]);
+      setCurrentView(SESSION);
+    });
   };
 
   const handleExitSession = () => {
-    setcurrentSessionId(null);
+    sessionsSocket.disconnect();
     setCurrentView(PICK_SESSION);
   };
 
@@ -78,6 +82,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       );
     }
   };
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>

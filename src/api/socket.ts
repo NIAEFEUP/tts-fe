@@ -29,10 +29,15 @@ class OptionalSocket {
 class SessionsSocket {
     private url: string;
     private socket: OptionalSocket;
+    private _roomId: number | null;
 
     constructor(url: string) {
         this.url = url;
         this.socket = new OptionalSocket();
+    }
+
+    get roomId() {
+        return this._roomId;
     }
 
     connect() {
@@ -41,7 +46,12 @@ class SessionsSocket {
                 token: 'dummy',  // TODO: Replace with actual federated authentication token
             }
         });
+
         this.socket.set(newSocket);
+        newSocket.on('connected', data => {
+            console.log('Connected to sessions socket');
+            this._roomId = data['room_id'];
+        });
     }
 
     disconnect() {
@@ -51,6 +61,10 @@ class SessionsSocket {
 
     on(event: string, callback: (...args: any[]) => void) {
         this.socket.use(socket => socket.on(event, callback));
+    }
+
+    onAny(callback: (event: string, ...args: any[]) => void) {
+        this.socket.use(socket => socket.onAny(callback));
     }
 
     off(event: string, callback?: (...args: any[]) => void) {

@@ -31,13 +31,13 @@ const dummySessions: CollabSession[] = [
 const CollaborativeSession = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sessions, setSessions] = useState(dummySessions);
-  const [currentSessionId, setcurrentSessionId] = useState<number | null>(null);
+  const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <CollabSessionContext.Provider value={{ sessions, setSessions, currentSessionId, setcurrentSessionId }}>
+    <CollabSessionContext.Provider value={{ sessions, setSessions, currentSessionId, setCurrentSessionId }}>
       <div>
         <Button variant="icon" className="bg-primary" onClick={openModal}>
           <UsersIcon className="h-5 w-5" />
