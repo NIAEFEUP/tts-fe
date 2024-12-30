@@ -39,7 +39,7 @@ const CollaborativeSession = () => {
   return (
     <CollabSessionContext.Provider value={{ sessions, setSessions, currentSessionId, setCurrentSessionId }}>
       <div>
-        <Button variant="icon" className="bg-primary" onClick={openModal}>
+        <Button variant="icon" className={!currentSessionId ? "bg-primary" : "bg-green-600"} onClick={openModal}>
           <UsersIcon className="h-5 w-5" />
         </Button>
 
