@@ -8,7 +8,7 @@
     "faqs": "faqs",
     "notfound": "*",
     "home": "home",
-    "test": "test"
+    "privacypolicy": "privacy-policy"
   },
   "api": {
     "port": 8100,

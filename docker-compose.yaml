@@ -8,7 +8,7 @@ services:
       - ./src:/usr/src/tts-fe/src
       - ./public:/usr/src/tts-fe/public
     ports:
-      - 3100:3100
+      - 3101:3100
     env_file:
       - .env
 
@@ -25,3 +25,7 @@ services:
       - ./public:/usr/src/tts-fe/public
     ports:
       - 3100:80
+
+networks:
+  default:
+    name: tts-docker-network
