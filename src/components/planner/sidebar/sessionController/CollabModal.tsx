@@ -6,9 +6,8 @@ import CollabSessionModal from './CollabSessionModal';
 import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 import { sessionsSocket } from '../../../../api/socket';
 import { toast } from '../../../ui/use-toast';
+import { useSearchParams } from 'react-router-dom';
 
-const PICK_SESSION = 'PICK_SESSION';
-const SESSION = 'SESSION';
 const generateUniqueId = () => Date.now();
 
 type Props = {
@@ -18,21 +17,35 @@ type Props = {
 
 const CollabModal = ({ isOpen, closeModal }: Props) => {
   const { sessions, setSessions, currentSessionId, setCurrentSessionId } = useContext(CollabSessionContext);
-  const [currentView, setCurrentView] = useState(PICK_SESSION); //Defines in which modal we are
   const currentSession = sessions.find(s => s.id === currentSessionId) || null;
+  const [searchParams, _] = useSearchParams();
 
   useEffect(() => {
-    if (isOpen) {
-      if (currentSession !== null) {
-        setCurrentView(SESSION);
-      } else {
-        setCurrentView(PICK_SESSION);
-      }
+    if (searchParams.has('session')) {
+      const sessionId = parseInt(searchParams.get('session')!);
+      handleStartSession(sessionId);
     }
-  }, [isOpen, currentSessionId]);
+  }, []);
 
   const handleStartSession = (sessionId) => {
-    setCurrentView(SESSION);
+    sessionsSocket.connect();
+
+    sessionsSocket.on('connected', data => {
+      const newSession = {
+        id: data['room_id'],
+        name: Math.random().toString(36).substr(2, 9),
+        lastEdited: new Date().toLocaleDateString(),
+        lifeSpan: 30,
+        currentUser: 'TheCreator',
+        link: `http://localhost:3100/planner?session=${data['room_id']}`,
+        participants: ['TheCreator'],
+      }
+
+      setCurrentSessionId(newSession.id);
+      setSessions(prevSessions => [...prevSessions, newSession]);
+
+      toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
+    });
   };
 
   const handleCreateSession = () => { //Dummy function to create a session...
@@ -45,13 +58,12 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
         lastEdited: new Date().toLocaleDateString(),
         lifeSpan: 30,
         currentUser: 'TheCreator',
-        link: `https://collab.app/session/${data['room_id']}`,
+        link: `http://localhost:3100/planner?session=${data['room_id']}`,
         participants: ['TheCreator'],
       }
 
       setCurrentSessionId(newSession.id);
       setSessions(prevSessions => [...prevSessions, newSession]);
-      setCurrentView(SESSION);
 
       toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
     });
@@ -61,7 +73,6 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     sessionsSocket.disconnect();
     toast({ title: 'Sessão abandonada', description: 'Podes voltar a ela mais tarde, ou iniciar/entrar noutra sessão.'});
     setCurrentSessionId(null);
-    setCurrentView(PICK_SESSION);
   };
 
   const handleDeleteSession = (sessionId: number | null) => {
@@ -125,7 +136,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
                   </button>
                 </div>
 
-                {currentView === PICK_SESSION && (
+                {currentSessionId === null && (
                   <CollabPickSession
                     sessions={sessions}
                     onStartSession={handleStartSession}
@@ -134,7 +145,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
                   />
                 )}
 
-                {currentView === SESSION && currentSession && (
+                {currentSessionId !== null && (
                   <CollabSessionModal
                     session={currentSession}
                     onExitSession={handleExitSession}
