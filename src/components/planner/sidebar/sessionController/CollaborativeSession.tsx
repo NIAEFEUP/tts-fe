@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../../../ui/button';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import CollabModal from './CollabModal';
