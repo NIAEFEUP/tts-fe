@@ -60,6 +60,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   const handleExitSession = () => {
     sessionsSocket.disconnect();
     toast({ title: 'Sessão abandonada', description: 'Podes voltar a ela mais tarde, ou iniciar/entrar noutra sessão.'});
+    setCurrentSessionId(null);
     setCurrentView(PICK_SESSION);
   };
 
