@@ -4,8 +4,8 @@ import { CollabSession } from '../@types';
 interface CollabSessionContextContent {
   sessions: CollabSession[];
   setSessions: Dispatch<SetStateAction<CollabSession[]>>;
-  currentSessionId: number | null;  // Use index instead of the full session object
-  setCurrentSessionId: Dispatch<SetStateAction<number | null>>;
+  currentSessionId: string | null;  // Use index instead of the full session object
+  setCurrentSessionId: Dispatch<SetStateAction<string | null>>;
 }
 
 const CollabSessionContext: Context<CollabSessionContextContent> = createContext({

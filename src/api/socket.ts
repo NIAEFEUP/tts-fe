@@ -18,6 +18,10 @@ class OptionalSocket {
         this.socket = null;
     }
 
+    is_set() {
+        return this.socket !== null
+    }
+
     use<T>(callback: (socket: Socket) => T): T {
         if (!this.socket) {
             throw new Error('Socket is not connected');
@@ -34,16 +38,25 @@ class SessionsSocket {
     constructor(url: string) {
         this.url = url;
         this.socket = new OptionalSocket();
+        this._sessionId = null;
     }
 
     get sessionId() {
         return this._sessionId;
     }
 
-    async connect(sessionId?: string): Promise<void> {
+    set sessionId(sessionId: number | null) {
+        this._sessionId = sessionId;
+    }
+
+    isConnected() {
+        this.socket.is_set();
+    }
+
+    async connect(): Promise<void> {
         return new Promise((resolve, reject) => {
             const newSocket = io(this.url, {
-                ...sessionId ? { query: { session_id: sessionId } } : {},
+                ...this.sessionId ? { query: { session_id: this.sessionId } } : {},
                 auth: {
                     token: 'dummy',  // TODO: Replace with actual federated authentication token
                 }
@@ -85,6 +98,10 @@ class SessionsSocket {
 
     emit(event: string, ...args: any[]) {
         this.socket.use(socket => socket.emit(event, args));
+    }
+
+    emitToSession(event: string, session_id: string, ...args: any) {
+        this.socket.use(socket => socket.emit(event, session_id=session_id, ...args));
     }
 }
 

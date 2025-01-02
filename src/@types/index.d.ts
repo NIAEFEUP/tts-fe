@@ -95,7 +95,7 @@ export type ImportedCourses = {
 }
 
 export type CollabSession = {
-  id: number
+  id: string
   name: string
   lastEdited: string
   lifeSpan: number
