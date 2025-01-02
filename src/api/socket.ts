@@ -48,13 +48,6 @@ class SessionsSocket {
             }
         });
 
-        console.log({
-            ...room_id ? { query: { room_id: room_id } } : {},
-            auth: {
-                token: 'dummy',  // TODO: Replace with actual federated authentication token
-            }
-        })
-
         this.socket.set(newSocket);
         newSocket.on('connected', data => {
             console.log('Connected to sessions socket');
