@@ -59,7 +59,7 @@ class SessionsSocket {
         this.socket.is_set();
     }
 
-    async connect(participantName: string): Promise<void> {
+    async connect(participantName: string): Promise<SessionsSocket> {
         return new Promise((resolve, reject) => {
             const query = { 
                 ...(this.sessionId ? { session_id: this.sessionId } : {}),
@@ -79,7 +79,7 @@ class SessionsSocket {
                 this._sessionId = data['session_id'];
                 this._sessionInfo = data['session_info'];
                 console.log('Connected to session', this._sessionId);
-                resolve();
+                resolve(this);
             });
 
             newSocket.on('connect_error', (err) => {
