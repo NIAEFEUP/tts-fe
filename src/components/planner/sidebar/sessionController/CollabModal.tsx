@@ -49,7 +49,9 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   }, [currentSessionId]);
   
   const handleStartSession = (sessionId) => {
-    sessionsSocket.connect(sessionId);
+    sessionsSocket.connect(sessionId)
+      .catch(err => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
+
 
     sessionsSocket.on('connected', data => {
       const newSession = {
@@ -70,7 +72,9 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   };
 
   const handleCreateSession = () => { //Dummy function to create a session...
-    sessionsSocket.connect();
+    sessionsSocket.connect()
+      .catch(err => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
+
 
     sessionsSocket.on('connected', data => {
       const newSession = {
