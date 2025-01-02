@@ -18,7 +18,7 @@ type Props = {
 const CollabModal = ({ isOpen, closeModal }: Props) => {
   const { sessions, setSessions, currentSessionId, setCurrentSessionId } = useContext(CollabSessionContext);
   const currentSession = sessions.find(s => s.id === currentSessionId) || null;
-  const [searchParams, _] = useSearchParams();
+  const [searchParams, ] = useSearchParams();
 
   useEffect(() => {
     if (searchParams.has('session')) {
@@ -27,6 +27,27 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     }
   }, []);
 
+  // TODO: Remove this
+  let interval: number | null = null;
+  const [uid, ] = useState(generateUniqueId());
+  useEffect(() => {
+    if (!currentSessionId) {
+      if (interval)
+        clearInterval(interval!);
+      interval = null;
+      return;
+    }
+
+    sessionsSocket.on('ping', data => {
+      console.log('Received ping', data['id']);
+    });
+
+    interval = setInterval(() => {
+      sessionsSocket.emit('ping', { 'id': uid, 'room_id': sessionsSocket.roomId });
+      console.log('Sent ping', uid);
+    }, 1000);
+  }, [currentSessionId]);
+  
   const handleStartSession = (sessionId) => {
     sessionsSocket.connect(sessionId);
 
