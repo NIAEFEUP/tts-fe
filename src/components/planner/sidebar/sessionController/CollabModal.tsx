@@ -47,6 +47,11 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       console.log('Sent ping', uid);
     }, 1000);
   }, [currentSessionId]);
+
+  const handleUnexpectedDisconnect = () => {
+    setCurrentSessionId(null);
+    toast({ title: 'Foste desconectado inesperadamente', description: 'Por favor, tenta novamente mais tarde.' });
+  };
   
   const handleStartSession = (sessionId) => {
     sessionsSocket.connect(sessionId)
@@ -67,13 +72,15 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       setCurrentSessionId(newSession.id);
       setSessions(prevSessions => [...prevSessions, newSession]);
 
-      toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
+      toast({ title: 'Entrou na sessão', description: 'Convida mais amigos para se juntarem!'});
     });
+
+    sessionsSocket.on('disconnect', handleUnexpectedDisconnect);
   };
 
   const handleCreateSession = () => { //Dummy function to create a session...
     sessionsSocket.connect()
-      .catch(err => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
+      .catch(err => toast({ title: 'Erro ao criar a sessão', description: 'Tente novamente mais tarde.' }));
 
 
     sessionsSocket.on('connected', data => {
@@ -92,9 +99,12 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
 
       toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
     });
+
+    sessionsSocket.on('disconnect', handleUnexpectedDisconnect);
   };
 
   const handleExitSession = () => {
+    sessionsSocket.off('disconnect', handleUnexpectedDisconnect);
     sessionsSocket.disconnect();
     toast({ title: 'Sessão abandonada', description: 'Podes voltar a ela mais tarde, ou iniciar/entrar noutra sessão.'});
     setCurrentSessionId(null);
