@@ -48,40 +48,53 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     }, 1000));
   }, [currentSessionId]);
 
+
+  const updatedSession = (sessionId: string, sessionInfo: any) => {
+    setSessions(prevSessions =>
+      prevSessions.map(session =>
+        session.id === sessionId ? { ...session, participants: sessionInfo['participants'].map((participant: any) => participant['name']) } : session
+      )
+    );
+  }
+
   const handleUnexpectedDisconnect = () => {
     setCurrentSessionId(null);
     toast({ title: 'Foste desconectado inesperadamente', description: 'Por favor, tenta novamente mais tarde.' });
   };
+
+  const addSocketListeners = socket => {
+    socket.on('disconnect', handleUnexpectedDisconnect);
+    socket.on('update_session_info', (data) => updatedSession(data['session_id'], data['session_info']));
+  };
+
   
   const handleStartSession = (sessionId) => {
     sessionsSocket.sessionId = sessionId;
     sessionsSocket.connect('TheCreator')
+      .then(sessionsSocket => {
+        const newSession = {
+          id: sessionsSocket.sessionId,
+          name: Math.random().toString(36).substr(2, 9),
+          lastEdited: new Date().toLocaleDateString(),
+          lifeSpan: 30,
+          currentUser: 'TheCreator',
+          link: `http://localhost:3100/planner?session=${sessionsSocket.sessionId}`,
+          participants: (sessionsSocket.sessionInfo['participants']).map(participant => participant['name']),
+        }
+  
+        addSocketListeners(sessionsSocket);
+        setCurrentSessionId(sessionsSocket.sessionId);
+        setSessions(prevSessions => [...prevSessions, newSession]);
+  
+        toast({ title: 'Entrou na sessão', description: 'Convida mais amigos para se juntarem!'});
+      })
       .catch(err => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
-
-
-    sessionsSocket.on('connect', () => {
-      const newSession = {
-        id: sessionsSocket.sessionId,
-        name: Math.random().toString(36).substr(2, 9),
-        lastEdited: new Date().toLocaleDateString(),
-        lifeSpan: 30,
-        currentUser: 'TheCreator',
-        link: `http://localhost:3100/planner?session=${sessionsSocket.sessionId}`,
-        participants: sessionsSocket.sessionInfo['participants'],
-      }
-
-      setCurrentSessionId(sessionsSocket.sessionId);
-      setSessions(prevSessions => [...prevSessions, newSession]);
-
-      toast({ title: 'Entrou na sessão', description: 'Convida mais amigos para se juntarem!'});
-    });
-
-    sessionsSocket.on('disconnect', handleUnexpectedDisconnect);
   };
 
   const handleCreateSession = () => { //Dummy function to create a session...
+    sessionsSocket.sessionId = null;
     sessionsSocket.connect('TheCreator')
-      .then(() => {
+      .then(sessionsSocket => {
         console.log((sessionsSocket.sessionInfo['participants']));
 
         const newSession = {
@@ -94,12 +107,11 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           participants: (sessionsSocket.sessionInfo['participants']).map(participant => participant['name']),
         };
         
+        addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
         setSessions(prevSessions => [...prevSessions, newSession]);
   
         toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
-    
-        sessionsSocket.on('disconnect', handleUnexpectedDisconnect);
       })
       .catch(err => toast({ title: 'Erro ao criar a sessão', description: 'Tente novamente mais tarde.' }));
   };
