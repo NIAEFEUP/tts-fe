@@ -40,24 +40,35 @@ class SessionsSocket {
         return this._sessionId;
     }
 
-    connect(sessionId?: string) {
-        const newSocket = io(this.url, {
-            ...sessionId ? { query: { session_id: sessionId } } : {},
-            auth: {
-                token: 'dummy',  // TODO: Replace with actual federated authentication token
-            }
-        });
+    async connect(sessionId?: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const newSocket = io(this.url, {
+                ...sessionId ? { query: { session_id: sessionId } } : {},
+                auth: {
+                    token: 'dummy',  // TODO: Replace with actual federated authentication token
+                }
+            });
 
-        this.socket.set(newSocket);
-        newSocket.on('connected', data => {
-            console.log('Connected to sessions socket');
-            this._sessionId = data['session_id'];
+            this.socket.set(newSocket);
+
+            newSocket.on('connected', data => {
+                this._sessionId = data['session_id'];
+                resolve();
+            });
+
+            newSocket.on('connect_error', (err) => {
+                this.socket.unset();
+                reject(err);
+            });
         });
     }
 
-    disconnect() {
-        this.socket.use(socket => socket.disconnect());
-        this.socket.unset();
+    async disconnect(): Promise<void> {
+        return new Promise(resolve => {
+            this.socket.use(socket => socket.disconnect());
+            this.socket.unset();
+            resolve();
+        });
     }
 
     on(event: string, callback: (...args: any[]) => void) {
