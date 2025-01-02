@@ -43,7 +43,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     });
 
     interval = setInterval(() => {
-      sessionsSocket.emit('ping', { 'id': uid, 'room_id': sessionsSocket.roomId });
+      sessionsSocket.emit('ping', { 'id': uid, 'session_id': sessionsSocket.sessionId });
       console.log('Sent ping', uid);
     }, 1000);
   }, [currentSessionId]);
@@ -53,12 +53,12 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
 
     sessionsSocket.on('connected', data => {
       const newSession = {
-        id: data['room_id'],
+        id: data['session_id'],
         name: Math.random().toString(36).substr(2, 9),
         lastEdited: new Date().toLocaleDateString(),
         lifeSpan: 30,
         currentUser: 'TheCreator',
-        link: `http://localhost:3100/planner?session=${data['room_id']}`,
+        link: `http://localhost:3100/planner?session=${data['session_id']}`,
         participants: ['TheCreator'],
       }
 
@@ -74,12 +74,12 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
 
     sessionsSocket.on('connected', data => {
       const newSession = {
-        id: generateUniqueId(),
+        id: data['session_id'],
         name: Math.random().toString(36).substr(2, 9),
         lastEdited: new Date().toLocaleDateString(),
         lifeSpan: 30,
         currentUser: 'TheCreator',
-        link: `http://localhost:3100/planner?session=${data['room_id']}`,
+        link: `http://localhost:3100/planner?session=${data['session_id']}`,
         participants: ['TheCreator'],
       }
 
