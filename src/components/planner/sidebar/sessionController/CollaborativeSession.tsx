@@ -9,7 +9,7 @@ import { CollabSession } from '../../../../@types';
 // dummySessions are just dummy default sessions to help visualize them until we actually have sessions where participants can join and stuff...
 const dummySessions: CollabSession[] = [
   {
-    id: 1,
+    id: '1',
     name: 'asdipuhaosd',
     lastEdited: 'há 3 dias',
     currentUser: 'Jota Mongoose',
@@ -18,7 +18,7 @@ const dummySessions: CollabSession[] = [
     participants: ['Jota Mongoose','Duarte', 'Olivia', 'Ricardo', 'Miguel', 'João', 'Mariana', 'Ana']
   },
   {
-    id: 2,
+    id: '2',
     name: 'uyavfiuya8gf3',
     lastEdited: 'há 1 semana',
     currentUser: 'msantos',
@@ -31,7 +31,7 @@ const dummySessions: CollabSession[] = [
 const CollaborativeSession = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sessions, setSessions] = useState(dummySessions);
-  const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

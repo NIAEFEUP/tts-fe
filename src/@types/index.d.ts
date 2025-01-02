@@ -162,7 +162,7 @@ export type Student = {
 }
 
 export type CollabSession = {
-  id: number
+  id: string
   name: string
   lastEdited: string
   lifeSpan: number

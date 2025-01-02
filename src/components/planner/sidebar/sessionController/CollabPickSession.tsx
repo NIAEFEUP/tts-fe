@@ -5,9 +5,9 @@ import { CollabSession } from '../../../../@types';
 
 type Props = {
   sessions: Array<CollabSession>,
-  onStartSession: (arg: number | null) => void
+  onStartSession: (arg: string | null) => void
   onCreateSession: () => void
-  onDeleteSession: (arg: number | null) => void
+  onDeleteSession: (arg: string | null) => void
 }
 
 const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDeleteSession }: Props) => (

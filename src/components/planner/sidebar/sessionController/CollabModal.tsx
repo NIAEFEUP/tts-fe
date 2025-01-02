@@ -43,7 +43,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     });
 
     interval = setInterval(() => {
-      sessionsSocket.emit('ping', { 'id': uid, 'session_id': sessionsSocket.sessionId });
+      sessionsSocket.emitToSession('ping', currentSessionId, { 'id': uid });
       console.log('Sent ping', uid);
     }, 1000);
   }, [currentSessionId]);
@@ -54,7 +54,8 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   };
   
   const handleStartSession = (sessionId) => {
-    sessionsSocket.connect(sessionId)
+    sessionsSocket.sessionId = sessionId;
+    sessionsSocket.connect()
       .catch(err => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
 
 
@@ -110,7 +111,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     setCurrentSessionId(null);
   };
 
-  const handleDeleteSession = (sessionId: number | null) => {
+  const handleDeleteSession = (sessionId: string | null) => {
     setSessions(prevSessions => prevSessions.filter(session => session.id !== sessionId));
     if (currentSession?.id === sessionId) {
       handleExitSession();
