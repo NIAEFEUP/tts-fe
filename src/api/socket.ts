@@ -33,39 +33,52 @@ class OptionalSocket {
 class SessionsSocket {
     private url: string;
     private socket: OptionalSocket;
-    private _sessionId: number | null;
+    private _sessionId: string;
+    private _sessionInfo: any;
 
     constructor(url: string) {
         this.url = url;
         this.socket = new OptionalSocket();
         this._sessionId = null;
+        this._sessionInfo = null;
     }
 
-    get sessionId() {
+    get sessionId(): string | null {
         return this._sessionId;
     }
 
-    set sessionId(sessionId: number | null) {
+    set sessionId(sessionId: string | null) {
         this._sessionId = sessionId;
+    }
+
+    get sessionInfo() {
+        return this._sessionInfo;
     }
 
     isConnected() {
         this.socket.is_set();
     }
 
-    async connect(): Promise<void> {
+    async connect(participantName: string): Promise<void> {
         return new Promise((resolve, reject) => {
+            const query = { 
+                ...(this.sessionId ? { session_id: this.sessionId } : {}),
+                participant_name: participantName,
+            };
+
             const newSocket = io(this.url, {
-                ...this.sessionId ? { query: { session_id: this.sessionId } } : {},
+                query,
                 auth: {
                     token: 'dummy',  // TODO: Replace with actual federated authentication token
-                }
+                },
             });
 
             this.socket.set(newSocket);
 
             newSocket.on('connected', data => {
                 this._sessionId = data['session_id'];
+                this._sessionInfo = data['session_info'];
+                console.log('Connected to session', this._sessionId);
                 resolve();
             });
 
