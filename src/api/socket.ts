@@ -29,20 +29,20 @@ class OptionalSocket {
 class SessionsSocket {
     private url: string;
     private socket: OptionalSocket;
-    private _roomId: number | null;
+    private _sessionId: number | null;
 
     constructor(url: string) {
         this.url = url;
         this.socket = new OptionalSocket();
     }
 
-    get roomId() {
-        return this._roomId;
+    get sessionId() {
+        return this._sessionId;
     }
 
-    connect(room_id?: string) {
+    connect(sessionId?: string) {
         const newSocket = io(this.url, {
-            ...room_id ? { query: { room_id: room_id } } : {},
+            ...sessionId ? { query: { session_id: sessionId } } : {},
             auth: {
                 token: 'dummy',  // TODO: Replace with actual federated authentication token
             }
@@ -51,7 +51,7 @@ class SessionsSocket {
         this.socket.set(newSocket);
         newSocket.on('connected', data => {
             console.log('Connected to sessions socket');
-            this._roomId = data['room_id'];
+            this._sessionId = data['session_id'];
         });
     }
 
