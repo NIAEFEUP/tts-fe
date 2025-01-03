@@ -161,12 +161,18 @@ export type Student = {
   mecNumber: number
 }
 
+export type Participant = {
+  client_id: string
+  name: string
+}
+
+// TODO(Process-ing): Maybe join Student and Participant into a single type
+
 export type CollabSession = {
   id: string
   name: string
   lastEdited: string
   lifeSpan: number
-  currentUser: string
   link: string
-  participants: Array<string>
+  participants: Array<Participant>
 }

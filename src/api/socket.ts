@@ -33,18 +33,24 @@ class OptionalSocket {
 class SessionsSocket {
     private url: string;
     private socket: OptionalSocket;
-    private _sessionId: string;
+    private _clientId: string | null;
+    private _sessionId: string | null;
     private _sessionInfo: any;
 
     constructor(url: string) {
         this.url = url;
         this.socket = new OptionalSocket();
+        this._clientId = null;
         this._sessionId = null;
         this._sessionInfo = null;
     }
 
     get sessionId(): string | null {
         return this._sessionId;
+    }
+
+    get clientId(): string | null {
+        return this._clientId;
     }
 
     set sessionId(sessionId: string | null) {
@@ -76,6 +82,7 @@ class SessionsSocket {
             this.socket.set(newSocket);
 
             newSocket.on('connected', data => {
+                this._clientId = data['client_id'];
                 this._sessionId = data['session_id'];
                 this._sessionInfo = data['session_info'];
                 console.log('Connected to session', this._sessionId);
@@ -110,11 +117,7 @@ class SessionsSocket {
     }
 
     emit(event: string, ...args: any[]) {
-        this.socket.use(socket => socket.emit(event, args));
-    }
-
-    emitToSession(event: string, session_id: string, ...args: any) {
-        this.socket.use(socket => socket.emit(event, session_id=session_id, ...args));
+        this.socket.use(socket => socket.emit(event, ...args));
     }
 }
 
