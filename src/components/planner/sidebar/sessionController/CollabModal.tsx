@@ -43,7 +43,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     });
 
     setInt(setInterval(() => {
-      sessionsSocket.emitToSession('ping', currentSessionId, { 'id': uid });
+      sessionsSocket.emit('ping', { id: uid });
       console.log('Sent ping', uid);
     }, 1000));
   }, [currentSessionId]);
@@ -79,7 +79,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           lifeSpan: 30,
           currentUser: 'TheCreator',
           link: `http://localhost:3100/planner?session=${sessionsSocket.sessionId}`,
-          participants: (sessionsSocket.sessionInfo['participants']).map(participant => participant['name']),
+          participants: sessionsSocket.sessionInfo['participants'],
         }
   
         addSocketListeners(sessionsSocket);
@@ -102,9 +102,8 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           name: Math.random().toString(36).substr(2, 9),
           lastEdited: new Date().toLocaleDateString(),
           lifeSpan: 30,
-          currentUser: 'TheCreator',
           link: `http://localhost:3100/planner?session=${sessionsSocket.sessionId}`,
-          participants: (sessionsSocket.sessionInfo['participants']).map(participant => participant['name']),
+          participants: sessionsSocket.sessionInfo['participants'],
         };
         
         addSocketListeners(sessionsSocket);
@@ -130,21 +129,23 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     }
   };
 
-  const handleUpdateUser = (updatedUser: string) => {
-    if (currentSession) {
-      const updatedSession = {
-        ...currentSession,
-        currentUser: updatedUser,
-        participants: currentSession.participants.map(participant =>
-          participant === currentSession.currentUser ? updatedUser : participant
-        )
-      };
-      setSessions(prevSessions =>
-        prevSessions.map(session =>
-          session.id === currentSession.id ? updatedSession : session
-        )
-      );
-    }
+  const handleUpdateUser = (updatedName: string) => {
+    if (!currentSession)
+      return;
+
+    const updatedSession = {
+      ...currentSession,
+      participants: currentSession.participants.map(participant =>
+        participant.client_id === sessionsSocket.clientId ? { ...participant, name: updatedName } : participant
+      )
+    };
+    setSessions(prevSessions =>
+      prevSessions.map(session =>
+        session.id === currentSession.id ? updatedSession : session
+      )
+    );
+
+    sessionsSocket.emit('update_user', { 'name': updatedName });
   };
 
   return (
