@@ -52,7 +52,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   const updatedSession = (sessionId: string, sessionInfo: any) => {
     setSessions(prevSessions =>
       prevSessions.map(session =>
-        session.id === sessionId ? { ...session, participants: sessionInfo['participants'].map((participant: any) => participant['name']) } : session
+        session.id === sessionId ? { ...session, participants: sessionInfo['participants'] } : session
       )
     );
   }
@@ -145,7 +145,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       )
     );
 
-    sessionsSocket.emit('update_user', { 'name': updatedName });
+    sessionsSocket.emit('update_participant', { 'name': updatedName });
   };
 
   return (
