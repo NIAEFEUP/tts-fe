@@ -76,7 +76,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           id: sessionsSocket.sessionId,
           name: Math.random().toString(36).substr(2, 9),
           lastEdited: new Date().toLocaleDateString(),
-          lifeSpan: 30,
+          expirationTime: new Date(sessionsSocket.sessionInfo['expiration_time']).getTime(),
           currentUser: 'TheCreator',
           link: `http://localhost:3100/planner?session=${sessionsSocket.sessionId}`,
           participants: sessionsSocket.sessionInfo['participants'],
@@ -101,7 +101,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           id: sessionsSocket.sessionId,
           name: Math.random().toString(36).substr(2, 9),
           lastEdited: new Date().toLocaleDateString(),
-          lifeSpan: 30,
+          expirationTime: new Date(sessionsSocket.sessionInfo['expiration_time']).getTime(),
           link: `http://localhost:3100/planner?session=${sessionsSocket.sessionId}`,
           participants: sessionsSocket.sessionInfo['participants'],
         };

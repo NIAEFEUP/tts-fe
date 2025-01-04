@@ -19,7 +19,7 @@ const dummySessions: CollabSession[] = [
     name: 'asdipuhaosd',
     lastEdited: 'há 3 dias',
     link: 'https://ni.fe.up.pt/tts/#room=d8750cf5...',
-    lifeSpan: 7,
+    expirationTime: Date.now() + 1000 * 60 * 60 * 24 * 14,
     participants: dummyParticipants[0],
   },
   {
@@ -27,7 +27,7 @@ const dummySessions: CollabSession[] = [
     name: 'uyavfiuya8gf3',
     lastEdited: 'há 1 semana',
     link: 'https://ni.fe.up.pt/tts/#room=d8750cf5...',
-    lifeSpan: 14,
+    expirationTime: Date.now() + 1000 * 60 * 60 * 24 * 7,
     participants: dummyParticipants[1],
   },
 ];

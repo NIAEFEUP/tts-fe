@@ -172,7 +172,7 @@ export type CollabSession = {
   id: string
   name: string
   lastEdited: string
-  lifeSpan: number
+  expirationTime: number
   link: string
   participants: Array<Participant>
 }
