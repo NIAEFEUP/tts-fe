@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../../../ui/button';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import CollabModal from './CollabModal';
@@ -37,6 +37,15 @@ const CollaborativeSession = () => {
   const [sessions, setSessions] = useState(dummySessions);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
+  // TODO: Move this to sessions hook
+  const sessionIsNotExpired = (session: CollabSession) => {
+    return session.expirationTime < Date.now();
+  };
+
+  useEffect(() => {
+    setSessions(sessions.filter(sessionIsNotExpired));
+  }, []);
+  
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
