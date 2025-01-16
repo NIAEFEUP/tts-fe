@@ -39,7 +39,7 @@ const CollaborativeSession = () => {
 
   // TODO: Move this to sessions hook
   const sessionIsNotExpired = (session: CollabSession) => {
-    return session.expirationTime < Date.now();
+    return session.expirationTime > Date.now();
   };
 
   useEffect(() => {
