@@ -14,12 +14,12 @@ const CsvExport = () => {
   const { multipleOptions } = useContext(MultipleOptionsContext);
 
   const exportCSV = () => {
-    const header = ['Ano', 'Nome', 'Sigla']
+    const header = ['ID', 'Ano', 'Nome', 'Sigla']
     multipleOptions.forEach((option) => header.push(option.name))
     const lines = []
 
     pickedCourses.forEach(course => {
-      const line = [course.course_unit_year, csvEncode(course.name), course.acronym]
+      const line = [course.id, course.course_unit_year, csvEncode(course.name), course.acronym]
       multipleOptions.forEach(option => {
         const courseOption = option.course_options.find(courseOption => courseOption.course_id === course.id)
         const pickedClass = course.classes.find(c => c.id === courseOption?.picked_class_id);
