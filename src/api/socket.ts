@@ -85,7 +85,6 @@ class SessionsSocket {
                 this._clientId = data['client_id'];
                 this._sessionId = data['session_id'];
                 this._sessionInfo = data['session_info'];
-                console.log('Connected to session', this._sessionId);
                 resolve(this);
             });
 

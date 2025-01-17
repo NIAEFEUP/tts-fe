@@ -39,11 +39,13 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     }
 
     sessionsSocket.on('ping', data => {
+      // eslint-disable-next-line no-console
       console.log('Received ping', data['id']);
     });
 
     setInt(setInterval(() => {
       sessionsSocket.emit('ping', { id: uid });
+      // eslint-disable-next-line no-console
       console.log('Sent ping', uid);
     }, 1000));
   }, [currentSessionId]);
@@ -91,7 +93,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   
         toast({ title: 'Entrou na sessão', description: 'Convida mais amigos para se juntarem!'});
       })
-      .catch(err => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
+      .catch(() => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
   };
 
   const handleCreateSession = () => { //Dummy function to create a session...
@@ -113,7 +115,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   
         toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
       })
-      .catch(err => toast({ title: 'Erro ao criar a sessão', description: 'Tente novamente mais tarde.' }));
+      .catch(() => toast({ title: 'Erro ao criar a sessão', description: 'Tente novamente mais tarde.' }));
   };
 
   const handleExitSession = () => {

@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './api/socket'
-import { sessionsSocket } from './api/socket'
 
 const strictMode = false
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
