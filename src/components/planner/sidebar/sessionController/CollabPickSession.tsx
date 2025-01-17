@@ -2,6 +2,7 @@ import React from 'react';
 import { PlayCircleIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { Button } from '../../../ui/button';
 import { CollabSession } from '../../../../@types';
+import toHumanReadableTimeDiff from '../../../../utils/human-time';
 
 type Props = {
   sessions: Array<CollabSession>,
@@ -44,8 +45,8 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
         {sessions.map((session) => (
           <li key={session.id} className="sm:grid sm:grid-cols-7 flex flex-col sm:mt-0  mt-6 items-center text-sm text-gray-800 gap-4">
             <span className="col-span-2 truncate whitespace-nowrap font-bold">{session.name}</span>
-            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">editado {session.lastEdited}</span>
-            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">expira em {Math.floor((session.expirationTime - Date.now()) / (1000 * 60 * 60 * 24))} dias</span>
+            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">editado {toHumanReadableTimeDiff(session.lastEdited)}</span>
+            <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">expira {toHumanReadableTimeDiff(session.expirationTime)}</span>
             <div className="col-span-1 flex justify-end space-x-4">
               <a
                 href="#"
