@@ -1,4 +1,3 @@
-import React from 'react';
 import { PlayCircleIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { Button } from '../../../ui/button';
 import { CollabSession } from '../../../../@types';
