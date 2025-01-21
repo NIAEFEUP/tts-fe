@@ -72,7 +72,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   
   const handleStartSession = (sessionId) => {
     sessionsSocket.sessionId = sessionId;
-    sessionsSocket.connect('TheCreator')
+    sessionsSocket.connect('AnotherUser')
       .then(sessionsSocket => {
         if (sessions.find(session => session.id === sessionsSocket.sessionId) === undefined) {
           const newSession = {
@@ -80,7 +80,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
             name: Math.random().toString(36).substr(2, 9),
             lastEdited: Date.now(),
             expirationTime: new Date(sessionsSocket.sessionInfo['expiration_time']).getTime(),
-            currentUser: 'TheCreator',
+            currentUser: 'AnotherUser',
             link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
             participants: sessionsSocket.sessionInfo['participants'],
           }
@@ -91,7 +91,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
   
-        toast({ title: 'Entrou na sessão', description: 'Convida mais amigos para se juntarem!'});
+        toast({ title: 'Entrou na sessão', description: 'Convida mais pessoas para se juntarem!'});
       })
       .catch(() => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
   };

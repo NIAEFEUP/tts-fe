@@ -53,7 +53,7 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
     }
   };
 
-  const currentUserName = session.participants.find(p => p.client_id === sessionsSocket.clientId)?.name ?? '';
+  const currentUserName = session.participants.find(p => p.client_id === sessionsSocket.clientId)?.name ?? 'Anonymous';
 
   return (
     <div className="text-left">
