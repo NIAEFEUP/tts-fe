@@ -113,7 +113,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
         setCurrentSessionId(sessionsSocket.sessionId);
         setSessions(prevSessions => [...prevSessions, newSession]);
   
-        toast({ title: 'Sessão criada', description: 'Convida mais amigos para se juntarem!'});
+        toast({ title: 'Sessão criada', description: 'Convida mais pessoas para se juntarem!'});
       })
       .catch(() => toast({ title: 'Erro ao criar a sessão', description: 'Tente novamente mais tarde.' }));
   };
