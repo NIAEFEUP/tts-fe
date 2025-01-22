@@ -64,7 +64,7 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && npm run generate:protobuf && vite build",
+    "build": "tsc && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",

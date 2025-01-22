@@ -7,7 +7,8 @@ RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
 
 # Install protobuf compiler
-RUN apk add --no-cache protoc
+RUN apk update
+RUN apk add --no-cache protoc git
 
 COPY .*rc ./
 COPY *.json ./
@@ -20,6 +21,12 @@ RUN npm install
 COPY public/ public/
 COPY src/ src/
 COPY index.html ./
+
+RUN git init
+RUN git submodule init
+RUN git submodule update
+
+COPY ./tts-protobufs/ ./tts-protobufs
 
 # dev
 FROM build AS dev
@@ -42,6 +49,9 @@ RUN echo "${TTS_FE_VARS_CONTENT}" | base64 -d > .env.production
 
 # prod-build
 FROM prod-build-with-${TTS_FE_VARS_METHOD} AS prod-build
+
+COPY --from=build /usr/src/tts-fe/tts-protobufs ./tts-protobufs
+
 RUN npm run build
 
 # prod
