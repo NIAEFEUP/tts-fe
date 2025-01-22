@@ -3,9 +3,10 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
 import { Command, CommandEmpty, CommandList, CommandItem, CommandInput } from '../../../../ui/command'
 import { Major } from '../../../../../@types'
 import MajorContext from '../../../../../contexts/MajorContext'
-import { cn, plausible } from '../../../../../utils'
+import { cn } from '../../../../../utils'
 import { Button } from '../../../../ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/popover'
+import { AnalyticsTracker } from '../../../../../utils/AnalyticsTracker'
 
 interface Props {
   selectedMajor: Major | null
@@ -63,10 +64,18 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
         >
           <CommandInput placeholder="Procurar curso..." className="h-9" />
           <CommandEmpty>Nenhum curso corresponde à tua pesquisa.</CommandEmpty>
-          <CommandList>
+          <CommandList
+            className="min-h-fit overflow-y-auto"
+            // This is needed to allow scroll of the result contents with the mouse wheel. Without this,
+            // the event would be handled by the <Popover> component, not allowing the <CommandList> to
+            // handle that event and actually be scrollable with the mouse wheel
+            onWheel={(e) => e.stopPropagation()}
+          >
+          {selectedMajor && (
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
+          )}
             {majors &&
               majors.map((major) => (
                 <CommandItem
@@ -77,9 +86,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
                     setSelectedMajor(currentMajor.id === selectedMajor?.id ? null : currentMajor)
                     setOpen(false)
 
-                    const { trackEvent } = plausible
-                    trackEvent('Major Selected', { props: { major: currentMajor.name } })
-                    trackEvent('Faculty', { props: { faculty: currentMajor.faculty_id.toUpperCase() } })
+                    AnalyticsTracker.majorSelected(currentMajor)
                   }}
                 >
                   {`${major.name} (${major.acronym}) - ${major.faculty_id.toUpperCase()}`}

@@ -1,5 +1,5 @@
 {
-  "pathPrefix": "/tts/",
+  "pathPrefix": "/",
   "paths": {
     "about": "about",
     "profile": "profile",
@@ -7,7 +7,8 @@
     "exchange": "exchange",
     "faqs": "faqs",
     "notfound": "*",
-    "home": "home"
+    "home": "home",
+    "privacypolicy": "privacy-policy"
   },
   "api": {
     "port": 443,

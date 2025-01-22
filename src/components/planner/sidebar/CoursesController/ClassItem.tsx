@@ -1,8 +1,8 @@
-import { useContext, useMemo } from 'react'
+import { useContext } from 'react'
 import { ClassInfo } from '../../../../@types/index'
 import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
-import { schedulesConflict } from '../../../../utils'
+import { classesConflictSeverity } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import CourseContext from '../../../../contexts/CourseContext'
 
@@ -10,16 +10,12 @@ import CourseContext from '../../../../contexts/CourseContext'
 type Props = {
   course_id: number,
   classInfo: ClassInfo
-  displayed?: boolean
-  checked?: boolean
-  preview: number
-  conflict?: boolean
   onSelect?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
 
-const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect, onMouseEnter, onMouseLeave }: Props) => {
+const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses } = useContext(CourseContext);
 
@@ -32,31 +28,26 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
     onSelect();
   }
 
-  const conflict: number = useMemo(() => {
-    let classes: ClassInfo[] = []
+  const conflictSeverity = () => {
+    const chosenCourses = multipleOptions[selectedOption].course_options.filter(
+      (option) => option.course_id !== course_id
+    );
 
-    for (const course_option of multipleOptions[selectedOption].course_options) {
-      if (course_option.picked_class_id && course_option.course_id !== course_id) {
-        const pickedCourse = pickedCourses.find(co => co.id === course_option.course_id);
-        // retrieve class with the picked class id of the course option
-        const pickedClass = pickedCourse.classes.find(c => c.id === course_option.picked_class_id);
+    const otherClasses = [];
+    chosenCourses.forEach((option) => {
+      const courseInfo = pickedCourses.find((course) => course.id === option.course_id);
+      const pickedClass = courseInfo.classes.find((classInfo) => classInfo.id === option.picked_class_id);
 
-        classes.push(pickedClass);
-      }
+      if (pickedClass) otherClasses.push(pickedClass);
+    });
+
+    let maxSeverity = 0;
+    for (const otherClass of otherClasses) {
+      maxSeverity = Math.max(maxSeverity, classesConflictSeverity(classInfo, otherClass));
     }
 
-    for (const pickedClass of classes)
-      for (const slot1 of pickedClass.slots)
-        for (const slot2 of classInfo.slots)
-          if (schedulesConflict(slot1, slot2)) {
-            if (slot1.lesson_type == "TP" && slot2.lesson_type == "TP")
-              return 2
-            else if (slot1.lesson_type == "TP" || slot2.lesson_type == "TP")
-              return 1
-            else
-              return 0
-          }
-  }, []);
+    return maxSeverity;
+  }
 
   return (
     <DropdownMenuCheckboxItem
@@ -70,8 +61,6 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
           {classInfo.slots.map((slot, idx) => (
             <div key={`${classInfo.name}-${idx}`} className="flex items-center space-x-2">
               <span className="text-xs text-gray-500">{slot.lesson_type}</span>
-              {/* <span className="text-xs text-gray-500">{convertWeekday(slot.day)}</span> */}
-              {/* <span className="text-xs text-gray-500">{getLessonBoxTime(slot)}</span> */}
               <span className="text-xs text-gray-500">{slot.location}</span>
               <span className="text-xs text-gray-500">
                 {slot.professors.map((professor) => professor.acronym).join(', ')}
@@ -80,7 +69,7 @@ const ClassItem = ({ course_id, classInfo, displayed, checked, preview, onSelect
           ))}
         </div>
       </div>
-      <ExclamationTriangleIcon className={`h-5 w-5 ${conflict ? 'block' : 'hidden'} ${conflict == 2 ? 'text-red-600' : 'text-amber-500'}`} aria-hidden="true" />
+      <ExclamationTriangleIcon className={`h-5 w-5 ${conflictSeverity() > 0 ? 'block' : 'hidden'} ${conflictSeverity() == 2 ? 'text-red-600' : 'text-amber-500'}`} aria-hidden="true" />
     </DropdownMenuCheckboxItem>
   )
 }

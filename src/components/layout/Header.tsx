@@ -1,19 +1,20 @@
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-
 import {
   Bars3Icon,
   XMarkIcon,
   AtSymbolIcon,
   RectangleStackIcon,
   QuestionMarkCircleIcon,
+  ArrowsRightLeftIcon
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
-import useVerifyCourseUnitHashes from '../../hooks/useVerifyCourseUnitHashes'
-import CourseContext from '../../contexts/CourseContext'
-import { useContext, useEffect } from 'react'
+import SessionContext from '../../contexts/SessionContext'
+import { useContext } from 'react'
+import { LoginButton } from '../auth/LoginButton'
+import { HeaderProfileDropdown } from '../auth/HeaderProfileDropdown'
 
 const navigation = [
   {
@@ -21,6 +22,11 @@ const navigation = [
     location: getPath(config.paths.planner),
     icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
+  }, {
+    title: 'Trocas',
+    location: getPath(config.paths.exchange),
+    icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
+    wip: true,
   },
   { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
   {
@@ -37,8 +43,7 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const { pickedCourses,} =useContext(CourseContext);
-  const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
+  const { signedIn } = useContext(SessionContext);
 
   return (
     <Disclosure
@@ -64,16 +69,15 @@ const Header = ({ siteTitle, location }: Props) => {
 
                 <div className="hidden space-x-8 self-center md:inline-flex">
                   {navigation
-                    .filter((link) => !link.wip)
+                    .filter((link) => (!link.wip || (link.wip && (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1'))))
                     .map((link, index) => (
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button
                           type="button"
-                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
-                            location === link.title
-                              ? 'text-primary dark:text-white'
-                              : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
-                          }`}
+                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
+                            ? 'text-primary dark:text-white'
+                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
+                            }`}
                         >
                           <span className="flex items-center justify-center space-x-1.5">
                             <span>{link.icon}</span>
@@ -87,18 +91,21 @@ const Header = ({ siteTitle, location }: Props) => {
                     ))}
                 </div>
 
-                <div className="hidden self-center md:inline-flex">
 
-
+                <div className="hidden self-center md:inline-flex items-center gap-x-2">
                   <DarkModeSwitch />
+                  {signedIn ?
+                    <HeaderProfileDropdown />
+                    : <LoginButton expanded={false} />
+                  }
                 </div>
               </div>
-            </div>
+            </div >
             <Mobile location={location} />
           </>
         )
       }}
-    </Disclosure>
+    </Disclosure >
   )
 }
 
@@ -110,11 +117,10 @@ type HamburgerProps = {
 
 const Hamburger = ({ open }: HamburgerProps) => (
   <div
-    className={`z-50 md:hidden ${
-      open
-        ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
-        : 'flex w-full items-center justify-between'
-    }`}
+    className={`z-50 md:hidden ${open
+      ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
+      : 'flex w-full items-center justify-between'
+      }`}
   >
     <Link to={config.pathPrefix}>
       {open ? (
@@ -166,11 +172,10 @@ const Mobile = ({ location }: MobileProps) => (
         <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
           <button
             type="button"
-            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
-              location === link.title
-                ? 'text-primary dark:text-white'
-                : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
-            }`}
+            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
+              ? 'text-primary dark:text-white'
+              : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
+              }`}
           >
             <span className="flex items-center justify-center space-x-2">
               <span>{link.icon}</span>

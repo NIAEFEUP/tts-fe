@@ -12,7 +12,7 @@ type Props = {
 
 const Layout = ({ children, location, liquid, title }: Props) => {
   useEffect(() => {
-    document.title = `${title} | ${import.meta.env.VITE_APP_SITE_TITLE || 'Time Table Scheduler'}`
+    document.title = `${title} | ${import.meta.env.VITE_APP_SITE_TITLE || 'Time Table Selector'}`
   }, [title])
 
   return (

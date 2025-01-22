@@ -11,6 +11,7 @@ import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { convertCourseInfoToCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { useToast } from '../../../ui/use-toast'
+import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
 const PasteOption = () => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
@@ -35,11 +36,10 @@ const PasteOption = () => {
     const isImporteFromClipboard: boolean = value
 
     if (!isValidURL(decoded_url)) {
-
       const description = isImporteFromClipboard
         ? 'O texto do clipboard não é uma opção válida'
         : 'O texto inserido não é uma opção válida'
-      console.log(description)
+
       toast({
         title: 'Erro ao colar opção',
         description,
@@ -81,7 +81,7 @@ const PasteOption = () => {
       const newPickedCourses = [...pickedCourses]
       setPickedCourses(newPickedCourses.concat(courses))
 
-      let newMultipleOptions = [...multipleOptions]
+      const newMultipleOptions = [...multipleOptions]
       newMultipleOptions.forEach((option) => {
         option.course_options = option.course_options.concat(
           courses.map((course) => convertCourseInfoToCourseOption(course))
@@ -98,6 +98,8 @@ const PasteOption = () => {
       description: 'A opção foi colada com sucesso',
       duration: 1500,
     })
+
+    AnalyticsTracker.trackFeature(Feature.PASTE);
   }
 
   /**

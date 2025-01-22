@@ -1,6 +1,7 @@
 import classNames from 'classnames'
-import { useState, useContext, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 
+import ConflictsContext from '../../../contexts/ConflictsContext'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
@@ -33,12 +34,14 @@ const LessonBox = ({
     slotInfo.professors
       .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
       .join('\n')
+
+  const conflicts = [];
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false) // Controls if the popover showing the conflicts appear
   const [isHovered, setIsHovered] = useState(false)
-  const [conflicts, setConflicts] = useState([]);
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
+  const { setConflictSeverity } = useContext(ConflictsContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
@@ -57,7 +60,7 @@ const LessonBox = ({
         const slot = classDescriptor.classInfo.slots[j];
         if (schedulesConflict(slotInfo, slot)) {
           // The highest severity of the all the conflicts is the overall severity
-          newConflictInfo.severe = conflictsSeverity(slotInfo, slot) || newConflictInfo.severe;
+          newConflictInfo.severe = conflictsSeverity(slotInfo, slot) == 2 || newConflictInfo.severe;
           const newClassDescriptor = {
             classInfo: classDescriptor.classInfo,
             courseInfo: classDescriptor.courseInfo,
@@ -70,6 +73,10 @@ const LessonBox = ({
 
     setConflict(newConflictInfo);
   }, [classInfo, classes]);
+
+  useEffect(() => {
+    setConflictSeverity(conflict?.severe);
+  }, [hasConflict]);
 
   const showConflicts = () => {
     setConflictsShown(true)

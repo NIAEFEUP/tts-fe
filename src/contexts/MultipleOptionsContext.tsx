@@ -11,9 +11,9 @@ interface MultipleOptionsContent {
 
 const MultipleOptionsContext: Context<MultipleOptionsContent> = createContext({
   multipleOptions: [],
-  setMultipleOptions: (multipleOptions: MultipleOptions) => {},
+  setMultipleOptions: () => { },
   selectedOption: 0,
-  setSelectedOption: (selectedOption: number) => {},
+  setSelectedOption: () => { },
 });
 
 export default MultipleOptionsContext
