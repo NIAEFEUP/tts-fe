@@ -7,7 +7,7 @@ import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 import { sessionsSocket } from '../../../../api/socket';
 import { toast } from '../../../ui/use-toast';
 import { useSearchParams } from 'react-router-dom';
-import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import useSession from '../../../../hooks/useSession';
 
 const generateUniqueId = () => Date.now();
