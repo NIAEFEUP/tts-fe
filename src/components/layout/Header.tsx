@@ -23,7 +23,7 @@ const navigation = [
     icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
   }, {
-    title: 'Trocas',
+    title: 'Turmas',
     location: getPath(config.paths.exchange),
     icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
     wip: true,

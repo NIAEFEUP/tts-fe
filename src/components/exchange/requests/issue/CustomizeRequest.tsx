@@ -8,10 +8,11 @@ import { Switch } from "../../../ui/switch"
 import { toast } from "../../../ui/use-toast"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 import PreviewRequestForm from "./PreviewRequestForm"
+import { ExchangeSidebarStatus } from "../../../../pages/Exchange"
 
 type Props = {
   selectedCourseUnits: CourseInfo[]
-  setCreatingRequest: Dispatch<SetStateAction<boolean>>
+  setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
   requests: any
   setRequests: Dispatch<SetStateAction<any>>
   setSelectedCourseUnits: Dispatch<SetStateAction<CourseInfo[]>>
@@ -19,7 +20,7 @@ type Props = {
 
 export const CustomizeRequest = ({
   selectedCourseUnits,
-  setCreatingRequest,
+  setExchangeSidebarStatus,
   requests,
   setRequests,
   setSelectedCourseUnits
@@ -50,7 +51,7 @@ export const CustomizeRequest = ({
         <p className="text-center">Ainda não adicionaste nenhuma disciplina para fazer uma troca.</p>
         <Button
           className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} add-item-button`}
-          onClick={() => { setCreatingRequest(false) }}
+          onClick={() => {setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS)}}
         >
           <div className="flex flex-row gap-x-2">
             <ArrowLeftIcon className="h-5 w-5" />
@@ -65,7 +66,7 @@ export const CustomizeRequest = ({
               <>
                 <Button
                   className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
-                  onClick={() => { setCreatingRequest(false) }}
+                  onClick={() => { setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS) }}
                 >
                   <div className="flex flex-row gap-x-2">
                     <ArrowLeftIcon className="h-5 w-5" />
