@@ -1,48 +1,52 @@
 import useAdminExchanges from "../../hooks/useAdminExchanges";
+import { Button } from "../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { AcceptedExchangeCard } from "./AcceptedExchangeCard";
+import { TrashIcon } from "@heroicons/react/24/outline"
 
 export const AdminMainContent = () => {
     const { exchanges } = useAdminExchanges();
-
-    /*
-    export type DirectExchangeParticipant = {
-      id: number,
-      course_info: CourseInfo,
-      participant_name: string,
-      participant_nmec: string,
-      class_participant_goes_from: ClassInfo,
-      class_participant_goes_to: ClassInfo,
-      course_unit: string,
-      course_unit_id: string,
-      accepted: boolean
-      date: string
-    }
-
-    export type CourseInfo = {
-      id: number,
-      course_unit_year: number,
-      course_unit_id: number,
-      ects: number,
-      acronym: string,
-      name: string,
-      url: string,
-      hash: string,
-      classes?: Array<ClassInfo>
-    }
-
-
-    export type ClassInfo = {
-      // course_unit_id: number, // é mesmo necessário ??
-      // composed_name: string,
-      id: number,
-      name: string,
-      filteredTeachers: Array<number>,
-      slots: Array<SlotInfo>
-    }
-    */
     return (
         <div className="flex flex-col gap-y-4 p-4">
-            <h1 className="text-3xl font-bold">Pedidos</h1>
+            <div className="flex justify-between">
+                <h1 className="text-3xl font-bold">Pedidos</h1>
+                <div className="flex gap-4">
+                    <Select>
+                        <SelectTrigger className="w-[100px]">
+                            <SelectValue placeholder="Curso" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="m.eic">M.EIC</SelectItem>
+                            <SelectItem value="l.eic">L.EIC</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Select>
+                        <SelectTrigger className="w-[80px]">
+                            <SelectValue placeholder="Ano" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="1">1</SelectItem>
+                            <SelectItem value="2">2</SelectItem>
+                            <SelectItem value="3">3</SelectItem>
+                            <SelectItem value="4">4</SelectItem>
+                            <SelectItem value="5">5</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Select>
+                        <SelectTrigger className="w-[120px]">
+                            <SelectValue placeholder="Estado" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="light">Aceite</SelectItem>
+                            <SelectItem value="procurando">Procurando</SelectItem>
+                            <SelectItem value="pendente">Pendente</SelectItem>
+                            <SelectItem value="rejeitado">Rejeitado</SelectItem>
+                            <SelectItem value="tratado">Tratado</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Button>Resetar</Button>
+                </div>
+            </div>
             <div className="flex flex-col gap-y-2">
                 <article key={`João Pereira`}>
                     <AcceptedExchangeCard
