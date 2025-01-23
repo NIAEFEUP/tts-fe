@@ -1,7 +1,26 @@
 import { io, Socket } from "socket.io-client";
 import backendApi from "./backend";
 
-const SOCKET_URL = (import.meta.env.VITE_APP_PROD == 0 ? 'ws://' : 'wss://') + backendApi.BACKEND_URL.split('//')[1];
+type SocketConfig = {
+    url: string,
+    path: string,
+    secure: boolean,
+};
+
+const getSocketConfig = (backendUrl: string): SocketConfig => {
+    const [schema, rest] = backendUrl.split('://', 2);
+    const [host, path] = rest.split('/', 2);
+    const secure = schema === 'https';
+    const newSchema = secure ? 'wss' : 'ws';
+
+    return {
+        url: `${newSchema}://${host}`,
+        path: `/${path}/socket.io`,
+        secure,
+    };
+}
+
+const SOCKET_CONFIG = getSocketConfig(backendApi.BACKEND_URL);
 
 class OptionalSocket {
     private socket: Socket | null;
@@ -31,14 +50,14 @@ class OptionalSocket {
 }
 
 class SessionsSocket {
-    private url: string;
+    private config: SocketConfig;
     private socket: OptionalSocket;
     private _clientId: string | null;
     private _sessionId: string | null;
     private _sessionInfo: any;
 
-    constructor(url: string) {
-        this.url = url;
+    constructor(config: SocketConfig) {
+        this.config = config;
         this.socket = new OptionalSocket();
         this._clientId = null;
         this._sessionId = null;
@@ -72,11 +91,13 @@ class SessionsSocket {
                 participant_name: participantName,
             };
 
-            const newSocket = io(this.url, {
+            const newSocket = io(this.config.url, {
                 query,
                 auth: {
                     token: 'dummy',  // TODO: Replace with actual federated authentication token
                 },
+                path: this.config.path,
+                secure: this.config.secure,
             });
 
             this.socket.set(newSocket);
@@ -120,9 +141,6 @@ class SessionsSocket {
     }
 }
 
-const sessionsSocket = new SessionsSocket(SOCKET_URL);
+const sessionsSocket = new SessionsSocket(SOCKET_CONFIG);
 
-export {
-    sessionsSocket,
-    SOCKET_URL,
-};
+export { sessionsSocket };
