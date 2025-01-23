@@ -4,6 +4,7 @@ import { StopIcon } from '@heroicons/react/24/solid';
 import { Button } from '../../../ui/button';
 import { useToast } from '../../../ui/use-toast';
 import { CollabSession } from '../../../../@types';
+import { sessionsSocket } from '../../../../api/socket';
 
 const pastelColors = [ //Colors for the participants
   'bg-orange-200 text-orange-700',
@@ -22,7 +23,7 @@ type Props = {
 const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
-  const [lastValidUser, setLastValidUser] = useState(session.currentUser);
+  const [lastValidUser, setLastValidUser] = useState(session.participants.find(p => p.client_id === sessionsSocket.clientId)?.name ?? '');
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(session.link);
@@ -52,6 +53,8 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
     }
   };
 
+  const currentUserName = session.participants.find(p => p.client_id === sessionsSocket.clientId)?.name ?? 'Anonymous';
+
   return (
     <div className="text-left">
       <h3 className="text-xl font-bold leading-6 mb-6">Colaboração ao vivo...</h3>
@@ -60,7 +63,7 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
         <label className="block text-sm font-medium text-gray-700 mb-1">O teu nome</label>
         <input
           type="text"
-          defaultValue={session.currentUser}
+          defaultValue={currentUserName}
           onChange={handleUserChange}
           onBlur={handleUserBlur}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
@@ -99,13 +102,11 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
                 className={`rounded-full h-10 w-10 flex items-center justify-center ${pastelColors[index % pastelColors.length]
                   }`}
               >
-                {user[0]}
+                {user.name[0]}
               </div>
-              {user && (
-                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-opacity duration-200 bg-gray-900 text-white text-xs rounded-md px-2 py-1">
-                  {user}
-                </div>
-              )}
+              <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-opacity duration-200 bg-gray-900 text-white text-xs rounded-md px-2 py-1">
+                {user.name}
+              </div>
             </div>
           ))}
         </div>
