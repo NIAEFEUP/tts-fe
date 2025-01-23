@@ -74,19 +74,20 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     sessionsSocket.sessionId = sessionId;
     sessionsSocket.connect('AnotherUser')
       .then(sessionsSocket => {
-        if (sessions.find(session => session.id === sessionsSocket.sessionId) === undefined) {
-          const newSession = {
-            id: sessionsSocket.sessionId,
-            name: Math.random().toString(36).substr(2, 9),
-            lastEdited: Date.now(),
-            expirationTime: new Date(sessionsSocket.sessionInfo['expiration_time']).getTime(),
-            currentUser: 'AnotherUser',
-            link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
-            participants: sessionsSocket.sessionInfo['participants'],
-          }
-
-          setSessions(prevSessions => [...prevSessions, newSession]);
+        const newSession = {
+          id: sessionsSocket.sessionId,
+          name: Math.random().toString(36).substr(2, 9),
+          lastEdited: Date.now(),
+          expirationTime: new Date(sessionsSocket.sessionInfo['expiration_time']).getTime(),
+          currentUser: 'AnotherUser',
+          link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
+          participants: sessionsSocket.sessionInfo['participants'],
         }
+
+        setSessions(prevSessions => [
+          ...prevSessions.filter(session => session.id !== sessionId),
+          newSession
+        ]);
   
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
