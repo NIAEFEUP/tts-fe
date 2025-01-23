@@ -1,0 +1,3 @@
+[submodule "tts-protobufs"]
+	path = tts-protobufs
+	url = https://github.com/NIAEFEUP/tts-protobufs.git
