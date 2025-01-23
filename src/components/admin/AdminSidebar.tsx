@@ -2,6 +2,7 @@ import { FileDown, LayoutDashboard, SendHorizonal, Settings } from "lucide-react
 import { Separator } from "../ui/separator"
 import api from "../../api/backend"
 
+// TODO(thePeras): use Shadcn sidebar
 export const AdminSidebar = () => {  
    return (
     <div className="flex flex-col gap-y-4 bg-white shadow-md h-full h-dvh m-4 p-4 rounded-lg m-1">
