@@ -158,7 +158,8 @@ export type DirectExchangeParticipant = {
 
 export type Student = {
   name: string,
-  mecNumber: number
+  mecNumber: number,
+  classInfo?: ClassInfo
 }
 
 export type CollabSession = {
