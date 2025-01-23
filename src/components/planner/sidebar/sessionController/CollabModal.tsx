@@ -8,6 +8,7 @@ import { sessionsSocket } from '../../../../api/socket';
 import { toast } from '../../../ui/use-toast';
 import { useSearchParams } from 'react-router-dom';
 import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+import useSession from '../../../../hooks/useSession';
 
 const generateUniqueId = () => Date.now();
 
@@ -20,6 +21,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   const { sessions, setSessions, currentSessionId, setCurrentSessionId } = useContext(CollabSessionContext);
   const currentSession = sessions.find(s => s.id === currentSessionId) || null;
   const [searchParams, ] = useSearchParams();
+  const { signedIn: userSignedIn, user } = useSession();
 
   useEffect(() => {
     if (searchParams.has('session')) {
@@ -70,18 +72,22 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     socket.on('update_session_info', (data) => updatedSession(data['session_id'], data['session_info']));
   };
 
+  const getName = () => {
+    if (userSignedIn) {
+      return user.name;
+    } else {
+      return uniqueNamesGenerator({
+        dictionaries: [adjectives, animals],
+        length: 2,
+        separator: '',
+        style: 'capital'
+      });
+    }
+  }
   
   const handleStartSession = (sessionId) => {
     sessionsSocket.sessionId = sessionId;
-
-    let name = uniqueNamesGenerator({
-      dictionaries: [colors, adjectives, animals],
-      length: 2,
-      separator: '',
-      style: 'capital'
-    });
-
-    sessionsSocket.connect(name)
+    sessionsSocket.connect(getName())
       .then(sessionsSocket => {
         const newSession = {
           id: sessionsSocket.sessionId,
@@ -106,9 +112,9 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       .catch(() => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
   };
 
-  const handleCreateSession = () => { //Dummy function to create a session...
+  const handleCreateSession = () => {
     sessionsSocket.sessionId = null;
-    sessionsSocket.connect('TheCreator')
+    sessionsSocket.connect(getName())
       .then(sessionsSocket => {
         const newSession = {
           id: sessionsSocket.sessionId,
