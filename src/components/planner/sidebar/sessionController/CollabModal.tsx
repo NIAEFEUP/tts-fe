@@ -7,6 +7,7 @@ import CollabSessionContext from '../../../../contexts/CollabSessionContext';
 import { sessionsSocket } from '../../../../api/socket';
 import { toast } from '../../../ui/use-toast';
 import { useSearchParams } from 'react-router-dom';
+import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
 
 const generateUniqueId = () => Date.now();
 
@@ -72,7 +73,15 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   
   const handleStartSession = (sessionId) => {
     sessionsSocket.sessionId = sessionId;
-    sessionsSocket.connect('AnotherUser')
+
+    let name = uniqueNamesGenerator({
+      dictionaries: [colors, adjectives, animals],
+      length: 2,
+      separator: '',
+      style: 'capital'
+    });
+
+    sessionsSocket.connect(name)
       .then(sessionsSocket => {
         const newSession = {
           id: sessionsSocket.sessionId,
