@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { CourseYearCheckboxes } from './CourseYearCheckboxes'
 import { ScrollArea } from '../../../../ui/scroll-area'
-import CourseContext from '../../../../../contexts/CourseContext'
+import CoursePickerContext from '../../../../../contexts/coursePicker/CoursePickerContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { groupCoursesByYear, isSubset, replaceCourseOptions } from '../../../../../utils'
 import { NoMajorSelectedSVG } from '../../../../svgs'
@@ -10,7 +10,7 @@ import { CourseInfo } from '../../../../../@types'
 
 //TODO: Check this code, too ugly
 const CourseYearTabs = () => {
-  const { coursesInfo, checkboxedCourses, setCheckboxedCourses } = useContext(CourseContext)
+  const { coursesInfo, checkboxedCourses, setCheckboxedCourses } = useContext(CoursePickerContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [selectedTab, setSelectedTab] = useState('1')
   const coursesByYear = groupCoursesByYear(coursesInfo)
