@@ -12,11 +12,11 @@ import { ViewRequests } from "../components/exchange/requests/view/ViewRequests"
 import { ShieldExclamationIcon } from "@heroicons/react/24/outline";
 import { Schedule } from "../components/planner";
 import { Enrollments } from "../components/exchange/enrollments/Enrollments";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
 export enum ExchangeSidebarStatus {
   SHOWING_REQUESTS,
-  CREATING_REQUEST,
-  ENROLLING
+  CREATING_REQUEST
 }
 
 const ExchangeSidebarStatusView = (
@@ -27,8 +27,6 @@ const ExchangeSidebarStatusView = (
       return <ViewRequests setExchangeSidebarStatus={setSidebarStatus} />
     case ExchangeSidebarStatus.CREATING_REQUEST:
       return <CreateRequest setExchangeSidebarStatus={setSidebarStatus} />
-    case ExchangeSidebarStatus.ENROLLING:
-      return <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
   }
 }
 
@@ -92,10 +90,21 @@ const ExchangePage = () => {
         </div>
 
         <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
-          <ExchangeSidebarStatusView 
-            sidebarStatus={sidebarStatus} 
-            setSidebarStatus={setSidebarStatus}
-          />
+          <Tabs defaultValue="requests">
+            <TabsList className="w-full mb-2">
+              <TabsTrigger value="requests">Pedidos</TabsTrigger>
+              <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
+            </TabsList>
+            <TabsContent value="requests">
+              <ExchangeSidebarStatusView
+                sidebarStatus={sidebarStatus}
+                setSidebarStatus={setSidebarStatus}
+              />
+            </TabsContent>
+            <TabsContent value="enrollments">
+              <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
+            </TabsContent>
+          </Tabs>
           {/* {user?.eligible_exchange ? */}
             {/* : */}
             {/* <div className="flex flex-col items-center justify-center gap-4 h-full"> */}

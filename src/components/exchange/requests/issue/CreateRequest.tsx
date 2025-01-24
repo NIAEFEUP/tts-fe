@@ -21,7 +21,10 @@ export const CreateRequest = ({
   return <div className="flex flex-col">
     <div className="flex flex-col gap-y-4 max-h-screen overflow-y-auto">
       <div className="flex flex-row justify-between w-full items-center">
-        <h1 className="font-bold text-xl">Criar pedido</h1>
+        <div className="flex flex-col">
+          <h1 className="font-bold text-xl">Criar pedido</h1>
+          <p className="text-sm">Podes criar um pedido sem ou com estudantes selecionados ou submeter um pedido urgente.</p>
+        </div>
         {!selectingCourseUnits &&
           <Button 
             className="add-item-button" 
