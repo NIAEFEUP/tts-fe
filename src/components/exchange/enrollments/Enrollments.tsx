@@ -1,18 +1,37 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, Dispatch, SetStateAction } from "react";
+import { Desert } from "../../svgs/";
 import { ExchangeCoursePicker } from "../../planner/sidebar/sessionController/ExchangeCoursePicker";
-import { CourseInfo, Major } from "../../../@types";
+import { ClassInfo, CourseInfo, Major } from "../../../@types";
 import MajorContext from "../../../contexts/MajorContext";
 import BackendAPI from "../../../api/backend";
-import ClassSelector from "../../planner/sidebar/CoursesController/ClassSelector";
+import { PlannerClassSelector } from "../../planner/sidebar/CoursesController/PlannerClassSelector";
 import CourseContext from "../../../contexts/CourseContext";
 import { Button } from "../../ui/button";
+import courseUnitEnrollmentService from "../../../api/services/courseUnitEnrollmentService";
+import { ExchangeSidebarStatus } from "../../../pages/Exchange"
+import { useToast } from "../../ui/use-toast";
+import { ExchangeClassSelector } from "../../planner/sidebar/CoursesController/ExchangeClassSelector";
 
-export const Enrollments = () => {
+type EnrollmentChoice = {
+  courseInfo: CourseInfo,
+  class: ClassInfo
+}
+
+type Props = {
+  setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
+}
+
+export const Enrollments = ({
+  setExchangeSidebarStatus
+}: Props) => {
   const [enrollCourses, setEnrollCourses] = useState<CourseInfo[]>([]);
+  const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, number>>([]);
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const { setMajors } = useContext(MajorContext);
   
-   useEffect(() => {
+  const { toast } = useToast();
+  
+  useEffect(() => {
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
@@ -37,16 +56,35 @@ export const Enrollments = () => {
       </div>
 
       <div className="w-full flex flex-col gap-y-2">
+        {enrollCourses.length === 0 && <>
+          <Desert className="w-full" />
+          <p className="text-center text-lg">
+            Não escolheste inscrição em nenhuma disciplina.
+          </p>
+        </>}
+
         {enrollCourses.map((course: CourseInfo) => (
-          <ClassSelector 
+          <ExchangeClassSelector
             course={course} 
+            selectedClassIdCallback={
+              (classId) => {
+                const newEnrollmentChoices = new Map(enrollmentChoices);
+                newEnrollmentChoices.set(course.id, classId);
+                setEnrollmentChoices(newEnrollmentChoices);
+              }}
             key={`course-schedule-${course.id}`} 
           />
         ))}
 
         {enrollCourses.length > 0 &&
-          <form onSubmit={(e) => {
+          <form onSubmit={async (e) => {
             e.preventDefault();
+            courseUnitEnrollmentService.submitEnrollmentRequest(enrollmentChoices);
+            setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS);
+            toast({
+              title: 'Pedido submetido',
+              description: 'Pedido de inscrição submetida com sucesso',
+            });
           }}>
             <Button className="w-full">
               Submeter

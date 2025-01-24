@@ -19,8 +19,6 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses } = useContext(CourseContext);
 
-  console.log("WHT PICKED COURSES: ", pickedCourses);
-
   const selectOption = () => {
     const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.course_id === course_id);
     if (multipleOptionsEntry) {

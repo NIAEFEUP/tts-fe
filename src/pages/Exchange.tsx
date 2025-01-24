@@ -28,7 +28,7 @@ const ExchangeSidebarStatusView = (
     case ExchangeSidebarStatus.CREATING_REQUEST:
       return <CreateRequest setExchangeSidebarStatus={setSidebarStatus} />
     case ExchangeSidebarStatus.ENROLLING:
-      return <Enrollments />
+      return <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
   }
 }
 

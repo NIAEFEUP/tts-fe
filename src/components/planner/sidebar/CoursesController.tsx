@@ -1,11 +1,10 @@
 import { useContext } from 'react'
-import ClassSelector from './CoursesController/ClassSelector'
+import { ClassSelectorController, PlannerClassSelector }from './CoursesController/PlannerClassSelector'
 import CourseContext from '../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { TrashIcon } from "@heroicons/react/24/outline"
 import { NoMajorSelectedSVG } from '../../svgs'
 import { Button } from '../../ui/button'
-
 
 const CoursesController = () => {
   const { pickedCourses, setUcsModalOpen } = useContext(CourseContext);
@@ -47,7 +46,10 @@ const CoursesController = () => {
         pickedCourses
           .sort((course1, course2) => course1.id - course2.id) // Same order as Sigarra
           .map((course, courseIdx) => (
-            <ClassSelector course={course} key={`course-schedule-${courseIdx}-${course.id}`} />
+            <PlannerClassSelector
+              course={course} 
+              key={`course-schedule-${courseIdx}-${course.id}`} 
+            />
           ))
       )}
 

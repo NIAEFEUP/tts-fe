@@ -95,7 +95,7 @@ export const CustomizeRequest = ({
             }
           }} />
           <label htmlFor="person-to-exchange">
-            Tenho uma pessoa para trocar
+            Tenho pessoas com quem trocar
           </label>
         </div>
 
