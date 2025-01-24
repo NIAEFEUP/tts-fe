@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { ClassDescriptor } from "../@types";
 import { LoginButton } from "../components/auth/LoginButton";
 import ExchangeSchedule from "../components/exchange/schedule/ExchangeSchedule";

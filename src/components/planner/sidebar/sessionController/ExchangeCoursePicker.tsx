@@ -3,6 +3,7 @@ import CoursePicker from './CoursePicker'
 import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
 import { Major, CourseInfo } from '../../../../@types'
 import BackendAPI from '../../../../api/backend'
+import { Dispatch, SetStateAction } from 'react'
 
 type Props = {
   enrollCourses: CourseInfo[]

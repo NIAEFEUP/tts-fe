@@ -1,5 +1,5 @@
 import { Context, Dispatch, createContext, SetStateAction } from 'react'
-import { CourseInfo, Major } from '../@types'
+import { CourseInfo, Major } from '../../@types'
 
 interface CoursePickerContextContent {
   coursesStorage: CourseInfo[]

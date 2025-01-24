@@ -4,6 +4,7 @@ import CoursePicker from './CoursePicker'
 import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
 import StorageAPI from '../../../../api/storage'
 import BackendAPI from '../../../../api/backend'
+import { Major } from '../../../../@types'
 
 export const PlannerCoursePicker = () => {
   const { 
