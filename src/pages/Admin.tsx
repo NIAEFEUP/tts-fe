@@ -3,30 +3,29 @@ import { AdminSidebar } from "../components/admin/AdminSidebar";
 import SessionContext from '../contexts/SessionContext'
 import { useContext } from "react";
 import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
+import { SidebarProvider } from "../components/ui/sidebar";
 
 type Props = {
     page: string;
 }
 
 const AdminPage = ({ page }: Props) => {
-    const {signedIn, user} = useContext(SessionContext);
+    const { signedIn, user } = useContext(SessionContext);
 
     console.log("CURRENT USER: ", user);
 
     /*if (!signedIn || user?.role !== 'admin') {
         return <div>Access Denied. You do not have admin credentials.</div>;
     }*/
-    
+
     return (
-        <div className="flex flex-row h-screen gap-x-2">
-            <div className="w-2/12">
-                <AdminSidebar />
-            </div>
-            <div className="w-10/12 m-8">
+        <SidebarProvider>
+            <AdminSidebar />
+            <main className="m-8 w-full">
                 {page === "pedidos" && <AdminMainContent />}
                 {page === "settings" && <AdminExchangeSettings />}
-            </div>
-        </div>
+            </main>
+        </SidebarProvider>
     )
 }
 

@@ -2,7 +2,6 @@ import useAdminExchanges from "../../hooks/useAdminExchanges";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { AcceptedExchangeCard } from "./AcceptedExchangeCard";
-import { TrashIcon } from "@heroicons/react/24/outline"
 
 export const AdminMainContent = () => {
     const { exchanges } = useAdminExchanges();
