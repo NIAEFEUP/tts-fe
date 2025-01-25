@@ -40,6 +40,8 @@ export const Enrollments = ({
   }, [])
 
   useEffect(() => {
+    if(!enrollCourses || enrollCourses.length === 0) return;
+
     for (const [course_unit_id, class_id] of enrollmentChoices) {
       if (!class_id) continue; // If the student has not yet selected a class for course, skip it
 
@@ -86,7 +88,7 @@ export const Enrollments = ({
           {enrollCourses.length === 0 && <>
             <Desert className="w-full" />
             <p className="text-center text-lg">
-              Não escolheste inscrição em nenhuma disciplina.
+              Não existem disciplinas selecionadas
             </p>
           </>}
 
@@ -115,6 +117,7 @@ export const Enrollments = ({
                   title: 'Pedido submetido',
                   description: 'Pedido de inscrição submetida com sucesso',
                 });
+                setEnrollCourses([]);
               } else {
                 const json = await res.json();
                 toast({
