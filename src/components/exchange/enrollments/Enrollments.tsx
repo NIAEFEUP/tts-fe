@@ -111,12 +111,22 @@ export const Enrollments = ({
           {enrollCourses.length > 0 &&
             <form onSubmit={async (e) => {
               e.preventDefault();
-              courseUnitEnrollmentService.submitEnrollmentRequest(enrollmentChoices);
-              setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS);
-              toast({
-                title: 'Pedido submetido',
-                description: 'Pedido de inscrição submetida com sucesso',
-              });
+
+              const res = await courseUnitEnrollmentService.submitEnrollmentRequest(enrollmentChoices);
+
+              if (res.ok) {
+                setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS);
+                toast({
+                  title: 'Pedido submetido',
+                  description: 'Pedido de inscrição submetida com sucesso',
+                });
+              } else {
+                const json = await res.json();
+                toast({
+                  title: 'Erro',
+                  description: json.error
+                })
+              }
             }}>
               <Button className="w-full">
                 Submeter
