@@ -1,4 +1,3 @@
-import CoursePicker from './sessionController/CoursePicker'
 import Export from './sessionController/Export'
 import Refresh from './sessionController/Refresh'
 import CollaborativeSession from './sessionController/CollaborativeSession'

@@ -9,7 +9,7 @@ import useStudentCourseUnits from "../hooks/useStudentCourseUnits";
 import '../styles/exchange.css';
 import { CreateRequest } from "../components/exchange/requests/issue/CreateRequest";
 import { ViewRequests } from "../components/exchange/requests/view/ViewRequests";
-import { ShieldExclamationIcon } from "@heroicons/react/24/outline";
+import { FaceFrownIcon, ShieldExclamationIcon } from "@heroicons/react/24/outline";
 import { Schedule } from "../components/planner";
 import { Enrollments } from "../components/exchange/enrollments/Enrollments";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
@@ -20,9 +20,9 @@ export enum ExchangeSidebarStatus {
 }
 
 const ExchangeSidebarStatusView = (
-  {sidebarStatus, setExchangeSidebarStatus}: {sidebarStatus: ExchangeSidebarStatus, setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>}
+  { sidebarStatus, setExchangeSidebarStatus }: { sidebarStatus: ExchangeSidebarStatus, setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>> }
 ) => {
-  switch(sidebarStatus) {
+  switch (sidebarStatus) {
     case ExchangeSidebarStatus.SHOWING_REQUESTS:
       return <ViewRequests setExchangeSidebarStatus={setExchangeSidebarStatus} />
     case ExchangeSidebarStatus.CREATING_REQUEST:
@@ -37,11 +37,11 @@ const ExchangePage = () => {
   const { schedule, loading: loadingSchedule } = useSchedule();
   const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
-  const { signedIn } = useContext(SessionContext);
+  const { signedIn, user } = useContext(SessionContext);
   const { enrolledCourseUnits } = useStudentCourseUnits();
 
   useEffect(() => {
-    if(creatingRequest) setSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST)
+    if (creatingRequest) setSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST)
     else setSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS)
   }, [creatingRequest])
 
@@ -95,26 +95,26 @@ const ExchangePage = () => {
               <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
             </TabsList>
             <TabsContent value="requests">
-              <ExchangeSidebarStatusView
-                sidebarStatus={sidebarStatus}
-                setExchangeSidebarStatus={setSidebarStatus}
-              />
+              {user?.eligible_exchange 
+                ? <ExchangeSidebarStatusView
+                  sidebarStatus={sidebarStatus}
+                  setExchangeSidebarStatus={setSidebarStatus}
+                />
+                :
+                <div className="flex flex-col items-center justify-center gap-4 h-full mt-16">
+                  <FaceFrownIcon className="w-12 h-12" />
+                  <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
+                  {/* TODO: Open the send feedback modal with something already written  */}
+                  {/*<p className="text-center">Gostavas de utilizar esta funcionalidade no teu curso?</p> */}
+                  {/*   <Button onClick={() => { }}>Sim!</Button> */}
+                </div>
+              }
             </TabsContent>
             <TabsContent value="enrollments">
               <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
             </TabsContent>
           </Tabs>
-          {/* {user?.eligible_exchange ? */}
-            {/* : */}
-            {/* <div className="flex flex-col items-center justify-center gap-4 h-full"> */}
-            {/*   <FaceFrownIcon className="w-12 h-12" /> */}
-            {/*   <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p> */}
-            {/*   {/* TODO: Open the send feedback modal with something already written  */}
-            {/*   <p className="text-center">Gostavas de utilizar esta funcionalidade no teu curso?</p> */}
-            {/*   <Button onClick={() => { }}>Sim!</Button> */}
-            {/*   */}
-            {/* </div> */}
-          {/* } */}
+
         </div>
       </div>
     }

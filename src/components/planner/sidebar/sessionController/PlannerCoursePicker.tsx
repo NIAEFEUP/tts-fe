@@ -5,7 +5,6 @@ import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerC
 import StorageAPI from '../../../../api/storage'
 import BackendAPI from '../../../../api/backend'
 import { Major } from '../../../../@types'
-import useCourseUnits from '../../../../hooks/useCourseUnits'
 
 export const PlannerCoursePicker = () => {
   const { 
@@ -34,7 +33,7 @@ export const PlannerCoursePicker = () => {
       coursesStorage: pickedCourses, setCoursesStorage: setPickedCourses, 
       checkboxedCourses, setCheckboxedCourses, choosingNewCourse, 
       setChoosingNewCourse, ucsModalOpen, setUcsModalOpen, coursesInfo, setCoursesInfo,
-      selectedMajor, setSelectedMajor, courseUnits
+      selectedMajor, setSelectedMajor
     }}
     >
       <CoursePicker />

@@ -1,9 +1,7 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import ClassSelector from './ClassSelector'
-import { CourseInfo, CourseOption } from '../../../../@types'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { CourseInfo } from '../../../../@types'
 import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
-import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
 type Props = {
   course: CourseInfo,
@@ -30,11 +28,6 @@ export const ExchangeClassSelector = ({
    
   }, []);
 
-  // Restores into multiple options the picked_class_id prior to when the user started previewing
-  const removePreview = () => {
-    
-  }
-
   return (
     <ClassSelectorContext.Provider value={{
       selectedClassId,
@@ -43,7 +36,7 @@ export const ExchangeClassSelector = ({
       setDisplay,
       preview,
       setPreview,
-      removePreview,
+      removePreview: () => {},
       locked: null,
       setLocked: null,
       toggleLocker: null,

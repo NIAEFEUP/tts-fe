@@ -10,13 +10,11 @@ import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelect
 type Props = {
   course: CourseInfo,
   lockFunctionality?: boolean,
-  previewFunctionality?: boolean
 }
 
 const ClassSelector = ({
   course,
   lockFunctionality = true,
-  previewFunctionality = true
 }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
@@ -25,12 +23,8 @@ const ClassSelector = ({
     selectedClassId,
     setSelectedClassId,
     display,
-    setDisplay,
-    preview,
     setPreview,
     removePreview,
-    locked,
-    setLocked,
     toggleLocker,
     courseOption
   } = useContext(ClassSelectorContext);

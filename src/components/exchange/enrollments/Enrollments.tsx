@@ -1,10 +1,9 @@
 import { useState, useContext, useEffect, Dispatch, SetStateAction } from "react";
 import { Desert } from "../../svgs/";
 import { ExchangeCoursePicker } from "../../planner/sidebar/sessionController/ExchangeCoursePicker";
-import { ClassInfo, CourseInfo, Major } from "../../../@types";
+import { CourseInfo, Major } from "../../../@types";
 import MajorContext from "../../../contexts/MajorContext";
 import BackendAPI from "../../../api/backend";
-import { PlannerClassSelector } from "../../planner/sidebar/CoursesController/PlannerClassSelector";
 import CourseContext from "../../../contexts/CourseContext";
 import { Button } from "../../ui/button";
 import courseUnitEnrollmentService from "../../../api/services/courseUnitEnrollmentService";
@@ -14,11 +13,6 @@ import { ExchangeClassSelector } from "../../planner/sidebar/CoursesController/E
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import ScheduleContext from "../../../contexts/ScheduleContext";
 import useSchedule from "../../../hooks/useSchedule";
-
-type EnrollmentChoice = {
-  courseInfo: CourseInfo,
-  class: ClassInfo
-}
 
 type Props = {
   setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
@@ -52,7 +46,8 @@ export const Enrollments = ({
       const course = enrollCourses.find((course) => course.course_unit_id === course_unit_id);
       const classInfo = course.classes.find((classInfo) => classInfo.id === class_id);
 
-      const newSchedule = [...exchangeSchedule?.filter((classDescriptor) => {
+      if(!exchangeSchedule) return;
+      const newSchedule = [...exchangeSchedule.filter((classDescriptor) => {
         return classDescriptor.courseInfo.course_unit_id !== course_unit_id
       })];
 
