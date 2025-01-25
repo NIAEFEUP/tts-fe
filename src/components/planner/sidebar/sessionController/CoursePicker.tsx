@@ -1,5 +1,5 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
-import { PencilSquareIcon, TrashIcon } from '@heroicons//react/24/solid'
+import { PencilSquareIcon } from '@heroicons//react/24/solid'
 import { useContext, useEffect, useState } from 'react'
 import StorageAPI from '../../../../api/storage'
 import CourseContext from '../../../../contexts/CourseContext'

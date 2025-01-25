@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useState, useContext, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
@@ -33,10 +33,11 @@ const LessonBox = ({
     slotInfo.professors
       .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
       .join('\n')
+
+  const conflicts = [];
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false) // Controls if the popover showing the conflicts appear
   const [isHovered, setIsHovered] = useState(false)
-  const [conflicts, setConflicts] = useState([]);
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
 

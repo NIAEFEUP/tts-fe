@@ -94,3 +94,12 @@ export type ImportedCourses = {
   [key: string]: string
 }
 
+export type CollabSession = {
+  id: number
+  name: string
+  lastEdited: string
+  lifeSpan: number
+  currentUser: string
+  link : string
+  participants: Array<string>
+}

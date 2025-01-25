@@ -1,6 +1,6 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo } from '../@types'
+import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo, ClassInfo } from '../@types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import Plausible from 'plausible-tracker'
@@ -75,6 +75,20 @@ const isMandatory = (slot: SlotInfo): boolean => {
 
 const conflictsSeverity = (first: SlotInfo, second: SlotInfo): number => {
   return (isMandatory(first) && isMandatory(second)) ? 2 : 1;
+}
+
+const classesConflictSeverity = (first: ClassInfo, second: ClassInfo): number => {
+  let maxSeverity = 0;
+
+  for (const slot of first.slots) {
+    for (const otherSlot of second.slots) {
+      if (schedulesConflict(slot, otherSlot)) {
+        maxSeverity = Math.max(maxSeverity, conflictsSeverity(slot, otherSlot));
+      }
+    }
+  }
+
+  return maxSeverity;
 }
 
 const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
@@ -210,7 +224,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }
@@ -223,7 +237,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
  * @example output: [[{ course: 1, year: 1 }, { course: 3, year: 1 }], [{ course: 2, year: 2 }]]
  */
 const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
-  let majorCourses: CourseInfo[][] = []
+  const majorCourses: CourseInfo[][] = []
   let currYear = 0
   for (let i = 0; i < yearCourses?.length; i++) {
     if (yearCourses[i].course_unit_year !== currYear) {
@@ -237,9 +251,9 @@ const groupCoursesByYear = (yearCourses: CourseInfo[]): CourseInfo[][] => {
 }
 
 const isSubset = (set1, set2, same) => {
-  for (let elem1 of set1) {
+  for (const elem1 of set1) {
     let found = false
-    for (let elem2 of set2) {
+    for (const elem2 of set2) {
       if (same(elem1, elem2)) {
         found = true
         break
@@ -255,7 +269,7 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
     course_id: course.id,
     picked_class_id: null,
     locked: false,
-    filteredTeachers: [],
+    filteredTeachers: null,
     hide: []
   }
 }
@@ -316,7 +330,9 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
     const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
+
     if (!classInfo) return [];
+
     return classInfo.slots
   })
 }
@@ -396,5 +412,6 @@ export {
   uniqueTeachersFromCourseInfo,
   teacherIdsFromCourseInfo,
   scrollToTop,
+  classesConflictSeverity,
   plausible
 }

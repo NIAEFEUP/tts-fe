@@ -108,6 +108,10 @@ const setMultipleOptionsStorage = (multipleOptions: MultipleOptions) => {
   writeStorage(key, multipleOptions);
 }
 
+const getCourseFilteredTeachersStorage = (selectedOption: number, courseUnitId: number) => {
+  return getMultipleOptionsStorage()[selectedOption].course_options.find((option) => option.course_id === courseUnitId).filteredTeachers;
+}
+
 const getSelectedOptionStorage = () => {
   const key = 'niaefeup-tts.selected-option';
 
@@ -165,6 +169,7 @@ const StorageAPI = {
   setSelectedMajorStorage,
   getPickedCoursesStorage,
   setPickedCoursesStorage,
+  getCourseFilteredTeachersStorage
 }
 
 export default StorageAPI
