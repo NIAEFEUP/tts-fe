@@ -10,7 +10,7 @@ const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
   return true;
 }
 
-const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string) => {
+const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string = "") => {
   const formData = new FormData();
 
   for (const request of requests.values()) {

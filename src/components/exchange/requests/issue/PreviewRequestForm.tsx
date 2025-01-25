@@ -1,3 +1,5 @@
+"use client";
+
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -9,6 +11,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import PreviewRequestCard from "./cards/PreviewRequestCard";
 import { Checkbox } from "../../../ui/checkbox";
 import { Textarea } from "../../../ui/textarea";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
 
 type Props = {
   requests: Map<number, CreateRequestData>
@@ -19,8 +25,21 @@ type Props = {
 
 const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook, submittingRequest }: Props) => {
   const [previewingForm, setPreviewingForm] = previewingFormHook;
-  const [urgentMessage, setUrgentMessage] = useState<string>("");
   const [sendUrgentMessage, setSendUrgentMessage] = useState<boolean>(false);
+
+  const schema = z.object({
+    urgentMessage: sendUrgentMessage ? z.string().min(1, {
+      message: "Tens de especificar um motivo!"
+    }).max(2048) : z.string().optional()
+  });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema)
+  });
+
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    await requestSubmitHandler(data.urgentMessage);
+  }
 
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
     <DialogTrigger asChild>
@@ -59,39 +78,48 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
       </div>
 
       {requests.size > 0 &&
-        <form className="flex flex-col gap-y-4 items-center mx-auto">
-          <div className="flex flex-row gap-x-1">
-            <Checkbox 
-              checked={sendUrgentMessage}
-              onCheckedChange={(checked: boolean) => setSendUrgentMessage(checked)}
-            />
-            <p>Quero enviar o pedido direto à comissão de inscrição</p>
-          </div>
-          {sendUrgentMessage &&
-            <Textarea 
-              value={urgentMessage}
-              onChange={(e) => setUrgentMessage(e.target.value)}
-              placeholder="Justifica a urgência do teu pedido de troca." 
-            />
-          }
-          <Button
-            className="flex flex-row gap-x-2 success-button"
-            type="submit"
-            onClick={async (e) => {
-              e.preventDefault();
-              await requestSubmitHandler(urgentMessage);
-            }}
-          >
-            {submittingRequest
-              ? <p>A processar pedido...</p>
-              : <>
-                <p>Submeter pedido</p>
-                <CheckBadgeIcon className="h-5 w-5" />
-              </>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 items-center mx-auto">
+            <div className="flex flex-row gap-x-1">
+              <Checkbox
+                checked={sendUrgentMessage}
+                onCheckedChange={(checked: boolean) => setSendUrgentMessage(checked)}
+              />
+              <p>Quero enviar o pedido direto à comissão de inscrição</p>
+            </div>
+            {sendUrgentMessage &&
+              <FormField
+                control={form.control}
+                name="urgentMessage"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        placeholder="Justifica a urgência do teu pedido de troca."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             }
-          </Button>
-          {submittingRequest && <BeatLoader size={10} />}
-        </form>
+
+            <Button
+              className="flex flex-row gap-x-2 success-button"
+              type="submit"
+            >
+              {submittingRequest
+                ? <p>A processar pedido...</p>
+                : <>
+                  <p>Submeter pedido</p>
+                  <CheckBadgeIcon className="h-5 w-5" />
+                </>
+              }
+            </Button>
+            {submittingRequest && <BeatLoader size={10} />}
+          </form>
+        </Form>
       }
     </DialogContent>
   </Dialog >

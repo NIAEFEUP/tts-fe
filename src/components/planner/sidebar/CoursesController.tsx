@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ClassSelectorController, PlannerClassSelector }from './CoursesController/PlannerClassSelector'
+import { PlannerClassSelector }from './CoursesController/PlannerClassSelector'
 import CourseContext from '../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { TrashIcon } from "@heroicons/react/24/outline"

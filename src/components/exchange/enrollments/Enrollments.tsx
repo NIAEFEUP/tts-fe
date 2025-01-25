@@ -25,8 +25,10 @@ type Props = {
 export const Enrollments = ({
   setExchangeSidebarStatus
 }: Props) => {
-  const [enrollCourses, setEnrollCourses] = useLocalStorage("enrollCourses", []);
-  const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, number>>([]);
+  const parentCourseContext = useContext(CourseContext);
+
+  const [enrollCourses, setEnrollCourses] = useLocalStorage<CourseInfo[]>("enrollCourses", []);
+  const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, number>>(new Map());
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const { setMajors } = useContext(MajorContext);
   
@@ -40,10 +42,11 @@ export const Enrollments = ({
 
   return (
     <CourseContext.Provider value={{
+      ...parentCourseContext,
       pickedCourses: enrollCourses,
       setPickedCourses: setEnrollCourses,
       coursesInfo: coursesInfo,
-      setCoursesInfo: setCoursesInfo
+      setCoursesInfo: setCoursesInfo,
     }}>
     <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
       <div className="flex flex-row justify-between items-center w-full">

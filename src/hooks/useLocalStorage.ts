@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
 
-const useLocalStorage = (key: string, initialValue?: any) => {
+function useLocalStorage<S>(key: string, initialValue?: S) {
     const [value, setValue] = useState(() => {
       try {
-        console.log("HERE");
         return JSON.parse(
           window.localStorage.getItem(key) || JSON.stringify(initialValue)
         );

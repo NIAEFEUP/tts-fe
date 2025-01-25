@@ -20,13 +20,13 @@ export enum ExchangeSidebarStatus {
 }
 
 const ExchangeSidebarStatusView = (
-  {sidebarStatus, setSidebarStatus}: {sidebarStatus: ExchangeSidebarStatus, setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>}
+  {sidebarStatus, setExchangeSidebarStatus}: {sidebarStatus: ExchangeSidebarStatus, setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>}
 ) => {
   switch(sidebarStatus) {
     case ExchangeSidebarStatus.SHOWING_REQUESTS:
-      return <ViewRequests setExchangeSidebarStatus={setSidebarStatus} />
+      return <ViewRequests setExchangeSidebarStatus={setExchangeSidebarStatus} />
     case ExchangeSidebarStatus.CREATING_REQUEST:
-      return <CreateRequest setExchangeSidebarStatus={setSidebarStatus} />
+      return <CreateRequest setExchangeSidebarStatus={setExchangeSidebarStatus} />
   }
 }
 
@@ -97,7 +97,7 @@ const ExchangePage = () => {
             <TabsContent value="requests">
               <ExchangeSidebarStatusView
                 sidebarStatus={sidebarStatus}
-                setSidebarStatus={setSidebarStatus}
+                setExchangeSidebarStatus={setSidebarStatus}
               />
             </TabsContent>
             <TabsContent value="enrollments">
