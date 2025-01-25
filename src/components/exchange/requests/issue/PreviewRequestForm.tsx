@@ -1,22 +1,26 @@
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { CreateRequestData } from "../../../../@types";
 import exchangeUtils from "../../../../utils/exchange";
 import { Desert } from "../../../svgs";
 import { Button } from "../../../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../../ui/dialog";
 import PreviewRequestCard from "./cards/PreviewRequestCard";
+import { Checkbox } from "../../../ui/checkbox";
+import { Textarea } from "../../../ui/textarea";
 
 type Props = {
   requests: Map<number, CreateRequestData>
-  requestSubmitHandler: () => void
+  requestSubmitHandler: (message: string) => void
   previewingFormHook: [boolean, Dispatch<SetStateAction<boolean>>]
   submittingRequest: boolean
 }
 
 const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook, submittingRequest }: Props) => {
   const [previewingForm, setPreviewingForm] = previewingFormHook;
+  const [urgentMessage, setUrgentMessage] = useState<string>("");
+  const [sendUrgentMessage, setSendUrgentMessage] = useState<boolean>(false);
 
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
     <DialogTrigger asChild>
@@ -56,12 +60,26 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
 
       {requests.size > 0 &&
         <form className="flex flex-col gap-y-4 items-center mx-auto">
+          <div className="flex flex-row gap-x-1">
+            <Checkbox 
+              checked={sendUrgentMessage}
+              onCheckedChange={(checked: boolean) => setSendUrgentMessage(checked)}
+            />
+            <p>Quero enviar o pedido direto à comissão de inscrição</p>
+          </div>
+          {sendUrgentMessage &&
+            <Textarea 
+              value={urgentMessage}
+              onChange={(e) => setUrgentMessage(e.target.value)}
+              placeholder="Justifica a urgência do teu pedido de troca." 
+            />
+          }
           <Button
             className="flex flex-row gap-x-2 success-button"
             type="submit"
             onClick={async (e) => {
               e.preventDefault();
-              await requestSubmitHandler();
+              await requestSubmitHandler(urgentMessage);
             }}
           >
             {submittingRequest
