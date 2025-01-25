@@ -55,10 +55,25 @@ const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
   });
 }
 
+const verifyExchangeRequest = async (token: string) => {
+  return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  }).then(async (res) => {
+    return res.ok;
+  }).catch((e) => {
+    console.error(e);
+    return false;
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
-  retrieveRequestCardMetadata
+  retrieveRequestCardMetadata,
+  verifyExchangeRequest
 }
 
 export default exchangeRequestService;
