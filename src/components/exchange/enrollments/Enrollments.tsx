@@ -11,6 +11,7 @@ import courseUnitEnrollmentService from "../../../api/services/courseUnitEnrollm
 import { ExchangeSidebarStatus } from "../../../pages/Exchange"
 import { useToast } from "../../ui/use-toast";
 import { ExchangeClassSelector } from "../../planner/sidebar/CoursesController/ExchangeClassSelector";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 type EnrollmentChoice = {
   courseInfo: CourseInfo,
@@ -24,7 +25,7 @@ type Props = {
 export const Enrollments = ({
   setExchangeSidebarStatus
 }: Props) => {
-  const [enrollCourses, setEnrollCourses] = useState<CourseInfo[]>([]);
+  const [enrollCourses, setEnrollCourses] = useLocalStorage("enrollCourses", []);
   const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, number>>([]);
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const { setMajors } = useContext(MajorContext);

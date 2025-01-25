@@ -4,6 +4,7 @@ import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerC
 import { Major, CourseInfo } from '../../../../@types'
 import BackendAPI from '../../../../api/backend'
 import { Dispatch, SetStateAction } from 'react'
+import useLocalStorage from '../../../../hooks/useLocalStorage'
 
 type Props = {
   enrollCourses: CourseInfo[]
@@ -14,7 +15,7 @@ export const ExchangeCoursePicker = ({
   enrollCourses,
   setEnrollCourses
 }: Props) => {
-  const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>([]);
+  const [checkboxedCourses, setCheckboxedCourses] = useLocalStorage("enrollCoursesCheckboxedCourses", []);
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [selectedMajor, setSelectedMajor] = useState<Major>(null);
