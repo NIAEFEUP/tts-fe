@@ -41,7 +41,7 @@ export const Enrollments = ({
 
   useEffect(() => {
     BackendAPI.getMajors().then((majors: Major[]) => {
-      setMajors(majors)
+      setMajors(majors.filter((major) => major.acronym === "L.EIC" || major.acronym === "M.EIC"))
     })
   }, [])
 

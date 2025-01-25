@@ -5,6 +5,7 @@ import { Major, CourseInfo } from '../../../../@types'
 import BackendAPI from '../../../../api/backend'
 import { Dispatch, SetStateAction } from 'react'
 import useLocalStorage from '../../../../hooks/useLocalStorage'
+import useCourseUnits from '../../../../hooks/useCourseUnits'
 
 type Props = {
   enrollCourses: CourseInfo[]

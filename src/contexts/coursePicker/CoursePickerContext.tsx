@@ -28,7 +28,7 @@ const CoursePickerContext: Context<CoursePickerContextContent> = createContext({
   coursesInfo: [],
   setCoursesInfo: () => { },
   selectedMajor: null,
-  setSelectedMajor: () => { },
+  setSelectedMajor: () => { }
 })
 
 export default CoursePickerContext
