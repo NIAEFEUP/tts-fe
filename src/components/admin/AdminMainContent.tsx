@@ -1,7 +1,11 @@
 import useAdminExchanges from "../../hooks/useAdminExchanges";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import { AcceptedExchangeCard } from "./AcceptedExchangeCard";
+import { MultipleStudentExchanges } from "./requests/MultipleStudentExchanges";
+import { SingleStudentExchanges } from "./requests/SingleStudentExchanges";
+import { StudentEnrollments } from "./requests/StudentEnrollments";
 
 export const AdminMainContent = () => {
     const { exchanges } = useAdminExchanges();
@@ -46,6 +50,22 @@ export const AdminMainContent = () => {
                     <Button>Resetar</Button>
                 </div>
             </div>
+            <Tabs defaultValue="exchange-with-student">
+                <TabsList className="w-full">
+                    <TabsTrigger value="exchange-with-student">Trocas entre estudantes</TabsTrigger>
+                    <TabsTrigger value="exchange-singular">Trocas individuais</TabsTrigger>
+                    <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
+                </TabsList>
+                <TabsContent value="exchange-with-student">
+                    <MultipleStudentExchanges />
+                </TabsContent>
+                <TabsContent value="exchange-singular">
+                    <SingleStudentExchanges />
+                </TabsContent>
+                <TabsContent value="enrollments">
+                    <StudentEnrollments />
+                </TabsContent>
+            </Tabs>
             <div className="flex flex-col gap-y-2">
                 <article key={`João Pereira`}>
                     <AcceptedExchangeCard
