@@ -159,11 +159,15 @@ export type DirectExchangeParticipant = {
 export type UrgentRequest = {
   id: number,
   user_nmec: string,
-  course_unit: CourseInfo,
-  class_user_goes_from: string,
-  class_user_goes_to: string,
   message: string,
-  accepted: boolean
+  accepted: boolean,
+  options: Array<UrgentRequestOption>
+}
+
+export type UrgentRequestOption = {
+  course_unit: CourseInfo,
+  class_user_goes_from: ClassInfo,
+  class_user_goes_to: ClassInfo,
 }
 
 export type Student = {
