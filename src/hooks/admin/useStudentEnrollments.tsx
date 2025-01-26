@@ -6,9 +6,9 @@ import useSWR from "swr";
  * Gets the exchanges that a student made not involving any other student.
 */
 export default () => {
-  const getExchanges = async () => {
+  const getEnrollments = async () => {
     try {
-        const res = await fetch(`${api.BACKEND_URL}/exchange/urgent/`, {
+        const res = await fetch(`${api.BACKEND_URL}/course_unit/enrollment/`, {
             credentials: "include"
         });
 
@@ -20,13 +20,14 @@ export default () => {
     }
   };
 
-  const { data, error, mutate } = useSWR("admin-single-student-exchanges", getExchanges);
-  const exchanges = useMemo(() => data ? data : null, [data]);
+  const { data, error, mutate } = useSWR("admin-student-enrollments", getEnrollments);
+  const enrollments = useMemo(() => data ? data : null, [data]);
 
   return {
-    exchanges,
+    enrollments,
     error,
     loading: !data,
     mutate,
   };
 };
+

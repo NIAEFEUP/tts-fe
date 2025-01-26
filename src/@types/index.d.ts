@@ -170,6 +170,18 @@ export type UrgentRequestOption = {
   class_user_goes_to: ClassInfo,
 }
 
+export type CourseUnitEnrollment = {
+  id: number,
+  user_nmec: string,
+  accepted: boolean,
+  options: Array<CourseUnitEnrollmentOption>
+}
+
+export type CourseUnitEnrollmentOption = {
+  course_unit: CourseInfo,
+  class_user_goes_to: ClassInfo,
+}
+
 export type Student = {
   name: string,
   mecNumber: number

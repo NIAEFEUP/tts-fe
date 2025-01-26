@@ -7,7 +7,8 @@ export const SingleStudentExchanges = () => {
 
     return (
         <>
-            {loading && <BarLoader />}
+            {loading && <BarLoader className="w-full"/>}
+
             {!loading && exchanges?.map((exchange) => (
                 <SingleStudentExchangeCard exchange={exchange} />
             ))}

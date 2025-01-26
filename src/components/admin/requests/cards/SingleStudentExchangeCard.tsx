@@ -5,7 +5,7 @@ import { Button } from "../../../ui/button";
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Separator } from "../../../ui/separator";
 import { Person } from "./Person";
-import { ExchangeStatus } from "./ExchangeStatuts";
+import { ExchangeStatus } from "./ExchangeStatus";
 
 type Props = {
     exchange: UrgentRequest

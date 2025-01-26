@@ -8,7 +8,7 @@ export const MultipleStudentExchanges = () => {
     return (
         <>
             <div className="flex flex-col gap-y-2">
-                {loading && <BarLoader />}
+                {loading && <BarLoader className="w-full"/>}
 
                 {!loading && (!exchanges || exchanges.length === 0) && (
                     <h2>Nenhum pedido encontrado de momento</h2>
