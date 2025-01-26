@@ -1,3 +1,16 @@
+import { BarLoader } from "react-spinners";
+import useSingleStudentExchanges from "../../../hooks/admin/useSingleStudentExchanges";
+import { SingleStudentExchangeCard } from "./cards/SingleStudentExchangeCard";
+
 export const SingleStudentExchanges = () => {
-    return <></>
+    const { exchanges, loading } = useSingleStudentExchanges();
+
+    return (
+        <>
+            {loading && <BarLoader />}
+            {!loading && exchanges?.map((exchange) => (
+                <SingleStudentExchangeCard exchange={exchange} />
+            ))}
+        </>
+    )
 }
