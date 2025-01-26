@@ -37,6 +37,8 @@ const CoursePicker = () => {
     setUcsModalOpen(false)
   }
 
+  console.log("course picker being rendered")
+
   return (
     <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>

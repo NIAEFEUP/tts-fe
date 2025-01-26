@@ -22,7 +22,6 @@ export const ExchangeCoursePicker = ({
 
  useEffect(() => {
     BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
-      // StorageAPI.setPickedCoursesStorage(courseWithClasses);
       setEnrollCourses(courseWithClasses);
     })
   }, [checkboxedCourses])
