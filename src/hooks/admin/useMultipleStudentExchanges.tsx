@@ -1,7 +1,10 @@
 import { useMemo } from "react";
-import api from "../api/backend";
+import api from "../../api/backend";
 import useSWR from "swr";
 
+/**
+ * Gets the exchanges that involve multiple students.
+*/
 export default () => {
   const getExchanges = async () => {
     try {
@@ -17,7 +20,7 @@ export default () => {
     }
   };
 
-  const { data, error, mutate } = useSWR("admin-exchanges", getExchanges);
+  const { data, error, mutate } = useSWR("admin-multiple-student-exchanges", getExchanges);
   const exchanges = useMemo(() => data ? data : null, [data]);
 
   return {
