@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DirectExchangeParticipant, DirectExchangeRequest, UrgentRequest, UrgentRequestOption } from "../../../../@types"
+import { UrgentRequest, UrgentRequestOption } from "../../../../@types"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
@@ -28,6 +28,7 @@ export const SingleStudentExchangeCard = ({
                                         {`#${exchange.id}`}
                                     </h2>
                                 </CardTitle>
+                                <ExchangeStatus exchange={exchange} />
                             </div>
                             <p className="text-sm">Criado às 15h30 de 15/09/2020</p>
                             <p className="text-sm">Atualizado às 15h30 de 15/09/2020</p>

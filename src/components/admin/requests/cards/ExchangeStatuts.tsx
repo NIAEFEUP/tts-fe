@@ -1,8 +1,8 @@
-import { DirectExchangeRequest } from "../../../../@types"
+import { DirectExchangeRequest, UrgentRequest } from "../../../../@types"
 import { cn } from "../../../../utils"
 
 type Props = {
-    exchange: DirectExchangeRequest
+    exchange: DirectExchangeRequest | UrgentRequest
 }
 
 type ExchangeStatusProperty = {
