@@ -8,11 +8,11 @@ import { buildUrlWithFilterParams } from "../../utils/admin/filters";
  * Gets the exchanges that a student made not involving any other student.
 */
 export default (filtersContext: RequestFiltersContextContent) => {
-  const url = buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/`, filtersContext);
+  const url = buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/`, filtersContext);
 
   const getEnrollments = async (url: string) => {
     try {
-        const res = await fetch(`${api.BACKEND_URL}/course_unit/enrollment/`, {
+        const res = await fetch(url, {
             credentials: "include"
         });
 
