@@ -54,7 +54,7 @@ const Header = ({ siteTitle, location }: Props) => {
         return (
           <>
             <div className={`${open ? 'p-0' : 'p-2'} relative flex items-center justify-between md:py-0`}>
-              <Hamburger open={open} />
+              <Hamburger open={open} signedIn = {signedIn} />
               <div className="flex flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to={config.pathPrefix} className="flex items-center space-x-2">
@@ -112,53 +112,58 @@ const Header = ({ siteTitle, location }: Props) => {
 export default Header
 
 type HamburgerProps = {
-  open: boolean
+  open: boolean,
+  signedIn: boolean
 }
 
-const Hamburger = ({ open }: HamburgerProps) => (
-  <div
-    className={`z-50 md:hidden ${open
-      ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
-      : 'flex w-full items-center justify-between'
-      }`}
-  >
-    <Link to={config.pathPrefix}>
-      {open ? (
-        <img
-          className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
-          src={LogoNIAEFEUPImage}
-          alt="Time Table Selector"
-        />
-      ) : (
-        <img
-          className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
-          src={LogoNIAEFEUPImage}
-          alt="Time Table Selector"
-        />
-      )}
-    </Link>
+const Hamburger = ({ open, signedIn }: HamburgerProps) => {
 
-    <div className="flex items-center space-x-1">
-
-      <DarkModeSwitch />
-
-      <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
-        <span className="sr-only">Open nav menu</span>
+  return (
+    <div
+      className={`z-50 md:hidden ${open
+        ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
+        : 'flex w-full items-center justify-between'
+        }`}
+    >
+      <Link to={config.pathPrefix}>
         {open ? (
-          <XMarkIcon
-            className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
-            aria-hidden="true"
+          <img
+            className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
+            src={LogoNIAEFEUPImage}
+            alt="Time Table Selector"
           />
         ) : (
-          <Bars3Icon
-            className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
-            aria-hidden="true"
+          <img
+            className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
+            src={LogoNIAEFEUPImage}
+            alt="Time Table Selector"
           />
         )}
-      </Disclosure.Button>
+      </Link>
+
+      <div className="flex items-center space-x-1">
+
+        <DarkModeSwitch />
+        {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
+
+        <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
+          <span className="sr-only">Open nav menu</span>
+          {open ? (
+            <XMarkIcon
+              className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
+              aria-hidden="true"
+            />
+          ) : (
+            <Bars3Icon
+              className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
+              aria-hidden="true"
+            />
+          )}
+        </Disclosure.Button>
+      </div>
     </div>
-  </div>
-)
+  );
+};
 
 type MobileProps = {
   location: string
