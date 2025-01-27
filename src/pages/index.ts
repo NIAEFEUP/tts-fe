@@ -4,5 +4,6 @@ import NotFoundPage from './NotFound'
 import FaqsPage from './Faqs'
 import ExchangePage from './Exchange'
 import AdminPage from './Admin'
+import PrivacyPolicyPage from './PrivacyPolicy'
 
-export { AboutPage, TimeTableSelectorPage, NotFoundPage, FaqsPage, ExchangePage, AdminPage }
+export { AboutPage, TimeTableSelectorPage, NotFoundPage, FaqsPage, ExchangePage, PrivacyPolicyPage, AdminPage }

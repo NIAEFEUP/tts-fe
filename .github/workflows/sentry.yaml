@@ -45,6 +45,7 @@ jobs:
         with:
           environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
           version: ${{ steps.get_version.outputs.release_version }}
+          ignore_missing: true
           sourcemaps: ./build
           finalize: true
         env:

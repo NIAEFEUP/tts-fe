@@ -26,27 +26,29 @@ const HeroPlanner = () => {
       subtitle: 'O teu melhor amigo para escolher e gerir o teu horário na UPorto.',
       image: enabled ? ScheduleDarkImage : ScheduleLightImage,
       content: (
-        <div className="space-y-3">
-          <p>
-            TTS, ou <strong>Time Table Selector</strong>, é uma plataforma desenvolvida pelo <strong>NIAEFEUP</strong>
-            {', '}
-            como uma melhor alternativa à ferramenta de horários do SIGARRA, para ajudar os estudantes da Universidade
-            do Porto a planear e elaborar o seu horário para um semestre.
-          </p>
-          <p>
-            O TTS é a ferramenta que torna o processo de escolher turmas mais simples, mais flexível e da forma a
-            perderes o menos tempo possível. Molda o horário à tua maneira, quer seja por preferires certos professores
-            ou dias livres. Partilha facilmente os horários com os amigos e{' '}
-            <strong> não deixes o horário perfeito escapar</strong>. Tens dúvidas sobre a plataforma? A{' '}
-            <Link
-              className="font-medium text-primary transition-all hover:underline hover:opacity-80"
-              to={getPath(config.paths.faqs)}
-            >
-              página das FAQs
-            </Link>{' '}
-            esclarece as dúvidas mais comuns.
-          </p>
-        </div>
+        <>
+          <div className="space-y-3">
+            <p>
+              TTS, ou <strong>Time Table Selector</strong>, é uma plataforma desenvolvida pelo <strong>NIAEFEUP</strong>
+              {', '}
+              como uma melhor alternativa à ferramenta de horários do SIGARRA, para ajudar os estudantes da Universidade
+              do Porto a planear e elaborar o seu horário para um semestre.
+            </p>
+            <p>
+              O TTS é a ferramenta que torna o processo de escolher turmas mais simples, mais flexível e da forma a
+              perderes o menos tempo possível. Molda o horário à tua maneira, quer seja por preferires certos professores
+              ou dias livres. Partilha facilmente os horários com os amigos e{' '}
+              <strong> não deixes o horário perfeito escapar</strong>. Tens dúvidas sobre a plataforma? A{' '}
+              <Link
+                className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+                to={getPath(config.paths.faqs)}
+              >
+                página das FAQs
+              </Link>{' '}
+              esclarece as dúvidas mais comuns.
+            </p>
+          </div>
+        </>
       ),
     },
   ]
@@ -93,6 +95,9 @@ const HeroPlanner = () => {
             {/* Desktop */}
             <div className="hidden items-start justify-between xl:flex">
               <div className={classNames('container grow', item.reverse ? 'order-2 ml-8' : 'mr-8')}>
+                <p className="mb-4">
+                  <Link to="/privacy-policy">Política de privacidade</Link>
+                </p>
                 <button
                   onClick={() => scrollToComponentSection(item.id)}
                   className="relative text-xl font-semibold transition 

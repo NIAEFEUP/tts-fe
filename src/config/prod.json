@@ -8,7 +8,8 @@
     "faqs": "faqs",
     "notfound": "*",
     "home": "home",
-    "admin": "admin"
+    "admin": "admin",
+    "privacypolicy": "privacy-policy"
   },
   "api": {
     "port": 443,
