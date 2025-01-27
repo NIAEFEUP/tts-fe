@@ -182,6 +182,13 @@ export type CourseUnitEnrollmentOption = {
   class_user_goes_to: ClassInfo,
 }
 
+export enum AdminRequestState {
+  ACCEPTED = "accepted",
+  PENDING = "pending",
+  TREATED = "treated",
+  REJECTED = "rejected"
+}
+
 export type Student = {
   name: string,
   mecNumber: number

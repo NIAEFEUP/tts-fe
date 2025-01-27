@@ -1,9 +1,12 @@
 import { BarLoader } from "react-spinners";
 import useMultipleStudentExchanges from "../../../hooks/admin/useMultipleStudentExchanges";
 import { MultipleStudentExchangeCard } from "./cards/MultipleStudentExchangeCard";
+import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
+import { useContext } from "react";
 
 export const MultipleStudentExchanges = () => {
-    const { exchanges, loading } = useMultipleStudentExchanges();
+    const filterContext = useContext(RequestFiltersContext);
+    const { exchanges, loading } = useMultipleStudentExchanges(filterContext);
 
     return (
         <>
@@ -17,6 +20,7 @@ export const MultipleStudentExchanges = () => {
                 {exchanges?.map((exchange) => (
                     <MultipleStudentExchangeCard 
                         exchange={exchange}
+                        key={`multiple-student-${exchange.id}`}
                     />
                 ))}
             </div>
