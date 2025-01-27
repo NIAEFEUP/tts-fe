@@ -150,6 +150,7 @@ export type DirectExchangeParticipant = {
   participant_nmec: string,
   class_participant_goes_from: ClassInfo,
   class_participant_goes_to: ClassInfo,
+  schedule: Array<ClassDescriptor>,
   course_unit: string,
   course_unit_id: string,
   accepted: boolean
@@ -162,6 +163,7 @@ export type UrgentRequest = {
   message: string,
   accepted: boolean,
   options: Array<UrgentRequestOption>
+  schedule: Array<ClassDescriptor>
 }
 
 export type UrgentRequestOption = {
@@ -174,6 +176,7 @@ export type CourseUnitEnrollment = {
   id: number,
   user_nmec: string,
   accepted: boolean,
+  schedule: Array<ClassDescriptor>,
   options: Array<CourseUnitEnrollmentOption>
 }
 

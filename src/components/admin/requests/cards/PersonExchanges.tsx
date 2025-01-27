@@ -15,7 +15,6 @@ export const PersonExchanges = ({
     participant_name,
     participant_nmec
 }: Props) => {
-    console.log("EXCHANGES: ", exchanges);
     return (
         <>
             <div className="flex justify-between">

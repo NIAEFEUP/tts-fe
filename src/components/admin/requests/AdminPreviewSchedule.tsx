@@ -34,8 +34,8 @@ export const AdminPreviewSchedule = ({
                     Visualizar
                 </Button>
             </DialogTrigger>
-            <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-scroll">
-                <DialogHeader>
+            <DialogContent className="max-w-fit max-h-fit p-4">
+                <DialogHeader className="w-[50em]">
                     <DialogTitle>Prever horário</DialogTitle>
                 </DialogHeader>
                 <ScheduleContext.Provider value={{
@@ -45,10 +45,8 @@ export const AdminPreviewSchedule = ({
                     enrolledCourseUnits: [],
                     loadingSchedule: false
                 }}>
-                    <div className="order-1 col-span-12 rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
-                        <div className="h-full w-full">
-                            <ExchangeSchedule />
-                        </div>
+                    <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+                        <ExchangeSchedule />
                     </div>
                 </ScheduleContext.Provider>
             </DialogContent>

@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
-import { CourseUnitEnrollment, CourseUnitEnrollmentOption } from "../../../../@types"
+import { ClassDescriptor, CourseUnitEnrollment, CourseUnitEnrollmentOption } from "../../../../@types"
 import { Button } from "../../../ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card"
 import { Person } from "./Person"
@@ -67,7 +67,18 @@ export const StudentEnrollmentCard = ({
                                 </div>
                             </div>
                             <div>
-                                <AdminPreviewSchedule /> 
+                                <AdminPreviewSchedule 
+                                    originalSchedule={enrollment.schedule}
+                                    classesToAdd={
+                                        enrollment.options.map((option): ClassDescriptor => {
+                                            return {
+                                                classInfo: option.class_user_goes_to,
+                                                courseInfo: option.course_unit,
+                                                slotInfo: null
+                                            }
+                                        })
+                                    }
+                                /> 
                             </div>
                         </div>
                     </div>

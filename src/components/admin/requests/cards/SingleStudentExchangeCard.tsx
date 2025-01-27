@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UrgentRequest, UrgentRequestOption } from "../../../../@types"
+import { ClassDescriptor, UrgentRequest, UrgentRequestOption } from "../../../../@types"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
@@ -73,7 +73,18 @@ export const SingleStudentExchangeCard = ({
                                     </div>
                                 </div>
                                 <div>
-                                    <AdminPreviewSchedule />
+                                    <AdminPreviewSchedule
+                                        originalSchedule={exchange.schedule}
+                                        classesToAdd={
+                                            exchange.options.map((option): ClassDescriptor => {
+                                                return {
+                                                    classInfo: option.class_user_goes_to,
+                                                    courseInfo: option.course_unit,
+                                                    slotInfo: null
+                                                }
+                                            })
+                                        }
+                                    />
                                 </div>
                             </div>
                             <div>
