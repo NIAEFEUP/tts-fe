@@ -7,6 +7,7 @@ import { useState } from "react"
 import { Separator } from "../../../ui/separator"
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
+import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
 
 type Props = {
     enrollment: CourseUnitEnrollment
@@ -16,6 +17,8 @@ export const StudentEnrollmentCard = ({
     enrollment
 }: Props) => {
     const [open, setOpen] = useState<boolean>(false);
+
+    const { schedule } = useStudentsSchedule(enrollment.user_nmec);
 
     return (
         <Card>
@@ -69,7 +72,7 @@ export const StudentEnrollmentCard = ({
                             </div>
                             <div>
                                 <AdminPreviewSchedule 
-                                    originalSchedule={enrollment.schedule}
+                                    originalSchedule={schedule}
                                     classesToAdd={
                                         enrollment.options.map((option): ClassDescriptor => {
                                             return {

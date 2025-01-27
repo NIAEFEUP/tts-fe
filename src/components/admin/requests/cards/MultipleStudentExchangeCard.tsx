@@ -8,6 +8,7 @@ import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { PersonExchanges } from "./PersonExchanges";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
+import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 
 type Props = {
     exchange: DirectExchangeRequest

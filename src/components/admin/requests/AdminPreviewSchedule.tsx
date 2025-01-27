@@ -20,6 +20,8 @@ export const AdminPreviewSchedule = ({
     const [schedule, setSchedule] = useState<Array<ClassDescriptor>>(originalSchedule);
 
     useEffect(() => {
+        if(!originalSchedule) return;
+
         const prevSchedule = originalSchedule.filter(
             (classDescriptor) => !classesToAdd.some((newClass) => newClass.courseInfo.id === classDescriptor.courseInfo.id)
         );

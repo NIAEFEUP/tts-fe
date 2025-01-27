@@ -4,6 +4,7 @@ import { Person } from "./Person";
 import { Button } from "../../../ui/button";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 import { AdminSendEmail } from "../AdminSendEmail";
+import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 
 type Props = {
     participant_nmec: string
@@ -16,6 +17,8 @@ export const PersonExchanges = ({
     participant_name,
     participant_nmec
 }: Props) => {
+    const { schedule } = useStudentsSchedule(participant_nmec);
+
     return (
         <>
             <div className="flex justify-between">
@@ -39,7 +42,7 @@ export const PersonExchanges = ({
                 </div>
                 <div className="flex flex-row gap-x-2">
                     <AdminPreviewSchedule 
-                        originalSchedule={exchanges[0].schedule}
+                        originalSchedule={schedule}
                         classesToAdd={
                             exchanges.map((exchange): ClassDescriptor => {
                                 return {
@@ -50,7 +53,9 @@ export const PersonExchanges = ({
                             })
                         }
                     />
-                    <AdminSendEmail />
+                    <AdminSendEmail
+                        nmec={participant_nmec}
+                    />
                 </div>
             </div>
         </>

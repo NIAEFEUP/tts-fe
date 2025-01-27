@@ -7,6 +7,7 @@ import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
+import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 
 type Props = {
     exchange: UrgentRequest
@@ -16,6 +17,8 @@ export const SingleStudentExchangeCard = ({
     exchange
 }: Props) => {
     const [open, setOpen] = useState<boolean>(false);
+
+    const { schedule } = useStudentsSchedule(exchange.user_nmec);
 
     return (
         <>
@@ -74,7 +77,7 @@ export const SingleStudentExchangeCard = ({
                                 </div>
                                 <div>
                                     <AdminPreviewSchedule
-                                        originalSchedule={exchange.schedule}
+                                        originalSchedule={schedule}
                                         classesToAdd={
                                             exchange.options.map((option): ClassDescriptor => {
                                                 return {
