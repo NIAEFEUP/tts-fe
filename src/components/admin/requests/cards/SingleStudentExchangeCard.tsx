@@ -3,10 +3,10 @@ import { ClassDescriptor, UrgentRequest, UrgentRequestOption } from "../../../..
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { Separator } from "../../../ui/separator";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
+import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 
 type Props = {
     exchange: UrgentRequest
@@ -96,17 +96,9 @@ export const SingleStudentExchangeCard = ({
                 </CardContent>
 
                 {open &&
-                    <>
-                        <Separator className="my-4" />
-                        <CardFooter className="justify-end gap-4">
-                            <Button variant="secondary">
-                                Rejeitar
-                            </Button>
-                            <Button>
-                                Tratar
-                            </Button>
-                        </CardFooter>
-                    </>
+                    <AdminRequestCardFooter
+                        nmecs={[exchange.user_nmec]} 
+                    /> 
                 }
             </Card>
         </>

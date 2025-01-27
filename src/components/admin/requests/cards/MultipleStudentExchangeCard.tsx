@@ -7,6 +7,7 @@ import { Separator } from "../../../ui/separator";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { PersonExchanges } from "./PersonExchanges";
+import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 
 type Props = {
     exchange: DirectExchangeRequest
@@ -84,17 +85,11 @@ export const MultipleStudentExchangeCard = ({
                 </CardContent>
 
                 {open &&
-                    <>
-                        <Separator className="my-4" />
-                        <CardFooter className="justify-end gap-4">
-                            <Button variant="secondary">
-                                Rejeitar
-                            </Button>
-                            <Button>
-                                Tratar
-                            </Button>
-                        </CardFooter>
-                    </>
+                    <AdminRequestCardFooter 
+                        nmecs={
+                            exchange.options.map(option => option.participant_nmec)
+                        }
+                    /> 
                 }
             </Card>
         </>

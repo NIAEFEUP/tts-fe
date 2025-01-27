@@ -3,6 +3,7 @@ import { ClassDescriptor, DirectExchangeParticipant } from "../../../../@types";
 import { Person } from "./Person";
 import { Button } from "../../../ui/button";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
+import { AdminSendEmail } from "../AdminSendEmail";
 
 type Props = {
     participant_nmec: string
@@ -36,7 +37,7 @@ export const PersonExchanges = ({
                         </div>
                     ))}
                 </div>
-                <div>
+                <div className="flex flex-row gap-x-2">
                     <AdminPreviewSchedule 
                         originalSchedule={exchanges[0].schedule}
                         classesToAdd={
@@ -49,6 +50,7 @@ export const PersonExchanges = ({
                             })
                         }
                     />
+                    <AdminSendEmail />
                 </div>
             </div>
         </>

@@ -57,9 +57,8 @@ export const RequestFilters = () => {
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="accepted">Aceite</SelectItem>
-                <SelectItem value="pending">Pendente</SelectItem>
+                <SelectItem value="untreated">Não tratado</SelectItem>
                 <SelectItem value="rejected">Rejeitado</SelectItem>
-                <SelectItem value="treated">Tratado</SelectItem>
             </SelectContent>
         </Select>
         <Button

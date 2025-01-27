@@ -6,6 +6,7 @@ import { Person } from "./Person"
 import { useState } from "react"
 import { Separator } from "../../../ui/separator"
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
+import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
 
 type Props = {
     enrollment: CourseUnitEnrollment
@@ -85,17 +86,9 @@ export const StudentEnrollmentCard = ({
                 ))}
 
                 {open &&
-                    <>
-                        <Separator className="my-4" />
-                        <CardFooter className="justify-end gap-4">
-                            <Button variant="secondary">
-                                Rejeitar
-                            </Button>
-                            <Button>
-                                Tratar
-                            </Button>
-                        </CardFooter>
-                    </>
+                    <AdminRequestCardFooter 
+                        nmecs={[enrollment.user_nmec]}
+                    /> 
                 }
             </CardContent>
         </Card>
