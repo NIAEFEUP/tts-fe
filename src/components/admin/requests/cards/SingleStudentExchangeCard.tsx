@@ -8,6 +8,7 @@ import { ExchangeStatus } from "./ExchangeStatus";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
+import { RequestDate } from "./RequestDate";
 
 type Props = {
     exchange: UrgentRequest
@@ -34,8 +35,9 @@ export const SingleStudentExchangeCard = ({
                                 </CardTitle>
                                 <ExchangeStatus exchange={exchange} />
                             </div>
-                            <p className="text-sm">Criado às 15h30 de 15/09/2020</p>
-                            <p className="text-sm">Atualizado às 15h30 de 15/09/2020</p>
+                            <RequestDate 
+                                date={exchange.date}
+                            />
                         </div>
                         {!open && <>
                             <Person name={exchange.user_nmec} nmec={exchange.user_nmec} />

@@ -9,7 +9,7 @@ const dateProperties = (isoString: string) => {
     return { time, day, month, year };
 }
 
-const requestCreatedAtDate = (isoString: string) => {
+export const requestCreatedAtDate = (isoString: string) => {
     const { time, day, month, year } = dateProperties(isoString);
 
     return `Criado às ${time} de ${day}/${month}/${year}`;

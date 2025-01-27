@@ -3,12 +3,12 @@ import { DirectExchangeParticipant, DirectExchangeRequest } from "../../../../@t
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { Separator } from "../../../ui/separator";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { PersonExchanges } from "./PersonExchanges";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
-import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
+import { requestCreatedAtDate } from "../../../../utils/date";
+import { RequestDate } from "./RequestDate";
 
 type Props = {
     exchange: DirectExchangeRequest
@@ -50,7 +50,9 @@ export const MultipleStudentExchangeCard = ({
                                 </CardTitle>
                                 <ExchangeStatus exchange={exchange} />
                             </div>
-                            <p className="text-sm">Criado às 15h30 de 15/09/2020</p>
+                            <RequestDate 
+                                date={exchange.date}
+                            />
                             <p className="text-sm">Atualizado às 15h30 de 15/09/2020</p>
                         </div>
                         {!open && <>

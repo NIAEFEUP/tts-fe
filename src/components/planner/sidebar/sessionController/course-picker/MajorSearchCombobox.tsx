@@ -35,7 +35,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
       .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover> 
       <PopoverTrigger asChild>
         <Button
           ref={(node) => {

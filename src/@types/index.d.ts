@@ -139,6 +139,7 @@ export type DirectExchangeRequest = {
   issuer_nmec: string,
   accepted: boolean,
   pending_motive: DirectExchangePendingMotive,
+  admin_state: string,
   options: DirectExchangeParticipant[],
   date: string
 }
@@ -160,8 +161,10 @@ export type DirectExchangeParticipant = {
 export type UrgentRequest = {
   id: number,
   user_nmec: string,
+  date: string,
   message: string,
   accepted: boolean,
+  admin_state: string,
   options: Array<UrgentRequestOption>
   schedule: Array<ClassDescriptor>
 }
@@ -174,7 +177,9 @@ export type UrgentRequestOption = {
 
 export type CourseUnitEnrollment = {
   id: number,
+  date: string,
   user_nmec: string,
+  admin_state: string,
   accepted: boolean,
   schedule: Array<ClassDescriptor>,
   options: Array<CourseUnitEnrollmentOption>

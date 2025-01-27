@@ -10,7 +10,7 @@ type ExchangeStatusProperty = {
     color: string
 }
 
-const exchangeStatusProperties = (exchange: DirectExchangeRequest) => {
+const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentRequest) => {
     if (exchange.accepted) {
         return {
             "message": "Aceite",
