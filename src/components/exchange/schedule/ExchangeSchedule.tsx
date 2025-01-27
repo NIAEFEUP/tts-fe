@@ -8,10 +8,6 @@ const ExchangeSchedule = () => {
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [classes, setClasses] = useState<ClassDescriptor[]>([]);
 
-  console.log("Exchange schedule: ", exchangeSchedule);
-  console.log("SLOTS: ", slots);
-  console.log("Classes: ", classes);
-
   useEffect(() => {
     if (!exchangeSchedule) return;
 

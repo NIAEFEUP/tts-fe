@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../u
 import { Person } from "./Person"
 import { useState } from "react"
 import { Separator } from "../../../ui/separator"
+import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
 
 type Props = {
     enrollment: CourseUnitEnrollment
@@ -66,9 +67,7 @@ export const StudentEnrollmentCard = ({
                                 </div>
                             </div>
                             <div>
-                                <Button variant="secondary">
-                                    Visualizar
-                                </Button>
+                                <AdminPreviewSchedule /> 
                             </div>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Separator } from "../../../ui/separator";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
+import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 
 type Props = {
     exchange: UrgentRequest
@@ -72,9 +73,7 @@ export const SingleStudentExchangeCard = ({
                                     </div>
                                 </div>
                                 <div>
-                                    <Button variant="secondary">
-                                        Visualizar
-                                    </Button>
+                                    <AdminPreviewSchedule />
                                 </div>
                             </div>
                             <div>

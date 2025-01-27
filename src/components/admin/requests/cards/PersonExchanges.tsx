@@ -1,7 +1,8 @@
 import { ArrowRightIcon } from "lucide-react";
-import { DirectExchangeParticipant } from "../../../../@types";
+import { ClassDescriptor, DirectExchangeParticipant } from "../../../../@types";
 import { Person } from "./Person";
 import { Button } from "../../../ui/button";
+import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 
 type Props = {
     participant_nmec: string
@@ -14,6 +15,7 @@ export const PersonExchanges = ({
     participant_name,
     participant_nmec
 }: Props) => {
+    console.log("EXCHANGES: ", exchanges);
     return (
         <>
             <div className="flex justify-between">
@@ -36,9 +38,18 @@ export const PersonExchanges = ({
                     ))}
                 </div>
                 <div>
-                    <Button variant="secondary">
-                        Visualizar
-                    </Button>
+                    <AdminPreviewSchedule 
+                        originalSchedule={exchanges[0].schedule}
+                        classesToAdd={
+                            exchanges.map((exchange): ClassDescriptor => {
+                                return {
+                                    classInfo: exchange.class_participant_goes_to,
+                                    courseInfo: exchange.course_info,
+                                    slotInfo: null
+                                }
+                            })
+                        }
+                    />
                 </div>
             </div>
         </>
