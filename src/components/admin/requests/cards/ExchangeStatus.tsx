@@ -1,8 +1,8 @@
-import { DirectExchangeRequest, UrgentRequest } from "../../../../@types"
+import { CourseUnitEnrollment, DirectExchangeRequest, UrgentRequest } from "../../../../@types"
 import { cn } from "../../../../utils"
 
 type Props = {
-    exchange: DirectExchangeRequest | UrgentRequest
+    exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment
 }
 
 type ExchangeStatusProperty = {
@@ -11,16 +11,22 @@ type ExchangeStatusProperty = {
 }
 
 const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentRequest) => {
-    if (exchange.accepted) {
-        return {
-            "message": "Aceite",
-            "color": "bg-green-200 text-green-800",
-        };
-    } else {
-        return {
-            "message": "Pendente",
-            "color": "bg-yellow-200 text-yellow-800",
-        }
+    switch (exchange.admin_state) {
+        case "accepted":
+            return {
+                "message": "Aceite",
+                "color": "bg-green-200 text-green-800",
+            };
+        case "rejected":
+            return {
+                "message": "Rejeitado",
+                "color": "bg-red-200 text-red-800",
+            }
+        case "untreated":
+            return {
+                "message": "Pendente",
+                "color": "bg-yellow-200 text-yellow-800",
+            }
     }
 }
 

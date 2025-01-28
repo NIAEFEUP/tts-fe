@@ -10,6 +10,7 @@ import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
 import { RequestDate } from "./RequestDate"
 import { rejectEmailExchanges } from "../../../../utils/mail"
 import { AdminRequestType } from "../../../../utils/exchange"
+import { ExchangeStatus } from "./ExchangeStatus"
 
 type Props = {
     enrollment: CourseUnitEnrollment
@@ -33,8 +34,11 @@ export const StudentEnrollmentCard = ({
                                     {`#${enrollment.id}`}
                                 </h2>
                             </CardTitle>
-                            {/* <ExchangeStatus exchange={exchange} /> */}
+                            <ExchangeStatus
+                                exchange={enrollment} 
+                            />
                         </div>
+
                         <RequestDate
                             date={enrollment.date} 
                         />

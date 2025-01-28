@@ -11,6 +11,7 @@ import { requestCreatedAtDate } from "../../../../utils/date";
 import { RequestDate } from "./RequestDate";
 import { rejectEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
+import { RequestStudentState } from "../RequestStudentState";
 
 type Props = {
     exchange: DirectExchangeRequest
@@ -52,10 +53,12 @@ export const MultipleStudentExchangeCard = ({
                                 </CardTitle>
                                 <ExchangeStatus exchange={exchange} />
                             </div>
+                            <RequestStudentState 
+                                accepted={exchange.accepted} 
+                            />
                             <RequestDate 
                                 date={exchange.date}
                             />
-                            <p className="text-sm">Atualizado às 15h30 de 15/09/2020</p>
                         </div>
                         {!open && <>
                             {exchange.options.map((participant: DirectExchangeParticipant) => (
