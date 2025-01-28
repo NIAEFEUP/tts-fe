@@ -4,11 +4,12 @@ import { Button } from "../../../ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card"
 import { Person } from "./Person"
 import { useState } from "react"
-import { Separator } from "../../../ui/separator"
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
 import { RequestDate } from "./RequestDate"
+import { rejectEmailExchanges } from "../../../../utils/mail"
+import { AdminRequestType } from "../../../../utils/exchange"
 
 type Props = {
     enrollment: CourseUnitEnrollment
@@ -93,6 +94,15 @@ export const StudentEnrollmentCard = ({
                 {open &&
                     <AdminRequestCardFooter 
                         nmecs={[enrollment.user_nmec]}
+                        rejectMessage={rejectEmailExchanges(
+                            enrollment.options.map(option => ({
+                                goes_from: option.class_user_goes_to.name,
+                                goes_to: option.class_user_goes_to.name,
+                                course_acronym: option.course_unit.acronym
+                            }))
+                        )}
+                        requestType={AdminRequestType.ENROLLMENT}
+                        requestId={enrollment.id}
                     /> 
                 }
             </CardContent>

@@ -35,16 +35,22 @@ export const AdminExchangeSettings = () => {
             <form className="flex flex-row gap-x-2 mt-4">
               <div className="flex flex-row space-x-2">
                 <Input type="text" placeholder="Nome do período" />
-                <DateTimePicker
+                {/* <DateTimePicker
                   value={startDate}
                   onChange={setStartDate}
+                  showOutsideDays={false}
+                  weekStartsOn={1}
+                  showWeekNumber={false}
                   placeholder="Início"
                 />
                 <DateTimePicker
                   value={endDate}
                   onChange={setEndDate}
+                  showOutsideDays={false}
+                  weekStartsOn={1}
+                  showWeekNumber={false}
                   placeholder="Fim"
-                />
+                /> */}
               </div>
               <div>
                 <Button onClick={() => setAddingPeriod(false)}>

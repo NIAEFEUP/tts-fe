@@ -197,6 +197,12 @@ export enum AdminRequestState {
   REJECTED = "rejected"
 }
 
+export enum AdminRequestType {
+  DIRECT_EXCHANGE = "direct_exchange",
+  URGENT_EXCHANGE = "urgent_exchange",
+  ENROLLMENT = "enrollment"
+}
+
 export type Student = {
   name: string,
   mecNumber: number

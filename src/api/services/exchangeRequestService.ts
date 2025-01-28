@@ -1,5 +1,5 @@
 import { Key } from "swr";
-import { CreateRequestData, MarketplaceRequest } from "../../@types";
+import { AdminRequestType, CreateRequestData, MarketplaceRequest } from "../../@types";
 import api from "../backend";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
@@ -55,10 +55,21 @@ const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
   });
 }
 
+const adminRejectExchangeRequest = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/reject/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
-  retrieveRequestCardMetadata
+  retrieveRequestCardMetadata,
+  adminRejectExchangeRequest
 }
 
 export default exchangeRequestService;

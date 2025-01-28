@@ -9,6 +9,8 @@ import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 import { RequestDate } from "./RequestDate";
+import { rejectEmailExchanges } from "../../../../utils/mail";
+import { AdminRequestType } from "../../../../utils/exchange";
 
 type Props = {
     exchange: UrgentRequest
@@ -89,6 +91,7 @@ export const SingleStudentExchangeCard = ({
                                                 }
                                             })
                                         }
+
                                     />
                                 </div>
                             </div>
@@ -103,6 +106,15 @@ export const SingleStudentExchangeCard = ({
                 {open &&
                     <AdminRequestCardFooter
                         nmecs={[exchange.user_nmec]} 
+                        rejectMessage={rejectEmailExchanges(
+                            exchange.options.map(option => ({
+                                goes_from: option.class_user_goes_from.name,
+                                goes_to: option.class_user_goes_to.name,
+                                course_acronym: option.course_unit.acronym
+                            }))
+                        )}
+                        requestType={AdminRequestType.URGENT_EXCHANGE}
+                        requestId={exchange.id}
                     /> 
                 }
             </Card>

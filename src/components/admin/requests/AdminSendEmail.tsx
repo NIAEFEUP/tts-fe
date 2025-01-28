@@ -1,17 +1,5 @@
+import { mailtoStringBuilder } from "../../../utils/mail"
 import { Button } from "../../ui/button"
-
-const mailtoStringBuilder = (nmec: string | Array<string>) => {
-    if (Array.isArray(nmec)) {
-        let mailto = "mailto:"
-        nmec.forEach(nmec => {
-            mailto += `up${nmec}@up.pt,`
-        })
-
-        return mailto;
-    }
-
-    return `mailto:up${nmec}@up.pt`
-}
 
 type Props = {
     nmec: string | Array<string>

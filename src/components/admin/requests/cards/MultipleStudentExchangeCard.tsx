@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DirectExchangeParticipant, DirectExchangeRequest } from "../../../../@types"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Person } from "./Person";
@@ -9,6 +9,8 @@ import { PersonExchanges } from "./PersonExchanges";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 import { requestCreatedAtDate } from "../../../../utils/date";
 import { RequestDate } from "./RequestDate";
+import { rejectEmailExchanges } from "../../../../utils/mail";
+import { AdminRequestType } from "../../../../utils/exchange";
 
 type Props = {
     exchange: DirectExchangeRequest
@@ -92,6 +94,15 @@ export const MultipleStudentExchangeCard = ({
                         nmecs={
                             exchange.options.map(option => option.participant_nmec)
                         }
+                        rejectMessage={rejectEmailExchanges(
+                            exchange.options.map(option => ({
+                                goes_from: option.class_participant_goes_from.name,
+                                goes_to: option.class_participant_goes_to.name,
+                                course_acronym: option.course_unit
+                            }))
+                        )}
+                        requestType={AdminRequestType.DIRECT_EXCHANGE}
+                        requestId={exchange.id}
                     /> 
                 }
             </Card>
