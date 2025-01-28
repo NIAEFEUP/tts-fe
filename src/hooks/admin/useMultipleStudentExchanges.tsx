@@ -1,15 +1,13 @@
 import { useMemo } from "react";
 import api from "../../api/backend";
-import useSWR from "swr";
 import { RequestFiltersContextContent } from "../../contexts/admin/RequestFiltersContext";
 import { buildUrlWithFilterParams } from "../../utils/admin/filters";
+import useSWRInfinite from "swr/infinite";
 
 /**
  * Gets the exchanges that involve multiple students.
 */
 export default (filterContext: RequestFiltersContextContent) => {
-  const url = buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/`, filterContext);
-
   const getExchanges = async (url: string) => {
     try {
         const res = await fetch(url, {
@@ -24,12 +22,16 @@ export default (filterContext: RequestFiltersContextContent) => {
     }
   };
 
-  const { data, error, mutate } = useSWR(url, getExchanges);
-  const exchanges = useMemo(() => data ? data : null, [data]);
+  const { data, error, mutate, size, setSize } = useSWRInfinite((index) => {
+    return buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/?page=${index}`, filterContext);
+  }, getExchanges);
+  const exchanges = useMemo(() => data ? [].concat(...data) : null, [data]);
 
   return {
     exchanges,
     error,
+    size,
+    setSize,
     loading: !data,
     mutate,
   };

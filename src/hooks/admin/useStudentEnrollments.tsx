@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import api from "../../api/backend";
-import useSWR from "swr";
+import useSWRInfinite from "swr/infinite";
 import { RequestFiltersContextContent } from "../../contexts/admin/RequestFiltersContext";
 import { buildUrlWithFilterParams } from "../../utils/admin/filters";
 
@@ -24,12 +24,17 @@ export default (filtersContext: RequestFiltersContextContent) => {
     }
   };
 
-  const { data, error, mutate } = useSWR(url, getEnrollments);
-  const enrollments = useMemo(() => data ? data : null, [data]);
+  const { data, error, mutate, size, setSize } = useSWRInfinite((index) => {
+    return buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/?page=${index}`, filtersContext);
+  }, getEnrollments);
+
+  const enrollments = useMemo(() => data ? [].concat(...data) : null, [data]);
 
   return {
     enrollments,
     error,
+    size,
+    setSize,
     loading: !data,
     mutate,
   };
