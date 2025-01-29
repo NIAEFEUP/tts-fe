@@ -7,9 +7,6 @@ export const AdminPagination = () => {
 
     return <Pagination>
         <PaginationContent>
-            <PaginationItem>
-                <PaginationPrevious href="#" />
-            </PaginationItem>
             {currPage > 1 && (
                 <PaginationItem>
                     <PaginationLink 
@@ -37,12 +34,6 @@ export const AdminPagination = () => {
                 >
                     {currPage + 1}
                 </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-                <PaginationNext href="#" />
             </PaginationItem>
         </PaginationContent>
     </Pagination>

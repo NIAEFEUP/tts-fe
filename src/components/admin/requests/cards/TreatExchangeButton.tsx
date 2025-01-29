@@ -14,10 +14,14 @@ export const TreatExchangeButton = ({
 }: Props) => {
     const { studentCourseMetadata } = useStudentCourseMetadata(nmec, courseUnitId);
 
+    const uniqueMetadata = studentCourseMetadata
+        ? Array.from(new Map(studentCourseMetadata.map(m => [m.fest_id, m])).values())
+        : [];
+
     return (
         <>
             {
-                studentCourseMetadata?.map((metadata) => (
+                uniqueMetadata.map((metadata) => (
                     <a
                         href={`https://sigarra.up.pt?fest_id=${metadata.fest_id}`}
                         key={metadata.fest_id}
