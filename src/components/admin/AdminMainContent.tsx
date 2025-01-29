@@ -34,7 +34,6 @@ export const AdminMainContent = () => {
                         <h1 className="text-3xl font-bold">Pedidos</h1>
                         <RequestFilters />
                     </div>
-                    <AdminPagination />
                     <Tabs defaultValue="exchange-with-student">
                         <TabsList className="w-full">
                             <TabsTrigger 
@@ -65,6 +64,10 @@ export const AdminMainContent = () => {
                         <TabsContent value="enrollments">
                             <StudentEnrollments />
                         </TabsContent>
+
+                        <div className="mt-8">
+                            <AdminPagination />
+                        </div>
                     </Tabs>
                 </div>
             </RequestFiltersContext.Provider>

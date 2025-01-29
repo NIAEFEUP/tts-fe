@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import api from "../../api/backend";
-import useSWRInfinite from "swr/infinite";
+import useSWR from "swr";
 import { RequestFiltersContextContent } from "../../contexts/admin/RequestFiltersContext";
 import { buildUrlWithFilterParams } from "../../utils/admin/filters";
 
 /**
  * Gets the exchanges that a student made not involving any other student.
 */
-export default (filtersContext: RequestFiltersContextContent) => {
+export default (filtersContext: RequestFiltersContextContent, pageIndex: number) => {
   const getEnrollments = async (url: string) => {
     try {
         const res = await fetch(url, {
@@ -22,17 +22,16 @@ export default (filtersContext: RequestFiltersContextContent) => {
     }
   };
 
-  const { data, error, mutate, size, setSize } = useSWRInfinite((index) => {
-    return buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/?page=${index + 1}`, filtersContext);
-  }, getEnrollments);
+  const { data, error, mutate } = useSWR(
+    buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/?page=${pageIndex}`, filtersContext),
+    getEnrollments
+  );
 
   const enrollments = useMemo(() => data ? [].concat(...data) : null, [data]);
 
   return {
     enrollments,
     error,
-    size,
-    setSize,
     loading: !data,
     mutate,
   };

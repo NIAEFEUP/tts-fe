@@ -13,6 +13,7 @@ import { ExchangeClassSelector } from "../../planner/sidebar/CoursesController/E
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import ScheduleContext from "../../../contexts/ScheduleContext";
 import useSchedule from "../../../hooks/useSchedule";
+import useStudentEnrollments from "../../../hooks/admin/useStudentEnrollments";
 
 type Props = {
   setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
