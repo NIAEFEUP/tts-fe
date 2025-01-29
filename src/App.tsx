@@ -3,7 +3,7 @@ import { Toaster } from './components/ui/toaster'
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
-import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage, PrivacyPolicyPage } from './pages'
+import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage, PrivacyPolicyPage, ExchangeVerifyPage } from './pages'
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import Exchange from './pages/Exchange'
@@ -87,6 +87,18 @@ const App = () => {
               }
             />
           ))}
+          <Route 
+            path="/exchange/verify/:token" 
+            key="exchange-verify-page"
+            element={
+              <Layout location="Exchange" title="Exchange" liquid={true}>
+                <div>
+                  <ExchangeVerifyPage />
+                  <Toaster />
+                </div>
+              </Layout>
+            }
+          />
           {redirects.map((redirect, redirectIdx) => (
             <Route
               path={redirect.from}
