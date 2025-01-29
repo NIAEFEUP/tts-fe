@@ -38,6 +38,10 @@ export const CustomizeRequest = ({
       toast({
         title: 'Pedido submetido com sucesso!',
       });
+    }else{
+      toast({
+        title: 'Erro ao submeter o pedido.',
+        description: json.error  });
     }
 
     setSubmittingRequest(false);
