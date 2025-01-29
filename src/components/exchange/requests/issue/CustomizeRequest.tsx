@@ -43,7 +43,6 @@ export const CustomizeRequest = ({
     setSubmittingRequest(false);
   }
 
-
   return <div className="flex flex-col gap-y-4">
     {selectedCourseUnits.length === 0
       ? <div className="flex flex-col gap-y-4">

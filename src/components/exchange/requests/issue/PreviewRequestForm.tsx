@@ -1,5 +1,6 @@
 "use client";
 
+import { useContext } from "react";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -15,6 +16,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
+import ConflictsContext from "../../../../contexts/ConflictsContext";
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
 
 type Props = {
   requests: Map<number, CreateRequestData>
@@ -41,12 +44,26 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
     await requestSubmitHandler(data.urgentMessage);
   }
 
+  const { isConflictSevere } = useContext(ConflictsContext);
+
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
-    <DialogTrigger asChild>
-      <Button className="w-1/2">
-        Submeter pedido
-      </Button>
-    </DialogTrigger>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger className="w-1/2">
+          <DialogTrigger asChild>
+            <Button
+              className="w-full"
+              disabled={isConflictSevere}
+            >
+              Submeter pedido
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Tens conflitos</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
     <DialogContent className="flex flex-col">
       <DialogHeader>
         <DialogTitle>Prever visualização do pedido</DialogTitle>
@@ -102,8 +119,7 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-            }
+              />}
 
             <Button
               className="flex flex-row gap-x-2 success-button"
