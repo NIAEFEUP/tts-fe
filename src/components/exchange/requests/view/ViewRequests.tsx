@@ -12,9 +12,10 @@ import { MineRequestCard } from "./cards/MineRequestCard";
 import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
+import { ExchangeSidebarStatus } from "../../../../pages/Exchange";
 
 type Props = {
-    setCreatingRequest: Dispatch<SetStateAction<boolean>>
+    setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
 }
 
 const requestTypeFilters = ["all", "mine", "received"];
@@ -53,7 +54,7 @@ const RequestCardSkeletons = () => {
 }
 
 export const ViewRequests = ({
-    setCreatingRequest
+    setExchangeSidebarStatus
 }: Props) => {
     const { originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
     const requestCardsContainerRef = useRef(null);
@@ -93,16 +94,18 @@ export const ViewRequests = ({
     return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
         <div className="flex flex-row justify-between items-center w-full">
             <h1 className="font-bold text-xl">Pedidos</h1>
-            <Button
-                className="add-item-button"
-                onClick={() => {
-                    setCreatingRequest(true);
-                    setExchangeSchedule(originalExchangeSchedule);
-                }}
-            >
-                Criar pedido
-                <PlusIcon className="h-5 w-5" />
-            </Button>
+            <div className="flex flex-row gap-x-2">
+              <Button
+                  className="add-item-button"
+                  onClick={() => {
+                      setExchangeSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST);
+                      setExchangeSchedule(originalExchangeSchedule);
+                  }}
+              >
+                  Criar pedido
+                  <PlusIcon className="h-5 w-5" />
+              </Button>
+            </div>
         </div>
 
         <Tabs defaultValue="todos" className="mt-2 w-full">

@@ -19,7 +19,7 @@ const pages = [
   { path: getPath(configToUse.paths.planner), location: 'Horários', element: TimeTableSelectorPage, liquid: true },
   { path: getPath(configToUse.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
   { path: getPath(configToUse.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
-  { path: getPath(config.paths.exchange), location: 'Trocas', element: Exchange, liquid: true },
+  { path: getPath(config.paths.exchange), location: 'Turmas', element: Exchange, liquid: true },
   { path: getPath(config.paths.privacypolicy), location: 'Privacidade', element: PrivacyPolicyPage, liquid: true },
 ]
 
