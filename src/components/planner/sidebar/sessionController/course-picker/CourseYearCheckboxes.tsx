@@ -1,18 +1,17 @@
 import { useContext, useState, useEffect } from 'react'
 import { CourseInfo } from '../../../../../@types'
-import CourseContext from '../../../../../contexts/CourseContext'
+import CoursePickerContext from '../../../../../contexts/coursePicker/CoursePickerContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { removeCourseOption, addCourseOption } from '../../../../../utils'
 import { Checkbox } from '../../../../ui/checkbox'
 import { Label } from '../../../../ui/label'
-
 
 type Props = {
   courses: CourseInfo[]
 }
 
 export const CourseYearCheckboxes = ({ courses }: Props) => {
-  const { setCheckboxedCourses, checkboxedCourses } = useContext(CourseContext)
+  const { setCheckboxedCourses, checkboxedCourses } = useContext(CoursePickerContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [checkboxList, setCheckboxList] = useState<boolean[]>([])
 

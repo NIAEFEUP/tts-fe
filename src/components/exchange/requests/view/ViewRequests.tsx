@@ -95,14 +95,6 @@ export const ViewRequests = ({
         <div className="flex flex-row justify-between items-center w-full">
             <h1 className="font-bold text-xl">Pedidos</h1>
             <div className="flex flex-row gap-x-2">
-              <Button 
-                className="add-item-button"
-                onClick={() => {
-                  setExchangeSidebarStatus(ExchangeSidebarStatus.ENROLLING);
-                }}
-              >
-                Inscrições
-              </Button>
               <Button
                   className="add-item-button"
                   onClick={() => {

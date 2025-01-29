@@ -32,17 +32,17 @@ export const CreateRequestCard = ({
   useEffect(() => {
     if (!originalExchangeSchedule || !courseInfo) return;
     const originClassName = findIssuerOriginClassName();
-    
+
     setIssuerOriginClassName(originClassName);
     setIssuerOriginClass(findClassInfoByName(originClassName));
-  
+
     const request = requests.get(courseInfo.id);
     if (request) {
       const destinationClass = findClassInfoByName(request.classNameRequesterGoesTo);
       setSelectedDestinationClass(destinationClass);
     }
   }, [originalExchangeSchedule, courseInfo, requestMetadata]);
-  
+
   const findIssuerOriginClassName = (): string | null => {
     const scheduleItem = originalExchangeSchedule
       .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== "T")
@@ -54,7 +54,7 @@ export const CreateRequestCard = ({
   const findClassInfoByName = (className: string | null): ClassInfo | null => {
     return requestMetadata?.classes?.find((classInfo: ClassInfo) => classInfo.name === className) || null;
   };
-  
+
   const excludeClass = () => {
     if (requests.get(courseInfo.id)) {
       const newRequests = new Map(requests);
@@ -105,42 +105,49 @@ export const CreateRequestCard = ({
       </div>
     </CardHeader>
     <CardContent className="flex flex-col gap-y-4">
-      <div className="flex flex-row items-center gap-x-2">
-        <p>{issuerOriginClassName}</p>
-        <ArrowRightIcon className="w-5 h-5" />
-        <div className="p-2 rounded-md w-full">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="w-full">
-              <Button variant="outline" className="w-full">
-                {selectedDestinationClass?.name ?? "Escolher turma..."}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-full">
-              <ScrollArea className="max-h-72 rounded overflow-y-auto">
-                {requestMetadata?.classes?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
-                  .map((currentClass) => (
-                    <DropdownMenuItem
-                      key={"dropdown-class-" + currentClass.name}
-                      className="w-full"
-                      onMouseEnter={() => togglePreview(currentClass, currentClass.slots)}
-                      onMouseLeave={() => {
-                        const persistentClass = selectedDestinationClass || issuerOriginClass;
-                        togglePreview(persistentClass, persistentClass?.slots);
-                      }}
-                      onSelect={() => {
-                        setSelectedDestinationClass(currentClass);
-                        togglePreview(currentClass, currentClass.slots);
-                        addRequest(currentClass.name);
-                      }
-                      }>
-                      <p className="w-full">{currentClass.name}</p>
-                    </DropdownMenuItem>
-                  ))}
-              </ScrollArea>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      {(!hasStudentToExchange || (selectedDestinationStudent && hasStudentToExchange)) &&
+        <div className="flex flex-row items-center gap-x-2">
+          <p>{issuerOriginClassName}</p>
+          <ArrowRightIcon className="w-5 h-5" />
+          <div className="p-2 rounded-md w-full">
+            {(hasStudentToExchange && selectedDestinationStudent && selectedDestinationStudent.classInfo)
+              ? <p>{selectedDestinationStudent.classInfo.name}</p>
+              :
+              <DropdownMenu>
+                <DropdownMenuTrigger className="w-full">
+                  <Button variant="outline" className="w-full">
+                    {selectedDestinationClass?.name ?? "Escolher turma..."}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-full">
+                  <ScrollArea className="max-h-72 rounded overflow-y-auto">
+                    {requestMetadata?.classes?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
+                      .map((currentClass) => (
+                        <DropdownMenuItem
+                          key={"dropdown-class-" + currentClass.name}
+                          className="w-full"
+                          onMouseEnter={() => togglePreview(currentClass, currentClass.slots)}
+                          onMouseLeave={() => {
+                            const persistentClass = selectedDestinationClass || issuerOriginClass;
+                            togglePreview(persistentClass, persistentClass?.slots);
+                          }}
+                          onSelect={() => {
+                            setSelectedDestinationClass(currentClass);
+                            togglePreview(currentClass, currentClass.slots);
+                            addRequest(currentClass.name);
+                          }
+                          }>
+                          <p className="w-full">{currentClass.name}</p>
+                        </DropdownMenuItem>
+                      ))}
+                  </ScrollArea>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            }
+          </div>
         </div>
-      </div>
+      }
+
       <div className="flex flex-col gap-y-4">
         <div className={`${hasStudentToExchange ? "" : "hidden"}`}>
           <DropdownMenu>
@@ -160,8 +167,22 @@ export const CreateRequestCard = ({
                     className="w-full"
                     onSelect={() => {
                       if (requests.get(courseInfo.id)) {
-                        requests.get(courseInfo.id).other_student = { name: student.nome, mecNumber: Number(student.codigo) }
+                        requests.get(courseInfo.id).other_student = {
+                          name: student.nome,
+                          mecNumber: Number(student.codigo),
+                          classInfo: student.classInfo
+                        }
+                        if (student.classInfo) requests.get(courseInfo.id).classNameRequesterGoesTo = student.classInfo.name;
                         setRequests(new Map(requests));
+                      } else if (student.classInfo) {
+                        addRequest(student.classInfo.name)
+
+                        requests.get(courseInfo.id).other_student = {
+                          name: student.nome,
+                          mecNumber: Number(student.codigo),
+                          classInfo: student.classInfo
+                        }
+                        requests.get(courseInfo.id).classNameRequesterGoesTo = student.classInfo.name;
                       }
 
                       setSelectedDestinationStudent(student);

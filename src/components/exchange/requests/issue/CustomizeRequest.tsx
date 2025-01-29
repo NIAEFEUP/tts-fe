@@ -29,9 +29,9 @@ export const CustomizeRequest = ({
   const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
   const [previewingForm, setPreviewingForm] = useState<boolean>(false);
 
-  const submitRequest = async () => {
+  const submitRequest = async (urgentMessage: string) => {
     setSubmittingRequest(true);
-    const json = await exchangeRequestService.submitExchangeRequest(requests);
+    const json = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage);
 
     if (json.success) {
       setPreviewingForm(false);
@@ -42,7 +42,6 @@ export const CustomizeRequest = ({
 
     setSubmittingRequest(false);
   }
-
 
   return <div className="flex flex-col gap-y-4">
     {selectedCourseUnits.length === 0
@@ -95,7 +94,7 @@ export const CustomizeRequest = ({
             }
           }} />
           <label htmlFor="person-to-exchange">
-            Tenho uma pessoa para trocar
+            Tenho pessoas com quem trocar
           </label>
         </div>
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { ClassDescriptor } from "../@types";
 import { LoginButton } from "../components/auth/LoginButton";
 import ExchangeSchedule from "../components/exchange/schedule/ExchangeSchedule";
@@ -9,26 +9,24 @@ import useStudentCourseUnits from "../hooks/useStudentCourseUnits";
 import '../styles/exchange.css';
 import { CreateRequest } from "../components/exchange/requests/issue/CreateRequest";
 import { ViewRequests } from "../components/exchange/requests/view/ViewRequests";
-import { ShieldExclamationIcon } from "@heroicons/react/24/outline";
+import { FaceFrownIcon, ShieldExclamationIcon } from "@heroicons/react/24/outline";
 import { Schedule } from "../components/planner";
 import { Enrollments } from "../components/exchange/enrollments/Enrollments";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
 export enum ExchangeSidebarStatus {
   SHOWING_REQUESTS,
-  CREATING_REQUEST,
-  ENROLLING
+  CREATING_REQUEST
 }
 
 const ExchangeSidebarStatusView = (
-  {sidebarStatus, setSidebarStatus}: {sidebarStatus: ExchangeSidebarStatus, setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>}
+  { sidebarStatus, setExchangeSidebarStatus }: { sidebarStatus: ExchangeSidebarStatus, setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>> }
 ) => {
-  switch(sidebarStatus) {
+  switch (sidebarStatus) {
     case ExchangeSidebarStatus.SHOWING_REQUESTS:
-      return <ViewRequests setExchangeSidebarStatus={setSidebarStatus} />
+      return <ViewRequests setExchangeSidebarStatus={setExchangeSidebarStatus} />
     case ExchangeSidebarStatus.CREATING_REQUEST:
-      return <CreateRequest setExchangeSidebarStatus={setSidebarStatus} />
-    case ExchangeSidebarStatus.ENROLLING:
-      return <Enrollments />
+      return <CreateRequest setExchangeSidebarStatus={setExchangeSidebarStatus} />
   }
 }
 
@@ -39,11 +37,11 @@ const ExchangePage = () => {
   const { schedule, loading: loadingSchedule } = useSchedule();
   const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
-  const { signedIn } = useContext(SessionContext);
+  const { signedIn, user } = useContext(SessionContext);
   const { enrolledCourseUnits } = useStudentCourseUnits();
 
   useEffect(() => {
-    if(creatingRequest) setSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST)
+    if (creatingRequest) setSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST)
     else setSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS)
   }, [creatingRequest])
 
@@ -58,7 +56,6 @@ const ExchangePage = () => {
       setOriginalExchangeSchedule(schedule ? schedule : []);
     }
   }, [schedule]);
-
 
   if (!signedIn) return <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
     <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
@@ -92,21 +89,32 @@ const ExchangePage = () => {
         </div>
 
         <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
-          <ExchangeSidebarStatusView 
-            sidebarStatus={sidebarStatus} 
-            setSidebarStatus={setSidebarStatus}
-          />
-          {/* {user?.eligible_exchange ? */}
-            {/* : */}
-            {/* <div className="flex flex-col items-center justify-center gap-4 h-full"> */}
-            {/*   <FaceFrownIcon className="w-12 h-12" /> */}
-            {/*   <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p> */}
-            {/*   {/* TODO: Open the send feedback modal with something already written  */}
-            {/*   <p className="text-center">Gostavas de utilizar esta funcionalidade no teu curso?</p> */}
-            {/*   <Button onClick={() => { }}>Sim!</Button> */}
-            {/*   */}
-            {/* </div> */}
-          {/* } */}
+          <Tabs defaultValue="requests">
+            <TabsList className="w-full mb-2">
+              <TabsTrigger value="requests">Pedidos</TabsTrigger>
+              <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
+            </TabsList>
+            <TabsContent value="requests">
+              {user?.eligible_exchange 
+                ? <ExchangeSidebarStatusView
+                  sidebarStatus={sidebarStatus}
+                  setExchangeSidebarStatus={setSidebarStatus}
+                />
+                :
+                <div className="flex flex-col items-center justify-center gap-4 h-full mt-16">
+                  <FaceFrownIcon className="w-12 h-12" />
+                  <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
+                  {/* TODO: Open the send feedback modal with something already written  */}
+                  {/*<p className="text-center">Gostavas de utilizar esta funcionalidade no teu curso?</p> */}
+                  {/*   <Button onClick={() => { }}>Sim!</Button> */}
+                </div>
+              }
+            </TabsContent>
+            <TabsContent value="enrollments">
+              <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
+            </TabsContent>
+          </Tabs>
+
         </div>
       </div>
     }
