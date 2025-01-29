@@ -23,7 +23,7 @@ export default (filtersContext: RequestFiltersContextContent) => {
   };
 
   const { data, error, mutate, size, setSize } = useSWRInfinite((index) => {
-    return buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/?page=${index}`, filtersContext);
+    return buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/?page=${index + 1}`, filtersContext);
   }, getEnrollments);
 
   const enrollments = useMemo(() => data ? [].concat(...data) : null, [data]);

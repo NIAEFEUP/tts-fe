@@ -23,7 +23,7 @@ export default (filterContext: RequestFiltersContextContent) => {
   };
 
   const { data, error, mutate, size, setSize } = useSWRInfinite((index) => {
-    return buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/?page=${index}`, filterContext);
+    return buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/?page=${index + 1}`, filterContext);
   }, getExchanges);
   const exchanges = useMemo(() => data ? [].concat(...data) : null, [data]);
 
