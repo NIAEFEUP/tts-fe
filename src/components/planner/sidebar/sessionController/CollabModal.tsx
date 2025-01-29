@@ -9,6 +9,7 @@ import { toast } from '../../../ui/use-toast';
 import { useSearchParams } from 'react-router-dom';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import useSession from '../../../../hooks/useSession';
+import CourseContext from '../../../../contexts/CourseContext';
 
 const generateUniqueId = () => Date.now();
 
@@ -22,6 +23,8 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   const currentSession = sessions.find(s => s.id === currentSessionId) || null;
   const [searchParams, ] = useSearchParams();
   const { signedIn: userSignedIn, user } = useSession();
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
+  const [pickedCoursesLock, setPickedCoursesLock] = useState(false);
 
   useEffect(() => {
     if (searchParams.has('session')) {
@@ -54,7 +57,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   }, [currentSessionId]);
 
 
-  const updatedSession = (sessionId: string, sessionInfo: any) => {
+  const updateSession = (sessionId: string, sessionInfo: any) => {
     setSessions(prevSessions =>
       prevSessions.map(session =>
         session.id === sessionId ? { ...session, participants: sessionInfo['participants'] } : session
@@ -69,8 +72,21 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
 
   const addSocketListeners = socket => {
     socket.on('disconnect', handleUnexpectedDisconnect);
-    socket.on('update_session_info', (data) => updatedSession(data['session_id'], data['session_info']));
+    socket.on('update_session_info', (data) => updateSession(data['session_id'], data['session_info']));
+    socket.on('update_picked_courses', (courses) => {
+      setPickedCoursesLock(true);
+      setPickedCourses(courses);
+    })
   };
+
+  useEffect(() => {
+    if (sessionsSocket.isConnected) {
+      if (!pickedCoursesLock)
+        sessionsSocket.emit('update_picked_courses', pickedCourses);
+      else
+        setPickedCoursesLock(false);
+    }
+  }, [pickedCourses])
 
   const getName = () => {
     if (userSignedIn) {
@@ -105,6 +121,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
+        setPickedCourses(sessionsSocket.sessionInfo['picked_courses']);
   
         toast({
           title: sessionId ? 'Entrou na sessão' : 'Sessão criada',

@@ -80,8 +80,8 @@ class SessionsSocket {
         return this._sessionInfo;
     }
 
-    isConnected() {
-        this.socket.is_set();
+    get isConnected() {
+        return this.socket.is_set();
     }
 
     async connect(participantName: string): Promise<SessionsSocket> {
