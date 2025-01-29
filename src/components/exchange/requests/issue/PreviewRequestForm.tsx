@@ -9,7 +9,7 @@ import { Button } from "../../../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../../ui/dialog";
 import PreviewRequestCard from "./cards/PreviewRequestCard";
 import ConflictsContext from "../../../../contexts/ConflictsContext";
-
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
 
 type Props = {
   requests: Map<number, CreateRequestData>
@@ -19,17 +19,28 @@ type Props = {
 }
 
 const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook, submittingRequest }: Props) => {
-  
   const [previewingForm, setPreviewingForm] = previewingFormHook;
 
   const { isConflictSevere } = useContext(ConflictsContext);
 
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
-    <DialogTrigger asChild>
-      <Button className="w-1/2">
-        Submeter pedido
-      </Button>
-    </DialogTrigger>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger className="w-1/2">
+          <DialogTrigger asChild>
+            <Button
+              className="w-full"
+              disabled={isConflictSevere}
+            >
+              Submeter pedido
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Tens conflitos</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
     <DialogContent className="flex flex-col">
       <DialogHeader>
         <DialogTitle>Prever visualização do pedido</DialogTitle>
@@ -63,7 +74,7 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
       {requests.size > 0 &&
         <form className="flex flex-col gap-y-4 items-center mx-auto">
           <Button
-            className={isConflictSevere ? "flex flex-row gap-x-2 bg-red-400"  :"flex flex-row gap-x-2 success-button"}
+            className={isConflictSevere ? "flex flex-row gap-x-2 bg-red-400" : "flex flex-row gap-x-2 success-button"}
             type="submit"
             onClick={async (e) => {
               e.preventDefault();
