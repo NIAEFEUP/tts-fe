@@ -18,7 +18,7 @@ export const ExchangeCoursePicker = ({
   const [checkboxedCourses, setCheckboxedCourses] = useLocalStorage("enrollCoursesCheckboxedCourses", []);
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [selectedMajor, setSelectedMajor] = useState<Major>(null);
+  const [selectedMajor, setSelectedMajor] = useLocalStorage<Major>("enrollMajor",null);
 
  useEffect(() => {
     BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {

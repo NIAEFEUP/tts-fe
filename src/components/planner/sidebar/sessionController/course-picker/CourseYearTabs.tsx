@@ -14,7 +14,7 @@ const CourseYearTabs = () => {
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [selectedTab, setSelectedTab] = useState('1')
   const coursesByYear = groupCoursesByYear(coursesInfo)
-
+  
   /*
    * Handle a double click in a year tab which function as a
    * select all/deselect all course units from that year
