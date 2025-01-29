@@ -9,6 +9,7 @@ import SessionContext from "./SessionContext";
 import MajorContext from "./MajorContext";
 import CourseContext from "./CourseContext";
 import ConflictsContext from "./ConflictsContext";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 type Props = {
   children: React.JSX.Element
@@ -17,7 +18,7 @@ type Props = {
 const CombinedProvider = ({ children }: Props) => {
   const [majors, setMajors] = useState<Major[]>([])
   const [coursesInfo, setCoursesInfo] = useState([]);
-  const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
+  const [pickedCourses, setPickedCourses] = useLocalStorage('niaefeup-tts.picked-courses', [])
   const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
   const [ucsModalOpen, setUcsModalOpen] = useState<boolean>(false);
 
