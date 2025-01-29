@@ -16,14 +16,14 @@ export const ExchangeVerifyStatus = ({
             ? <>
                 <Check size={100} />
                 <p className="w-1/3 text-center">
-                    Verificaste com sucesso que aceitas a troca.
+                    Verificaste com sucesso que aceitas a troca!
                 </p>
             </>
             : <>
                 <Ban size={100} />
                 <p className="w-1/3 text-center">
                     O token pode estar incorreto ou as trocas associadas a este pedido foram invalidadas entretanto por outros
-                    pedidos feitos por ti ou pelas outras pessoas envolvidas no pedido.
+                    pedidos feitos por ti ou pelas outras pessoas envolvidas no pedido!
                 </p>
             </>
         }
