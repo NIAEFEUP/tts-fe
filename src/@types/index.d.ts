@@ -203,6 +203,11 @@ export enum AdminRequestType {
   ENROLLMENT = "enrollment"
 }
 
+export type StudentCourseMetadata = {
+  nmec: string, 
+  fest_id: number
+}
+
 export type Student = {
   name: string,
   mecNumber: number

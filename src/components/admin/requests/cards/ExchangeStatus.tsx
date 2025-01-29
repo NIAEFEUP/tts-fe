@@ -10,7 +10,7 @@ type ExchangeStatusProperty = {
     color: string
 }
 
-const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentRequest) => {
+const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment) => {
     switch (exchange.admin_state) {
         case "accepted":
             return {

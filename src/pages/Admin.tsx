@@ -12,8 +12,6 @@ type Props = {
 const AdminPage = ({ page }: Props) => {
     const { signedIn, user } = useContext(SessionContext);
 
-    console.log("CURRENT USER: ", user);
-
     /*if (!signedIn || user?.role !== 'admin') {
         return <div>Access Denied. You do not have admin credentials.</div>;
     }*/

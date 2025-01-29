@@ -5,17 +5,20 @@ import { Button } from "../../../ui/button";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 import { AdminSendEmail } from "../AdminSendEmail";
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
+import { TreatExchangeButton } from "./TreatExchangeButton";
 
 type Props = {
     participant_nmec: string
     participant_name: string
     exchanges: Array<DirectExchangeParticipant>
+    showTreatButton?: boolean
 }
 
 export const PersonExchanges = ({
     exchanges,
     participant_name,
-    participant_nmec
+    participant_nmec,
+    showTreatButton = false
 }: Props) => {
     const { schedule } = useStudentsSchedule(participant_nmec);
 
@@ -53,6 +56,13 @@ export const PersonExchanges = ({
                             })
                         }
                     />
+                    {showTreatButton && 
+                        <TreatExchangeButton
+                            nmec={participant_nmec}
+                            courseUnitId={exchanges.map(exchange => Number(exchange.course_unit_id))[0]}
+                            variant="secondary"
+                        />
+                    }
                     <AdminSendEmail
                         nmec={participant_nmec}
                     />

@@ -44,7 +44,11 @@ export const StudentEnrollmentCard = ({
                         />
                     </div>
                     {!open && <>
-                        <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
+                        <Person 
+                            key={"enrollment-person-" + enrollment.user_nmec}
+                            name={enrollment.user_nmec} 
+                            nmec={enrollment.user_nmec} 
+                        />
                     </>}
                 </div>
                 <div>
@@ -107,6 +111,7 @@ export const StudentEnrollmentCard = ({
                         )}
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}
+                        courseUnitId={enrollment.options.map(option => option.course_unit.id)}
                     /> 
                 }
             </CardContent>

@@ -7,7 +7,6 @@ import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { PersonExchanges } from "./PersonExchanges";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
-import { requestCreatedAtDate } from "../../../../utils/date";
 import { RequestDate } from "./RequestDate";
 import { rejectEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
@@ -62,7 +61,11 @@ export const MultipleStudentExchangeCard = ({
                         </div>
                         {!open && <>
                             {exchange.options.map((participant: DirectExchangeParticipant) => (
-                                <Person name={participant.participant_name} nmec={participant.participant_nmec} />
+                                <Person 
+                                    key={"multiple-student-person-" + participant.participant_nmec}
+                                    name={participant.participant_name} 
+                                    nmec={participant.participant_nmec} 
+                                />
                             ))}
                         </>}
 
@@ -84,9 +87,11 @@ export const MultipleStudentExchangeCard = ({
                     {open &&
                         Array.from(participantExchangesMap(exchange).entries()).map(([participant_nmec, exchanges]) => (
                             <PersonExchanges
+                                key={"multiple-student-person-exchanges-" + participant_nmec}
                                 exchanges={exchanges}
                                 participant_name={participant_nmec}
                                 participant_nmec={participant_nmec}
+                                showTreatButton={true}
                             />
                         ))
                     }
@@ -106,6 +111,7 @@ export const MultipleStudentExchangeCard = ({
                         )}
                         requestType={AdminRequestType.DIRECT_EXCHANGE}
                         requestId={exchange.id}
+                        showTreatButton={false}
                     /> 
                 }
             </Card>

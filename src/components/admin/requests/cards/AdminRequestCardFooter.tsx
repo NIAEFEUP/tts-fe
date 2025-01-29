@@ -5,12 +5,15 @@ import { Button } from "../../../ui/button"
 import { CardFooter } from "../../../ui/card"
 import { Separator } from "../../../ui/separator"
 import { AdminSendEmail } from "../AdminSendEmail"
+import { TreatExchangeButton } from "./TreatExchangeButton"
 
 type Props = {
     nmecs: Array<string>,
     rejectMessage: string,
     requestType: AdminRequestType,
-    requestId: number
+    requestId: number,
+    showTreatButton?: boolean,
+    courseUnitId?: Array<number>
 }
 
 const rejectRequest = async (
@@ -25,7 +28,7 @@ const rejectRequest = async (
         const a = document.createElement('a');
         a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de troca rejeitado&body=${rejectMessage}`;
         a.click();
-    } catch(e) {
+    } catch (e) {
         console.error(e);
     }
 }
@@ -34,7 +37,9 @@ export const AdminRequestCardFooter = ({
     nmecs,
     rejectMessage,
     requestType,
-    requestId
+    requestId,
+    showTreatButton = true,
+    courseUnitId
 }: Props) => {
     return <>
         <Separator className="my-4" />
@@ -48,9 +53,16 @@ export const AdminRequestCardFooter = ({
                 Rejeitar
             </Button>
 
-            <Button>
-                Tratar
-            </Button>
+            {showTreatButton &&
+                nmecs.map(nmec => (
+                    <TreatExchangeButton
+                        key={"treat-exchange-button-" + nmec}
+                        nmec={nmec}
+                        courseUnitId={courseUnitId[0]}
+                    />
+                ))
+            }
+
             <AdminSendEmail
                 nmec={nmecs}
             />

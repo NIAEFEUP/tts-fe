@@ -12,6 +12,7 @@ import { RequestDate } from "./RequestDate";
 import { rejectEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
 import { RequestStudentState } from "../RequestStudentState";
+import { OptionsController } from "../../../planner/sidebar";
 
 type Props = {
     exchange: UrgentRequest
@@ -119,6 +120,7 @@ export const SingleStudentExchangeCard = ({
                         )}
                         requestType={AdminRequestType.URGENT_EXCHANGE}
                         requestId={exchange.id}
+                        courseUnitId={exchange.options.map(option => option.course_unit.id)}
                     /> 
                 }
             </Card>

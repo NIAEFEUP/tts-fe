@@ -121,7 +121,6 @@ export const AcceptedExchangeCard = ({
                             Rejeitar
                         </Button>
                         <Button>
-                            Tratar
                         </Button>
                     </CardFooter>
                 </>
