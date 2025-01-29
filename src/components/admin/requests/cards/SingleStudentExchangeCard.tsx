@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ClassDescriptor, UrgentRequest, UrgentRequestOption } from "../../../../@types"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Person } from "./Person";
@@ -12,7 +12,6 @@ import { RequestDate } from "./RequestDate";
 import { rejectEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
 import { RequestStudentState } from "../RequestStudentState";
-import { OptionsController } from "../../../planner/sidebar";
 
 type Props = {
     exchange: UrgentRequest
@@ -66,7 +65,7 @@ export const SingleStudentExchangeCard = ({
 
                 <CardContent className="w-full ">
                     {open && exchange.options.map((option: UrgentRequestOption) => (
-                        <div className="flex flex-col gap-y-8">
+                        <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
                             <div className="flex justify-between">
                                 <Person name={exchange.user_nmec} nmec={exchange.user_nmec} />
                                 <div>

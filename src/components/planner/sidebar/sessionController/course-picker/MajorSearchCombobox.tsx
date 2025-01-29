@@ -20,6 +20,7 @@ interface Props {
  */
 const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   const { majors } = useContext(MajorContext)
+
   const [open, setOpen] = useState(false)
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined)
 

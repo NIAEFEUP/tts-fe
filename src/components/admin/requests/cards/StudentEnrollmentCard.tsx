@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { ClassDescriptor, CourseUnitEnrollment, CourseUnitEnrollmentOption } from "../../../../@types"
 import { Button } from "../../../ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card"
 import { Person } from "./Person"
 import { useState } from "react"
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
@@ -65,7 +65,7 @@ export const StudentEnrollmentCard = ({
             </CardHeader>
             <CardContent className="w-full ">
                 {open && enrollment.options.map((option: CourseUnitEnrollmentOption) => (
-                    <div className="flex flex-col gap-y-8">
+                    <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
                         <div className="flex justify-between">
                             <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
                             <div>

@@ -210,7 +210,8 @@ export type StudentCourseMetadata = {
 
 export type Student = {
   name: string,
-  mecNumber: number
+  mecNumber: number,
+  classInfo?: ClassInfo
 }
 
 export type Participant = {

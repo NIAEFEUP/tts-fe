@@ -1,7 +1,6 @@
 import { ArrowRightIcon } from "lucide-react";
 import { ClassDescriptor, DirectExchangeParticipant } from "../../../../@types";
 import { Person } from "./Person";
-import { Button } from "../../../ui/button";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 import { AdminSendEmail } from "../AdminSendEmail";
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";

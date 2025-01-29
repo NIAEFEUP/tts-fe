@@ -1,4 +1,5 @@
 "use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { Table, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
@@ -7,15 +8,15 @@ import { useState } from 'react'
 import useAdminExchangeCourses from '../../hooks/admin/useAdminExchangeCourses'
 import { CheckIcon, PlusIcon } from 'lucide-react'
 import { Input } from '../ui/input'
-import { DateTimePicker } from '../ui/datetime-picker';
+// import { DateTimePicker } from '../ui/datetime-picker';
 
 export const AdminExchangeSettings = () => {
-  const { courses, loading } = useAdminExchangeCourses();
+  const { courses } = useAdminExchangeCourses();
 
   const [selectedGroup, setSelectedGroup] = useState<number>(0);
   const [addingPeriod, setAddingPeriod] = useState<boolean>(false)
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
+  // const [startDate, setStartDate] = useState<Date>();
+  // const [endDate, setEndDate] = useState<Date>();
 
   return (
     <div className="flex flex-col gap-y-8">

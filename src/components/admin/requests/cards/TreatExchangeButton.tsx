@@ -12,20 +12,24 @@ export const TreatExchangeButton = ({
     courseUnitId,
     variant = "default"
 }: Props) => {
-    const { studentCourseMetadata, loading } = useStudentCourseMetadata(nmec, courseUnitId);
+    const { studentCourseMetadata } = useStudentCourseMetadata(nmec, courseUnitId);
 
     return (
-        studentCourseMetadata?.map((metadata) => (
-            <a 
-                href={`https://sigarra.up.pt?fest_id=${metadata.fest_id}`}
-                key={metadata.fest_id}
-            >
-                <Button
-                    variant={variant}
-                >
-                    Tratar
-                </Button>
-            </a>
-        ))
+        <>
+            {
+                studentCourseMetadata?.map((metadata) => (
+                    <a
+                        href={`https://sigarra.up.pt?fest_id=${metadata.fest_id}`}
+                        key={metadata.fest_id}
+                    >
+                        <Button
+                            variant={variant}
+                        >
+                            Tratar
+                        </Button>
+                    </a>
+                ))
+            }
+        </>
     )
 }

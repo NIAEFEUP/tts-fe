@@ -27,7 +27,12 @@ export const RequestFilters = () => {
             </SelectTrigger>
             <SelectContent>
                 {courses?.map((course) => (
-                    <SelectItem value={`${course.id}`}>{course.acronym}</SelectItem>
+                    <SelectItem 
+                        key={`course-select-item-${course.id}`}
+                        value={`${course.id}`}
+                    >
+                        {course.acronym}
+                    </SelectItem>
                 ))}
             </SelectContent>
         </Select>
