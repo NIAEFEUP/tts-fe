@@ -6,11 +6,10 @@ import toHumanReadableTimeDiff from '../../../../utils/human-time';
 type Props = {
   sessions: Array<CollabSession>,
   onStartSession: (arg: string | null) => void
-  onCreateSession: () => void
   onDeleteSession: (arg: string | null) => void
 }
 
-const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDeleteSession }: Props) => (
+const CollabPickSession = ({ sessions, onStartSession, onDeleteSession }: Props) => (
   <div className="text-center">
     <UserGroupIcon className="h-40 w-40 mx-auto text-primary" />
     <h3 className="text-xl font-bold leading-6 text-primary">
@@ -28,7 +27,7 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
       <Button
         variant="icon"
         className="flex items-center rounded-lg bg-primary py-6"
-        onClick={onCreateSession}
+        onClick={() => onStartSession(null)}
       >
         <PlayCircleIcon className="h-8 w-8 mr-2 " />
         Iniciar nova sessão

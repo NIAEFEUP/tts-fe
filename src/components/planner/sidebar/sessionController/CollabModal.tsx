@@ -94,7 +94,6 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           name: Math.random().toString(36).substr(2, 9),
           lastEdited: Date.now(),
           expirationTime: new Date(sessionsSocket.sessionInfo['expiration_time']).getTime(),
-          currentUser: 'AnotherUser',
           link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
           participants: sessionsSocket.sessionInfo['participants'],
         }
@@ -107,31 +106,15 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
   
-        toast({ title: 'Entrou na sessão', description: 'Convida mais pessoas para se juntarem!'});
+        toast({
+          title: sessionId ? 'Entrou na sessão' : 'Sessão criada',
+          description: 'Convida mais pessoas para se juntarem!',
+        });
       })
-      .catch(() => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
-  };
-
-  const handleCreateSession = () => {
-    sessionsSocket.sessionId = null;
-    sessionsSocket.connect(getName())
-      .then(sessionsSocket => {
-        const newSession = {
-          id: sessionsSocket.sessionId,
-          name: Math.random().toString(36).substr(2, 9),
-          lastEdited: Date.now(),
-          expirationTime: sessionsSocket.sessionInfo['expiration_time'],
-          link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
-          participants: sessionsSocket.sessionInfo['participants'],
-        };
-        
-        addSocketListeners(sessionsSocket);
-        setCurrentSessionId(sessionsSocket.sessionId);
-        setSessions(prevSessions => [...prevSessions, newSession]);
-  
-        toast({ title: 'Sessão criada', description: 'Convida mais pessoas para se juntarem!'});
-      })
-      .catch(() => toast({ title: 'Erro ao criar a sessão', description: 'Tente novamente mais tarde.' }));
+      .catch(() => toast({
+        title: `Erro ao ${sessionId ? 'entrar na' : 'criar a'} sessão`,
+        description: 'Tente novamente mais tarde.',
+      }));
   };
 
   const handleExitSession = () => {
@@ -208,7 +191,6 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
                   <CollabPickSession
                     sessions={sessions}
                     onStartSession={handleStartSession}
-                    onCreateSession={handleCreateSession}
                     onDeleteSession={handleDeleteSession}
                   />
                 )}
