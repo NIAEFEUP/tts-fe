@@ -3,11 +3,14 @@ import useMultipleStudentExchanges from "../../../hooks/admin/useMultipleStudent
 import { MultipleStudentExchangeCard } from "./cards/MultipleStudentExchangeCard";
 import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
 import { useContext } from "react";
+import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
 
 export const MultipleStudentExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
-    const { exchanges, loading } = useMultipleStudentExchanges(filterContext);
 
+    const { currPage } = useContext(AdminPaginationContext);
+    const { exchanges, loading } = useMultipleStudentExchanges(filterContext, currPage);
+    
     return (
         <>
             <div className="flex flex-col gap-y-2">
