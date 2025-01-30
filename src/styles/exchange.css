@@ -1,0 +1,3 @@
+.add-item-button {
+  @apply bg-white text-black border shadow-md mr-0 hover:bg-gray-50 flex flex-row gap-x-1;
+}

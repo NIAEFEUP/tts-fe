@@ -1,14 +1,11 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { ScheduleGrid, } from './schedules'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
-import { useContext } from 'react'
 import ScheduleTypes from './ScheduleType'
 import { ClassDescriptor, SlotInfo } from '../../@types'
-import CourseContext from '../../contexts/CourseContext'
-import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import { useShowGrid } from '../../hooks'
 import { maxHour, minHour, convertWeekdayLong, convertHour } from '../../utils'
 import SlotBoxes from './schedules/SlotBoxes'
@@ -16,36 +13,16 @@ import SlotBoxes from './schedules/SlotBoxes'
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
-const Schedule = () => {
-  const { pickedCourses } = useContext(CourseContext)
-  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
+type Props = {
+  classes: Array<ClassDescriptor>,
+  slots: Array<SlotInfo>
+}
 
-  const [classes, setClasses] = useState<ClassDescriptor[]>([])
-  const [slots, setSlots] = useState<SlotInfo[]>([])
-  const scheduleRef = useRef(null)
-
-  useEffect(() => {
-    //TODO: Improvements by functional programming
-    const newClasses = []
-    const option = multipleOptions[selectedOption]
-
-    for (let i = 0; i < option.course_options.length; i++) {
-      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
-      if (!course_info) continue;
-      const class_info = course_info.classes?.find(
-        (class_info) => class_info.id === option.course_options[i].picked_class_id
-      )
-
-      if (course_info === undefined || class_info === undefined) continue
-      newClasses.push({
-        courseInfo: course_info,
-        classInfo: class_info,
-      })
-    }
-
-    setClasses(newClasses)
-    setSlots(newClasses.map((newClass) => newClass.classInfo.slots).flat())
-  }, [multipleOptions, pickedCourses, selectedOption])
+const Schedule = ({
+  classes,
+  slots
+}: Props) => {
+  const scheduleRef = useRef(null);
 
   // TODO: Improvements by functional programming
   const slotTypes: string[] = useMemo(() => {
