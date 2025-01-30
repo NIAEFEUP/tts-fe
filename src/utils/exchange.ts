@@ -17,6 +17,12 @@ export enum DirectExchangePendingMotive {
   OTHERS_DID_NOT_ACCEPT = 2
 }
 
+export enum AdminRequestType {
+  DIRECT_EXCHANGE = "direct_exchange",
+  URGENT_EXCHANGE = "urgent_exchange",
+  ENROLLMENT = "enrollment"
+}
+
 const exchangeUtils = {
   exchangeIsValid,
   isDirectExchange,
