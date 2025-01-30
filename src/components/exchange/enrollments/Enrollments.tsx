@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, Dispatch, SetStateAction } from "react";
-import { Desert } from "../../svgs/";
+// import { Desert } from "../../svgs/";
 import { ExchangeCoursePicker } from "../../planner/sidebar/sessionController/ExchangeCoursePicker";
 import { CourseInfo, Major } from "../../../@types";
 import MajorContext from "../../../contexts/MajorContext";
@@ -13,10 +13,25 @@ import { ExchangeClassSelector } from "../../planner/sidebar/CoursesController/E
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import ScheduleContext from "../../../contexts/ScheduleContext";
 import useSchedule from "../../../hooks/useSchedule";
-import useStudentEnrollments from "../../../hooks/admin/useStudentEnrollments";
+import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
+// import { AlreadyEnrolledCourseUnitCard } from "./AlreadyEnrolledCourseUnitCard";
+
+export enum CourseUnitEnrollmentType {
+  DISENROLLING = 1,
+  ENROLLING = 2
+}
+
+export type EnrollmentOption = {
+  classId: number, // If the user is disenrolling, we do not need a classid
+  type: CourseUnitEnrollmentType
+}
 
 type Props = {
   setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
+}
+
+const notNullEnrollemnts = (enrollments: Map<number, EnrollmentOption>) => {
+  return Array.from(enrollments.values()).filter(enrollment => enrollment.classId !== null).length > 0;
 }
 
 export const Enrollments = ({
@@ -25,12 +40,14 @@ export const Enrollments = ({
   const parentCourseContext = useContext(CourseContext);
 
   const [enrollCourses, setEnrollCourses] = useLocalStorage<CourseInfo[]>("enrollCourses", []);
-  const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, number>>(new Map());
+  const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map());
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const { setMajors } = useContext(MajorContext);
 
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const originalSchedule = useSchedule();
+
+  const { enrolledCourseUnits: alreadyEnrolledCourseUnits } = useStudentCourseUnits();
 
   const { toast } = useToast();
 
@@ -41,24 +58,28 @@ export const Enrollments = ({
   }, [])
 
   useEffect(() => {
-    if(!enrollCourses || enrollCourses.length === 0) return;
+    if (!enrollCourses || enrollCourses.length === 0) return;
 
-    for (const [course_unit_id, class_id] of enrollmentChoices) {
-      if (!class_id) continue; // If the student has not yet selected a class for course, skip it
+    for (const [course_unit_id, option] of enrollmentChoices) {
+      const { classId } = option;
 
-      const course = enrollCourses.find((course) => course.course_unit_id === course_unit_id);
-      const classInfo = course.classes.find((classInfo) => classInfo.id === class_id);
+      if (!classId) continue; // If the student has not yet selected a class for course, skip it
 
-      if(!exchangeSchedule) return;
-      const newSchedule = [...exchangeSchedule.filter((classDescriptor) => {
-        return classDescriptor.courseInfo.course_unit_id !== course_unit_id
-      })];
+      if (option.type === CourseUnitEnrollmentType.ENROLLING) {
+        const course = enrollCourses.find((course) => course.course_unit_id === course_unit_id);
+        const classInfo = course.classes.find((classInfo) => classInfo.id === classId);
 
-      newSchedule.push({
-        courseInfo: course,
-        classInfo: classInfo
-      });
-      setExchangeSchedule(newSchedule);
+        if (!exchangeSchedule) return;
+        const newSchedule = [...exchangeSchedule.filter((classDescriptor) => {
+          return classDescriptor.courseInfo.course_unit_id !== course_unit_id
+        })];
+
+        newSchedule.push({
+          courseInfo: course,
+          classInfo: classInfo
+        });
+        setExchangeSchedule(newSchedule);
+      }
     }
 
     return () => {
@@ -86,27 +107,28 @@ export const Enrollments = ({
         </div>
 
         <div className="w-full flex flex-col gap-y-2">
-          {enrollCourses.length === 0 && <>
-            <Desert className="w-full" />
-            <p className="text-center text-lg">
-              Não existem disciplinas selecionadas
-            </p>
-          </>}
-
           {enrollCourses.map((course: CourseInfo) => (
             <ExchangeClassSelector
               course={course}
               selectedClassIdCallback={
                 (classId) => {
                   const newEnrollmentChoices = new Map(enrollmentChoices);
-                  newEnrollmentChoices.set(course.id, classId);
+                  newEnrollmentChoices.set(course.id, { classId, type: CourseUnitEnrollmentType.ENROLLING });
                   setEnrollmentChoices(newEnrollmentChoices);
                 }}
               key={`course-schedule-${course.id}`}
             />
           ))}
 
-          {enrollCourses.length > 0 &&
+          {/* {alreadyEnrolledCourseUnits?.map((courseUnit: CourseInfo) => (
+            <AlreadyEnrolledCourseUnitCard
+              courseUnit={courseUnit}
+              enrollmentChoices={enrollmentChoices}
+              setEnrollmentChoices={setEnrollmentChoices}
+            />
+          ))} */}
+
+          {(notNullEnrollemnts(enrollmentChoices) && enrollmentChoices.size > 0) &&
             <form onSubmit={async (e) => {
               e.preventDefault();
 

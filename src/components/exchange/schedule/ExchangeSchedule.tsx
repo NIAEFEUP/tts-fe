@@ -39,7 +39,6 @@ const ExchangeSchedule = () => {
 
 
   const getCombinedClassName = (classes: ClassDescriptor[]): string => {
-
     const praticalClass = classes.find((cls) =>
       cls.classInfo.slots.some(slot => slot.lesson_type === "TP" || slot.lesson_type === "PL")
     );
