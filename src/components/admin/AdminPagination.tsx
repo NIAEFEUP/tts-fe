@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "../ui/pagination";
 import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext";
 
 export const AdminPagination = () => {

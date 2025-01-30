@@ -1,5 +1,4 @@
 import { Context, Dispatch, createContext, SetStateAction } from "react";
-import { AdminRequestState } from "../../@types";
 
 export interface AdminPaginationContextContent {
     currPage: number,

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { CourseInfo } from "../../../@types"
 import { Button } from "../../ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card"
+import { Card, CardHeader, CardTitle } from "../../ui/card"
 import { EnrollmentOption } from "./Enrollments"
 import ScheduleContext from "../../../contexts/ScheduleContext"
 
@@ -35,12 +35,14 @@ export const AlreadyEnrolledCourseUnitCard = ({
                         setRemoveSelected(prev => !prev);
                         const newEnrollmentChoices = new Map(enrollmentChoices);
 
-                        removeSelected
-                            ? newEnrollmentChoices.delete(courseUnit.id)
-                            : newEnrollmentChoices.set(courseUnit.id, { 
+                        if(removeSelected) {
+                            newEnrollmentChoices.delete(courseUnit.id)
+                        } else {
+                            newEnrollmentChoices.set(courseUnit.id, { 
                                 type: CourseUnitEnrollmentType.DISENROLLING,
                                 classId: exchangeSchedule?.find((item) => item.courseInfo.course_unit_id === courseUnit.id)?.classInfo.id
                             });
+                        }
 
                         setEnrollmentChoices(newEnrollmentChoices);
                     }}

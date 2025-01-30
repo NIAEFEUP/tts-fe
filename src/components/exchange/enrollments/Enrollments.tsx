@@ -13,7 +13,7 @@ import { ExchangeClassSelector } from "../../planner/sidebar/CoursesController/E
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import ScheduleContext from "../../../contexts/ScheduleContext";
 import useSchedule from "../../../hooks/useSchedule";
-import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
+// import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
 // import { AlreadyEnrolledCourseUnitCard } from "./AlreadyEnrolledCourseUnitCard";
 
 export enum CourseUnitEnrollmentType {
@@ -47,7 +47,7 @@ export const Enrollments = ({
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const originalSchedule = useSchedule();
 
-  const { enrolledCourseUnits: alreadyEnrolledCourseUnits } = useStudentCourseUnits();
+  // const { enrolledCourseUnits: alreadyEnrolledCourseUnits } = useStudentCourseUnits();
 
   const { toast } = useToast();
 
