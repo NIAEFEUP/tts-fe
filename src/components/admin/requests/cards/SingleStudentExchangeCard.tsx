@@ -21,6 +21,7 @@ export const SingleStudentExchangeCard = ({
     exchange
 }: Props) => {
     const [open, setOpen] = useState<boolean>(false);
+    const [exchangeState, setExchangeState] = useState(exchange);
 
     const { schedule } = useStudentsSchedule(exchange.user_nmec);
 
@@ -36,7 +37,7 @@ export const SingleStudentExchangeCard = ({
                                         {`#${exchange.id}`}
                                     </h2>
                                 </CardTitle>
-                                <ExchangeStatus exchange={exchange} />
+                                <ExchangeStatus exchange={exchangeState} />
                             </div>
                             <RequestStudentState
                                 accepted={exchange.accepted}
@@ -120,6 +121,7 @@ export const SingleStudentExchangeCard = ({
                         requestType={AdminRequestType.URGENT_EXCHANGE}
                         requestId={exchange.id}
                         courseUnitId={exchange.options.map(option => option.course_unit.id)}
+                        setExchange={setExchangeState}
                     /> 
                 }
             </Card>

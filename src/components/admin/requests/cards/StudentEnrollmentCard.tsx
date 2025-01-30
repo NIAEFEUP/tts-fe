@@ -20,6 +20,7 @@ export const StudentEnrollmentCard = ({
     enrollment
 }: Props) => {
     const [open, setOpen] = useState<boolean>(false);
+    const [enrollmentState, setEnrollmentState] = useState(enrollment);
 
     const { schedule } = useStudentsSchedule(enrollment.user_nmec);
 
@@ -35,7 +36,7 @@ export const StudentEnrollmentCard = ({
                                 </h2>
                             </CardTitle>
                             <ExchangeStatus
-                                exchange={enrollment} 
+                                exchange={enrollmentState} 
                             />
                         </div>
 
@@ -112,6 +113,7 @@ export const StudentEnrollmentCard = ({
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}
                         courseUnitId={enrollment.options.map(option => option.course_unit.id)}
+                        setExchange={setEnrollmentState}
                     /> 
                 }
             </CardContent>

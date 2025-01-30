@@ -1,4 +1,5 @@
-import { AdminRequestType } from "../../../../@types"
+import { Dispatch, SetStateAction } from "react"
+import { AdminRequestType, CourseUnitEnrollment, DirectExchangeRequest, UrgentRequest } from "../../../../@types"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { mailtoStringBuilder } from "../../../../utils/mail"
 import { Button } from "../../../ui/button"
@@ -14,6 +15,7 @@ type Props = {
     requestId: number,
     showTreatButton?: boolean,
     courseUnitId?: Array<number>
+    setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment>>
 }
 
 const rejectRequest = async (
@@ -39,7 +41,8 @@ export const AdminRequestCardFooter = ({
     requestType,
     requestId,
     showTreatButton = true,
-    courseUnitId
+    courseUnitId,
+    setExchange
 }: Props) => {
     return <>
         <Separator className="my-4" />
@@ -48,9 +51,27 @@ export const AdminRequestCardFooter = ({
                 variant="destructive"
                 onClick={() => {
                     rejectRequest(nmecs, rejectMessage, requestType, requestId);
+                    setExchange(prev => {
+                        const newPrev = {...prev };
+                        newPrev.admin_state = "rejected";
+                        return newPrev;
+                    })
                 }}
             >
                 Rejeitar
+            </Button>
+
+            <Button 
+                onClick={() => {
+                    setExchange(prev => {
+                        const newPrev = {...prev };
+                        newPrev.admin_state = "accepted";
+                        return newPrev;
+                    })
+                }}  
+                className="success-button"
+            >
+                Marcar como aceite
             </Button>
 
             {showTreatButton &&

@@ -38,6 +38,9 @@ export const MultipleStudentExchangeCard = ({
     exchange
 }: Props) => {
     const [open, setOpen] = useState<boolean>(false);
+    const [exchangeState, setExchangeState] = useState(exchange);
+
+    console.log("EXCHANGE STATE: ", exchangeState);
 
     return (
         <>
@@ -51,7 +54,7 @@ export const MultipleStudentExchangeCard = ({
                                         {`#${exchange.id}`}
                                     </h2>
                                 </CardTitle>
-                                <ExchangeStatus exchange={exchange} />
+                                <ExchangeStatus exchange={exchangeState} />
                             </div>
                             <RequestStudentState
                                 accepted={exchange.accepted}
@@ -118,6 +121,7 @@ export const MultipleStudentExchangeCard = ({
                         requestType={AdminRequestType.DIRECT_EXCHANGE}
                         requestId={exchange.id}
                         showTreatButton={false}
+                        setExchange={setExchangeState}
                     />
                 }
             </Card>
