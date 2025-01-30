@@ -40,8 +40,6 @@ export const MultipleStudentExchangeCard = ({
     const [open, setOpen] = useState<boolean>(false);
     const [exchangeState, setExchangeState] = useState(exchange);
 
-    console.log("EXCHANGE STATE: ", exchangeState);
-
     return (
         <>
             <Card>
@@ -122,6 +120,7 @@ export const MultipleStudentExchangeCard = ({
                         requestId={exchange.id}
                         showTreatButton={false}
                         setExchange={setExchangeState}
+                        courseId={exchange.options[0].course_info.id}
                     />
                 }
             </Card>

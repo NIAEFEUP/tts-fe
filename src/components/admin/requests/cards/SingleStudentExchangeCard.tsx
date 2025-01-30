@@ -122,6 +122,7 @@ export const SingleStudentExchangeCard = ({
                         requestId={exchange.id}
                         courseUnitId={exchange.options.map(option => option.course_unit.id)}
                         setExchange={setExchangeState}
+                        courseId={exchange.options[0].course_unit.id}
                     /> 
                 }
             </Card>

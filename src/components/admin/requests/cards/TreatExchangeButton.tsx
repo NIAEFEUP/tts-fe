@@ -4,13 +4,15 @@ import { Button } from "../../../ui/button"
 type Props = {
     nmec: string,
     courseUnitId: number,
-    variant?: "icon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+    variant?: "icon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link",
+    courseId: number
 }
 
 export const TreatExchangeButton = ({
     nmec,
     courseUnitId,
-    variant = "default"
+    courseId,
+    variant = "default",
 }: Props) => {
     const { studentCourseMetadata } = useStudentCourseMetadata(nmec, courseUnitId);
 
@@ -23,7 +25,7 @@ export const TreatExchangeButton = ({
             {
                 uniqueMetadata.map((metadata) => (
                     <a
-                        href={`https://sigarra.up.pt?fest_id=${metadata.fest_id}`}
+                        href={`https://sigarra.up.pt/feup/pt/it_adm.adm_selecciona_turmas_livre?pv_estudante_id=${metadata.fest_id}&pv_curso_id=${courseId}`}
                         key={metadata.fest_id}
                     >
                         <Button
