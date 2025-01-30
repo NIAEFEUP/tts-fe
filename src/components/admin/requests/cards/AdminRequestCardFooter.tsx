@@ -11,6 +11,7 @@ import { TreatExchangeButton } from "./TreatExchangeButton"
 type Props = {
     nmecs: Array<string>,
     rejectMessage: string,
+    acceptMessage: string,
     requestType: AdminRequestType,
     requestId: number,
     showTreatButton?: boolean,
@@ -36,9 +37,27 @@ const rejectRequest = async (
     }
 }
 
+const acceptRequest = async (
+    nmecs: Array<string>,
+    acceptMessage: string,
+    requestType: AdminRequestType,
+    id: number
+) => {
+    try {
+        await exchangeRequestService.adminAcceptExchangeRequest(requestType, id);
+
+        const a = document.createElement('a');
+        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de troca aceito&body=${acceptMessage}`;
+        a.click();
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 export const AdminRequestCardFooter = ({
     nmecs,
     rejectMessage,
+    acceptMessage,
     requestType,
     requestId,
     showTreatButton = true,
@@ -52,8 +71,8 @@ export const AdminRequestCardFooter = ({
         <CardFooter className="justify-end gap-4">
             <Button
                 variant="destructive"
-                onClick={() => {
-                    rejectRequest(nmecs, rejectMessage, requestType, requestId);
+                onClick={async () => {
+                    await rejectRequest(nmecs, rejectMessage, requestType, requestId);
                     setExchange(prev => {
                         const newPrev = {...prev };
                         newPrev.admin_state = "rejected";
@@ -65,7 +84,8 @@ export const AdminRequestCardFooter = ({
             </Button>
 
             <Button 
-                onClick={() => {
+                onClick={async () => {
+                    await acceptRequest(nmecs, acceptMessage, requestType, requestId);
                     setExchange(prev => {
                         const newPrev = {...prev };
                         newPrev.admin_state = "accepted";

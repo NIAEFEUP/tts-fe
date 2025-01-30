@@ -118,6 +118,7 @@ export const SingleStudentExchangeCard = ({
                                 course_acronym: option.course_unit.acronym
                             }))
                         )}
+                        acceptMessage={"mensagem"}
                         requestType={AdminRequestType.URGENT_EXCHANGE}
                         requestId={exchange.id}
                         courseUnitId={exchange.options.map(option => option.course_unit.id)}

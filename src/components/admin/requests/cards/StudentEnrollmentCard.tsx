@@ -110,6 +110,7 @@ export const StudentEnrollmentCard = ({
                                 course_acronym: option.course_unit.acronym
                             }))
                         )}
+                        acceptMessage="mensagem"
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}
                         courseUnitId={enrollment.options.map(option => option.course_unit.id)}

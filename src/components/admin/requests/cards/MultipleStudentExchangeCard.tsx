@@ -116,6 +116,13 @@ export const MultipleStudentExchangeCard = ({
                                 course_acronym: option.course_unit
                             }))
                         )}
+                        acceptMessage={"mensagem"/*acceptEmailExchanges(
+                            exchange.options.map(option => ({
+                                goes_from: option.class_participant_goes_from.name,
+                                goes_to: option.class_participant_goes_to.name,
+                                course_acronym: option.course_unit
+                            }))
+                        )*/}
                         requestType={AdminRequestType.DIRECT_EXCHANGE}
                         requestId={exchange.id}
                         showTreatButton={false}

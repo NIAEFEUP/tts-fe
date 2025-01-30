@@ -67,11 +67,22 @@ const adminRejectExchangeRequest = async (requestType: AdminRequestType, id: num
   });
 }
 
+const adminAcceptExchangeRequest = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/accept/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
   retrieveRequestCardMetadata,
   adminRejectExchangeRequest,
+  adminAcceptExchangeRequest
 }
 
 export default exchangeRequestService;
