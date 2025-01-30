@@ -12,7 +12,7 @@ type ExchangeStatusProperty = {
 
 const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment) => {
     switch (exchange.admin_state) {
-        case "accepted":
+        case "accepted": case "treated":
             return {
                 "message": "Aceite",
                 "color": "bg-green-200 text-green-800",
@@ -36,7 +36,7 @@ export const ExchangeStatus = ({
     const status: ExchangeStatusProperty = exchangeStatusProperties(exchange);
 
     return (
-        <p className={cn(status.color, "rounded-full px-4 py-1 text-sm")}>
+        <p className={cn(status?.color, "rounded-full px-4 py-1 text-sm")}>
             {status.message}
         </p>
     )
