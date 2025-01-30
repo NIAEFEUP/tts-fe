@@ -17,7 +17,7 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
     formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
-  if(urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
+  if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
 
   return fetch(
     `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
@@ -71,7 +71,7 @@ const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
   retrieveRequestCardMetadata,
-  adminRejectExchangeRequest
+  adminRejectExchangeRequest,
 }
 
 export default exchangeRequestService;

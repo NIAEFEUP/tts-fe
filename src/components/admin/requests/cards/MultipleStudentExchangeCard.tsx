@@ -11,6 +11,7 @@ import { RequestDate } from "./RequestDate";
 import { rejectEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
 import { RequestStudentState } from "../RequestStudentState";
+import { ValidateRequestButton } from "./ValidateRequestButton";
 
 type Props = {
     exchange: DirectExchangeRequest
@@ -43,7 +44,7 @@ export const MultipleStudentExchangeCard = ({
             <Card>
                 <CardHeader className="flex flex-row justify-between items-center">
                     <div className="flex gap-4 items-center">
-                        <div className="flex flex-col gap-1 ">
+                        <div className="flex flex-col gap-2 ">
                             <div className="flex gap-2 items-center">
                                 <CardTitle>
                                     <h2 className="font-bold">
@@ -52,19 +53,24 @@ export const MultipleStudentExchangeCard = ({
                                 </CardTitle>
                                 <ExchangeStatus exchange={exchange} />
                             </div>
-                            <RequestStudentState 
-                                accepted={exchange.accepted} 
+                            <RequestStudentState
+                                accepted={exchange.accepted}
                             />
-                            <RequestDate 
+                            <RequestDate
                                 date={exchange.date}
                             />
+                            <div className="mt-4">
+                                <ValidateRequestButton
+                                    id={exchange.id}
+                                />
+                            </div>
                         </div>
                         {!open && <>
                             {exchange.options.map((participant: DirectExchangeParticipant) => (
-                                <Person 
+                                <Person
                                     key={"multiple-student-person-" + participant.participant_nmec}
-                                    name={participant.participant_name} 
-                                    nmec={participant.participant_nmec} 
+                                    name={participant.participant_name}
+                                    nmec={participant.participant_nmec}
                                 />
                             ))}
                         </>}
@@ -98,7 +104,7 @@ export const MultipleStudentExchangeCard = ({
                 </CardContent>
 
                 {open &&
-                    <AdminRequestCardFooter 
+                    <AdminRequestCardFooter
                         nmecs={
                             exchange.options.map(option => option.participant_nmec)
                         }
@@ -112,7 +118,7 @@ export const MultipleStudentExchangeCard = ({
                         requestType={AdminRequestType.DIRECT_EXCHANGE}
                         requestId={exchange.id}
                         showTreatButton={false}
-                    /> 
+                    />
                 }
             </Card>
         </>
