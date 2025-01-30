@@ -2,7 +2,7 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 import colors from 'tailwindcss/colors'
 
 module.exports = {
-  darkMode: ['class', 'class'],
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}', './src/styles/safelist.txt'],
   theme: {
   	extend: {
