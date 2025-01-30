@@ -10,6 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import useSession from '../../../../hooks/useSession';
 import CourseContext from '../../../../contexts/CourseContext';
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext';
 
 const generateUniqueId = () => Date.now();
 
@@ -24,7 +25,9 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   const [searchParams, ] = useSearchParams();
   const { signedIn: userSignedIn, user } = useSession();
   const { pickedCourses, setPickedCourses } = useContext(CourseContext);
+  const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
   const [pickedCoursesLock, setPickedCoursesLock] = useState(false);
+  const [multipleOptionsLock, setMultipleOptionsLock] = useState(false);
 
   useEffect(() => {
     if (searchParams.has('session')) {
@@ -76,6 +79,10 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     socket.on('update_picked_courses', (courses) => {
       setPickedCoursesLock(true);
       setPickedCourses(courses);
+    });
+    socket.on('update_multiple_options', (courses_info) => {
+      setMultipleOptionsLock(true);
+      setMultipleOptions(courses_info);
     })
   };
 
@@ -86,7 +93,16 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       else
         setPickedCoursesLock(false);
     }
-  }, [pickedCourses])
+  }, [pickedCourses]);
+
+  useEffect(() => {
+    if (sessionsSocket.isConnected) {
+      if (!multipleOptionsLock)
+        sessionsSocket.emit('update_multiple_options', multipleOptions);
+      else
+        setMultipleOptionsLock(false);
+    }
+  }, [multipleOptions]);
 
   const getName = () => {
     if (userSignedIn) {
@@ -122,6 +138,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
         setPickedCourses(sessionsSocket.sessionInfo['picked_courses']);
+        setMultipleOptions(sessionsSocket.sessionInfo['multiple_options']);
   
         toast({
           title: sessionId ? 'Entrou na sessão' : 'Sessão criada',
