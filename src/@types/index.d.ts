@@ -171,7 +171,6 @@ export type Participant = {
 
 export type CollabSession = {
   id: string
-  name: string
   lastEdited: number
   expirationTime: number
   link: string

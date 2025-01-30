@@ -41,8 +41,7 @@ const CollabPickSession = ({ sessions, onStartSession, onDeleteSession }: Props)
       </p>
       <ul className="mt-4 flex flex-col sm:grid sm:grid-cols-1 sm:gap-y-4">
         {sessions.map((session) => (
-          <li key={session.id} className="sm:grid sm:grid-cols-7 flex flex-col sm:mt-0  mt-6 items-center text-sm text-gray-800 gap-4">
-            <span className="col-span-2 truncate whitespace-nowrap font-bold">{session.name}</span>
+          <li key={session.id} className="sm:grid sm:grid-cols-5 flex flex-col sm:mt-0 mt-6 items-center text-sm text-gray-800 gap-4">
             <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">editado {toHumanReadableTimeDiff(session.lastEdited)}</span>
             <span className="col-span-2 text-gray-600 truncate whitespace-nowrap">expira {toHumanReadableTimeDiff(session.expirationTime)}</span>
             <div className="col-span-1 flex justify-end space-x-4">
