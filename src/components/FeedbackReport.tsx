@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/react";
-import { BugAntIcon } from "@heroicons/react/24/solid"
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu"
 import { Button } from "./ui/button"
 import { DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu"
@@ -15,21 +14,18 @@ import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { FlagIcon } from "@heroicons/react/24/outline";
 
 enum ReportType {
-  Bug = 1,
-  Suggestion,
+  Suggestion = "Sugestão",
+  Bug = "Bug"
 }
-
-const reportTypeString = ["Bug", "Sugestão"]
-const reportTypeSuccessMessage = ["O bug foi submetido com sucesso", "A sugestão foi submetida com sucesso"]
 
 const bugSchema = z.object({
   email: z.string().optional(),
-  description: z.string().trim().min(1, { message: "É necessário descreveres o bug" }),
+  description: z.string().trim().min(1, { message: "É necessário descreveres" }),
 })
 
 export const FeedbackReport = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const [reportType, setReportType] = useState<ReportType>(ReportType.Bug);
+  const [reportType, setReportType] = useState<ReportType>(ReportType.Suggestion);
 
   const { toast } = useToast();
 
@@ -44,9 +40,10 @@ export const FeedbackReport = () => {
   const { register } = form;
 
   const onSubmit = (values: z.infer<typeof bugSchema>) => {
-    const eventId = Sentry.captureMessage(reportTypeString[reportType]);
+    const eventId = Sentry.captureMessage(reportType);
 
     const userFeedback = {
+      type: reportType,
       email: values.email ?? "",
       message: values.description,
       associatedEventId: eventId,
@@ -54,9 +51,9 @@ export const FeedbackReport = () => {
     Sentry.captureFeedback(userFeedback);
 
     setOpen(false);
+
     toast({
-      title: "Obrigado!",
-      description: reportTypeSuccessMessage[reportType],
+      title: "Enviado! Obrigado pelo teu feedback",
       duration: 3000,
     })
   }
@@ -68,11 +65,11 @@ export const FeedbackReport = () => {
         <p className="text-black">Feedback</p>
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent className="ml-4">
-      <Tabs defaultValue="bug">
+    <DropdownMenuContent className="ml-5">
+      <Tabs defaultValue="suggestion">
         <TabsList className="w-full">
-          <TabsTrigger value="bug" onClick={() => setReportType(ReportType.Bug)}>Bug</TabsTrigger>
           <TabsTrigger value="suggestion" onClick={() => setReportType(ReportType.Suggestion)}>Sugestão</TabsTrigger>
+          <TabsTrigger value="bug" onClick={() => setReportType(ReportType.Bug)}>Bug</TabsTrigger>
         </TabsList>
       </Tabs>
       <Form {...form}>

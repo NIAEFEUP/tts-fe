@@ -21,7 +21,7 @@ const Layout = ({ children, location, liquid, title }: Props) => {
       id="layout"
       className="min-h-screen flex-col bg-light font-prose font-normal text-gray-800 opacity-[99%] dark:bg-darkest dark:text-white"
     >
-      <div className="hidden md:flex fixed bottom-0 left-0 mb-4 ml-4 rounded-full shadow-lg bg-white border">
+      <div className="hidden md:flex fixed bottom-0 left-0 mb-6 ml-5 rounded-full shadow-lg bg-white border">
         <FeedbackReport />
       </div>
 
