@@ -46,8 +46,8 @@ export const AlreadyEnrolledCourseUnitCard = ({
                     }}
                 >
                     {removeSelected 
-                        ? "Cancelar desinscrição"
-                        : "Desinscrever"
+                        ? "Cancelar pedido"
+                        : "Anular inscrição"
                     }
                 </Button>
             </CardHeader>
