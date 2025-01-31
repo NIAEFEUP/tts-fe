@@ -168,7 +168,7 @@ export const CreateRequestCard = ({
                 }
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full">
+            <PopoverContent className="w-full w-[var(--radix-popper-anchor-width)]">
               <Command>
                 <CommandInput 
                   placeholder="Pesquisar por estudante"
