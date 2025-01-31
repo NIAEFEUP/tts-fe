@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Command, CommandGroup, CommandItem } from "../../ui/command";
 import { Check, ChevronDownIcon } from "lucide-react";
 import { set } from "date-fns";
+import { Badge } from "../../ui/badge";
 
 /**
  * This component is the view that allows the user to control which filters are active and applied to the requests.
@@ -60,7 +61,10 @@ export const RequestFilters = () => {
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="outline" className="w-full flex flex-row gap-x-2">
-                    <p>Estado</p>
+                    <p>
+                        Estado
+                        {activeStates.length > 0 && <Badge variant="outline" className="ml-2">{activeStates.length}</Badge>}
+                    </p>
                     <ChevronDownIcon className="w-5 h-5" />
                 </Button>
             </PopoverTrigger>
