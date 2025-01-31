@@ -7,6 +7,8 @@ import useRequestCardCourseMetadata from "../../../../../hooks/useRequestCardCou
 import { Button } from "../../../../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../ui/dropdown-menu"
+import { Popover, PopoverContent, PopoverTrigger } from "../../../../ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../../../../ui/command"
 
 type Props = {
   courseInfo: CourseInfo
@@ -27,6 +29,7 @@ export const CreateRequestCard = ({
   const [issuerOriginClassName, setIssuerOriginClassName] = useState<string | null>(null);
   const [selectedDestinationClass, setSelectedDestinationClass] = useState<ClassInfo | null>(null);
   const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<Student | null>(null);
+  const [studentDropdownOpen, setStudentDropdownOpen] = useState<boolean>(false);
   const { exchangeSchedule, originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
 
   useEffect(() => {
@@ -70,7 +73,8 @@ export const CreateRequestCard = ({
       courseUnitId: courseInfo.id,
       courseUnitName: courseInfo.name,
       classNameRequesterGoesFrom: issuerOriginClassName,
-      classNameRequesterGoesTo: destinationClassName
+      classNameRequesterGoesTo: destinationClassName,
+      other_student: selectedDestinationStudent
     }
 
     requests.set(courseInfo.id, currentRequest);
@@ -150,49 +154,58 @@ export const CreateRequestCard = ({
 
       <div className="flex flex-col gap-y-4">
         <div className={`${hasStudentToExchange ? "" : "hidden"}`}>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="w-full">
-              <div className="flex flex-col gap-y-2">
-                <p className="text-left font-bold">Estudante</p>
-                <Button variant="outline" className="w-full">
-                  {selectedDestinationStudent ? selectedDestinationStudent.name : "Escolher estudante..."}
-                </Button>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-full max-h-fit overflow-scroll">
-              <ScrollArea className="max-h-72 overflow-y-auto rounded">
-                {requestMetadata?.students?.map((student) => (
-                  <DropdownMenuItem
-                    key={"dropdown-student-" + student.nome}
-                    className="w-full"
-                    onSelect={() => {
-                      if (requests.get(courseInfo.id)) {
-                        requests.get(courseInfo.id).other_student = {
-                          name: student.nome,
-                          mecNumber: Number(student.codigo),
-                          classInfo: student.classInfo
-                        }
-                        if (student.classInfo) requests.get(courseInfo.id).classNameRequesterGoesTo = student.classInfo.name;
-                        setRequests(new Map(requests));
-                      } else if (student.classInfo) {
-                        addRequest(student.classInfo.name)
+          <Popover open={studentDropdownOpen} onOpenChange={setStudentDropdownOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={studentDropdownOpen}
+                className="w-full justify-between"
+              >
+                {selectedDestinationStudent 
+                  ? <p>{selectedDestinationStudent.name}</p>
+                  : <p>Escolher estudante</p>
+                }
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full">
+              <Command>
+                <CommandInput 
+                  placeholder="Pesquisar por estudante"
+                  className="w-full"
+                />
 
-                        requests.get(courseInfo.id).other_student = {
-                          name: student.nome,
-                          mecNumber: Number(student.codigo),
-                          classInfo: student.classInfo
-                        }
-                        requests.get(courseInfo.id).classNameRequesterGoesTo = student.classInfo.name;
-                      }
+                <ScrollArea className="max-h-72 overflow-y-auto rounded">
+                  <CommandList>
+                    <CommandEmpty>Sem pessoas encontradas</CommandEmpty>
+                  </CommandList>
+                  <CommandGroup>
+                    {requestMetadata?.students?.map((student) => (
+                      <CommandItem
+                        key={"dropdown-student-" + student.name}
+                        className="w-full"
+                        onSelect={() => {
+                          if (requests.get(courseInfo.id)) {
+                            requests.get(courseInfo.id).other_student = {
+                              name: student.name,
+                              mecNumber: Number(student.mecNumber),
+                              classInfo: student.classInfo
+                            }
+                            if (student.classInfo) requests.get(courseInfo.id).classNameRequesterGoesTo = student.classInfo.name;
+                            setRequests(new Map(requests));
+                          }
 
-                      setSelectedDestinationStudent(student);
-                    }}>
-                    <p className="w-full">{student.nome}</p>
-                  </DropdownMenuItem>
-                ))}
-              </ScrollArea>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                          setSelectedDestinationStudent(student);
+                          setStudentDropdownOpen(false);
+                        }}>
+                        <p className="w-full">{student.name}</p>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </ScrollArea>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </CardContent>
