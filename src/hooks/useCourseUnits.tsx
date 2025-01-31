@@ -3,18 +3,18 @@ import api from "../api/backend";
 import useSWR from "swr";
 
 export default (courseId: number | null) => {
-  const getCourseUnit = async (id) => {
+  const getCourseUnit = async () => {
     try {
-      if (courseId) return await api.getCoursesByMajorId(Number(id));
+      if (courseId) return await api.getCoursesByMajorId(Number(courseId));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const { data, error, mutate } = useSWR(String(courseId), getCourseUnit, {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
+  const { data, error, mutate } = useSWR(`course-units-of-${String(courseId)}`, getCourseUnit, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false
   });
   const courseUnits = useMemo(() => data ? data : null, [data]);
 

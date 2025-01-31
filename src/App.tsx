@@ -3,9 +3,12 @@ import { Toaster } from './components/ui/toaster'
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
-import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage } from './pages'
+import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage, PrivacyPolicyPage, ExchangeVerifyPage, AdminPage } from './pages'
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
+import Exchange from './pages/Exchange'
+import { useEffect } from 'react'
+import api from './api/backend'
 import * as Sentry from "@sentry/react";
 
 const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
@@ -16,6 +19,8 @@ const pages = [
   { path: getPath(configToUse.paths.planner), location: 'Horários', element: TimeTableSelectorPage, liquid: true },
   { path: getPath(configToUse.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
   { path: getPath(configToUse.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
+  { path: getPath(config.paths.exchange), location: 'Turmas', element: Exchange, liquid: true },
+  { path: getPath(config.paths.privacypolicy), location: 'Privacidade', element: PrivacyPolicyPage, liquid: true },
 ]
 
 const redirects = [
@@ -33,20 +38,25 @@ const App = () => {
   const { enableAutoPageviews } = plausible
   enableAutoPageviews()
 
+  useEffect(() => {
+    fetch(`${api.BACKEND_URL}/csrf/`, { credentials: "include" }).then(() => {
+    }).catch((e) => console.error(e));
+  });
+  
   // Enable Error Tracking, Performance Monitoring and Session Replay
   Sentry.init({
     environment: Number(import.meta.env.VITE_APP_PROD) ? "production" : "development",
-    dsn: "https://01f0882e6aa029a125426e4ad32e6c18@o553498.ingest.us.sentry.io/4507775325437952",
+    dsn: import.meta.env.VITE_APP_SENTRY_DSN,
     integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
-      Sentry.reactRouterV6BrowserTracingIntegration({
+      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.browserTracingIntegration() : null,
+      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.replayIntegration() : null,
+      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.reactRouterV6BrowserTracingIntegration({
         useEffect: React.useEffect,
         useLocation,
         useNavigationType,
         createRoutesFromChildren,
         matchRoutes,
-      }),
+      }) : null,
     ],
 
     // Performance monitoring
@@ -71,12 +81,24 @@ const App = () => {
                 <Layout location={page.location} title={page.location} liquid={page.liquid}>
                   <div>
                     <page.element />
-                    <Toaster/>
+                    <Toaster />
                   </div>
                 </Layout>
               }
             />
           ))}
+          <Route 
+            path="/exchange/verify/:token" 
+            key="exchange-verify-page"
+            element={
+              <Layout location="Exchange" title="Exchange" liquid={true}>
+                <div>
+                  <ExchangeVerifyPage />
+                  <Toaster />
+                </div>
+              </Layout>
+            }
+          />
           {redirects.map((redirect, redirectIdx) => (
             <Route
               path={redirect.from}
@@ -84,6 +106,20 @@ const App = () => {
               element={<Navigate replace to={redirect.to} />}
             />
           ))}
+          <Route
+            path="admin"
+            key="page-admin"
+            element={
+              <AdminPage page="pedidos"/>
+            }
+          />
+          <Route
+            path="admin/settings"
+            key="page-admin-settings"
+            element={
+              <AdminPage page="settings"/>
+            }
+          />
         </SentryRoutes>
       </CombinedProvider>
     </BrowserRouter>
