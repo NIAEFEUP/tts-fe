@@ -7,7 +7,6 @@ const submitEnrollmentRequest = async (courses: Map<number, EnrollmentOption>) =
   for (const [key, value] of courses) {
     formData.append(`enrollCourses[]`, JSON.stringify({ 
       course_unit_id: key, 
-      class_id: value.classId, 
       enrolling: value.type === CourseUnitEnrollmentType.ENROLLING 
     }));
 }
