@@ -18,10 +18,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
 import ConflictsContext from "../../../../contexts/ConflictsContext";
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
+import { Input } from "../../../ui/input";
 
 type Props = {
   requests: Map<number, CreateRequestData>
-  requestSubmitHandler: (message: string) => void
+  requestSubmitHandler: (message: string, attachment: File | null) => void
   previewingFormHook: [boolean, Dispatch<SetStateAction<boolean>>]
   submittingRequest: boolean
 }
@@ -33,7 +34,8 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
   const schema = z.object({
     urgentMessage: sendUrgentMessage ? z.string().min(1, {
       message: "Tens de especificar um motivo!"
-    }).max(2048) : z.string().optional()
+    }).max(2048) : z.string().optional(),
+    urgentMessageAttachment: z.instanceof(File).optional() 
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -41,7 +43,9 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
   });
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    await requestSubmitHandler(data.urgentMessage);
+    await requestSubmitHandler(data.urgentMessage, data.urgentMessageAttachment);
+
+    form.reset();
   }
 
   const { isConflictSevere } = useContext(ConflictsContext);
@@ -105,21 +109,35 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
               <p>Quero enviar o pedido direto à comissão de inscrição</p>
             </div>
             {sendUrgentMessage &&
-              <FormField
-                control={form.control}
-                name="urgentMessage"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Justifica a urgência do teu pedido de troca."
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />}
+              <>
+                <FormField
+                  control={form.control}
+                  name="urgentMessage"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          placeholder="Justifica a urgência do teu pedido de troca."
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="urgentMessageAttachment"
+                  render={({ field }) => (
+                    <Input
+                      type="file"
+                      id="urgentMessageAttachment"
+                      onChange={(e) => field.onChange(e.target.files?.[0])}
+                    />
+                  )}
+                />
+              </>
+            }
 
             <Button
               className="flex flex-row gap-x-2 success-button"

@@ -10,14 +10,17 @@ const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
   return true;
 }
 
-const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string = "") => {
+const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string = "", urgentMessageAttachment: File | null = null) => {
   const formData = new FormData();
 
   for (const request of requests.values()) {
     formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
-  if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
+  if (urgentMessage !== "") {
+    formData.append("urgentMessage", urgentMessage);
+    formData.append("urgentMessageAttachment", urgentMessageAttachment);
+  }
 
   return fetch(
     `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
