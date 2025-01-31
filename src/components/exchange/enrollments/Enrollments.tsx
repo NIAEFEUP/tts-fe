@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, Dispatch, SetStateAction } from "react";
-// import { Desert } from "../../svgs/";
+import { Desert } from "../../svgs/";
 import { ExchangeCoursePicker } from "../../planner/sidebar/sessionController/ExchangeCoursePicker";
 import { CourseInfo, Major } from "../../../@types";
 import MajorContext from "../../../contexts/MajorContext";
@@ -13,8 +13,8 @@ import { ExchangeClassSelector } from "../../planner/sidebar/CoursesController/E
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import ScheduleContext from "../../../contexts/ScheduleContext";
 import useSchedule from "../../../hooks/useSchedule";
-// import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
-// import { AlreadyEnrolledCourseUnitCard } from "./AlreadyEnrolledCourseUnitCard";
+import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
+import { AlreadyEnrolledCourseUnitCard } from "./AlreadyEnrolledCourseUnitCard";
 
 export enum CourseUnitEnrollmentType {
   DISENROLLING = 1,
@@ -22,7 +22,8 @@ export enum CourseUnitEnrollmentType {
 }
 
 export type EnrollmentOption = {
-  classId: number, // If the user is disenrolling, we do not need a classid
+  courseId: number, // If the user is disenrolling, we do not need a classid
+  classAcronym: string,
   type: CourseUnitEnrollmentType
 }
 
@@ -47,7 +48,7 @@ export const Enrollments = ({
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const originalSchedule = useSchedule();
 
-  // const { enrolledCourseUnits: alreadyEnrolledCourseUnits } = useStudentCourseUnits();
+  const { enrolledCourseUnits: alreadyEnrolledCourseUnits } = useStudentCourseUnits();
 
   const { toast } = useToast();
 
@@ -120,13 +121,13 @@ export const Enrollments = ({
             />
           ))}
 
-          {/* {alreadyEnrolledCourseUnits?.map((courseUnit: CourseInfo) => (
+          {alreadyEnrolledCourseUnits?.map((courseUnit: CourseInfo) => (
             <AlreadyEnrolledCourseUnitCard
               courseUnit={courseUnit}
               enrollmentChoices={enrollmentChoices}
               setEnrollmentChoices={setEnrollmentChoices}
             />
-          ))} */}
+          ))}
 
           {(notNullEnrollemnts(enrollmentChoices) && enrollmentChoices.size > 0) &&
             <form onSubmit={async (e) => {
