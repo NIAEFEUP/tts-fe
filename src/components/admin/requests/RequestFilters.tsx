@@ -26,6 +26,7 @@ export const RequestFilters = () => {
                 <SelectValue placeholder="Curso" />
             </SelectTrigger>
             <SelectContent>
+                {courses.length === 0 && <p>Nenhum</p>}
                 {courses?.map((course) => (
                     <SelectItem 
                         key={`course-select-item-${course.id}`}
