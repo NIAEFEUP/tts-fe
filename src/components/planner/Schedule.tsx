@@ -93,13 +93,13 @@ const Schedule = ({
         </div>
 
         {/* Bottom bar */}
-        <div className="flex justify-between gap-5 pl-16">
-          <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
+        <div className="flex justify-end gap-5 pl-16">
+          <div className="flex gap-x-4">
             <ScheduleTypes types={slotTypes} hiddenLessonsTypes={hiddenLessonsTypes} setHiddenLessonsTypes={setHiddenLessonsTypes} />
-          </div>
-          <div className="flex gap-2">
-            <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
-            <PrintSchedule component={scheduleRef} />
+            <div className="flex flex-row gap-x-2">
+              <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
+              <PrintSchedule component={scheduleRef} />
+            </div>
           </div>
         </div>
       </div>
