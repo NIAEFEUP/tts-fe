@@ -1,5 +1,5 @@
 import { Key } from "swr";
-import { CreateRequestData, MarketplaceRequest } from "../../@types";
+import { AdminRequestType, CreateRequestData, MarketplaceRequest } from "../../@types";
 import api from "../backend";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
@@ -17,7 +17,7 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
     formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
-  if(urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
+  if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
 
   return fetch(
     `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
@@ -57,6 +57,26 @@ const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
   });
 }
 
+const adminRejectExchangeRequest = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/reject/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
+const adminAcceptExchangeRequest = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/accept/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  })
+}
+
 const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
   return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
     method: "POST",
@@ -80,6 +100,8 @@ const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
   retrieveRequestCardMetadata,
+  adminRejectExchangeRequest,
+  adminAcceptExchangeRequest,
   verifyExchangeRequest
 }
 

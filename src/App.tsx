@@ -3,7 +3,7 @@ import { Toaster } from './components/ui/toaster'
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
-import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage, PrivacyPolicyPage, ExchangeVerifyPage } from './pages'
+import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage, PrivacyPolicyPage, ExchangeVerifyPage, AdminPage } from './pages'
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import Exchange from './pages/Exchange'
@@ -106,6 +106,20 @@ const App = () => {
               element={<Navigate replace to={redirect.to} />}
             />
           ))}
+          <Route
+            path="admin"
+            key="page-admin"
+            element={
+              <AdminPage page="pedidos"/>
+            }
+          />
+          <Route
+            path="admin/settings"
+            key="page-admin-settings"
+            element={
+              <AdminPage page="settings"/>
+            }
+          />
         </SentryRoutes>
       </CombinedProvider>
     </BrowserRouter>
