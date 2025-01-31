@@ -24,7 +24,7 @@ const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentReques
             }
         case "untreated":
             return {
-                "message": "Pendente",
+                "message": "Não tratado",
                 "color": "bg-yellow-200 text-yellow-800",
             }
     }

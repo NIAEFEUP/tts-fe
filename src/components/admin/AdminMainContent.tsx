@@ -4,7 +4,7 @@ import { MultipleStudentExchanges } from "./requests/MultipleStudentExchanges";
 import { RequestFilters } from "./requests/RequestFilters";
 import { SingleStudentExchanges } from "./requests/SingleStudentExchanges";
 import { StudentEnrollments } from "./requests/StudentEnrollments";
-import { AdminRequestState } from "../../@types";
+import { AdminRequestState } from "../../contexts/admin/RequestFiltersContext";
 import RequestFiltersContext from "../../contexts/admin/RequestFiltersContext";
 import { AdminPagination } from "./AdminPagination";
 import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext";
@@ -12,7 +12,7 @@ import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext"
 export const AdminMainContent = () => {
     const [activeCourse, setActiveCourse] = useState<number | undefined>(undefined);
     const [activeCurricularYear, setActiveCurricularYear] = useState<number | undefined>(undefined);
-    const [activeState, setActiveState] = useState<AdminRequestState | undefined>(undefined);
+    const [activeStates, setActiveStates] = useState<Array<AdminRequestState>>([]);
 
     const [currPage, setCurrPage] = useState<number>(1);
 
@@ -26,8 +26,8 @@ export const AdminMainContent = () => {
                 setActiveCourse: setActiveCourse,
                 activeCurricularYear: activeCurricularYear,
                 setActiveCurricularYear: setActiveCurricularYear,
-                activeState: activeState,
-                setActiveState: setActiveState
+                activeStates: activeStates,
+                setActiveStates: setActiveStates
             }}>
                 <div className="flex flex-col gap-y-4 p-4">
                     <div className="flex justify-between">
