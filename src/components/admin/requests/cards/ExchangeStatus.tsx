@@ -27,6 +27,11 @@ const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentReques
                 "message": "Não tratado",
                 "color": "bg-yellow-200 text-yellow-800",
             }
+        case "awaiting-information":
+            return {
+                "message": "A aguardar informação",
+                "color": "bg-blue-500 text-white",
+            }
     }
 }
 
