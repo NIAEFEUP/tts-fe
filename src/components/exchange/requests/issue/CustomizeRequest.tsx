@@ -9,6 +9,7 @@ import { toast } from "../../../ui/use-toast"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 import PreviewRequestForm from "./PreviewRequestForm"
 import { ExchangeSidebarStatus } from "../../../../pages/Exchange"
+import { exchangeErrorToText } from "../../../../utils/error"
 
 type Props = {
   selectedCourseUnits: CourseInfo[]
@@ -37,6 +38,12 @@ export const CustomizeRequest = ({
       setPreviewingForm(false);
       toast({
         title: 'Pedido submetido com sucesso!',
+      });
+    }else{
+      setPreviewingForm(false);
+      toast({
+        title: 'Erro ao submeter o pedido.',
+        description: exchangeErrorToText[json.error]
       });
     }
 
