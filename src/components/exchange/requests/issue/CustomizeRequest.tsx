@@ -30,9 +30,9 @@ export const CustomizeRequest = ({
   const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
   const [previewingForm, setPreviewingForm] = useState<boolean>(false);
 
-  const submitRequest = async (urgentMessage: string) => {
+  const submitRequest = async (urgentMessage: string, urgentMessageAttachment: File | null = null) => {
     setSubmittingRequest(true);
-    const json = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage);
+    const json = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage, urgentMessageAttachment);
 
     if (json.success) {
       setPreviewingForm(false);
