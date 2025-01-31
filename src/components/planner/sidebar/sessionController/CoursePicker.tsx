@@ -1,43 +1,35 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon } from '@heroicons//react/24/solid'
-import { useContext, useEffect, useState } from 'react'
-import StorageAPI from '../../../../api/storage'
-import CourseContext from '../../../../contexts/CourseContext'
+import { useContext, useEffect } from 'react'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/button'
 import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/dialog'
-import BackendAPI from '../../../../api/backend'
 import { Separator } from '../../../ui/separator'
 import useCourseUnits from '../../../../hooks/useCourseUnits'
-import { Major } from '../../../../@types'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
+import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
 
 //TODO: absolute imports with @
 
 const CoursePicker = () => {
-  const { pickedCourses, setPickedCourses, checkboxedCourses, setChoosingNewCourse, setCoursesInfo, ucsModalOpen, setUcsModalOpen } = useContext(CourseContext)
+  const {
+    coursesStorage,
+    setCoursesInfo,
+    setUcsModalOpen,
+    setChoosingNewCourse,
+    ucsModalOpen,
+    selectedMajor,
+    setSelectedMajor
+  } = useContext(CoursePickerContext)
 
-  const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
   const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
-  const showContent = selectedMajor || pickedCourses.length > 0
+  const showContent = selectedMajor || coursesStorage.length > 0
 
   useEffect(() => {
     if (!courseUnits) return;
     setCoursesInfo(courseUnits);
   }, [courseUnits])
-
-  useEffect(() => {
-    BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
-      StorageAPI.setPickedCoursesStorage(courseWithClasses);
-      setPickedCourses(courseWithClasses);
-    })
-  }, [checkboxedCourses])
-
-  useEffect(() => {
-    if (!selectedMajor) return
-    StorageAPI.setSelectedMajorStorage(selectedMajor);
-  }, [selectedMajor, setCoursesInfo])
 
   const handleOpenChange = () => {
     setChoosingNewCourse((prev) => !prev);

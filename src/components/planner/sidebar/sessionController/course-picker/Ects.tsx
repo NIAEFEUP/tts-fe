@@ -1,11 +1,11 @@
 import { useContext } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/24/solid'
-import CourseContext from '../../../../../contexts/CourseContext'
+import CoursePickerContext from '../../../../../contexts/coursePicker/CoursePickerContext'
 import { TooltipTrigger, TooltipContent, TooltipProvider, Tooltip } from '../../../../ui/tooltip'
 
 const Ects = () => {
-  const { pickedCourses } = useContext(CourseContext)
-  const totalEcts = pickedCourses.reduce((acc, course) => acc + course.ects, 0)
+  const { coursesStorage } = useContext(CoursePickerContext)
+  const totalEcts = coursesStorage.reduce((acc, course) => acc + course.ects, 0)
   const warning = totalEcts > 42 ? 2 : totalEcts > 36 ? 1 : 0
 
   return (

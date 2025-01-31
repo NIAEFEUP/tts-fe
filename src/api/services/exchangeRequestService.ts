@@ -1,5 +1,5 @@
 import { Key } from "swr";
-import { CreateRequestData, MarketplaceRequest } from "../../@types";
+import { AdminRequestType, CreateRequestData, MarketplaceRequest } from "../../@types";
 import api from "../backend";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
@@ -10,12 +10,14 @@ const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
   return true;
 }
 
-const submitExchangeRequest = async (requests: Map<number, CreateRequestData>) => {
+const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string = "") => {
   const formData = new FormData();
 
   for (const request of requests.values()) {
     formData.append("exchangeChoices[]", JSON.stringify(request));
   }
+
+  if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
 
   try {
     const res = await fetch(
@@ -59,10 +61,52 @@ const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
   });
 }
 
+const adminRejectExchangeRequest = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/reject/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
+const adminAcceptExchangeRequest = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/accept/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  })
+}
+
+const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
+  return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  }).then(async (res) => {
+    if(res.ok) {
+      const json = await res.json();
+      return json.verified;
+    } else {
+      return false;
+    }
+  }).catch((e) => {
+    console.error(e);
+    return false;
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
-  retrieveRequestCardMetadata
+  retrieveRequestCardMetadata,
+  adminRejectExchangeRequest,
+  adminAcceptExchangeRequest,
+  verifyExchangeRequest
 }
 
 export default exchangeRequestService;

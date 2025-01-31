@@ -13,9 +13,11 @@ import { useToast } from "../../../../ui/use-toast";
 
 export const RequestCard = () => {
   const {
-    chosenRequest, hiddenRequests, request, open, setOpen, selectedOptions, setSelectedOptions,
+    chosenRequest, hiddenRequests, request, open, 
+    setOpen, selectedOptions, setSelectedOptions,
     selectAll, setSelectAll, hide, togglePreview
   } = useContext(ExchangeRequestCommonContext);
+
   const [hovered, setHovered] = useState<boolean>(false);
 
   const { isConflictSevere } = useContext(ConflictsContext);
