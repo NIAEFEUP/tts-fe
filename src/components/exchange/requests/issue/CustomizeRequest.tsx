@@ -32,9 +32,9 @@ export const CustomizeRequest = ({
 
   const submitRequest = async (urgentMessage: string) => {
     setSubmittingRequest(true);
-    const json = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage);
+    const res = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage);
 
-    if (json.success) {
+    if (res.ok) {
       setPreviewingForm(false);
       toast({
         title: 'Pedido submetido com sucesso!',
@@ -43,7 +43,7 @@ export const CustomizeRequest = ({
       setPreviewingForm(false);
       toast({
         title: 'Erro ao submeter o pedido.',
-        description: exchangeErrorToText[json.error]
+        description: exchangeErrorToText[(await res.json())["error"]]
       });
     }
 
