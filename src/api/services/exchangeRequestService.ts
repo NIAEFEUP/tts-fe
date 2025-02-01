@@ -107,14 +107,8 @@ const acceptDirectExchangeRequest = async (id: number) => {
     headers: {
       "X-CSRFToken": api.getCSRFToken(),
     },
-  }).then(async (res) => {
-    const json = await res.json();
-    return json;
-  }).catch((e) => {
-    console.error(e);
   });
 }
-
 
 const exchangeRequestService = {
   submitExchangeRequest,
