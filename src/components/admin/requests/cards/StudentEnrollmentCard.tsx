@@ -8,7 +8,6 @@ import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
 import { RequestDate } from "./RequestDate"
-import { rejectEmailExchanges } from "../../../../utils/mail"
 import { AdminRequestType } from "../../../../utils/exchange"
 import { ExchangeStatus } from "./ExchangeStatus"
 
