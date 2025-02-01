@@ -81,6 +81,16 @@ const adminAcceptExchangeRequest = async (requestType: AdminRequestType, id: num
   })
 }
 
+const adminMarkRequestAsAwaitingInformation = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/awaiting-information/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  })
+}
+
 const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
   return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
     method: "POST",
@@ -116,6 +126,7 @@ const exchangeRequestService = {
   retrieveRequestCardMetadata,
   adminRejectExchangeRequest,
   adminAcceptExchangeRequest,
+  adminMarkRequestAsAwaitingInformation,
   verifyExchangeRequest,
   acceptDirectExchangeRequest
 }

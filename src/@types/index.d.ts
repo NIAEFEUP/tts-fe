@@ -190,13 +190,6 @@ export type CourseUnitEnrollmentOption = {
   class_user_goes_to: ClassInfo,
 }
 
-export enum AdminRequestState {
-  ACCEPTED = "accepted",
-  PENDING = "pending",
-  TREATED = "treated",
-  REJECTED = "rejected"
-}
-
 export enum AdminRequestType {
   DIRECT_EXCHANGE = "direct_exchange",
   URGENT_EXCHANGE = "urgent_exchange",
