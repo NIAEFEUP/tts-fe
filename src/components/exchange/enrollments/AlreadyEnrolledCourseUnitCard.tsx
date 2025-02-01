@@ -1,9 +1,8 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { CourseInfo } from "../../../@types"
 import { Button } from "../../ui/button"
 import { Card, CardHeader, CardTitle } from "../../ui/card"
 import { EnrollmentOption } from "./Enrollments"
-import ScheduleContext from "../../../contexts/ScheduleContext"
 
 enum CourseUnitEnrollmentType {
   DISENROLLING = 1,
@@ -22,7 +21,6 @@ export const AlreadyEnrolledCourseUnitCard = ({
     setEnrollmentChoices
 }: Props) => {
     const [removeSelected, setRemoveSelected] = useState<boolean>(false);
-    const { exchangeSchedule } = useContext(ScheduleContext);
 
     return (
         <Card>
@@ -31,6 +29,7 @@ export const AlreadyEnrolledCourseUnitCard = ({
                     {courseUnit.acronym}
                 </CardTitle>
                 <Button
+                    variant="secondary"
                     onClick={() => {
                         setRemoveSelected(prev => !prev);
                         const newEnrollmentChoices = new Map(enrollmentChoices);
@@ -40,7 +39,6 @@ export const AlreadyEnrolledCourseUnitCard = ({
                         } else {
                             newEnrollmentChoices.set(courseUnit.id, { 
                                 type: CourseUnitEnrollmentType.DISENROLLING,
-                                classId: exchangeSchedule?.find((item) => item.courseInfo.course_unit_id === courseUnit.id)?.classInfo.id
                             });
                         }
 
@@ -48,8 +46,8 @@ export const AlreadyEnrolledCourseUnitCard = ({
                     }}
                 >
                     {removeSelected 
-                        ? "Cancelar desinscrição"
-                        : "Desinscrever"
+                        ? "Cancelar pedido"
+                        : "Anular inscrição"
                     }
                 </Button>
             </CardHeader>
