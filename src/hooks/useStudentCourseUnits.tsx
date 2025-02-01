@@ -1,4 +1,3 @@
-import { ClassDescriptor, CourseInfo } from "../@types";
 import { useMemo } from "react";
 import api from "../api/backend";
 import useSWR from "swr";
@@ -33,20 +32,3 @@ export default () => {
     mutate,
   };
 };
-
-
-// export default (schedule: Array<ClassDescriptor>): Array<CourseInfo> => {
-//   if (!schedule) return [];
-//
-//   const duplicates = new Set<number>();
-//   const result = [];
-//
-//   schedule?.forEach((scheduleItem: ClassDescriptor) => {
-//     if (!duplicates.has(scheduleItem.courseInfo.id)) {
-//       result.push(scheduleItem.courseInfo);
-//       duplicates.add(scheduleItem.courseInfo.id);
-//     }
-//   });
-//   return result.sort((a: CourseInfo, b: CourseInfo) => Number(a.acronym < b.acronym));
-// };
-

@@ -1,19 +1,30 @@
-import { Dispatch, SetStateAction, useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button } from "../../../../ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../../ui/card";
+import { Card, CardContent, CardFooter } from "../../../../ui/card";
 import { Checkbox } from "../../../../ui/checkbox";
 import { Separator } from "../../../../ui/separator";
-import exchangeRequestService from "../../../../../api/services/exchangeRequestService";
 import { ListRequestChanges } from "./ListRequestChanges";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import { CommonCardHeader } from "./CommonCardHeader";
+import ConflictsContext from "../../../../../contexts/ConflictsContext";
+import { useToast } from "../../../../ui/use-toast";
+import { exchangeErrorToText } from "../../../../../utils/error";
+import useMarketplaceAcceptExchange from "../../../../../hooks/useMarketplaceAcceptExchange";
+import { MoonLoader } from "react-spinners";
 
-export const RequestCard = ({ }) => {
+export const RequestCard = () => {
   const {
-    chosenRequest, hiddenRequests, request, open, setOpen, selectedOptions, setSelectedOptions,
+    chosenRequest, hiddenRequests, request, open, 
+    setOpen, selectedOptions, setSelectedOptions,
     selectAll, setSelectAll, hide, togglePreview
   } = useContext(ExchangeRequestCommonContext);
+
   const [hovered, setHovered] = useState<boolean>(false);
+
+  const { isConflictSevere } = useContext(ConflictsContext);
+  const { toast } = useToast();
+
+  const { trigger: requestExchangeProposal, isMutating: isProcessingExchangeProposal} = useMarketplaceAcceptExchange(request, selectedOptions);
 
   useEffect(() => {
     if (chosenRequest?.id !== request.id) {
@@ -22,11 +33,10 @@ export const RequestCard = ({ }) => {
   }, [chosenRequest]);
 
   const handleSelectAll = () => {
-    const allSelected = !selectAll;
-    setSelectAll(allSelected);
+    setSelectAll(!selectAll);
 
     for (const key of selectedOptions.keys()) {
-      selectedOptions.set(key, allSelected);
+      selectedOptions.set(key, !selectAll);
     }
 
     const newSelectedOptions = new Map(selectedOptions);
@@ -37,26 +47,30 @@ export const RequestCard = ({ }) => {
   const submitExchange = async (e) => {
     e.preventDefault();
 
-    const exchangeRequests = new Map();
-    for (const option of request.options) {
-      if (selectedOptions.get(option.course_info.acronym)) {
-        exchangeRequests.set(
-          option.course_info.id,
-          {
-            courseUnitId: option.course_info.id,
-            courseUnitName: option.course_info.name,
-            classNameRequesterGoesFrom: option.class_issuer_goes_from.name,
-            classNameRequesterGoesTo: option.class_issuer_goes_to.name,
-            other_student: {
-              name: request.issuer_name,
-              mecNumber: request.issuer_nmec
-            }
-          }
-        );
+    try {
+      const response = await requestExchangeProposal();
+      if (response && response.ok) {
+        toast({
+          title: "Troca proposta com sucesso!",
+          description: "A proposta de troca foi realizada com sucesso.",
+          variant: "default",
+        });
+      }
+      else {
+        toast({
+          title: "Erro ao propor troca.",
+          description: exchangeErrorToText[(await response.json())["error"]],
+          variant: "destructive",
+        });
       }
     }
-
-    await exchangeRequestService.submitExchangeRequest(exchangeRequests);
+    catch (error) {
+      toast({
+        title: "Erro ao propor a troca.",
+        description: `Houve um erro desconhecido: ${error.message}`,
+        variant: "destructive",
+      });
+    }
   };
 
   return <>
@@ -82,6 +96,7 @@ export const RequestCard = ({ }) => {
         <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
           {request.options?.map((option) => (
             <ListRequestChanges
+              key={"marketplace-request-card" + option.course_info.id}
               option={option}
               selectedOptionsHook={[selectedOptions, setSelectedOptions]}
               setSelectAll={setSelectAll}
@@ -102,8 +117,16 @@ export const RequestCard = ({ }) => {
               <label htmlFor="select-all">Selecionar todas</label>
             </div>
             <form className="flex flex-row gap-2">
-              <Button type="submit" onClick={submitExchange} className="success-button hover:bg-white">
-                Propôr troca
+              <Button
+                type="submit"
+                onClick={!isConflictSevere ? submitExchange : () => { }}
+                className={isConflictSevere ? "disabled:bg-red-400" : "success-button hover:bg-white"}
+                disabled={isConflictSevere}
+              >
+                { isProcessingExchangeProposal
+                  ? <MoonLoader size={20} />
+                  : <p>Propôr troca</p>
+                }
               </Button>
             </form>
           </div>

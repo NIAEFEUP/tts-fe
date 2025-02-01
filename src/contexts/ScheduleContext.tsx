@@ -1,6 +1,6 @@
 import { Context, Dispatch, SetStateAction } from 'react'
 import { createContext } from 'react'
-import { ClassDescriptor, CourseInfo, MultipleOptions } from '../@types'
+import { ClassDescriptor, CourseInfo } from '../@types'
 
 interface ScheduleContent {
   originalExchangeSchedule: Array<ClassDescriptor>

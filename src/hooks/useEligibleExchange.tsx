@@ -9,8 +9,7 @@ export default () => {
         credentials: "include",
       });
 
-      const json = await res.json();
-      return json;
+      return await res.json();
     } catch (error) {
       console.error(error);
     }

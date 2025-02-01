@@ -4,7 +4,7 @@ import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from "../../../../
 import StorageAPI from "../../../../api/storage";
 import CourseContext from "../../../../contexts/CourseContext";
 import MultipleOptionsContext from "../../../../contexts/MultipleOptionsContext";
-import { getAllPickedSlots, schedulesConflict, teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from "../../../../utils";
+import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from "../../../../utils";
 import { Desert } from "../../../svgs";
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "../../../ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
@@ -157,13 +157,6 @@ const ClassSelectorDropdownController = ({
     setMultipleOptions(newMultipleOptions)
   }
 
-  // Checks if any of the selected classes have time conflicts with the classInfo
-  // This is used to display a warning icon in each class of the dropdown in case of conflicts
-  const timesCollideWithSelected = (classInfo: ClassInfo) => {
-    const pickedSlots = getAllPickedSlots(pickedCourses, multipleOptions[selectedOption])
-    return pickedSlots.some((slot) => classInfo.slots.some((currentSlot) => schedulesConflict(slot, currentSlot)))
-  }
-
   return <>
     <div>
       {course.classes === null ? (
@@ -217,16 +210,17 @@ const ClassSelectorDropdownController = ({
               {!course.classes || course.classes.length === 0
                 ? <NoOptionsFound mobile={false} />
                 : <>
+                {selectedClassId && (
                   <DropdownMenuItem onSelect={() => deleteOption()}>
                     <span className="text-sm tracking-tighter">Remover Seleção</span>
                   </DropdownMenuItem>
+                )}
                   {course.classes &&
                     getOptions().map((classInfo) => (
                       <ClassItem
                         key={`schedule-${classInfo.name}`}
                         course_id={course.id}
                         classInfo={classInfo}
-                        conflict={timesCollideWithSelected(classInfo)}
                         onSelect={() => {
                           setSelectedClassId(classInfo.id)
                           setPreview(null)
@@ -260,7 +254,6 @@ const ClassSelectorDropdownController = ({
                             key={`schedule-${classInfo.name}`}
                             course_id={course.id}
                             classInfo={classInfo}
-                            conflict={timesCollideWithSelected(classInfo)}
                             onSelect={() => {
                               setSelectedClassId(classInfo.id)
                               setPreview(null)

@@ -6,7 +6,6 @@ import { Badge } from "../../../ui/badge"
 import { Button } from "../../../ui/button"
 import { Checkbox } from "../../../ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../ui/dropdown-menu"
-import { Separator } from "../../../ui/separator"
 
 type Props = {
   courseUnit: CourseInfo
@@ -59,12 +58,13 @@ export const ViewRequestBadgeFilter = ({
         <Button variant="icon" className="p-0 h-5 w-5 text-black dark:text-white">
           <ChevronDownIcon className="h-5 w-5" />
         </Button>
+
       </DropdownMenuTrigger>
       <DropdownMenuContent className="flex flex-col gap-y-2 max-h-72 overflow-y-scroll">
         <p className="p-2">Turma de destino</p>
         {classes?.map((currentClass: ClassInfo) => (
-          <DropdownMenuItem className="flex flex-row">
-            <div className="flex flex-row items-center gap-x-2">
+          <DropdownMenuItem className="flex flex-row" key={`from-${currentClass.id}`}>
+            <div className="flex flex-row items-center gap-x-2" key={`from-${currentClass.id}`}>
               <Checkbox
                 id={`from-${currentClass.id}`}
                 checked={classesFilter.get(courseUnit.acronym)?.has(currentClass.name)}

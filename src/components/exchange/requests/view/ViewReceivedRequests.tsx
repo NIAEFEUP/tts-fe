@@ -1,9 +1,4 @@
-import { useState } from "react";
-import { MarketplaceRequest } from "../../../../@types"
-import { useSession } from "../../../../hooks";
 import useReceivedRequests from "../../../../hooks/useReceivedRequests";
-import { Card } from "../../../ui/card";
-import { CommonCardHeader } from "./cards/CommonCardHeader";
 import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 
 export const ViewReceivedRequests = () => {
@@ -13,7 +8,8 @@ export const ViewReceivedRequests = () => {
 
   return <>
     {requests.map((request) => (
-      <ReceivedRequestCard
+      <ReceivedRequestCard 
+        key={request.id}
         request={request}
       />
     ))}

@@ -20,6 +20,7 @@ interface Props {
  */
 const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   const { majors } = useContext(MajorContext)
+
   const [open, setOpen] = useState(false)
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined)
 
@@ -35,7 +36,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
       .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen}> 
       <PopoverTrigger asChild>
         <Button
           ref={(node) => {
@@ -71,9 +72,11 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
             // handle that event and actually be scrollable with the mouse wheel
             onWheel={(e) => e.stopPropagation()}
           >
+          {selectedMajor && (
             <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
               Remover Seleção
             </CommandItem>
+          )}
             {majors &&
               majors.map((major) => (
                 <CommandItem

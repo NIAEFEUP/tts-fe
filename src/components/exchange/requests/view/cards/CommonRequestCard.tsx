@@ -26,7 +26,6 @@ export const CommonRequestCard = ({
 }: Props) => {
   const { exchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
   const [open, setOpen] = useState<boolean>(false);
-  const [hovered, setHovered] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<Map<string, boolean>>(new Map());
   const [selectAll, setSelectAll] = useState<boolean>(true);
   const originalSchedule = useSchedule();

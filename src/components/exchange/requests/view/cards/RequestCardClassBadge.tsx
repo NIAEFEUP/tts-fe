@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ExchangeOption } from "../../../../../@types";
 import { Badge } from "../../../../ui/badge";
 

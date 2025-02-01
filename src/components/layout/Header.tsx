@@ -8,18 +8,13 @@ import {
   RectangleStackIcon,
   QuestionMarkCircleIcon,
   ArrowsRightLeftIcon,
-  ArrowDownIcon,
-  ArrowLeftStartOnRectangleIcon,
-  ArrowLeftEndOnRectangleIcon,
+  WrenchScrewdriverIcon
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
-import useVerifyCourseUnitHashes from '../../hooks/useVerifyCourseUnitHashes'
-import CourseContext from '../../contexts/CourseContext'
+import { FeedbackReport } from '../FeedbackReport'
 import SessionContext from '../../contexts/SessionContext'
 import { useContext } from 'react'
-import api from '../../api/backend'
-import { Button } from '../ui/button'
 import { LoginButton } from '../auth/LoginButton'
 import { HeaderProfileDropdown } from '../auth/HeaderProfileDropdown'
 
@@ -29,18 +24,23 @@ const navigation = [
     location: getPath(config.paths.planner),
     icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
-  },
-  {
-    title: 'Exchange',
+  }, {
+    title: 'Turmas',
     location: getPath(config.paths.exchange),
     icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
-    wip: false,
+    wip: true,
   },
   { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
   {
     title: 'FAQs',
     location: getPath(config.paths.faqs),
     icon: <QuestionMarkCircleIcon className="h-5 w-5" />,
+    wip: false,
+  },
+  {
+    title: 'Admin',
+    location: getPath(config.paths.admin),
+    icon: <WrenchScrewdriverIcon className="h-5 w-5" />,
     wip: false,
   },
 ]
@@ -51,9 +51,7 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const { pickedCourses, } = useContext(CourseContext);
-  const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses);
-  const { signedIn } = useContext(SessionContext);
+  const { signedIn, user } = useContext(SessionContext);
 
   return (
     <Disclosure
@@ -64,7 +62,7 @@ const Header = ({ siteTitle, location }: Props) => {
         return (
           <>
             <div className={`${open ? 'p-0' : 'p-2'} relative flex items-center justify-between md:py-0`}>
-              <Hamburger open={open} />
+              <Hamburger open={open} signedIn = {signedIn} />
               <div className="flex flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to={config.pathPrefix} className="flex items-center space-x-2">
@@ -79,7 +77,8 @@ const Header = ({ siteTitle, location }: Props) => {
 
                 <div className="hidden space-x-8 self-center md:inline-flex">
                   {navigation
-                    .filter((link) => !link.wip)
+                    .filter((link) => (!link.wip || (link.wip && (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1'))))
+                    .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin)) 
                     .map((link, index) => (
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button
@@ -98,7 +97,7 @@ const Header = ({ siteTitle, location }: Props) => {
                           <span className="absolute bottom-0 h-1 w-full rounded-t bg-primary dark:bg-primary" />
                         ) : null}
                       </Link>
-                    ))}
+                    ))}    
                 </div>
 
 
@@ -122,80 +121,93 @@ const Header = ({ siteTitle, location }: Props) => {
 export default Header
 
 type HamburgerProps = {
-  open: boolean
+  open: boolean,
+  signedIn: boolean
 }
 
-const Hamburger = ({ open }: HamburgerProps) => (
-  <div
-    className={`z-50 md:hidden ${open
-      ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
-      : 'flex w-full items-center justify-between'
-      }`}
-  >
-    <Link to={config.pathPrefix}>
-      {open ? (
-        <img
-          className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
-          src={LogoNIAEFEUPImage}
-          alt="Time Table Selector"
-        />
-      ) : (
-        <img
-          className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
-          src={LogoNIAEFEUPImage}
-          alt="Time Table Selector"
-        />
-      )}
-    </Link>
+const Hamburger = ({ open, signedIn }: HamburgerProps) => {
 
-    <div className="flex items-center space-x-1">
-
-      <DarkModeSwitch />
-
-      <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
-        <span className="sr-only">Open nav menu</span>
+  return (
+    <div
+      className={`z-50 md:hidden ${open
+        ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
+        : 'flex w-full items-center justify-between'
+        }`}
+    >
+      <Link to={config.pathPrefix}>
         {open ? (
-          <XMarkIcon
-            className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
-            aria-hidden="true"
+          <img
+            className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
+            src={LogoNIAEFEUPImage}
+            alt="Time Table Selector"
           />
         ) : (
-          <Bars3Icon
-            className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
-            aria-hidden="true"
+          <img
+            className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
+            src={LogoNIAEFEUPImage}
+            alt="Time Table Selector"
           />
         )}
-      </Disclosure.Button>
+      </Link>
+
+      <div className="flex items-center space-x-1">
+
+        <DarkModeSwitch />
+        <FeedbackReport />
+        {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
+
+        <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
+          <span className="sr-only">Open nav menu</span>
+          {open ? (
+            <XMarkIcon
+              className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
+              aria-hidden="true"
+            />
+          ) : (
+            <Bars3Icon
+              className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
+              aria-hidden="true"
+            />
+          )}
+        </Disclosure.Button>
+      </div>
     </div>
-  </div>
-)
+  );
+};
 
 type MobileProps = {
   location: string
 }
 
-const Mobile = ({ location }: MobileProps) => (
-  <Disclosure.Panel className="flex flex-col space-y-3 py-2 md:hidden">
-    {navigation
-      .filter((link) => !link.wip)
-      .map((link, index) => (
-        <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
-          <button
-            type="button"
-            className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
-              ? 'text-primary dark:text-white'
-              : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
+const Mobile = ({ location }: MobileProps) => {
+  const { signedIn, user} = useContext(SessionContext);
+  
+  return (
+    <Disclosure.Panel className="flex flex-col space-y-3 py-2 md:hidden">
+      {navigation
+        .filter((link) => !link.wip)
+        .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin)) 
+        .map((link, index) => (
+          <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
+            <button
+              type="button"
+              className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
+                location === link.title
+                  ? 'text-primary dark:text-white'
+                  : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
               }`}
-          >
-            <span className="flex items-center justify-center space-x-2">
-              <span>{link.icon}</span>
-              <span>{link.title}</span>
-            </span>
-            {location === link.title ? (
-              <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
-            ) : null}
-          </button>
-        </Link>
-      ))}
-  </Disclosure.Panel>
-)
+            >
+              <span className="flex items-center justify-center space-x-2">
+                <span>{link.icon}</span>
+                <span>{link.title}</span>
+              </span>
+              {location === link.title && (
+                <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
+              )}
+            </button>
+          </Link>
+        ))}
+    </Disclosure.Panel>
+  );
+};
+

@@ -1,17 +1,17 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { CourseInfo, CreateRequestData } from "../../../../@types"
-import ScheduleContext from "../../../../contexts/ScheduleContext"
 import useStudentCourseUnits from "../../../../hooks/useStudentCourseUnits"
 import { Button } from "../../../ui/button"
 import { ChooseIncludedCourseUnits } from "./ChooseIncludedCourseUnits"
 import { CustomizeRequest } from "./CustomizeRequest"
+import { ExchangeSidebarStatus } from "../../../../pages/Exchange"
 
 type Props = {
-  setCreatingRequest: Dispatch<SetStateAction<boolean>>
+  setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
 }
 
 export const CreateRequest = ({
-  setCreatingRequest
+  setExchangeSidebarStatus
 }: Props) => {
   const [requests, setRequests] = useState<Map<number, CreateRequestData | null>>(new Map());
   const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
@@ -23,7 +23,10 @@ export const CreateRequest = ({
       <div className="flex flex-row justify-between w-full items-center">
         <h1 className="font-bold text-xl">Criar pedido</h1>
         {!selectingCourseUnits &&
-          <Button className="add-item-button" onClick={() => setSelectingCourseUnits(true)}>
+          <Button 
+            className="add-item-button" 
+            onClick={() => setSelectingCourseUnits(true)}
+          >
             Disciplina +
           </Button>
         }
@@ -40,7 +43,7 @@ export const CreateRequest = ({
             />
             : <CustomizeRequest
               selectedCourseUnits={selectedCourseUnits}
-              setCreatingRequest={setCreatingRequest}
+              setExchangeSidebarStatus={setExchangeSidebarStatus}
               requests={requests}
               setRequests={setRequests}
               setSelectedCourseUnits={setSelectedCourseUnits}

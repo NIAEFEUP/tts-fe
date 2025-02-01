@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import useSWRInfinite from "swr/infinite";
 import { MarketplaceRequest } from "../@types";
 import api from "../api/backend";
@@ -30,7 +29,7 @@ export default (courseUnitNameFilter: Set<number>, requestType: string, classesF
   const getKey = (pageIndex: number) => {
     if (pageIndex === 0) return `${api.BACKEND_URL}/${getUrl(requestType)}/?limit=10&${filters}`;
 
-    return `${api.BACKEND_URL}/exchange/marketplace/?page=${pageIndex + 1}&limit=10&${filters}`;
+    return `${api.BACKEND_URL}/${getUrl(requestType)}/?page=${pageIndex + 1}&limit=10&${filters}`;
   }
 
   const { data, size, setSize, isLoading, isValidating } = useSWRInfinite<Promise<MarketplaceRequest[]>>(

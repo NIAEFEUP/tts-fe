@@ -8,10 +8,12 @@ import { Switch } from "../../../ui/switch"
 import { toast } from "../../../ui/use-toast"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 import PreviewRequestForm from "./PreviewRequestForm"
+import { ExchangeSidebarStatus } from "../../../../pages/Exchange"
+import { exchangeErrorToText } from "../../../../utils/error"
 
 type Props = {
   selectedCourseUnits: CourseInfo[]
-  setCreatingRequest: Dispatch<SetStateAction<boolean>>
+  setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
   requests: any
   setRequests: Dispatch<SetStateAction<any>>
   setSelectedCourseUnits: Dispatch<SetStateAction<CourseInfo[]>>
@@ -19,7 +21,7 @@ type Props = {
 
 export const CustomizeRequest = ({
   selectedCourseUnits,
-  setCreatingRequest,
+  setExchangeSidebarStatus,
   requests,
   setRequests,
   setSelectedCourseUnits
@@ -28,22 +30,25 @@ export const CustomizeRequest = ({
   const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
   const [previewingForm, setPreviewingForm] = useState<boolean>(false);
 
-  const submitRequest = async () => {
+  const submitRequest = async (urgentMessage: string) => {
     setSubmittingRequest(true);
-    const json = await exchangeRequestService.submitExchangeRequest(requests);
+    const res = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage);
 
-    if (json.success) {
+    if (res.ok) {
       setPreviewingForm(false);
       toast({
         title: 'Pedido submetido com sucesso!',
-        // description: 'Não encontramos uma combinação com as turmas das disciplinas selecionadas sem conflitos',
-        // position: 'top-right',
+      });
+    }else{
+      setPreviewingForm(false);
+      toast({
+        title: 'Erro ao submeter o pedido.',
+        description: exchangeErrorToText[(await res.json())["error"]]
       });
     }
 
     setSubmittingRequest(false);
   }
-
 
   return <div className="flex flex-col gap-y-4">
     {selectedCourseUnits.length === 0
@@ -52,7 +57,7 @@ export const CustomizeRequest = ({
         <p className="text-center">Ainda não adicionaste nenhuma disciplina para fazer uma troca.</p>
         <Button
           className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} add-item-button`}
-          onClick={() => { setCreatingRequest(false) }}
+          onClick={() => {setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS)}}
         >
           <div className="flex flex-row gap-x-2">
             <ArrowLeftIcon className="h-5 w-5" />
@@ -67,7 +72,7 @@ export const CustomizeRequest = ({
               <>
                 <Button
                   className={`${selectedCourseUnits.length > 0 ? "w-1/2" : "w-full"} bg-gray-200 text-gray-800 hover:bg-gray-150`}
-                  onClick={() => { setCreatingRequest(false) }}
+                  onClick={() => { setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS) }}
                 >
                   <div className="flex flex-row gap-x-2">
                     <ArrowLeftIcon className="h-5 w-5" />
@@ -89,14 +94,14 @@ export const CustomizeRequest = ({
           <Switch id="person-to-exchange" onCheckedChange={(checked) => {
             setHasStudentToExchange(checked)
             if (!checked) {
-              requests.forEach((request, key) => {
+              requests.forEach((request) => {
                 request.other_student = null;
               })
               setRequests(new Map(requests));
             }
           }} />
           <label htmlFor="person-to-exchange">
-            Tenho uma pessoa para trocar
+            Tenho pessoas com quem trocar
           </label>
         </div>
 

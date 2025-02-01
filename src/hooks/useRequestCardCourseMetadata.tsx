@@ -1,6 +1,5 @@
 import useSWR from "swr";
-import { CourseInfo, MarketplaceRequest } from "../@types";
-import api from "../api/backend";
+import { CourseInfo } from "../@types";
 import exchangeRequestService from "../api/services/exchangeRequestService";
 
 /*

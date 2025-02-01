@@ -23,17 +23,17 @@ interface ExchangeRequestCommonContext {
 const ExchangeRequestCommonContext: Context<ExchangeRequestCommonContext> = createContext({
   request: null,
   hiddenRequests: new Set(),
-  setHiddenRequests: (param) => { },
+  setHiddenRequests: () => { },
   chosenRequest: null,
-  setChosenRequest: (param) => { },
+  setChosenRequest: () => { },
   exchangeSchedule: [],
   selectAll: true,
-  setSelectAll: (param) => { },
+  setSelectAll: () => { },
   selectedOptions: new Map(),
-  setSelectedOptions: (param) => { },
+  setSelectedOptions: () => { },
   open: false,
-  setOpen: (param) => { },
-  togglePreview: (param) => { },
+  setOpen: () => { },
+  togglePreview: () => { },
   hide: () => { },
   handleSelectAll: () => { }
 });

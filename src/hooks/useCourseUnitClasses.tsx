@@ -9,13 +9,8 @@ export default (courseId: number) => {
         credentials: "include"
       });
 
-      if (res.ok) {
-        const json = await res.json();
-
-        return json;
-      }
-
-      return [];
+      if (!res.ok) return [];
+      return await res.json();
     } catch (e) {
       console.error(e);
       return [];

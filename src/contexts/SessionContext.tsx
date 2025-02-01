@@ -11,7 +11,7 @@ const SessionContext: Context<SessionContextContent> = createContext({
   signedIn: false,
   user: null,
   isSessionLoading: false,
-  setSignedIn: (param) => { }
+  setSignedIn: () => { }
 });
 
 export default SessionContext
