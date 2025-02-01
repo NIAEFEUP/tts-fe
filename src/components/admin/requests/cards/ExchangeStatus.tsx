@@ -37,7 +37,7 @@ export const ExchangeStatus = ({
 
     return (
         <p className={cn(status?.color, "rounded-full px-4 py-1 text-sm")}>
-            {status.message}
+            {status?.message}
         </p>
     )
 }
