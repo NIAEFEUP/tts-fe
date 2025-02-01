@@ -12,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
+import { FeedbackReport } from '../FeedbackReport'
 import SessionContext from '../../contexts/SessionContext'
 import { useContext } from 'react'
 import { LoginButton } from '../auth/LoginButton'
@@ -152,6 +153,7 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
       <div className="flex items-center space-x-1">
 
         <DarkModeSwitch />
+        <FeedbackReport />
         {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
 
         <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">

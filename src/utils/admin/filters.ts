@@ -7,10 +7,16 @@ export const buildUrlWithFilterParams = (
     let newUrl = `${url}`;
 
     for (const property of requestFilterProperties) {
-        const propertValue = filterContext[property];
+        const propertyValue = filterContext[property];
 
-        if(propertValue) {
-            newUrl += `&${property}=${propertValue}`;
+        if(Array.isArray(propertyValue)) {
+            newUrl += `&${property}=`;
+            propertyValue.forEach((value, idx) => {
+                if(idx > 0) newUrl += ",";
+                newUrl += `${value}`;
+            });
+        } else if(propertyValue) {
+            newUrl += `&${property}=${propertyValue}`;
         }
     }
 

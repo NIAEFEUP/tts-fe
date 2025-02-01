@@ -19,22 +19,26 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
 
   if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
 
-  return fetch(
-    `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
-    {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "X-CSRFToken": api.getCSRFToken(),
-      },
-      body: formData
-    },
-  ).then(async (res) => {
-    const json = await res.json();
-    return json;
-  }).catch((e) => {
-    console.error(e);
-  });
+  try {
+    const res = await fetch(
+      `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": api.getCSRFToken(),
+        },
+        body: formData
+      }
+    );
+
+    return res;
+  } 
+  catch (error) 
+  {
+    console.error(error);
+    throw new Error("Network error");
+  }
 }
 
 const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceRequest[]> => {
@@ -77,6 +81,16 @@ const adminAcceptExchangeRequest = async (requestType: AdminRequestType, id: num
   })
 }
 
+const adminMarkRequestAsAwaitingInformation = async (requestType: AdminRequestType, id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/request/${requestType}/${id}/awaiting-information/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  })
+}
+
 const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
   return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
     method: "POST",
@@ -96,13 +110,25 @@ const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
   });
 }
 
+const acceptDirectExchangeRequest = async (id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/direct/${id}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
   retrieveRequestCardMetadata,
   adminRejectExchangeRequest,
   adminAcceptExchangeRequest,
-  verifyExchangeRequest
+  adminMarkRequestAsAwaitingInformation,
+  verifyExchangeRequest,
+  acceptDirectExchangeRequest
 }
 
 export default exchangeRequestService;

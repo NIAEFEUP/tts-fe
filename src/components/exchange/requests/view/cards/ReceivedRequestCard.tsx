@@ -7,6 +7,10 @@ import { Button } from "../../../../ui/button";
 import { Card, CardContent, CardFooter } from "../../../../ui/card";
 import { CommonCardHeader } from "./CommonCardHeader";
 import { ListRequestChanges } from "./ListRequestChanges";
+import useAcceptDirectExchange from "../../../../../hooks/exchange/useAcceptDirectExchange";
+import { MoonLoader } from "react-spinners";
+import { exchangeErrorToText } from "../../../../../utils/error";
+import { useToast } from "../../../../ui/use-toast";
 
 type Props = {
     request: DirectExchangeRequest
@@ -19,6 +23,10 @@ export const ReceivedRequestCard = ({
     const [hovered, setHovered] = useState<boolean>(false);
 
     const { user } = useContext(SessionContext);
+
+    const { toast } = useToast();
+
+    const { trigger: acceptDirectExchange, isMutating: isAcceptingDirectExchange } = useAcceptDirectExchange(request.id);
 
     useEffect(() => {
         if (request.type === "directexchange") request.options = request.options.filter((option) => option.participant_nmec === user?.username);
@@ -66,8 +74,32 @@ export const ReceivedRequestCard = ({
                                 <Button
                                     type="submit"
                                     className="success-button hover:bg-white"
+                                    onClick={async (e) => {
+                                        e.preventDefault();
+
+                                        const res = await acceptDirectExchange();
+                                        const json = await res.json();
+
+                                        if (res.ok) {
+                                            toast({
+                                                title: "Troca aceita com sucesso!",
+                                                description: "A troca foi aceita com sucesso.",
+                                                variant: "default",
+                                            });
+                                        }
+                                        else {
+                                            toast({
+                                                title: "Erro ao aceitar troca.",
+                                                description: exchangeErrorToText[json["error"]],
+                                                variant: "destructive",
+                                            });
+                                        }
+                                    }}  
                                 >
-                                    Aceitar
+                                    {isAcceptingDirectExchange 
+                                        ? <MoonLoader size={20} />
+                                        : <span>Aceitar</span>
+                                    }
                                 </Button>
                             }
                         </form>

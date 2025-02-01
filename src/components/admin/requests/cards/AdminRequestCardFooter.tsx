@@ -54,6 +54,14 @@ const acceptRequest = async (
     }
 }
 
+const markRequestAsAwaitingInformation = async (requestType: AdminRequestType, id: number) => {
+    try {
+        await exchangeRequestService.adminMarkRequestAsAwaitingInformation(requestType, id);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 export const AdminRequestCardFooter = ({
     nmecs,
     rejectMessage,
@@ -95,6 +103,20 @@ export const AdminRequestCardFooter = ({
                 className="success-button"
             >
                 Marcar como aceite
+            </Button>
+
+            <Button
+                className="bg-blue-400"
+                onClick={async () => {
+                    await markRequestAsAwaitingInformation(requestType, requestId);
+                    setExchange(prev => {
+                        const newPrev = {...prev };
+                        newPrev.admin_state = "awaiting-information";
+                        return newPrev;
+                    })
+                }}
+            >
+                Aguardar informação
             </Button>
 
             {showTreatButton &&

@@ -1,10 +1,33 @@
 import { Context, Dispatch, createContext, SetStateAction } from "react";
-import { AdminRequestState } from "../../@types";
+
+export enum AdminRequestState {
+  ACCEPTED = "accepted",
+  UNTREATED = "untreated",
+  AWAITING = "awaiting-information",
+  TREATED = "treated",
+  REJECTED = "rejected"
+};
+
+// The string is not defined in the enum definition because this way it is easier to send to the backend
+export const adminRequestStateToText = {
+    "accepted": "Aceite",
+    "untreated": "Não tratado",
+    "awaiting-information": "Aguardar informação",
+    "treated": "Tratado",
+    "rejected": "Rejeitado"
+};
+
+export const activeStatesPossibleValues = [
+    AdminRequestState.UNTREATED,
+    AdminRequestState.AWAITING,
+    AdminRequestState.TREATED,
+    AdminRequestState.REJECTED
+];
 
 export const requestFilterProperties = [
     "activeCourse",
     "activeCurricularYear",
-    "activeState"
+    "activeStates"
 ];
 
 export interface RequestFiltersContextContent {
@@ -12,8 +35,8 @@ export interface RequestFiltersContextContent {
     setActiveCourse: Dispatch<SetStateAction<number | undefined>>,
     activeCurricularYear: number | undefined,
     setActiveCurricularYear: Dispatch<SetStateAction<number | undefined>>,
-    activeState: AdminRequestState | undefined,
-    setActiveState: Dispatch<SetStateAction<AdminRequestState>>
+    activeStates: Array<AdminRequestState>,
+    setActiveStates: Dispatch<SetStateAction<Array<AdminRequestState>>>
 }
 
 const RequestFiltersContext: Context<RequestFiltersContextContent> = createContext({
@@ -21,8 +44,8 @@ const RequestFiltersContext: Context<RequestFiltersContextContent> = createConte
     setActiveCourse: () => { },
     activeCurricularYear: undefined,
     setActiveCurricularYear: () => { },
-    activeState: undefined,
-    setActiveState: () => { }
+    activeStates: [],
+    setActiveStates: () => { }
 });
 
 export default RequestFiltersContext;

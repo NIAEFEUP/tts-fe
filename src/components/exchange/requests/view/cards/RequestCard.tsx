@@ -3,12 +3,14 @@ import { Button } from "../../../../ui/button";
 import { Card, CardContent, CardFooter } from "../../../../ui/card";
 import { Checkbox } from "../../../../ui/checkbox";
 import { Separator } from "../../../../ui/separator";
-import exchangeRequestService from "../../../../../api/services/exchangeRequestService";
 import { ListRequestChanges } from "./ListRequestChanges";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import { CommonCardHeader } from "./CommonCardHeader";
 import ConflictsContext from "../../../../../contexts/ConflictsContext";
-import { ExchangeOption } from "../../../../../@types";
+import { useToast } from "../../../../ui/use-toast";
+import { exchangeErrorToText } from "../../../../../utils/error";
+import useMarketplaceAcceptExchange from "../../../../../hooks/useMarketplaceAcceptExchange";
+import { MoonLoader } from "react-spinners";
 
 export const RequestCard = () => {
   const {
@@ -20,6 +22,9 @@ export const RequestCard = () => {
   const [hovered, setHovered] = useState<boolean>(false);
 
   const { isConflictSevere } = useContext(ConflictsContext);
+  const { toast } = useToast();
+
+  const { trigger: requestExchangeProposal, isMutating: isProcessingExchangeProposal} = useMarketplaceAcceptExchange(request, selectedOptions);
 
   useEffect(() => {
     if (chosenRequest?.id !== request.id) {
@@ -42,26 +47,30 @@ export const RequestCard = () => {
   const submitExchange = async (e) => {
     e.preventDefault();
 
-    const exchangeRequests = new Map();
-    for (const option of request.options) {
-      if (selectedOptions.get(option.course_info.acronym)) {
-        exchangeRequests.set(
-          option.course_info.id,
-          {
-            courseUnitId: option.course_info.id,
-            courseUnitName: option.course_info.name,
-            classNameRequesterGoesFrom: (option as ExchangeOption).class_issuer_goes_from.name,
-            classNameRequesterGoesTo: (option as ExchangeOption).class_issuer_goes_to.name,
-            other_student: {
-              name: request.issuer_name,
-              mecNumber: request.issuer_nmec
-            }
-          }
-        );
+    try {
+      const response = await requestExchangeProposal();
+      if (response && response.ok) {
+        toast({
+          title: "Troca proposta com sucesso!",
+          description: "A proposta de troca foi realizada com sucesso.",
+          variant: "default",
+        });
+      }
+      else {
+        toast({
+          title: "Erro ao propor troca.",
+          description: exchangeErrorToText[(await response.json())["error"]],
+          variant: "destructive",
+        });
       }
     }
-
-    await exchangeRequestService.submitExchangeRequest(exchangeRequests);
+    catch (error) {
+      toast({
+        title: "Erro ao propor a troca.",
+        description: `Houve um erro desconhecido: ${error.message}`,
+        variant: "destructive",
+      });
+    }
   };
 
   return <>
@@ -114,7 +123,10 @@ export const RequestCard = () => {
                 className={isConflictSevere ? "disabled:bg-red-400" : "success-button hover:bg-white"}
                 disabled={isConflictSevere}
               >
-                Propôr troca
+                { isProcessingExchangeProposal
+                  ? <MoonLoader size={20} />
+                  : <p>Propôr troca</p>
+                }
               </Button>
             </form>
           </div>

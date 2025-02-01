@@ -24,8 +24,13 @@ const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentReques
             }
         case "untreated":
             return {
-                "message": "Pendente",
+                "message": "Não tratado",
                 "color": "bg-yellow-200 text-yellow-800",
+            }
+        case "awaiting-information":
+            return {
+                "message": "A aguardar informação",
+                "color": "bg-blue-500 text-white",
             }
     }
 }
@@ -37,7 +42,7 @@ export const ExchangeStatus = ({
 
     return (
         <p className={cn(status?.color, "rounded-full px-4 py-1 text-sm")}>
-            {status.message}
+            {status?.message}
         </p>
     )
 }

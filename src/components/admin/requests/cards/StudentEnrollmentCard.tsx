@@ -8,7 +8,6 @@ import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
 import { RequestDate } from "./RequestDate"
-import { rejectEmailExchanges } from "../../../../utils/mail"
 import { AdminRequestType } from "../../../../utils/exchange"
 import { ExchangeStatus } from "./ExchangeStatus"
 
@@ -76,9 +75,6 @@ export const StudentEnrollmentCard = ({
                                 >
                                     <div className="flex gap-5 items-center">
                                         <h2 className="font-bold">{option.course_unit.acronym}</h2>
-                                        <div className="flex gap-2 items-center">
-                                            <p>{option.class_user_goes_to.name}</p>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -103,13 +99,7 @@ export const StudentEnrollmentCard = ({
                 {open &&
                     <AdminRequestCardFooter 
                         nmecs={[enrollment.user_nmec]}
-                        rejectMessage={rejectEmailExchanges(
-                            enrollment.options.map(option => ({
-                                goes_from: option.class_user_goes_to.name,
-                                goes_to: option.class_user_goes_to.name,
-                                course_acronym: option.course_unit.acronym
-                            }))
-                        )}
+                        rejectMessage={""}
                         acceptMessage="mensagem"
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}

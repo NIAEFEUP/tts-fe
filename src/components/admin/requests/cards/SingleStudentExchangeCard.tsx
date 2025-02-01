@@ -11,7 +11,6 @@ import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 import { RequestDate } from "./RequestDate";
 import { rejectEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
-import { RequestStudentState } from "../RequestStudentState";
 
 type Props = {
     exchange: UrgentRequest
@@ -39,9 +38,6 @@ export const SingleStudentExchangeCard = ({
                                 </CardTitle>
                                 <ExchangeStatus exchange={exchangeState} />
                             </div>
-                            <RequestStudentState
-                                accepted={exchange.accepted}
-                            />
                             <RequestDate 
                                 date={exchange.date}
                             />
