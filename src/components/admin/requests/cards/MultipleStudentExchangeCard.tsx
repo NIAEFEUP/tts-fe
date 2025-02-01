@@ -10,7 +10,6 @@ import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 import { RequestDate } from "./RequestDate";
 import { rejectEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
-import { RequestStudentState } from "../RequestStudentState";
 import { ValidateRequestButton } from "./ValidateRequestButton";
 
 type Props = {
@@ -54,9 +53,6 @@ export const MultipleStudentExchangeCard = ({
                                 </CardTitle>
                                 <ExchangeStatus exchange={exchangeState} />
                             </div>
-                            <RequestStudentState
-                                accepted={exchange.accepted}
-                            />
                             <RequestDate
                                 date={exchange.date}
                             />

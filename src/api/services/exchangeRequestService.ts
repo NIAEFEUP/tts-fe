@@ -110,6 +110,16 @@ const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
   });
 }
 
+const acceptDirectExchangeRequest = async (id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/direct/${id}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
@@ -117,7 +127,8 @@ const exchangeRequestService = {
   adminRejectExchangeRequest,
   adminAcceptExchangeRequest,
   adminMarkRequestAsAwaitingInformation,
-  verifyExchangeRequest
+  verifyExchangeRequest,
+  acceptDirectExchangeRequest
 }
 
 export default exchangeRequestService;
