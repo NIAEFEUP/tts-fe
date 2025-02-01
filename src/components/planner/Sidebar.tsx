@@ -61,7 +61,7 @@ const Sidebar = () => {
         </Button>
         <button title='Mudar o lado da Sidebar'
           onClick={toggleSidebarPosition}
-          className="flex items-center justify-center gap-2 w-[48px] h-[40px] bg-primary hover:opacity-80 dark:text-white rounded-md p-1 text-gray text-sm"
+          className="hidden md:flex items-center justify-center gap-2 w-[48px] h-[40px] bg-primary hover:opacity-80 dark:text-white rounded-md p-1 text-gray text-sm"
         >
           <ArrowsRightLeftIcon className="h-5 w-5 text-white dark:text-white" />
         </button>
