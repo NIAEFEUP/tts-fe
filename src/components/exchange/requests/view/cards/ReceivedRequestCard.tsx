@@ -92,7 +92,8 @@ export const ReceivedRequestCard = ({
                                                 description: "A troca foi aceita com sucesso.",
                                                 variant: "default",
                                             });
-                                            setRequestStatus(StudentRequestCardStatus.ACCEPTED);
+                                            
+                                            setRequestStatus(StudentRequestCardStatus.PENDING);
                                         }
                                         else {
                                             toast({
