@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from "react"
 import { StudentRequestCardStatus } from "../../../../../utils/requests"
 import { RequestCardStatus } from "./RequestCardStatus"
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext"
+import { RequestCardPendingMotive } from "./RequestCardPendingMotive"
 
 type Props = {
     name: string
@@ -19,26 +20,27 @@ type Props = {
     showRequestStatus?: boolean
     hideAbility?: boolean
     hideHandler: () => void
-    classUserGoesToName: string
+    classUserGoesToName: string,
+    showPendingMotive?: boolean
 }
 
 export const CommonCardHeader = ({
     name, username, hovered, request, openHook, hideAbility = true, showRequestStatus = false, hideHandler,
-    classUserGoesToName 
+    classUserGoesToName, showPendingMotive = false
 }: Props) => {
     const [open, setOpen] = openHook;
     const { requestStatus, setRequestStatus } = useContext(ExchangeRequestCommonContext);
 
     useEffect(() => {
-        if(!showRequestStatus) return;
+        if (!showRequestStatus) return;
 
-        if((request as DirectExchangeRequest).canceled) {
+        if ((request as DirectExchangeRequest).canceled) {
             setRequestStatus(StudentRequestCardStatus.CANCELED);
             return;
-        } 
+        }
 
-        setRequestStatus(request.accepted 
-            ? StudentRequestCardStatus.ACCEPTED 
+        setRequestStatus(request.accepted
+            ? StudentRequestCardStatus.ACCEPTED
             : StudentRequestCardStatus.PENDING
         );
     }, [request]);
@@ -91,21 +93,28 @@ export const CommonCardHeader = ({
                         }
                     </div>
                 </div>
-                <CardDescription>
-                    {open
-                        ? <p>{username}</p>
-                        :
-                        <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
-                            {request.options?.map((option) => {
-                                return (<RequestCardClassBadge
-                                    key={option.course_info.acronym}
-                                    option={option}
-                                    requestCardHovered={hovered}
-                                    classUserGoesToName={option[classUserGoesToName].name}
-                                />)
-                            })}
-                        </div>
-                    }
+                <CardDescription className="flex flex-col gap-y-2">
+                    <div>
+                        {open
+                            ? <p>{username}</p>
+                            :
+                            <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
+                                {request.options?.map((option) => {
+                                    return (<RequestCardClassBadge
+                                        key={option.course_info.acronym}
+                                        option={option}
+                                        requestCardHovered={hovered}
+                                        classUserGoesToName={option[classUserGoesToName].name}
+                                    />)
+                                })}
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        {showPendingMotive && <RequestCardPendingMotive
+                            request={request as DirectExchangeRequest}
+                        />}
+                    </div>
                 </CardDescription>
             </div>
         </div>

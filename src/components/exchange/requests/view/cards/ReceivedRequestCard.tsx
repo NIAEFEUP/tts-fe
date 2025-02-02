@@ -53,6 +53,7 @@ export const ReceivedRequestCard = ({
                     hideAbility={false}
                     hideHandler={() => { }}
                     classUserGoesToName="class_participant_goes_to"
+                    showPendingMotive={true}
                 />
                 <CardContent className="p-0 px-4">
                     {open && (
@@ -110,7 +111,6 @@ export const ReceivedRequestCard = ({
                             }
                         </form>
                     </div>
-
                 </CardFooter>
             </Card>}
     </>
