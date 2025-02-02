@@ -75,7 +75,8 @@ export const ReceivedRequestCard = ({
                 <CardFooter className={open ? "" : "hidden"}>
                     <div className="flex flex-row justify-between w-full items-center">
                         <form className="flex flex-row gap-2">
-                            {!request.accepted && !request.canceled && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
+                            {!request.accepted 
+                                && requestStatus !== StudentRequestCardStatus.CANCELED && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
                                 <Button
                                     type="submit"
                                     className="success-button hover:bg-white"
