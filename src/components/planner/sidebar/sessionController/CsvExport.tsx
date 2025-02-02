@@ -1,9 +1,9 @@
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
-import { csvEncode } from './IOUtils'
+import { csvEncode } from '../../../../utils/io'
 
 
 /**
@@ -13,23 +13,45 @@ const CsvExport = () => {
   const { pickedCourses } = useContext(CourseContext);
   const { multipleOptions } = useContext(MultipleOptionsContext);
 
-  const exportCSV = () => {
-    const header = ['ID', 'Ano', 'Nome', 'Sigla']
-    multipleOptions.forEach((option) => header.push(option.name))
-    const lines = []
+  const GET_NAMES = true;
+  const GET_IDS = false;
 
-    pickedCourses.forEach(course => {
-      const line = [course.id, course.course_unit_year, csvEncode(course.name), course.acronym]
+  const getOptions = (getByName: boolean): string[] => {
+    return pickedCourses.map(course => {
+
+      const line = getByName
+        ? [course.course_unit_year, csvEncode(course.name), course.acronym]
+        : [course.id];
+  
       multipleOptions.forEach(option => {
-        const courseOption = option.course_options.find(courseOption => courseOption.course_id === course.id)
-        const pickedClass = course.classes.find(c => c.id === courseOption?.picked_class_id);
+        const courseOption = option.course_options.find(co => co.course_id === course.id);
+        const pickedClass = courseOption
+          ? course.classes.find(c => c.id === courseOption.picked_class_id)
+          : undefined;
+  
+        const value = getByName ? pickedClass?.name : pickedClass?.id?.toString();
+        line.push(csvEncode(value || ''));
+      });
+  
+      return line.join(',');
+    });
+  };
 
-        line.push(csvEncode(pickedClass?.name))
-      })
-      lines.push(line.join(','))
-    })
+  const exportCSV = () => {
+    const header = ['Ano', 'Nome', 'Sigla']
+    multipleOptions.forEach((option) => header.push(option.name))
+    header.push(pickedCourses.length.toString())
 
-    const csv = [header.join(','), lines.flat().join('\n')].join('\n')
+    const lines = getOptions(GET_NAMES);
+
+    lines.push("////----////----////----////----////----////----////")
+
+    const header_ids = ['UC_ID']
+    multipleOptions.forEach((option) => header_ids.push(option.name + "_ID"))
+
+    const lines_id = getOptions(GET_IDS);
+
+    const csv = [header.join(','), lines.flat().join('\n'), header_ids.join(','), lines_id.flat().join('\n')].join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
