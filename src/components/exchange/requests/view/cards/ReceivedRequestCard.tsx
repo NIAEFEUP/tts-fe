@@ -11,6 +11,7 @@ import useAcceptDirectExchange from "../../../../../hooks/exchange/useAcceptDire
 import { MoonLoader } from "react-spinners";
 import { exchangeErrorToText } from "../../../../../utils/error";
 import { useToast } from "../../../../ui/use-toast";
+import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
     request: DirectExchangeRequest
@@ -19,7 +20,10 @@ type Props = {
 export const ReceivedRequestCard = ({
     request
 }: Props) => {
-    const { open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview } = useContext(ExchangeRequestCommonContext);
+    const { 
+        open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview,
+        requestStatus, setRequestStatus
+    } = useContext(ExchangeRequestCommonContext);
     const [hovered, setHovered] = useState<boolean>(false);
 
     const { user } = useContext(SessionContext);
@@ -50,7 +54,7 @@ export const ReceivedRequestCard = ({
                     hideHandler={() => { }}
                     classUserGoesToName="class_participant_goes_to"
                 />
-                <CardContent>
+                <CardContent className="p-0 px-4">
                     {open && (
                         <>
                             {request.options.map((option) => (
@@ -86,6 +90,7 @@ export const ReceivedRequestCard = ({
                                                 description: "A troca foi aceita com sucesso.",
                                                 variant: "default",
                                             });
+                                            setRequestStatus(StudentRequestCardStatus.ACCEPTED);
                                         }
                                         else {
                                             toast({
@@ -93,6 +98,7 @@ export const ReceivedRequestCard = ({
                                                 description: exchangeErrorToText[json["error"]],
                                                 variant: "destructive",
                                             });
+                                            setRequestStatus(StudentRequestCardStatus.CANCELED);
                                         }
                                     }}  
                                 >

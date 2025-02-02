@@ -138,6 +138,7 @@ export type DirectExchangeRequest = {
   issuer_name: string,
   issuer_nmec: string,
   accepted: boolean,
+  canceled: boolean,
   pending_motive: DirectExchangePendingMotive,
   admin_state: string,
   options: DirectExchangeParticipant[],

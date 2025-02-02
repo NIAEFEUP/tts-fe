@@ -179,7 +179,7 @@ export const ViewRequests = ({
                     filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
                     classesFilterHook={[classesFilter, setClassesFilter]}
                 />
-                <div className="mt-4">
+                <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
                     {requests.map((request) => (
                         <CommonRequestCard
                             key={request.id}

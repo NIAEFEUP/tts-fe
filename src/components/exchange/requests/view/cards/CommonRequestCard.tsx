@@ -4,6 +4,7 @@ import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeReques
 import ScheduleContext from "../../../../../contexts/ScheduleContext";
 import useSchedule from "../../../../../hooks/useSchedule";
 import { toast } from "../../../../ui/use-toast";
+import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export const CommonRequestCard = ({
   const [open, setOpen] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<Map<string, boolean>>(new Map());
   const [selectAll, setSelectAll] = useState<boolean>(true);
+  const [requestStatus, setRequestStatus] = useState<StudentRequestCardStatus | undefined>(undefined);
   const originalSchedule = useSchedule();
 
   const hide = () => {
@@ -121,6 +123,8 @@ export const CommonRequestCard = ({
     togglePreview: togglePreview,
     hide: hide,
     handleSelectAll: handleSelectAll,
+    requestStatus: requestStatus,
+    setRequestStatus: setRequestStatus
   }}>
     {children}
   </ExchangeRequestCommonContext.Provider>
