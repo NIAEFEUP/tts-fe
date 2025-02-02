@@ -22,7 +22,7 @@ export const ReceivedRequestCard = ({
 }: Props) => {
     const { 
         open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview,
-        requestStatus, setRequestStatus
+        requestStatus, setRequestStatus, setRequest
     } = useContext(ExchangeRequestCommonContext);
     const [hovered, setHovered] = useState<boolean>(false);
 
@@ -94,6 +94,9 @@ export const ReceivedRequestCard = ({
                                             });
                                             
                                             setRequestStatus(StudentRequestCardStatus.PENDING);
+
+                                            request.pending_motive = DirectExchangePendingMotive.OTHERS_DID_NOT_ACCEPT;
+                                            setRequest(request);
                                         }
                                         else {
                                             toast({

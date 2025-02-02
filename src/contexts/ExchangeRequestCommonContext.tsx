@@ -5,6 +5,7 @@ import { StudentRequestCardStatus } from '../utils/requests'
 
 interface ExchangeRequestCommonContext {
   request: MarketplaceRequest | DirectExchangeRequest
+  setRequest: Dispatch<SetStateAction<MarketplaceRequest | DirectExchangeRequest>>
   hiddenRequests: Set<number>
   setHiddenRequests: Dispatch<SetStateAction<Set<number>>>
   chosenRequest: MarketplaceRequest | DirectExchangeRequest | null
@@ -25,6 +26,7 @@ interface ExchangeRequestCommonContext {
 
 const ExchangeRequestCommonContext: Context<ExchangeRequestCommonContext> = createContext({
   request: null,
+  setRequest: () => { },
   hiddenRequests: new Set(),
   setHiddenRequests: () => { },
   chosenRequest: null,

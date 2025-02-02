@@ -30,6 +30,7 @@ export const CommonRequestCard = ({
   const [selectedOptions, setSelectedOptions] = useState<Map<string, boolean>>(new Map());
   const [selectAll, setSelectAll] = useState<boolean>(true);
   const [requestStatus, setRequestStatus] = useState<StudentRequestCardStatus | undefined>(undefined);
+  const [currRequest, setCurrRequest] = useState<MarketplaceRequest | DirectExchangeRequest | null>(request);
   const originalSchedule = useSchedule();
 
   const hide = () => {
@@ -108,7 +109,8 @@ export const CommonRequestCard = ({
   };
 
   return <ExchangeRequestCommonContext.Provider value={{
-    request: request,
+    request: currRequest,
+    setRequest: setCurrRequest,
     hiddenRequests: hiddenRequests,
     setHiddenRequests: setHiddenRequests,
     chosenRequest: chosenRequest,

@@ -1,4 +1,4 @@
-import { CheckIcon, Hourglass, MessageCircleX, X } from "lucide-react"
+import { CheckIcon, Hourglass, X } from "lucide-react"
 import { StudentRequestCardStatus } from "../../../../../utils/requests"
 
 type Props = {
