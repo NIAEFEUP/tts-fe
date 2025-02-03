@@ -4,6 +4,7 @@ import { Button } from "../../../ui/button"
 type Props = {
     nmec: string,
     courseUnitId: number,
+    notEnrolledCourseUnitId?: number | null,
     variant?: "icon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link",
     courseId: number
 }
@@ -11,6 +12,7 @@ type Props = {
 export const TreatExchangeButton = ({
     nmec,
     courseUnitId,
+    notEnrolledCourseUnitId,
     courseId,
     variant = "default",
 }: Props) => {
@@ -35,6 +37,10 @@ export const TreatExchangeButton = ({
                         </Button>
                     </a>
                 ))
+            }
+            
+            {notEnrolledCourseUnitId &&
+                <p>Fuck this shit</p>
             }
         </>
     )

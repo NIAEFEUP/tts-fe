@@ -120,6 +120,16 @@ const acceptDirectExchangeRequest = async (id: number) => {
   });
 }
 
+const cancelMarketplaceRequest = async (id: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/marketplace/${id}/cancel/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
@@ -128,7 +138,8 @@ const exchangeRequestService = {
   adminAcceptExchangeRequest,
   adminMarkRequestAsAwaitingInformation,
   verifyExchangeRequest,
-  acceptDirectExchangeRequest
+  acceptDirectExchangeRequest,
+  cancelMarketplaceRequest
 }
 
 export default exchangeRequestService;
