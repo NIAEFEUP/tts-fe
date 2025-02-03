@@ -43,6 +43,7 @@
     "emoji-picker-react": "^4.6.4",
     "html-to-image": "^1.11.11",
     "js-cookie": "^3.0.5",
+    "jsondiffpatch": "^0.6.0",
     "lucide-react": "^0.307.0",
     "node-fetch": "^3.2.8",
     "plausible-tracker": "^0.3.9",
