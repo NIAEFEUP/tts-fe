@@ -31,6 +31,25 @@ export const CreateRequestCard = ({
   const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<Student | null>(null);
   const [studentDropdownOpen, setStudentDropdownOpen] = useState<boolean>(false);
   const { exchangeSchedule, originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
+  const [beforePreviewClass, setBeforePreviewClass] = useState<Array<ClassDescriptor> | null>(null);
+
+  useEffect(() => {
+    if (!selectedDestinationStudent) return;
+
+    if (selectedDestinationStudent?.classInfo) {
+      togglePreview(selectedDestinationStudent.classInfo, selectedDestinationStudent.classInfo.slots)
+      setSelectedDestinationClass(selectedDestinationStudent.classInfo)
+      addRequest(selectedDestinationStudent.classInfo.name)
+    } else {
+      if(!beforePreviewClass) return;
+
+      const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => beforePreviewClass.filter((item) => item.courseInfo.id === scheduleItem.courseInfo.id).length === 0);
+      setExchangeSchedule(newExchangeSchedule.concat(beforePreviewClass));
+
+      setSelectedDestinationClass(null);
+      setBeforePreviewClass(null);
+    }
+  }, [selectedDestinationStudent])
 
   useEffect(() => {
     if (!originalExchangeSchedule || !courseInfo) return;
@@ -65,6 +84,9 @@ export const CreateRequestCard = ({
       setRequests(newRequests);
     }
 
+    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => beforePreviewClass.filter((item) => item.courseInfo.id === scheduleItem.courseInfo.id).length === 0);
+    setExchangeSchedule(newExchangeSchedule.concat(beforePreviewClass));
+
     setSelectedCourseUnits((prev) => prev.filter((currentCourseInfo) => currentCourseInfo.id !== courseInfo.id));
   }
 
@@ -82,6 +104,7 @@ export const CreateRequestCard = ({
   }
 
   const togglePreview = (destinationClass: ClassInfo, slots: SlotInfo[]) => {
+    setBeforePreviewClass(exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id === courseInfo.id));
     const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id !== courseInfo.id);
 
     for (const slot of slots) {
@@ -162,7 +185,7 @@ export const CreateRequestCard = ({
                 aria-expanded={studentDropdownOpen}
                 className="w-full justify-between"
               >
-                {selectedDestinationStudent 
+                {selectedDestinationStudent
                   ? <p>{selectedDestinationStudent.name}</p>
                   : <p>Escolher estudante</p>
                 }
@@ -170,7 +193,7 @@ export const CreateRequestCard = ({
             </PopoverTrigger>
             <PopoverContent className="w-full w-[var(--radix-popper-anchor-width)]">
               <Command>
-                <CommandInput 
+                <CommandInput
                   placeholder="Pesquisar por estudante"
                   className="w-full"
                 />
