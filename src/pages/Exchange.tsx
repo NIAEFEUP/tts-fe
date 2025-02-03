@@ -18,7 +18,6 @@ import { AlertCircle } from "lucide-react"
 import {
   Alert,
   AlertDescription,
-  AlertTitle,
 } from "../components/ui/alert"
  
 export enum ExchangeSidebarStatus {
@@ -57,7 +56,6 @@ const ExchangePage = () => {
   }, [setLoads]);
 
   useEffect(() => {
-    console.log(" sigarra synced" ,sigarraSynced)
     setExchangeSchedule(schedule ? schedule : []);
 
     if (loads <= 0) {
@@ -97,7 +95,7 @@ const ExchangePage = () => {
               <Alert variant="destructive" className="my-2">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Este horário náo está synced com o do sigarra
+                  O horário reflete trocas que ainda não estão no sigarra
                 </AlertDescription>
               </Alert>
             </>
