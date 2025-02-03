@@ -1,6 +1,6 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
-import { useMemo, useRef, useState } from 'react'
+import { useContext, useMemo, useRef, useState } from 'react'
 import { ScheduleGrid, } from './schedules'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
@@ -9,6 +9,9 @@ import { ClassDescriptor, SlotInfo } from '../../@types'
 import { useShowGrid } from '../../hooks'
 import { maxHour, minHour, convertWeekdayLong, convertHour } from '../../utils'
 import SlotBoxes from './schedules/SlotBoxes'
+import ScheduleContext from '../../contexts/ScheduleContext'
+import { SyncLoader } from 'react-spinners'
+import { ThemeContext } from '../../contexts/ThemeContext'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -53,6 +56,9 @@ const Schedule = ({
   const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<string[]>([])
   const [showGrid, setShowGrid] = useShowGrid()
 
+  const { loadingSchedule } = useContext(ScheduleContext);
+  const { enabled } = useContext(ThemeContext);
+
   return (
     <>
       {/*Schedule desktop*/}
@@ -82,11 +88,18 @@ const Schedule = ({
             <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
-                <SlotBoxes
-                  slots={slots}
-                  hiddenLessonsTypes={hiddenLessonsTypes}
-                  classes={classes}
-                />
+                {loadingSchedule ? (
+                  <div className="flex flex-col justify-center items-center h-full w-full gap-8">
+                    <p className="text-lg text-black dark:text-white">Carregando</p>
+                    <SyncLoader color={ enabled ? "#fff" : "#000" } size={8} />
+                  </div>
+                ) : (
+                  <SlotBoxes
+                    slots={slots}
+                    hiddenLessonsTypes={hiddenLessonsTypes}
+                    classes={classes}
+                  />
+                )}
               </div>
             </div>
           </div>
