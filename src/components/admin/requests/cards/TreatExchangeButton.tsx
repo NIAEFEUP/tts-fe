@@ -4,6 +4,7 @@ import { Button } from "../../../ui/button"
 type Props = {
     nmec: string,
     courseUnitId: number,
+    notEnrolledCourseUnitId?: number | null,
     variant?: "icon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link",
     courseId: number
 }
@@ -11,6 +12,7 @@ type Props = {
 export const TreatExchangeButton = ({
     nmec,
     courseUnitId,
+    notEnrolledCourseUnitId,
     courseId,
     variant = "default",
 }: Props) => {
@@ -19,6 +21,8 @@ export const TreatExchangeButton = ({
     const uniqueMetadata = studentCourseMetadata
         ? Array.from(new Map(studentCourseMetadata.map(m => [m.fest_id, m])).values())
         : [];
+
+    console.log("COURSE ID", courseId);
 
     return (
         <>
@@ -35,6 +39,10 @@ export const TreatExchangeButton = ({
                         </Button>
                     </a>
                 ))
+            }
+            
+            {notEnrolledCourseUnitId &&
+                <p>Fuck this shit</p>
             }
         </>
     )
