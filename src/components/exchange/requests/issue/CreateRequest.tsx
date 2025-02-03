@@ -16,6 +16,7 @@ export const CreateRequest = ({
   const [requests, setRequests] = useState<Map<number, CreateRequestData | null>>(new Map());
   const [selectedCourseUnits, setSelectedCourseUnits] = useState<CourseInfo[]>([]);
   const [selectingCourseUnits, setSelectingCourseUnits] = useState<boolean>(false);
+  const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const { enrolledCourseUnits } = useStudentCourseUnits();
 
   return <div className="flex flex-col">
@@ -47,6 +48,8 @@ export const CreateRequest = ({
               requests={requests}
               setRequests={setRequests}
               setSelectedCourseUnits={setSelectedCourseUnits}
+              hasStudentToExchange={hasStudentToExchange}
+              setHasStudentToExchange={setHasStudentToExchange}
             />
         }
       </div>

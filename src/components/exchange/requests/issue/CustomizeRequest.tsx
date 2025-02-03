@@ -17,6 +17,8 @@ type Props = {
   requests: any
   setRequests: Dispatch<SetStateAction<any>>
   setSelectedCourseUnits: Dispatch<SetStateAction<CourseInfo[]>>
+  hasStudentToExchange: boolean
+  setHasStudentToExchange: Dispatch<SetStateAction<boolean>>
 }
 
 export const CustomizeRequest = ({
@@ -24,9 +26,10 @@ export const CustomizeRequest = ({
   setExchangeSidebarStatus,
   requests,
   setRequests,
-  setSelectedCourseUnits
+  setSelectedCourseUnits,
+  hasStudentToExchange,
+  setHasStudentToExchange
 }: Props) => {
-  const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
   const [previewingForm, setPreviewingForm] = useState<boolean>(false);
 

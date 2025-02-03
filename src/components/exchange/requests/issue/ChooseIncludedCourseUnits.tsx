@@ -3,6 +3,8 @@ import { CourseInfo } from "../../../../@types";
 import { Button } from "../../../ui/button";
 import { Checkbox } from "../../../ui/checkbox";
 import { IncludeCourseUnitCard } from "./cards/IncludeCourseUnitCard";
+import ScheduleContext from "../../../../contexts/ScheduleContext";
+import { useContext } from "react";
 
 type Props = {
   setSelectedCourseUnits: React.Dispatch<React.SetStateAction<CourseInfo[]>>
@@ -17,6 +19,8 @@ export const ChooseIncludedCourseUnits = ({
   enrolledCourseUnits,
   setSelectingCourseUnits
 }: Props) => {
+  const {originalExchangeSchedule, setExchangeSchedule} = useContext(ScheduleContext);
+
   return <div className="flex flex-col gap-y-2">
     <div className="flex flex-row gap-2 mb-2">
       <Checkbox
@@ -44,7 +48,10 @@ export const ChooseIncludedCourseUnits = ({
 
     <Button
       className="w-full success-button hover:bg-white flex flex-row gap-x-2"
-      onClick={() => { setSelectingCourseUnits(false) }}
+      onClick={() => { 
+        setSelectingCourseUnits(false) 
+        setExchangeSchedule(originalExchangeSchedule);
+      }}
     >
       Confirmar disciplinas
       <CheckBadgeIcon className="h-5 w-5" />
