@@ -32,7 +32,7 @@ export const PersonExchanges = ({
                             className="flex flex-col gap-y-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
                         >
                             <div className="flex gap-5 items-center">
-                                <h2 className="font-bold">{exchange.course_unit}</h2>
+                                <h2 className="font-bold">{exchange.course_info.acronym}</h2>
                                 <div className="flex gap-2 items-center">
                                     <p>{exchange.class_participant_goes_from.name}</p>
                                     <ArrowRightIcon className="w-5 h-5" />
