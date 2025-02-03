@@ -1,5 +1,5 @@
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
-import { ClassDescriptor, CourseUnitEnrollment, CourseUnitEnrollmentOption } from "../../../../@types"
+import { Check, ChevronDownIcon, ChevronUpIcon, X } from "lucide-react"
+import { ClassDescriptor, CourseUnitEnrollment } from "../../../../@types"
 import { Button } from "../../../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card"
 import { Person } from "./Person"
@@ -15,6 +15,9 @@ type Props = {
     enrollment: CourseUnitEnrollment
 }
 
+/**
+ * Card to show enrollments in the admin page
+ */
 export const StudentEnrollmentCard = ({
     enrollment
 }: Props) => {
@@ -35,19 +38,19 @@ export const StudentEnrollmentCard = ({
                                 </h2>
                             </CardTitle>
                             <ExchangeStatus
-                                exchange={enrollmentState} 
+                                exchange={enrollmentState}
                             />
                         </div>
 
                         <RequestDate
-                            date={enrollment.date} 
+                            date={enrollment.date}
                         />
                     </div>
                     {!open && <>
-                        <Person 
+                        <Person
                             key={"enrollment-person-" + enrollment.user_nmec}
-                            name={enrollment.user_nmec} 
-                            nmec={enrollment.user_nmec} 
+                            name={enrollment.user_nmec}
+                            nmec={enrollment.user_nmec}
                         />
                     </>}
                 </div>
@@ -64,22 +67,29 @@ export const StudentEnrollmentCard = ({
                 </div>
             </CardHeader>
             <CardContent className="w-full ">
-                {open && enrollment.options.map((option: CourseUnitEnrollmentOption) => (
+                {open && (
                     <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
-                        <div className="flex justify-between">
+                        <div className="flex flex-row justify-between">
                             <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
-                            <div>
-                                <div
-                                    key={crypto.randomUUID()}
-                                    className="flex flex-col gap-y-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
-                                >
-                                    <div className="flex gap-5 items-center">
-                                        <h2 className="font-bold">{option.course_unit.acronym}</h2>
+                            <div className="flex flex-row gap-x-2">
+                                {enrollment.options.map((option) => (
+                                    <div
+                                        key={crypto.randomUUID()}
+                                    >
+                                        <div
+                                            className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
+                                        >
+                                            <h2 className="font-bold">{option.course_unit.acronym}</h2>
+                                            {option.enrolling
+                                                ? <Check className="text-green-400" />
+                                                : <X className="text-red-400" />
+                                            }
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
                             <div>
-                                <AdminPreviewSchedule 
+                                <AdminPreviewSchedule
                                     originalSchedule={schedule}
                                     classesToAdd={
                                         enrollment.options.map((option): ClassDescriptor => {
@@ -90,14 +100,14 @@ export const StudentEnrollmentCard = ({
                                             }
                                         })
                                     }
-                                /> 
+                                />
                             </div>
                         </div>
                     </div>
-                ))}
+                )}
 
                 {open &&
-                    <AdminRequestCardFooter 
+                    <AdminRequestCardFooter
                         nmecs={[enrollment.user_nmec]}
                         rejectMessage={""}
                         acceptMessage="mensagem"
@@ -106,7 +116,7 @@ export const StudentEnrollmentCard = ({
                         courseUnitId={enrollment.options.map(option => option.course_unit.id)}
                         setExchange={setEnrollmentState}
                         courseId={enrollment.options[0].course_unit.id}
-                    /> 
+                    />
                 }
             </CardContent>
         </Card>
