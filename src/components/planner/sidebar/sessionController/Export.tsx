@@ -46,27 +46,24 @@ const Export = () => {
   const getSelectedCourses = async (content: any): Promise<CourseInfo[]> => {
     if (!Array.isArray(content) || content.length === 0) return [];
   
-    try {
-      // Fetch all courses in parallel
-      const selected_courses = await Promise.all(content.map(row => api.getCourseUnit(row[0])));
-  
-      // Fetch all majors in parallel
-      const majorsPromises = selected_courses.map(course => api.getCoursesByMajorId(course.course));
-      const majorsResults = await Promise.all(majorsPromises);
-  
-      // Map the ECTS values to the corresponding courses
-      selected_courses.forEach((course, index) => {
-        const full_courses = majorsResults[index];
-        const matching_course = full_courses.find(indiv_course => indiv_course.course_unit_id === course.id);
-        if (matching_course) {
-          course.ects = matching_course.ects;
-        }
-      });
-  
-      return selected_courses;
-    } catch (error) {
-      throw error;
-    }
+
+    // Fetch all courses in parallel
+    const selected_courses = await Promise.all(content.map(row => api.getCourseUnit(row[0])));
+
+    // Fetch all majors in parallel
+    const majorsPromises = selected_courses.map(course => api.getCoursesByMajorId(course.course));
+    const majorsResults = await Promise.all(majorsPromises);
+
+    // Map the ECTS values to the corresponding courses
+    selected_courses.forEach((course, index) => {
+      const full_courses = majorsResults[index];
+      const matching_course = full_courses.find(indiv_course => indiv_course.course_unit_id === course.id);
+      if (matching_course) {
+        course.ects = matching_course.ects;
+      }
+    });
+
+    return selected_courses;
   };
 
   const setCourseOptions = (courses: number[][]) => {

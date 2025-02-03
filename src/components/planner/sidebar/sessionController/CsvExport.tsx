@@ -1,5 +1,5 @@
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
