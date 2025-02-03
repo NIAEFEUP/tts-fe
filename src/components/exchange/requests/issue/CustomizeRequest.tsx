@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { CourseInfo } from "../../../../@types"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { Desert } from "../../../svgs"
