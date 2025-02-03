@@ -22,8 +22,6 @@ export const TreatExchangeButton = ({
         ? Array.from(new Map(studentCourseMetadata.map(m => [m.fest_id, m])).values())
         : [];
 
-    console.log("COURSE ID", courseId);
-
     return (
         <>
             {

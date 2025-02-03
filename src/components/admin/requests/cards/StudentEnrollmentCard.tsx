@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
-import { ClassDescriptor, CourseUnitEnrollment, CourseUnitEnrollmentOption } from "../../../../@types"
+import { ClassDescriptor, CourseUnitEnrollment } from "../../../../@types"
 import { Button } from "../../../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card"
 import { Person } from "./Person"
@@ -73,9 +73,10 @@ export const StudentEnrollmentCard = ({
                             <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
                             <div className="flex flex-row gap-x-2">
                                 {enrollment.options.map((option) => (
-                                    <div>
+                                    <div
+                                        key={crypto.randomUUID()}
+                                    >
                                         <div
-                                            key={crypto.randomUUID()}
                                             className="flex flex-col gap-y-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
                                         >
                                             <h2 className="font-bold">{option.course_unit.acronym}</h2>
