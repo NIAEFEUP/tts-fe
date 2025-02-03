@@ -49,9 +49,9 @@ const ExchangeSchedule = () => {
   };
 
   return <Schedule
-    classes={classes}
-    slots={slots}
-  />;
+      classes={classes}
+      slots={slots}
+    />;
 }
 
 export default ExchangeSchedule;

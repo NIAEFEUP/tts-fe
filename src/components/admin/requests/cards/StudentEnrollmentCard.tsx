@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import { Check, ChevronDownIcon, ChevronUpIcon, X } from "lucide-react"
 import { ClassDescriptor, CourseUnitEnrollment } from "../../../../@types"
 import { Button } from "../../../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card"
@@ -77,9 +77,13 @@ export const StudentEnrollmentCard = ({
                                         key={crypto.randomUUID()}
                                     >
                                         <div
-                                            className="flex flex-col gap-y-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
+                                            className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
                                         >
                                             <h2 className="font-bold">{option.course_unit.acronym}</h2>
+                                            {option.enrolling
+                                                ? <Check className="text-green-400" />
+                                                : <X className="text-red-400" />
+                                            }
                                         </div>
                                     </div>
                                 ))}
