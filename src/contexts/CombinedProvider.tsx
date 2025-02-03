@@ -39,6 +39,7 @@ const CombinedProvider = ({ children }: Props) => {
   }, [userSignedIn]);
 
   const [isConflictSevere, setConflictSeverity] = useState<boolean>(false);
+  const [tClassConflicts, setTClassConflicts] = useState<boolean>(false);
 
   const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
     if (newMultipleOptions instanceof Function)
@@ -70,7 +71,7 @@ const CombinedProvider = ({ children }: Props) => {
             }
           }>
             <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
-              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity }}>
+              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity, tClassConflicts, setTClassConflicts }}>
                 {children}
               </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>
