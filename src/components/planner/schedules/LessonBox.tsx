@@ -1,9 +1,10 @@
 import classNames from 'classnames'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
 import { getLessonBoxTime, schedulesConflict, conflictsSeverity, getLessonBoxStyles, maxHour, minHour, getClassTypeClassName, getLessonTypeLongName } from '../../../utils'
+import ConflictsContext from '../../../contexts/ConflictsContext'
 
 type Props = {
   courseInfo: CourseInfo
@@ -41,6 +42,7 @@ const LessonBox = ({
   const [isHovered, setIsHovered] = useState(false)
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
+  const { tClassConflicts } = useContext(ConflictsContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
@@ -59,7 +61,7 @@ const LessonBox = ({
         const slot = classDescriptor.classInfo.slots[j];
         if (schedulesConflict(slotInfo, slot)) {
           // The highest severity of the all the conflicts is the overall severity
-          newConflictInfo.severe = conflictsSeverity(slotInfo, slot, Number(import.meta.env.VITE_APP_T_CLASS_CONFLICTS) != 0) == 2 || newConflictInfo.severe;
+          newConflictInfo.severe = conflictsSeverity(slotInfo, slot, tClassConflicts) == 2 || newConflictInfo.severe;
           const newClassDescriptor = {
             classInfo: classDescriptor.classInfo,
             courseInfo: classDescriptor.courseInfo,
