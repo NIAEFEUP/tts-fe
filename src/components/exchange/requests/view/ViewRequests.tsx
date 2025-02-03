@@ -95,16 +95,16 @@ export const ViewRequests = ({
         <div className="flex flex-row justify-between items-center w-full">
             <h1 className="font-bold text-xl">Pedidos</h1>
             <div className="flex flex-row gap-x-2">
-              <Button
-                  className="add-item-button"
-                  onClick={() => {
-                      setExchangeSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST);
-                      setExchangeSchedule(originalExchangeSchedule);
-                  }}
-              >
-                  Criar pedido
-                  <PlusIcon className="h-5 w-5" />
-              </Button>
+                <Button
+                    className="add-item-button"
+                    onClick={() => {
+                        setExchangeSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST);
+                        setExchangeSchedule(originalExchangeSchedule);
+                    }}
+                >
+                    Criar pedido
+                    <PlusIcon className="h-5 w-5" />
+                </Button>
             </div>
         </div>
 
@@ -179,22 +179,27 @@ export const ViewRequests = ({
                     filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
                     classesFilterHook={[classesFilter, setClassesFilter]}
                 />
-                <div className="mt-4">
-                    {requests.map((request) => (
-                        <CommonRequestCard
-                            key={request.id}
-                            request={request}
-                            hiddenRequests={hiddenRequests}
-                            setHiddenRequests={setHiddenRequests}
-                            setChosenRequest={setChosenRequest}
-                            chosenRequest={chosenRequest}
-                            type={request.type}
-                        >
-                            <ReceivedRequestCard
-                                request={request}
-                            />
-                        </CommonRequestCard>
-                    ))}
+                <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
+                    {isLoading
+                        ? <RequestCardSkeletons />
+                        : <EmptyRequestGuard requests={requests}>
+                            {requests.map((request) => (
+                                <CommonRequestCard
+                                    key={request.id}
+                                    request={request}
+                                    hiddenRequests={hiddenRequests}
+                                    setHiddenRequests={setHiddenRequests}
+                                    setChosenRequest={setChosenRequest}
+                                    chosenRequest={chosenRequest}
+                                    type={request.type}
+                                >
+                                    <ReceivedRequestCard
+                                        request={request}
+                                    />
+                                </CommonRequestCard>
+                            ))}
+                        </EmptyRequestGuard>
+                    }
                 </div>
             </TabsContent>
         </Tabs>

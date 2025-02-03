@@ -129,6 +129,7 @@ export type MarketplaceRequest = {
   date: string,
   options?: Array<ExchangeOption>,
   classes?: Array<ClassInfo>,
+  pending_motive?: DirectExchangePendingMotive,
   accepted: boolean,
 }
 
@@ -138,7 +139,8 @@ export type DirectExchangeRequest = {
   issuer_name: string,
   issuer_nmec: string,
   accepted: boolean,
-  pending_motive: DirectExchangePendingMotive,
+  canceled: boolean,
+  pending_motive?: DirectExchangePendingMotive,
   admin_state: string,
   options: DirectExchangeParticipant[],
   date: string

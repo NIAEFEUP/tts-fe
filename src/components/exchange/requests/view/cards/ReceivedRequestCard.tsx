@@ -11,6 +11,7 @@ import useAcceptDirectExchange from "../../../../../hooks/exchange/useAcceptDire
 import { MoonLoader } from "react-spinners";
 import { exchangeErrorToText } from "../../../../../utils/error";
 import { useToast } from "../../../../ui/use-toast";
+import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
     request: DirectExchangeRequest
@@ -19,7 +20,10 @@ type Props = {
 export const ReceivedRequestCard = ({
     request
 }: Props) => {
-    const { open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview } = useContext(ExchangeRequestCommonContext);
+    const { 
+        open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview,
+        requestStatus, setRequestStatus, setRequest
+    } = useContext(ExchangeRequestCommonContext);
     const [hovered, setHovered] = useState<boolean>(false);
 
     const { user } = useContext(SessionContext);
@@ -49,8 +53,9 @@ export const ReceivedRequestCard = ({
                     hideAbility={false}
                     hideHandler={() => { }}
                     classUserGoesToName="class_participant_goes_to"
+                    showPendingMotive={true}
                 />
-                <CardContent>
+                <CardContent className="p-0 px-4">
                     {open && (
                         <>
                             {request.options.map((option) => (
@@ -70,7 +75,8 @@ export const ReceivedRequestCard = ({
                 <CardFooter className={open ? "" : "hidden"}>
                     <div className="flex flex-row justify-between w-full items-center">
                         <form className="flex flex-row gap-2">
-                            {!request.accepted && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
+                            {!request.accepted 
+                                && requestStatus !== StudentRequestCardStatus.CANCELED && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
                                 <Button
                                     type="submit"
                                     className="success-button hover:bg-white"
@@ -86,6 +92,11 @@ export const ReceivedRequestCard = ({
                                                 description: "A troca foi aceita com sucesso.",
                                                 variant: "default",
                                             });
+                                            
+                                            setRequestStatus(StudentRequestCardStatus.PENDING);
+
+                                            request.pending_motive = DirectExchangePendingMotive.OTHERS_DID_NOT_ACCEPT;
+                                            setRequest(request);
                                         }
                                         else {
                                             toast({
@@ -93,6 +104,7 @@ export const ReceivedRequestCard = ({
                                                 description: exchangeErrorToText[json["error"]],
                                                 variant: "destructive",
                                             });
+                                            setRequestStatus(StudentRequestCardStatus.CANCELED);
                                         }
                                     }}  
                                 >
@@ -104,7 +116,6 @@ export const ReceivedRequestCard = ({
                             }
                         </form>
                     </div>
-
                 </CardFooter>
             </Card>}
     </>

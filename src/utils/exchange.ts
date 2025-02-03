@@ -14,7 +14,8 @@ const isDirectExchange = (exchanges: Array<CreateRequestData>) => {
 
 export enum DirectExchangePendingMotive {
   USER_DID_NOT_ACCEPT = 1,
-  OTHERS_DID_NOT_ACCEPT = 2
+  OTHERS_DID_NOT_ACCEPT = 2,
+  ACCEPTED = 3
 }
 
 export enum AdminRequestType {

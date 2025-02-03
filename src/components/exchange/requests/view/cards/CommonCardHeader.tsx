@@ -1,10 +1,14 @@
-import { ArchiveBoxIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
-import { Hourglass } from "lucide-react"
+import { ArchiveBoxIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
 import { DirectExchangeRequest, MarketplaceRequest } from "../../../../../@types"
 import { Button } from "../../../../ui/button"
 import { CardDescription, CardHeader, CardTitle } from "../../../../ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
 import RequestCardClassBadge from "./RequestCardClassBadge"
+import { useContext, useEffect } from "react"
+import { StudentRequestCardStatus } from "../../../../../utils/requests"
+import { RequestCardStatus } from "./RequestCardStatus"
+import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext"
+import { RequestCardPendingMotive } from "./RequestCardPendingMotive"
 
 type Props = {
     name: string
@@ -15,14 +19,30 @@ type Props = {
     showRequestStatus?: boolean
     hideAbility?: boolean
     hideHandler: () => void
-    classUserGoesToName: string
+    classUserGoesToName: string,
+    showPendingMotive?: boolean
 }
 
 export const CommonCardHeader = ({
     name, username, hovered, request, openHook, hideAbility = true, showRequestStatus = false, hideHandler,
-    classUserGoesToName
+    classUserGoesToName, showPendingMotive = false
 }: Props) => {
     const [open, setOpen] = openHook;
+    const { requestStatus, setRequestStatus } = useContext(ExchangeRequestCommonContext);
+
+    useEffect(() => {
+        if (!showRequestStatus) return;
+
+        if ((request as DirectExchangeRequest).canceled) {
+            setRequestStatus(StudentRequestCardStatus.CANCELED);
+            return;
+        }
+
+        setRequestStatus(request.accepted
+            ? StudentRequestCardStatus.ACCEPTED
+            : StudentRequestCardStatus.PENDING
+        );
+    }, [request]);
 
     return <CardHeader
         className="flex flex-row gap-x-2 items-center p-4"
@@ -34,16 +54,11 @@ export const CommonCardHeader = ({
                     <CardTitle>{name}</CardTitle>
                     {showRequestStatus &&
                         <div className="flex items-center space-x-2">
-                            {!request.accepted ? (
-                                <div className="flex items-center gap-2 bg-yellow-100 text-yellow-600 rounded-full px-3 py-1">
-                                    <Hourglass className="h-4 w-4 text-yellow-600" />
-                                </div>
-                            )
-                                : (
-                                    <div className="flex items-center gap-2 bg-green-400 rounded-full px-2 py-1">
-                                        <CheckIcon className="h-5 w-5 text-white" />
-                                    </div>
-                                )}
+                            {showRequestStatus && (
+                                <RequestCardStatus
+                                    status={requestStatus}
+                                />
+                            )}
                         </div>
                     }
                     <div className="flex flex-row items-center">
@@ -77,21 +92,28 @@ export const CommonCardHeader = ({
                         }
                     </div>
                 </div>
-                <CardDescription>
-                    {open
-                        ? <p>{username}</p>
-                        :
-                        <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
-                            {request.options?.map((option) => {
-                                return (<RequestCardClassBadge
-                                    key={option.course_info.acronym}
-                                    option={option}
-                                    requestCardHovered={hovered}
-                                    classUserGoesToName={option[classUserGoesToName].name}
-                                />)
-                            })}
-                        </div>
-                    }
+                <CardDescription className="flex flex-col gap-y-2">
+                    <div>
+                        {open
+                            ? <p>{username}</p>
+                            :
+                            <div className="flex flex-row gap-x-1 gap-y-2 flex-wrap">
+                                {request.options?.map((option) => {
+                                    return (<RequestCardClassBadge
+                                        key={option.course_info.acronym}
+                                        option={option}
+                                        requestCardHovered={hovered}
+                                        classUserGoesToName={option[classUserGoesToName].name}
+                                    />)
+                                })}
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        {showPendingMotive && <RequestCardPendingMotive
+                            request={request as DirectExchangeRequest}
+                        />}
+                    </div>
                 </CardDescription>
             </div>
         </div>
