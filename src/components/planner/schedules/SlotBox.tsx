@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CourseInfo, ClassInfo, ClassDescriptor, SlotInfo } from '../../../@types'
 import LessonBox from './LessonBox'
 import ResponsiveLessonBox from './ResponsiveLessonBox'
@@ -7,9 +8,15 @@ type Props = {
   classInfo: ClassInfo
   slot: SlotInfo
   classes: ClassDescriptor[]
+  setSlotBoxConflict: (courseId: Number, conflictData: Boolean) => void
 }
 
-const SlotBox = ({ courseInfo, classInfo, classes, slot }: Props) => {
+const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: Props) => {
+
+  const updateSlotBoxConflict = (courseId, conflictData) => {
+    setSlotBoxConflict(courseId, conflictData);
+  };
+
   return (
     <>
       <div className="hidden lg:flex lg:flex-col">
@@ -19,6 +26,7 @@ const SlotBox = ({ courseInfo, classInfo, classes, slot }: Props) => {
           classInfo={classInfo}
           slotInfo={slot}
           classes={classes.filter((classDescriptor) => classDescriptor.classInfo.id !== classInfo.id)}
+          setLessonBoxConflict={updateSlotBoxConflict}
         />
       </div>
 

@@ -12,13 +12,15 @@ type Props = {
   classInfo: ClassInfo
   slotInfo: SlotInfo
   classes: ClassDescriptor[]
+  setLessonBoxConflict: (courseId: Number, conflictData: Boolean) => void
 }
 
 const LessonBox = ({
   courseInfo,
   classInfo,
   slotInfo,
-  classes
+  classes, 
+  setLessonBoxConflict
 }: Props) => {
   const classTitle = classInfo.name
   const lessonType = slotInfo.lesson_type
@@ -41,7 +43,6 @@ const LessonBox = ({
   const [isHovered, setIsHovered] = useState(false)
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
-  const { setConflictSeverity } = useContext(ConflictsContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
@@ -72,11 +73,13 @@ const LessonBox = ({
     }
 
     setConflict(newConflictInfo);
-  }, [classInfo, classes]);
+  }, [classInfo, classes, hasConflict]);
 
   useEffect(() => {
-    setConflictSeverity(conflict?.severe);
-  }, [hasConflict]);
+    if (conflict?.severe !== undefined){
+      setLessonBoxConflict(courseInfo.id, conflict?.severe);
+    }
+  }, [classInfo]);
 
   const showConflicts = () => {
     setConflictsShown(true)
