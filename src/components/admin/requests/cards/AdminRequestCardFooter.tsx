@@ -10,8 +10,7 @@ import { TreatExchangeButton } from "./TreatExchangeButton"
 
 type Props = {
     nmecs: Array<string>,
-    rejectMessage: string,
-    acceptMessage: string,
+    exchangeMessage: string,
     requestType: AdminRequestType,
     requestId: number,
     showTreatButton?: boolean,
@@ -22,7 +21,7 @@ type Props = {
 
 const rejectRequest = async (
     nmecs: Array<string>,
-    rejectMessage: string,
+    exchangeMessage: string,
     requestType: AdminRequestType,
     id: number
 ) => {
@@ -30,7 +29,7 @@ const rejectRequest = async (
         await exchangeRequestService.adminRejectExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
-        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de troca rejeitado&body=${rejectMessage}`;
+        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva, A alteração pedida não pode ser efetuada. ${exchangeMessage} Cmpts, Daniel Silva (pela comissão de inscrição em turmas)`;
         a.click();
     } catch (e) {
         console.error(e);
@@ -39,7 +38,7 @@ const rejectRequest = async (
 
 const acceptRequest = async (
     nmecs: Array<string>,
-    acceptMessage: string,
+    exchangeMessage: string,
     requestType: AdminRequestType,
     id: number
 ) => {
@@ -47,7 +46,7 @@ const acceptRequest = async (
         await exchangeRequestService.adminAcceptExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
-        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de troca aceito&body=${acceptMessage}`;
+        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva, A alteração pedida foi efetuada. ${exchangeMessage} Cmpts, Daniel Silva (pela comissão de inscrição em turmas)`;
         a.click();
     } catch (e) {
         console.error(e);
@@ -64,8 +63,7 @@ const markRequestAsAwaitingInformation = async (requestType: AdminRequestType, i
 
 export const AdminRequestCardFooter = ({
     nmecs,
-    rejectMessage,
-    acceptMessage,
+    exchangeMessage,
     requestType,
     requestId,
     showTreatButton = true,
@@ -80,7 +78,7 @@ export const AdminRequestCardFooter = ({
             <Button
                 variant="destructive"
                 onClick={async () => {
-                    await rejectRequest(nmecs, rejectMessage, requestType, requestId);
+                    await rejectRequest(nmecs, exchangeMessage, requestType, requestId);
                     setExchange(prev => {
                         const newPrev = {...prev };
                         newPrev.admin_state = "rejected";
@@ -93,7 +91,7 @@ export const AdminRequestCardFooter = ({
 
             <Button 
                 onClick={async () => {
-                    await acceptRequest(nmecs, acceptMessage, requestType, requestId);
+                    await acceptRequest(nmecs, exchangeMessage, requestType, requestId);
                     setExchange(prev => {
                         const newPrev = {...prev };
                         newPrev.admin_state = "accepted";
