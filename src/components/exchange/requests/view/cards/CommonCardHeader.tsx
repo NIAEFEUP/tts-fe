@@ -33,7 +33,7 @@ export const CommonCardHeader = ({
     useEffect(() => {
         if (!showRequestStatus) return;
 
-        if ((request as DirectExchangeRequest).canceled) {
+        if (request.canceled) {
             setRequestStatus(StudentRequestCardStatus.CANCELED);
             return;
         }

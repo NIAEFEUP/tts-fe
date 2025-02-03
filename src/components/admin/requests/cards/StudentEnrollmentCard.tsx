@@ -109,8 +109,7 @@ export const StudentEnrollmentCard = ({
                 {open &&
                     <AdminRequestCardFooter
                         nmecs={[enrollment.user_nmec]}
-                        rejectMessage={""}
-                        acceptMessage="mensagem"
+                        exchangeMessage={""}
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}
                         courseUnitId={enrollment.options.map(option => option.course_unit.id)}

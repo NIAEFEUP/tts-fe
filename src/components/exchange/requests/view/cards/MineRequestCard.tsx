@@ -5,14 +5,23 @@ import SessionContext from "../../../../../contexts/SessionContext";
 import { Card, CardContent, CardFooter } from "../../../../ui/card"
 import { CommonCardHeader } from "./CommonCardHeader";
 import { ListRequestChanges } from "./ListRequestChanges";
+import { Button } from "../../../../ui/button";
+import useCancelMarketplaceExchange from "../../../../../hooks/exchange/useCancelMarketplaceExchange";
+import { MoonLoader } from "react-spinners";
+import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
     request: MarketplaceRequest
 }
 
 export const MineRequestCard = ({ request }: Props) => {
-    const { open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview } = useContext(ExchangeRequestCommonContext);
+    const {
+        open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview,
+        setRequestStatus
+    } = useContext(ExchangeRequestCommonContext);
     const [hovered, setHovered] = useState<boolean>(false);
+
+    const { trigger: cancelMarketplaceExchange, isMutating: cancelingMarketplaceExchange } = useCancelMarketplaceExchange(request.id);
 
     const { user } = useContext(SessionContext);
 
@@ -49,20 +58,19 @@ export const MineRequestCard = ({ request }: Props) => {
             )}
         </CardContent>
         <CardFooter className={open ? "" : "hidden"}>
-            {/* <div className="flex flex-row justify-between w-full items-center"> */}
-            {/*     <form className="flex flex-row gap-2"> */}
-            {/*         {!request.accepted && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT && */}
-            {/*             <Button */}
-            {/*                 type="submit" */}
-            {/*                 className="success-button hover:bg-white" */}
-            {/*             > */}
-            {/*                 Aceitar */}
-            {/*             </Button> */}
-            {/*         } */}
-            {/*     </form> */}
-            {/* </div> */}
-
+            {(!request.canceled || !request.accepted) && <Button
+                variant="destructive"
+                onClick={async () => {
+                    await cancelMarketplaceExchange();
+                    setRequestStatus(StudentRequestCardStatus.CANCELED)
+                }}
+            >
+                {cancelingMarketplaceExchange
+                    ? <MoonLoader size={20} />
+                    : "Cancelar"
+                }
+            </Button>
+            }
         </CardFooter>
-
     </Card>
 }

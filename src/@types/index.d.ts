@@ -131,6 +131,7 @@ export type MarketplaceRequest = {
   classes?: Array<ClassInfo>,
   pending_motive?: DirectExchangePendingMotive,
   accepted: boolean,
+  canceled: boolean
 }
 
 export type DirectExchangeRequest = {
