@@ -13,7 +13,13 @@ import { FaceFrownIcon, ShieldExclamationIcon } from "@heroicons/react/24/outlin
 import { Schedule } from "../components/planner";
 import { Enrollments } from "../components/exchange/enrollments/Enrollments";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-
+import { AlertCircle } from "lucide-react"
+ 
+import {
+  Alert,
+  AlertDescription,
+} from "../components/ui/alert"
+ 
 export enum ExchangeSidebarStatus {
   SHOWING_REQUESTS,
   CREATING_REQUEST
@@ -34,7 +40,7 @@ const ExchangePage = () => {
   const [loads, setLoads] = useState<number>(-1);
   const [creatingRequest,] = useState<boolean>(false);
   const [sidebarStatus, setSidebarStatus] = useState<ExchangeSidebarStatus>(ExchangeSidebarStatus.SHOWING_REQUESTS);
-  const { schedule, loading: loadingSchedule } = useSchedule();
+  const { schedule, loading: loadingSchedule , sigarraSynced} = useSchedule();
   const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const { signedIn, user } = useContext(SessionContext);
@@ -85,7 +91,17 @@ const ExchangePage = () => {
         {/* Schedule Preview */}
         <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
           <div className="h-full w-full">
-            <ExchangeSchedule />
+          {(!sigarraSynced && !loadingSchedule) &&(
+            <>
+              <Alert variant="destructive" className="my-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  O horário reflete trocas que ainda não estão no sigarra
+                </AlertDescription>
+              </Alert>
+            </>
+          )}
+          <ExchangeSchedule />
           </div>
         </div>
 
