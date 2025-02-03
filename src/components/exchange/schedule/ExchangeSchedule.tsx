@@ -2,11 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { ClassDescriptor, SlotInfo } from "../../../@types";
 import ScheduleContext from "../../../contexts/ScheduleContext";
 import { Schedule } from "../../planner";
+import ConflictsContext from "../../../contexts/ConflictsContext";
 
 const ExchangeSchedule = () => {
   const { exchangeSchedule } = useContext(ScheduleContext);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [classes, setClasses] = useState<ClassDescriptor[]>([]);
+  const { setTClassConflicts } = useContext(ConflictsContext);
 
   useEffect(() => {
     if (!exchangeSchedule) return;
@@ -47,6 +49,12 @@ const ExchangeSchedule = () => {
     if (praticalClass) return praticalClass.classInfo.name;
     return classes[0].classInfo.name;
   };
+
+  // Configure T-class conflicts based on environment variable
+  useEffect(() => {
+    const tClassConflicts = Number(import.meta.env.VITE_APP_T_CLASS_CONFLICTS) !== 0;
+    setTClassConflicts(tClassConflicts);
+  }, []);
 
   return <Schedule
       classes={classes}
