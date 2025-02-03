@@ -12,10 +12,10 @@ type Props = {
 const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
   const filteredSlots = slots.filter((slot: SlotInfo) => !hiddenLessonsTypes.includes(slot.lesson_type));
 
-  const [conflictMap, setConflictMap] = useState(new Map<Number, boolean>());
+  const [conflictMap, setConflictMap] = useState(new Map<number, boolean>());
 
   const { setConflictSeverity } = useContext(ConflictsContext);
-  const updateConflictMap = (courseId: Number, conflictData: boolean) => {
+  const updateConflictMap = (courseId: number, conflictData: boolean) => {
     setConflictMap((prevConflictMap) => {
       const newConflictMap = new Map(prevConflictMap);
       newConflictMap.set(courseId, conflictData);
@@ -26,11 +26,8 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
   useEffect(() => {
     const isSevere = Array.from(conflictMap.values()).reduce((acc, val) => acc || val, false);
     setConflictSeverity(isSevere);
-    console.log("SlotBoxes conflictMap", conflictMap);
   }, [conflictMap]);
-
   
-
   return (
     <>
       {

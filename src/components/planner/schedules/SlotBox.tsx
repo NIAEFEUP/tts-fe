@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { CourseInfo, ClassInfo, ClassDescriptor, SlotInfo } from '../../../@types'
 import LessonBox from './LessonBox'
 import ResponsiveLessonBox from './ResponsiveLessonBox'
@@ -8,12 +7,12 @@ type Props = {
   classInfo: ClassInfo
   slot: SlotInfo
   classes: ClassDescriptor[]
-  setSlotBoxConflict: (courseId: Number, conflictData: Boolean) => void
+  setSlotBoxConflict: (courseId: number, conflictData: boolean) => void
 }
 
 const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: Props) => {
 
-  const updateSlotBoxConflict = (courseId, conflictData) => {
+  const updateSlotBoxConflict = (courseId: number, conflictData: boolean) => {
     setSlotBoxConflict(courseId, conflictData);
   };
 

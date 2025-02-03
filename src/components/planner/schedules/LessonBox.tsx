@@ -1,7 +1,5 @@
 import classNames from 'classnames'
-import { useContext, useState, useEffect } from 'react'
-
-import ConflictsContext from '../../../contexts/ConflictsContext'
+import { useState, useEffect } from 'react'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
@@ -12,7 +10,7 @@ type Props = {
   classInfo: ClassInfo
   slotInfo: SlotInfo
   classes: ClassDescriptor[]
-  setLessonBoxConflict: (courseId: Number, conflictData: Boolean) => void
+  setLessonBoxConflict: (courseId: number, conflictData: boolean) => void
 }
 
 const LessonBox = ({
