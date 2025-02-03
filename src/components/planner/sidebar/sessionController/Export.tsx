@@ -9,7 +9,7 @@ import { csvDecode } from '../../../../utils/io'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import api from '../../../../api/backend'
-import { CourseInfo } from '../../../../@types'
+import { Option, CourseInfo, CourseOption } from '../../../../@types'
 import { toast } from '../../../ui/use-toast'
 
 /**
