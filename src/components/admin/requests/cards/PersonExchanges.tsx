@@ -25,7 +25,7 @@ export const PersonExchanges = ({
         <>
             <div className="flex justify-between">
                 <Person name={participant_name} nmec={participant_nmec} />
-                <div>
+                <div className="flex flex-row flex-wrap gap-x-2">
                     {exchanges.map((exchange) => (
                         <div
                             key={crypto.randomUUID()}

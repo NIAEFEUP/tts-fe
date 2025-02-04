@@ -1,7 +1,7 @@
 
 import { Separator } from "../ui/separator"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar"
-import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 export const AdminSidebar = () => {
     return (
