@@ -52,8 +52,8 @@ export const RequestCard = () => {
       if (response && response.ok) {
         toast({
           title: "Troca proposta com sucesso!",
-          description: "A proposta de troca foi realizada com sucesso.",
           variant: "default",
+          description: 'A proposta de troca foi realizada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.'
         });
       }
       else {

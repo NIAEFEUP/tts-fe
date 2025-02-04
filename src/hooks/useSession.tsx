@@ -16,7 +16,7 @@ const useSession = () => {
   }
 
   const { data, isLoading } = useSwr("auth/info/", trySession, {
-    refreshInterval: 3600000000,
+    focusThrottleInterval: 1800000
   });
 
   if (data) {
