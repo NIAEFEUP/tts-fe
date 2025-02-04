@@ -28,7 +28,7 @@ const navigation = [
     title: 'Turmas',
     location: getPath(config.paths.exchange),
     icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
-    wip: true,
+    wip: false,
   },
   { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
   {
@@ -56,14 +56,14 @@ const Header = ({ siteTitle, location }: Props) => {
   return (
     <Disclosure
       as="nav"
-      className="sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
+      className="max-sm:flex max-sm:flex-col max-sm:gap-y-12 sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
     >
       {({ open }) => {
         return (
           <>
             <div className={`${open ? 'p-0' : 'p-2'} relative flex items-center justify-between md:py-0`}>
               <Hamburger open={open} signedIn = {signedIn} />
-              <div className="flex flex-1 items-center justify-between md:items-stretch md:justify-between">
+              <div className="flex md:flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to={config.pathPrefix} className="flex items-center space-x-2">
                     <img
