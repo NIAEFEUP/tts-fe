@@ -19,12 +19,12 @@ export const AdminSidebar = () => {
                             <span>Pedidos</span>
                         </a>
                     </SidebarMenuButton>
-                    <SidebarMenuButton asChild>
+                    {/* <SidebarMenuButton asChild>
                         <a href="/admin/settings">
                             <AdjustmentsHorizontalIcon className="w-6 h-6" />
                             <span>Definições</span>
                         </a>
-                    </SidebarMenuButton>
+                    </SidebarMenuButton> */}
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
