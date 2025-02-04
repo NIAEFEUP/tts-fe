@@ -62,7 +62,7 @@ export const FeedbackReport = () => {
     <DropdownMenuTrigger asChild>
       <Button variant="icon" className="rounded-full flex flex-row gap-x-2">
         <FlagIcon className="h-5 w-5 text-black" />
-        <p className="text-black">Feedback</p>
+        <p className="hidden sm:block text-black">Feedback</p>
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent className="ml-5">
