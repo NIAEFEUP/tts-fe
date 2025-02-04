@@ -3,7 +3,7 @@ import { Button } from "../../../../ui/button";
 import { Card, CardContent, CardFooter } from "../../../../ui/card";
 import { Checkbox } from "../../../../ui/checkbox";
 import { Separator } from "../../../../ui/separator";
-import { ListRequestChanges } from "./ListRequestChanges";
+import { ListRequestChanges, OptionOrder } from "./ListRequestChanges";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import { CommonCardHeader } from "./CommonCardHeader";
 import ConflictsContext from "../../../../../contexts/ConflictsContext";
@@ -102,6 +102,7 @@ export const RequestCard = () => {
               setSelectAll={setSelectAll}
               togglePreview={togglePreview}
               type={"marketplaceexchange"}
+              optionOrder={OptionOrder.FROM_TO}
             />
           ))}
         </CardContent>
