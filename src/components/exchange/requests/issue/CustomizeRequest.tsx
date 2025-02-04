@@ -41,6 +41,7 @@ export const CustomizeRequest = ({
       setPreviewingForm(false);
       toast({
         title: 'Pedido submetido com sucesso!',
+        description: 'A proposta de troca foi realizada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.'
       });
     }else{
       setPreviewingForm(false);

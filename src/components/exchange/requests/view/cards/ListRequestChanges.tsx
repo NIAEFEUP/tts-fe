@@ -4,12 +4,18 @@ import { Checkbox } from "../../../../ui/checkbox"
 import { Separator } from "../../../../ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../ui/table"
 
+export enum OptionOrder {
+    FROM_TO,
+    TO_FROM
+}
+
 type Props = {
     option: ExchangeOption | DirectExchangeParticipant
     selectedOptionsHook: [Map<string, boolean>, Dispatch<SetStateAction<Map<string, boolean>>>]
     setSelectAll: Dispatch<SetStateAction<boolean>>
     togglePreview: (selectedOptions: Map<string, boolean>) => void
     type: string
+    optionOrder?: OptionOrder,
     showChooseCheckbox?: boolean
 }
 
@@ -19,7 +25,8 @@ export const ListRequestChanges = ({
     setSelectAll,
     togglePreview,
     type,
-    showChooseCheckbox = true
+    showChooseCheckbox = true,
+    optionOrder = OptionOrder.TO_FROM
 }: Props) => {
     const [selectedOptions, setSelectedOptions] = selectedOptionsHook;
 
@@ -53,8 +60,18 @@ export const ListRequestChanges = ({
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="font-bold text-black">Turma para onde vais</TableHead>
-                                    <TableHead className="font-bold text-black">Turma onde estás</TableHead>
+                                    <TableHead className="font-bold text-black">
+                                        {optionOrder === OptionOrder.TO_FROM
+                                            ? "Turma onde estás"
+                                            : "Turma para onde vais"
+                                        }
+                                    </TableHead>
+                                    <TableHead className="font-bold text-black">
+                                        {optionOrder === OptionOrder.TO_FROM
+                                            ? "Turma para onde vais"
+                                            : "Turma onde estás"
+                                        }
+                                    </TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>

@@ -58,7 +58,7 @@ export const MineRequestCard = ({ request }: Props) => {
             )}
         </CardContent>
         <CardFooter className={open ? "" : "hidden"}>
-            {(!request.canceled || !request.accepted) && <Button
+            {(!request.canceled && request.accepted) && <Button
                 variant="destructive"
                 onClick={async () => {
                     await cancelMarketplaceExchange();
