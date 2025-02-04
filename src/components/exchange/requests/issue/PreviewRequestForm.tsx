@@ -97,12 +97,12 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
       {requests.size > 0 &&
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 items-center mx-auto">
-            <div className="flex flex-row gap-x-1">
+            <div className="flex flex-row gap-x-2 items-center">
               <Checkbox
                 checked={sendUrgentMessage}
                 onCheckedChange={(checked: boolean) => setSendUrgentMessage(checked)}
               />
-              <p>Quero enviar o pedido direto à comissão de inscrição</p>
+              <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p> 
             </div>
             {sendUrgentMessage &&
               <FormField
