@@ -47,23 +47,14 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
   const { isConflictSevere } = useContext(ConflictsContext);
 
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger className="w-1/2">
-          <DialogTrigger asChild>
-            <Button
-              className="w-full"
-              disabled={isConflictSevere}
-            >
-              Submeter pedido
-            </Button>
-          </DialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Tens conflitos</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <DialogTrigger asChild>
+      <Button
+        className="w-full"
+        disabled={isConflictSevere}
+      >
+        Submeter pedido
+      </Button>
+    </DialogTrigger>
     <DialogContent className="flex flex-col">
       <DialogHeader>
         <DialogTitle>Prever visualização do pedido</DialogTitle>
@@ -102,7 +93,7 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
                 checked={sendUrgentMessage}
                 onCheckedChange={(checked: boolean) => setSendUrgentMessage(checked)}
               />
-              <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p> 
+              <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p>
             </div>
             {sendUrgentMessage &&
               <FormField
