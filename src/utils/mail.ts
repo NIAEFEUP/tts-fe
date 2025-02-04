@@ -16,5 +16,5 @@ export const listEmailExchanges = (items: Array<{
     goes_to: string,
     course_acronym: string
 }>) => {
-    return items.map(item => `De ${item.goes_from} para ${item.goes_to} no curso ${item.course_acronym}.`).join("\n")
+    return items.map(item => `De ${item.goes_from} para ${item.goes_to} no curso ${item.course_acronym}.`).join("%0D%0A")
 }
