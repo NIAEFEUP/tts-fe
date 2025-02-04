@@ -29,7 +29,7 @@ const rejectRequest = async (
         await exchangeRequestService.adminRejectExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
-        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva, A alteração pedida não pode ser efetuada. ${exchangeMessage} Cmpts, Daniel Silva (pela comissão de inscrição em turmas)`;
+        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida não pode ser efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
         a.click();
     } catch (e) {
         console.error(e);
@@ -46,7 +46,7 @@ const acceptRequest = async (
         await exchangeRequestService.adminAcceptExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
-        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva, A alteração pedida foi efetuada. ${exchangeMessage} Cmpts, Daniel Silva (pela comissão de inscrição em turmas)`;
+        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida foi efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
         a.click();
     } catch (e) {
         console.error(e);
