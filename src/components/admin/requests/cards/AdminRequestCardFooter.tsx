@@ -14,9 +14,8 @@ type Props = {
     requestType: AdminRequestType,
     requestId: number,
     showTreatButton?: boolean,
-    courseUnitId?: Array<number>
     setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment>>
-    courseId: number
+    courseId: Array<number>
 }
 
 const rejectRequest = async (
@@ -67,11 +66,9 @@ export const AdminRequestCardFooter = ({
     requestType,
     requestId,
     showTreatButton = true,
-    courseUnitId,
     setExchange,
     courseId
 }: Props) => {
-
     return <>
         <Separator className="my-4" />
         <CardFooter className="justify-end gap-4">
@@ -122,7 +119,6 @@ export const AdminRequestCardFooter = ({
                     <TreatExchangeButton
                         key={"treat-exchange-button-" + nmec}
                         nmec={nmec}
-                        courseUnitId={courseUnitId[0]}
                         courseId={courseId}
                     />
                 ))

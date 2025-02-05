@@ -3,23 +3,19 @@ import { Button } from "../../../ui/button"
 
 type Props = {
     nmec: string,
-    courseUnitId: number,
-    notEnrolledCourseUnitId?: number | null,
     variant?: "icon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link",
-    courseId: number
+    courseId: Array<number>
 }
 
 export const TreatExchangeButton = ({
     nmec,
-    courseUnitId,
-    notEnrolledCourseUnitId,
     courseId,
     variant = "default",
 }: Props) => {
-    const { studentCourseMetadata } = useStudentCourseMetadata(nmec, courseUnitId);
+    const { studentCourseMetadata } = useStudentCourseMetadata(nmec, courseId);
 
     const uniqueMetadata = studentCourseMetadata
-        ? Array.from(new Map(studentCourseMetadata.map(m => [m.fest_id, m])).values())
+        ? Array.from(studentCourseMetadata.values()).filter(metadata => metadata.length > 0).flat()
         : [];
 
     return (
@@ -27,7 +23,7 @@ export const TreatExchangeButton = ({
             {
                 uniqueMetadata.map((metadata) => (
                     <a
-                        href={`https://sigarra.up.pt/feup/pt/it_adm.adm_selecciona_turmas_livre?pv_estudante_id=${metadata.fest_id}&pv_curso_id=${courseId}`}
+                        href={`https://sigarra.up.pt/feup/pt/it_adm.adm_selecciona_turmas_livre?pv_estudante_id=${metadata.fest_id}&pv_curso_id=${metadata.course.id}`}
                         key={metadata.fest_id}
                     >
                         <Button
@@ -37,10 +33,6 @@ export const TreatExchangeButton = ({
                         </Button>
                     </a>
                 ))
-            }
-            
-            {notEnrolledCourseUnitId &&
-                <p>Fuck this shit</p>
             }
         </>
     )
