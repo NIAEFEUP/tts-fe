@@ -1,7 +1,7 @@
 
 import { Separator } from "../ui/separator"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar"
-import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 export const AdminSidebar = () => {
     return (
@@ -19,12 +19,12 @@ export const AdminSidebar = () => {
                             <span>Pedidos</span>
                         </a>
                     </SidebarMenuButton>
-                    <SidebarMenuButton asChild>
+                    {/* <SidebarMenuButton asChild>
                         <a href="/admin/settings">
                             <AdjustmentsHorizontalIcon className="w-6 h-6" />
                             <span>Definições</span>
                         </a>
-                    </SidebarMenuButton>
+                    </SidebarMenuButton> */}
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>

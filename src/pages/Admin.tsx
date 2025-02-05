@@ -14,12 +14,7 @@ const AdminPage = ({ page }: Props) => {
     const navigate = useNavigate();
     const { signedIn, user, isSessionLoading } = useContext(SessionContext);
 
-    if (user && !user.is_admin) {
-        navigate("/planner")
-        return <></>
-    }
-
-    if (!isSessionLoading && !signedIn) {
+    if(!isSessionLoading && signedIn && user && !user.is_admin) {
         navigate("/planner")
         return <></>
     }
