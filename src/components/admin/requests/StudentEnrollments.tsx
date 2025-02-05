@@ -2,14 +2,18 @@ import { BarLoader } from "react-spinners";
 import useStudentEnrollments from "../../../hooks/admin/useStudentEnrollments";
 import { StudentEnrollmentCard } from "./cards/StudentEnrollmentCard";
 import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
 
 export const StudentEnrollments = () => {
     const filterContext = useContext(RequestFiltersContext);
 
-    const { currPage } = useContext(AdminPaginationContext);
-    const { enrollments, loading } = useStudentEnrollments(filterContext, currPage);
+    const { currPage, setTotalPages } = useContext(AdminPaginationContext);
+    const { enrollments, loading, totalPages } = useStudentEnrollments(filterContext, currPage);
+
+    useEffect(() => {
+        setTotalPages(totalPages)
+    }, [enrollments]);
 
     return (
         <>

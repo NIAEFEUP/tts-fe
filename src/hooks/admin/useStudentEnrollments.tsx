@@ -27,10 +27,12 @@ export default (filtersContext: RequestFiltersContextContent, pageIndex: number)
     getEnrollments
   );
 
-  const enrollments = useMemo(() => data ? [].concat(...data) : null, [data]);
+  const enrollments = useMemo(() => data ? [].concat(...data["enrollments"]) : null, [data]);
+  const totalPages = useMemo(() => data ? data["total_pages"] : null, [data]);
 
   return {
     enrollments,
+    totalPages,
     error,
     loading: !data,
     mutate,

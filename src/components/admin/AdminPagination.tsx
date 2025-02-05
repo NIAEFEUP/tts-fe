@@ -3,14 +3,14 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink } from ".
 import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext";
 
 export const AdminPagination = () => {
-    const { currPage, setCurrPage } = useContext(AdminPaginationContext);
+    const { currPage, setCurrPage, totalPages } = useContext(AdminPaginationContext);
 
     return <Pagination>
         <PaginationContent>
             {currPage > 1 && (
                 <PaginationItem>
-                    <PaginationLink 
-                        href="#" 
+                    <PaginationLink
+                        href="#"
                         onClick={() => setCurrPage(prev => prev - 1)}
                         className="hover:bg-black hover:text-white"
                     >
@@ -19,22 +19,23 @@ export const AdminPagination = () => {
                 </PaginationItem>
             )}
             <PaginationItem>
-                <PaginationLink 
-                    className="bg-black text-white hover:bg-white hover:text-black" 
+                <PaginationLink
+                    className="bg-black text-white hover:bg-white hover:text-black"
                     href="#"
                 >
                     {currPage}
                 </PaginationLink>
             </PaginationItem>
-            <PaginationItem>
-                <PaginationLink 
-                    href="#" 
-                    onClick={() => setCurrPage(prev => prev + 1)}
-                    className="hover:bg-black hover:text-white"
-                >
-                    {currPage + 1}
-                </PaginationLink>
-            </PaginationItem>
+            {currPage < totalPages && (
+                <PaginationItem>
+                    <PaginationLink
+                        href="#"
+                        onClick={() => setCurrPage(prev => prev + 1)}
+                        className="hover:bg-black hover:text-white"
+                    >
+                        {currPage + 1}
+                    </PaginationLink>
+                </PaginationItem>)}
         </PaginationContent>
     </Pagination>
 }

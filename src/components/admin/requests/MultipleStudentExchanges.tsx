@@ -2,14 +2,18 @@ import { BarLoader } from "react-spinners";
 import useMultipleStudentExchanges from "../../../hooks/admin/useMultipleStudentExchanges";
 import { MultipleStudentExchangeCard } from "./cards/MultipleStudentExchangeCard";
 import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
 
 export const MultipleStudentExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
 
-    const { currPage } = useContext(AdminPaginationContext);
-    const { exchanges, loading } = useMultipleStudentExchanges(filterContext, currPage);
+    const { currPage, setTotalPages } = useContext(AdminPaginationContext);
+    const { exchanges, totalPages, loading } = useMultipleStudentExchanges(filterContext, currPage);
+    
+    useEffect(() => {
+        setTotalPages(totalPages)
+    }, [exchanges]);
     
     return (
         <>

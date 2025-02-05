@@ -25,10 +25,12 @@ export default (filterContext: RequestFiltersContextContent, pageIndex: number) 
   const { data, error, mutate } = useSWR(
     buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/?page=${pageIndex}`, filterContext), getExchanges
   );
-  const exchanges = useMemo(() => data ? [].concat(...data) : null, [data]);
+  const exchanges = useMemo(() => data ? [].concat(...data["exchanges"]) : null, [data]);
+  const totalPages = useMemo(() => data ? data["total_pages"] : null, [data]);
 
   return {
     exchanges,
+    totalPages,
     error,
     loading: !data,
     mutate,
