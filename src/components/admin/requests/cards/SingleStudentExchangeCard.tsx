@@ -116,9 +116,8 @@ export const SingleStudentExchangeCard = ({
                         )}
                         requestType={AdminRequestType.URGENT_EXCHANGE}
                         requestId={exchange.id}
-                        courseUnitId={exchange.options.map(option => option.course_unit.id)}
                         setExchange={setExchangeState}
-                        courseId={exchange.options[0].course_unit.course}
+                        courseId={exchange.options.map(option => option.course_unit.course)}
                     /> 
                 }
             </Card>

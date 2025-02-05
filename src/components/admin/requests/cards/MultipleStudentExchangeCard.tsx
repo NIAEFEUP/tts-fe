@@ -64,13 +64,13 @@ export const MultipleStudentExchangeCard = ({
                         </div>
                         {!open && <>
                             {[...new Map(exchange.options.map((p: DirectExchangeParticipant) => [p.participant_nmec, p])).values()]
-  .map((participant) => (
-    <Person
-      key={"multiple-student-person-" + participant.participant_nmec}
-      name={participant.participant_name}
-      nmec={participant.participant_nmec}
-    />
-))}
+                                .map((participant) => (
+                                    <Person
+                                        key={"multiple-student-person-" + participant.participant_nmec}
+                                        name={participant.participant_name}
+                                        nmec={participant.participant_nmec}
+                                    />
+                                ))}
                         </>}
 
                     </div>
@@ -117,7 +117,7 @@ export const MultipleStudentExchangeCard = ({
                         requestId={exchange.id}
                         showTreatButton={false}
                         setExchange={setExchangeState}
-                        courseId={exchange.options[0].course_info.id}
+                        courseId={exchange.options.map(option => option.course_info.course)}
                     />
                 }
             </Card>

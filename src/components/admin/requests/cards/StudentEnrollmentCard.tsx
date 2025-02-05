@@ -112,9 +112,8 @@ export const StudentEnrollmentCard = ({
                         exchangeMessage={""}
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}
-                        courseUnitId={enrollment.options.map(option => option.course_unit.id)}
                         setExchange={setEnrollmentState}
-                        courseId={enrollment.options[0].course_unit.course}
+                        courseId={enrollment.options.map(option => option.course_unit.course)}
                     />
                 }
             </CardContent>
