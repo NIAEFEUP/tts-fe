@@ -52,6 +52,7 @@ export const MineRequestCard = ({ request }: Props) => {
                             togglePreview={togglePreview}
                             showChooseCheckbox={false}
                             type={request.type}
+                            userWillExchangeTo={option.other_student ? `${option.other_student}`: null}
                         />
                     ))}
                 </>

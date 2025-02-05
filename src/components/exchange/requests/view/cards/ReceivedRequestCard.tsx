@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { DirectExchangeRequest } from "../../../../../@types"
+import { useContext, useState } from "react";
+import { DirectExchangeParticipant, DirectExchangeRequest } from "../../../../../@types"
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import SessionContext from "../../../../../contexts/SessionContext";
 import { DirectExchangePendingMotive } from "../../../../../utils/exchange";
@@ -26,15 +26,11 @@ export const ReceivedRequestCard = ({
     } = useContext(ExchangeRequestCommonContext);
     const [hovered, setHovered] = useState<boolean>(false);
 
-    const { user } = useContext(SessionContext);
-
     const { toast } = useToast();
 
-    const { trigger: acceptDirectExchange, isMutating: isAcceptingDirectExchange } = useAcceptDirectExchange(request.id);
+    const { user } = useContext(SessionContext);
 
-    useEffect(() => {
-        if (request.type === "directexchange") request.options = request.options.filter((option) => option.participant_nmec === user?.username);
-    }, [request]);
+    const { trigger: acceptDirectExchange, isMutating: isAcceptingDirectExchange } = useAcceptDirectExchange(request.id);
 
     return <>
         {request.type === "directexchange" &&
@@ -58,7 +54,7 @@ export const ReceivedRequestCard = ({
                 <CardContent className="p-0 px-4">
                     {open && (
                         <>
-                            {request.options.map((option) => (
+                            {request.options.filter((option) => option.participant_nmec === user?.username).map((option) => (
                                 <ListRequestChanges
                                     key={option.course_info.id}
                                     option={option}
@@ -67,6 +63,7 @@ export const ReceivedRequestCard = ({
                                     togglePreview={togglePreview}
                                     type={"directexchange"}
                                     showChooseCheckbox={false}
+                                    userWillExchangeTo={request.options.find((o: DirectExchangeParticipant) => o.class_participant_goes_from.id === option.class_participant_goes_to.id)?.participant_name}
                                 />
                             ))}
                         </>
