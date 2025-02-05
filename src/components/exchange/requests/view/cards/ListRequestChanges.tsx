@@ -16,7 +16,8 @@ type Props = {
     togglePreview: (selectedOptions: Map<string, boolean>) => void
     type: string
     optionOrder?: OptionOrder,
-    showChooseCheckbox?: boolean
+    showChooseCheckbox?: boolean,
+    userWillExchangeTo?: string
 }
 
 export const ListRequestChanges = ({
@@ -26,7 +27,8 @@ export const ListRequestChanges = ({
     togglePreview,
     type,
     showChooseCheckbox = true,
-    optionOrder = OptionOrder.TO_FROM
+    optionOrder = OptionOrder.TO_FROM,
+    userWillExchangeTo = null
 }: Props) => {
     const [selectedOptions, setSelectedOptions] = selectedOptionsHook;
 
@@ -57,6 +59,7 @@ export const ListRequestChanges = ({
                         <p>
                             <span className="font-bold">{option.course_info.acronym}</span> - {option.course_info.name}
                         </p>
+                        {userWillExchangeTo && <p>Troca com {userWillExchangeTo}</p>}
                         <Table>
                             <TableHeader>
                                 <TableRow>
