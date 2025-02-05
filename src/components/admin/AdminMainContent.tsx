@@ -15,11 +15,14 @@ export const AdminMainContent = () => {
     const [activeStates, setActiveStates] = useState<Array<AdminRequestState>>([]);
 
     const [currPage, setCurrPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
 
     return (
         <AdminPaginationContext.Provider value={{
             currPage,
-            setCurrPage
+            setCurrPage,
+            totalPages,
+            setTotalPages
         }}>
             <RequestFiltersContext.Provider value={{
                 activeCourse: activeCourse,
