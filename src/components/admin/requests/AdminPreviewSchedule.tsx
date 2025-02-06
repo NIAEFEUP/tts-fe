@@ -42,7 +42,7 @@ export const AdminPreviewSchedule = ({
                     <DialogTitle>Prever horário</DialogTitle>
                 </DialogHeader>
                 <ScheduleContext.Provider value={{
-                    originalExchangeSchedule: originalSchedule.filter((classDescriptor) => classDescriptor.classInfo && classDescriptor.courseInfo),
+                    originalExchangeSchedule: originalSchedule?.filter((classDescriptor) => classDescriptor.classInfo && classDescriptor.courseInfo),
                     exchangeSchedule: schedule,
                     setExchangeSchedule: setSchedule,
                     enrolledCourseUnits: [],
