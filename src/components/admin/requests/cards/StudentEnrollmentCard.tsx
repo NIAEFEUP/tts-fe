@@ -115,8 +115,8 @@ export const StudentEnrollmentCard = ({
                                 enrollment.options.map(option => ({
                                     participant_nmec: enrollment.user_nmec,
                                     goes_to: option.course_unit.name,
-                                    course: option.course_unit.course,
-                                    course_unit_id: option.course_unit.id
+                                    course: option.course,
+                                    course_unit: option.course_unit
                                 }))
                             )
                         }

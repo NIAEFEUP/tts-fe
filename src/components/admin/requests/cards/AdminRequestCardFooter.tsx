@@ -137,6 +137,12 @@ export const AdminRequestCardFooter = ({
 
             <AdminSendEmail
                 nmec={nmecs}
+                subject={
+                    requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE
+                        ? "Pedido de troca de turma"
+                        : "Pedido de Inscrição em Unidades Curriculares"
+                }
+                message={exchangeMessage}
             />
         </CardFooter>
     </>

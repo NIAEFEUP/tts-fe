@@ -17,10 +17,10 @@ const ExchangeVerifyPage = () => {
     const { token } = useParams();
     const { verified, loading} = useExchangeVerify(token);
 
-    return (<div className="flex flex-col items-center">
+    return (<div className="flex flex-col flex-grow items-center justify-center min-h-screen mb-48">
         {loading
             ? <div>
-                <MoonLoader size={10} />
+                <MoonLoader size={20} />
             </div>
             : <ExchangeVerifyStatus verified={verified} />
         }
