@@ -43,8 +43,16 @@ const ExchangePage = () => {
   const { schedule, loading: loadingSchedule , sigarraSynced} = useSchedule();
   const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
-  const { signedIn, user } = useContext(SessionContext);
-  const { enrolledCourseUnits } = useStudentCourseUnits();
+  const { signedIn, user, forceScheduleRevalidation, isSessionLoading } = useContext(SessionContext);
+  const { enrolledCourseUnits, forceCourseUnitsRevalidation } = useStudentCourseUnits();
+
+  useEffect(() => {
+    forceScheduleRevalidation();
+  }, [schedule])
+
+  useEffect(() => {
+    if(user?.eligible_exchange) forceCourseUnitsRevalidation();
+  }, [user])
 
   useEffect(() => {
     if (creatingRequest) setSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST)
@@ -112,7 +120,7 @@ const ExchangePage = () => {
               <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
             </TabsList>
             <TabsContent value="requests">
-              {user?.eligible_exchange 
+              {!isSessionLoading && user?.eligible_exchange
                 ? <ExchangeSidebarStatusView
                   sidebarStatus={sidebarStatus}
                   setExchangeSidebarStatus={setSidebarStatus}

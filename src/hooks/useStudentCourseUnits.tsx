@@ -29,6 +29,6 @@ export default () => {
     error,
     loading: !data,
     isValidating,
-    mutate,
+    forceCourseUnitsRevalidation: mutate,
   };
 };

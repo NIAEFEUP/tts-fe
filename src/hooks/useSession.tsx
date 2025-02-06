@@ -4,6 +4,7 @@ import api from "../api/backend";
 const useSession = () => {
 
   const trySession = async (key) => {
+    console.log("Will this get retried???");
     try {
       const res = await fetch(`${api.BACKEND_URL}/${key}`, {
         method: "GET",
@@ -15,7 +16,7 @@ const useSession = () => {
     }
   }
 
-  const { data, isLoading } = useSwr("auth/info/", trySession, {
+  const { data, isLoading, mutate } = useSwr("auth/info/", trySession, {
     focusThrottleInterval: 1800000
   });
 
@@ -26,6 +27,7 @@ const useSession = () => {
   return {
     signedIn: data ? data.signed : false,
     user: data ? data : null,
+    forceScheduleRevalidation: mutate,
     isLoading
   }
 }
