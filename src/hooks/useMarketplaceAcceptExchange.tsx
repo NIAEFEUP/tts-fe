@@ -22,7 +22,8 @@ export default (request: MarketplaceRequest | DirectExchangeRequest, selectedOpt
                         other_student: {
                             name: request.issuer_name,
                             mecNumber: request.issuer_nmec
-                        }
+                        },
+                        marketplace_id: request.id
                     }
                 );
             }
