@@ -91,9 +91,10 @@ export const ReceivedRequestCard = ({
                                             });
                                             
                                             setRequestStatus(StudentRequestCardStatus.PENDING);
-
-                                            request.pending_motive = DirectExchangePendingMotive.OTHERS_DID_NOT_ACCEPT;
-                                            setRequest(request);
+                                            
+                                            const newRequest = {...request};
+                                            newRequest.pending_motive = DirectExchangePendingMotive.OTHERS_DID_NOT_ACCEPT;
+                                            setRequest(newRequest);
                                         }
                                         else {
                                             toast({

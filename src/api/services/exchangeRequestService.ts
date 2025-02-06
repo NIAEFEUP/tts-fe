@@ -17,6 +17,8 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
     formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
+  if(!isDirectExchange(requests.values()) && requests.values()[0]?.marketplace_id) formData.append("marketplace_id", requests.values()[0]?.marketplace_id);
+
   if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
 
   try {
