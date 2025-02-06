@@ -42,7 +42,12 @@ export const CommonCardHeader = ({
             ? StudentRequestCardStatus.ACCEPTED
             : StudentRequestCardStatus.PENDING
         );
+
+        if(request.type === "directexchange") {
+            (request as DirectExchangeRequest).options = (request as DirectExchangeRequest).options.filter((option) => option.participant_nmec === username);
+        }
     }, [request]);
+
 
     return <CardHeader
         className="flex flex-row gap-x-2 items-center p-4"

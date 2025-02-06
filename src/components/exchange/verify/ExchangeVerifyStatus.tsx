@@ -11,7 +11,7 @@ type Props = {
 export const ExchangeVerifyStatus = ({
     verified
 }: Props) => {
-    return (<div className="flex flex-col items-center gap-y-2">
+    return (<div className="my-auto flex flex-col items-center gap-y-2">
         {verified
             ? <>
                 <Check size={100} />
