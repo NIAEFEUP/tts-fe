@@ -5,6 +5,7 @@ import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
 import { AdminSendEmail } from "../AdminSendEmail";
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 import { TreatExchangeButton } from "./TreatExchangeButton";
+import { listEmailExchanges } from "../../../../utils/mail";
 
 type Props = {
     participant_nmec: string
@@ -64,6 +65,16 @@ export const PersonExchanges = ({
                     }
                     <AdminSendEmail
                         nmec={participant_nmec}
+                        subject="Pedido de troca de turmas"
+                        message={listEmailExchanges(
+                            exchanges.map(option => ({
+                                participant_nmec: option.participant_nmec,
+                                participant_name: option.participant_name,
+                                goes_from: option.class_participant_goes_from.name,
+                                goes_to: option.class_participant_goes_to.name,
+                                course_acronym: option.course_unit
+                            }))
+                        )}
                     />
                 </div>
             </div>

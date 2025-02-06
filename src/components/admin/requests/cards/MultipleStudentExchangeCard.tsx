@@ -12,21 +12,32 @@ import { listEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
 import { ValidateRequestButton } from "./ValidateRequestButton";
 
+export type ParticipantEntry = {
+    name: string,
+    nmec: string
+}
+
 type Props = {
     exchange: DirectExchangeRequest
 }
 
 const participantExchangesMap = (exchange: DirectExchangeRequest) => {
     const participants = exchange.options;
-    const map = new Map<string, Array<DirectExchangeParticipant>>();
+    const map = new Map<ParticipantEntry, Array<DirectExchangeParticipant>>();
 
     participants.forEach((participant) => {
-        const existingEntry = map.get(participant.participant_nmec);
+        const existingEntry = map.get({
+            "name": participant.participant_name,
+            "nmec": participant.participant_nmec
+        });
 
         if (existingEntry) {
             existingEntry.push(participant);
         } else {
-            map.set(participant.participant_nmec, [participant]);
+            map.set({
+                "name": participant.participant_name,
+                "nmec": participant.participant_nmec
+            }, [participant]);
         }
     })
 
@@ -89,12 +100,12 @@ export const MultipleStudentExchangeCard = ({
 
                 <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
                     {open &&
-                        Array.from(participantExchangesMap(exchange).entries()).map(([participant_nmec, exchanges]) => (
+                        Array.from(participantExchangesMap(exchange).entries()).map(([participant, exchanges]) => (
                             <PersonExchanges
-                                key={"multiple-student-person-exchanges-" + participant_nmec}
+                                key={"multiple-student-person-exchanges-" + participant.nmec}
                                 exchanges={exchanges}
-                                participant_name={participant_nmec}
-                                participant_nmec={participant_nmec}
+                                participant_name={participant.name}
+                                participant_nmec={participant.nmec}
                                 showTreatButton={true}
                             />
                         ))
@@ -109,6 +120,7 @@ export const MultipleStudentExchangeCard = ({
                         exchangeMessage={listEmailExchanges(
                             exchange.options.map(option => ({
                                 participant_nmec: option.participant_nmec,
+                                participant_name: option.participant_name,
                                 goes_from: option.class_participant_goes_from.name,
                                 goes_to: option.class_participant_goes_to.name,
                                 course_acronym: option.course_unit

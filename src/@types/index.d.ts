@@ -191,6 +191,7 @@ export type CourseUnitEnrollment = {
 
 export type CourseUnitEnrollmentOption = {
   course_unit: CourseInfo,
+  course: Major,
   enrolling: boolean,
   class_user_goes_to: ClassInfo,
 }
