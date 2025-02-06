@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
-import { AdminRequestType, CourseUnitEnrollment, DirectExchangeRequest, UrgentRequest } from "../../../../@types"
+import { CourseUnitEnrollment, DirectExchangeRequest, UrgentRequest } from "../../../../@types"
+import { AdminRequestType } from "../../../../utils/exchange"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { mailtoStringBuilder } from "../../../../utils/mail"
 import { Button } from "../../../ui/button"
@@ -28,7 +29,12 @@ const rejectRequest = async (
         await exchangeRequestService.adminRejectExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
-        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida não pode ser efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
+        if(requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE) {
+            a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida não pode ser efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
+        } else {
+            a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Inscrição em Unidades Curriculares&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AO pedido de inscriçao em unidades curriculares não pode ser efetuado..%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
+        }
+
         a.click();
     } catch (e) {
         console.error(e);
@@ -45,7 +51,11 @@ const acceptRequest = async (
         await exchangeRequestService.adminAcceptExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
-        a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida foi efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
+        if(requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE) {
+            a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida foi efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
+        } else {
+            a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Inscrição em Unidades Curriculares&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida foi efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
+        }
         a.click();
     } catch (e) {
         console.error(e);
@@ -69,6 +79,7 @@ export const AdminRequestCardFooter = ({
     setExchange,
     courseId
 }: Props) => {
+
     return <>
         <Separator className="my-4" />
         <CardFooter className="justify-end gap-4">

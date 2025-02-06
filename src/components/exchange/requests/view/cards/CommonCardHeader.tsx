@@ -1,5 +1,5 @@
 import { ArchiveBoxIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
-import { DirectExchangeParticipant, DirectExchangeRequest, MarketplaceRequest } from "../../../../../@types"
+import { DirectExchangeRequest, MarketplaceRequest } from "../../../../../@types"
 import { Button } from "../../../../ui/button"
 import { CardDescription, CardHeader, CardTitle } from "../../../../ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"

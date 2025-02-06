@@ -104,10 +104,11 @@ export const MultipleStudentExchangeCard = ({
                 {open &&
                     <AdminRequestCardFooter
                         nmecs={
-                            exchange.options.map(option => option.participant_nmec)
+                            [...new Set(exchange.options.map(option => option.participant_nmec))]
                         }
                         exchangeMessage={listEmailExchanges(
                             exchange.options.map(option => ({
+                                participant_nmec: option.participant_nmec,
                                 goes_from: option.class_participant_goes_from.name,
                                 goes_to: option.class_participant_goes_to.name,
                                 course_acronym: option.course_unit

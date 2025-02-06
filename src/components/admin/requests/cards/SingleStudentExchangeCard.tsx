@@ -109,6 +109,7 @@ export const SingleStudentExchangeCard = ({
                         nmecs={[exchange.user_nmec]} 
                         exchangeMessage={listEmailExchanges(
                             exchange.options.map(option => ({
+                                participant_nmec: exchange.user_nmec,
                                 goes_from: option.class_user_goes_from.name,
                                 goes_to: option.class_user_goes_to.name,
                                 course_acronym: option.course_unit.acronym

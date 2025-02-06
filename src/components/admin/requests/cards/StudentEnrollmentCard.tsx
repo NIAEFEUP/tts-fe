@@ -10,6 +10,7 @@ import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
 import { RequestDate } from "./RequestDate"
 import { AdminRequestType } from "../../../../utils/exchange"
 import { ExchangeStatus } from "./ExchangeStatus"
+import { listEmailEnrollments } from "../../../../utils/mail"
 
 type Props = {
     enrollment: CourseUnitEnrollment
@@ -109,7 +110,16 @@ export const StudentEnrollmentCard = ({
                 {open &&
                     <AdminRequestCardFooter
                         nmecs={[enrollment.user_nmec]}
-                        exchangeMessage={""}
+                        exchangeMessage={
+                            listEmailEnrollments(
+                                enrollment.options.map(option => ({
+                                    participant_nmec: enrollment.user_nmec,
+                                    goes_to: option.course_unit.name,
+                                    course: option.course_unit.course,
+                                    course_unit_id: option.course_unit.id
+                                }))
+                            )
+                        }
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}
                         setExchange={setEnrollmentState}
