@@ -9,6 +9,7 @@ import { StudentRequestCardStatus } from "../../../../../utils/requests"
 import { RequestCardStatus } from "./RequestCardStatus"
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext"
 import { RequestCardPendingMotive } from "./RequestCardPendingMotive"
+import studentInfoService from "../../../../../api/services/studentInfo"
 
 type Props = {
     name: string
@@ -52,7 +53,7 @@ export const CommonCardHeader = ({
     return <CardHeader
         className="flex flex-row gap-x-2 items-center p-4"
     >
-        <img className="w-10 h-10 rounded-full shadow-md" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png"></img>
+        <img className="w-10 h-10 rounded-full shadow-md" src={studentInfoService.getStudentPictureUrl(username)}></img>
         <div className="flex flex-row justify-between items-center w-full">
             <div className="flex flex-col w-full">
                 <div className="flex flex-row justify-between w-full items-center">
