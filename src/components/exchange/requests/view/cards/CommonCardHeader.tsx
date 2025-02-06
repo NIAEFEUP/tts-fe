@@ -1,5 +1,5 @@
 import { ArchiveBoxIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline"
-import { DirectExchangeRequest, MarketplaceRequest } from "../../../../../@types"
+import { DirectExchangeParticipant, DirectExchangeRequest, MarketplaceRequest } from "../../../../../@types"
 import { Button } from "../../../../ui/button"
 import { CardDescription, CardHeader, CardTitle } from "../../../../ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../../ui/tooltip"
@@ -42,7 +42,12 @@ export const CommonCardHeader = ({
             ? StudentRequestCardStatus.ACCEPTED
             : StudentRequestCardStatus.PENDING
         );
+
+        if(request.type === "directexchange") {
+            (request as DirectExchangeRequest).options = (request as DirectExchangeRequest).options.filter((option) => option.participant_nmec === username);
+        }
     }, [request]);
+
 
     return <CardHeader
         className="flex flex-row gap-x-2 items-center p-4"

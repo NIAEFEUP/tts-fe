@@ -4,7 +4,6 @@ import api from "../api/backend";
 const useSession = () => {
 
   const trySession = async (key) => {
-    console.log("Will this get retried???");
     try {
       const res = await fetch(`${api.BACKEND_URL}/${key}`, {
         method: "GET",
