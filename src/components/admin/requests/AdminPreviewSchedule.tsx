@@ -22,11 +22,12 @@ export const AdminPreviewSchedule = ({
     useEffect(() => {
         if(!originalSchedule) return;
 
-        const prevSchedule = originalSchedule.filter(
-            (classDescriptor) => !classesToAdd.some((newClass) => newClass.courseInfo.id === classDescriptor.courseInfo.id)
+        const prevSchedule = originalSchedule
+            .filter((classDescriptor) => classDescriptor.classInfo && classDescriptor.courseInfo)
+            .filter((classDescriptor) => !classesToAdd.some((newClass) => newClass.courseInfo.id === classDescriptor.courseInfo.id)
         );
 
-        setSchedule([...prevSchedule, ...classesToAdd]);
+        setSchedule([...prevSchedule, ...classesToAdd.filter((classDescriptor) => classDescriptor.classInfo && classDescriptor.courseInfo)]);
     }, [originalSchedule])
 
     return (
@@ -41,7 +42,7 @@ export const AdminPreviewSchedule = ({
                     <DialogTitle>Prever horário</DialogTitle>
                 </DialogHeader>
                 <ScheduleContext.Provider value={{
-                    originalExchangeSchedule: originalSchedule,
+                    originalExchangeSchedule: originalSchedule.filter((classDescriptor) => classDescriptor.classInfo && classDescriptor.courseInfo),
                     exchangeSchedule: schedule,
                     setExchangeSchedule: setSchedule,
                     enrolledCourseUnits: [],
