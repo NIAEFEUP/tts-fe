@@ -1,6 +1,5 @@
 import classNames from 'classnames'
 import { useState, useEffect } from 'react'
-
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
@@ -11,13 +10,15 @@ type Props = {
   classInfo: ClassInfo
   slotInfo: SlotInfo
   classes: ClassDescriptor[]
+  setLessonBoxConflict: (courseId: number, conflictData: boolean) => void
 }
 
 const LessonBox = ({
   courseInfo,
   classInfo,
   slotInfo,
-  classes
+  classes, 
+  setLessonBoxConflict
 }: Props) => {
   const classTitle = classInfo.name
   const lessonType = slotInfo.lesson_type
@@ -70,7 +71,13 @@ const LessonBox = ({
     }
 
     setConflict(newConflictInfo);
-  }, [classInfo, classes]);
+  }, [classInfo, classes, hasConflict]);
+
+  useEffect(() => {
+    if (conflict?.severe !== undefined){
+      setLessonBoxConflict(courseInfo.id, conflict?.severe);
+    }
+  }, [classInfo]);
 
   const showConflicts = () => {
     setConflictsShown(true)

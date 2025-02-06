@@ -9,6 +9,8 @@ const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
+const T_CLASS_CONFLICTS = Number(import.meta.env.VITE_APP_T_CLASS_CONFLICTS)
+
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -70,7 +72,7 @@ const convertHour = (hourNumber: string) => {
 }
 
 const isMandatory = (slot: SlotInfo): boolean => {
-  return slot.lesson_type !== "T" && slot.lesson_type !== "O";
+  return (T_CLASS_CONFLICTS || slot.lesson_type !== 'T') && slot.lesson_type !== 'O';
 }
 
 const conflictsSeverity = (first: SlotInfo, second: SlotInfo): number => {

@@ -25,3 +25,7 @@ services:
       - ./public:/usr/src/tts-fe/public
     ports:
       - 3100:80
+
+networks:
+  default:
+    name: tts-docker-network

@@ -1,43 +1,16 @@
-import { useEffect, useState } from 'react'
-
-const useLocalStorage = (key: string, initialValue?: any) => {
-  const [storedValue, setStoredValue] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : initialValue
-    } catch (error) {
-      console.warn(error)
-      return initialValue
-    }
-  })
-
-  const setValue = (value: any) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value
-
-      setStoredValue(valueToStore)
-
-      window.localStorage.setItem(key, JSON.stringify(valueToStore))
-    } catch (error) {
-      console.warn(error)
-    }
-  }
-  return [storedValue, setValue]
-}
+import { useEffect } from 'react'
+import useLocalStorage from './useLocalStorage'
 
 const useDarkMode = () => {
-  const [enabled, setEnabled] = useLocalStorage('dark-theme')
-
-  // @ts-ignore
-  const isEnabled = typeof enabledState === 'undefined' && enabled
+  const [enabled, setEnabled] = useLocalStorage('dark-theme', false)
 
   useEffect(() => {
     const className = 'dark'
     const bodyClass = window.document.body.classList
 
     // eslint-disable-next-line 
-    isEnabled ? bodyClass.add(className) : bodyClass.remove(className)
-  }, [enabled, isEnabled])
+    enabled ? bodyClass.add(className) : bodyClass.remove(className)
+  }, [enabled])
 
   return [enabled, setEnabled]
 }

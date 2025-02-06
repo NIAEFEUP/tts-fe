@@ -37,7 +37,7 @@
 }
 
 .schedule-main-right {
-  @apply w-full h-full pt-0 xl:pt-1;
+  @apply w-full pt-0 xl:pt-1;
 }
 
 /* Schedule Grid */
@@ -52,6 +52,11 @@
 .schedule-classes {
   @apply absolute top-0 w-full h-full;
 }
+
+.exchange-request-card {
+  @apply dark:border dark:border-white dark:bg-gray-800;
+}
+
 
 /* Columns */
 .schedule-column {

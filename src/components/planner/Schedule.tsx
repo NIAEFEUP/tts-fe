@@ -1,51 +1,31 @@
 import '../../styles/schedule.css'
 import classNames from 'classnames'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useMemo, useRef, useState } from 'react'
 import { ScheduleGrid, } from './schedules'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
 import PrintSchedule from './schedule/PrintSchedule'
-import { useContext } from 'react'
 import ScheduleTypes from './ScheduleType'
 import { ClassDescriptor, SlotInfo } from '../../@types'
-import CourseContext from '../../contexts/CourseContext'
-import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import { useShowGrid } from '../../hooks'
 import { maxHour, minHour, convertWeekdayLong, convertHour } from '../../utils'
 import SlotBoxes from './schedules/SlotBoxes'
+import ScheduleContext from '../../contexts/ScheduleContext'
+import { SyncLoader } from 'react-spinners'
+import { ThemeContext } from '../../contexts/ThemeContext'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
 
-const Schedule = () => {
-  const { pickedCourses } = useContext(CourseContext)
-  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
+type Props = {
+  classes: Array<ClassDescriptor>,
+  slots: Array<SlotInfo>
+}
 
-  const [classes, setClasses] = useState<ClassDescriptor[]>([])
-  const [slots, setSlots] = useState<SlotInfo[]>([])
-  const scheduleRef = useRef(null)
-
-  useEffect(() => {
-    //TODO: Improvements by functional programming
-    const newClasses = []
-    const option = multipleOptions[selectedOption]
-
-    for (let i = 0; i < option.course_options.length; i++) {
-      const course_info = pickedCourses.find((course) => course.id === option.course_options[i].course_id)
-      if (!course_info) continue;
-      const class_info = course_info.classes?.find(
-        (class_info) => class_info.id === option.course_options[i].picked_class_id
-      )
-
-      if (course_info === undefined || class_info === undefined) continue
-      newClasses.push({
-        courseInfo: course_info,
-        classInfo: class_info,
-      })
-    }
-
-    setClasses(newClasses)
-    setSlots(newClasses.map((newClass) => newClass.classInfo.slots).flat())
-  }, [multipleOptions, pickedCourses, selectedOption])
+const Schedule = ({
+  classes,
+  slots
+}: Props) => {
+  const scheduleRef = useRef(null);
 
   // TODO: Improvements by functional programming
   const slotTypes: string[] = useMemo(() => {
@@ -76,6 +56,9 @@ const Schedule = () => {
   const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<string[]>([])
   const [showGrid, setShowGrid] = useShowGrid()
 
+  const { loadingSchedule } = useContext(ScheduleContext);
+  const { enabled } = useContext(ThemeContext);
+
   return (
     <>
       {/*Schedule desktop*/}
@@ -105,24 +88,31 @@ const Schedule = () => {
             <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
               <ScheduleGrid showGrid={showGrid} />
               <div className="schedule-classes">
-                <SlotBoxes
-                  slots={slots}
-                  hiddenLessonsTypes={hiddenLessonsTypes}
-                  classes={classes}
-                />
+                {loadingSchedule ? (
+                  <div className="flex flex-col justify-center items-center h-full w-full gap-8">
+                    <p className="text-lg text-black dark:text-white">Carregando</p>
+                    <SyncLoader color={ enabled ? "#fff" : "#000" } size={8} />
+                  </div>
+                ) : (
+                  <SlotBoxes
+                    slots={slots}
+                    hiddenLessonsTypes={hiddenLessonsTypes}
+                    classes={classes}
+                  />
+                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="flex justify-between gap-5 pl-16">
-          <div className="flex flex-wrap gap-4 gap-y-1 text-sm text-gray-600 dark:text-white 2xl:gap-y-2 2xl:text-base">
+        <div className="flex justify-end gap-5 pl-16">
+          <div className="flex gap-x-4">
             <ScheduleTypes types={slotTypes} hiddenLessonsTypes={hiddenLessonsTypes} setHiddenLessonsTypes={setHiddenLessonsTypes} />
-          </div>
-          <div className="flex gap-2">
-            <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
-            <PrintSchedule component={scheduleRef} />
+            <div className="flex flex-row gap-x-2">
+              <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
+              <PrintSchedule component={scheduleRef} />
+            </div>
           </div>
         </div>
       </div>
