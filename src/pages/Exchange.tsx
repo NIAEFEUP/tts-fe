@@ -125,15 +125,15 @@ const ExchangePage = () => {
                   sidebarStatus={sidebarStatus}
                   setExchangeSidebarStatus={setSidebarStatus}
                 />
-                :
-                <div className="flex flex-col items-center justify-center gap-4 h-full mt-16">
+                :<>
+                {!loadingSchedule && <div className="flex flex-col items-center justify-center gap-4 h-full mt-16">
                   <FaceFrownIcon className="w-12 h-12" />
                   <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
                   {/* TODO: Open the send feedback modal with something already written  */}
                   {/*<p className="text-center">Gostavas de utilizar esta funcionalidade no teu curso?</p> */}
                   {/*   <Button onClick={() => { }}>Sim!</Button> */}
                 </div>
-              }
+              }</>}
             </TabsContent>
             <TabsContent value="enrollments">
               <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
