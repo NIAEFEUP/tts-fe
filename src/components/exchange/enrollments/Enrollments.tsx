@@ -34,6 +34,7 @@ export const Enrollments = ({
 
   const [enrollCourses, setEnrollCourses] = useLocalStorage<CourseInfo[]>("enrollCourses", []);
   const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map());
+  const [disenrollmentChoices, setDisenrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map());
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const { setMajors } = useContext(MajorContext);
 
@@ -48,18 +49,15 @@ export const Enrollments = ({
   }, [])
 
   useEffect(() => {
-    if (!enrollCourses || enrollCourses.length === 0) return;
+    if (!enrollCourses) return;
 
+    const newEnrollmentChoices = new Map();
     enrollCourses.forEach((course) => {
-      // if course is not in enrollmentChoices map, add it
-      if (!enrollmentChoices.has(course.id)) {
-        const newEnrollmentChoices = new Map(enrollmentChoices);
-        newEnrollmentChoices.set(course.id, { type: CourseUnitEnrollmentType.ENROLLING });
-        setEnrollmentChoices(newEnrollmentChoices);
-      }
+      newEnrollmentChoices.set(course.id, { type: CourseUnitEnrollmentType.ENROLLING });
     });
+    setEnrollmentChoices(newEnrollmentChoices);
 
-  }, [enrollCourses, enrollmentChoices]);
+  }, [enrollCourses]);
 
   return (
     <CourseContext.Provider value={{
@@ -108,8 +106,8 @@ export const Enrollments = ({
               <AlreadyEnrolledCourseUnitCard
                 key={"already-enrolled-" + courseUnit.id}
                 courseUnit={courseUnit}
-                enrollmentChoices={enrollmentChoices}
-                setEnrollmentChoices={setEnrollmentChoices}
+                enrollmentChoices={disenrollmentChoices}
+                setEnrollmentChoices={setDisenrollmentChoices}
               />
             ))}
           </div>
@@ -118,7 +116,7 @@ export const Enrollments = ({
             <form onSubmit={async (e) => {
               e.preventDefault();
 
-              const res = await courseUnitEnrollmentService.submitEnrollmentRequest(enrollmentChoices);
+              const res = await courseUnitEnrollmentService.submitEnrollmentRequest(new Map([...enrollmentChoices, ...disenrollmentChoices]));
 
               if (res.ok) {
                 setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS);
