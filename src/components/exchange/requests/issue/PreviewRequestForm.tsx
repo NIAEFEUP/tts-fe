@@ -101,10 +101,13 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Justifica a urgência do teu pedido de troca."
-                      />
+                      <>
+                        <Textarea
+                          {...field}
+                          placeholder="Justifica a urgência do teu pedido de troca. Irá ser enviado diretamente para a comissão de inscrição de turmas."
+                        />
+                        <p className="text-sm font-bold">Se quiseres enviar ficheiros como comprovativo, podes enviar para a comissão de inscrição de turmas.</p>
+                      </>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
