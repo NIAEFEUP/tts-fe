@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction, useState } from "react"
-import { CourseInfo } from "../../../../@types"
+import { CourseInfo, CreateRequestData } from "../../../../@types"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { Desert } from "../../../svgs"
 import { Button } from "../../../ui/button"
@@ -14,7 +14,7 @@ import { exchangeErrorToText } from "../../../../utils/error"
 type Props = {
   selectedCourseUnits: CourseInfo[]
   setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
-  requests: any
+  requests: Map<number, CreateRequestData>
   setRequests: Dispatch<SetStateAction<any>>
   setSelectedCourseUnits: Dispatch<SetStateAction<CourseInfo[]>>
   hasStudentToExchange: boolean
@@ -41,9 +41,12 @@ export const CustomizeRequest = ({
       setPreviewingForm(false);
       toast({
         title: 'Pedido submetido com sucesso!',
-        description: 'A proposta de troca foi realizada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.'
+        description: 
+          exchangeRequestService.isDirectExchange(requests.values())
+            ? 'A proposta de troca foi realizada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.'
+            : `${urgentMessage ? 'O pedido foi enviado para a comissão de inscrição de turmas' : 'O pedido de troca foi submetido no marketplace. Podes consultar o estado na aba "Enviados"'}`
       });
-    }else{
+    } else{
       setPreviewingForm(false);
       toast({
         title: 'Erro ao submeter o pedido.',
