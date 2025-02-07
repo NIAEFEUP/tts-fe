@@ -142,7 +142,8 @@ const exchangeRequestService = {
   adminMarkRequestAsAwaitingInformation,
   verifyExchangeRequest,
   acceptDirectExchangeRequest,
-  cancelMarketplaceRequest
+  cancelMarketplaceRequest,
+  isDirectExchange
 }
 
 export default exchangeRequestService;
