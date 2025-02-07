@@ -94,6 +94,7 @@ const adminMarkRequestAsAwaitingInformation = async (requestType: AdminRequestTy
 }
 
 const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
+  token = atob(token);
   return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
     method: "POST",
     headers: {
