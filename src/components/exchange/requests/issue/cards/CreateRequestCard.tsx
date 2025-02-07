@@ -49,7 +49,7 @@ export const CreateRequestCard = ({
       setSelectedDestinationClass(null);
       setBeforePreviewClass(null);
     }
-  }, [selectedDestinationStudent])
+  }, [selectedDestinationStudent, hasStudentToExchange])
 
   useEffect(() => {
     if (!originalExchangeSchedule || !courseInfo) return;
@@ -83,9 +83,10 @@ export const CreateRequestCard = ({
       newRequests.delete(courseInfo.id)
       setRequests(newRequests);
     }
-
-    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => beforePreviewClass.filter((item) => item.courseInfo.id === scheduleItem.courseInfo.id).length === 0);
-    setExchangeSchedule(newExchangeSchedule.concat(beforePreviewClass));
+  
+    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id !== courseInfo.id);
+    newExchangeSchedule.push(...originalExchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id === courseInfo.id));
+    setExchangeSchedule(newExchangeSchedule);
 
     setSelectedCourseUnits((prev) => prev.filter((currentCourseInfo) => currentCourseInfo.id !== courseInfo.id));
   }
