@@ -9,8 +9,6 @@ const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-const T_CLASS_CONFLICTS = Number(import.meta.env.VITE_APP_T_CLASS_CONFLICTS)
-
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -71,21 +69,21 @@ const convertHour = (hourNumber: string) => {
   return `${hour}:${minutes}`
 }
 
-const isMandatory = (slot: SlotInfo): boolean => {
-  return (T_CLASS_CONFLICTS || slot.lesson_type !== 'T') && slot.lesson_type !== 'O';
+const isMandatory = (slot: SlotInfo, tClassConflict: boolean): boolean => {
+  return (tClassConflict || slot.lesson_type !== 'T') && slot.lesson_type !== 'O';
 }
 
-const conflictsSeverity = (first: SlotInfo, second: SlotInfo): number => {
-  return (isMandatory(first) && isMandatory(second)) ? 2 : 1;
+const conflictsSeverity = (first: SlotInfo, second: SlotInfo, tClassConflict: boolean): number => {
+  return (isMandatory(first, tClassConflict) && isMandatory(second, tClassConflict)) ? 2 : 1;
 }
 
-const classesConflictSeverity = (first: ClassInfo, second: ClassInfo): number => {
+const classesConflictSeverity = (first: ClassInfo, second: ClassInfo, tClassConflict: boolean): number => {
   let maxSeverity = 0;
 
   for (const slot of first.slots) {
     for (const otherSlot of second.slots) {
       if (schedulesConflict(slot, otherSlot)) {
-        maxSeverity = Math.max(maxSeverity, conflictsSeverity(slot, otherSlot));
+        maxSeverity = Math.max(maxSeverity, conflictsSeverity(slot, otherSlot, tClassConflict));
       }
     }
   }
