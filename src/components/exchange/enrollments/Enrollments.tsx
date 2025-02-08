@@ -112,7 +112,7 @@ export const Enrollments = ({
             ))}
           </div>
 
-          {(enrollmentChoices.size > 0) &&
+          {(enrollmentChoices.size > 0 || disenrollmentChoices.size > 0) &&
             <form onSubmit={async (e) => {
               e.preventDefault();
 
