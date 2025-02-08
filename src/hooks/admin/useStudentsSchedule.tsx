@@ -21,7 +21,7 @@ export default (nmec: string) => {
 
   }
 
-  const { data, error, mutate, isValidating } = useSWR("schedule", getSchedule, {});
+  const { data, error, mutate, isValidating } = useSWR("schedule-" + nmec, getSchedule, {});
   const schedule = useMemo(() => data ? data.schedule : null, [data]);
   const sigarraSynced = data ? data.noChanges : null;
 
