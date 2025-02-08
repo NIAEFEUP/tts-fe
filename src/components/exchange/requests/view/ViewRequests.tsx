@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useRef, useState } from "react";
 import { DirectExchangeRequest, MarketplaceRequest } from "../../../../@types";
 import ScheduleContext from "../../../../contexts/ScheduleContext";
 import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
@@ -13,6 +13,7 @@ import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
 import { ExchangeSidebarStatus } from "../../../../pages/Exchange";
+import { MoonLoader } from "react-spinners";
 
 type Props = {
     setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
@@ -53,6 +54,34 @@ const RequestCardSkeletons = () => {
     </>
 }
 
+const ViewMoreButton = ({
+    hasNext,
+    setSize,
+    size,
+    isValidating
+}: {
+    hasNext: boolean
+    setSize: Dispatch<SetStateAction<number>>
+    size: number
+    isValidating: boolean
+}) => {
+    return <>
+        {hasNext &&
+            <Button
+                variant="secondary"
+                onClick={() => {
+                    setSize(size + 1)
+                }}
+            >
+                {isValidating 
+                    ? <MoonLoader size={20} />
+                    : "Ver mais"
+                }
+            </Button>
+        }
+    </>
+}
+
 export const ViewRequests = ({
     setExchangeSidebarStatus
 }: Props) => {
@@ -66,30 +95,9 @@ export const ViewRequests = ({
     // This is to keep track of the request of the request card that is currently open
     const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
-    const { data, size, setSize, isLoading } = useMarketplaceRequests(
+    const { requests, size, setSize, isLoading, hasNext, isValidating } = useMarketplaceRequests(
         filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter], classesFilter
     );
-
-    const requests = data ? [].concat(...data) : [];
-
-    const onScroll = () => {
-        if (!requestCardsContainerRef.current) return;
-
-        if ((requestCardsContainerRef.current.scrollHeight - requestCardsContainerRef.current.scrollTop)
-            <= requestCardsContainerRef.current.clientHeight + 100
-        ) {
-            setSize(size + 1);
-        }
-    }
-
-    useEffect(() => {
-        if (!requestCardsContainerRef.current) return;
-
-        requestCardsContainerRef.current.addEventListener('scroll', onScroll);
-        return () => {
-            if (requestCardsContainerRef.current) requestCardsContainerRef.current.removeEventListener('scroll', onScroll);
-        }
-    }, []);
 
     return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
         <div className="flex flex-row justify-between items-center w-full">
@@ -138,6 +146,12 @@ export const ViewRequests = ({
                                                 <RequestCard />
                                             </CommonRequestCard>
                                         ))}
+                                        <ViewMoreButton
+                                            hasNext={hasNext}
+                                            setSize={setSize}
+                                            size={size}
+                                            isValidating={isValidating}
+                                        />
                                     </EmptyRequestGuard>
                                 }
                             </>
@@ -170,6 +184,12 @@ export const ViewRequests = ({
                                 </CommonRequestCard>
 
                             ))}
+                            <ViewMoreButton
+                                hasNext={hasNext}
+                                setSize={setSize}
+                                size={size}
+                                isValidating={isValidating}
+                            />
                         </EmptyRequestGuard>
                     }
                 </div>
@@ -198,6 +218,12 @@ export const ViewRequests = ({
                                     />
                                 </CommonRequestCard>
                             ))}
+                            <ViewMoreButton
+                                hasNext={hasNext}
+                                setSize={setSize}
+                                size={size}
+                                isValidating={isValidating}
+                            />
                         </EmptyRequestGuard>
                     }
                 </div>
