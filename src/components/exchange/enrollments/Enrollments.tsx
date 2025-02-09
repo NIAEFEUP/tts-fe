@@ -9,7 +9,6 @@ import { Button } from "../../ui/button";
 import courseUnitEnrollmentService from "../../../api/services/courseUnitEnrollmentService";
 import { ExchangeSidebarStatus } from "../../../pages/Exchange"
 import { useToast } from "../../ui/use-toast";
-import useLocalStorage from "../../../hooks/useLocalStorage";
 import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
 import { AlreadyEnrolledCourseUnitCard } from "./AlreadyEnrolledCourseUnitCard";
 import { EnrollingCourseUnitCard } from "./EnrollingCourseUnitCard";
@@ -32,7 +31,7 @@ export const Enrollments = ({
 }: Props) => {
   const parentCourseContext = useContext(CourseContext);
 
-  const [enrollCourses, setEnrollCourses] = useLocalStorage<CourseInfo[]>("enrollCourses", []);
+  const [enrollCourses, setEnrollCourses] = useState<CourseInfo[]>([]);
   const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map());
   const [disenrollmentChoices, setDisenrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map());
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
@@ -125,6 +124,8 @@ export const Enrollments = ({
                   description: 'Pedido de inscrição submetida com sucesso',
                 });
                 setEnrollCourses([]);
+                setEnrollmentChoices(new Map());
+                setDisenrollmentChoices(new Map());
               } else {
                 const json = await res.json();
                 toast({
