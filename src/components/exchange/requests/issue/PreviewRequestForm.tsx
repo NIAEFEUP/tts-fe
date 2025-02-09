@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
 import ConflictsContext from "../../../../contexts/ConflictsContext";
+import exchangeRequestService from "../../../../api/services/exchangeRequestService";
 
 type Props = {
   requests: Map<number, CreateRequestData>
@@ -49,7 +50,6 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
     <DialogTrigger asChild>
       <Button
         className="w-full"
-        disabled={isConflictSevere}
       >
         Submeter pedido
       </Button>
@@ -87,13 +87,14 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
       {requests.size > 0 &&
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 items-center mx-auto">
-            <div className="flex flex-row gap-x-2 items-center">
+            {!exchangeRequestService.isDirectExchange(requests.values()) && <div className="flex flex-row gap-x-2 items-center">
               <Checkbox
                 checked={sendUrgentMessage}
                 onCheckedChange={(checked: boolean) => setSendUrgentMessage(checked)}
               />
               <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p>
             </div>
+            }
             {sendUrgentMessage &&
               <FormField
                 control={form.control}
@@ -117,6 +118,7 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
             <Button
               className="flex flex-row gap-x-2 success-button"
               type="submit"
+              disabled={sendUrgentMessage ? false : isConflictSevere}
             >
               {submittingRequest
                 ? <p>A processar pedido...</p>
