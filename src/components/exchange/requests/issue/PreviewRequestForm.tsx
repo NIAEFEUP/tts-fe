@@ -90,7 +90,10 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
             {!exchangeRequestService.isDirectExchange(requests.values()) && <div className="flex flex-row gap-x-2 items-center">
               <Checkbox
                 checked={sendUrgentMessage}
-                onCheckedChange={(checked: boolean) => setSendUrgentMessage(checked)}
+                onCheckedChange={(checked: boolean) => {
+                  setSendUrgentMessage(checked)
+                  if(!checked) form.setValue("urgentMessage", "")
+                }}
               />
               <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p>
             </div>
