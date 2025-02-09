@@ -15,7 +15,7 @@ export const ExchangeCoursePicker = ({
   enrollCourses,
   setEnrollCourses
 }: Props) => {
-  const [checkboxedCourses, setCheckboxedCourses] = useLocalStorage("enrollCoursesCheckboxedCourses", []);
+  const [checkboxedCourses, setCheckboxedCourses] = useState([]);
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [selectedMajor, setSelectedMajor] = useLocalStorage<Major>("enrollMajor",null);
