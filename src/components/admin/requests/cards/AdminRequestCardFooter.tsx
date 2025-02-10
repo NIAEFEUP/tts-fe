@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-import { CourseUnitEnrollment, DirectExchangeRequest, UrgentRequest } from "../../../../@types"
+import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, UrgentRequest } from "../../../../@types"
 import { AdminRequestType } from "../../../../utils/exchange"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { mailtoStringBuilder } from "../../../../utils/mail"
@@ -15,7 +15,7 @@ type Props = {
     requestType: AdminRequestType,
     requestId: number,
     showTreatButton?: boolean,
-    setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment>>
+    setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest>>
     courseId: Array<number>
 }
 

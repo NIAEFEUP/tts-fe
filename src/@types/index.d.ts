@@ -132,6 +132,7 @@ export type MarketplaceRequest = {
   classes?: Array<ClassInfo>,
   pending_motive?: DirectExchangePendingMotive,
   accepted: boolean,
+  admin_state: string,
   canceled: boolean
 }
 

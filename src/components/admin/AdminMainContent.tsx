@@ -8,6 +8,7 @@ import { AdminRequestState } from "../../contexts/admin/RequestFiltersContext";
 import RequestFiltersContext from "../../contexts/admin/RequestFiltersContext";
 import { AdminPagination } from "./AdminPagination";
 import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext";
+import { AdminMarketplaceExhanges } from "./requests/AdminMarketplaceExhanges";
 
 export const AdminMainContent = () => {
     const [activeCourse, setActiveCourse] = useState<number | undefined>(undefined);
@@ -39,23 +40,29 @@ export const AdminMainContent = () => {
                     </div>
                     <Tabs defaultValue="exchange-with-student">
                         <TabsList className="w-full">
-                            <TabsTrigger 
+                            <TabsTrigger
                                 value="exchange-with-student"
                                 onClick={() => setCurrPage(1)}
                             >
                                 Trocas entre estudantes
                             </TabsTrigger>
-                            <TabsTrigger 
+                            <TabsTrigger
                                 value="exchange-singular"
                                 onClick={() => setCurrPage(1)}
                             >
                                 Trocas individuais
                             </TabsTrigger>
-                            <TabsTrigger 
+                            <TabsTrigger
                                 value="enrollments"
                                 onClick={() => setCurrPage(1)}
                             >
                                 Inscrições
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="admin-marketplace"
+                                onClick={() => setCurrPage(1)}
+                            >
+                                Marketplace
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="exchange-with-student">
@@ -66,6 +73,9 @@ export const AdminMainContent = () => {
                         </TabsContent>
                         <TabsContent value="enrollments">
                             <StudentEnrollments />
+                        </TabsContent>
+                        <TabsContent value="admin-marketplace">
+                            <AdminMarketplaceExhanges />
                         </TabsContent>
 
                         <div className="mt-8">
