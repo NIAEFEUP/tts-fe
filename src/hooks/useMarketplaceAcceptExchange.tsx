@@ -17,8 +17,8 @@ export default (request: MarketplaceRequest | DirectExchangeRequest, selectedOpt
                     {
                         courseUnitId: option.course_info.id,
                         courseUnitName: option.course_info.name,
-                        classNameRequesterGoesTo: (option as ExchangeOption).class_issuer_goes_from.name,
-                        classNameRequesterGoesFrom: (option as ExchangeOption).class_issuer_goes_to.name,
+                        classNameRequesterGoesTo: (option as ExchangeOption).class_issuer_goes_from?.name,
+                        classNameRequesterGoesFrom: (option as ExchangeOption).class_issuer_goes_to?.name,
                         other_student: {
                             name: request.issuer_name,
                             mecNumber: request.issuer_nmec

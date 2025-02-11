@@ -93,6 +93,7 @@ export const CommonRequestCard = ({
       request.options.forEach((option) => {
         if (updatedOptions.get(option.course_info.acronym) === true) {
           const matchingClass = (type === "directexchange" ? option.class_participant_goes_to : option.class_issuer_goes_from);
+          if(!matchingClass) return;
           matchingClass.slots.forEach((slot) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,
