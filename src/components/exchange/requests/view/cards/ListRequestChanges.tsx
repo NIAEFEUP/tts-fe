@@ -79,8 +79,8 @@ export const ListRequestChanges = ({
                             </TableHeader>
                             <TableBody>
                                 <TableRow>
-                                    <TableCell>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_from.name : (option as ExchangeOption).class_issuer_goes_from.name}</TableCell>
-                                    <TableCell>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_to.name : (option as ExchangeOption).class_issuer_goes_to.name}</TableCell>
+                                    <TableCell>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_from.name : (option as ExchangeOption).class_issuer_goes_from?.name}</TableCell>
+                                    <TableCell>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_to.name : (option as ExchangeOption).class_issuer_goes_to?.name}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>

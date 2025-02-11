@@ -109,7 +109,7 @@ export const AdminMarketplaceExhangesCard = ({
                         exchange.options.map(option => ({
                             participant_name: undefined,
                             participant_nmec: exchange.issuer_nmec,
-                            goes_from: option.class_issuer_goes_from.name,
+                            goes_from: option.class_issuer_goes_from?.name,
                             goes_to: option.class_issuer_goes_to.name,
                             course_acronym: option.course_info.acronym
                         }))
