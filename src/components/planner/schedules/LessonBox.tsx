@@ -1,9 +1,10 @@
 import classNames from 'classnames'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
 import { getLessonBoxTime, schedulesConflict, conflictsSeverity, getLessonBoxStyles, maxHour, minHour, getClassTypeClassName, getLessonTypeLongName } from '../../../utils'
+import ScheduleContext from '../../../contexts/ScheduleContext'
 
 type Props = {
   courseInfo: CourseInfo
@@ -41,6 +42,7 @@ const LessonBox = ({
   const [isHovered, setIsHovered] = useState(false)
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
+  const {originalExchangeSchedule} = useContext(ScheduleContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
@@ -69,7 +71,13 @@ const LessonBox = ({
         }
       }
     }
+    
+    const hasNewClasses = !newConflictInfo.conflictingClasses.every((conflictingClass) => originalExchangeSchedule.some((originalClass) => originalClass.classInfo.id === conflictingClass.classInfo.id));
 
+    if(!hasNewClasses && newConflictInfo.severe) {
+      newConflictInfo.severe = false;
+    }
+    
     setConflict(newConflictInfo);
   }, [classInfo, classes, hasConflict]);
 

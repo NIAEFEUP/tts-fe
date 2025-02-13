@@ -1,8 +1,8 @@
-import { CourseUnitEnrollment, DirectExchangeRequest, UrgentRequest } from "../../../../@types"
+import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, UrgentRequest } from "../../../../@types"
 import { cn } from "../../../../utils"
 
 type Props = {
-    exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment
+    exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest
 }
 
 type ExchangeStatusProperty = {
@@ -10,7 +10,7 @@ type ExchangeStatusProperty = {
     color: string
 }
 
-const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment) => {
+const exchangeStatusProperties = (exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest) => {
     switch (exchange.admin_state) {
         case "accepted": case "treated":
             return {

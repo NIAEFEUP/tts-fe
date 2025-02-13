@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-import { CourseUnitEnrollment, DirectExchangeRequest, UrgentRequest } from "../../../../@types"
+import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, UrgentRequest } from "../../../../@types"
 import { AdminRequestType } from "../../../../utils/exchange"
 import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { mailtoStringBuilder } from "../../../../utils/mail"
@@ -15,7 +15,7 @@ type Props = {
     requestType: AdminRequestType,
     requestId: number,
     showTreatButton?: boolean,
-    setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment>>
+    setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest>>
     courseId: Array<number>
 }
 
@@ -29,6 +29,9 @@ const rejectRequest = async (
         await exchangeRequestService.adminRejectExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+
         if(requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE) {
             a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida não pode ser efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
         } else {
@@ -51,11 +54,14 @@ const acceptRequest = async (
         await exchangeRequestService.adminAcceptExchangeRequest(requestType, id);
 
         const a = document.createElement('a');
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
         if(requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE) {
             a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida foi efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
         } else {
             a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Inscrição em Unidades Curriculares&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AA alteração pedida foi efetuada.%0D%0A${exchangeMessage}%0D%0A%0D%0ACmpts,%0D%0ADaniel Silva%0D%0A(pela comissão de inscrição em turmas)`;
         }
+
         a.click();
     } catch (e) {
         console.error(e);

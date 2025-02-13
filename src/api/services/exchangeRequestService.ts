@@ -46,7 +46,7 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
 const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceRequest[]> => {
   return fetch(url).then(async (res) => {
     const json = await res.json();
-    return json.data;
+    return json;
   }).catch((e) => {
     console.error(e);
     return [];

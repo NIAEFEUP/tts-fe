@@ -96,7 +96,7 @@ export const RequestCard = () => {
         <CardContent className={`p-0 px-4 ${open ? "" : "hidden"}`}>
           {request.options?.map((option) => (
             <ListRequestChanges
-              key={"marketplace-request-card" + option.course_info.id}
+              key={crypto.randomUUID()}
               option={option}
               selectedOptionsHook={[selectedOptions, setSelectedOptions]}
               setSelectAll={setSelectAll}

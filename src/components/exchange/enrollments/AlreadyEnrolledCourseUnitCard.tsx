@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { CourseInfo } from "../../../@types"
 import { Button } from "../../ui/button"
 import { Card, CardHeader, CardTitle } from "../../ui/card"
@@ -21,6 +21,12 @@ export const AlreadyEnrolledCourseUnitCard = ({
     setEnrollmentChoices
 }: Props) => {
     const [removeSelected, setRemoveSelected] = useState<boolean>(false);
+
+    useEffect(() => {
+        if(enrollmentChoices.size === 0) {
+            setRemoveSelected(false);
+        }
+    }, [enrollmentChoices])
 
     return (
         <Card>
@@ -47,7 +53,7 @@ export const AlreadyEnrolledCourseUnitCard = ({
                 >
                     {removeSelected 
                         ? "Cancelar pedido"
-                        : "Anular inscrição"
+                        : "Anular inscrição em turma"
                     }
                 </Button>
             </CardHeader>
