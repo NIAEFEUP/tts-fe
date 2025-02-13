@@ -13,43 +13,41 @@ const CsvExport = () => {
   const { pickedCourses } = useContext(CourseContext);
   const { multipleOptions } = useContext(MultipleOptionsContext);
 
-  const GET_NAMES = true;
-  const GET_IDS = false;
+  enum GetOptionsBy {NAME, ID}
 
-  const getOptions = (getByName: boolean): string[] => {
-    return pickedCourses.map(course => {
-
-      const line = getByName
-        ? [course.course_unit_year, csvEncode(course.name), course.acronym]
-        : [course.id];
+  const getOptions = (getByName: GetOptionsBy): string[] => 
+    pickedCourses.map(course => {
+      const baseInfo = getByName === GetOptionsBy.NAME ? 
+            [course.course_unit_year, csvEncode(course.name), course.acronym] :
+            [course.id];
   
-      multipleOptions.forEach(option => {
+      const classValues = multipleOptions.map(option => {
         const courseOption = option.course_options.find(co => co.course_id === course.id);
-        const pickedClass = courseOption
-          ? course.classes.find(c => c.id === courseOption.picked_class_id)
-          : undefined;
+        const pickedClass = courseOption ? 
+              course.classes.find(c => c.id === courseOption.picked_class_id) : 
+              undefined;
   
-        const value = getByName ? pickedClass?.name : pickedClass?.id?.toString();
-        line.push(csvEncode(value || ''));
+        return csvEncode(getByName === GetOptionsBy.NAME ? pickedClass?.name : pickedClass?.id?.toString() || '');
       });
   
-      return line.join(',');
-    });
-  };
+      return [...baseInfo, ...classValues].join(',');
+    }
+  );
+  
 
   const exportCSV = () => {
     const header = ['Ano', 'Nome', 'Sigla']
     multipleOptions.forEach((option) => header.push(option.name))
     header.push(pickedCourses.length.toString())
 
-    const lines = getOptions(GET_NAMES);
+    const lines = getOptions(GetOptionsBy.NAME);
 
     lines.push("////----////----////----////----////----////----////")
 
     const header_ids = ['UC_ID']
     multipleOptions.forEach((option) => header_ids.push(option.name + "_ID"))
 
-    const lines_id = getOptions(GET_IDS);
+    const lines_id = getOptions(GetOptionsBy.ID);
 
     const csv = [header.join(','), lines.flat().join('\n'), header_ids.join(','), lines_id.flat().join('\n')].join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
