@@ -1,14 +1,31 @@
 import { useContext, useEffect, useState } from "react";
-import { ClassDescriptor, SlotInfo } from "../../../@types";
+import { ClassDescriptor, CourseInfo, CourseOption, ImportedCourses, SlotInfo } from "../../../@types";
 import CourseContext from "../../../contexts/CourseContext";
 import MultipleOptionsContext from "../../../contexts/MultipleOptionsContext";
 import Schedule from "../Schedule";
+import { importSchedule } from "../../../utils/ImportSchedule";
 
 const PlannerSchedule = () => {
-  const { pickedCourses } = useContext(CourseContext);
-  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext);
+  const { pickedCourses,setPickedCourses } = useContext(CourseContext);
+  const { multipleOptions,setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
   const [classes, setClasses] = useState<ClassDescriptor[]>([]);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const pastedClasses = params.get('classes')
+
+    if(pastedClasses !== "" ) { 
+      importSchedule(
+        pastedClasses,
+        multipleOptions,
+        setMultipleOptions,
+        selectedOption,
+        pickedCourses,
+        setPickedCourses
+      )
+    }
+  },[])
 
   useEffect(() => {
     //TODO: Improvements by functional programming
@@ -35,9 +52,9 @@ const PlannerSchedule = () => {
 
 
   return <Schedule
-    classes={classes}
-    slots={slots}
-  />;
+      classes={classes}
+      slots={slots}
+    />;
 }
 
 export default PlannerSchedule;

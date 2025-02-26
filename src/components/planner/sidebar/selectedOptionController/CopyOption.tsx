@@ -38,7 +38,10 @@ const CopyOption = ({ currentOption, className }: Props) => {
 
   const copyOption = () => {
     const scheduleHash = optionToString(currentOption);
-    navigator.clipboard.writeText(scheduleHash);
+    const copyLink = scheduleHash === ""
+      ? ""
+      : window.location.origin + `/planner?classes=${scheduleHash}`
+    navigator.clipboard.writeText(copyLink);
     setIcon(true);
 
     if (scheduleHash === "") {
