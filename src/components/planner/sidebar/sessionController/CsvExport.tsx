@@ -4,6 +4,7 @@ import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 import { csvEncode } from '../../../../utils/io'
+import api from '../../../../api/backend'
 
 
 /**
@@ -13,43 +14,33 @@ const CsvExport = () => {
   const { pickedCourses } = useContext(CourseContext);
   const { multipleOptions } = useContext(MultipleOptionsContext);
 
-  enum GetOptionsBy {NAME, ID}
+  const getOptions = async (): Promise<string[]> => {
+    const lines = [];
 
-  const getOptions = (getByName: GetOptionsBy): string[] => 
-    pickedCourses.map(course => {
-      const baseInfo = getByName === GetOptionsBy.NAME ? 
-            [course.course_unit_year, csvEncode(course.name), course.acronym] :
-            [course.id];
-  
+    for(const course of pickedCourses) {
+      const baseInfo = [course.course_id, course.course_unit_year, csvEncode(course.name), course.acronym]
+
       const classValues = multipleOptions.map(option => {
         const courseOption = option.course_options.find(co => co.course_id === course.id);
         const pickedClass = courseOption ? 
               course.classes.find(c => c.id === courseOption.picked_class_id) : 
               undefined;
-  
-        return csvEncode(getByName === GetOptionsBy.NAME ? pickedClass?.name : pickedClass?.id?.toString() || '');
+
+        return csvEncode(pickedClass?.name);
       });
-  
-      return [...baseInfo, ...classValues].join(',');
+      lines.push([...baseInfo, ...classValues].join(','));
     }
-  );
+
+    return lines;
+  }
   
+  const exportCSV = async () => {
+    const header = ['ID_Curso', 'Ano', 'Nome', 'Sigla']
+    multipleOptions.forEach((option) => header.push(option.name));
 
-  const exportCSV = () => {
-    const header = ['Ano', 'Nome', 'Sigla']
-    multipleOptions.forEach((option) => header.push(option.name))
-    header.push(pickedCourses.length.toString())
+    const lines = await getOptions();
 
-    const lines = getOptions(GetOptionsBy.NAME);
-
-    lines.push("////----////----////----////----////----////----////")
-
-    const header_ids = ['UC_ID']
-    multipleOptions.forEach((option) => header_ids.push(option.name + "_ID"))
-
-    const lines_id = getOptions(GetOptionsBy.ID);
-
-    const csv = [header.join(','), lines.flat().join('\n'), header_ids.join(','), lines_id.flat().join('\n')].join('\n')
+    const csv = [header.join(','), lines.flat().join('\n')].join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')

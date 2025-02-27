@@ -7,7 +7,7 @@ const CsvImport = ({handleClick}) => {
     <div>
       <button
         onClick={handleClick}
-        className="group flex w-full items-center gap-2 dark:text-white rounded-md p-1 text-gray text-sm disabled:cursor-not-allowed disabled:opacity-50"
+        className="group flex w-full items-center gap-2n dark:text-white rounded-md p-1 text-gray text-sm  disabled:cursor-not-allowed disabled:opacity-50"
       >
         <ArrowDownOnSquareIcon className="h-5 w-5 text-secondary hover:brightness-200" />
         <span className="pl-1">Importar Opções (CSV)</span>
