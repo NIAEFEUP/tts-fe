@@ -18,7 +18,7 @@ import { toast } from '../../../ui/use-toast'
 const Export = () => {
 
   const fileInputRef = useRef(null);
-  const { setPickedCourses, setCheckboxedCourses } = useContext(CourseContext);
+  const { pickedCourses, setPickedCourses, setCheckboxedCourses } = useContext(CourseContext);
   const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,11 +29,13 @@ const Export = () => {
 
     try {
       const content = csvDecode(await file.text());
+      console.log("input content",content);
       const courses = await getSelectedCourses(content);
+      console.log("selected courses",courses);
 
       setCheckboxedCourses(courses);
       setPickedCourses(courses);
-      setCourseOptions(content);
+      setCourseOptions(content, courses);
     } catch (error) {
       toast({
         title: 'Não foi possível importar os horários!',
@@ -43,35 +45,41 @@ const Export = () => {
     }
   };
 
-  const getSelectedCourses = async (content: any): Promise<CourseInfo[]> => {
+  const getSelectedCourses = async (content: string[][]): Promise<CourseInfo[]> => {
     if (!Array.isArray(content) || content.length === 0) return [];
+
+    const courses: CourseInfo[] = [];
   
-    const selected_courses = await Promise.all(content.map(row => api.getCourseUnit(row[0])));
-
-    const majorsPromises = selected_courses.map(course => api.getCoursesByMajorId(course.course));
-    const majorsResults = await Promise.all(majorsPromises);
-
-    selected_courses.forEach((course, index) => {
-      const full_courses = majorsResults[index];
-      const matching_course = full_courses.find(indiv_course => indiv_course.course_unit_id === course.id);
-      if (matching_course) {
-        course.ects = matching_course.ects;
-      }
+    const promises = content.map(async (row) => {
+      const res = await api.getCoursesByMajorId(parseInt(row[0]));
+      const matchedCourses = res.filter(course => course.acronym === row[3]);
+      courses.push(...matchedCourses);
     });
+  
+    await Promise.all(promises);
 
-    return selected_courses;
+    for(const course of courses){
+      if(typeof(course.ects) === "string")
+        course.ects = parseFloat(course.ects.replace(",", "."));
+    }
+
+    return courses;
   };
 
-  const setCourseOptions = (courses: number[][]) => {
-    const transposedCourses = courses[0].map((_, colIndex) => courses.map(row => row[colIndex]));
-  
-    const newOptions = transposedCourses.slice(1, 11).map((column, i) => 
-      createOption(multipleOptions[i], column.map((value, j) => 
-        createCourseOption(transposedCourses[0][j], value)
-      ))
-    );
-  
-    setMultipleOptions(newOptions);
+  const setCourseOptions = async (content: string[][], courses: CourseInfo[]) => {
+    const updatedOptions = [...multipleOptions];
+
+    for (let i = 0; i < courses.length; i++) {
+      const courseOptions = await api.getCourseClass(courses[i]);
+      content[i].slice(4).forEach((courseOption, j) => {
+        const matchedClassOption = courseOptions.find(classOption => classOption.name === courseOption);
+        if (matchedClassOption) {
+          updatedOptions[j].course_options.push(createCourseOption(courses[i].id, matchedClassOption.id));
+        }
+      });
+    }
+
+    setMultipleOptions(updatedOptions);
   };
 
   const createCourseOption = (course_id: number, picked_class_id: number): CourseOption => {
@@ -81,15 +89,6 @@ const Export = () => {
       locked: false,
       filteredTeachers: null,
       hide: []
-    }
-  }
-
-  const createOption = (option : Option, new_course_options : Array<CourseOption>) => {
-    return {
-      id: option.id,
-      icon: option.icon,
-      name: option.name,
-      course_options: new_course_options
     }
   }
 
