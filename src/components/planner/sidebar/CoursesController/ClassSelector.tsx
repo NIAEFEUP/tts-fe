@@ -1,80 +1,35 @@
-import { useEffect, useRef, useState, useContext } from 'react'
+import { useRef, useState, useContext } from 'react'
 import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
-import { CourseInfo, CourseOption } from '../../../../@types'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { CourseInfo } from '../../../../@types'
 import { getClassDisplayText } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
-import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
+import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
 
 type Props = {
-  course: CourseInfo
+  course: CourseInfo,
+  lockFunctionality?: boolean,
 }
 
-const ClassSelector = ({ course }: Props) => {
+const ClassSelector = ({
+  course,
+  lockFunctionality = true,
+}: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
 
-  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
-  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
-  const courseOption: CourseOption = multipleOptions[selectedOption].course_options.find((opt) => opt.course_id === course.id)
-  const [locked, setLocked] = useState(courseOption?.locked)
-  const [preview, setPreview] = useState<number | null>(null)
-  const [display, setDisplay] = useState(courseOption?.picked_class_id)
+  const {
+    selectedClassId,
+    setSelectedClassId,
+    display,
+    setPreview,
+    removePreview,
+    toggleLocker,
+    courseOption
+  } = useContext(ClassSelectorContext);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    const course_options = multipleOptions[selectedOption].course_options;
-    const option = course_options.filter((option) => option.course_id === course.id && option.picked_class_id !== null)
-
-    if (option.length === 0) {
-      setSelectedClassId(null);
-      setDisplay(null);
-      return;
-    }
-
-    if (!preview) setSelectedClassId(option[0].picked_class_id);
-    setDisplay(option[0].picked_class_id);
-  }, [selectedOption, multipleOptions, course.id]);
-
-  const toggleLocker = () => {
-    const newMultipleOptions = [...multipleOptions];
-    const courseOptions = newMultipleOptions[selectedOption].course_options.map(opt => {
-      if (opt.course_id === course.id) {
-        return { ...opt, locked: !locked };
-      }
-      return opt;
-    });
-    newMultipleOptions[selectedOption].course_options = courseOptions;
-    setMultipleOptions(newMultipleOptions);
-    setLocked(!locked)
-
-    AnalyticsTracker.trackFeature(Feature.LOCK_TOGGLE);
-  }
-
-  useEffect(() => {
-    setLocked(courseOption?.locked)
-  }, [selectedOption]);
-
-
-  // Restores into multiple options the picked_class_id prior to when the user started previewing
-  const removePreview = () => {
-    const newMultipleOptions = [...multipleOptions];
-
-    const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
-      if (c.course_id === course.course_unit_id) {
-        c.picked_class_id = selectedClassId
-      }
-
-      return c;
-    });
-
-    newMultipleOptions[selectedOption].course_options = newCourseOptions;
-    setMultipleOptions(newMultipleOptions);
-
-    setPreview(null);
-  }
 
   return (
     <div className="text-sm" key={`course-option-${course.acronym}`}>
@@ -119,18 +74,20 @@ const ClassSelector = ({ course }: Props) => {
         </DropdownMenu>
 
         {/* Lock Button */}
-        <Button
-          variant="icon"
-          title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
-          onClick={toggleLocker}
-          disabled={display === null}
-        >
-          {courseOption?.locked ? (
-            <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />
-          ) : (
-            <LockOpenIcon className="h-6 w-6 text-darkish dark:text-lightish" />
-          )}
-        </Button>
+        {lockFunctionality &&
+          <Button
+            variant="icon"
+            title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
+            onClick={toggleLocker}
+            disabled={display === null}
+          >
+            {courseOption?.locked ? (
+              <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+            ) : (
+              <LockOpenIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+            )}
+          </Button>
+        }
       </div>
     </div>
   )

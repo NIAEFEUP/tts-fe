@@ -1,23 +1,25 @@
 import classNames from 'classnames'
-import { useState, useEffect } from 'react'
-
+import { useState, useEffect, useContext } from 'react'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
 import { getLessonBoxTime, schedulesConflict, conflictsSeverity, getLessonBoxStyles, maxHour, minHour, getClassTypeClassName, getLessonTypeLongName } from '../../../utils'
+import ScheduleContext from '../../../contexts/ScheduleContext'
 
 type Props = {
   courseInfo: CourseInfo
   classInfo: ClassInfo
   slotInfo: SlotInfo
   classes: ClassDescriptor[]
+  setLessonBoxConflict: (courseId: number, conflictData: boolean) => void
 }
 
 const LessonBox = ({
   courseInfo,
   classInfo,
   slotInfo,
-  classes
+  classes, 
+  setLessonBoxConflict
 }: Props) => {
   const classTitle = classInfo.name
   const lessonType = slotInfo.lesson_type
@@ -40,6 +42,7 @@ const LessonBox = ({
   const [isHovered, setIsHovered] = useState(false)
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
+  const {originalExchangeSchedule} = useContext(ScheduleContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
@@ -68,9 +71,21 @@ const LessonBox = ({
         }
       }
     }
+    
+    const hasNewClasses = !newConflictInfo.conflictingClasses.every((conflictingClass) => originalExchangeSchedule.some((originalClass) => originalClass.classInfo.id === conflictingClass.classInfo.id));
 
+    if(!hasNewClasses && newConflictInfo.severe) {
+      newConflictInfo.severe = false;
+    }
+    
     setConflict(newConflictInfo);
-  }, [classInfo, classes]);
+  }, [classInfo, classes, hasConflict]);
+
+  useEffect(() => {
+    if (conflict?.severe !== undefined){
+      setLessonBoxConflict(courseInfo.id, conflict?.severe);
+    }
+  }, [classInfo]);
 
   const showConflicts = () => {
     setConflictsShown(true)

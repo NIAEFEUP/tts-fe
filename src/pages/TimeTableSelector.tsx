@@ -1,29 +1,23 @@
 import BackendAPI from '../api/backend'
-import StorageAPI from '../api/storage'
-import { useState, useEffect } from 'react'
-import { Schedule, Sidebar } from '../components/planner'
-import { CourseInfo, Major } from '../@types'
+import { useEffect, useContext } from 'react'
+import { Sidebar } from '../components/planner'
+import { Major } from '../@types'
 import MajorContext from '../contexts/MajorContext'
 import CourseContext from '../contexts/CourseContext'
 import { useSidebarContext } from '../components/layout/SidebarPosition'
 import { SidebarProvider } from '../components/layout/SidebarPosition'
+import PlannerSchedule from '../components/planner/schedule/PlannerSchedule'
 
 const TimeTableSelectorPage = () => {
-  const [majors, setMajors] = useState<Major[]>([])
-  const [coursesInfo, setCoursesInfo] = useState([]);
-  const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
-  const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
-  const [ucsModalOpen, setUcsModalOpen] = useState<boolean>(false);
+  const {setMajors} = useContext(MajorContext);
 
-  //TODO: Looks suspicious
-  const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
+  // fetch majors when component is ready
   useEffect(() => {
     document.getElementById('layout').scrollIntoView()
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors)
     })
   }, [])
-
 
   return (
     <MajorContext.Provider value={{ majors, setMajors }}>
