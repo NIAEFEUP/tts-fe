@@ -8,7 +8,7 @@ type SidebarContextType = {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SidebarProvider = ({ children }: { children: JSX.Element }) => {
     const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>(() => {
     const storedPosition = window.localStorage.getItem("sidebar-position");
     return storedPosition === "left" || storedPosition === "right" ? storedPosition : "right";
