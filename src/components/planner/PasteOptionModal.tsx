@@ -56,9 +56,10 @@ const PasteOptionModal = ({ pastedClasses } : { pastedClasses : string }) => {
                 </p>
                 <div className="grid grid-cols-3 md:grid-cols-5 lg:flex lg:flex-row gap-2 transition-colors duration-300 dark:group-hover:text-white group-hover:text-slate-700" >
                   {
-                    [...multipleOptions].map((option) => {
+                    [...multipleOptions].map((option,key) => {
                       return (
                         <Button
+                          key={key}
                           variant='icon'
                           className={`flex-grow bg-lightish dark:bg-darkish 
                                     ${selectedCopyOption === option.id

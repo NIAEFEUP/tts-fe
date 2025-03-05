@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { ClassDescriptor, CourseInfo, CourseOption, ImportedCourses, SlotInfo } from "../../../@types";
+import { ClassDescriptor, SlotInfo } from "../../../@types";
 import CourseContext from "../../../contexts/CourseContext";
 import MultipleOptionsContext from "../../../contexts/MultipleOptionsContext";
 import Schedule from "../Schedule";
-import { importSchedule } from "../../../utils/ImportSchedule";
 
 const PlannerSchedule = () => {
   const { pickedCourses } = useContext(CourseContext);
