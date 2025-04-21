@@ -12,7 +12,9 @@ import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerC
 
 //TODO: absolute imports with @
 
+
 const CoursePicker = () => {
+
   const {
     coursesStorage,
     setCoursesInfo,
