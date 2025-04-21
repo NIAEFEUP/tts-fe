@@ -1,14 +1,12 @@
 import BackendAPI from '../api/backend'
 import { useEffect, useContext } from 'react'
-import { PasteOptionModal, Sidebar } from '../components/planner'
+import { Sidebar } from '../components/planner'
 import { Major } from '../@types'
 import MajorContext from '../contexts/MajorContext'
 import PlannerSchedule from '../components/planner/schedule/PlannerSchedule'
 
 const TimeTableSelectorPage = () => {
   const {setMajors} = useContext(MajorContext);
-  const params = new URLSearchParams(window.location.search)
-  const pastedClasses = params.get('classes')
 
   // fetch majors when component is ready
   useEffect(() => {
@@ -24,12 +22,8 @@ const TimeTableSelectorPage = () => {
       <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
           <PlannerSchedule />
-          {(pastedClasses && pastedClasses != '') && 
-            <PasteOptionModal pastedClasses={pastedClasses}/>
-          }
         </div>
       </div>
-
       <Sidebar />
     </div>
   )

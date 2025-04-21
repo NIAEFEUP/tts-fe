@@ -1,5 +1,5 @@
 import { Buffer } from "buffer"
-import { CourseInfo, CourseOption, ImportedCourses, MultipleOptions, PickedCourses } from "../@types"
+import { CourseInfo, ImportedCourses, Major, MultipleOptions, PickedCourses } from "../@types"
 import { toast } from "../components/ui/use-toast"
 import { AnalyticsTracker, Feature } from "./AnalyticsTracker"
 import fillOptions from "../components/planner/sidebar/selectedOptionController/fillOptions"
@@ -11,11 +11,13 @@ export const importSchedule = async (
   multipleOptions: MultipleOptions,
   setMultipleOptions: (newMultipleOptions : MultipleOptions) => void,
   selectedOption: number,
-  pickedCourses: PickedCourses ,
   setPickedCourses: (newPickedCourses : PickedCourses) => void,
+  setSelectedMajor: (newMajor: Major) => void,
+  setCheckboxedCourses : (newCheckboxedCourses : CourseInfo[]) => void,
 ) => {
   const url = value
   const decoded_url = Buffer.from(url, 'base64').toString()
+  
   const isImporteFromClipboard: boolean = value === ''
 
   if (!isValidURL(decoded_url)) {
@@ -31,9 +33,24 @@ export const importSchedule = async (
     return
   }
 
-  //ex: course_id#picked_class_id;course_id#picked_class_id
+  //ex: major_id;course_id#picked_class_id;course_id#picked_class_id
   const tokens: string[] = decoded_url.split(';')
 
+  const majorID = tokens.shift();
+  const majors: Major[] = await api.getMajors();
+  const major = majors.find((m) => m.id === parseInt(majorID));
+
+  if (!major) {
+    toast({
+      title: 'Erro ao colar opção',
+      description: 'O curso selecionado não foi encontrado',
+      duration: 3000,
+    });
+    return;
+  }
+
+  setSelectedMajor(major);
+  
   //TODO (thePeras): A more function programming oportunity here
   const importedCourses: ImportedCourses = {}
   tokens.forEach((token) => {
@@ -41,26 +58,17 @@ export const importSchedule = async (
     importedCourses[course[0]] = course[1]
   })
 
-  // Unchecked imported courses units
-  const checkedCoursesIds = multipleOptions[selectedOption].course_options.map((courseOption: CourseOption) => {
-    return courseOption.course_id
-  })
-
-  const uncheckedCoursesIds = Object.keys(importedCourses).filter((course_unit_id) => {
-    return !checkedCoursesIds.includes(Number(course_unit_id))
-  })
+  let uncheckedCoursesIds = Object.keys(importedCourses)
 
   if (uncheckedCoursesIds.length > 0) {
-    const courses: CourseInfo[] = (
-      await Promise.all(
-        uncheckedCoursesIds.map(async (course_unit_id) => {
-          return await api.getCourseUnit(Number(course_unit_id))
-        })
-      )
-    ).flat()
+    // TODO: getCourseUnit route doesn't return enough information (i.e. ECTS)
+    const unfilteredCourses : CourseInfo[] = await api.getCoursesByMajorId(Number(majorID))
+    const courses : CourseInfo[] = unfilteredCourses.filter((course) => 
+      uncheckedCoursesIds.includes(course.course_unit_id.toString())
+    )
 
-    const newPickedCourses = [...pickedCourses]
-    setPickedCourses(newPickedCourses.concat(courses))
+    setPickedCourses(courses)
+    setCheckboxedCourses(courses)
 
     const newMultipleOptions = [...multipleOptions]
     newMultipleOptions.forEach((option) => {
@@ -91,7 +99,12 @@ export const importSchedule = async (
 export const isValidURL = (url: string) => {
   if (url.length === 0) return false
   const tokens = url.split(';')
-  if (tokens.length < 1) return false //At leat one course
+  if (tokens.length < 1) return false; // At least major
+  if (tokens.length < 2) return false; // At least on class
+
+  // Validate majorID
+  const majorID= tokens.shift();
+  if(isNaN(Number(majorID))) return false;
 
   // Validate courses: course_unit_id#selected_option_id
   tokens.forEach((token) => {
