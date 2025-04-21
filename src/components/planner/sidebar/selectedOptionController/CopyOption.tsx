@@ -34,7 +34,6 @@ const CopyOption = ({ currentOption, className }: Props) => {
 
     const uc : CourseInfo = await api.getCourseUnit(Number(selectedOption.at(0).course_id))
     const majorID = uc.course
-    console.log(majorID)
 
     const copyOption = majorID + ";" + selectedCourses
     return Buffer.from(copyOption).toString('base64')

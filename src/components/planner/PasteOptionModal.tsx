@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { importSchedule } from '../../utils/ImportSchedule';
 import { CheckCircleIcon,  TrashIcon } from '@heroicons/react/24/outline';
 import CoursePickerContext from '../../contexts/coursePicker/CoursePickerContext';
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader } from '../ui/dialog';
 
 const PasteOptionModal = ({ pastedClasses } : { pastedClasses : string }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);

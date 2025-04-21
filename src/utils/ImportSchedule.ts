@@ -58,7 +58,7 @@ export const importSchedule = async (
     importedCourses[course[0]] = course[1]
   })
 
-  let uncheckedCoursesIds = Object.keys(importedCourses)
+  const uncheckedCoursesIds = Object.keys(importedCourses)
 
   if (uncheckedCoursesIds.length > 0) {
     // TODO: getCourseUnit route doesn't return enough information (i.e. ECTS)
