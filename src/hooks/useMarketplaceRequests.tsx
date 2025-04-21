@@ -45,7 +45,8 @@ export default (courseUnitNameFilter: Set<number>, requestType: string, classesF
 
   useEffect(() => {
     if(data) {
-      setHasNext(data[data.length - 1]["page"]["has_next"]);
+      const page = data[data.length - 1]["page"];
+      if(page) setHasNext(page["has_next"]);
     }
   }, [data])
 

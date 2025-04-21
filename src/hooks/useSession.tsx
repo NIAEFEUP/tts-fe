@@ -7,6 +7,7 @@ const useSession = () => {
     try {
       const res = await fetch(`${api.BACKEND_URL}/${key}`, {
         method: "GET",
+        credentials: "include"
       });
 
       return await res.json();

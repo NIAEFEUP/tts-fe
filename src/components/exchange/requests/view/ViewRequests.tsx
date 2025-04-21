@@ -135,7 +135,7 @@ export const ViewRequests = ({
                                     <EmptyRequestGuard requests={requests}>
                                         {requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
                                             <CommonRequestCard
-                                                key={request.id}
+                                                key={request?.id}
                                                 request={request}
                                                 hiddenRequests={hiddenRequests}
                                                 setHiddenRequests={setHiddenRequests}
@@ -203,15 +203,15 @@ export const ViewRequests = ({
                     {isLoading
                         ? <RequestCardSkeletons />
                         : <EmptyRequestGuard requests={requests}>
-                            {requests.map((request) => (
+                            {requests?.map((request) => (
                                 <CommonRequestCard
-                                    key={request.id}
+                                    key={request?.id}
                                     request={request}
                                     hiddenRequests={hiddenRequests}
                                     setHiddenRequests={setHiddenRequests}
                                     setChosenRequest={setChosenRequest}
                                     chosenRequest={chosenRequest}
-                                    type={request.type}
+                                    type={request?.type}
                                 >
                                     <ReceivedRequestCard
                                         request={request}
