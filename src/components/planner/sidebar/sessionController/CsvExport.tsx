@@ -3,15 +3,7 @@ import { useContext } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
-
-//TODO: utils??
-const csvEncode = (text: string | null | undefined) => {
-  if (!text)
-    return ''
-  if (text.includes(','))
-    return `"${text}"`
-  return text
-}
+import { csvEncode } from '../../../../utils/io'
 
 /**
  * Sidebar with all the main schedule interactions
@@ -20,21 +12,31 @@ const CsvExport = () => {
   const { pickedCourses } = useContext(CourseContext);
   const { multipleOptions } = useContext(MultipleOptionsContext);
 
-  const exportCSV = () => {
-    const header = ['Ano', 'Nome', 'Sigla']
-    multipleOptions.forEach((option) => header.push(option.name))
-    const lines = []
+  const getOptions = async(): Promise<string[]> => {
+    const lines = [];
 
-    pickedCourses.forEach(course => {
-      const line = [course.course_unit_year, csvEncode(course.name), course.acronym]
-      multipleOptions.forEach(option => {
-        const courseOption = option.course_options.find(courseOption => courseOption.course_id === course.id)
-        const pickedClass = course.classes.find(c => c.id === courseOption?.picked_class_id);
+    for(const course of pickedCourses) {
+      const baseInfo = [course.course_id, course.course_unit_year, csvEncode(course.name), course.acronym]
 
-        line.push(csvEncode(pickedClass?.name))
-      })
-      lines.push(line.join(','))
-    })
+      const classValues = multipleOptions.map(option => {
+        const courseOption = option.course_options.find(co => co.course_id === course.id);
+        const pickedClass = courseOption ? 
+              course.classes.find(c => c.id === courseOption.picked_class_id) : 
+              undefined;
+
+        return csvEncode(pickedClass?.name);
+      });
+      lines.push([...baseInfo, ...classValues].join(','));
+    }
+
+    return lines;
+  }
+  const exportCSV = async () => {
+    const header = ['ID_Curso', 'Ano', 'Nome', 'Sigla']
+    multipleOptions.forEach((option) => header.push(option.name));
+
+    const lines = await getOptions();
+    console.log(lines);
 
     const csv = [header.join(','), lines.flat().join('\n')].join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
