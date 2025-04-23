@@ -13,13 +13,19 @@ import { FaceFrownIcon, ShieldExclamationIcon } from "@heroicons/react/24/outlin
 import { Schedule } from "../components/planner";
 import { Enrollments } from "../components/exchange/enrollments/Enrollments";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { AlertCircle } from "lucide-react"
- 
+import { AlertCircle, RotateCwIcon } from "lucide-react"
+
 import {
   Alert,
   AlertDescription,
 } from "../components/ui/alert"
- 
+import { Button } from "../components/ui/button";
+import studentScheduleRequestService from "../api/services/studentScheduleRequestService";
+import useStudentRefreshSchedule from "../hooks/useStudentRefreshSchedule";
+import { cn } from "../utils";
+import { useToast } from "../components/ui/use-toast";
+import RefreshScheduleButton from "../components/exchange/schedule/RefreshScheduleButton";
+
 export enum ExchangeSidebarStatus {
   SHOWING_REQUESTS,
   CREATING_REQUEST
@@ -37,21 +43,33 @@ const ExchangeSidebarStatusView = (
 }
 
 const ExchangePage = () => {
+  const { toast } = useToast();
+
   const [loads, setLoads] = useState<number>(-1);
   const [creatingRequest,] = useState<boolean>(false);
   const [sidebarStatus, setSidebarStatus] = useState<ExchangeSidebarStatus>(ExchangeSidebarStatus.SHOWING_REQUESTS);
-  const { schedule, loading: loadingSchedule , sigarraSynced} = useSchedule();
+  const { schedule, loading: loadingSchedule, sigarraSynced } = useSchedule();
   const [originalExchangeSchedule, setOriginalExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
   const [exchangeSchedule, setExchangeSchedule] = useState<Array<ClassDescriptor>>([]);
+
   const { signedIn, user, forceScheduleRevalidation, isSessionLoading } = useContext(SessionContext);
+
   const { enrolledCourseUnits, forceCourseUnitsRevalidation } = useStudentCourseUnits();
+
+  const { refreshedSchedule, forceRefreshStudentSchedule, isRefreshingStudentSchedule } = useStudentRefreshSchedule();
 
   useEffect(() => {
     forceScheduleRevalidation();
+
+    setExchangeSchedule(schedule ? schedule : []);
+
+    if (loads <= 0) {
+      setOriginalExchangeSchedule(schedule ? schedule : []);
+    }
   }, [schedule])
 
   useEffect(() => {
-    if(user?.eligible_exchange) forceCourseUnitsRevalidation();
+    if (user?.eligible_exchange) forceCourseUnitsRevalidation();
   }, [user])
 
   useEffect(() => {
@@ -60,16 +78,12 @@ const ExchangePage = () => {
   }, [creatingRequest])
 
   useEffect(() => {
-    setLoads(prev => prev + 1);
-  }, [setLoads]);
+    if (refreshedSchedule) setExchangeSchedule(refreshedSchedule.schedule);
+  }, [refreshedSchedule]);
 
   useEffect(() => {
-    setExchangeSchedule(schedule ? schedule : []);
-
-    if (loads <= 0) {
-      setOriginalExchangeSchedule(schedule ? schedule : []);
-    }
-  }, [schedule]);
+    setLoads(prev => prev + 1);
+  }, [setLoads]);
 
   if (!signedIn) return <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
     <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
@@ -94,22 +108,28 @@ const ExchangePage = () => {
 
   return <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
     {
-      
       <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
         {/* Schedule Preview */}
-        <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+        <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-6 py-6 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
           <div className="h-full w-full">
-          {(!sigarraSynced && !loadingSchedule) &&(
-            <>
-              <Alert variant="destructive" className="my-2">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  O horário reflete trocas que ainda não estão no sigarra
-                </AlertDescription>
-              </Alert>
-            </>
-          )}
-          <ExchangeSchedule />
+            {(!sigarraSynced && !loadingSchedule) && (
+              <>
+                <Alert variant="destructive" className="my-2">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    O horário reflete trocas que ainda não estão no sigarra
+                  </AlertDescription>
+                </Alert>
+              </>
+            )}
+            {!loadingSchedule &&
+              <RefreshScheduleButton
+                forceRefreshStudentSchedule={forceRefreshStudentSchedule}
+                loadingSchedule={loadingSchedule}
+                isRefreshingStudentSchedule={isRefreshingStudentSchedule}
+              />
+            }
+            <ExchangeSchedule />
           </div>
         </div>
 
@@ -125,15 +145,15 @@ const ExchangePage = () => {
                   sidebarStatus={sidebarStatus}
                   setExchangeSidebarStatus={setSidebarStatus}
                 />
-                :<>
-                {!loadingSchedule && <div className="flex flex-col items-center justify-center gap-4 h-full mt-16">
-                  <FaceFrownIcon className="w-12 h-12" />
-                  <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
-                  {/* TODO: Open the send feedback modal with something already written  */}
-                  {/*<p className="text-center">Gostavas de utilizar esta funcionalidade no teu curso?</p> */}
-                  {/*   <Button onClick={() => { }}>Sim!</Button> */}
-                </div>
-              }</>}
+                : <>
+                  {!loadingSchedule && <div className="flex flex-col items-center justify-center gap-4 h-full mt-16">
+                    <FaceFrownIcon className="w-12 h-12" />
+                    <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
+                    {/* TODO: Open the send feedback modal with something already written  */}
+                    {/*<p className="text-center">Gostavas de utilizar esta funcionalidade no teu curso?</p> */}
+                    {/*   <Button onClick={() => { }}>Sim!</Button> */}
+                  </div>
+                  }</>}
             </TabsContent>
             <TabsContent value="enrollments">
               <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
