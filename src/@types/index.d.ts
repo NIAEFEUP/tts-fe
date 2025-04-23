@@ -23,6 +23,7 @@ export type Major = {
 }
 
 export type CourseInfo = {
+  course_id: number,
   id: number,
   course: number,
   course_unit_year: number,
