@@ -1,0 +1,10 @@
+import { GeneratorCallback, Tree } from '@nx/devkit';
+export interface LinterInitOptions {
+    skipPackageJson?: boolean;
+    keepExistingVersions?: boolean;
+    updatePackageScripts?: boolean;
+    addPlugin?: boolean;
+    eslintConfigFormat?: 'mjs' | 'cjs';
+}
+export declare function initEsLint(tree: Tree, options: LinterInitOptions): Promise<GeneratorCallback>;
+export declare function lintInitGenerator(tree: Tree, options: LinterInitOptions): Promise<GeneratorCallback>;

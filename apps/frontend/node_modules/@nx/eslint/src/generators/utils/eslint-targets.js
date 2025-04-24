@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getEslintTargets = getEslintTargets;
+const executor_options_utils_1 = require("@nx/devkit/src/generators/executor-options-utils");
+function getEslintTargets(tree) {
+    const eslintTargetNames = new Set();
+    (0, executor_options_utils_1.forEachExecutorOptions)(tree, '@nx/eslint:lint', (_, __, target) => {
+        eslintTargetNames.add(target);
+    });
+    (0, executor_options_utils_1.forEachExecutorOptions)(tree, '@nx/linter:eslint', (_, __, target) => {
+        eslintTargetNames.add(target);
+    });
+    (0, executor_options_utils_1.forEachExecutorOptions)(tree, '@nrwl/linter:eslint', (_, __, target) => {
+        eslintTargetNames.add(target);
+    });
+    return eslintTargetNames;
+}

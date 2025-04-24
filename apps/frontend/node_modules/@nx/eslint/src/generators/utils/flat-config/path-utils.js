@@ -1,0 +1,27 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.updateFiles = updateFiles;
+exports.mapFilePath = mapFilePath;
+const devkit_1 = require("@nx/devkit");
+function updateFiles(override) {
+    if (override.files) {
+        override.files = Array.isArray(override.files)
+            ? override.files
+            : [override.files];
+        override.files = override.files.map((file) => mapFilePath(file));
+    }
+    return override;
+}
+function mapFilePath(filePath) {
+    if (filePath.startsWith('!')) {
+        const fileWithoutBang = filePath.slice(1);
+        if (fileWithoutBang.startsWith('*.')) {
+            return `!${(0, devkit_1.joinPathFragments)('**', fileWithoutBang)}`;
+        }
+        return filePath;
+    }
+    if (filePath.startsWith('*.')) {
+        return (0, devkit_1.joinPathFragments)('**', filePath);
+    }
+    return filePath;
+}

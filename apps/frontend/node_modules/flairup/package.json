@@ -1,0 +1,72 @@
+{
+  "name": "flairup",
+  "description": "🎩 Lightweight CSS-in-JS solution for npm packages",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ealush/flairup.git"
+  },
+  "keywords": [
+    "CSS-in-JS",
+    "Component-styling",
+    "Third-party-styling",
+    "One-time-runtime",
+    "style",
+    "StyleSheet",
+    "CSS",
+    "CSS-variables",
+    "Scoping-styles",
+    "Custom-class names",
+    "zero-config",
+    "reusable",
+    "scoped-styls"
+  ],
+  "main": "./dist/index.js",
+  "devDependencies": {
+    "@swc/core": "^1.3.102",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "jsdom": "^23.0.1",
+    "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vitest": "^1.1.1"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup ./src/index.ts --target es5",
+    "lint": "eslint --ext .ts ./src",
+    "test": "vitest --watch=false",
+    "prepublish": "npm run test && npm run build"
+  },
+  "tsup": {
+    "sourcemap": true,
+    "dts": true,
+    "clean": true,
+    "legacyOutput": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "types": "./dist/index.d.ts"
+}

@@ -22,3 +22,10 @@ dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+
+.nx/cache
+.nx/workspace-data
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
