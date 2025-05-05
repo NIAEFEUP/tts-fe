@@ -53,7 +53,10 @@ export const CommonCardHeader = ({
     return <CardHeader
         className="flex flex-row gap-x-2 items-center p-4"
     >
-        <img className="w-10 h-10 rounded-full shadow-md" src={studentInfoService.getStudentPictureUrl(username)}></img>
+        <img 
+            className="w-10 h-10 rounded-full shadow-md" 
+            src={studentInfoService.getStudentPictureUrl(username)}>
+        </img>
         <div className="flex flex-row justify-between items-center w-full">
             <div className="flex flex-col w-full">
                 <div className="flex flex-row justify-between w-full items-center">
