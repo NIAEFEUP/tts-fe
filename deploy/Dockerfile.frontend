@@ -6,17 +6,17 @@ FROM node:21-alpine3.19 AS build
 RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
 
-COPY .*rc ./
-COPY *.json ./
-COPY .prettier* ./
-COPY *.config.js ./
-COPY *.config.ts ./
+COPY apps/frontend/.*rc ./
+COPY apps/frontend/*.json ./
+COPY apps/frontend/.prettier* ./
+COPY apps/frontend/*.config.js ./
+COPY apps/frontend/*.config.ts ./
 
 RUN npm install
 
-COPY public/ public/
-COPY src/ src/
-COPY index.html ./
+COPY apps/frontend/public/ public/
+COPY apps/frontend/src/ src/
+COPY apps/frontend/index.html ./
 
 # dev
 FROM build AS dev
@@ -45,4 +45,4 @@ RUN npm run build
 FROM nginx:alpine AS prod
 
 COPY --from=prod-build /usr/src/tts-fe/build /usr/share/nginx/html
-COPY nginx.tts.conf /etc/nginx/conf.d/default.conf
+COPY apps/frontend/nginx.tts.conf /etc/nginx/conf.d/default.conf
