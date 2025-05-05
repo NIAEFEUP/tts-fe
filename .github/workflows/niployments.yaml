@@ -7,7 +7,7 @@ on:
       - develop
 
 jobs:
-  build:
+  frontend-build:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name }}
@@ -16,7 +16,7 @@ jobs:
     - name: Upload to NIployments register
       uses: NIAEFEUP/push-to-niployments@v2.2
       with:
-        docker_dockerfile: Dockerfile
+        docker_dockerfile: deploy/Dockerfile.frontend
         docker_context: .
         docker_target: prod
         docker_build_args: |
