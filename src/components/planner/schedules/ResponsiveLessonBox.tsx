@@ -20,7 +20,7 @@ const ResponsiveLessonBox = ({
   return (
     <div
       className={classNames(
-        'schedule-class-responsive group',
+        'flex  group rounded w-full',
         getClassTypeClassName(lessonType),
         conflict ? 'schedule-class-conflict' : ''
       )}
@@ -37,7 +37,7 @@ const ResponsiveLessonBox = ({
 
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <span title="Duração">{getLessonBoxTime(slotInfo)}</span>
           <span title="Nome da Turma">
             {classInfo.name}
@@ -50,7 +50,7 @@ const ResponsiveLessonBox = ({
             {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
           </span>
         </div>
-        
+        {/*}
         <div className="flex w-full flex-col justify-between gap-2">
           <span className="flex w-full items-center justify-between">
             <strong title="Dia">{convertWeekdayLong(slotInfo.day)}</strong>
@@ -58,7 +58,7 @@ const ResponsiveLessonBox = ({
           </span>
           <span title="Duração">{getLessonBoxTime(slotInfo)}</span>
         </div>
-
+        
         <div className="flex w-full flex-col items-start gap-2">
           <strong title="Sigla da Unidade Curricular">{courseInfo.acronym}</strong>
           <span title="Nome da Turma">
@@ -71,7 +71,7 @@ const ResponsiveLessonBox = ({
           <span title="Professor(es)" className="whitespace-nowrap">
             {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
           </span>
-        </div>
+        </div>*/}
        
         
       </div>
