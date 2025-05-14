@@ -10,7 +10,6 @@ type Props = {
 }
 
 const SlotBox = ({ courseInfo, classInfo, classes, slot }: Props) => {
-  console.log('SlotBox', slot)
   return (
     <>
       <div className="hidden lg:flex lg:flex-col">

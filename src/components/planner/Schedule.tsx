@@ -115,7 +115,7 @@ const Schedule = ({
       </div>
 
       {/*Schedule mobile*/}
-      <div className="flex h-full w-full flex-col items-center justify-start space-y-4 lg:hidden">
+      <div className="flex h-full w-full flex-col items-center justify-start space-y-4 md:hidden">
         {slots.length === 0 ? (
           <p className="w-full p-4 text-center">Ainda não foram selecionadas turmas!</p>
         ) : (
