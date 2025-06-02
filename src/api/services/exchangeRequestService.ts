@@ -1,6 +1,7 @@
 import { Key } from "swr";
 import { AdminRequestType, CreateRequestData, MarketplaceRequest } from "../../@types";
 import api from "../backend";
+import { startOfDay } from "date-fns";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
   for (const request of requests) {
@@ -33,7 +34,6 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
         body: formData
       }
     );
-
     return res;
   } 
   catch (error) 
@@ -133,6 +133,37 @@ const cancelMarketplaceRequest = async (id: number) => {
   });
 }
 
+const addCourseExchangePeriod = async (startDate: Date, endDate: Date, selectedCourse: number) => {
+  const formData = new FormData();
+  formData.append("startDate", startDate.toISOString());
+  formData.append("endDate", endDate.toISOString()); 
+  formData.append("courseId" , selectedCourse.toString());
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: formData
+  });
+}
+
+const addCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selectedCourseUnit: number) => {
+  const formData = new FormData();
+  formData.append("startDate", startDate.toISOString());
+  formData.append("endDate", endDate.toISOString());
+  formData.append("courseId" , selectedCourseUnit.toString());
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: formData
+  });
+}
+
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
@@ -143,7 +174,9 @@ const exchangeRequestService = {
   verifyExchangeRequest,
   acceptDirectExchangeRequest,
   cancelMarketplaceRequest,
-  isDirectExchange
+  isDirectExchange,
+  addCourseExchangePeriod,
+  addCourseUnitExchangePeriod,
 }
 
 export default exchangeRequestService;
