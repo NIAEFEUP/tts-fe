@@ -196,6 +196,26 @@ const editCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, sele
   });
 }
 
+const deleteCourseExchangePeriod = async (selectedCourse: number, periodId: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/${periodId}/`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
+const deleteCourseUnitExchangePeriod = async (selectedCourseUnit: number, periodId: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/${periodId}/`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
@@ -210,7 +230,9 @@ const exchangeRequestService = {
   addCourseExchangePeriod,
   addCourseUnitExchangePeriod,
   editCourseExchangePeriod,
-  editCourseUnitExchangePeriod
+  editCourseUnitExchangePeriod,
+  deleteCourseExchangePeriod,
+  deleteCourseUnitExchangePeriod
 }
 
 export default exchangeRequestService;

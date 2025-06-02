@@ -1,12 +1,12 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
-import { Table, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Table, TableHead, TableRow, TableBody, TableCell } from '../ui/table';
+import { useEffect, useState } from 'react';
 import exchangeRequestService from "../../api/services/exchangeRequestService";
-import { useEffect, useState } from 'react'
-import useAdminExchangeCoursePeriods from '../../hooks/admin/useAdminExchangeCoursePeriods'
-import { CheckIcon, PlusIcon } from 'lucide-react'
+import useAdminExchangeCoursePeriods from '../../hooks/admin/useAdminExchangeCoursePeriods';
+import { CheckIcon, PlusIcon } from 'lucide-react';
 import { DateTimePicker } from '../ui/datetime-picker';
 import { format } from 'date-fns';
 
@@ -17,6 +17,7 @@ export const AdminExchangeCourseSettings = () => {
   const [addingPeriod, setAddingPeriod] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [editingPeriodId, setEditingPeriodId] = useState<number | null>(null);
   const [editingStartDate, setEditingStartDate] = useState<Date | undefined>(undefined);
@@ -35,6 +36,7 @@ export const AdminExchangeCourseSettings = () => {
     if (!startDate || !endDate || !selectedCourse) return;
 
     try {
+      setIsLoading(true);
       await exchangeRequestService.addCourseExchangePeriod(startDate, endDate, selectedCourse);
       setAddingPeriod(false);
       setStartDate(undefined);
@@ -42,6 +44,8 @@ export const AdminExchangeCourseSettings = () => {
       mutate();
     } catch (error) {
       console.error("Failed to add exchange period:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,172 +54,199 @@ export const AdminExchangeCourseSettings = () => {
     if (!editingStartDate || !editingEndDate || !selectedCourse || editingPeriodId === null) return;
 
     try {
-      await exchangeRequestService.editCourseExchangePeriod(editingStartDate, editingEndDate, selectedCourse, editingPeriodId);
+      setIsLoading(true);
+      await exchangeRequestService.editCourseExchangePeriod(
+        editingStartDate,
+        editingEndDate,
+        selectedCourse,
+        editingPeriodId
+      );
       setEditingPeriodId(null);
       setEditingStartDate(undefined);
       setEditingEndDate(undefined);
       mutate();
     } catch (error) {
       console.error("Failed to update exchange period:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'yyyy-MM-dd HH:mm');
+  const handleDeletePeriod = async (periodId: number) => {
+    if (!selectedCourse) return;
+    if (!confirm("Tem certeza que deseja excluir este período de troca?")) return;
+    try {
+      setIsLoading(true);
+      await exchangeRequestService.deleteCourseExchangePeriod(selectedCourse, periodId);
+      mutate();
+    } catch (error) {
+      console.error("Failed to delete exchange period:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const formatDate = (dateString: string) => format(new Date(dateString), 'yyyy-MM-dd HH:mm');
 
   const getCurrentCoursePeriods = () => {
     if (!exchangeCoursePeriods?.courses || !selectedCourse) return [];
     const course = exchangeCoursePeriods.courses.find(c => c.courseId === selectedCourse);
-    console.log("Selected course:", course);
-    return course ? course.exchangePeriods : [];
+    return course?.exchangePeriods || [];
   };
 
   return (
-    <div className="flex flex-col gap-y-8">
-      <div>
-        <p>Aqui podem ser definidas configurações para o período de trocas dos grupos de cursos responsáveis.</p>
+    <div className="flex flex-col gap-y-8 p-4">
+      <div className="text-base text-muted-foreground">
+        <p>Configure os períodos de troca dos cursos responsáveis.</p>
       </div>
-      <div className="flex flex-row justify-between">
-        <div className="w-1/2">
-          <div className="flex flex-row gap-x-4 items-center">
-            <h2 className="text-lg font-bold">Períodos de troca ativos</h2>
-            <Button onClick={() => setAddingPeriod(prev => !prev)}>
-              <PlusIcon className="h-5 w-5" />
-            </Button>
-          </div>
-          
-          {addingPeriod && (
-            <form onSubmit={handleAddPeriod} className="flex flex-row gap-x-2 mt-4">
-              <div className="flex flex-row space-x-2">
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="col-span-2 rounded-2xl shadow-md">
+          <CardHeader>
+            <div className="flex flex-row justify-between items-center">
+              <CardTitle className="text-xl">Períodos de troca ativos</CardTitle>
+              <Button onClick={() => setAddingPeriod(prev => !prev)} size="icon">
+                <PlusIcon className="h-5 w-5" />
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            {addingPeriod && (
+              <form onSubmit={handleAddPeriod} className="flex flex-col md:flex-row gap-4 mb-6">
                 <DateTimePicker
                   value={startDate}
                   onChange={setStartDate}
-                  showOutsideDays={false}
-                  weekStartsOn={1}
-                  showWeekNumber={false}
                   placeholder="Início"
                 />
                 <DateTimePicker
                   value={endDate}
                   onChange={setEndDate}
-                  showOutsideDays={false}
-                  weekStartsOn={1}
-                  showWeekNumber={false}
                   placeholder="Fim"
-                /> 
-              </div>
-              <div>
-                <Button type="submit">
+                />
+                <Button type="submit" disabled={isLoading} className="md:mt-0">
                   <CheckIcon className="h-5 w-5" />
                 </Button>
-              </div>
-            </form>
-          )}
-          
-          <Table className="w-1/2 table-fixed mt-4">
-            <TableHead>
-              <TableRow>
-                <TableHead className="text-center px-12">#</TableHead>
-                <TableHead className="text-right font-mono px-12">Data de início</TableHead>
-                <TableHead className="text-right font-mono px-12">Data de término</TableHead>
-                <TableHead className="text-center">Ações</TableHead>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedCourse ? (
-                getCurrentCoursePeriods().length > 0 ? (
-                  getCurrentCoursePeriods().map((period, index) => (
-                    <TableRow key={period.id}>
-                      <TableCell className="text-center">{index + 1}</TableCell>
-                      <TableCell className="text-right font-mono px-5">
-                        {editingPeriodId === period.id ? (
-                          <DateTimePicker
-                            value={editingStartDate}
-                            onChange={setEditingStartDate}
-                            showOutsideDays={false}
-                            weekStartsOn={1}
-                            showWeekNumber={false}
-                          />
-                        ) : (
-                          formatDate(period.startDate)
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right font-mono">
-                        {editingPeriodId === period.id ? (
-                          <DateTimePicker
-                            value={editingEndDate}
-                            onChange={setEditingEndDate}
-                            showOutsideDays={false}
-                            weekStartsOn={1}
-                            showWeekNumber={false}
-                          />
-                        ) : (
-                          formatDate(period.endDate)
-                        )}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {editingPeriodId === period.id ? (
-                          <>
-                            <Button onClick={handleEditPeriod} className="mr-2" type="button">
-                              <CheckIcon className="h-5 w-5" />
-                            </Button>
-                            <Button onClick={() => setEditingPeriodId(null)} variant="destructive" type="button">
-                              Cancel
-                            </Button>
-                          </>
-                        ) : (
-                          <Button onClick={() => {
-                            setEditingPeriodId(period.id);
-                            setEditingStartDate(new Date(period.startDate));
-                            setEditingEndDate(new Date(period.endDate));
-                          }}>
-                            Editar
-                          </Button>
-                        )}
+              </form>
+            )}
+
+            <Table className="w-full table-auto">
+              <TableHead>
+                <TableRow>
+                  <TableHead className="text-center w-12">#</TableHead>
+                  <TableHead className="text-right font-mono">Início</TableHead>
+                  <TableHead className="text-right font-mono">Fim</TableHead>
+                  <TableHead className="text-center">Ações</TableHead>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedCourse ? (
+                  getCurrentCoursePeriods().length > 0 ? (
+                    getCurrentCoursePeriods().map((period, index) => (
+                      <TableRow key={period.id}>
+                        <TableCell className="text-center">{index + 1}</TableCell>
+                        <TableCell className="text-right font-mono">
+                          {editingPeriodId === period.id ? (
+                            <DateTimePicker
+                              value={editingStartDate}
+                              onChange={setEditingStartDate}
+                            />
+                          ) : (
+                            formatDate(period.startDate)
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right font-mono">
+                          {editingPeriodId === period.id ? (
+                            <DateTimePicker
+                              value={editingEndDate}
+                              onChange={setEditingEndDate}
+                            />
+                          ) : (
+                            formatDate(period.endDate)
+                          )}
+                        </TableCell>
+                        <TableCell className="flex justify-center gap-2">
+                          {editingPeriodId === period.id ? (
+                            <>
+                              <Button onClick={handleEditPeriod} size="sm" disabled={isLoading}>
+                                <CheckIcon className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  setEditingPeriodId(null);
+                                  setEditingStartDate(undefined);
+                                  setEditingEndDate(undefined);
+                                }}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                Cancelar
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                onClick={() => {
+                                  setEditingPeriodId(period.id);
+                                  setEditingStartDate(new Date(period.startDate));
+                                  setEditingEndDate(new Date(period.endDate));
+                                }}
+                                size="sm"
+                              >
+                                Editar
+                              </Button>
+                              <Button
+                                onClick={() => handleDeletePeriod(period.id)}
+                                variant="destructive"
+                                size="sm"
+                                disabled={isLoading}
+                              >
+                                Excluir
+                              </Button>
+                            </>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center text-muted-foreground py-4">
+                        Nenhum período encontrado.
                       </TableCell>
                     </TableRow>
-                  ))
+                  )
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center">
-                      Nenhum período encontrado para este curso
+                    <TableCell colSpan={4} className="text-center text-muted-foreground py-4">
+                      Selecione um curso
                     </TableCell>
                   </TableRow>
-                )
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center">
-                    Selecione um curso
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        
-        <div className="flex flex-row gap-x-4 mx-auto">
-          <Card className="rounded-md">
-            <CardHeader>
-              <CardTitle className="text-lg">Cursos responsáveis</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-y-2 m-2">
-              {courses.map((course, idx) => (
-                <Button
-                  key={course.courseId}
-                  variant="ghost"
-                  className={`${selectedGroup === idx ? "bg-gray-100" : ""}`}
-                  onClick={() => {
-                    setSelectedGroup(idx);
-                    setSelectedCourse(course.courseId);
-                  }}
-                >
-                  {course.courseAcronym}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl shadow-md">
+          <CardHeader>
+            <CardTitle className="text-lg">Cursos responsáveis</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            {courses.map((course, idx) => (
+              <Button
+                key={course.courseId}
+                variant={selectedGroup === idx ? "default" : "ghost"}
+                className="w-full justify-start"
+                onClick={() => {
+                  setSelectedGroup(idx);
+                  setSelectedCourse(course.courseId);
+                }}
+              >
+                {course.courseAcronym}
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

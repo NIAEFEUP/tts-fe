@@ -96,157 +96,172 @@ export const AdminExchangeCourseUnitSettings = () => {
     }
   };
 
+  const handleDeletePeriod = async (periodId: number) => {
+    if (!selectedCourseUnit) return;
+    try {
+      setIsLoading(true);
+      await exchangeRequestService.deleteCourseUnitExchangePeriod(selectedCourseUnit, periodId);
+      mutate();
+    } catch (error) {
+      console.error("Failed to delete exchange period:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'yyyy-MM-dd HH:mm');
   };
 
   return (
-    <div className="flex flex-col gap-y-8">
-      <div>
+    <div className="flex flex-col gap-y-8 p-4">
+      <div className="text-base text-muted-foreground">
         <p>Aqui podem ser definidas configurações para o período de trocas dos grupos de cadeiras responsáveis.</p>
       </div>
-      <div className="flex flex-row justify-between">
-        <div className="w-1/2">
-          <div className="flex flex-row gap-x-4 items-center">
-            <h2 className="text-lg font-bold">Períodos de troca ativos</h2>
-            <Button onClick={() => setAddingPeriod(prev => !prev)}>
-              <PlusIcon className="h-5 w-5" />
-            </Button>
-          </div>
-          
-          {addingPeriod && (
-            <form onSubmit={handleAddPeriod} className="flex flex-row gap-x-2 mt-4">
-              <div className="flex flex-row space-x-2">
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="col-span-2 rounded-2xl shadow-md">
+          <CardHeader>
+            <div className="flex flex-row justify-between items-center">
+              <CardTitle className="text-xl">Períodos de troca ativos</CardTitle>
+              <Button onClick={() => setAddingPeriod(prev => !prev)} size="icon">
+                <PlusIcon className="h-5 w-5" />
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            {addingPeriod && (
+              <form onSubmit={handleAddPeriod} className="flex flex-col md:flex-row gap-4 mb-6">
                 <DateTimePicker
                   value={startDate}
                   onChange={setStartDate}
-                  showOutsideDays={false}
-                  weekStartsOn={1}
-                  showWeekNumber={false}
                   placeholder="Início"
                 />
                 <DateTimePicker
                   value={endDate}
                   onChange={setEndDate}
-                  showOutsideDays={false}
-                  weekStartsOn={1}
-                  showWeekNumber={false}
                   placeholder="Fim"
-                /> 
-              </div>
-              <div>
-                <Button type="submit" disabled={isLoading}>
+                />
+                <Button type="submit" disabled={isLoading} className="md:mt-0">
                   <CheckIcon className="h-5 w-5" />
                 </Button>
-              </div>
-            </form>
-          )}
-          
-          <Table className="w-1/2 table-fixed mt-4">
-            <TableHead>
-              <TableRow>
-                <TableHead className="text-center px-12">#</TableHead>
-                <TableHead className="text-right font-mono px-12">Data de início</TableHead>
-                <TableHead className="text-right font-mono px-12">Data de término</TableHead>
-                <TableHead className="text-center">Ações</TableHead>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {getCurrentPeriods().length > 0 ? (
-                getCurrentPeriods().map((period, index) => (
-                  <TableRow key={period.id}>
-                    <TableCell className="text-center">{index + 1}</TableCell>
-                    <TableCell className="text-right font-mono px-5">
-                      {editingPeriodId === period.id ? (
-                        <DateTimePicker
-                          value={editingStartDate}
-                          onChange={setEditingStartDate}
-                          showOutsideDays={false}
-                          weekStartsOn={1}
-                          showWeekNumber={false}
-                        />
-                      ) : (
-                        formatDate(period.startDate)
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right font-mono">
-                      {editingPeriodId === period.id ? (
-                        <DateTimePicker
-                          value={editingEndDate}
-                          onChange={setEditingEndDate}
-                          showOutsideDays={false}
-                          weekStartsOn={1}
-                          showWeekNumber={false}
-                        />
-                      ) : (
-                        formatDate(period.endDate)
-                      )}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {editingPeriodId === period.id ? (
-                        <>
-                          <Button onClick={handleEditPeriod} className="mr-2" type="button" disabled={isLoading}>
-                            <CheckIcon className="h-5 w-5" />
-                          </Button>
-                          <Button 
-                            onClick={() => {
-                              setEditingPeriodId(null);
-                              setEditingStartDate(undefined);
-                              setEditingEndDate(undefined);
-                            }}
-                            variant="destructive" 
-                            type="button"
-                          >
-                            Cancel
-                          </Button>
-                        </>
-                      ) : (
-                        <Button 
-                          onClick={() => {
-                            setEditingPeriodId(period.id);
-                            setEditingStartDate(new Date(period.startDate));
-                            setEditingEndDate(new Date(period.endDate));
-                          }}
-                        >
-                          Editar
-                        </Button>
-                      )}
+              </form>
+            )}
+
+            <Table className="w-full table-auto">
+              <TableHead>
+                <TableRow>
+                  <TableHead className="text-center w-12">#</TableHead>
+                  <TableHead className="text-right font-mono">Início</TableHead>
+                  <TableHead className="text-right font-mono">Fim</TableHead>
+                  <TableHead className="text-center">Ações</TableHead>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {getCurrentPeriods().length > 0 ? (
+                  getCurrentPeriods().map((period, index) => (
+                    <TableRow key={period.id}>
+                      <TableCell className="text-center">{index + 1}</TableCell>
+                      <TableCell className="text-right font-mono">
+                        {editingPeriodId === period.id ? (
+                          <DateTimePicker
+                            value={editingStartDate}
+                            onChange={setEditingStartDate}
+                          />
+                        ) : (
+                          formatDate(period.startDate)
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        {editingPeriodId === period.id ? (
+                          <DateTimePicker
+                            value={editingEndDate}
+                            onChange={setEditingEndDate}
+                          />
+                        ) : (
+                          formatDate(period.endDate)
+                        )}
+                      </TableCell>
+                      <TableCell className="flex justify-center gap-2 py-2">
+                        {editingPeriodId === period.id ? (
+                          <>
+                            <Button
+                              onClick={handleEditPeriod}
+                              size="sm"
+                              disabled={isLoading}
+                            >
+                              <CheckIcon className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                setEditingPeriodId(null);
+                                setEditingStartDate(undefined);
+                                setEditingEndDate(undefined);
+                              }}
+                              variant="destructive"
+                              size="sm"
+                            >
+                              Cancelar
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              onClick={() => {
+                                setEditingPeriodId(period.id);
+                                setEditingStartDate(new Date(period.startDate));
+                                setEditingEndDate(new Date(period.endDate));
+                              }}
+                              size="sm"
+                            >
+                              Editar
+                            </Button>
+                            <Button
+                              onClick={() => handleDeletePeriod(period.id)}
+                              variant="destructive"
+                              size="sm"
+                              disabled={isLoading}
+                            >
+                              Apagar
+                            </Button>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center text-muted-foreground py-4">
+                      Nenhum período encontrado.
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center">
-                    Nenhum período encontrado
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        
-        <div className="flex flex-row gap-x-4 mx-auto">
-          <Card className="rounded-md">
-            <CardHeader>
-              <CardTitle className="text-lg">Cadeiras responsáveis</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-y-2 m-2">
-              {courseUnits.map((courseUnit, idx) => (
-                <Button
-                  key={courseUnit.id}
-                  variant="ghost"
-                  className={`${selectedGroup === idx ? "bg-gray-100" : ""}`}
-                  onClick={() => {
-                    setSelectedGroup(idx);
-                    setSelectedCourseUnit(courseUnit.id);
-                  }}
-                >
-                  {courseUnit.acronym}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl shadow-md">
+          <CardHeader>
+            <CardTitle className="text-lg">Cadeiras responsáveis</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            {courseUnits.map((courseUnit, idx) => (
+              <Button
+                key={courseUnit.id}
+                variant={selectedGroup === idx ? "default" : "ghost"}
+                className="justify-start"
+                onClick={() => {
+                  setSelectedGroup(idx);
+                  setSelectedCourseUnit(courseUnit.id);
+                }}
+              >
+                {courseUnit.acronym}
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
