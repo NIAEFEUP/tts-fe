@@ -10,7 +10,6 @@ import { CheckIcon, PlusIcon } from 'lucide-react'
 import { DateTimePicker } from '../ui/datetime-picker';
 import { format } from 'date-fns';
 
-
 export const AdminExchangeCourseSettings = () => {
   const { exchangeCoursePeriods, mutate } = useAdminExchangeCoursePeriods();
   const [selectedGroup, setSelectedGroup] = useState<number>(0);
@@ -18,6 +17,10 @@ export const AdminExchangeCourseSettings = () => {
   const [addingPeriod, setAddingPeriod] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+
+  const [editingPeriodId, setEditingPeriodId] = useState<number | null>(null);
+  const [editingStartDate, setEditingStartDate] = useState<Date | undefined>(undefined);
+  const [editingEndDate, setEditingEndDate] = useState<Date | undefined>(undefined);
 
   const courses = exchangeCoursePeriods?.courses || [];
 
@@ -42,6 +45,21 @@ export const AdminExchangeCourseSettings = () => {
     }
   };
 
+  const handleEditPeriod = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingStartDate || !editingEndDate || !selectedCourse || editingPeriodId === null) return;
+
+    try {
+      await exchangeRequestService.editCourseExchangePeriod(editingStartDate, editingEndDate, selectedCourse, editingPeriodId);
+      setEditingPeriodId(null);
+      setEditingStartDate(undefined);
+      setEditingEndDate(undefined);
+      mutate();
+    } catch (error) {
+      console.error("Failed to update exchange period:", error);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'yyyy-MM-dd HH:mm');
   };
@@ -49,6 +67,7 @@ export const AdminExchangeCourseSettings = () => {
   const getCurrentCoursePeriods = () => {
     if (!exchangeCoursePeriods?.courses || !selectedCourse) return [];
     const course = exchangeCoursePeriods.courses.find(c => c.courseId === selectedCourse);
+    console.log("Selected course:", course);
     return course ? course.exchangePeriods : [];
   };
 
@@ -100,6 +119,7 @@ export const AdminExchangeCourseSettings = () => {
                 <TableHead className="text-center px-12">#</TableHead>
                 <TableHead className="text-right font-mono px-12">Data de início</TableHead>
                 <TableHead className="text-right font-mono px-12">Data de término</TableHead>
+                <TableHead className="text-center">Ações</TableHead>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -108,20 +128,64 @@ export const AdminExchangeCourseSettings = () => {
                   getCurrentCoursePeriods().map((period, index) => (
                     <TableRow key={period.id}>
                       <TableCell className="text-center">{index + 1}</TableCell>
-                      <TableCell className="text-right font-mono px-5">{formatDate(period.startDate)}</TableCell>
-                      <TableCell className="text-right font-mono">{formatDate(period.endDate)}</TableCell>
+                      <TableCell className="text-right font-mono px-5">
+                        {editingPeriodId === period.id ? (
+                          <DateTimePicker
+                            value={editingStartDate}
+                            onChange={setEditingStartDate}
+                            showOutsideDays={false}
+                            weekStartsOn={1}
+                            showWeekNumber={false}
+                          />
+                        ) : (
+                          formatDate(period.startDate)
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        {editingPeriodId === period.id ? (
+                          <DateTimePicker
+                            value={editingEndDate}
+                            onChange={setEditingEndDate}
+                            showOutsideDays={false}
+                            weekStartsOn={1}
+                            showWeekNumber={false}
+                          />
+                        ) : (
+                          formatDate(period.endDate)
+                        )}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {editingPeriodId === period.id ? (
+                          <>
+                            <Button onClick={handleEditPeriod} className="mr-2" type="button">
+                              <CheckIcon className="h-5 w-5" />
+                            </Button>
+                            <Button onClick={() => setEditingPeriodId(null)} variant="destructive" type="button">
+                              Cancel
+                            </Button>
+                          </>
+                        ) : (
+                          <Button onClick={() => {
+                            setEditingPeriodId(period.id);
+                            setEditingStartDate(new Date(period.startDate));
+                            setEditingEndDate(new Date(period.endDate));
+                          }}>
+                            Editar
+                          </Button>
+                        )}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center">
+                    <TableCell colSpan={4} className="text-center">
                       Nenhum período encontrado para este curso
                     </TableCell>
                   </TableRow>
                 )
               ) : (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center">
+                  <TableCell colSpan={4} className="text-center">
                     Selecione um curso
                   </TableCell>
                 </TableRow>

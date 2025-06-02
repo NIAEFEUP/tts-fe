@@ -1,7 +1,6 @@
 import { Key } from "swr";
 import { AdminRequestType, CreateRequestData, MarketplaceRequest } from "../../@types";
 import api from "../backend";
-import { startOfDay } from "date-fns";
 
 const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
   for (const request of requests) {
@@ -163,6 +162,39 @@ const addCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selec
   });
 }
 
+const editCourseExchangePeriod = async (startDate: Date, endDate: Date, selectedCourse: number, periodId: number) => {
+  const payload = {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      courseId: selectedCourse
+  };
+    
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/${periodId}/`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": api.getCSRFToken(),
+      },
+      body: JSON.stringify(payload)
+  });
+};
+
+const editCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selectedCourseUnit: number, periodId: number) => {
+  const payload = {
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
+    courseId: selectedCourseUnit
+  };
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/${periodId}/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: JSON.stringify(payload)
+  });
+}
 
 const exchangeRequestService = {
   submitExchangeRequest,
@@ -177,6 +209,8 @@ const exchangeRequestService = {
   isDirectExchange,
   addCourseExchangePeriod,
   addCourseUnitExchangePeriod,
+  editCourseExchangePeriod,
+  editCourseUnitExchangePeriod
 }
 
 export default exchangeRequestService;
