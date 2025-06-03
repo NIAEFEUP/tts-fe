@@ -5,10 +5,11 @@ import { Button } from '../ui/button'
 import { Table, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
 import { useEffect, useState } from 'react'
 import useAdminExchangeCourseUnitPeriods from '../../hooks/admin/useAdminExchangeCourseUnitPeriods'
-import { CheckIcon, PlusIcon } from 'lucide-react'
+import { CheckIcon, PlusIcon, Edit2Icon, Trash2Icon } from 'lucide-react'
 import { DateTimePicker } from '../ui/datetime-picker';
 import exchangeRequestService from "../../api/services/exchangeRequestService";
 import { format } from 'date-fns';
+import { AdminExchangePeriodDeleteConfirmation } from "./AdminExchangePeriodDeleteConfirmation";
 
 interface ExchangePeriod {
   id: number;
@@ -29,6 +30,9 @@ export const AdminExchangeCourseUnitSettings = () => {
   const [editingStartDate, setEditingStartDate] = useState<Date | undefined>(undefined);
   const [editingEndDate, setEditingEndDate] = useState<Date | undefined>(undefined);
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [periodToDelete, setPeriodToDelete] = useState<number | null>(null);
+
   const courseUnits = courseUnitPeriods?.courseUnits || [];
 
   useEffect(() => {
@@ -40,14 +44,13 @@ export const AdminExchangeCourseUnitSettings = () => {
   const getCurrentPeriods = (): ExchangePeriod[] => {
     if (!courseUnits || !selectedCourseUnit) return [];
     const unit = courseUnits.find(u => u.id === selectedCourseUnit);
-
     return unit?.exchangePeriods?.map(period => ({
       id: period.id, 
       startDate: period.startDate,
       endDate: period.endDate
     })) || [];
   };
-  
+
   const handleAddPeriod = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!startDate || !endDate || !selectedCourseUnit) return;
@@ -109,6 +112,14 @@ export const AdminExchangeCourseUnitSettings = () => {
     }
   };
 
+  const confirmDelete = async () => {
+    if (periodToDelete !== null) {
+      await handleDeletePeriod(periodToDelete);
+      setPeriodToDelete(null);
+    }
+    setDeleteDialogOpen(false);
+  };
+
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'yyyy-MM-dd HH:mm');
   };
@@ -119,7 +130,7 @@ export const AdminExchangeCourseUnitSettings = () => {
         <p>Aqui podem ser definidas configurações para o período de trocas dos grupos de cadeiras responsáveis.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <Card className="col-span-2 rounded-2xl shadow-md">
           <CardHeader>
             <div className="flex flex-row justify-between items-center">
@@ -132,7 +143,7 @@ export const AdminExchangeCourseUnitSettings = () => {
 
           <CardContent>
             {addingPeriod && (
-              <form onSubmit={handleAddPeriod} className="flex flex-col md:flex-row gap-4 mb-6">
+              <form onSubmit={handleAddPeriod} className="flex flex-col xl:flex-row gap-4 mb-6">
                 <DateTimePicker
                   value={startDate}
                   onChange={setStartDate}
@@ -155,7 +166,7 @@ export const AdminExchangeCourseUnitSettings = () => {
                   <TableHead className="text-center w-12">#</TableHead>
                   <TableHead className="text-right font-mono">Início</TableHead>
                   <TableHead className="text-right font-mono">Fim</TableHead>
-                  <TableHead className="text-center">Ações</TableHead>
+                  <TableHead className="text-center font-mono">Ações</TableHead>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -186,11 +197,7 @@ export const AdminExchangeCourseUnitSettings = () => {
                       <TableCell className="flex justify-center gap-2 py-2">
                         {editingPeriodId === period.id ? (
                           <>
-                            <Button
-                              onClick={handleEditPeriod}
-                              size="sm"
-                              disabled={isLoading}
-                            >
+                            <Button onClick={handleEditPeriod} size="sm" disabled={isLoading}>
                               <CheckIcon className="h-4 w-4" />
                             </Button>
                             <Button
@@ -215,15 +222,18 @@ export const AdminExchangeCourseUnitSettings = () => {
                               }}
                               size="sm"
                             >
-                              Editar
+                              <Edit2Icon className="h-4 w-4" />
                             </Button>
                             <Button
-                              onClick={() => handleDeletePeriod(period.id)}
+                              onClick={() => {
+                                setPeriodToDelete(period.id);
+                                setDeleteDialogOpen(true);
+                              }}
                               variant="destructive"
                               size="sm"
                               disabled={isLoading}
                             >
-                              Apagar
+                              <Trash2Icon className="h-4 w-4" />
                             </Button>
                           </>
                         )}
@@ -257,12 +267,18 @@ export const AdminExchangeCourseUnitSettings = () => {
                   setSelectedCourseUnit(courseUnit.id);
                 }}
               >
-                {courseUnit.acronym}
+                {courseUnit.name}
               </Button>
             ))}
           </CardContent>
         </Card>
       </div>
+      
+      <AdminExchangePeriodDeleteConfirmation
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

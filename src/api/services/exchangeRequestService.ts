@@ -136,7 +136,6 @@ const addCourseExchangePeriod = async (startDate: Date, endDate: Date, selectedC
   const formData = new FormData();
   formData.append("startDate", startDate.toISOString());
   formData.append("endDate", endDate.toISOString()); 
-  formData.append("courseId" , selectedCourse.toString());
   return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/`, {
     method: "POST",
     credentials: "include",
@@ -151,7 +150,6 @@ const addCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selec
   const formData = new FormData();
   formData.append("startDate", startDate.toISOString());
   formData.append("endDate", endDate.toISOString());
-  formData.append("courseId" , selectedCourseUnit.toString());
   return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/`, {
     method: "POST",
     credentials: "include",
@@ -165,8 +163,7 @@ const addCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selec
 const editCourseExchangePeriod = async (startDate: Date, endDate: Date, selectedCourse: number, periodId: number) => {
   const payload = {
       startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-      courseId: selectedCourse
+      endDate: endDate.toISOString()
   };
     
   return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/${periodId}/`, {
@@ -183,8 +180,7 @@ const editCourseExchangePeriod = async (startDate: Date, endDate: Date, selected
 const editCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selectedCourseUnit: number, periodId: number) => {
   const payload = {
     startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-    courseId: selectedCourseUnit
+    endDate: endDate.toISOString()
   };
   return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/${periodId}/`, {
     method: "PUT",
