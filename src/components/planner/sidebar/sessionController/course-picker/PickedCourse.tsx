@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { CourseInfo } from '../../../../../@types'
-import CourseContext from '../../../../../contexts/CourseContext'
+import CoursePickerContext from '../../../../../contexts/coursePicker/CoursePickerContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { removeCourseOption } from '../../../../../utils'
 
@@ -10,7 +10,7 @@ type Props = {
 }
 
 const PickedCourse = ({ course }: Props) => {
-  const { checkboxedCourses, setCheckboxedCourses } = useContext(CourseContext)
+  const { checkboxedCourses, setCheckboxedCourses } = useContext(CoursePickerContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
 
   const removeCourse = () => {

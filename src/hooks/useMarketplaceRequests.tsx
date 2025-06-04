@@ -2,6 +2,7 @@ import useSWRInfinite from "swr/infinite";
 import { MarketplaceRequest } from "../@types";
 import api from "../api/backend";
 import exchangeRequestService from "../api/services/exchangeRequestService";
+import { useEffect, useState } from "react";
 
 const getUrl = (requestType: string) => {
   switch (requestType) {
@@ -22,6 +23,8 @@ const getUrl = (requestType: string) => {
  * 
 */
 export default (courseUnitNameFilter: Set<number>, requestType: string, classesFilter: Map<string, Set<string>>) => {
+  const [hasNext, setHasNext] = useState<boolean>(true);
+
   const classesFilterArray = Array.from(classesFilter, ([key, value]) => [key, Array.from(value)]);
   const classesFilterBase64 = btoa(JSON.stringify(classesFilterArray));
   const filters = `courseUnitNameFilter=${Array.from(courseUnitNameFilter).join(",")}&classesFilter=${classesFilterBase64}`;
@@ -37,8 +40,19 @@ export default (courseUnitNameFilter: Set<number>, requestType: string, classesF
     exchangeRequestService.retrieveMarketplaceRequest
   );
 
+
+  const requests = data ? [].concat(...data.map((el) => el["data"])) : [];
+
+  useEffect(() => {
+    if(data) {
+      const page = data[data.length - 1]["page"];
+      if(page) setHasNext(page["has_next"]);
+    }
+  }, [data])
+
   return {
-    data,
+    requests,
+    hasNext,
     isLoading,
     size,
     isValidating,

@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { convertWeekdayLong, getClassTypeClassName, getLessonBoxTime, getLessonTypeLongName } from '../../../utils'
+import { getClassTypeClassName, getLessonBoxTime, getLessonTypeLongName } from '../../../utils'
 import { ClassInfo, CourseInfo, SlotInfo } from '../../../@types'
 
 type Props = {
@@ -9,11 +9,11 @@ type Props = {
   conflict?: boolean
 }
 
-const ResponsiveLessonBox = ({ 
+const ResponsiveLessonBox = ({
   courseInfo,
   classInfo,
   slotInfo,
-  conflict 
+  conflict
 }: Props) => {
   const lessonType = slotInfo.lesson_type
 
@@ -72,8 +72,8 @@ const ResponsiveLessonBox = ({
             {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
           </span>
         </div>*/}
-       
-        
+
+
       </div>
     </div>
   )

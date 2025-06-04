@@ -28,7 +28,7 @@ const CombinedProvider = ({ children }: Props) => {
   const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
 
-  const { signedIn: userSignedIn, user, isLoading: isSessionLoading } = useSession();
+  const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
   const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
   useEffect(() => {
     setSignedIn(userSignedIn);
@@ -53,7 +53,7 @@ const CombinedProvider = ({ children }: Props) => {
   }
 
   return (
-    <SessionContext.Provider value={{ signedIn, setSignedIn, user, isSessionLoading }}>
+    <SessionContext.Provider value={{ signedIn, setSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
           <CourseContext.Provider value={

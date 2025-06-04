@@ -8,6 +8,7 @@
     "faqs": "faqs",
     "notfound": "*",
     "home": "home",
+    "admin": "admin",
     "privacypolicy": "privacy-policy"
   },
   "api": {

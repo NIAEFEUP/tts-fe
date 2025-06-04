@@ -1,12 +1,12 @@
 import { useContext } from 'react'
 import PickedCourse from './PickedCourse'
-import CourseContext from '../../../../../contexts/CourseContext'
+import CoursePickerContext from '../../../../../contexts/coursePicker/CoursePickerContext'
 import { NoCourseSelectedSVG } from '../../../../svgs'
 import { ScrollArea } from '../../../../ui/scroll-area'
 import { CourseInfo } from '../../../../../@types'
 
 const PickedCoursesList = () => {
-  const { checkboxedCourses } = useContext(CourseContext)
+  const { checkboxedCourses } = useContext(CoursePickerContext)
 
   return checkboxedCourses.length > 0 ? (
     <ScrollArea className="h-64 w-full pr-4 ">
