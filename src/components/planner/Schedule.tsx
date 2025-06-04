@@ -52,6 +52,16 @@ const Schedule = ({
     });
   }
 
+  const groupSlotsByDay = (slots: Array<SlotInfo>): Record<number, Array<SlotInfo>> => {
+    return slots.reduce((acc, slot) => {
+      if (!acc[slot.day]) {
+        acc[slot.day] = [];
+      }
+      acc[slot.day].push(slot);
+      return acc;
+    }, {} as Record<number, Array<SlotInfo>>);
+  };
+
   // Bottom Bar Configurations
   const [hiddenLessonsTypes, setHiddenLessonsTypes] = useState<string[]>([])
   const [showGrid, setShowGrid] = useShowGrid()
@@ -91,7 +101,7 @@ const Schedule = ({
                 {loadingSchedule ? (
                   <div className="flex flex-col justify-center items-center h-full w-full gap-8">
                     <p className="text-lg text-black dark:text-white">Carregando</p>
-                    <SyncLoader color={ enabled ? "#fff" : "#000" } size={8} />
+                    <SyncLoader color={enabled ? "#fff" : "#000"} size={8} />
                   </div>
                 ) : (
                   <SlotBoxes
@@ -118,18 +128,31 @@ const Schedule = ({
       </div>
 
       {/*Schedule mobile*/}
-      <div className="flex h-full w-full flex-col items-center justify-start space-y-2 lg:hidden">
-        <div className="flex w-full items-center justify-start gap-2" key={`responsive-lesson-row-${""}`}>
-          <div className="h-full w-1 rounded bg-primary" />
-          <div className="flex w-full flex-row flex-wrap items-center justify-start gap-2">
-            {slots.length === 0 && <p>Ainda não foram selecionadas turmas!</p>}
-            <SlotBoxes
-              slots={slotsOrderedByDay(slots)}
-              classes={classes}
-              hiddenLessonsTypes={hiddenLessonsTypes}
-            />
-          </div>
-        </div>
+      <div className="flex h-full w-full flex-col items-center justify-start space-y-4 md:hidden">
+        {slots.length === 0 ? (
+          <p className="w-full p-4 text-center">Ainda não foram selecionadas turmas!</p>
+        ) : (
+          Object.entries(groupSlotsByDay(slotsOrderedByDay(slots))).map(([day, daySlots]) => (
+            <div key={`mobile-day-${day}`} className="w-full">
+              <div className="flex items-center gap-2 px-2 py-1">
+                <div className="h-4 w-1 rounded-full bg-primary" />
+                <h3 className="font-bold text-gray-800 dark:text-white">
+                  {convertWeekdayLong(parseInt(day))}
+                </h3>
+              </div>
+
+              <div className="flex w-full items-start gap-2 pl-3">
+                <div className="flex w-full flex-col gap-2">
+                  <SlotBoxes
+                    slots={daySlots}
+                    classes={classes}
+                    hiddenLessonsTypes={hiddenLessonsTypes}
+                  />
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
     </>
