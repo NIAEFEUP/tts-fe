@@ -30,12 +30,12 @@ export const MineRequestCard = ({ request }: Props) => {
         onMouseLeave={() => { setHovered(false) }}
     >
         <CommonCardHeader
-            name={user.name}
+            name={request.issuer_name}
             username={user.username}
             request={request}
             hovered={hovered}
             openHook={[open, setOpen]}
-            classUserGoesToName={request.type === "marketplaceexchange" ? "class_issuer_goes_to" : "class_participant_goes_to"}
+            classUserGoesToName={request.type === "directexchange" ?  "class_participant_goes_to" : "class_issuer_goes_to"}
             showRequestStatus={true}
             hideAbility={false}
             hideHandler={() => { }}
@@ -59,7 +59,7 @@ export const MineRequestCard = ({ request }: Props) => {
             )}
         </CardContent>
         <CardFooter className={open ? "" : "hidden"}>
-            {(!request.canceled && !request.accepted) && <Button
+            {(!request.canceled && !request.accepted && request.type != "urgentexchange") && <Button
                 variant="destructive"
                 onClick={async () => {
                     await cancelMarketplaceExchange();
