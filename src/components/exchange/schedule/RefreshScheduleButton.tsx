@@ -16,7 +16,7 @@ export default function RefreshScheduleButton({
   return (
     <Button
       variant="icon"
-      className="absolute h-4 p-4 bg-lightish text-black dark:bg-darkish dark:text-white"
+      className="h-4 p-4 bg-lightish text-black dark:bg-darkish dark:text-white"
       onClick={() => {
         forceRefreshStudentSchedule();
       }}

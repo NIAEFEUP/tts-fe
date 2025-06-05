@@ -1,4 +1,3 @@
-import api from "../api/backend";
 import useSWR from "swr";
 import studentScheduleRequestService from "../api/services/studentScheduleRequestService";
 

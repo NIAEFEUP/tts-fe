@@ -26,9 +26,14 @@ const Layout = ({ children, location, liquid, title }: Props) => {
       </div>
 
       <Header location={location} siteTitle="Time Table Selector" />
-      <div className={classNames(liquid ? 'my-auto' : 'mb-auto')}>{children}</div>
-      <Footer />
+      <div className="flex flex-col flex-grow">
+        <div className={classNames('flex-grow', liquid ? 'sm:my-auto' : '')}>
+          {children}
+        </div>
+        <Footer />
+      </div>
     </div>
+
   )
 }
 
