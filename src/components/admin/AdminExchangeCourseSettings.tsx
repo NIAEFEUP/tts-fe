@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
-import { Table, TableHead, TableRow, TableBody, TableCell } from '../ui/table';
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table';
 import { useEffect, useState } from 'react';
 import exchangeRequestService from "../../api/services/exchangeRequestService";
 import useAdminExchangeCoursePeriods from '../../hooks/admin/useAdminExchangeCoursePeriods';
@@ -23,9 +23,10 @@ export const AdminExchangeCourseSettings = () => {
   const [editingPeriodId, setEditingPeriodId] = useState<number | null>(null);
   const [editingStartDate, setEditingStartDate] = useState<Date | undefined>(undefined);
   const [editingEndDate, setEditingEndDate] = useState<Date | undefined>(undefined);
-
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [periodToDelete, setPeriodToDelete] = useState<number | null>(null);
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const courses = exchangeCoursePeriods?.courses || [];
 
@@ -35,19 +36,35 @@ export const AdminExchangeCourseSettings = () => {
     }
   }, [courses]);
 
+  useEffect(() => {
+    if (!addingPeriod && editingPeriodId === null) {
+      setErrorMessage(null);
+    }
+  }, [addingPeriod, editingPeriodId]);
+
   const handleAddPeriod = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!startDate || !endDate || !selectedCourse) return;
 
     try {
       setIsLoading(true);
-      await exchangeRequestService.addCourseExchangePeriod(startDate, endDate, selectedCourse);
+      setErrorMessage(null); 
+    
+      const response = await exchangeRequestService.addCourseExchangePeriod(startDate, endDate, selectedCourse);
+    
+      if (!response.ok) {
+        const data = await response.json();
+        setErrorMessage(data.error || "Erro ao adicionar período.");
+        return;
+      }
+    
       setAddingPeriod(false);
       setStartDate(undefined);
       setEndDate(undefined);
       mutate();
     } catch (error) {
       console.error("Failed to add exchange period:", error);
+      setErrorMessage("Erro de rede ao adicionar o período.");
     } finally {
       setIsLoading(false);
     }
@@ -59,18 +76,27 @@ export const AdminExchangeCourseSettings = () => {
 
     try {
       setIsLoading(true);
-      await exchangeRequestService.editCourseExchangePeriod(
+      setErrorMessage(null);
+      const response = await exchangeRequestService.editCourseExchangePeriod(
         editingStartDate,
         editingEndDate,
         selectedCourse,
         editingPeriodId
       );
+      
+      if (!response.ok) {
+        const data = await response.json();
+        setErrorMessage(data.error || "Erro ao atualizar período.");
+        return;
+      }
+      
       setEditingPeriodId(null);
       setEditingStartDate(undefined);
       setEditingEndDate(undefined);
       mutate();
     } catch (error) {
       console.error("Failed to update exchange period:", error);
+      setErrorMessage("Erro de rede ao atualizar o período.");
     } finally {
       setIsLoading(false);
     }
@@ -116,13 +142,24 @@ export const AdminExchangeCourseSettings = () => {
           <CardHeader>
             <div className="flex flex-row justify-between items-center">
               <CardTitle className="text-xl">Períodos de troca ativos</CardTitle>
-              <Button onClick={() => setAddingPeriod(prev => !prev)} size="icon">
+              <Button onClick={() => {
+                setAddingPeriod(prev => {
+                  if (prev) setErrorMessage(null);
+                  return !prev;
+                });
+                setEditingPeriodId(null);
+              }} size="icon">
                 <PlusIcon className="h-5 w-5" />
               </Button>
             </div>
           </CardHeader>
 
           <CardContent>
+            {errorMessage && (
+              <div className="text-sm text-red-600 px-2 py-1 rounded-md bg-red-100 border border-red-300">
+                {errorMessage}
+              </div>
+            )}
             {addingPeriod && (
               <form onSubmit={handleAddPeriod} className="flex flex-col xl:flex-row gap-4 mb-6">
                 <DateTimePicker
@@ -142,21 +179,21 @@ export const AdminExchangeCourseSettings = () => {
             )}
 
             <Table className="w-full table-auto">
-              <TableHead>
+              <TableHeader>
                 <TableRow>
                   <TableHead className="text-center">#</TableHead>
-                  <TableHead className="text-right font-mono">Início</TableHead>
-                  <TableHead className="text-right font-mono">Fim</TableHead>
+                  <TableHead className="text-center font-mono">Início</TableHead>
+                  <TableHead className="text-center font-mono">Fim</TableHead>
                   <TableHead className="text-center font-mono">Ações</TableHead>
                 </TableRow>
-              </TableHead>
+              </TableHeader>
               <TableBody>
                 {selectedCourse ? (
                   getCurrentCoursePeriods().length > 0 ? (
                     getCurrentCoursePeriods().map((period, index) => (
                       <TableRow key={period.id}>
                         <TableCell className="text-center">{index + 1}</TableCell>
-                        <TableCell className="text-right font-mono">
+                        <TableCell className="text-center font-mono">
                           {editingPeriodId === period.id ? (
                             <DateTimePicker
                               value={editingStartDate}
@@ -166,7 +203,7 @@ export const AdminExchangeCourseSettings = () => {
                             formatDate(period.startDate)
                           )}
                         </TableCell>
-                        <TableCell className="text-right font-mono">
+                        <TableCell className="text-center font-mono">
                           {editingPeriodId === period.id ? (
                             <DateTimePicker
                               value={editingEndDate}
@@ -187,6 +224,7 @@ export const AdminExchangeCourseSettings = () => {
                                   setEditingPeriodId(null);
                                   setEditingStartDate(undefined);
                                   setEditingEndDate(undefined);
+                                  setErrorMessage(null);
                                 }}
                                 variant="destructive"
                                 size="sm"

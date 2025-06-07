@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
-import { Table, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
+import { Table, TableHead, TableHeader, TableRow, TableBody, TableCell } from '../ui/table'
 import { useEffect, useState } from 'react'
 import useAdminExchangeCourseUnitPeriods from '../../hooks/admin/useAdminExchangeCourseUnitPeriods'
 import { CheckIcon, PlusIcon, Edit2Icon, Trash2Icon } from 'lucide-react'
@@ -18,7 +18,7 @@ interface ExchangePeriod {
 }
 
 export const AdminExchangeCourseUnitSettings = () => {
-  const { courseUnitPeriods, mutate, error } = useAdminExchangeCourseUnitPeriods();
+  const { courseUnitPeriods, mutate } = useAdminExchangeCourseUnitPeriods();
   const [selectedGroup, setSelectedGroup] = useState<number>(0);
   const [selectedCourseUnit, setSelectedCourseUnit] = useState<number | null>(null);
   const [addingPeriod, setAddingPeriod] = useState<boolean>(false);
@@ -33,6 +33,8 @@ export const AdminExchangeCourseUnitSettings = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [periodToDelete, setPeriodToDelete] = useState<number | null>(null);
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const courseUnits = courseUnitPeriods?.courseUnits || [];
 
   useEffect(() => {
@@ -40,6 +42,12 @@ export const AdminExchangeCourseUnitSettings = () => {
       setSelectedCourseUnit(courseUnits[0].id);
     }
   }, [courseUnits]);
+
+  useEffect(() => {
+    if (!addingPeriod && editingPeriodId === null) {
+      setErrorMessage(null);
+    }
+  }, [addingPeriod, editingPeriodId]);
 
   const getCurrentPeriods = (): ExchangePeriod[] => {
     if (!courseUnits || !selectedCourseUnit) return [];
@@ -57,20 +65,27 @@ export const AdminExchangeCourseUnitSettings = () => {
 
     try {
       setIsLoading(true);
-      await exchangeRequestService.addCourseUnitExchangePeriod(
+      setErrorMessage(null);
+
+      const response = await exchangeRequestService.addCourseUnitExchangePeriod(
         startDate, 
         endDate, 
         selectedCourseUnit
       );
+
+      if (!response.ok) {
+        const data = await response.json();
+        setErrorMessage(data.error || "Erro ao adicionar período.");
+        return;
+      }
+
       setAddingPeriod(false);
       setStartDate(undefined);
       setEndDate(undefined);
-      if (error) {
-        console.error("Error fetching course unit periods:", error);
-      }
       mutate();
     } catch (error) {
       console.error("Failed to add exchange period:", error);
+      setErrorMessage("Erro de rede ao adicionar o período.");
     } finally {
       setIsLoading(false);
     }
@@ -82,18 +97,27 @@ export const AdminExchangeCourseUnitSettings = () => {
     
     try {
       setIsLoading(true);
-      await exchangeRequestService.editCourseUnitExchangePeriod(
+      setErrorMessage(null);
+      const response = await exchangeRequestService.editCourseUnitExchangePeriod(
         editingStartDate,
         editingEndDate,
         selectedCourseUnit,
         editingPeriodId
       );
+      
+      if (!response.ok) {
+        const data = await response.json();
+        setErrorMessage(data.error || "Erro ao atualizar período.");
+        return;
+      }
+      
       setEditingPeriodId(null);
       setEditingStartDate(undefined);
       setEditingEndDate(undefined);
       mutate();
     } catch (error) {
       console.error("Failed to update exchange period:", error);
+      setErrorMessage("Erro de rede ao atualizar o período.");
     } finally {
       setIsLoading(false);
     }
@@ -135,13 +159,25 @@ export const AdminExchangeCourseUnitSettings = () => {
           <CardHeader>
             <div className="flex flex-row justify-between items-center">
               <CardTitle className="text-xl">Períodos de troca ativos</CardTitle>
-              <Button onClick={() => setAddingPeriod(prev => !prev)} size="icon">
+              <Button onClick={() => {
+                setAddingPeriod(prev => {
+                  if (prev) setErrorMessage(null);
+                  return !prev;
+                });
+                setEditingPeriodId(null);
+              }} size="icon">
                 <PlusIcon className="h-5 w-5" />
               </Button>
             </div>
           </CardHeader>
 
           <CardContent>
+            {errorMessage && (
+              <div className="text-sm text-red-600 px-2 py-1 rounded-md bg-red-100 border border-red-300 mb-4">
+                {errorMessage}
+              </div>
+            )}
+
             {addingPeriod && (
               <form onSubmit={handleAddPeriod} className="flex flex-col xl:flex-row gap-4 mb-6">
                 <DateTimePicker
@@ -161,20 +197,20 @@ export const AdminExchangeCourseUnitSettings = () => {
             )}
 
             <Table className="w-full table-auto">
-              <TableHead>
+              <TableHeader>
                 <TableRow>
                   <TableHead className="text-center w-12">#</TableHead>
-                  <TableHead className="text-right font-mono">Início</TableHead>
-                  <TableHead className="text-right font-mono">Fim</TableHead>
+                  <TableHead className="text-center font-mono">Início</TableHead>
+                  <TableHead className="text-center font-mono">Fim</TableHead>
                   <TableHead className="text-center font-mono">Ações</TableHead>
                 </TableRow>
-              </TableHead>
+              </TableHeader>
               <TableBody>
                 {getCurrentPeriods().length > 0 ? (
                   getCurrentPeriods().map((period, index) => (
                     <TableRow key={period.id}>
                       <TableCell className="text-center">{index + 1}</TableCell>
-                      <TableCell className="text-right font-mono">
+                      <TableCell className="text-center font-mono">
                         {editingPeriodId === period.id ? (
                           <DateTimePicker
                             value={editingStartDate}
@@ -184,7 +220,7 @@ export const AdminExchangeCourseUnitSettings = () => {
                           formatDate(period.startDate)
                         )}
                       </TableCell>
-                      <TableCell className="text-right font-mono">
+                      <TableCell className="text-center font-mono">
                         {editingPeriodId === period.id ? (
                           <DateTimePicker
                             value={editingEndDate}
@@ -205,6 +241,7 @@ export const AdminExchangeCourseUnitSettings = () => {
                                 setEditingPeriodId(null);
                                 setEditingStartDate(undefined);
                                 setEditingEndDate(undefined);
+                                setErrorMessage(null);
                               }}
                               variant="destructive"
                               size="sm"
