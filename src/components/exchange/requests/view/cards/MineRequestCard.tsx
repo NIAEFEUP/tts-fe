@@ -11,7 +11,7 @@ import { MoonLoader } from "react-spinners";
 import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
-    request: MarketplaceRequest | UrgentRequest;
+    request: MarketplaceRequest;
 }
 
 export const MineRequestCard = ({ request }: Props) => {
@@ -32,7 +32,7 @@ export const MineRequestCard = ({ request }: Props) => {
         <CommonCardHeader
             name={request.issuer_name}
             username={user.username}
-            request={request as MarketplaceRequest}
+            request={request}
             hovered={hovered}
             openHook={[open, setOpen]}
             classUserGoesToName={request.type === "directexchange" ?  "class_participant_goes_to" : "class_issuer_goes_to"}
@@ -41,11 +41,6 @@ export const MineRequestCard = ({ request }: Props) => {
             hideHandler={() => { }}
         />
         <CardContent>
-            {open && request.type === "urgentexchange" && (request as UrgentRequest).message && (
-                <div className="px-4">
-                    {(request as UrgentRequest).message}
-                </div>
-            )}
             {open && (
                 <>
                     {request.options.map((option) => (
@@ -64,7 +59,7 @@ export const MineRequestCard = ({ request }: Props) => {
             )}
         </CardContent>
         <CardFooter className={open ? "" : "hidden"}>
-            {(!(request as MarketplaceRequest).canceled && !request.accepted && request.type != "urgentexchange") && <Button
+            {(!request.canceled && !request.accepted && request.type != "urgentexchange") && <Button
                 variant="destructive"
                 onClick={async () => {
                     await cancelMarketplaceExchange();
