@@ -167,6 +167,7 @@ export type UrgentRequest = {
   id: number,
   issuer_name: string,
   issuer_nmec: string,
+  type: string,
   date: string,
   message: string,
   accepted: boolean,

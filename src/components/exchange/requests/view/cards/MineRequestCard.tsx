@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { MarketplaceRequest } from "../../../../../@types";
+import { MarketplaceRequest, UrgentRequest } from "../../../../../@types";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import SessionContext from "../../../../../contexts/SessionContext";
 import { Card, CardContent, CardFooter } from "../../../../ui/card"
@@ -11,7 +11,7 @@ import { MoonLoader } from "react-spinners";
 import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
-    request: MarketplaceRequest
+    request: MarketplaceRequest | UrgentRequest;
 }
 
 export const MineRequestCard = ({ request }: Props) => {
@@ -32,7 +32,7 @@ export const MineRequestCard = ({ request }: Props) => {
         <CommonCardHeader
             name={request.issuer_name}
             username={user.username}
-            request={request}
+            request={request as MarketplaceRequest}
             hovered={hovered}
             openHook={[open, setOpen]}
             classUserGoesToName={request.type === "directexchange" ?  "class_participant_goes_to" : "class_issuer_goes_to"}
@@ -41,9 +41,9 @@ export const MineRequestCard = ({ request }: Props) => {
             hideHandler={() => { }}
         />
         <CardContent>
-            {open && request.type === "urgentexchange" && request.message && (
+            {open && request.type === "urgentexchange" && (request as UrgentRequest).message && (
                 <div className="px-4">
-                    {request.message}
+                    {(request as UrgentRequest).message}
                 </div>
             )}
             {open && (
@@ -64,7 +64,7 @@ export const MineRequestCard = ({ request }: Props) => {
             )}
         </CardContent>
         <CardFooter className={open ? "" : "hidden"}>
-            {(!request.canceled && !request.accepted && request.type != "urgentexchange") && <Button
+            {(!(request as MarketplaceRequest).canceled && !request.accepted && request.type != "urgentexchange") && <Button
                 variant="destructive"
                 onClick={async () => {
                     await cancelMarketplaceExchange();
