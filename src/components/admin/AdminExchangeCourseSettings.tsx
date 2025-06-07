@@ -2,14 +2,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
-import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table';
-import { useEffect, useState } from 'react';
-import exchangeRequestService from "../../api/services/exchangeRequestService";
 import useAdminExchangeCoursePeriods from '../../hooks/admin/useAdminExchangeCoursePeriods';
-import { CheckIcon, PlusIcon, Edit2Icon, Trash2Icon } from 'lucide-react';
-import { DateTimePicker } from '../ui/datetime-picker';
-import { format } from 'date-fns';
+import exchangeRequestService from "../../api/services/exchangeRequestService";
+import { PlusIcon } from 'lucide-react';
 import { AdminExchangePeriodDeleteConfirmation } from "./AdminExchangePeriodDeleteConfirmation";
+import { ExchangePeriodForm } from "./AdminExchangePeriodForm";
+import { ExchangePeriodTable, ExchangePeriod } from "./AdminExchangePeriodTable";
+import { useEffect, useState } from 'react';
 
 export const AdminExchangeCourseSettings = () => {
   const { exchangeCoursePeriods, mutate } = useAdminExchangeCoursePeriods();
@@ -25,7 +24,6 @@ export const AdminExchangeCourseSettings = () => {
   const [editingEndDate, setEditingEndDate] = useState<Date | undefined>(undefined);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [periodToDelete, setPeriodToDelete] = useState<number | null>(null);
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const courses = exchangeCoursePeriods?.courses || [];
@@ -42,22 +40,20 @@ export const AdminExchangeCourseSettings = () => {
     }
   }, [addingPeriod, editingPeriodId]);
 
-  const handleAddPeriod = async (e: React.FormEvent) => {
+  const handleAddPeriod = async (e) => {
     e.preventDefault();
     if (!startDate || !endDate || !selectedCourse) return;
-
     try {
       setIsLoading(true);
-      setErrorMessage(null); 
-    
-      const response = await exchangeRequestService.addCourseExchangePeriod(startDate, endDate, selectedCourse);
-    
+      setErrorMessage(null);
+      const response = await exchangeRequestService.addCourseExchangePeriod(
+        startDate, endDate, selectedCourse
+      );
       if (!response.ok) {
         const data = await response.json();
         setErrorMessage(data.error || "Erro ao adicionar período.");
         return;
       }
-    
       setAddingPeriod(false);
       setStartDate(undefined);
       setEndDate(undefined);
@@ -70,10 +66,9 @@ export const AdminExchangeCourseSettings = () => {
     }
   };
 
-  const handleEditPeriod = async (e: React.FormEvent) => {
+  const handleEditPeriod = async (e) => {
     e.preventDefault();
     if (!editingStartDate || !editingEndDate || !selectedCourse || editingPeriodId === null) return;
-
     try {
       setIsLoading(true);
       setErrorMessage(null);
@@ -83,13 +78,11 @@ export const AdminExchangeCourseSettings = () => {
         selectedCourse,
         editingPeriodId
       );
-      
       if (!response.ok) {
         const data = await response.json();
         setErrorMessage(data.error || "Erro ao atualizar período.");
         return;
       }
-      
       setEditingPeriodId(null);
       setEditingStartDate(undefined);
       setEditingEndDate(undefined);
@@ -123,12 +116,30 @@ export const AdminExchangeCourseSettings = () => {
     setDeleteDialogOpen(false);
   };
 
-  const formatDate = (dateString: string) => format(new Date(dateString), 'yyyy-MM-dd HH:mm');
-
-  const getCurrentCoursePeriods = () => {
+  const getCurrentCoursePeriods = (): ExchangePeriod[] => {
     if (!exchangeCoursePeriods?.courses || !selectedCourse) return [];
     const course = exchangeCoursePeriods.courses.find(c => c.courseId === selectedCourse);
     return course?.exchangePeriods || [];
+  };
+
+  const onEditChange = (periodId: number, newStartDate: Date, newEndDate: Date) => {
+    if (editingPeriodId === null) {
+      setEditingPeriodId(periodId);
+    }
+    setEditingStartDate(newStartDate);
+    setEditingEndDate(newEndDate);
+  };
+
+  const onCancelEdit = () => {
+    setEditingPeriodId(null);
+    setEditingStartDate(undefined);
+    setEditingEndDate(undefined);
+    setErrorMessage(null);
+  };
+
+  const onDelete = (periodId: number) => {
+    setPeriodToDelete(periodId);
+    setDeleteDialogOpen(true);
   };
 
   return (
@@ -156,126 +167,31 @@ export const AdminExchangeCourseSettings = () => {
 
           <CardContent>
             {errorMessage && (
-              <div className="text-sm text-red-600 px-2 py-1 rounded-md bg-red-100 border border-red-300">
+              <div className="text-sm text-red-600 px-2 py-1 rounded-md bg-red-100 border border-red-300 mb-4">
                 {errorMessage}
               </div>
             )}
             {addingPeriod && (
-              <form onSubmit={handleAddPeriod} className="flex flex-col xl:flex-row gap-4 mb-6">
-                <DateTimePicker
-                  value={startDate}
-                  onChange={setStartDate}
-                  placeholder="Início"
-                />
-                <DateTimePicker
-                  value={endDate}
-                  onChange={setEndDate}
-                  placeholder="Fim"
-                />
-                <Button type="submit" disabled={isLoading} className="md:mt-0">
-                  <CheckIcon className="h-5 w-5" />
-                </Button>
-              </form>
+              <ExchangePeriodForm
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                isLoading={isLoading}
+                onSubmit={handleAddPeriod}
+              />
             )}
-
-            <Table className="w-full table-auto">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-center">#</TableHead>
-                  <TableHead className="text-center font-mono">Início</TableHead>
-                  <TableHead className="text-center font-mono">Fim</TableHead>
-                  <TableHead className="text-center font-mono">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {selectedCourse ? (
-                  getCurrentCoursePeriods().length > 0 ? (
-                    getCurrentCoursePeriods().map((period, index) => (
-                      <TableRow key={period.id}>
-                        <TableCell className="text-center">{index + 1}</TableCell>
-                        <TableCell className="text-center font-mono">
-                          {editingPeriodId === period.id ? (
-                            <DateTimePicker
-                              value={editingStartDate}
-                              onChange={setEditingStartDate}
-                            />
-                          ) : (
-                            formatDate(period.startDate)
-                          )}
-                        </TableCell>
-                        <TableCell className="text-center font-mono">
-                          {editingPeriodId === period.id ? (
-                            <DateTimePicker
-                              value={editingEndDate}
-                              onChange={setEditingEndDate}
-                            />
-                          ) : (
-                            formatDate(period.endDate)
-                          )}
-                        </TableCell>
-                        <TableCell className="flex justify-center gap-2">
-                          {editingPeriodId === period.id ? (
-                            <>
-                              <Button onClick={handleEditPeriod} size="sm" disabled={isLoading}>
-                                <CheckIcon className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  setEditingPeriodId(null);
-                                  setEditingStartDate(undefined);
-                                  setEditingEndDate(undefined);
-                                  setErrorMessage(null);
-                                }}
-                                variant="destructive"
-                                size="sm"
-                              >
-                                Cancelar
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              <Button
-                                onClick={() => {
-                                  setEditingPeriodId(period.id);
-                                  setEditingStartDate(new Date(period.startDate));
-                                  setEditingEndDate(new Date(period.endDate));
-                                }}
-                                size="sm"
-                              >
-                                <Edit2Icon className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  setPeriodToDelete(period.id);
-                                  setDeleteDialogOpen(true);
-                                }}
-                                variant="destructive"
-                                size="sm"
-                                disabled={isLoading}
-                              >
-                                <Trash2Icon className="h-4 w-4" />
-                              </Button>
-                            </>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center text-muted-foreground py-4">
-                        Nenhum período encontrado.
-                      </TableCell>
-                    </TableRow>
-                  )
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground py-4">
-                      Selecione um curso
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <ExchangePeriodTable
+              periods={getCurrentCoursePeriods()}
+              editingPeriodId={editingPeriodId}
+              editingStartDate={editingStartDate}
+              editingEndDate={editingEndDate}
+              isLoading={isLoading}
+              onEditChange={onEditChange}
+              onEditSubmit={handleEditPeriod}
+              onCancelEdit={onCancelEdit}
+              onDelete={onDelete}
+            />
           </CardContent>
         </Card>
 
