@@ -41,6 +41,11 @@ export const MineRequestCard = ({ request }: Props) => {
             hideHandler={() => { }}
         />
         <CardContent>
+            {open && request.type === "urgentexchange" && request.message && (
+                <div className="px-4">
+                    {request.message}
+                </div>
+            )}
             {open && (
                 <>
                     {request.options.map((option) => (
