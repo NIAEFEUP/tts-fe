@@ -102,7 +102,7 @@ const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
   }).then(async (res) => {
     if(res.ok) {
       const json = await res.json();
-      return json.verified;
+      return json;
     } else {
       return false;
     }
@@ -212,6 +212,15 @@ const deleteCourseUnitExchangePeriod = async (selectedCourseUnit: number, period
   });
 }
 
+const revalidateExchangeRequest = async (exchangeRequestId: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/${exchangeRequestId}/revalidate/`, {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
 const exchangeRequestService = {
   submitExchangeRequest,
   retrieveMarketplaceRequest,
@@ -228,7 +237,8 @@ const exchangeRequestService = {
   editCourseExchangePeriod,
   editCourseUnitExchangePeriod,
   deleteCourseExchangePeriod,
-  deleteCourseUnitExchangePeriod
+  deleteCourseUnitExchangePeriod,
+  revalidateExchangeRequest
 }
 
 export default exchangeRequestService;

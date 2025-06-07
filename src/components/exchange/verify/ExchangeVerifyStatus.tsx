@@ -1,9 +1,14 @@
 import { Ban, Check } from "lucide-react"
 import { Button } from "../../ui/button"
 import { useNavigate } from "react-router-dom"
+import exchangeRequestService from "../../../api/services/exchangeRequestService";
+import { toast } from "../../../../src/components/ui/use-toast";
+
 
 type Props = {
-    verified: boolean
+    verified: boolean,
+    expired: boolean,
+    exchange_id: number
 }
 
 /**
@@ -11,7 +16,9 @@ type Props = {
  * verify was indeed so.
  */
 export const ExchangeVerifyStatus = ({
-    verified
+    verified, 
+    expired,
+    exchange_id
 }: Props) => {
     const navigate = useNavigate();
 
@@ -32,10 +39,33 @@ export const ExchangeVerifyStatus = ({
             </>
             : <>
                 <Ban size={100} />
-                <p className="w-1/3 text-center">
-                    O token pode estar incorreto ou as trocas associadas a este pedido foram invalidadas entretanto por outros
-                    pedidos feitos por ti ou pelas outras pessoas envolvidas no pedido!
-                </p>
+                <div className="flex flex-col items-center gap-y-2">
+                    <p className="w-1/3 text-center">
+                        { expired 
+                            ? "O token desta troca expirou, revalida a tua troca." 
+                            : "O token pode estar incorreto ou as trocas associadas a este pedido\
+                            foram invalidadas entretanto por outros pedidos feitos por ti ou pelas\
+                            outras pessoas envolvidas no pedido!"
+                        }
+                    </p>
+                    { expired &&
+                        <Button
+                            onClick={
+                                () => {
+                                    exchangeRequestService.revalidateExchangeRequest(exchange_id)
+                                    toast({
+                                        title: 'Troca revalidada',
+                                        description: 'Verifica o teu email para verificares a troca.',
+                                        duration: 2000,
+                                    })
+                                }    
+                            }
+                            
+                        >
+                            Revalidar a troca
+                        </Button>
+                    }
+                </div>
             </>
         }
     </div>)

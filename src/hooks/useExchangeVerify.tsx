@@ -7,10 +7,12 @@ import exchangeRequestService from "../api/services/exchangeRequestService";
  */
 export default (token: string) => {
   const { data, error, mutate, isLoading } = useSWR(token, exchangeRequestService.verifyExchangeRequest);
-  const verified = useMemo(() => data ? data : null, [data]);
+  const response = useMemo(() => data || { verified: false }, [data]);
 
   return {
-    verified,
+    verified : response["verified"],
+    expired : response["expired"],
+    exchange_id : response["exchange_id"],
     error,
     loading: isLoading,
     mutate,

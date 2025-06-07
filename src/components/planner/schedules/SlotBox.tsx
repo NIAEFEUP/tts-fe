@@ -29,7 +29,7 @@ const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: P
         />
       </div>
 
-      <div className="lg:hidden flex flex-col ">
+      <div className="lg:hidden flex flex-col w-full ">
         <ResponsiveLessonBox
           key={`course[${courseInfo.id}]-class[${classInfo.id}]-${slot.lesson_type}-${slot.id}`}
           courseInfo={courseInfo}

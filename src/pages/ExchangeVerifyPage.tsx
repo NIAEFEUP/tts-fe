@@ -15,14 +15,15 @@ import { MoonLoader } from "react-spinners";
  */
 const ExchangeVerifyPage = () => {
     const { token } = useParams();
-    const { verified, loading} = useExchangeVerify(token);
+    const { verified, expired, loading, exchange_id} = useExchangeVerify(token);
+
 
     return (<div className="flex flex-col flex-grow items-center justify-center min-h-screen mb-48">
         {loading
             ? <div>
                 <MoonLoader size={20} />
             </div>
-            : <ExchangeVerifyStatus verified={verified} />
+            : <ExchangeVerifyStatus verified={verified} expired={expired} exchange_id={exchange_id} />
         }
     </div>
     )
