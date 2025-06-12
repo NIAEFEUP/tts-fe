@@ -2,7 +2,7 @@ import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline"
 import api from "../../api/backend"
 import { Button } from "../ui/button"
 
-const FEDERATED_AUTH = Number(import.meta.env.VITE_FEDERATED_AUTH)
+const FEDERATED_AUTH = Number(import.meta.env.VITE_APP_FEDERATED_AUTH)
 
 type Props = {
   expanded: boolean
