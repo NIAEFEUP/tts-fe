@@ -165,7 +165,9 @@ export type DirectExchangeParticipant = {
 
 export type UrgentRequest = {
   id: number,
-  user_nmec: string,
+  issuer_name: string,
+  issuer_nmec: string,
+  type: string,
   date: string,
   message: string,
   accepted: boolean,
