@@ -6,41 +6,41 @@ import NitSigExport from './NitSigExport'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
 import React, { useContext, useRef } from 'react'
 import CourseContext from '../../../../contexts/CourseContext'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext' 
 import { csvDecode } from '../../../../utils/io'
 import { toast } from '../../../ui/use-toast'
-import api from '../../../../api/backend'
+import Backend from '../../../../api/backend'
+import StorageAPI from '../../../../api/storage'
+import { CourseInfo, CourseOption } from '../../../../@types'
 
-/**
- * Sidebar with all the main schedule interactions
- */
 const Export = () => {
 
   const fileInputRef = useRef(null);
-  const { pickedCourses, setPickedCourses, setCheckboxedCourses } = useContext(CourseContext);
+  const { setPickedCourses, setCheckboxedCourses } = useContext(CourseContext);
   const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext);
-
+  
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
-    if (!file) {
-      throw new Error('No file selected');
-    }
+    if (!file) throw new Error('No file selected');
 
     try {
+      // set loadingSchedule to true
       const content = csvDecode(await file.text());
-      console.log("input content",content);
       const courses = await getSelectedCourses(content);
-      console.log("selected courses",courses);
 
       setCheckboxedCourses(courses);
       setPickedCourses(courses);
       setCourseOptions(content, courses);
+      // set loadingSchedule to false
+      // TODO: THE CLASSES ONLY GET SELECTED AFTER SELECTING ANY RANDOM BUTTON, FIX THIS
     } catch (error) {
       toast({
         title: 'Não foi possível importar os horários!',
         description: 'Ocorreu um erro ao ler ou interpretar o ficheiro importado: ' + error,
         position: 'top-right',
       });
+    } finally {
+      // set loadingSchedule to false
     }
   };
 
@@ -50,7 +50,7 @@ const Export = () => {
     const courses: CourseInfo[] = [];
   
     const promises = content.map(async (row) => {
-      const res = await api.getCoursesByMajorId(parseInt(row[0]));
+      const res = await Backend.getCoursesByMajorId(parseInt(row[0]));
       const matchedCourses = res.filter(course => course.acronym === row[3]);
       courses.push(...matchedCourses);
     });
@@ -66,19 +66,22 @@ const Export = () => {
   };
 
   const setCourseOptions = async (content: string[][], courses: CourseInfo[]) => {
-    const updatedOptions = [...multipleOptions];
-
-    for (let i = 0; i < courses.length; i++) {
-      const courseOptions = await api.getCourseClass(courses[i]);
-      content[i].slice(4).forEach((courseOption, j) => {
-        const matchedClassOption = courseOptions.find(classOption => classOption.name === courseOption);
-        if (matchedClassOption) {
-          updatedOptions[j].course_options.push(createCourseOption(courses[i].id, matchedClassOption.id));
-        }
-      });
+    const scheduleOptions = content.map(row => row.slice(4));
+    for (let i = 0; i < scheduleOptions[0].length; i++) {
+      multipleOptions[i].course_options = [];
     }
 
-    setMultipleOptions(updatedOptions);
+    for (let i = 0; i < scheduleOptions.length; i++) {
+      for(let j = 0; j < 10; j++){
+        while(courses[i].classes === undefined) await new Promise(resolve => setTimeout(resolve, 100));
+        
+        const foundClassId = courses[i].classes.find(c => c.name === scheduleOptions[i][j]);
+        const newCourseOption = createCourseOption(courses[i].id, foundClassId ? foundClassId.id : null);
+        multipleOptions[j].course_options.push(newCourseOption);
+      }
+    }
+    StorageAPI.setMultipleOptionsStorage(multipleOptions);
+    setMultipleOptions(multipleOptions);
   };
 
 
