@@ -7,9 +7,15 @@ type Props = {
   classInfo: ClassInfo
   slot: SlotInfo
   classes: ClassDescriptor[]
+  setSlotBoxConflict: (courseId: number, conflictData: boolean) => void
 }
 
-const SlotBox = ({ courseInfo, classInfo, classes, slot }: Props) => {
+const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: Props) => {
+
+  const updateSlotBoxConflict = (courseId: number, conflictData: boolean) => {
+    setSlotBoxConflict(courseId, conflictData);
+  };
+
   return (
     <>
       <div className="hidden lg:flex lg:flex-col">
@@ -19,10 +25,11 @@ const SlotBox = ({ courseInfo, classInfo, classes, slot }: Props) => {
           classInfo={classInfo}
           slotInfo={slot}
           classes={classes.filter((classDescriptor) => classDescriptor.classInfo.id !== classInfo.id)}
+          setLessonBoxConflict={updateSlotBoxConflict}
         />
       </div>
 
-      <div className="lg:hidden flex flex-col ">
+      <div className="lg:hidden flex flex-col w-full ">
         <ResponsiveLessonBox
           key={`course[${courseInfo.id}]-class[${classInfo.id}]-${slot.lesson_type}-${slot.id}`}
           courseInfo={courseInfo}

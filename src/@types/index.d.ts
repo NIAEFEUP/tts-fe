@@ -24,6 +24,7 @@ export type Major = {
 
 export type CourseInfo = {
   id: number,
+  course: number,
   course_unit_year: number,
   course_unit_id: number,
   ects: number,
@@ -129,7 +130,10 @@ export type MarketplaceRequest = {
   date: string,
   options?: Array<ExchangeOption>,
   classes?: Array<ClassInfo>,
+  pending_motive?: DirectExchangePendingMotive,
   accepted: boolean,
+  admin_state: string,
+  canceled: boolean
 }
 
 export type DirectExchangeRequest = {
@@ -138,7 +142,9 @@ export type DirectExchangeRequest = {
   issuer_name: string,
   issuer_nmec: string,
   accepted: boolean,
-  pending_motive: DirectExchangePendingMotive,
+  canceled: boolean,
+  pending_motive?: DirectExchangePendingMotive,
+  admin_state: string,
   options: DirectExchangeParticipant[],
   date: string
 }
@@ -150,23 +156,79 @@ export type DirectExchangeParticipant = {
   participant_nmec: string,
   class_participant_goes_from: ClassInfo,
   class_participant_goes_to: ClassInfo,
+  schedule: Array<ClassDescriptor>,
   course_unit: string,
   course_unit_id: string,
   accepted: boolean
   date: string
 }
 
-export type Student = {
-  name: string,
-  mecNumber: number
+export type UrgentRequest = {
+  id: number,
+  issuer_name: string,
+  issuer_nmec: string,
+  type: string,
+  date: string,
+  message: string,
+  accepted: boolean,
+  admin_state: string,
+  options: Array<UrgentRequestOption>
+  schedule: Array<ClassDescriptor>
 }
 
-export type CollabSession = {
-  id: number
+export type UrgentRequestOption = {
+  course_unit: CourseInfo,
+  class_user_goes_from: ClassInfo,
+  class_user_goes_to: ClassInfo,
+}
+
+export type CourseUnitEnrollment = {
+  id: number,
+  date: string,
+  user_nmec: string,
+  admin_state: string,
+  accepted: boolean,
+  schedule: Array<ClassDescriptor>,
+  options: Array<CourseUnitEnrollmentOption>
+}
+
+export type CourseUnitEnrollmentOption = {
+  course_unit: CourseInfo,
+  course: Major,
+  enrolling: boolean,
+  class_user_goes_to: ClassInfo,
+}
+
+export enum AdminRequestType {
+  DIRECT_EXCHANGE = "direct_exchange",
+  URGENT_EXCHANGE = "urgent_exchange",
+  ENROLLMENT = "enrollment"
+}
+
+export type StudentCourseMetadata = {
+  nmec: string, 
+  fest_id: number,
+  course: CourseInfo
+}
+
+export type Student = {
+  name: string,
+  mecNumber: number,
+  classInfo?: ClassInfo
+}
+
+export type Participant = {
+  client_id: string
   name: string
-  lastEdited: string
-  lifeSpan: number
-  currentUser: string
+}
+
+// TODO(Process-ing): Maybe join Student and Participant into a single type
+
+export type CollabSession = {
+  id: string
+  name: string
+  lastEdited: number
+  expirationTime: number
   link: string
-  participants: Array<string>
+  participants: Array<Participant>
 }

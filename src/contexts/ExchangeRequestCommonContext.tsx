@@ -1,9 +1,11 @@
 import { Context, Dispatch, SetStateAction } from 'react'
 import { createContext } from 'react'
 import { ClassDescriptor, DirectExchangeRequest, MarketplaceRequest } from '../@types'
+import { StudentRequestCardStatus } from '../utils/requests'
 
 interface ExchangeRequestCommonContext {
   request: MarketplaceRequest | DirectExchangeRequest
+  setRequest: Dispatch<SetStateAction<MarketplaceRequest | DirectExchangeRequest>>
   hiddenRequests: Set<number>
   setHiddenRequests: Dispatch<SetStateAction<Set<number>>>
   chosenRequest: MarketplaceRequest | DirectExchangeRequest | null
@@ -18,10 +20,13 @@ interface ExchangeRequestCommonContext {
   togglePreview: (updatedOptions: Map<string, boolean>) => void
   hide: () => void
   handleSelectAll: () => void
+  requestStatus: StudentRequestCardStatus | undefined
+  setRequestStatus: Dispatch<SetStateAction<StudentRequestCardStatus | undefined>>
 }
 
 const ExchangeRequestCommonContext: Context<ExchangeRequestCommonContext> = createContext({
   request: null,
+  setRequest: () => { },
   hiddenRequests: new Set(),
   setHiddenRequests: () => { },
   chosenRequest: null,
@@ -35,7 +40,9 @@ const ExchangeRequestCommonContext: Context<ExchangeRequestCommonContext> = crea
   setOpen: () => { },
   togglePreview: () => { },
   hide: () => { },
-  handleSelectAll: () => { }
+  handleSelectAll: () => { },
+  requestStatus: undefined,
+  setRequestStatus: () => { }
 });
 
 export default ExchangeRequestCommonContext;

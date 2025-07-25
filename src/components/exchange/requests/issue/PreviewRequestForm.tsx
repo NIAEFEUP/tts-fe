@@ -1,26 +1,56 @@
+"use client";
+
+import { useContext } from "react";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { CreateRequestData } from "../../../../@types";
 import exchangeUtils from "../../../../utils/exchange";
 import { Desert } from "../../../svgs";
 import { Button } from "../../../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../../ui/dialog";
 import PreviewRequestCard from "./cards/PreviewRequestCard";
+import { Checkbox } from "../../../ui/checkbox";
+import { Textarea } from "../../../ui/textarea";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
+import ConflictsContext from "../../../../contexts/ConflictsContext";
+import exchangeRequestService from "../../../../api/services/exchangeRequestService";
 
 type Props = {
   requests: Map<number, CreateRequestData>
-  requestSubmitHandler: () => void
+  requestSubmitHandler: (message: string) => void
   previewingFormHook: [boolean, Dispatch<SetStateAction<boolean>>]
   submittingRequest: boolean
 }
 
 const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook, submittingRequest }: Props) => {
   const [previewingForm, setPreviewingForm] = previewingFormHook;
+  const [sendUrgentMessage, setSendUrgentMessage] = useState<boolean>(false);
+
+  const schema = z.object({
+    urgentMessage: sendUrgentMessage ? z.string().min(1, {
+      message: "Tens de especificar um motivo!"
+    }).max(2048) : z.string().optional()
+  });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema)
+  });
+
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    await requestSubmitHandler(data.urgentMessage);
+  }
+
+  const { isConflictSevere } = useContext(ConflictsContext);
 
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
     <DialogTrigger asChild>
-      <Button className="w-1/2">
+      <Button
+        className="w-full"
+      >
         Submeter pedido
       </Button>
     </DialogTrigger>
@@ -55,25 +85,55 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
       </div>
 
       {requests.size > 0 &&
-        <form className="flex flex-col gap-y-4 items-center mx-auto">
-          <Button
-            className="flex flex-row gap-x-2 success-button"
-            type="submit"
-            onClick={async (e) => {
-              e.preventDefault();
-              await requestSubmitHandler();
-            }}
-          >
-            {submittingRequest
-              ? <p>A processar pedido...</p>
-              : <>
-                <p>Submeter pedido</p>
-                <CheckBadgeIcon className="h-5 w-5" />
-              </>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 items-center mx-auto">
+            {!exchangeRequestService.isDirectExchange(requests.values()) && <div className="flex flex-row gap-x-2 items-center">
+              <Checkbox
+                checked={sendUrgentMessage}
+                onCheckedChange={(checked: boolean) => {
+                  setSendUrgentMessage(checked)
+                  if(!checked) form.setValue("urgentMessage", "")
+                }}
+              />
+              <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p>
+            </div>
             }
-          </Button>
-          {submittingRequest && <BeatLoader size={10} />}
-        </form>
+            {sendUrgentMessage &&
+              <FormField
+                control={form.control}
+                name="urgentMessage"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <>
+                        <Textarea
+                          {...field}
+                          placeholder="Justifica a urgência do teu pedido de troca. Irá ser enviado diretamente para a comissão de inscrição de turmas."
+                        />
+                        <p className="text-sm font-bold">Se quiseres enviar ficheiros como comprovativo, podes enviar para a comissão de inscrição de turmas.</p>
+                      </>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />}
+
+            <Button
+              className="flex flex-row gap-x-2 success-button"
+              type="submit"
+              disabled={sendUrgentMessage ? false : isConflictSevere}
+            >
+              {submittingRequest
+                ? <p>A processar pedido...</p>
+                : <>
+                  <p>Submeter pedido</p>
+                  <CheckBadgeIcon className="h-5 w-5" />
+                </>
+              }
+            </Button>
+            {submittingRequest && <BeatLoader size={10} />}
+          </form>
+        </Form>
       }
     </DialogContent>
   </Dialog >

@@ -1,8 +1,13 @@
-import { ArrowRightIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction } from "react"
 import { DirectExchangeParticipant, ExchangeOption } from "../../../../../@types"
 import { Checkbox } from "../../../../ui/checkbox"
 import { Separator } from "../../../../ui/separator"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../ui/table"
+
+export enum OptionOrder {
+    FROM_TO,
+    TO_FROM
+}
 
 type Props = {
     option: ExchangeOption | DirectExchangeParticipant
@@ -10,7 +15,9 @@ type Props = {
     setSelectAll: Dispatch<SetStateAction<boolean>>
     togglePreview: (selectedOptions: Map<string, boolean>) => void
     type: string
-    showChooseCheckbox?: boolean
+    optionOrder?: OptionOrder,
+    showChooseCheckbox?: boolean,
+    userWillExchangeTo?: string
 }
 
 export const ListRequestChanges = ({
@@ -19,7 +26,9 @@ export const ListRequestChanges = ({
     setSelectAll,
     togglePreview,
     type,
-    showChooseCheckbox = true
+    showChooseCheckbox = true,
+    optionOrder = OptionOrder.TO_FROM,
+    userWillExchangeTo = null
 }: Props) => {
     const [selectedOptions, setSelectedOptions] = selectedOptionsHook;
 
@@ -48,17 +57,36 @@ export const ListRequestChanges = ({
                 <label htmlFor={option.course_info.acronym} className="w-11/12">
                     <div className="flex flex-col">
                         <p>
-                            {option.course_info.acronym} - {option.course_info.name}
+                            <span className="font-bold">{option.course_info.acronym}</span> - {option.course_info.name}
                         </p>
-                        <div className="flex flex-row gap-x-2 items-center font-bold">
-                            <p>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_from.name : (option as ExchangeOption).class_issuer_goes_from.name}</p>
-                            <ArrowRightIcon className="w-5 h-5" />
-                            <p>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_to.name : (option as ExchangeOption).class_issuer_goes_to.name}</p>
-                        </div>
+                        {userWillExchangeTo && <p>Troca com {userWillExchangeTo}</p>}
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="font-bold text-black">
+                                        {optionOrder === OptionOrder.TO_FROM
+                                            ? "Turma onde estás"
+                                            : "Turma para onde vais"
+                                        }
+                                    </TableHead>
+                                    <TableHead className="font-bold text-black">
+                                        {optionOrder === OptionOrder.TO_FROM
+                                            ? "Turma para onde vais"
+                                            : "Turma onde estás"
+                                        }
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_from.name : (option as ExchangeOption).class_issuer_goes_from?.name}</TableCell>
+                                    <TableCell>{type === "directexchange" ? (option as DirectExchangeParticipant).class_participant_goes_to.name : (option as ExchangeOption).class_issuer_goes_to?.name}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
                     </div>
                 </label>
             </div>
         </div>
-
     </>
 }

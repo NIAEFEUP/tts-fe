@@ -5,6 +5,7 @@ import { ThemeContext } from '../../contexts/ThemeContext'
 
 export const DarkModeSwitch = () => {
   const { enabled, setEnabled } = useContext(ThemeContext)
+
   return (
     <Switch.Group>
       <div className="flex items-center">

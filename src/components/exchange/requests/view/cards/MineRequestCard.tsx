@@ -1,18 +1,27 @@
 import { useContext, useState } from "react";
-import { MarketplaceRequest } from "../../../../../@types";
+import { MarketplaceRequest, UrgentRequest } from "../../../../../@types";
 import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeRequestCommonContext";
 import SessionContext from "../../../../../contexts/SessionContext";
 import { Card, CardContent, CardFooter } from "../../../../ui/card"
 import { CommonCardHeader } from "./CommonCardHeader";
 import { ListRequestChanges } from "./ListRequestChanges";
+import { Button } from "../../../../ui/button";
+import useCancelMarketplaceExchange from "../../../../../hooks/exchange/useCancelMarketplaceExchange";
+import { MoonLoader } from "react-spinners";
+import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
-    request: MarketplaceRequest
+    request: MarketplaceRequest | UrgentRequest;
 }
 
 export const MineRequestCard = ({ request }: Props) => {
-    const { open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview } = useContext(ExchangeRequestCommonContext);
+    const {
+        open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview,
+        setRequestStatus
+    } = useContext(ExchangeRequestCommonContext);
     const [hovered, setHovered] = useState<boolean>(false);
+
+    const { trigger: cancelMarketplaceExchange, isMutating: cancelingMarketplaceExchange } = useCancelMarketplaceExchange(request.id);
 
     const { user } = useContext(SessionContext);
 
@@ -21,17 +30,22 @@ export const MineRequestCard = ({ request }: Props) => {
         onMouseLeave={() => { setHovered(false) }}
     >
         <CommonCardHeader
-            name={user.name}
+            name={request.issuer_name}
             username={user.username}
-            request={request}
+            request={request as MarketplaceRequest}
             hovered={hovered}
             openHook={[open, setOpen]}
-            classUserGoesToName={request.type === "marketplaceexchange" ? "class_issuer_goes_to" : "class_participant_goes_to"}
+            classUserGoesToName={request.type === "directexchange" ? "class_participant_goes_to" : "class_issuer_goes_to"}
             showRequestStatus={true}
             hideAbility={false}
             hideHandler={() => { }}
         />
         <CardContent>
+            {open && request.type === "urgentexchange" && (request as UrgentRequest).message && (
+                <div className="px-4">                    
+                    {(request as UrgentRequest).message}
+                </div>)
+            }
             {open && (
                 <>
                     {request.options.map((option) => (
@@ -43,26 +57,26 @@ export const MineRequestCard = ({ request }: Props) => {
                             togglePreview={togglePreview}
                             showChooseCheckbox={false}
                             type={request.type}
+                            userWillExchangeTo={option.other_student ? `${option.other_student}` : null}
                         />
                     ))}
                 </>
             )}
         </CardContent>
         <CardFooter className={open ? "" : "hidden"}>
-            {/* <div className="flex flex-row justify-between w-full items-center"> */}
-            {/*     <form className="flex flex-row gap-2"> */}
-            {/*         {!request.accepted && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT && */}
-            {/*             <Button */}
-            {/*                 type="submit" */}
-            {/*                 className="success-button hover:bg-white" */}
-            {/*             > */}
-            {/*                 Aceitar */}
-            {/*             </Button> */}
-            {/*         } */}
-            {/*     </form> */}
-            {/* </div> */}
-
+            {(!(request as MarketplaceRequest).canceled && !request.accepted && request.type != "urgentexchange") && <Button
+                variant="destructive"
+                onClick={async () => {
+                    await cancelMarketplaceExchange();
+                    setRequestStatus(StudentRequestCardStatus.CANCELED)
+                }}
+            >
+                {cancelingMarketplaceExchange
+                    ? <MoonLoader size={20} />
+                    : "Cancelar"
+                }
+            </Button>
+            }
         </CardFooter>
-
     </Card>
 }
