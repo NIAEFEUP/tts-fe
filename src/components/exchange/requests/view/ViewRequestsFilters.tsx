@@ -1,12 +1,21 @@
-import { Dispatch, SetStateAction, useContext } from "react"
-import { CourseInfo } from "../../../../@types"
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
+import { CourseInfo, MarketplaceRequest } from "../../../../@types"
 import ScheduleContext from "../../../../contexts/ScheduleContext"
 import { Skeleton } from "../../../ui/skeleton"
 import { ViewRequestBadgeFilter } from "./ViewRequestBadgeFilter"
+import {
+  Select ,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+}
+from "../../../ui/select"
 
 type Props = {
   filterCourseUnitsHook: [Set<number>, Dispatch<SetStateAction<Set<number>>>]
   classesFilterHook: [Map<string, Set<string>>, Dispatch<SetStateAction<Map<string, Set<string>>>>]
+  setRequestStateFilter : Dispatch<SetStateAction<string>>
 }
 
 const ViewRequestsFiltersSkeletons = () => {
@@ -21,10 +30,13 @@ const ViewRequestsFiltersSkeletons = () => {
 
 export const ViewRequestsFilters = ({
   filterCourseUnitsHook,
-  classesFilterHook
+  classesFilterHook,
+  setRequestStateFilter 
 }: Props) => {
   const { enrolledCourseUnits, loadingSchedule } = useContext(ScheduleContext);
 
+
+  
   return <div className="flex flex-row justify-between w-full">
     {/* Course unit filters */}
     {loadingSchedule ? <ViewRequestsFiltersSkeletons />
@@ -42,5 +54,22 @@ export const ViewRequestsFilters = ({
           }
         </div>
       </div>}
+    {(
+      <Select
+       
+        onValueChange={(value) => setRequestStateFilter(value)}
+      >
+      
+        <SelectTrigger className="w-64">
+          <SelectValue placeholder="Filtrar por tipo" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Todos</SelectItem>
+          <SelectItem value="pending">Pendentes</SelectItem>
+          <SelectItem value="accepted">Aceites</SelectItem>
+          <SelectItem value="canceled">Canceladas</SelectItem>
+        </SelectContent>
+      </Select>
+    )}
   </div>
 }

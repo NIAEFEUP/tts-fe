@@ -13,8 +13,17 @@ import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
 
+
 type Props = {
     setCreatingRequest: Dispatch<SetStateAction<boolean>>
+}
+
+const isRequestVisible = (request: any, filter: string) => {
+    if (filter === "all") return true;
+    if (filter === "accepted") return request.accepted;
+    if (filter === "canceled") return request.canceled;
+    if (filter === "pending") return !request.accepted && !request.canceled;
+    return false;
 }
 
 const requestTypeFilters = ["all", "mine", "received"];
@@ -61,7 +70,7 @@ export const ViewRequests = ({
     const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
     const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
     const [classesFilter, setClassesFilter] = useState<Map<string, Set<string>>>(new Map());
-
+    const [requestStateFilter, setRequestStateFilter] = useState<string>("all");
     // This is to keep track of the request of the request card that is currently open
     const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
@@ -69,7 +78,7 @@ export const ViewRequests = ({
         filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter], classesFilter
     );
 
-    const requests = data ? [].concat(...data) : [];
+    const requests = data ? [].concat(...data) : [];    
 
     const onScroll = () => {
         if (!requestCardsContainerRef.current) return;
@@ -115,6 +124,7 @@ export const ViewRequests = ({
                 <ViewRequestsFilters
                     filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
                     classesFilterHook={[classesFilter, setClassesFilter]}
+                    setRequestStateFilter={setRequestStateFilter}
                 />
                 <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-[70vh]">
                     {
@@ -122,7 +132,7 @@ export const ViewRequests = ({
                             ? <RequestCardSkeletons /> : <>
                                 {
                                     <EmptyRequestGuard requests={requests}>
-                                        {requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
+                                        {requests?.filter((request) => request !== undefined && isRequestVisible(request, requestStateFilter)).map((request: MarketplaceRequest) => (
                                             <CommonRequestCard
                                                 key={request.id}
                                                 request={request}
@@ -145,13 +155,14 @@ export const ViewRequests = ({
                 <ViewRequestsFilters
                     filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
                     classesFilterHook={[classesFilter, setClassesFilter]}
+                    setRequestStateFilter={setRequestStateFilter}
                 />
                 {/* <ViewSentRequests /> */}
                 <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
                     {isLoading
                         ? <RequestCardSkeletons />
                         : <EmptyRequestGuard requests={requests}>
-                            {requests?.filter((request) => request !== undefined).map((request: MarketplaceRequest) => (
+                            {requests?.filter((request) => request !== undefined && isRequestVisible(request, requestStateFilter)).map((request: MarketplaceRequest) => (
                                 <CommonRequestCard
                                     key={request.id}
                                     request={request}
@@ -175,9 +186,10 @@ export const ViewRequests = ({
                 <ViewRequestsFilters
                     filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
                     classesFilterHook={[classesFilter, setClassesFilter]}
+                    setRequestStateFilter={setRequestStateFilter}
                 />
                 <div className="mt-4">
-                    {requests.map((request) => (
+                    {requests?.filter((request) => request !== undefined && isRequestVisible(request, requestStateFilter)).map((request) => (
                         <CommonRequestCard
                             key={request.id}
                             request={request}
