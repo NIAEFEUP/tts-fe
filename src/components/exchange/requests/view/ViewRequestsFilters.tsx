@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { CourseInfo, MarketplaceRequest } from "../../../../@types"
+import { Dispatch, SetStateAction, useContext } from "react"
+import { CourseInfo } from "../../../../@types"
 import ScheduleContext from "../../../../contexts/ScheduleContext"
 import { Skeleton } from "../../../ui/skeleton"
 import { ViewRequestBadgeFilter } from "./ViewRequestBadgeFilter"
