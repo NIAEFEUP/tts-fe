@@ -39,7 +39,6 @@ const ExchangeSchedule = () => {
 
 
   const getCombinedClassName = (classes: ClassDescriptor[]): string => {
-
     const praticalClass = classes.find((cls) =>
       cls.classInfo.slots.some(slot => slot.lesson_type === "TP" || slot.lesson_type === "PL")
     );
@@ -50,9 +49,9 @@ const ExchangeSchedule = () => {
   };
 
   return <Schedule
-    classes={classes}
-    slots={slots}
-  />;
+      classes={classes}
+      slots={slots}
+    />;
 }
 
 export default ExchangeSchedule;

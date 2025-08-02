@@ -7,6 +7,7 @@ const useSession = () => {
     try {
       const res = await fetch(`${api.BACKEND_URL}/${key}`, {
         method: "GET",
+        credentials: "include"
       });
 
       return await res.json();
@@ -15,8 +16,8 @@ const useSession = () => {
     }
   }
 
-  const { data, isLoading } = useSwr("auth/info/", trySession, {
-    refreshInterval: 3600000000,
+  const { data, isLoading, mutate } = useSwr("auth/info/", trySession, {
+    focusThrottleInterval: 1800000
   });
 
   if (data) {
@@ -26,6 +27,7 @@ const useSession = () => {
   return {
     signedIn: data ? data.signed : false,
     user: data ? data : null,
+    forceScheduleRevalidation: mutate,
     isLoading
   }
 }

@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useRef, useState } from "react";
 import { DirectExchangeRequest, MarketplaceRequest } from "../../../../@types";
 import ScheduleContext from "../../../../contexts/ScheduleContext";
 import useMarketplaceRequests from "../../../../hooks/useMarketplaceRequests";
@@ -12,10 +12,12 @@ import { MineRequestCard } from "./cards/MineRequestCard";
 import { ReceivedRequestCard } from "./cards/ReceivedRequestCard";
 import { RequestCard } from "./cards/RequestCard";
 import { ViewRequestsFilters } from "./ViewRequestsFilters";
+import { ExchangeSidebarStatus } from "../../../../pages/Exchange";
+import { MoonLoader } from "react-spinners";
 
 
 type Props = {
-    setCreatingRequest: Dispatch<SetStateAction<boolean>>
+    setExchangeSidebarStatus: Dispatch<SetStateAction<ExchangeSidebarStatus>>
 }
 
 const isRequestVisible = (request: any, filter: string) => {
@@ -61,8 +63,36 @@ const RequestCardSkeletons = () => {
     </>
 }
 
+const ViewMoreButton = ({
+    hasNext,
+    setSize,
+    size,
+    isValidating
+}: {
+    hasNext: boolean
+    setSize: Dispatch<SetStateAction<number>>
+    size: number
+    isValidating: boolean
+}) => {
+    return <>
+        {hasNext &&
+            <Button
+                variant="secondary"
+                onClick={() => {
+                    setSize(size + 1)
+                }}
+            >
+                {isValidating 
+                    ? <MoonLoader size={20} />
+                    : "Ver mais"
+                }
+            </Button>
+        }
+    </>
+}
+
 export const ViewRequests = ({
-    setCreatingRequest
+    setExchangeSidebarStatus
 }: Props) => {
     const { originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
     const requestCardsContainerRef = useRef(null);
@@ -74,11 +104,10 @@ export const ViewRequests = ({
     // This is to keep track of the request of the request card that is currently open
     const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
-    const { data, size, setSize, isLoading } = useMarketplaceRequests(
+    const { requests, size, setSize, isLoading, hasNext, isValidating } = useMarketplaceRequests(
         filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter], classesFilter
     );
-
-    const requests = data ? [].concat(...data) : [];    
+ 
 
     const onScroll = () => {
         if (!requestCardsContainerRef.current) return;
@@ -102,16 +131,18 @@ export const ViewRequests = ({
     return <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
         <div className="flex flex-row justify-between items-center w-full">
             <h1 className="font-bold text-xl">Pedidos</h1>
-            <Button
-                className="add-item-button"
-                onClick={() => {
-                    setCreatingRequest(true);
-                    setExchangeSchedule(originalExchangeSchedule);
-                }}
-            >
-                Criar pedido
-                <PlusIcon className="h-5 w-5" />
-            </Button>
+            <div className="flex flex-row gap-x-2">
+                <Button
+                    className="add-item-button"
+                    onClick={() => {
+                        setExchangeSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST);
+                        setExchangeSchedule(originalExchangeSchedule);
+                    }}
+                >
+                    Criar pedido
+                    <PlusIcon className="h-5 w-5" />
+                </Button>
+            </div>
         </div>
 
         <Tabs defaultValue="todos" className="mt-2 w-full">
@@ -134,7 +165,7 @@ export const ViewRequests = ({
                                     <EmptyRequestGuard requests={requests}>
                                         {requests?.filter((request) => request !== undefined && isRequestVisible(request, requestStateFilter)).map((request: MarketplaceRequest) => (
                                             <CommonRequestCard
-                                                key={request.id}
+                                                key={request?.id}
                                                 request={request}
                                                 hiddenRequests={hiddenRequests}
                                                 setHiddenRequests={setHiddenRequests}
@@ -145,6 +176,12 @@ export const ViewRequests = ({
                                                 <RequestCard />
                                             </CommonRequestCard>
                                         ))}
+                                        <ViewMoreButton
+                                            hasNext={hasNext}
+                                            setSize={setSize}
+                                            size={size}
+                                            isValidating={isValidating}
+                                        />
                                     </EmptyRequestGuard>
                                 }
                             </>
@@ -178,6 +215,12 @@ export const ViewRequests = ({
                                 </CommonRequestCard>
 
                             ))}
+                            <ViewMoreButton
+                                hasNext={hasNext}
+                                setSize={setSize}
+                                size={size}
+                                isValidating={isValidating}
+                            />
                         </EmptyRequestGuard>
                     }
                 </div>
@@ -188,22 +231,35 @@ export const ViewRequests = ({
                     classesFilterHook={[classesFilter, setClassesFilter]}
                     setRequestStateFilter={setRequestStateFilter}
                 />
-                <div className="mt-4">
-                    {requests?.filter((request) => request !== undefined && isRequestVisible(request, requestStateFilter)).map((request) => (
-                        <CommonRequestCard
-                            key={request.id}
-                            request={request}
-                            hiddenRequests={hiddenRequests}
-                            setHiddenRequests={setHiddenRequests}
-                            setChosenRequest={setChosenRequest}
-                            chosenRequest={chosenRequest}
-                            type={request.type}
-                        >
-                            <ReceivedRequestCard
-                                request={request}
+
+                <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-screen">
+                    {isLoading
+                        ? <RequestCardSkeletons />
+                        : <EmptyRequestGuard requests={requests}>
+                            {requests?.filter((request) => request !== undefined && isRequestVisible(request, requestStateFilter)).map((request) => (
+                                <CommonRequestCard
+                                    key={request?.id}
+                                    request={request}
+                                    hiddenRequests={hiddenRequests}
+                                    setHiddenRequests={setHiddenRequests}
+                                    setChosenRequest={setChosenRequest}
+                                    chosenRequest={chosenRequest}
+                                    type={request?.type}
+                                >
+                                    <ReceivedRequestCard
+                                        request={request}
+                                    />
+                                </CommonRequestCard>
+                            ))}
+                            <ViewMoreButton
+                                hasNext={hasNext}
+                                setSize={setSize}
+                                size={size}
+                                isValidating={isValidating}
+
                             />
-                        </CommonRequestCard>
-                    ))}
+                        </EmptyRequestGuard>
+                    }
                 </div>
             </TabsContent>
         </Tabs>

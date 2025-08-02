@@ -4,6 +4,7 @@ import ExchangeRequestCommonContext from "../../../../../contexts/ExchangeReques
 import ScheduleContext from "../../../../../contexts/ScheduleContext";
 import useSchedule from "../../../../../hooks/useSchedule";
 import { toast } from "../../../../ui/use-toast";
+import { StudentRequestCardStatus } from "../../../../../utils/requests";
 
 type Props = {
   children: React.ReactNode;
@@ -28,6 +29,8 @@ export const CommonRequestCard = ({
   const [open, setOpen] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<Map<string, boolean>>(new Map());
   const [selectAll, setSelectAll] = useState<boolean>(true);
+  const [requestStatus, setRequestStatus] = useState<StudentRequestCardStatus | undefined>(undefined);
+  const [currRequest, setCurrRequest] = useState<MarketplaceRequest | DirectExchangeRequest | null>(request);
   const originalSchedule = useSchedule();
 
   const hide = () => {
@@ -84,10 +87,13 @@ export const CommonRequestCard = ({
       }
     );
 
+    if(!exchangeSchedule) return;
+
     if (anySelected) {
       request.options.forEach((option) => {
         if (updatedOptions.get(option.course_info.acronym) === true) {
           const matchingClass = (type === "directexchange" ? option.class_participant_goes_to : option.class_issuer_goes_from);
+          if(!matchingClass) return;
           matchingClass.slots.forEach((slot) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,
@@ -104,7 +110,8 @@ export const CommonRequestCard = ({
   };
 
   return <ExchangeRequestCommonContext.Provider value={{
-    request: request,
+    request: currRequest,
+    setRequest: setCurrRequest,
     hiddenRequests: hiddenRequests,
     setHiddenRequests: setHiddenRequests,
     chosenRequest: chosenRequest,
@@ -119,6 +126,8 @@ export const CommonRequestCard = ({
     togglePreview: togglePreview,
     hide: hide,
     handleSelectAll: handleSelectAll,
+    requestStatus: requestStatus,
+    setRequestStatus: setRequestStatus
   }}>
     {children}
   </ExchangeRequestCommonContext.Provider>

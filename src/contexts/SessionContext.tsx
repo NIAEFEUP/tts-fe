@@ -5,13 +5,15 @@ interface SessionContextContent {
   user: any
   isSessionLoading: boolean
   setSignedIn: Dispatch<SetStateAction<boolean>>
+  forceScheduleRevalidation: () => void
 }
 
 const SessionContext: Context<SessionContextContent> = createContext({
   signedIn: false,
   user: null,
   isSessionLoading: false,
-  setSignedIn: () => { }
+  setSignedIn: () => { },
+  forceScheduleRevalidation: () => { }
 });
 
 export default SessionContext

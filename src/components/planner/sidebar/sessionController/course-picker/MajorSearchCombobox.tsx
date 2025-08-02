@@ -20,6 +20,7 @@ interface Props {
  */
 const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   const { majors } = useContext(MajorContext)
+
   const [open, setOpen] = useState(false)
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined)
 
@@ -35,7 +36,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
       .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen}> 
       <PopoverTrigger asChild>
         <Button
           ref={(node) => {
