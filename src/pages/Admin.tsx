@@ -17,20 +17,13 @@ const AdminPage = ({ page }: Props) => {
   const isAuthorized = signedIn && user?.is_admin;
 
   useEffect(() => {
-    if (isSessionLoading) return;
-
-    if (!user?.is_admin) {
+    if (!isSessionLoading && !isAuthorized) {
       navigate("/planner");
     }
-  }, [user, isSessionLoading, navigate]);
+  }, [isSessionLoading, isAuthorized, navigate]);
+  
 
-  if (isSessionLoading) {
-    return null;
-  }
-
-  if (!isAuthorized) {
-    return null;
-  }
+  if (isSessionLoading || !isAuthorized) return null;
 
   return (
     <SidebarProvider>
