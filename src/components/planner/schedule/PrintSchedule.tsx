@@ -5,7 +5,7 @@ import { CameraIcon } from '@heroicons/react/24/outline'
 import { toPng } from 'html-to-image'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
-import { LogoNIAEFEUPImage } from '../../../images'
+
 
 type Props = {
   component: any
@@ -19,8 +19,7 @@ const PrintSchedule = ({ component, optionName }: Props) => {
     (isThemeEnabled) => {
       if (!component.current) return
 
-      const original = component.current
-      const rect = original.getBoundingClientRect()
+      const rect = component.current.getBoundingClientRect()
       const generalPadding = rect.height * 0.05
 
       // Create container
@@ -34,7 +33,7 @@ const PrintSchedule = ({ component, optionName }: Props) => {
       container.style.display = 'none' // hide until everything loaded
 
       // Clone original
-      const clone = original.cloneNode(true) as HTMLElement
+      const clone = component.current.cloneNode(true) as HTMLElement
 
       // Remove bottom bar
       const bottomBars = clone.querySelectorAll('div.flex.justify-end')
@@ -45,15 +44,10 @@ const PrintSchedule = ({ component, optionName }: Props) => {
       }
 
       container.appendChild(clone)
-
-
       document.body.appendChild(container)
 
-      
-
-      
-      container.style.display = 'inline-block' // show container
-      toPng(container, { cacheBust: true, pixelRatio: 2, useCORS: true })
+      container.style.display = 'inline-block' 
+      toPng(container, { cacheBust: true, pixelRatio: 2})
           .then((dataUrl) => {
             const link = document.createElement('a')
             link.href = dataUrl
@@ -68,6 +62,8 @@ const PrintSchedule = ({ component, optionName }: Props) => {
     },
     [component, enabled, optionName]
   )
+
+
 
   return (
     <TooltipProvider delayDuration={300}>

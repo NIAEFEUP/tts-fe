@@ -12,7 +12,7 @@ import SlotBoxes from './schedules/SlotBoxes'
 import ScheduleContext from '../../contexts/ScheduleContext'
 import { SyncLoader } from 'react-spinners'
 import { ThemeContext } from '../../contexts/ThemeContext'
-import MultipleOptionsContext from '../../contexts/MultipleOptionsContext' // Add this import
+import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -69,7 +69,7 @@ const Schedule = ({
 
   const { loadingSchedule } = useContext(ScheduleContext);
   const { enabled } = useContext(ThemeContext);
-  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext); // Add this line
+  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext); 
 
   // Get the current option name
   const currentOptionName = multipleOptions?.[selectedOption]?.name;
