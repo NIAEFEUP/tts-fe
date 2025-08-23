@@ -1,6 +1,16 @@
+import { get } from 'sortablejs'
 import { MultipleOptions, Major, PickedCourses } from '../@types/index'
 import API from './backend'
-
+import { getSemester, getSchoolYear } from '../utils'
+const storeCurrentVisit = () => {
+  const currentSemester = getSemester()
+  const currentYear = getSchoolYear()
+  const storedVisit = JSON.parse(localStorage.getItem('niaefeup-tts.current-visit'))
+  if (storedVisit == null || storedVisit.year !== currentYear || storedVisit.semester !== currentSemester) {
+    localStorage.clear()
+    localStorage.setItem('niaefeup-tts.current-visit', JSON.stringify({ year: currentYear, semester: currentSemester }))
+  }
+}
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
   const storedFetchDate = JSON.parse(localStorage.getItem(key + '.fetch-date'))
@@ -8,6 +18,7 @@ const isStorageValid = (key: string, daysElapsed: number) => {
   if (storedFetchDate === null) return false
 
   const savedTime = new Date(storedFetchDate).getTime()
+
   const expiredStorage = Math.abs(new Date().getTime() - savedTime) / 36e5 > 24 * daysElapsed
 
   return stored !== null && savedTime !== null && !expiredStorage
@@ -87,6 +98,7 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
       course_options: [],
     },
   ];
+  storeCurrentVisit();
 
   try {
     if (isStorageValid(key, 7)) {
@@ -169,7 +181,8 @@ const StorageAPI = {
   setSelectedMajorStorage,
   getPickedCoursesStorage,
   setPickedCoursesStorage,
-  getCourseFilteredTeachersStorage
+  getCourseFilteredTeachersStorage,
+  storeCurrentVisit
 }
 
 export default StorageAPI

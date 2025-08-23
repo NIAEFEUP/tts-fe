@@ -15,6 +15,7 @@ type Props = {
 }
 
 const CombinedProvider = ({ children }: Props) => {
+  StorageAPI.storeCurrentVisit();
   const [majors, setMajors] = useState<Major[]>([])
   const [coursesInfo, setCoursesInfo] = useState([]);
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
@@ -26,10 +27,13 @@ const CombinedProvider = ({ children }: Props) => {
 
   const [enabled, setEnabled] = useDarkMode()  // TODO (Process-ing): Stop using a hook (who smoked here?)
   const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());
+
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
   const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
+  
+
   useEffect(() => {
     setSignedIn(userSignedIn);
   }, [userSignedIn]);
