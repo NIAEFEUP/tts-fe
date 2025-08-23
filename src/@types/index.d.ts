@@ -146,7 +146,8 @@ export type DirectExchangeRequest = {
   pending_motive?: DirectExchangePendingMotive,
   admin_state: string,
   options: DirectExchangeParticipant[],
-  date: string
+  date: string,
+  last_validated: string
 }
 
 export type DirectExchangeParticipant = {

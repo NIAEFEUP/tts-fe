@@ -1,32 +1,44 @@
 import { useEffect, useState } from "react";
 import useDirectExchangeValidation from "../../../../hooks/useDirectExchangeValidation";
-import { Button } from "../../../ui/button"
+import { Button } from "../../../ui/button";
 
 type Props = {
-    id: number
-}
+  id: number;
+  onValidation?: (result: ValidationResponse) => void;
+};
+
+type ValidationResponse = {
+  valid: boolean;
+  last_validated?: string | null;
+};
 
 export const ValidateRequestButton = ({
-    id
+    id,
+    onValidation 
 }: Props) => {
     const { trigger, isMutating } = useDirectExchangeValidation(id);
-    const [validateResult, setValidateResult] = useState<boolean | null>(null);
+    const [validateResult, setValidateResult] = useState<ValidationResponse | null>(null);
 
     useEffect(() => {
         if(validateResult === null) return;
 
         const timeout = setTimeout(() => {
             setValidateResult(null);
-        }, 4000)
+        }, 4000);
 
         return () => clearTimeout(timeout);
-    }, [validateResult, setValidateResult])
+    }, [validateResult]);
 
     return (<div className="flex flex-col gap-y-2">
         <Button
             variant="secondary"
             onClick={async () => {
-                setValidateResult(await trigger(id));
+            const result = await trigger(id);
+            console.log("Validation result:", result);
+            setValidateResult(result);
+            if (onValidation) {
+                onValidation(result);
+            }
             }}
         >
             {isMutating
@@ -48,5 +60,5 @@ export const ValidateRequestButton = ({
             }
         </p>
     </div>
-    )
-}
+    );
+};

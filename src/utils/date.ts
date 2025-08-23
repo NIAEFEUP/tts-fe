@@ -14,3 +14,9 @@ export const requestCreatedAtDate = (isoString: string) => {
 
     return `Criado às ${time} de ${day}/${month}/${year}`;
 }
+
+export const requestLastUpdatedDate = (isoString: string) => {
+    const { time, day, month, year } = dateProperties(isoString);
+
+    return `Validado pela última vez às ${time} de ${day}/${month}/${year}`;
+};
