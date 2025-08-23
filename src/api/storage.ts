@@ -1,4 +1,3 @@
-import { get } from 'sortablejs'
 import { MultipleOptions, Major, PickedCourses } from '../@types/index'
 import API from './backend'
 import { getSemester, getSchoolYear } from '../utils'
