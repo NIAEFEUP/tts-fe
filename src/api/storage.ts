@@ -6,25 +6,14 @@ const storeCurrentVisit = () => {
   const currentYear = getSchoolYear()
   const multipleOptions = getMultipleOptionsStorage()
   const storedVisit = JSON.parse(localStorage.getItem('niaefeup-tts.current-visit'))
-  
+
   if ((storedVisit == null && multipleOptions[0].course_options.length === 0)|| storedVisit.year !== currentYear || storedVisit.semester !== currentSemester) {
     localStorage.clear()
   }
 
   localStorage.setItem('niaefeup-tts.current-visit', JSON.stringify({ year: currentYear, semester: currentSemester }))
 }
-const isStorageValid = (key: string, daysElapsed: number) => {
-  const stored = JSON.parse(localStorage.getItem(key))
-  const storedFetchDate = JSON.parse(localStorage.getItem(key + '.fetch-date'))
 
-  if (storedFetchDate === null) return false
-
-  const savedTime = new Date(storedFetchDate).getTime()
-
-  const expiredStorage = Math.abs(new Date().getTime() - savedTime) / 36e5 > 24 * daysElapsed
-
-  return stored !== null && savedTime !== null && !expiredStorage
-}
 
 const writeStorage = (key: string, value: any) => {
   localStorage.setItem(key, JSON.stringify(value))
@@ -100,17 +89,10 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
       course_options: [],
     },
   ];
-  storeCurrentVisit();
 
   try {
-    if (isStorageValid(key, 7)) {
-      const multipleOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
-      return multipleOptions;
-
-    } else {
-      writeStorageInvalid(key, defaultValue);
-      return defaultValue;
-    }
+    const multipleOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
+    return multipleOptions;
   } catch (error) {
     console.warn(error)
     return defaultValue;
