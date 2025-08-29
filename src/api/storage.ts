@@ -4,11 +4,14 @@ import { getSemester, getSchoolYear } from '../utils'
 const storeCurrentVisit = () => {
   const currentSemester = getSemester()
   const currentYear = getSchoolYear()
+  const multipleOptions = getMultipleOptionsStorage()
   const storedVisit = JSON.parse(localStorage.getItem('niaefeup-tts.current-visit'))
-  if (storedVisit == null || storedVisit.year !== currentYear || storedVisit.semester !== currentSemester) {
+  
+  if ((storedVisit == null && multipleOptions[0].course_options.length === 0)|| storedVisit.year !== currentYear || storedVisit.semester !== currentSemester) {
     localStorage.clear()
-    localStorage.setItem('niaefeup-tts.current-visit', JSON.stringify({ year: currentYear, semester: currentSemester }))
   }
+
+  localStorage.setItem('niaefeup-tts.current-visit', JSON.stringify({ year: currentYear, semester: currentSemester }))
 }
 const isStorageValid = (key: string, daysElapsed: number) => {
   const stored = JSON.parse(localStorage.getItem(key))
