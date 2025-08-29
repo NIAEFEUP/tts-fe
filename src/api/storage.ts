@@ -13,7 +13,7 @@ const storeCurrentVisit = () => {
 
   localStorage.setItem('niaefeup-tts.current-visit', JSON.stringify({ year: currentYear, semester: currentSemester }))
 }
-const isStorageValid = (key: string, daysElapsed: number) => {
+const isStorageValid = (key: string) => {
   const storedFetchDate = JSON.parse(localStorage.getItem(key + '.fetch-date'))
   if (storedFetchDate === null) return false
   return true
@@ -95,7 +95,7 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
   ];
 
   try {
-    if (isStorageValid(key, 7)) {
+    if (isStorageValid(key)) {
       const multipleOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
       return multipleOptions;
 
