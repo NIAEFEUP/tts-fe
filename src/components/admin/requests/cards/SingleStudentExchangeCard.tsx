@@ -22,7 +22,7 @@ export const SingleStudentExchangeCard = ({
     const [open, setOpen] = useState<boolean>(false);
     const [exchangeState, setExchangeState] = useState(exchange);
 
-    const { schedule } = useStudentsSchedule(exchange.user_nmec);
+    const { schedule } = useStudentsSchedule(exchange.issuer_nmec);
 
     return (
         <>
@@ -43,7 +43,7 @@ export const SingleStudentExchangeCard = ({
                             />
                         </div>
                         {!open && <>
-                            <Person name={exchange.user_nmec} nmec={exchange.user_nmec} />
+                            <Person name={exchange.issuer_name} nmec={exchange.issuer_nmec} />
                         </>}
 
                     </div>
@@ -64,7 +64,7 @@ export const SingleStudentExchangeCard = ({
                     {open &&
                         <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
                             <div className="flex justify-between">
-                                <Person name={exchange.user_nmec} nmec={exchange.user_nmec} />
+                                <Person name={exchange.issuer_name} nmec={exchange.issuer_nmec} />
                                 <div>
                                     <div
                                         key={crypto.randomUUID()}
@@ -109,11 +109,11 @@ export const SingleStudentExchangeCard = ({
 
                 {open &&
                     <AdminRequestCardFooter
-                        nmecs={[exchange.user_nmec]}
+                        nmecs={[exchange.issuer_nmec]}
                         exchangeMessage={listEmailExchanges(
                             exchange.options.map(option => ({
-                                participant_name: undefined,
-                                participant_nmec: exchange.user_nmec,
+                                participant_name: exchange.issuer_name,
+                                participant_nmec: exchange.issuer_nmec,
                                 goes_from: option.class_user_goes_from.name,
                                 goes_to: option.class_user_goes_to.name,
                                 course_acronym: option.course_unit.acronym
