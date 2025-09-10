@@ -6,6 +6,7 @@ import { AdminSendEmail } from "../AdminSendEmail";
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 import { TreatExchangeButton } from "./TreatExchangeButton";
 import { listEmailExchanges } from "../../../../utils/mail";
+import useAdminClasses from "../../../../hooks/admin/useAdminClasses";
 
 type Props = {
     participant_nmec: string
@@ -21,6 +22,15 @@ export const PersonExchanges = ({
     showTreatButton = false
 }: Props) => {
     const { schedule } = useStudentsSchedule(participant_nmec);
+    const { classes } = useAdminClasses();
+
+    const getVacanciesFromCourseUnitAcronymAndClassName = (courseUnitAcronym: string, className: string) => {
+        if (!classes) return null;
+        const foundClass = classes.find((cls: any) => 
+            cls.course_unit_acronym === courseUnitAcronym && cls.name === className
+        );
+        return foundClass ? foundClass.vacancies : null;
+    };
 
     return (
         <>
@@ -36,8 +46,11 @@ export const PersonExchanges = ({
                                 <h2 className="font-bold">{exchange.course_info.acronym}</h2>
                                 <div className="flex gap-2 items-center">
                                     <p>{exchange.class_participant_goes_from.name}</p>
+                                    <p>{getVacanciesFromCourseUnitAcronymAndClassName(exchange.course_info.acronym, exchange.class_participant_goes_from.name) ?? 'N/A'} vagas</p>
                                     <ArrowRightIcon className="w-5 h-5" />
                                     <p>{exchange.class_participant_goes_to.name}</p>
+                                     <p>{getVacanciesFromCourseUnitAcronymAndClassName(exchange.course_info.acronym, exchange.class_participant_goes_to.name) ?? 'N/A'} vagas</p>
+
                                 </div>
                             </div>
                         </div>

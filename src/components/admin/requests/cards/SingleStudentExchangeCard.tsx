@@ -11,6 +11,7 @@ import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 import { RequestDate } from "./RequestDate";
 import { listEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
+import useAdminClasses from "../../../../hooks/admin/useAdminClasses";
 
 type Props = {
     exchange: UrgentRequest
@@ -23,6 +24,15 @@ export const SingleStudentExchangeCard = ({
     const [exchangeState, setExchangeState] = useState(exchange);
 
     const { schedule } = useStudentsSchedule(exchange.issuer_nmec);
+    const { classes } = useAdminClasses();
+
+    const getVacanciesFromCourseUnitAcronymAndClassName = (courseUnitAcronym: string, className: string) => {
+        if (!classes) return null;
+        const foundClass = classes.find((cls: any) => 
+            cls.course_unit_acronym === courseUnitAcronym && cls.name === className
+        );
+        return foundClass ? foundClass.vacancies : null;
+    };
 
     return (
         <>
@@ -75,8 +85,11 @@ export const SingleStudentExchangeCard = ({
                                                 <h2 className="font-bold">{option.course_unit.acronym}</h2>
                                                 <div className="flex gap-2 items-center">
                                                     <p>{option.class_user_goes_from.name}</p>
+                                                    <p>{getVacanciesFromCourseUnitAcronymAndClassName(option.course_unit.acronym, option.class_user_goes_from.name) ?? 'N/A'} vagas</p>
                                                     <ArrowRightIcon className="w-5 h-5" />
                                                     <p>{option.class_user_goes_to.name}</p>
+                                                    <p>{getVacanciesFromCourseUnitAcronymAndClassName(option.course_unit.acronym, option.class_user_goes_to.name) ?? 'N/A'} vagas</p>
+                                                    
                                                 </div>
                                             </div>
                                         ))}

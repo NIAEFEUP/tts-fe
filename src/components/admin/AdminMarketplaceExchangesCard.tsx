@@ -11,6 +11,7 @@ import { ClassDescriptor, MarketplaceRequest } from "../../@types"
 import { AdminRequestCardFooter } from "./requests/cards/AdminRequestCardFooter"
 import { listEmailExchanges } from "../../utils/mail"
 import { AdminRequestType } from "../../utils/exchange"
+import useAdminClasses from "../../hooks/admin/useAdminClasses"
 
 type Props = {
     exchange: MarketplaceRequest
@@ -19,6 +20,16 @@ type Props = {
 export const AdminMarketplaceExhangesCard = ({
     exchange
 }: Props) => {
+    const { classes } = useAdminClasses();
+
+    const getVacanciesFromCourseUnitAcronymAndClassName = (courseUnitAcronym: string, className: string) => {
+        if (!classes) return null;
+        const foundClass = classes.find((cls: any) => 
+            cls.course_unit_acronym === courseUnitAcronym && cls.name === className
+        );
+        return foundClass ? foundClass.vacancies : null;
+    };
+
     const [open, setOpen] = useState<boolean>(false);
     const [exchangeState, setExchangeState] = useState(exchange);
 
@@ -74,8 +85,10 @@ export const AdminMarketplaceExhangesCard = ({
                                             <h2 className="font-bold">{option.course_info.acronym}</h2>
                                             <div className="flex gap-2 items-center">
                                                 <p>{option.class_issuer_goes_from.name}</p>
+                                                <p>{getVacanciesFromCourseUnitAcronymAndClassName(option.course_info.acronym,option.class_issuer_goes_from.name) ?? 'N/A'} vagas</p>
                                                 <ArrowRightIcon className="w-5 h-5" />
                                                 <p>{option.class_issuer_goes_to.name}</p>
+                                                <p>{getVacanciesFromCourseUnitAcronymAndClassName(option.course_info.acronym,option.class_issuer_goes_to.name) ?? 'N/A'} vagas</p>
                                             </div>
                                         </div>
                                     ))}
