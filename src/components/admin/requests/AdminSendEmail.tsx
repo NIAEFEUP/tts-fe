@@ -4,9 +4,10 @@ import { mailtoStringBuilder } from "../../../utils/mail"
 import { Button } from "../../ui/button"
 
 type Props = {
-  nmec: string | Array<string>
-  subject?: string
-  message?: string
+    nmec: string | Array<string>
+    subject?: string
+    message?: string
+    onClick: () => Promise<void>
 }
 
 /**
@@ -15,7 +16,8 @@ type Props = {
 export const AdminSendEmail = ({
   nmec,
   subject = "",
-  message = ""
+  message = "",
+  onClick: awaitInfo
 }: Props) => {
   const { user } = useContext(SessionContext);
 
@@ -27,6 +29,7 @@ export const AdminSendEmail = ({
     >
       <Button
         variant="secondary"
+        onClick={awaitInfo}
       >
         Email
       </Button>

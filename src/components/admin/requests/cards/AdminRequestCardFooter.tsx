@@ -8,7 +8,6 @@ import { CardFooter } from "../../../ui/card"
 import { Separator } from "../../../ui/separator"
 import { AdminSendEmail } from "../AdminSendEmail"
 import { TreatExchangeButton } from "./TreatExchangeButton"
-import { useSession } from "../../../../hooks"
 import SessionContext from "../../../../contexts/SessionContext"
 
 type Props = {
@@ -80,6 +79,7 @@ const markRequestAsAwaitingInformation = async (requestType: AdminRequestType, i
   }
 }
 
+
 export const AdminRequestCardFooter = ({
   nmecs,
   exchangeMessage,
@@ -89,6 +89,14 @@ export const AdminRequestCardFooter = ({
   setExchange,
   courseId
 }: Props) => {
+  const awaitInfo = async () => {
+    await markRequestAsAwaitingInformation(requestType, requestId);
+    setExchange(prev => {
+      const newPrev = { ...prev };
+      newPrev.admin_state = "awaiting-information";
+      return newPrev;
+    })
+  }
 
   const { user } = useContext(SessionContext);
 
@@ -123,20 +131,6 @@ export const AdminRequestCardFooter = ({
         Marcar como aceite
       </Button>
 
-      <Button
-        className="bg-blue-400"
-        onClick={async () => {
-          await markRequestAsAwaitingInformation(requestType, requestId);
-          setExchange(prev => {
-            const newPrev = { ...prev };
-            newPrev.admin_state = "awaiting-information";
-            return newPrev;
-          })
-        }}
-      >
-        Aguardar informação
-      </Button>
-
       {showTreatButton &&
         nmecs.map(nmec => (
           <TreatExchangeButton
@@ -155,6 +149,7 @@ export const AdminRequestCardFooter = ({
             : "Pedido de Inscrição em Unidades Curriculares"
         }
         message={exchangeMessage}
+        onClick={awaitInfo}
       />
     </CardFooter>
   </>
