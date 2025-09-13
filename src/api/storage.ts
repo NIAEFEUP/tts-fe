@@ -147,7 +147,13 @@ const setSelectedMajorStorage = (selectedMajor: Major): void => {
 
 const getPickedCoursesStorage = (): PickedCourses => {
   const key = 'niaefeup-tts.picked-courses'
-  return JSON.parse(localStorage.getItem(key)) || []
+  const pickedCourses = JSON.parse(localStorage.getItem(key))  || []
+  const multipleOptions = getMultipleOptionsStorage()
+  if (multipleOptions.every(option => option.course_options.length === 0) && (pickedCourses.length > 0)) {
+    writeStorageInvalid(key, [])
+    return []
+  }
+  return pickedCourses
 }
 
 const setPickedCoursesStorage = (pickedCourses: any): void => {
