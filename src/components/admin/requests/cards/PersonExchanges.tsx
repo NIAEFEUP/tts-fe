@@ -78,6 +78,9 @@ export const PersonExchanges = ({
                                 course_acronym: option.course_unit
                             }))
                         )}
+                        onClick={async () => {}} //no action needed here
+                        
+                        
                     />
                 </div>
             </div>
