@@ -40,7 +40,7 @@ export type ClassInfo = {
   // composed_name: string,
   id: number,
   name: string,
-  vacancies: number,
+  vacancies?: number,
   filteredTeachers: Array<number>,
   slots: Array<SlotInfo>
 }
