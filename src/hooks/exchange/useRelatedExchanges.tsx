@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import api from "../api/backend";
 import useSWR from "swr";
 import { CreateRequestData } from "../../@types";
 import exchangeRequestService from "../../api/services/exchangeRequestService";

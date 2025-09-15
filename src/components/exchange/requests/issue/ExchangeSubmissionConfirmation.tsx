@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
-import { useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import ConflictsContext from "../../../../contexts/ConflictsContext";
 
 type Props = {
