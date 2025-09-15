@@ -22,7 +22,7 @@ type Props = {
 
 const isRequestVisible = (request: any, filter: string) => {
     if (filter === "all") return true;
-    if (filter === "accepted") return request.accepted;
+    if (filter === "accepted") return request.accepted && !request.canceled;
     if (filter === "canceled") return request.canceled;
     if (filter === "pending") return !request.accepted && !request.canceled;
     return false;
