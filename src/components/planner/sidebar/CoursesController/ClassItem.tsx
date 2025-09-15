@@ -43,7 +43,7 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
 
     let maxSeverity = 0;
     for (const otherClass of otherClasses) {
-      maxSeverity = Math.max(maxSeverity, classesConflictSeverity(classInfo, otherClass)); 
+      maxSeverity = Math.max(maxSeverity, classesConflictSeverity(classInfo, otherClass, false));
     }
 
     return maxSeverity;

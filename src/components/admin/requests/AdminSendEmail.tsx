@@ -5,6 +5,7 @@ type Props = {
     nmec: string | Array<string>
     subject?: string
     message?: string
+    onClick: () => Promise<void> 
 }
 
 /**
@@ -13,7 +14,8 @@ type Props = {
 export const AdminSendEmail = ({
     nmec,
     subject="",
-    message=""
+    message="",
+    onClick: awaitInfo
 }: Props) => {
     return <>
         <a 
@@ -23,6 +25,7 @@ export const AdminSendEmail = ({
         >
             <Button
                 variant="secondary"
+                onClick={awaitInfo}
             >
                 Email
             </Button>
