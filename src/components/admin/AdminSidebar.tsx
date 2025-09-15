@@ -1,7 +1,7 @@
-
-import { Separator } from "../ui/separator"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar"
-import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { Link } from "react-router-dom";
+import { Separator } from "../ui/separator";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
+import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 
 export const AdminSidebar = () => {
     return (
@@ -14,27 +14,27 @@ export const AdminSidebar = () => {
             <SidebarContent className="m-4">
                 <SidebarMenu>
                     <SidebarMenuButton asChild>
-                        <a href="/admin">
+                        <Link to="/admin">
                             <PaperAirplaneIcon className="w-6 h-6" />
                             <span>Pedidos</span>
-                        </a>
+                        </Link>
                     </SidebarMenuButton>
-                    {/* <SidebarMenuButton asChild>
-                        <a href="/admin/settings">
+                    <SidebarMenuButton asChild>
+                        <Link to="/admin/settings">
                             <AdjustmentsHorizontalIcon className="w-6 h-6" />
                             <span>Definições</span>
-                        </a>
-                    </SidebarMenuButton> */}
+                        </Link>
+                    </SidebarMenuButton>
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenuButton asChild>
-                    <a href="/admin">
+                    <Link to="/admin">
                         <ArrowLeftEndOnRectangleIcon className="w-6 h-6" />
                         <span>Terminar Sessão</span>
-                    </a>
+                    </Link>
                 </SidebarMenuButton>
             </SidebarFooter>
         </Sidebar>
-    )
-}
+    );
+};

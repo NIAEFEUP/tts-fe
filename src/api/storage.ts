@@ -1,16 +1,22 @@
 import { MultipleOptions, Major, PickedCourses } from '../@types/index'
 import API from './backend'
+import { getSemester, getSchoolYear } from '../utils'
+const storeCurrentVisit = () => {
+  const currentSemester = getSemester()
+  const currentYear = getSchoolYear()
+  const multipleOptions = getMultipleOptionsStorage()
+  const storedVisit = JSON.parse(localStorage.getItem('niaefeup-tts.current-visit'))
 
-const isStorageValid = (key: string, daysElapsed: number) => {
-  const stored = JSON.parse(localStorage.getItem(key))
+  if ((storedVisit == null && multipleOptions[0].course_options.length === 0)|| storedVisit.year !== currentYear || storedVisit.semester !== currentSemester) {
+    localStorage.clear()
+  }
+
+  localStorage.setItem('niaefeup-tts.current-visit', JSON.stringify({ year: currentYear, semester: currentSemester }))
+}
+const isStorageValid = (key: string) => {
   const storedFetchDate = JSON.parse(localStorage.getItem(key + '.fetch-date'))
-
   if (storedFetchDate === null) return false
-
-  const savedTime = new Date(storedFetchDate).getTime()
-  const expiredStorage = Math.abs(new Date().getTime() - savedTime) / 36e5 > 24 * daysElapsed
-
-  return stored !== null && savedTime !== null && !expiredStorage
+  return true
 }
 
 const writeStorage = (key: string, value: any) => {
@@ -89,7 +95,7 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
   ];
 
   try {
-    if (isStorageValid(key, 7)) {
+    if (isStorageValid(key)) {
       const multipleOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
       return multipleOptions;
 
@@ -141,7 +147,13 @@ const setSelectedMajorStorage = (selectedMajor: Major): void => {
 
 const getPickedCoursesStorage = (): PickedCourses => {
   const key = 'niaefeup-tts.picked-courses'
-  return JSON.parse(localStorage.getItem(key)) || []
+  const pickedCourses = JSON.parse(localStorage.getItem(key))  || []
+  const multipleOptions = getMultipleOptionsStorage()
+  if (multipleOptions.every(option => option.course_options.length === 0) && (pickedCourses.length > 0)) {
+    writeStorageInvalid(key, [])
+    return []
+  }
+  return pickedCourses
 }
 
 const setPickedCoursesStorage = (pickedCourses: any): void => {
@@ -169,7 +181,8 @@ const StorageAPI = {
   setSelectedMajorStorage,
   getPickedCoursesStorage,
   setPickedCoursesStorage,
-  getCourseFilteredTeachersStorage
+  getCourseFilteredTeachersStorage,
+  storeCurrentVisit
 }
 
 export default StorageAPI
