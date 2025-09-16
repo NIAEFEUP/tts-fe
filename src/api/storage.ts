@@ -7,7 +7,7 @@ const storeCurrentVisit = () => {
   const multipleOptions = getMultipleOptionsStorage()
   const storedVisit = JSON.parse(localStorage.getItem('niaefeup-tts.current-visit'))
 
-  if ((storedVisit == null && multipleOptions[0].course_options.length === 0)|| storedVisit.year !== currentYear || storedVisit.semester !== currentSemester) {
+  if ((storedVisit == null && multipleOptions[0]?.course_options.length === 0)|| storedVisit?.year !== currentYear || storedVisit?.semester !== currentSemester) {
     localStorage.clear()
   }
 
