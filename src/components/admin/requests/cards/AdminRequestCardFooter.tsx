@@ -76,6 +76,7 @@ const markRequestAsAwaitingInformation = async (requestType: AdminRequestType, i
     }
 }
 
+
 export const AdminRequestCardFooter = ({
     nmecs,
     exchangeMessage,
@@ -85,6 +86,14 @@ export const AdminRequestCardFooter = ({
     setExchange,
     courseId
 }: Props) => {
+    const awaitInfo = async () => {
+                    await markRequestAsAwaitingInformation(requestType, requestId);
+                    setExchange(prev => {
+                        const newPrev = {...prev };
+                        newPrev.admin_state = "awaiting-information";
+                        return newPrev;
+                    })
+                }
 
     return <>
         <Separator className="my-4" />
@@ -117,20 +126,6 @@ export const AdminRequestCardFooter = ({
                 Marcar como aceite
             </Button>
 
-            <Button
-                className="bg-blue-400"
-                onClick={async () => {
-                    await markRequestAsAwaitingInformation(requestType, requestId);
-                    setExchange(prev => {
-                        const newPrev = {...prev };
-                        newPrev.admin_state = "awaiting-information";
-                        return newPrev;
-                    })
-                }}
-            >
-                Aguardar informação
-            </Button>
-
             {showTreatButton &&
                 nmecs.map(nmec => (
                     <TreatExchangeButton
@@ -148,6 +143,7 @@ export const AdminRequestCardFooter = ({
                         ? "Pedido de troca de turma"
                         : "Pedido de Inscrição em Unidades Curriculares"
                 }
+                onClick={awaitInfo}
                 message={exchangeMessage}
             />
         </CardFooter>

@@ -26,7 +26,7 @@ export const HeaderProfileDropdown = () => {
     <HoverCardTrigger className="w-fit">
       <Avatar className="border shadow-sm">
         <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
-        <AvatarFallback>{user ? user.name.charAt(0) : ""}</AvatarFallback>
+        <AvatarFallback>{user?.name?.charAt(0) ?? ""}</AvatarFallback>
       </Avatar>
     </HoverCardTrigger>
     <HoverCardContent className="w-44 p-4 mx-4">
