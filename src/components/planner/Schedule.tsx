@@ -12,6 +12,7 @@ import SlotBoxes from './schedules/SlotBoxes'
 import ScheduleContext from '../../contexts/ScheduleContext'
 import { SyncLoader } from 'react-spinners'
 import { ThemeContext } from '../../contexts/ThemeContext'
+import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -68,6 +69,10 @@ const Schedule = ({
 
   const { loadingSchedule } = useContext(ScheduleContext);
   const { enabled } = useContext(ThemeContext);
+  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext); 
+
+  // Get the current option name
+  const currentOptionName = multipleOptions?.[selectedOption]?.name;
 
   return (
     <>
@@ -114,14 +119,13 @@ const Schedule = ({
             </div>
           </div>
         </div>
-
         {/* Bottom bar */}
-        <div className="flex justify-end gap-5 pl-16">
+        <div className="flex justify-end gap-5 pl-16 schedule-bottom-bar">
           <div className="flex gap-x-4">
             <ScheduleTypes types={slotTypes} hiddenLessonsTypes={hiddenLessonsTypes} setHiddenLessonsTypes={setHiddenLessonsTypes} />
             <div className="flex flex-row gap-x-2">
               <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
-              <PrintSchedule component={scheduleRef} />
+              <PrintSchedule component={scheduleRef} optionName={currentOptionName} />
             </div>
           </div>
         </div>
