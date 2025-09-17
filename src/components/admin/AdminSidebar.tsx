@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Separator } from "../ui/separator";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
-import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 export const AdminSidebar = () => {
     return (
@@ -17,6 +17,12 @@ export const AdminSidebar = () => {
                         <Link to="/admin">
                             <PaperAirplaneIcon className="w-6 h-6" />
                             <span>Pedidos</span>
+                        </Link>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                        <Link to="/admin/vacancies">
+                            <UsersIcon className="w-6 h-6" />
+                            <span>Vagas</span>
                         </Link>
                     </SidebarMenuButton>
                     <SidebarMenuButton asChild>
