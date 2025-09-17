@@ -21,7 +21,7 @@ const AdminPage = ({ page }: Props) => {
       navigate("/planner");
     }
   }, [isSessionLoading, isAuthorized, navigate]);
-  
+
 
   if (isSessionLoading || !isAuthorized) return null;
 
@@ -35,5 +35,6 @@ const AdminPage = ({ page }: Props) => {
     </SidebarProvider>
   );
 };
+
 
 export default AdminPage;
