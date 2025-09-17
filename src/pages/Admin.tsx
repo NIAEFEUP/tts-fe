@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AdminMainContent } from "../components/admin/AdminMainContent";
 import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
-import { AdminExchangeClasses } from "../components/admin/AdminExchangeClasses";
 import { SidebarProvider } from "../components/ui/sidebar";
 import SessionContext from "../contexts/SessionContext";
 
@@ -22,7 +21,7 @@ const AdminPage = ({ page }: Props) => {
       navigate("/planner");
     }
   }, [isSessionLoading, isAuthorized, navigate]);
-  
+
 
   if (isSessionLoading || !isAuthorized) return null;
 
