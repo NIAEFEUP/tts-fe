@@ -98,11 +98,11 @@ export const ViewRequests = ({
     const [currentRequestTypeFilter, setCurrentRequestTypeFilter] = useState<number>(0);
     const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set());
     const [classesFilter, setClassesFilter] = useState<Map<string, Set<string>>>(new Map());
-        const [requestStateFilter, setRequestStateFilter] = useState<string>("all");
+    const [requestStateFilter, setRequestStateFilter] = useState<string>("all");
     // This is to keep track of the request of the request card that is currently open
     const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
-    const { requests, size, setSize, isLoading, hasNext, isValidating } = useMarketplaceRequests(
+    const { requests, size, setSize, isLoading, hasNext, isValidating, updateUrgentRequest } = useMarketplaceRequests(
         filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter], classesFilter
     );
 
@@ -146,6 +146,7 @@ export const ViewRequests = ({
                                             <CommonRequestCard
                                                 key={request?.id}
                                                 request={request}
+
                                                 hiddenRequests={hiddenRequests}
                                                 setHiddenRequests={setHiddenRequests}
                                                 setChosenRequest={setChosenRequest}
@@ -180,7 +181,7 @@ export const ViewRequests = ({
                         ? <RequestCardSkeletons />
                         : <EmptyRequestGuard requests={requests}>
                             {requests?.filter((request) => request !== undefined && isRequestVisible(request, requestStateFilter)).map((request: MarketplaceRequest) => (
-                                <CommonRequestCard
+                                    <CommonRequestCard
                                     key={request.id}
                                     request={request}
                                     hiddenRequests={hiddenRequests}
@@ -191,6 +192,7 @@ export const ViewRequests = ({
                                 >
                                     <MineRequestCard
                                         request={request}
+                                        updateUrgentRequest={updateUrgentRequest}
                                     />
                                 </CommonRequestCard>
 
