@@ -43,7 +43,7 @@ export const CustomizeRequest = ({
 
   const [currentPreviewView, setCurrentPreviewView] = useState<CurrentView>(CurrentView.NONE);
 
-  const { relatedExchanges, loading } = useRelatedExchanges([requests.entries()].map(([k, v]) => `${k}=${v}`).join(","), requests);
+  const { relatedExchanges, loading } = useRelatedExchanges(previewingForm + [requests.entries()].map(([k, v]) => `${k}=${v}`).join(","), requests);
 
   useEffect(() => {
     if (exchangeUtils.isDirectExchange(Array.from(requests.values()))) {
