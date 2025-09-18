@@ -35,12 +35,12 @@ export default (courseUnitNameFilter: Set<number>, requestType: string, classesF
     return `${api.BACKEND_URL}/${getUrl(requestType)}/?page=${pageIndex + 1}&limit=10&${filters}`;
   }
 
-  const { data, size, setSize, isLoading, isValidating } = useSWRInfinite<Promise<MarketplaceRequest[]>>(
+  const { data, size, setSize, isLoading, isValidating, mutate } = useSWRInfinite<Promise<MarketplaceRequest[]>>(
     getKey,
     exchangeRequestService.retrieveMarketplaceRequest
   );
 
-
+  
   const requests = data ? [].concat(...data.map((el) => el["data"])) : [];
 
   useEffect(() => {
@@ -56,7 +56,8 @@ export default (courseUnitNameFilter: Set<number>, requestType: string, classesF
     isLoading,
     size,
     isValidating,
-    setSize
+    setSize,
+    mutate,
   }
 };
 
