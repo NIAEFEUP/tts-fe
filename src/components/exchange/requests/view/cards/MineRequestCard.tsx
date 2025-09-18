@@ -34,29 +34,51 @@ export const MineRequestCard = ({ request, mutate }: Props) => {
         setSaving(true)
         try {
             const res = await fetch(`${api.BACKEND_URL}/exchange/urgent/`, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', [api.csrfTokenName()]: api.getCSRFToken() },
-            body: JSON.stringify({ urgent_request_id: id, message })
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [api.csrfTokenName()]: api.getCSRFToken()
+                },
+                body: JSON.stringify({
+                    urgent_request_id: id,
+                    message
+                })
             })
             if (!res.ok) {
                 const text = await res.text()
-                toast({ title: 'Erro a atualizar', description: text, variant: 'destructive' })
+                toast({
+                    title: 'Erro a atualizar',
+                    description: text,
+                    variant: 'destructive'
+                })
                 return
             }
             const updated = await res.json()
             if (mutate) {
-            mutate((pages:any) => pages.map((p:any)=>({
-                ...p,
-                data: p.data.map((r:any)=> r.id === id ? { ...r, ...updated } : r)
-            })), { revalidate:false })
+                mutate((pages: any) => pages.map((p: any) => ({
+                    ...p,
+                    data: p.data.map((r: any) => r.id === id ? {
+                        ...r,
+                        ...updated
+                    } : r)
+                })), {
+                    revalidate: false
+                })
             }
-            toast({ title: 'Atualizado com sucesso' })
+            toast({
+                title: 'Atualizado com sucesso'
+            })
             setEditing(false)
         } catch (e) {
             console.error(e);
-            toast({ title: 'Erro inesperado', variant: 'destructive' })
-        } finally { setSaving(false) }
+            toast({
+                title: 'Erro inesperado',
+                variant: 'destructive'
+            })
+        } finally {
+            setSaving(false)
+        }
     }
 
     const { trigger: cancelMarketplaceExchange, isMutating: cancelingMarketplaceExchange } = useCancelMarketplaceExchange(request.id);
