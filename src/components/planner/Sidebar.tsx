@@ -39,18 +39,17 @@ const Sidebar = () => {
 
 
   return (
-    <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
-      <div className="flex-grow space-y-2">
-        <div className="relative flex flex-row flex-wrap items-center justify-center gap-x-2 gap-y-2 lg:justify-start">
+    <div className="order-2 col-span-12 flex flex-col justify-between rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4
+                h-[85vh] overflow-y-auto">
+        <div className="space-y-1">
           <SessionController />
           <OptionsController />
           <SelectedOptionController
             currentOption={multipleOptions[selectedOption].course_options}
           />
           <CoursesController />
-        </div>
       </div>
-      <footer className="mt-4 gap-x-1 border-white-300 pt-3 text-center flex items-end justify-end">
+      <footer className=" gap-x-1 border-white-300 text-center flex items-end justify-end">
         <Button
           onClick={eraseClasses}
           variant="icon"
