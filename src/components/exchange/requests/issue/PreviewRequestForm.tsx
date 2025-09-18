@@ -45,7 +45,7 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
     await requestSubmitHandler(data.urgentMessage);
   }
 
-  const { isConflictSevere } = useContext(ConflictsContext);
+  const { isConflictSevere , hasConflict } = useContext(ConflictsContext);
 
   return <Dialog open={previewingForm} onOpenChange={(open) => setPreviewingForm(open)}>
     <DialogTrigger asChild>
@@ -60,15 +60,18 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
         <DialogTitle className="text-center mb-4">
           Prever visualização do pedido
           </DialogTitle>
-          <Alert type={isConflictSevere ? AlertType.error : AlertType.warning} >
-            <p>
-              {isConflictSevere ? (
-                <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
-              ) : (
-                <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
-              )}
-            </p>
-          </Alert>
+          {hasConflict && (
+            <Alert type={isConflictSevere ? AlertType.error : AlertType.warning}>
+              <p>
+                {isConflictSevere ? (
+                  <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
+                ) : (
+                  <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
+                )}
+              </p>
+            </Alert>
+          )}
+
         <DialogDescription>
           {
             exchangeUtils.isDirectExchange(Array.from(requests.values()))
