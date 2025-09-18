@@ -14,7 +14,8 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
 
   const [conflictMap, setConflictMap] = useState(new Map<number, boolean>());
 
-  const { setConflictSeverity } = useContext(ConflictsContext);
+  const { setConflictSeverity, setHasConflict } = useContext(ConflictsContext);
+
   const updateConflictMap = (courseId: number, conflictData: boolean) => {
     setConflictMap((prevConflictMap) => {
       const newConflictMap = new Map(prevConflictMap);
@@ -23,10 +24,19 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
     });
   };
 
-  useEffect(() => {
-    const isSevere = Array.from(conflictMap.values()).reduce((acc, val) => acc || val, false);
-    setConflictSeverity(isSevere);
-  }, [conflictMap]);
+useEffect(() => {
+  const conflictValues = Array.from(conflictMap.values());
+
+  // hasConflict = there is at least one conflict entry
+  const hasConflict = conflictValues.length > 0;
+
+  // isSevere = at least one of the conflicts is marked as severe (true)
+  const isSevere = conflictValues.some(val => val);
+
+  setHasConflict(hasConflict);
+  setConflictSeverity(isSevere);
+}, [conflictMap, setHasConflict, setConflictSeverity]);
+
   
   return (
     <>

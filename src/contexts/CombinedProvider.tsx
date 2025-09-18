@@ -11,62 +11,112 @@ import CourseContext from "./CourseContext";
 import ConflictsContext from "./ConflictsContext";
 
 type Props = {
-  children: React.JSX.Element
-}
+  children: React.JSX.Element;
+};
 
 const CombinedProvider = ({ children }: Props) => {
-  const [majors, setMajors] = useState<Major[]>([])
+  const [majors, setMajors] = useState<Major[]>([]);
   const [coursesInfo, setCoursesInfo] = useState([]);
-  const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
-  const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
+  const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(
+    StorageAPI.getPickedCoursesStorage()
+  );
+  const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(
+    StorageAPI.getPickedCoursesStorage()
+  );
   const [ucsModalOpen, setUcsModalOpen] = useState<boolean>(false);
 
-  //TODO: Looks suspicious
+  // TODO: Looks suspicious
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
 
-  const [enabled, setEnabled] = useDarkMode()  // TODO (Process-ing): Stop using a hook (who smoked here?)
-  const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());
-  const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
+  const [enabled, setEnabled] = useDarkMode(); // TODO: Stop using a hook here
+  const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(
+    StorageAPI.getMultipleOptionsStorage()
+  );
+  const [selectedOption, setSelectedOptionState] = useState<number>(
+    StorageAPI.getSelectedOptionStorage()
+  );
 
-  const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
-  const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
+  const {
+    signedIn: userSignedIn,
+    user,
+    isLoading: isSessionLoading,
+    forceScheduleRevalidation,
+  } = useSession();
+  const [signedIn, setSignedIn] = useState<boolean>(
+    Boolean(localStorage.getItem("signedIn") ?? false)
+  );
   useEffect(() => {
     setSignedIn(userSignedIn);
   }, [userSignedIn]);
 
+  // new conflict states
+  const [hasConflict, setHasConflict] = useState<boolean>(false);
   const [isConflictSevere, setConflictSeverity] = useState<boolean>(false);
 
-  const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
+  const setMultipleOptions = (
+    newMultipleOptions:
+      | MultipleOptions
+      | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)
+  ) => {
     if (newMultipleOptions instanceof Function)
       newMultipleOptions = newMultipleOptions(multipleOptions);
 
     setMultipleOptionsState(newMultipleOptions);
     StorageAPI.setMultipleOptionsStorage(newMultipleOptions);
-  }
+  };
 
-  const setSelectedOption = (newOption: number | ((prevOption: number) => number)) => {
-    if (newOption instanceof Function)
-      newOption = newOption(selectedOption);
+  const setSelectedOption = (
+    newOption: number | ((prevOption: number) => number)
+  ) => {
+    if (newOption instanceof Function) newOption = newOption(selectedOption);
 
     setSelectedOptionState(newOption);
     StorageAPI.setSelectedOptionStorage(newOption);
-  }
+  };
 
   return (
-    <SessionContext.Provider value={{ signedIn, setSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
+    <SessionContext.Provider
+      value={{
+        signedIn,
+        setSignedIn,
+        user,
+        isSessionLoading,
+        forceScheduleRevalidation,
+      }}
+    >
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
-          <CourseContext.Provider value={
-            {
-              pickedCourses, setPickedCourses,
-              coursesInfo, setCoursesInfo,
-              checkboxedCourses, setCheckboxedCourses,
-              choosingNewCourse, setChoosingNewCourse,
-              ucsModalOpen, setUcsModalOpen
-            }
-          }>
-            <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
-              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity }}>
+          <CourseContext.Provider
+            value={{
+              pickedCourses,
+              setPickedCourses,
+              coursesInfo,
+              setCoursesInfo,
+              checkboxedCourses,
+              setCheckboxedCourses,
+              choosingNewCourse,
+              setChoosingNewCourse,
+              ucsModalOpen,
+              setUcsModalOpen,
+            }}
+          >
+            <MultipleOptionsContext.Provider
+              value={{
+                multipleOptions,
+                setMultipleOptions,
+                selectedOption,
+                setSelectedOption,
+              }}
+            >
+              <ConflictsContext.Provider
+                value={{
+                  hasConflict,
+                  setHasConflict,
+                  isConflictSevere,
+                  setConflictSeverity,
+                  
+                }}
+              >
                 {children}
               </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>

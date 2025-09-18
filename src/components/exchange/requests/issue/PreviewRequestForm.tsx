@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
 import ConflictsContext from "../../../../contexts/ConflictsContext";
 import exchangeRequestService from "../../../../api/services/exchangeRequestService";
+import Alert, { AlertType } from '../../../planner/Alert'
 
 type Props = {
   requests: Map<number, CreateRequestData>
@@ -56,7 +57,18 @@ const PreviewRequestForm = ({ requests, requestSubmitHandler, previewingFormHook
     </DialogTrigger>
     <DialogContent className="flex flex-col">
       <DialogHeader>
-        <DialogTitle>Prever visualização do pedido</DialogTitle>
+        <DialogTitle className="text-center mb-4">
+          Prever visualização do pedido
+          </DialogTitle>
+          <Alert type={isConflictSevere ? AlertType.error : AlertType.warning} >
+            <p>
+              {isConflictSevere ? (
+                <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
+              ) : (
+                <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
+              )}
+            </p>
+          </Alert>
         <DialogDescription>
           {
             exchangeUtils.isDirectExchange(Array.from(requests.values()))
