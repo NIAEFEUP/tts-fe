@@ -1,15 +1,12 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { CourseInfo, CreateRequestData } from "../../../../@types"
-import exchangeRequestService from "../../../../api/services/exchangeRequestService"
 import { Desert } from "../../../svgs"
 import { Button } from "../../../ui/button"
 import { Switch } from "../../../ui/switch"
-import { toast } from "../../../ui/use-toast"
 import { CreateRequestCard } from "./cards/CreateRequestCard"
 import PreviewRequestForm from "./PreviewRequestForm"
 import { ExchangeSidebarStatus } from "../../../../pages/Exchange"
-import { exchangeErrorToText } from "../../../../utils/error"
 import useRelatedExchanges from "../../../../hooks/exchange/useRelatedExchanges"
 import exchangeUtils from "../../../../utils/exchange"
 
@@ -26,6 +23,8 @@ type Props = {
 export enum CurrentView {
   NONE,
   CONFIRMATION,
+  ACCEPTANCE,
+  FAILURE,
   OTHER_REQUESTS
 }
 
@@ -38,7 +37,6 @@ export const CustomizeRequest = ({
   hasStudentToExchange,
   setHasStudentToExchange
 }: Props) => {
-  const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
   const [previewingForm, setPreviewingForm] = useState<boolean>(false);
 
   const [currentPreviewView, setCurrentPreviewView] = useState<CurrentView>(CurrentView.NONE);
@@ -54,31 +52,6 @@ export const CustomizeRequest = ({
     if (relatedExchanges && !loading && relatedExchanges.length === 0) setCurrentPreviewView(CurrentView.CONFIRMATION);
     if (relatedExchanges && !loading && relatedExchanges.length > 0) setCurrentPreviewView(CurrentView.OTHER_REQUESTS);
   }, [relatedExchanges]);
-
-
-  const submitRequest = async (urgentMessage: string) => {
-    setSubmittingRequest(true);
-    const res = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage);
-
-    if (res.ok) {
-      setPreviewingForm(false);
-      toast({
-        title: 'Pedido submetido com sucesso!',
-        description:
-          exchangeRequestService.isDirectExchange(requests.values())
-            ? 'A proposta de troca foi realizada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.'
-            : `${urgentMessage ? 'O pedido foi enviado para a comissão de inscrição de turmas' : 'O pedido de troca foi submetido no marketplace. Podes consultar o estado na aba "Enviados"'}`
-      });
-    } else {
-      setPreviewingForm(false);
-      toast({
-        title: 'Erro ao submeter o pedido.',
-        description: exchangeErrorToText[(await res.json())["error"]]
-      });
-    }
-
-    setSubmittingRequest(false);
-  }
 
   return <div className="flex flex-col gap-y-4">
     {selectedCourseUnits.length === 0
@@ -111,9 +84,7 @@ export const CustomizeRequest = ({
                 </Button>
                 <PreviewRequestForm
                   requests={requests}
-                  requestSubmitHandler={submitRequest}
                   previewingFormHook={[previewingForm, setPreviewingForm]}
-                  submittingRequest={submittingRequest}
                   currentView={currentPreviewView}
                   setCurrentView={setCurrentPreviewView}
                   relatedExchanges={relatedExchanges ?? []}
