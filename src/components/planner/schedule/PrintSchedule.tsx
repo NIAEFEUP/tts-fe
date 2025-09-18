@@ -57,6 +57,10 @@ const PrintSchedule = ({ component, optionName }: Props) => {
           .catch((err) => {
           console.error(err)
         })
+        .finally(() => {
+          container.remove() // remove do DOM
+        })
+
 
       AnalyticsTracker.trackFeature(Feature.SCREENSHOT)
     },
