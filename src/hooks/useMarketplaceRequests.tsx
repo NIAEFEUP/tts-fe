@@ -39,42 +39,6 @@ export default (courseUnitNameFilter: Set<number>, requestType: string, classesF
     getKey,
     exchangeRequestService.retrieveMarketplaceRequest
   );
-  const updateUrgentRequest = async (id: number, message: string) => {
-    try {
-      const res = await fetch(`${api.BACKEND_URL}/exchange/urgent/`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json', [api.csrfTokenName()]: api.getCSRFToken() },
-        body: JSON.stringify({ urgent_request_id: id, message: message })
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        console.error('Failed to update urgent request', res.status, text);
-        return null;
-      }
-
-      const updated = await res.json();
-
-      if (mutate) {
-        mutate((pages: any) => {
-          if (!pages) return pages;
-          return pages.map((page: any) => {
-            if (!page || !page.data) return page;
-            return {
-              ...page,
-              data: page.data.map((req: any) => req.id === id ? { ...req, ...updated } : req)
-            }
-          })
-        }, { revalidate: false });
-      }
-
-      return updated;
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  }
 
   
   const requests = data ? [].concat(...data.map((el) => el["data"])) : [];
@@ -93,8 +57,7 @@ export default (courseUnitNameFilter: Set<number>, requestType: string, classesF
     size,
     isValidating,
     setSize,
-    updateUrgentRequest
-
+    mutate,
   }
 };
 

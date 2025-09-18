@@ -102,7 +102,7 @@ export const ViewRequests = ({
     // This is to keep track of the request of the request card that is currently open
     const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
 
-    const { requests, size, setSize, isLoading, hasNext, isValidating, updateUrgentRequest } = useMarketplaceRequests(
+    const { requests, size, setSize, isLoading, hasNext, isValidating, mutate } = useMarketplaceRequests(
         filterCourseUnitNames, requestTypeFilters[currentRequestTypeFilter], classesFilter
     );
 
@@ -192,7 +192,7 @@ export const ViewRequests = ({
                                 >
                                     <MineRequestCard
                                         request={request}
-                                        updateUrgentRequest={updateUrgentRequest}
+                                        mutate={mutate}
                                     />
                                 </CommonRequestCard>
 
