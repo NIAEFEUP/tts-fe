@@ -1,5 +1,5 @@
 import { requestCreatedAtDate, requestLastUpdatedDate } from "../../../../utils/date";
-
+import Alert, { AlertType } from '../../../planner/Alert'
 // Componente para mostrar a data de criação
 type RequestDateProps = { date: string };
 export const RequestDate = ({ date }: RequestDateProps) => (
@@ -17,7 +17,11 @@ export const RequestLastUpdatedDate = ({ date, justValidated }: RequestLastUpdat
   }
 
   if (justValidated === "invalid") {
-    return <p className="text-sm text-red-600">Inválido!</p>;
+    return <Alert type={AlertType.error}>
+            <p>
+              Inválido!
+            </p>
+          </Alert>
   }
 
   if (!date) return null;
