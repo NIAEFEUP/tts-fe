@@ -6,6 +6,7 @@ import { useContext, useState } from "react";
 import SessionContext from "../../contexts/SessionContext";
 import ScheduleContext from "../../contexts/ScheduleContext";
 import authService from "../../api/services/authService";
+import {CornerDownLeftIcon } from "lucide-react";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -22,13 +23,14 @@ export const AdminSidebar = () => {
   };
 
     return (
-        <Sidebar className="bg-white">
+        <Sidebar className="bg-white h-screen flex flex-col">
             <SidebarHeader className="flex flex-row gap-2 p-4">
                 <RectangleGroupIcon className="w-6 h-6" />
                 <h1 className="font-bold">Admin</h1>
             </SidebarHeader>
             <Separator />
-            <SidebarContent className="m-4">
+               {/* Faz o conteúdo expandir para ocupar o espaço restante */}
+            <SidebarContent className="flex-1 m-4 overflow-auto">
                 <SidebarMenu>
                     <SidebarMenuButton asChild>
                         <a href="/admin">
@@ -38,11 +40,17 @@ export const AdminSidebar = () => {
                     </SidebarMenuButton>
                 </SidebarMenu>
             </SidebarContent>
-            <SidebarFooter>
+            <SidebarFooter className="mt-auto">
+                <SidebarMenuButton asChild>
+                    <a href="/planner">
+                        <CornerDownLeftIcon className="w-6 h-6" />
+                        <span>Planner</span>
+                    </a>
+                </SidebarMenuButton>
                 <SidebarMenuButton asChild>
                     <button
                         type="button"
-                        className="w-full flex flex-row justify-center gap-2 items-center"
+                        className="w-full flex flex-row gap-2 items-center"
                         onClick={logout}
                         disabled={loggingOut}
                 >

@@ -24,26 +24,35 @@ export const PersonExchanges = ({
 
     return (
         <>
-            <div className="flex justify-between">
+            <div className="flex w-full items-center">
+                {/* Nome + NMEC (40%) */}
+                <div className="basis-[40%] shrink-0 overflow-hidden">
                 <Person name={participant_name} nmec={participant_nmec} />
-                <div className="flex flex-row flex-wrap gap-x-2">
+            </div>
+
+            {/* Trocas de turmas (30%) */}
+            <div className="basis-[30%] flex justify-end overflow-hidden">
+                <div className="flex flex-wrap gap-2">
                     {exchanges.map((exchange) => (
                         <div
                             key={crypto.randomUUID()}
                             className="flex flex-col gap-y-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
                         >
                             <div className="flex gap-5 items-center">
-                                <h2 className="font-bold">{exchange.course_info.acronym}</h2>
+                                <h2 className="font-bold truncate">{exchange.course_info.acronym}</h2>
                                 <div className="flex gap-2 items-center">
-                                    <p>{exchange.class_participant_goes_from.name}</p>
+                                    <p className="truncate">{exchange.class_participant_goes_from.name}</p>
                                     <ArrowRightIcon className="w-5 h-5" />
-                                    <p>{exchange.class_participant_goes_to.name}</p>
+                                    <p className="truncate">{exchange.class_participant_goes_to.name}</p>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-                <div className="flex flex-row gap-x-2">
+                </div>
+
+                {/* Botões (30%) */}
+                <div className="basis-[30%] shrink-0 flex justify-end gap-x-2">
                     <AdminPreviewSchedule 
                         originalSchedule={schedule}
                         classesToAdd={
