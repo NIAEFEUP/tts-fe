@@ -15,6 +15,7 @@ type Props = {
 };
 
 const CombinedProvider = ({ children }: Props) => {
+  StorageAPI.storeCurrentVisit();
   const [majors, setMajors] = useState<Major[]>([]);
   const [coursesInfo, setCoursesInfo] = useState([]);
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(
@@ -28,23 +29,15 @@ const CombinedProvider = ({ children }: Props) => {
   // TODO: Looks suspicious
   const [choosingNewCourse, setChoosingNewCourse] = useState<boolean>(false);
 
-  const [enabled, setEnabled] = useDarkMode(); // TODO: Stop using a hook here
-  const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(
-    StorageAPI.getMultipleOptionsStorage()
-  );
-  const [selectedOption, setSelectedOptionState] = useState<number>(
-    StorageAPI.getSelectedOptionStorage()
-  );
+  const [enabled, setEnabled] = useDarkMode()  // TODO (Process-ing): Stop using a hook (who smoked here?)
+  const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());
 
-  const {
-    signedIn: userSignedIn,
-    user,
-    isLoading: isSessionLoading,
-    forceScheduleRevalidation,
-  } = useSession();
-  const [signedIn, setSignedIn] = useState<boolean>(
-    Boolean(localStorage.getItem("signedIn") ?? false)
-  );
+  const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
+
+  const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
+  const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
+  
+
   useEffect(() => {
     setSignedIn(userSignedIn);
   }, [userSignedIn]);
@@ -52,6 +45,7 @@ const CombinedProvider = ({ children }: Props) => {
   // new conflict states
   const [hasConflict, setHasConflict] = useState<boolean>(false);
   const [isConflictSevere, setConflictSeverity] = useState<boolean>(false);
+  const [tClassConflicts, setTClassConflicts] = useState<boolean>(false);
 
   const setMultipleOptions = (
     newMultipleOptions:
@@ -86,37 +80,17 @@ const CombinedProvider = ({ children }: Props) => {
     >
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
-          <CourseContext.Provider
-            value={{
-              pickedCourses,
-              setPickedCourses,
-              coursesInfo,
-              setCoursesInfo,
-              checkboxedCourses,
-              setCheckboxedCourses,
-              choosingNewCourse,
-              setChoosingNewCourse,
-              ucsModalOpen,
-              setUcsModalOpen,
-            }}
-          >
-            <MultipleOptionsContext.Provider
-              value={{
-                multipleOptions,
-                setMultipleOptions,
-                selectedOption,
-                setSelectedOption,
-              }}
-            >
-              <ConflictsContext.Provider
-                value={{
-                  hasConflict,
-                  setHasConflict,
-                  isConflictSevere,
-                  setConflictSeverity,
-                  
-                }}
-              >
+          <CourseContext.Provider value={
+            {
+              pickedCourses, setPickedCourses,
+              coursesInfo, setCoursesInfo,
+              checkboxedCourses, setCheckboxedCourses,
+              choosingNewCourse, setChoosingNewCourse,
+              ucsModalOpen, setUcsModalOpen
+            }
+          }>
+            <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
+              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity, tClassConflicts, setTClassConflicts }}>
                 {children}
               </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>

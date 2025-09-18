@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom"; 
-import { Separator } from "../ui/separator"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar"
-import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { Link } from "react-router-dom";import { useNavigate } from "react-router-dom"; 
+import { Separator } from "../ui/separator";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
+import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { useContext, useState } from "react";
 import SessionContext from "../../contexts/SessionContext";
 import ScheduleContext from "../../contexts/ScheduleContext";
@@ -33,10 +33,22 @@ export const AdminSidebar = () => {
             <SidebarContent className="flex-1 m-4 overflow-auto">
                 <SidebarMenu>
                     <SidebarMenuButton asChild>
-                        <a href="/admin">
+                        <Link to="/admin">
                             <PaperAirplaneIcon className="w-6 h-6" />
                             <span>Pedidos</span>
-                        </a>
+                        </Link>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                        <Link to="/admin/vacancies">
+                            <UsersIcon className="w-6 h-6" />
+                            <span>Vagas</span>
+                        </Link>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                        <Link to="/admin/settings">
+                            <AdjustmentsHorizontalIcon className="w-6 h-6" />
+                            <span>Definições</span>
+                        </Link>
                     </SidebarMenuButton>
                 </SidebarMenu>
             </SidebarContent>
@@ -60,5 +72,5 @@ export const AdminSidebar = () => {
                 </SidebarMenuButton>
             </SidebarFooter>
         </Sidebar>
-    )
-}
+    );
+};

@@ -3,9 +3,9 @@ import api from "../../api/backend";
 import useSWR from "swr";
 
 export default () => {
-  const getPeriods = async () => {
+  const getCourseUnitPeriods = async () => {
     try {
-        const res = await fetch(`${api.BACKEND_URL}/exchange/admin/course/periods`, {
+        const res = await fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/periods/`, {
             credentials: "include"
         });
 
@@ -17,11 +17,11 @@ export default () => {
     }
   };
 
-  const { data, error, mutate } = useSWR("admin-exchange-periods", getPeriods);
-  const exchangePeriods = useMemo(() => data ? data : null, [data]);
+  const { data, error, mutate } = useSWR("admin-exchange-course-unit-periods", getCourseUnitPeriods);
+  const courseUnitPeriods = useMemo(() => data ? data : null, [data]);
 
   return {
-    exchangePeriods,
+    courseUnitPeriods,
     error,
     loading: !data,
     mutate,
