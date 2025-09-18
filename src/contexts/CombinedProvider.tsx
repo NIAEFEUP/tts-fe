@@ -90,7 +90,8 @@ const CombinedProvider = ({ children }: Props) => {
             }
           }>
             <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
-              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity, tClassConflicts, setTClassConflicts }}>
+              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity, tClassConflicts, setTClassConflicts,hasConflict,
+                  setHasConflict }}>
                 {children}
               </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>
