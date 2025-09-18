@@ -41,7 +41,7 @@ export const MineRequestCard = ({ request, mutate }: Props) => {
             })
             if (!res.ok) {
                 const text = await res.text()
-                toast({ title: 'Erro inesperado', description: text, variant: 'destructive' })
+                toast({ title: 'Erro a atualizar', description: text, variant: 'destructive' })
                 return
             }
             const updated = await res.json()
@@ -54,6 +54,7 @@ export const MineRequestCard = ({ request, mutate }: Props) => {
             toast({ title: 'Atualizado com sucesso' })
             setEditing(false)
         } catch (e) {
+            console.error(e);
             toast({ title: 'Erro inesperado', variant: 'destructive' })
         } finally { setSaving(false) }
     }
