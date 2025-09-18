@@ -40,6 +40,7 @@ export type ClassInfo = {
   // composed_name: string,
   id: number,
   name: string,
+  vacancies?: number,
   filteredTeachers: Array<number>,
   slots: Array<SlotInfo>
 }
@@ -87,7 +88,7 @@ export type ClassDescriptor = {
 }
 
 export type ConflictInfo = {
-  severe: boolean
+  severe: number
   conflictingClasses: ClassDescriptor[]
 }
 

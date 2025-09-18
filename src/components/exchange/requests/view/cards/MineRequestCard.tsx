@@ -9,21 +9,85 @@ import { Button } from "../../../../ui/button";
 import useCancelMarketplaceExchange from "../../../../../hooks/exchange/useCancelMarketplaceExchange";
 import { MoonLoader } from "react-spinners";
 import { StudentRequestCardStatus } from "../../../../../utils/requests";
+import { useToast } from "../../../../ui/use-toast";
+import { SWRInfiniteKeyedMutator } from "swr/infinite";
+
+import api from "../../../../../api/backend";
 
 type Props = {
     request: MarketplaceRequest | UrgentRequest;
+    mutate: SWRInfiniteKeyedMutator<Promise<MarketplaceRequest[]>[]>;
 }
 
-export const MineRequestCard = ({ request }: Props) => {
+export const MineRequestCard = ({ request, mutate }: Props) => {
     const {
         open, setOpen, selectedOptions, setSelectedOptions, setSelectAll, togglePreview,
         setRequestStatus
     } = useContext(ExchangeRequestCommonContext);
+    
+
+    
     const [hovered, setHovered] = useState<boolean>(false);
+    const { toast } = useToast();
+
+    const handleSave = async (id: number, message: string) => {
+        setSaving(true)
+        try {
+            const res = await fetch(`${api.BACKEND_URL}/exchange/urgent/`, {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [api.csrfTokenName()]: api.getCSRFToken()
+                },
+                body: JSON.stringify({
+                    urgent_request_id: id,
+                    message
+                })
+            })
+            if (!res.ok) {
+                const text = await res.text()
+                toast({
+                    title: 'Erro a atualizar',
+                    description: text,
+                    variant: 'destructive'
+                })
+                return
+            }
+            const updated = await res.json()
+            if (mutate) {
+                mutate((pages: any) => pages.map((p: any) => ({
+                    ...p,
+                    data: p.data.map((r: any) => r.id === id ? {
+                        ...r,
+                        ...updated
+                    } : r)
+                })), {
+                    revalidate: false
+                })
+            }
+            toast({
+                title: 'Atualizado com sucesso'
+            })
+            setEditing(false)
+        } catch (e) {
+            console.error(e);
+            toast({
+                title: 'Erro inesperado',
+                variant: 'destructive'
+            })
+        } finally {
+            setSaving(false)
+        }
+    }
 
     const { trigger: cancelMarketplaceExchange, isMutating: cancelingMarketplaceExchange } = useCancelMarketplaceExchange(request.id);
 
     const { user } = useContext(SessionContext);
+    const isIssuer = user.username === request.issuer_nmec;
+    const [editing, setEditing] = useState(false);
+    const [draftMessage, setDraftMessage] = useState<string | undefined>(() => request.type === 'urgentexchange' ? (request as UrgentRequest).message : undefined);
+    const [saving, setSaving] = useState(false);
 
     return <Card
         onMouseOver={() => { setHovered(true) }}
@@ -41,9 +105,27 @@ export const MineRequestCard = ({ request }: Props) => {
             hideHandler={() => { }}
         />
         <CardContent>
-            {open && request.type === "urgentexchange" && (request as UrgentRequest).message && (
+            {open && request.type === "urgentexchange" && (
                 <div className="px-4">                    
-                    {(request as UrgentRequest).message}
+                    {isIssuer ? (
+                        editing ? (
+                            <div className="flex flex-col gap-2">
+                                <textarea className="w-full border rounded-md p-2" rows={3} value={draftMessage ?? ''} onChange={(e) => setDraftMessage(e.target.value)} />
+                                <div className="flex gap-2">
+                                    <Button disabled={saving} onClick={() =>{ handleSave(request.id, draftMessage ?? '')}} >Salvar
+                                    </Button>
+                                    <Button variant="outline" onClick={() => { setEditing(false); setDraftMessage((request as UrgentRequest).message); }}>Cancelar</Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex items-start gap-2">
+                                <div className="flex-1">{(request as UrgentRequest).message}</div>
+                                <Button onClick={() => { setDraftMessage((request as UrgentRequest).message); setEditing(true); }}>Editar</Button>
+                            </div>
+                        )
+                    ) : (
+                        (request as UrgentRequest).message && <div>{(request as UrgentRequest).message}</div>
+                    )}
                 </div>)
             }
             {open && (

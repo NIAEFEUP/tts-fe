@@ -3,10 +3,19 @@ import { CourseInfo } from "../../../../@types"
 import ScheduleContext from "../../../../contexts/ScheduleContext"
 import { Skeleton } from "../../../ui/skeleton"
 import { ViewRequestBadgeFilter } from "./ViewRequestBadgeFilter"
-
+import {
+  Select ,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+}
+from "../../../ui/select"
 type Props = {
   filterCourseUnitsHook: [Set<number>, Dispatch<SetStateAction<Set<number>>>]
   classesFilterHook: [Map<string, Set<string>>, Dispatch<SetStateAction<Map<string, Set<string>>>>]
+  setRequestStateFilter : Dispatch<SetStateAction<string>>
+  stateFilterActive?: boolean
 }
 
 const ViewRequestsFiltersSkeletons = () => {
@@ -21,7 +30,9 @@ const ViewRequestsFiltersSkeletons = () => {
 
 export const ViewRequestsFilters = ({
   filterCourseUnitsHook,
-  classesFilterHook
+  classesFilterHook,
+  setRequestStateFilter,
+  stateFilterActive
 }: Props) => {
   const { enrolledCourseUnits, loadingSchedule } = useContext(ScheduleContext);
 
@@ -40,7 +51,22 @@ export const ViewRequestsFilters = ({
               />
             ))
           }
+          {stateFilterActive && (
+            <Select onValueChange={(value) => setRequestStateFilter(value)}>
+              <SelectTrigger className="w-64">
+                <SelectValue placeholder="Filtrar por tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="pending">Pendentes</SelectItem>
+                <SelectItem value="accepted">Aceites</SelectItem>
+                <SelectItem value="canceled">Canceladas</SelectItem>
+              </SelectContent>
+          </Select>
+          )
+          }
         </div>
       </div>}
+      
   </div>
 }

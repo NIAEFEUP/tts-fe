@@ -1,21 +1,20 @@
-import { useState, useEffect, useContext} from "react"
+import { useState, useEffect, SetStateAction, Dispatch } from "react"
 import { ClassDescriptor, SlotInfo } from "../../../@types"
 import SlotBox from "./SlotBox"
-import ConflictsContext from '../../../contexts/ConflictsContext'
 
 type Props = {
   slots: Array<SlotInfo>
   classes: Array<ClassDescriptor>
   hiddenLessonsTypes: Array<string>
+  setConflictsSeverities: Dispatch<SetStateAction<Array<number>>>
 }
 
-const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
+const SlotBoxes = ({ slots, classes, hiddenLessonsTypes, setConflictsSeverities }: Props) => {
   const filteredSlots = slots.filter((slot: SlotInfo) => !hiddenLessonsTypes.includes(slot.lesson_type));
 
-  const [conflictMap, setConflictMap] = useState(new Map<number, boolean>());
+  const [conflictMap, setConflictMap] = useState(new Map<number, number>());
 
-  const { setConflictSeverity } = useContext(ConflictsContext);
-  const updateConflictMap = (courseId: number, conflictData: boolean) => {
+  const updateConflictMap = (courseId: number, conflictData: number) => {
     setConflictMap((prevConflictMap) => {
       const newConflictMap = new Map(prevConflictMap);
       newConflictMap.set(courseId, conflictData);
@@ -24,10 +23,9 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes }: Props) => {
   };
 
   useEffect(() => {
-    const isSevere = Array.from(conflictMap.values()).reduce((acc, val) => acc || val, false);
-    setConflictSeverity(isSevere);
+    setConflictsSeverities(prev => [...prev, ...Array.from(conflictMap.values())])
   }, [conflictMap]);
-  
+
   return (
     <>
       {
