@@ -7,12 +7,12 @@ type Props = {
   classInfo: ClassInfo
   slot: SlotInfo
   classes: ClassDescriptor[]
-  setSlotBoxConflict: (courseId: number, conflictData: boolean) => void
+  setSlotBoxConflict: (courseId: number, conflictData: number) => void
 }
 
 const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: Props) => {
 
-  const updateSlotBoxConflict = (courseId: number, conflictData: boolean) => {
+  const updateSlotBoxConflict = (courseId: number, conflictData: number) => {
     setSlotBoxConflict(courseId, conflictData);
   };
 

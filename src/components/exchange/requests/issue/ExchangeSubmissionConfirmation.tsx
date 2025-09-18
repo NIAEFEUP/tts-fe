@@ -45,7 +45,7 @@ export const ExchangeSubmissionConfirmation = ({
     await requestSubmitHandler(data.urgentMessage);
   }
 
-  const { isConflictSevere } = useContext(ConflictsContext);
+  const { conflictSeverity } = useContext(ConflictsContext);
 
   return (
     <>
@@ -105,7 +105,7 @@ export const ExchangeSubmissionConfirmation = ({
             <Button
               className="flex flex-row gap-x-2 success-button"
               type="submit"
-              disabled={sendUrgentMessage ? false : isConflictSevere}
+              disabled={sendUrgentMessage ? false : conflictSeverity}
             >
               {submittingRequest
                 ? <p>A processar pedido...</p>

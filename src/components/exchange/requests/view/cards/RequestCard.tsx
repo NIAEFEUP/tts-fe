@@ -14,17 +14,17 @@ import { MoonLoader } from "react-spinners";
 
 export const RequestCard = () => {
   const {
-    chosenRequest, hiddenRequests, request, open, 
+    chosenRequest, hiddenRequests, request, open,
     setOpen, selectedOptions, setSelectedOptions,
     selectAll, setSelectAll, hide, togglePreview
   } = useContext(ExchangeRequestCommonContext);
 
   const [hovered, setHovered] = useState<boolean>(false);
 
-  const { isConflictSevere } = useContext(ConflictsContext);
+  const { conflictSeverity } = useContext(ConflictsContext);
   const { toast } = useToast();
 
-  const { trigger: requestExchangeProposal, isMutating: isProcessingExchangeProposal} = useMarketplaceAcceptExchange(request, selectedOptions);
+  const { trigger: requestExchangeProposal, isMutating: isProcessingExchangeProposal } = useMarketplaceAcceptExchange(request, selectedOptions);
 
   useEffect(() => {
     if (chosenRequest?.id !== request.id) {
@@ -120,11 +120,11 @@ export const RequestCard = () => {
             <form className="flex justify-center">
               <Button
                 type="submit"
-                onClick={!isConflictSevere ? submitExchange : () => { }}
-                className={isConflictSevere ? "disabled:bg-red-400" : "success-button hover:bg-white"}
-                disabled={isConflictSevere}
+                onClick={!conflictSeverity ? submitExchange : () => { }}
+                className={conflictSeverity ? "disabled:bg-red-400" : "success-button hover:bg-white"}
+                disabled={conflictSeverity}
               >
-                { isProcessingExchangeProposal
+                {isProcessingExchangeProposal
                   ? <MoonLoader size={20} />
                   : <p>Propôr troca</p>
                 }

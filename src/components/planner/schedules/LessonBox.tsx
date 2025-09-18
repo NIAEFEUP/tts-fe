@@ -12,7 +12,7 @@ type Props = {
   classInfo: ClassInfo
   slotInfo: SlotInfo
   classes: ClassDescriptor[]
-  setLessonBoxConflict: (courseId: number, conflictData: boolean) => void
+  setLessonBoxConflict: (courseId: number, conflictData: number) => void
 }
 
 const LessonBox = ({
@@ -44,12 +44,12 @@ const LessonBox = ({
   const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
   const hasConflict = conflict?.conflictingClasses?.length > 1;
   const { tClassConflicts } = useContext(ConflictsContext);
-  const {originalExchangeSchedule} = useContext(ScheduleContext);
+  const { originalExchangeSchedule } = useContext(ScheduleContext);
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
     const newConflictInfo: ConflictInfo = {
-      severe: false,
+      severe: 0,
       conflictingClasses: [{
         classInfo: classInfo,
         courseInfo: courseInfo,
@@ -63,7 +63,7 @@ const LessonBox = ({
         const slot = classDescriptor.classInfo.slots[j];
         if (schedulesConflict(slotInfo, slot)) {
           // The highest severity of the all the conflicts is the overall severity
-          newConflictInfo.severe = conflictsSeverity(slotInfo, slot, tClassConflicts) == 2 || newConflictInfo.severe;
+          newConflictInfo.severe = conflictsSeverity(slotInfo, slot, tClassConflicts) //|| newConflictInfo.severe;
           const newClassDescriptor = {
             classInfo: classDescriptor.classInfo,
             courseInfo: classDescriptor.courseInfo,
@@ -76,15 +76,15 @@ const LessonBox = ({
 
     const hasNewClasses = !newConflictInfo.conflictingClasses.every((conflictingClass) => originalExchangeSchedule.some((originalClass) => originalClass.classInfo.id === conflictingClass.classInfo.id));
 
-    if(!hasNewClasses && newConflictInfo.severe) {
-      newConflictInfo.severe = false;
+    if (!hasNewClasses && newConflictInfo.severe === 0) {
+      newConflictInfo.severe = 0;
     }
 
     setConflict(newConflictInfo);
   }, [classInfo, classes, hasConflict]);
 
   useEffect(() => {
-    if (conflict?.severe !== undefined){
+    if (conflict?.severe !== undefined) {
       setLessonBoxConflict(courseInfo.id, conflict?.severe);
     }
   }, [classInfo]);
@@ -117,15 +117,8 @@ const LessonBox = ({
           className={classNames(
             'schedule-class group',
             getClassTypeClassName(lessonType),
-            hasConflict
-              ? conflict.severe
-                ? isHovered
-                  ? 'schedule-class-conflict-info'
-                  : 'schedule-class-conflict'
-                : isHovered
-                  ? 'schedule-class-conflict-warn-info'
-                  : 'schedule-class-conflict-warn'
-              : '',
+            (hasConflict && conflict.severe === 2) ? (isHovered ? 'schedule-class-conflict-info' : 'schedule-class-conflict') : '',
+            (hasConflict && conflict.severe === 1) ? (isHovered ? 'schedule-class-conflict-warn-info' : 'schedule-class-conflict-warn') : '',
             'overflow-hidden'
           )}
         >

@@ -88,7 +88,7 @@ export type ClassDescriptor = {
 }
 
 export type ConflictInfo = {
-  severe: boolean
+  severe: number
   conflictingClasses: ClassDescriptor[]
 }
 
