@@ -32,14 +32,15 @@ const CombinedProvider = ({ children }: Props) => {
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
   const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
-  
+
 
   useEffect(() => {
     setSignedIn(userSignedIn);
   }, [userSignedIn]);
 
-  const [isConflictSevere, setConflictSeverity] = useState<boolean>(false);
+  const [conflictSeverity, setConflictSeverity] = useState<boolean>(false);
   const [tClassConflicts, setTClassConflicts] = useState<boolean>(false);
+  const [hasSomeConflict, setHasSomeConflict] = useState<boolean>(false);
 
   const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
     if (newMultipleOptions instanceof Function)
@@ -71,7 +72,7 @@ const CombinedProvider = ({ children }: Props) => {
             }
           }>
             <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
-              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity, tClassConflicts, setTClassConflicts }}>
+              <ConflictsContext.Provider value={{ conflictSeverity, setConflictSeverity, tClassConflicts, setTClassConflicts, hasSomeConflict, setHasSomeConflict }}>
                 {children}
               </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>
