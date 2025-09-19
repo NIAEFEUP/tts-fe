@@ -138,7 +138,7 @@ const ExchangePage = () => {
         </div>
       </div>
 
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-hidden">
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh]">
         <Tabs defaultValue="requests" className="flex flex-col h-full">
           {/* Cabeçalho fixo */}
           <TabsList className="w-full mb-2 flex-shrink-0">
@@ -154,7 +154,7 @@ const ExchangePage = () => {
                 setExchangeSidebarStatus={setSidebarStatus}
               />
               : <>
-                {!loadingSchedule && <div className="flex flex-col items-center justify-center h-full gap-4 mt-16">
+                {!loadingSchedule && <div className="flex flex-col items-center justify-center gap-4 mt-16">
                   <FaceFrownIcon className="w-12 h-12" />
                   <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
                   {/* TODO: Open the send feedback modal with something already written  */}
