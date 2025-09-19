@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { CreateRequestData, MarketplaceRequest } from "../../../../@types";
 import exchangeUtils from "../../../../utils/exchange";
 import { Button } from "../../../ui/button";
@@ -9,9 +9,11 @@ import { ExchangeSubmissionConfirmation } from "./ExchangeSubmissionConfirmation
 import { RelatedExchanges } from "./RelatedExchanges";
 import { CurrentView } from "./CustomizeRequest";
 import exchangeRequestService from "../../../../api/services/exchangeRequestService";
+import Alert, { AlertType } from '../../../planner/Alert'
 import { AlertCircle, CheckCircle, XCircle } from "lucide-react";
 import { exchangeErrorToText } from "../../../../utils/error";
 import { useNavigate } from "react-router-dom";
+import ConflictsContext from "../../../../contexts/ConflictsContext";
 
 type Props = {
   requests: Map<number, CreateRequestData>
@@ -50,6 +52,7 @@ const PreviewRequestForm = ({
       setSubmittingRequest(false);
     }
   }
+  const { conflictSeverity , hasSomeConflict } = useContext(ConflictsContext);
 
   return <Dialog open={previewingForm} onOpenChange={(open) => {
     setPreviewingForm(open)
@@ -63,7 +66,21 @@ const PreviewRequestForm = ({
     </DialogTrigger>
     <DialogContent className="flex flex-col">
       <DialogHeader>
-        <DialogTitle>Prever visualização do pedido</DialogTitle>
+        <DialogTitle className="text-center mb-4">
+          Prever visualização do pedido
+          </DialogTitle>
+          {hasSomeConflict && (
+            <Alert type={conflictSeverity ? AlertType.error : AlertType.warning}>
+              <p>
+                {conflictSeverity ? (
+                  <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
+                ) : (
+                  <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
+                )}
+              </p>
+            </Alert>
+          )}
+
         <DialogDescription>
           {currentView === CurrentView.CONFIRMATION &&
             (

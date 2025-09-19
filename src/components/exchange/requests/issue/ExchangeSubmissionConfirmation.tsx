@@ -12,8 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
-import { Dispatch, SetStateAction, useContext } from "react";
-import ConflictsContext from "../../../../contexts/ConflictsContext";
+import { Dispatch, SetStateAction } from "react";
 
 type Props = {
   requests: Map<number, CreateRequestData>,
@@ -45,7 +44,7 @@ export const ExchangeSubmissionConfirmation = ({
     await requestSubmitHandler(data.urgentMessage);
   }
 
-  const { conflictSeverity } = useContext(ConflictsContext);
+  // const { conflictSeverity } = useContext(ConflictsContext);
 
   return (
     <>
@@ -105,7 +104,7 @@ export const ExchangeSubmissionConfirmation = ({
             <Button
               className="flex flex-row gap-x-2 success-button"
               type="submit"
-              disabled={sendUrgentMessage ? false : conflictSeverity}
+            // disabled={sendUrgentMessage ? false : conflictSeverity}
             >
               {submittingRequest
                 ? <p>A processar pedido...</p>
