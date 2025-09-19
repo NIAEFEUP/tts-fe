@@ -14,32 +14,35 @@ const OptionsController = () => {
   const { multipleOptions, selectedOption, setSelectedOption, setMultipleOptions } = useContext(MultipleOptionsContext);
 
   return (
-    <ReactSortable
-      className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start"
-      list={multipleOptions}
-      setList={(newMultipleOptions) => {
-        const prevId = multipleOptions[selectedOption].id;
-        setMultipleOptions(newMultipleOptions);
-        if (newMultipleOptions[selectedOption].id !== prevId) {
-          setSelectedOption(newMultipleOptions.findIndex((currentOption) => currentOption.id === prevId));
+    <div className="overflow-x-scroll w-full">
+      <ReactSortable
+        className="m-y-2 gap-2 flex flex-row overflow-x-auto py-2 text-center w-full lg:justify-start"
+        direction='horizontal'
+        list={multipleOptions}
+        setList={(newMultipleOptions) => {
+          const prevId = multipleOptions[selectedOption].id;
+          setMultipleOptions(newMultipleOptions);
+          if (newMultipleOptions[selectedOption].id !== prevId) {
+            setSelectedOption(newMultipleOptions.findIndex((currentOption) => currentOption.id === prevId));
+          }
         }
-      }
-      }
-      group="groupName"
-      animation={200}
-      delay={2}
-      multiDrag
-      onEnd={() => {
-        AnalyticsTracker.trackFeature(Feature.OPTION_REORDER);
-      }}
-    >
-      {multipleOptions.map((option: Option) => (
-        <OptionButton
-          key={multipleOptions.findIndex((currentOption) => currentOption.id === option.id)}
-          option={option}
-        />
-      ))}
-    </ReactSortable>
+        }
+        group="groupName"
+        animation={200}
+        delay={2}
+        multiDrag
+        onEnd={() => {
+          AnalyticsTracker.trackFeature(Feature.OPTION_REORDER);
+        }}
+      >
+        {multipleOptions.map((option: Option) => (
+          <OptionButton
+            key={multipleOptions.findIndex((currentOption) => currentOption.id === option.id)}
+            option={option}
+          />
+        ))}
+      </ReactSortable>
+    </div>
   )
 }
 
