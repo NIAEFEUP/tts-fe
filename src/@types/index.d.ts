@@ -40,6 +40,7 @@ export type ClassInfo = {
   // composed_name: string,
   id: number,
   name: string,
+  vacancies?: number,
   filteredTeachers: Array<number>,
   slots: Array<SlotInfo>
 }
@@ -87,7 +88,7 @@ export type ClassDescriptor = {
 }
 
 export type ConflictInfo = {
-  severe: boolean
+  severe: number
   conflictingClasses: ClassDescriptor[]
 }
 
@@ -178,9 +179,9 @@ export type UrgentRequest = {
 }
 
 export type UrgentRequestOption = {
-  course_unit: CourseInfo,
-  class_user_goes_from: ClassInfo,
-  class_user_goes_to: ClassInfo,
+  course_info: CourseInfo,
+  class_issuer_goes_from: ClassInfo,
+  class_issuer_goes_to: ClassInfo,
 }
 
 export type CourseUnitEnrollment = {
@@ -207,7 +208,7 @@ export enum AdminRequestType {
 }
 
 export type StudentCourseMetadata = {
-  nmec: string, 
+  nmec: string,
   fest_id: number,
   course: CourseInfo
 }
