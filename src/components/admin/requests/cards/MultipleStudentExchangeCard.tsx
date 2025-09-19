@@ -114,12 +114,7 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
 
       <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
         {/* Aviso de conflitos quando aberto */}
-        {open && (
-          <Alert type={AlertType.warning}>
-            <p>
-              O pedido apresenta conflitos com aulas teóricas e práticas em um ou ambos os alunos.
-            </p>
-          </Alert>
+        {open && (<></>
         )}
 
         {open &&
