@@ -5,6 +5,7 @@ import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerC
 import StorageAPI from '../../../../api/storage'
 import BackendAPI from '../../../../api/backend'
 import { Major } from '../../../../@types'
+import PasteOptionModal from '../../PasteOptionModal'
 
 export const PlannerCoursePicker = () => {
   const { 
@@ -15,6 +16,8 @@ export const PlannerCoursePicker = () => {
   } = useContext(CourseContext)
 
   const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
+  const params = new URLSearchParams(window.location.search)
+  const pastedClasses = params.get('classes')
 
   useEffect(() => {
     BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
@@ -37,6 +40,9 @@ export const PlannerCoursePicker = () => {
     }}
     >
       <CoursePicker />
+      {(pastedClasses && pastedClasses != '') && 
+        <PasteOptionModal pastedClasses={pastedClasses}/>
+      }
     </CoursePickerContext.Provider>
   )
 }
