@@ -42,10 +42,10 @@ export const PersonExchanges = ({
                             <div className="flex gap-5 items-center">
                                 <h2 className="font-bold truncate">{exchange.course_info.acronym}</h2>
                                 <div className="flex gap-2 items-center">
-                                    <p className="truncate >{exchange.class_participant_goes_from.name}</p>
+                                    <p className="truncate" >{exchange.class_participant_goes_from.name}</p>
                                     <p>{exchange.class_participant_goes_from.vacancies ?? 'N/A'} vagas</p>
                                     <ArrowRightIcon className="w-5 h-5" />
-                                    <p className="truncate >{exchange.class_participant_goes_to.name}</p>
+                                    <p className="truncate" >{exchange.class_participant_goes_to.name}</p>
                                     <p>{exchange.class_participant_goes_to.vacancies ?? 'N/A'} vagas</p>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@ export const PersonExchanges = ({
                 </div>
 
                 {/* Botões (30%) */}
-                <div className="basis-[30%] shrink-0 flex justify-end gap-x-2">
+                <div className= "basis-[30%] shrink-0 flex justify-end gap-x-2" >
                     <AdminPreviewSchedule 
                         originalSchedule={schedule}
                         classesToAdd={
