@@ -108,16 +108,16 @@ export const RequestCard = () => {
         </CardContent>
         {open && <Separator className="mb-2" />}
         <CardFooter className={open ? "" : "hidden"}>
-          <div className="flex flex-row justify-between w-full items-center">
-            <div className="flex flex-row items-center gap-x-2">
+          <div className="flex flex-col w-full space-y-3">
+            <div className="flex flex-row items-center justify-center  gap-x-2">
               <Checkbox
                 id="select-all"
                 checked={selectAll}
                 onCheckedChange={handleSelectAll}
               />
-              <label htmlFor="select-all">Selecionar todas</label>
+              <label htmlFor="select-all" className="text-sm">Selecionar todas</label>
             </div>
-            <form className="flex flex-row gap-2">
+            <form className="flex justify-center">
               <Button
                 type="submit"
                 onClick={!conflictSeverity ? submitExchange : () => { }}
