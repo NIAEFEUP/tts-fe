@@ -115,7 +115,7 @@ const ExchangePage = () => {
         <div className="h-full w-full">
           {(!sigarraSynced && !loadingSchedule) && (
             <>
-              <Alert variant="destructive" className="my-2">
+              <Alert variant="destructive" className="my-2 mb-4">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   O horário reflete trocas que ainda não estão no sigarra
@@ -138,12 +138,15 @@ const ExchangePage = () => {
         </div>
       </div>
 
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
-        <Tabs defaultValue="requests">
-          <TabsList className="w-full mb-2">
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-hidden">
+        <Tabs defaultValue="requests" className="flex flex-col h-full">
+          {/* Cabeçalho fixo */}
+          <TabsList className="w-full mb-2 flex-shrink-0">
             <TabsTrigger value="requests">Pedidos</TabsTrigger>
             <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
           </TabsList>
+          {/* Conteúdo */}
+          <div className="flex-grow">
           <TabsContent value="requests">
             {!isSessionLoading && user?.eligible_exchange
               ? <ExchangeSidebarStatusView
@@ -151,7 +154,7 @@ const ExchangePage = () => {
                 setExchangeSidebarStatus={setSidebarStatus}
               />
               : <>
-                {!loadingSchedule && <div className="flex flex-col items-center justify-center gap-4 h-full mt-16">
+                {!loadingSchedule && <div className="flex flex-col items-center justify-center gap-4 mt-16">
                   <FaceFrownIcon className="w-12 h-12" />
                   <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
                   {/* TODO: Open the send feedback modal with something already written  */}
@@ -163,6 +166,7 @@ const ExchangePage = () => {
           <TabsContent value="enrollments">
             <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
           </TabsContent>
+        </div>
         </Tabs>
 
       </div>
