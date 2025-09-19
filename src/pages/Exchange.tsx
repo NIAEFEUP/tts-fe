@@ -154,7 +154,7 @@ const ExchangePage = () => {
                 setExchangeSidebarStatus={setSidebarStatus}
               />
               : <>
-                {!loadingSchedule && <div className="flex flex-col items-center justify-center gap-4 mt-16">
+                {!loadingSchedule && <div className="flex flex-col items-center justify-center h-full gap-4 mt-16">
                   <FaceFrownIcon className="w-12 h-12" />
                   <p className="text-center">Nenhuma das tuas unidades curriculares dá para trocar a turma no TTS</p>
                   {/* TODO: Open the send feedback modal with something already written  */}
