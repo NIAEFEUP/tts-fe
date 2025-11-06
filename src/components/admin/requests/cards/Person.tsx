@@ -1,5 +1,5 @@
 import { CardDescription, CardTitle } from "../../../ui/card";
-import studentInfoService from "../../../../api/services/studentInfo"
+import studentInfoService from "../../../../api/services/studentInfo";
 
 
 export const Person = ({ name, nmec }: { name: string, nmec: string }) => (
