@@ -4,11 +4,13 @@ import { SingleStudentExchangeCard } from "./cards/SingleStudentExchangeCard";
 import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
 import { useContext, useEffect } from "react";
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
+import { PageSizeSelector } from "./cards/PageSizeSelector";
+
 
 export const SingleStudentExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
-    const { currPage, setTotalPages } = useContext(AdminPaginationContext);
-    const { exchanges, loading, totalPages } = useSingleStudentExchanges(filterContext, currPage);
+    const { currPage, setTotalPages, itemsPerPage, setItemsPerPage } = useContext(AdminPaginationContext);
+    const { exchanges, loading, totalPages } = useSingleStudentExchanges(filterContext, currPage, itemsPerPage);
 
     useEffect(() => {
         setTotalPages(totalPages)
@@ -18,6 +20,10 @@ export const SingleStudentExchanges = () => {
         <>
             {loading && <BarLoader className="w-full"/>}
 
+            <PageSizeSelector
+                            value={itemsPerPage}
+                            onChange={setItemsPerPage}
+                        />
             {!loading && exchanges?.map((exchange) => (
                 <SingleStudentExchangeCard 
                     key={`single-student-${exchange.id}`}

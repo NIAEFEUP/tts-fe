@@ -7,7 +7,7 @@ import useSWR from "swr";
 /**
  * Gets the exchanges that involve multiple students.
 */
-export default (filterContext: RequestFiltersContextContent, pageIndex: number) => {
+export default (filterContext: RequestFiltersContextContent, pageIndex: number, pageSize: number) => {
   const getExchanges = async (url: string) => {
     try {
         const res = await fetch(url, {
@@ -23,7 +23,7 @@ export default (filterContext: RequestFiltersContextContent, pageIndex: number) 
   };
 
   const { data, error, mutate } = useSWR(
-    buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/?page=${pageIndex}`, filterContext), getExchanges
+    buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/?page=${pageIndex}&page_size=${pageSize}`, filterContext), getExchanges
   );
   const exchanges = useMemo(() => data ? [].concat(...data["exchanges"]) : null, [data]);
   const totalPages = useMemo(() => data ? data["total_pages"] : null, [data]);

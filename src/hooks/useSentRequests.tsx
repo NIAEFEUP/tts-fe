@@ -14,7 +14,7 @@ export default () => {
     getKey,
     exchangeRequestService.retrieveMarketplaceRequest
   );
-
+  
   return {
     data,
     isLoading,

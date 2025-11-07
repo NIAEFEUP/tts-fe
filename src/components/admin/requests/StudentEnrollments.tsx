@@ -4,12 +4,13 @@ import { StudentEnrollmentCard } from "./cards/StudentEnrollmentCard";
 import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
 import { useContext, useEffect } from "react";
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
+import { PageSizeSelector } from "./cards/PageSizeSelector";
 
 export const StudentEnrollments = () => {
     const filterContext = useContext(RequestFiltersContext);
 
-    const { currPage, setTotalPages } = useContext(AdminPaginationContext);
-    const { enrollments, loading, totalPages } = useStudentEnrollments(filterContext, currPage);
+    const { currPage, setTotalPages , itemsPerPage, setItemsPerPage } = useContext(AdminPaginationContext);
+    const { enrollments, loading, totalPages } = useStudentEnrollments(filterContext, currPage, itemsPerPage);
 
     useEffect(() => {
         setTotalPages(totalPages)
@@ -19,6 +20,10 @@ export const StudentEnrollments = () => {
         <>
             {loading && <BarLoader className="w-full" />}
 
+            <PageSizeSelector
+                                        value={itemsPerPage}
+                                        onChange={setItemsPerPage}
+                                    />
             {!loading && enrollments?.map((enrollment) => (
                 <StudentEnrollmentCard 
                     key={`student-enrollment-${enrollment.id}`}
