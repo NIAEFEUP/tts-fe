@@ -48,9 +48,9 @@ export function AddAdminDialog({ open, onOpenChange, onAddAdmin }: AddAdminDialo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Admin</DialogTitle>
+          <DialogTitle>Adicionar Admin</DialogTitle>
           <DialogDescription>
-            Search for a user to add as an admin.
+            Pesquisa pelo usuário que pretendes adicionar como admin.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-2 py-4 relative">
@@ -61,10 +61,10 @@ export function AddAdminDialog({ open, onOpenChange, onAddAdmin }: AddAdminDialo
               setSearchTerm(e.target.value);
               setSelectedUser(null); 
             }}
-            placeholder="Enter username..."
+            placeholder="Introduzir nome de utilizador..."
           />
-          {error && <p className="text-sm text-red-600">Failed to load candidates</p>}
-          {candidates && candidates.length > 0 && !selectedUser && (
+          {error && <p className="text-sm text-red-600">Falha ao carregar candidatos</p>}
+          {candidates && candidates.length > 0 && !selectedUser && searchTerm.trim() && (
             <div className="absolute top-full left-0 right-0 z-10 max-h-40 overflow-y-auto border border-t-0 rounded-b-md bg-white dark:bg-gray-800 shadow-lg">
               {candidates.map((c: Candidate) => (
                 <div
@@ -85,10 +85,10 @@ export function AddAdminDialog({ open, onOpenChange, onAddAdmin }: AddAdminDialo
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleAdd} disabled={!selectedUser}>
-            Add Admin
+            Adicionar Admin
           </Button>
         </DialogFooter>
       </DialogContent>

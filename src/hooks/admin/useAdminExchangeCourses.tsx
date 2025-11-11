@@ -2,10 +2,15 @@ import { useMemo } from "react";
 import api from "../../api/backend";
 import useSWR from "swr";
 
-export default () => {
+export default (adminUsername?: string) => {
   const getCourses = async () => {
     try {
-        const res = await fetch(`${api.BACKEND_URL}/exchange/admin/courses/`, {
+        const url = new URL(`${api.BACKEND_URL}/exchange/admin/courses/`);
+        if (adminUsername) {
+          url.searchParams.set('admin_username', adminUsername);
+        }
+        
+        const res = await fetch(url.toString(), {
             credentials: "include"
         });
 
@@ -17,7 +22,8 @@ export default () => {
     }
   };
 
-  const { data, error, mutate } = useSWR("admin-exchange-courses", getCourses);
+  const cacheKey = adminUsername ? `admin-exchange-courses-${adminUsername}` : "admin-exchange-courses";
+  const { data, error, mutate } = useSWR(cacheKey, getCourses);
   const courses = useMemo(() => data ? data : null, [data]);
 
   return {
