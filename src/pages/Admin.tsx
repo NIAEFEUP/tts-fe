@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { AdminMainContent } from "../components/admin/AdminMainContent";
 import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
+import AdminExchangeManageAdmins from "../components/admin/AdminExchangeManageAdmins";
 import { SidebarProvider } from "../components/ui/sidebar";
 import SessionContext from "../contexts/SessionContext";
+import { Toaster } from "../components/ui/toaster";
 
 type Props = {
   page: string;
@@ -31,7 +33,9 @@ const AdminPage = ({ page }: Props) => {
       <main className="m-8 w-full">
         {page === "pedidos" && <AdminMainContent />}
         {page === "settings" && <AdminExchangeSettings />}
+        {page === "admins" &&  <AdminExchangeManageAdmins />}
       </main>
+      <Toaster />
     </SidebarProvider>
   );
 };

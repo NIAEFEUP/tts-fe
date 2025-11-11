@@ -1,5 +1,6 @@
 import { DirectExchangePendingMotive } from "../utils/exchange"
 
+
 enum lesson_type {
   T = "T",    // Ensino teórico
   TP = "TP",  // Ensino teórico-prático
