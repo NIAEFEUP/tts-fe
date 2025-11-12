@@ -21,14 +21,6 @@ import {
 import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext";
 import { AdminPagination } from "../admin/AdminPagination";
 
-const getCsrfToken = () => {
-  const name = 'csrftoken';
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return '';
-};
-
 type AdminRow = {
   id: number;
   username: string;
@@ -75,7 +67,7 @@ export const AdminsExchangeManageAdmins = () => {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
+          [api.csrfTokenName()]: api.getCSRFToken()
         },
         body: JSON.stringify({ username }),
       });
@@ -115,7 +107,7 @@ export const AdminsExchangeManageAdmins = () => {
         method: 'DELETE',
         credentials: 'include',
         headers: {
-          'X-CSRFToken': getCsrfToken(),
+          [api.csrfTokenName()]: api.getCSRFToken()
         },
       });
       if (res.ok) {

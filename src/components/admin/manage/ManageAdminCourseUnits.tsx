@@ -24,14 +24,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../../ui/alert-dialog";
+import { CourseUnitInfo } from "../../../@types";
 
-const getCsrfToken = () => {
-  const name = 'csrftoken';
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return '';
-};
 
 interface ManageAdminCourseUnitsProps {
   open: boolean;
@@ -49,26 +43,18 @@ type AdminRow = {
   date_joined: string | null;
 }
 
-type CourseUnit = {
-  id: number;
-  name: string;
-  acronym: string;
-  course_name: string;
-  course_acronym: string;
-  semester: number;
-  year: number;
-};
+
 
 export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: ManageAdminCourseUnitsProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCourseUnit, setSelectedCourseUnit] = useState<CourseUnit | null>(null);
+  const [selectedCourseUnit, setSelectedCourseUnit] = useState<CourseUnitInfo | null>(null);
   const { courseUnits: searchCourseUnits, loading: searchLoading, error: searchError } = useAdminExchangeCourseUnitsSearch(searchTerm);
   const { courseUnits: adminCourseUnits, loading: adminLoading, error: adminError, mutate } = useAdminExchangeCourseUnits(selectedAdmin?.username);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [courseUnitToRemove, setCourseUnitToRemove] = useState<number | null>(null);
   const { toast } = useToast();
 
-  const handleSelectCourseUnit = (courseUnit: CourseUnit) => {
+  const handleSelectCourseUnit = (courseUnit: CourseUnitInfo) => {
     setSelectedCourseUnit(courseUnit);
     setSearchTerm(`${courseUnit.acronym} - ${courseUnit.name}`);
   };
@@ -81,7 +67,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
+          [api.csrfTokenName()]: api.getCSRFToken()
         },
         body: JSON.stringify({ 
           course_unit_id: selectedCourseUnit.id,
@@ -131,7 +117,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
         method: 'DELETE',
         credentials: 'include',
         headers: {
-          'X-CSRFToken': getCsrfToken(),
+          [api.csrfTokenName()]: api.getCSRFToken()
         },
       });
       if (res.ok) {
@@ -187,7 +173,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
                   {searchError && <p className="text-sm text-red-600">Falha ao carregar cadeiras</p>}
                   {searchCourseUnits && searchCourseUnits.length > 0 && !selectedCourseUnit && searchTerm.trim() && (
                     <div className="absolute top-full left-0 right-0 z-10 max-h-40 overflow-y-auto border border-t-0 rounded-b-md bg-white dark:bg-gray-800 shadow-lg">
-                      {searchCourseUnits.map((cu: CourseUnit) => (
+                      {searchCourseUnits.map((cu: CourseUnitInfo) => (
                         <div
                           key={cu.id}
                           className={`p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${
