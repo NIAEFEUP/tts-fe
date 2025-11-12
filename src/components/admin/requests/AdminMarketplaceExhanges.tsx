@@ -13,6 +13,10 @@ export const AdminMarketplaceExhanges = () => {
     return (<>
         {loading && <BarLoader className="w-full" />}
 
+        {!loading && (!exchanges || exchanges.length === 0) && (
+                    <h2>Nenhuma pedido encontrado de momento</h2>
+            )}
+
         {exchanges?.map((exchange) => (
             <AdminMarketplaceExhangesCard 
                 key={`admin-marketplace-${exchange.id}`}
