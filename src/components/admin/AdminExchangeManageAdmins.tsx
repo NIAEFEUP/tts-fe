@@ -25,8 +25,9 @@ import { AdminInfo } from "../../@types";
 export const AdminsExchangeManageAdmins = () => {
   const [currPage, setCurrPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const { admins, totalPages: apiTotalPages, loading, error, mutate } = useAdminExchangeAdmins(currPage, 10);
+  const [searchInput, setSearchInput] = useState("");
   const [q, setQ] = useState("");
+  const { admins, totalPages: apiTotalPages, loading, error, mutate } = useAdminExchangeAdmins(currPage, 10, q);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [coursesDialogOpen, setCoursesDialogOpen] = useState(false);
   const [courseUnitsDialogOpen, setCourseUnitsDialogOpen] = useState(false);
@@ -35,21 +36,18 @@ export const AdminsExchangeManageAdmins = () => {
   const [adminToRemove, setAdminToRemove] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Update totalPages when API data changes
   useEffect(() => {
     setTotalPages(apiTotalPages);
   }, [apiTotalPages]);
 
-  const filtered: AdminInfo[] | null = admins
-    ? admins.filter((a: AdminInfo) =>
-        `${a.username} ${a.first_name} ${a.last_name}`.toLowerCase().includes(q.toLowerCase())
-      )
-    : null;
+  const filtered: AdminInfo[] | null = admins ?? null;
 
-  // Reset to page 1 when search query changes
   useEffect(() => {
-    setCurrPage(1);
-  }, [q]);
+    const t = setTimeout(() => {
+      setQ((prev) => (prev === searchInput ? prev : searchInput));
+    }, 350);
+    return () => clearTimeout(t);
+  }, [searchInput]);
 
   const handleAddAdmin = async (username: string) => {
     try {
@@ -142,8 +140,8 @@ export const AdminsExchangeManageAdmins = () => {
         <Input
           placeholder="Procurar admins atuais"
           className="my-4"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
         <Button variant="default" className="mb-4 bg-primary my-auto" onClick={() => setDialogOpen(true)}>Adicionar Admin +</Button>
       </div>
