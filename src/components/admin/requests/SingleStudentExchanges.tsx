@@ -18,6 +18,10 @@ export const SingleStudentExchanges = () => {
         <>
             {loading && <BarLoader className="w-full"/>}
 
+            {!loading && (!exchanges || exchanges.length === 0) && (
+                    <h2>Nenhum pedido encontrado de momento</h2>
+                )}
+                
             {!loading && exchanges?.map((exchange) => (
                 <SingleStudentExchangeCard 
                     key={`single-student-${exchange.id}`}
