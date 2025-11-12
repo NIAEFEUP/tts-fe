@@ -24,14 +24,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../../ui/alert-dialog";
+import { CourseInfo } from "../../../@types";
 
-const getCsrfToken = () => {
-  const name = 'csrftoken';
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return '';
-};
+
 
 interface ManageAdminCoursesProps {
   open: boolean;
@@ -49,26 +44,16 @@ type AdminRow = {
   date_joined: string | null;
 }
 
-type Course = {
-  id: number;
-  name: string;
-  acronym: string;
-  course_type: string;
-  year: number;
-  faculty_acronym: string;
-  faculty_name: string;
-};
-
 export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: ManageAdminCoursesProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<CourseInfo | null>(null);
   const { courses: searchCourses, loading: searchLoading, error: searchError } = useAdminExchangeCoursesSearch(searchTerm);
   const { courses: adminCourses, loading: adminLoading, error: adminError, mutate } = useAdminExchangeCourses(selectedAdmin?.username);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [courseToRemove, setCourseToRemove] = useState<number | null>(null);
   const { toast } = useToast();
 
-  const handleSelectCourse = (course: Course) => {
+  const handleSelectCourse = (course: CourseInfo) => {
     setSelectedCourse(course);
     setSearchTerm(`${course.acronym} - ${course.name}`);
   };
@@ -81,7 +66,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
+          [api.csrfTokenName()]: api.getCSRFToken()
         },
         body: JSON.stringify({ 
           course_id: selectedCourse.id,
@@ -131,7 +116,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
         method: 'DELETE',
         credentials: 'include',
         headers: {
-          'X-CSRFToken': getCsrfToken(),
+          [api.csrfTokenName()]: api.getCSRFToken()
         },
       });
       if (res.ok) {
@@ -187,7 +172,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
                   {searchError && <p className="text-sm text-red-600">Falha ao carregar cursos</p>}
                   {searchCourses && searchCourses.length > 0 && !selectedCourse && searchTerm.trim() && (
                     <div className="absolute top-full left-0 right-0 z-10 max-h-40 overflow-y-auto border border-t-0 rounded-b-md bg-white dark:bg-gray-800 shadow-lg">
-                      {searchCourses.map((c: Course) => (
+                      {searchCourses.map((c: CourseInfo) => (
                         <div
                           key={c.id}
                           className={`p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${
@@ -197,7 +182,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
                         >
                           <div className="font-medium">{c.acronym}</div>
                           <div className="text-sm text-muted-foreground">
-                            {c.name} - {c.faculty_acronym}
+                            {c.name} 
                           </div>
                         </div>
                       ))}

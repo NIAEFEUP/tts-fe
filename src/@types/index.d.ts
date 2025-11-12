@@ -36,6 +36,16 @@ export type CourseInfo = {
   classes?: Array<ClassInfo>
 }
 
+type CourseUnitInfo = {
+  id: number;
+  name: string;
+  acronym: string;
+  course_name: string;
+  course_acronym: string;
+  semester: number;
+  year: number;
+};
+
 export type ClassInfo = {
   // course_unit_id: number, // é mesmo necessário ??
   // composed_name: string,
@@ -235,3 +245,5 @@ export type CollabSession = {
   link: string
   participants: Array<Participant>
 }
+
+
