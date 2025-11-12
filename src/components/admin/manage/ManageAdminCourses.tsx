@@ -24,24 +24,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../../ui/alert-dialog";
-import { CourseInfo } from "../../../@types";
-
-
+import { CourseInfo, AdminInfo } from "../../../@types";
 
 interface ManageAdminCoursesProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedAdmin?: AdminRow;
-}
-
-type AdminRow = {
-  id: number;
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  is_active: boolean;
-  date_joined: string | null;
+  selectedAdmin?: AdminInfo;
 }
 
 export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: ManageAdminCoursesProps) {

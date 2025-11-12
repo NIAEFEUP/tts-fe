@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import SessionContext from "../../contexts/SessionContext";
 import ScheduleContext from "../../contexts/ScheduleContext";
 import authService from "../../api/services/authService";
-import { CornerDownLeftIcon, Import, Shield } from "lucide-react";
+import { CornerDownLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
 import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";

@@ -10,6 +10,7 @@ import {
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import useAdminExchangeCandidates from "../../../hooks/admin/useAdminExchangeCandidates";
+import { Candidate } from "../../../@types";
 
 interface AddAdminDialogProps {
   open: boolean;
@@ -17,13 +18,6 @@ interface AddAdminDialogProps {
   onAddAdmin: (username: string) => void;
 }
 
-type Candidate = {
-  id: number;
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-};
 
 export function AddAdminDialog({ open, onOpenChange, onAddAdmin }: AddAdminDialogProps) {
   const [searchTerm, setSearchTerm] = useState("");

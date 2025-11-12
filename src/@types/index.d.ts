@@ -235,6 +235,26 @@ export type Participant = {
   name: string
 }
 
+// Possible admin candidate (really just a user xd feel free to rename)
+export type Candidate = {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+};
+
+
+// Admin info 
+export type AdminInfo = {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  is_active: boolean;
+  date_joined: string | null;
+}
 // TODO(Process-ing): Maybe join Student and Participant into a single type
 
 export type CollabSession = {
