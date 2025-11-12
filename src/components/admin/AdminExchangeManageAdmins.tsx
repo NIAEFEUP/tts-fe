@@ -20,16 +20,7 @@ import {
 } from "../ui/alert-dialog";
 import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext";
 import { AdminPagination } from "../admin/AdminPagination";
-
-type AdminRow = {
-  id: number;
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  is_active: boolean;
-  date_joined: string | null;
-}
+import { AdminInfo } from "../../@types";
 
 export const AdminsExchangeManageAdmins = () => {
   const [currPage, setCurrPage] = useState<number>(1);
@@ -39,7 +30,7 @@ export const AdminsExchangeManageAdmins = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [coursesDialogOpen, setCoursesDialogOpen] = useState(false);
   const [courseUnitsDialogOpen, setCourseUnitsDialogOpen] = useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState<AdminRow | null>(null);
+  const [selectedAdmin, setSelectedAdmin] = useState<AdminInfo | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [adminToRemove, setAdminToRemove] = useState<string | null>(null);
   const { toast } = useToast();
@@ -49,8 +40,8 @@ export const AdminsExchangeManageAdmins = () => {
     setTotalPages(apiTotalPages);
   }, [apiTotalPages]);
 
-  const filtered: AdminRow[] | null = admins
-    ? admins.filter((a: AdminRow) =>
+  const filtered: AdminInfo[] | null = admins
+    ? admins.filter((a: AdminInfo) =>
         `${a.username} ${a.first_name} ${a.last_name}`.toLowerCase().includes(q.toLowerCase())
       )
     : null;
@@ -173,7 +164,7 @@ export const AdminsExchangeManageAdmins = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((a: AdminRow) => (
+              {filtered.map((a: AdminInfo) => (
                 <tr key={a.id} className="border-t">
                   <td className="p-2">{a.username}</td>
                   <td className="p-2">{`${a.first_name || ""} ${a.last_name || ""}`}</td>
