@@ -16,7 +16,6 @@ export const AdminMarketplaceExchanges = () => {
         {!loading && (!exchanges || exchanges.length === 0) && (
                     <h2>Nenhum pedido encontrado de momento</h2>
             )}
-
         {exchanges?.map((exchange) => (
             <AdminMarketplaceExchangesCard 
                 key={`admin-marketplace-${exchange.id}`}
