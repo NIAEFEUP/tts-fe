@@ -3,9 +3,9 @@ import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext
 import useAdminAllMarketplaceExchanges from "../../../hooks/admin/useAdminAllMarketplaceExchanges"
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
 import { BarLoader } from "react-spinners";
-import { AdminMarketplaceExhangesCard } from "../AdminMarketplaceExchangesCard";
+import { AdminMarketplaceExchangesCard } from "../AdminMarketplaceExchangesCard";
 
-export const AdminMarketplaceExhanges = () => {
+export const AdminMarketplaceExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
     const { currPage } = useContext(AdminPaginationContext);
     const { exchanges, loading } = useAdminAllMarketplaceExchanges(filterContext, currPage);
@@ -14,11 +14,11 @@ export const AdminMarketplaceExhanges = () => {
         {loading && <BarLoader className="w-full" />}
 
         {!loading && (!exchanges || exchanges.length === 0) && (
-                    <h2>Nenhuma pedido encontrado de momento</h2>
+                    <h2>Nenhum pedido encontrado de momento</h2>
             )}
 
         {exchanges?.map((exchange) => (
-            <AdminMarketplaceExhangesCard 
+            <AdminMarketplaceExchangesCard 
                 key={`admin-marketplace-${exchange.id}`}
                 exchange={exchange}
             /> 
