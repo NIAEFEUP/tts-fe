@@ -8,7 +8,7 @@ import { CornerDownLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
-import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -64,12 +64,12 @@ export const AdminSidebar = () => {
                 <SidebarMenuButton asChild>
                     <Button
                         variant="secondary"
-                        className="w-full flex flex-row justify-center gap-2"
+                        className="w-full flex flex-row justify-center gap-2 bg-primary text-white hover:bg-primary/90"
                         onClick={logout}
                         disabled={loggingOut}
                     >
-                        <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
-                        {!loggingOut && <span>Sair</span>}
+                        <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-white" />
+                        {!loggingOut && <span className="text-white">Sair</span>}
                     </Button>
                 </SidebarMenuButton>
             </SidebarFooter>
