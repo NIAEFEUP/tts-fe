@@ -16,7 +16,7 @@ type Props = {
     exchange: MarketplaceRequest
 }
 
-export const AdminMarketplaceExhangesCard = ({
+export const AdminMarketplaceExchangesCard = ({
     exchange
 }: Props) => {
 
