@@ -12,6 +12,7 @@ import { useToast } from "../../ui/use-toast";
 import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
 import { AlreadyEnrolledCourseUnitCard } from "./AlreadyEnrolledCourseUnitCard";
 import { EnrollingCourseUnitCard } from "./EnrollingCourseUnitCard";
+import {LockClosedIcon} from "@heroicons/react/24/outline";
 
 export enum CourseUnitEnrollmentType {
   DISENROLLING = 1,
@@ -98,10 +99,14 @@ export const Enrollments = ({
           </div>
 
           <div className="flex flex-col gap-y-2">
-            <h3 className="font-bold text-md">
-              Cadeiras já inscritas
-            </h3>
-            {alreadyEnrolledCourseUnits?.map((courseUnit: CourseInfo) => (
+            {alreadyEnrolledCourseUnits.length === 0 
+               ? <h3 className="flex flex-col items-center justify-center text-center font-bold text-md">
+              <LockClosedIcon className="w-12 h-12 mb-2" />
+              Não existem cadeiras com período de inscrição aberto 
+              </h3>
+            
+            
+             : alreadyEnrolledCourseUnits?.map((courseUnit: CourseInfo) => (
               <AlreadyEnrolledCourseUnitCard
                 key={"already-enrolled-" + courseUnit.id}
                 courseUnit={courseUnit}
