@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import Header from './Header'
-import FooterWraper from './FooterWraper'
+import Footer from './Footer'
 import classNames from 'classnames'
 import { FeedbackReport } from '../FeedbackReport'
 
@@ -30,7 +30,7 @@ const Layout = ({ children, location, liquid, title }: Props) => {
         <div className={classNames('flex-grow', liquid ? 'sm:my-auto' : '')}>
           {children}
         </div>
-        <FooterWraper />
+        <Footer />
       </div>
     </div>
 
