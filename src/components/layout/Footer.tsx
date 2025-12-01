@@ -20,7 +20,7 @@ const socials: Social[] = [
 
 const Footer = () => {
   return (
-    <footer className="mt-[7vh] bg-navy px-2 py-4 transition dark:bg-darker md:px-6 md:py-8">
+    <footer className="mt-8 bg-navy px-2 py-4 transition dark:bg-darker md:px-6 md:py-8">
       <div className="flex flex-col items-center justify-between space-y-4 lg:flex-row">
         {/* Social Media */}
         <ul className="order-2 mt-4 flex items-center justify-center space-x-4 lg:order-1">
