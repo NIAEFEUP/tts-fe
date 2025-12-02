@@ -12,6 +12,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs"
+import Alert, { AlertType }  from '../components/planner/Alert'
+import { AlertDescription } from '../components/ui/alert'
+
 const TimeTableSelectorPage = () => {
   const { setMajors } = useContext(MajorContext);
 
@@ -58,6 +61,15 @@ const Content = () => {
       
     </div>
     <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+     
+      <div className="col-span-12 mb-2">
+        <Alert type={AlertType.info}>
+          <AlertDescription>
+            Este horário é apenas uma simulação (Planner). As trocas reais de turma só são efetuadas na página de Trocas de Turmas
+          </AlertDescription>
+        </Alert>
+      </div>
+      
       {sidebarPosition === 'left' ? (
         <>
           <div className='col-span-12 lg:col-span-3 min-h'>
