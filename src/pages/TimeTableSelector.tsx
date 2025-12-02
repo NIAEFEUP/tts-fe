@@ -67,7 +67,7 @@ const Content = () => {
         <div className="col-span-12 mb-2">
           <Alert type={AlertType.info}>
             <AlertDescription>
-              Este horário é apenas uma simulação (Planner). As trocas reais de turma só são efetuadas na página de Trocas de Turmas
+              Este horário é apenas uma simulação (Planner). As trocas reais de turma só são efetuadas na página de Trocas de Turmas.
             </AlertDescription>
           </Alert>
         </div>
