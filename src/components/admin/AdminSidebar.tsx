@@ -9,9 +9,11 @@ import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
 import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { Sheet, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription } from "../ui/sheet";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const navigate = useNavigate(); 
 
   const { user, setSignedIn } = useContext(SessionContext);
@@ -65,7 +67,7 @@ export const AdminSidebar = () => {
                     <Button
                         variant="secondary"
                         className="w-full flex flex-row justify-center gap-2 bg-primary text-white hover:bg-primary/90"
-                        onClick={logout}
+                        onClick={() => setConfirmOpen(true)}
                         disabled={loggingOut}
                     >
                         <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-white" />
@@ -73,6 +75,22 @@ export const AdminSidebar = () => {
                     </Button>
                 </SidebarMenuButton>
             </SidebarFooter>
+            <Sheet open={confirmOpen} onOpenChange={setConfirmOpen}>
+                <SheetContent side="right">
+                <SheetHeader>
+                    <SheetTitle>Sair</SheetTitle>
+                    <SheetDescription>Tem a certeza que deseja sair?</SheetDescription>
+                </SheetHeader>
+                <SheetFooter className="mt-4 flex gap-2">
+                    <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+                    Cancelar
+                    </Button>
+                    <Button variant="destructive"onClick={() => { setConfirmOpen(false); logout();}}>
+                    Confirmar
+                    </Button>
+                </SheetFooter>
+                </SheetContent>
+            </Sheet>
         </Sidebar>
     );
 };
