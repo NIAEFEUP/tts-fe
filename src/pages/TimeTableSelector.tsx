@@ -14,6 +14,7 @@ import {
 } from "../components/ui/tabs"
 import Alert, { AlertType }  from '../components/planner/Alert'
 import { AlertDescription } from '../components/ui/alert'
+import SessionContext from '../contexts/SessionContext'
 
 const TimeTableSelectorPage = () => {
   const { setMajors } = useContext(MajorContext);
@@ -35,6 +36,7 @@ const TimeTableSelectorPage = () => {
 
 const Content = () => {
   const { sidebarPosition } = useSidebarContext();
+  const { user } = useContext(SessionContext);
 
   return (
     <div className='h-full w-full'>
@@ -61,15 +63,15 @@ const Content = () => {
       
     </div>
     <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-     
-      <div className="col-span-12 mb-2">
-        <Alert type={AlertType.info}>
-          <AlertDescription>
-            Este horário é apenas uma simulação (Planner). As trocas reais de turma só são efetuadas na página de Trocas de Turmas
-          </AlertDescription>
-        </Alert>
-      </div>
-      
+      {user?.eligible_exchange && (
+        <div className="col-span-12 mb-2">
+          <Alert type={AlertType.info}>
+            <AlertDescription>
+              Este horário é apenas uma simulação (Planner). As trocas reais de turma só são efetuadas na página de Trocas de Turmas
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
       {sidebarPosition === 'left' ? (
         <>
           <div className='col-span-12 lg:col-span-3 min-h'>
