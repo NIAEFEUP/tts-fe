@@ -6,8 +6,9 @@ import ScheduleContext from "../../contexts/ScheduleContext";
 import authService from "../../api/services/authService";
 import { CornerDownLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
-import { ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -61,15 +62,15 @@ export const AdminSidebar = () => {
                     </a>
                 </SidebarMenuButton>
                 <SidebarMenuButton asChild>
-                    <button
-                        type="button"
-                        className="w-full flex flex-row gap-2 items-center"
+                    <Button
+                        variant="secondary"
+                        className="w-full flex flex-row justify-center gap-2 bg-primary text-white hover:bg-primary/90"
                         onClick={logout}
                         disabled={loggingOut}
-                >
-                        <ArrowLeftEndOnRectangleIcon className="w-6 h-6" />
-                        <span>{loggingOut ? "A sair..." : "Terminar Sessão"}</span>
-                    </button>
+                    >
+                        <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-white" />
+                        {!loggingOut && <span className="text-white">Sair</span>}
+                    </Button>
                 </SidebarMenuButton>
             </SidebarFooter>
         </Sidebar>

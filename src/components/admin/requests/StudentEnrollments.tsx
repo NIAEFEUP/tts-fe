@@ -19,6 +19,10 @@ export const StudentEnrollments = () => {
         <>
             {loading && <BarLoader className="w-full" />}
 
+            {!loading && (!enrollments || enrollments.length === 0) && (
+                    <h2>Nenhuma inscrição encontrada de momento</h2>
+            )}
+
             {!loading && enrollments?.map((enrollment) => (
                 <StudentEnrollmentCard 
                     key={`student-enrollment-${enrollment.id}`}

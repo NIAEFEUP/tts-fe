@@ -8,7 +8,7 @@ import { AdminRequestState } from "../../contexts/admin/RequestFiltersContext";
 import RequestFiltersContext from "../../contexts/admin/RequestFiltersContext";
 import { AdminPagination } from "./AdminPagination";
 import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext";
-import { AdminMarketplaceExhanges } from "./requests/AdminMarketplaceExhanges";
+import { AdminMarketplaceExchanges } from "./requests/AdminMarketplaceExchanges";
 
 export const AdminMainContent = () => {
     const [activeCourse, setActiveCourse] = useState<number | undefined>(undefined);
@@ -75,7 +75,7 @@ export const AdminMainContent = () => {
                             <StudentEnrollments />
                         </TabsContent>
                         <TabsContent value="admin-marketplace">
-                            <AdminMarketplaceExhanges />
+                            <AdminMarketplaceExchanges />
                         </TabsContent>
 
                         <div className="mt-8">
