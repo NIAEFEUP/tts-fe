@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CourseInfo, Major, MultipleOptions } from "../@types";
 import StorageAPI from "../api/storage";
 import MultipleOptionsContext from "./MultipleOptionsContext";
