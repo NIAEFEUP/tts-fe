@@ -19,8 +19,8 @@ export const CreateRequest = ({
   const [hasStudentToExchange, setHasStudentToExchange] = useState<boolean>(false);
   const { enrolledCourseUnits } = useStudentCourseUnits();
 
-  return <div className="flex flex-col">
-    <div className="flex flex-col gap-y-4 max-h-screen overflow-y-auto">
+  return <div className="flex flex-col h-screen">
+    <div className="flex flex-col flex1 overflow-hidden gap-y-4 ">
       <div className="flex flex-row justify-between w-full items-center">
         <h1 className="font-bold text-xl">Criar pedido</h1>
         {!selectingCourseUnits &&
@@ -33,7 +33,7 @@ export const CreateRequest = ({
         }
       </div>
 
-      <div>
+      <div  className="flex flex-col flex-1 overflow-hidden">
         {
           selectingCourseUnits
             ? <ChooseIncludedCourseUnits
