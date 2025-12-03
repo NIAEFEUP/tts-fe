@@ -31,12 +31,11 @@ const CombinedProvider = ({ children }: Props) => {
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
-  const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
 
-
-  useEffect(() => {
-    setSignedIn(userSignedIn);
-  }, [userSignedIn]);
+  // Dummy setter for backward compatibility with logout functionality
+  const setSignedIn = () => {
+    // Session state is managed by useSession hook
+  };
 
   const [conflictSeverity, setConflictSeverity] = useState<boolean>(false);
   const [tClassConflicts, setTClassConflicts] = useState<boolean>(false);
