@@ -4,11 +4,11 @@ import { useContext, useState } from "react";
 import SessionContext from "../../contexts/SessionContext";
 import ScheduleContext from "../../contexts/ScheduleContext";
 import authService from "../../api/services/authService";
-import { CornerDownLeftIcon } from "lucide-react";
+import { CornerDownLeftIcon, PieChartIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
-import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon, ChartPieIcon } from "@heroicons/react/24/outline";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -45,13 +45,20 @@ export const AdminSidebar = () => {
                             <span>Vagas</span>
                         </Link>
                     </SidebarMenuButton>
-
+                    
                     <SidebarMenuButton asChild>
                         <Link to="/admin/settings" className="flex items-center gap-2">
                             <AdjustmentsHorizontalIcon className="w-6 h-6" />
                             <span>Definições</span>
                         </Link>
                     </SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                        <Link to="/admin/statistics" className="flex items-center gap-2">
+                            <PieChartIcon className="w-6 h-6" />
+                            <span>Estatísticas</span>
+                        </Link>
+                    </SidebarMenuButton>
+
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter className="mt-auto flex flex-col gap-2">
