@@ -50,7 +50,7 @@ export const AdminMainContent = () => {
                                 value="exchange-singular"
                                 onClick={() => setCurrPage(1)}
                             >
-                                Trocas individuais
+                                Trocas urgentes
                             </TabsTrigger>
                             <TabsTrigger
                                 value="enrollments"
@@ -62,7 +62,7 @@ export const AdminMainContent = () => {
                                 value="admin-marketplace"
                                 onClick={() => setCurrPage(1)}
                             >
-                                Marketplace
+                                Trocas individuais
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="exchange-with-student">
