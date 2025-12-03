@@ -9,7 +9,6 @@ import authService from "../../api/services/authService";
 import studentInfoService from "../../api/services/studentInfo";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import ScheduleContext from "../../contexts/ScheduleContext";
-import { Sheet, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription } from "../ui/sheet";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 export const HeaderProfileDropdown = () => {
