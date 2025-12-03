@@ -10,6 +10,7 @@ import studentInfoService from "../../api/services/studentInfo";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import ScheduleContext from "../../contexts/ScheduleContext";
 import { Sheet, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription } from "../ui/sheet";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -58,13 +59,13 @@ export const HeaderProfileDropdown = () => {
         }
       </div>
     </HoverCardContent>
-    <Sheet open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>Sair</SheetTitle>
-            <SheetDescription>Tem a certeza que deseja sair?</SheetDescription>
-          </SheetHeader>
-          <SheetFooter className="mt-4 flex gap-2">
+    <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent className="w-full max-w-[22rem] p-5">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sair</AlertDialogTitle>
+            <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-2 flex !justify-center gap-4">
             <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
               Cancelar
             </Button>
@@ -72,9 +73,9 @@ export const HeaderProfileDropdown = () => {
               variant="destructive" onClick={() => { setConfirmOpen(false); logout();}}>
               Confirmar
             </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
   </HoverCard>
   )
 }

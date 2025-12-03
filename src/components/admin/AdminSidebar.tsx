@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
 import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
-import { Sheet, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription } from "../ui/sheet";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -75,22 +75,23 @@ export const AdminSidebar = () => {
                     </Button>
                 </SidebarMenuButton>
             </SidebarFooter>
-            <Sheet open={confirmOpen} onOpenChange={setConfirmOpen}>
-                <SheetContent side="right">
-                <SheetHeader>
-                    <SheetTitle>Sair</SheetTitle>
-                    <SheetDescription>Tem a certeza que deseja sair?</SheetDescription>
-                </SheetHeader>
-                <SheetFooter className="mt-4 flex gap-2">
+            <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                <AlertDialogContent className="w-full max-w-[22rem] p-5">
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Sair</AlertDialogTitle>
+                    <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="mt-2 flex !justify-center gap-4">
                     <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
                     Cancelar
                     </Button>
-                    <Button variant="destructive"onClick={() => { setConfirmOpen(false); logout();}}>
+                    <Button variant="destructive"
+                    onClick={() => { setConfirmOpen(false); logout();}}>
                     Confirmar
                     </Button>
-                </SheetFooter>
-                </SheetContent>
-            </Sheet>
+                </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Sidebar>
     );
 };
