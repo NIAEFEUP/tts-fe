@@ -59,7 +59,7 @@ const CombinedProvider = ({ children }: Props) => {
   }
 
   return (
-    <SessionContext.Provider value={{ signedIn, setSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
+    <SessionContext.Provider value={{ signedIn: userSignedIn, setSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
           <CourseContext.Provider value={

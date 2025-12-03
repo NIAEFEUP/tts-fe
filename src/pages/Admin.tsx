@@ -17,14 +17,16 @@ const AdminPage = ({ page }: Props) => {
   const isAuthorized = signedIn && user?.is_admin;
 
   useEffect(() => {
-    // Only redirect if session is loaded and user is definitely not admin
-    if (!isSessionLoading && signedIn && !isAuthorized) {
+    if (!isSessionLoading && !isAuthorized) {
       navigate("/planner");
     }
-  }, [isSessionLoading, isAuthorized, signedIn, navigate]);
+  }, [isSessionLoading, isAuthorized, navigate]);
 
-  // Prevent rendering admin content for unauthorized users
-  if (!isAuthorized && signedIn && !isSessionLoading) {
+  if (isSessionLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthorized) {
     return null;
   }
 
