@@ -32,11 +32,6 @@ const CombinedProvider = ({ children }: Props) => {
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
 
-  // Dummy setter for backward compatibility with logout functionality
-  const setSignedIn = () => {
-    // Session state is managed by useSession hook
-  };
-
   const [conflictSeverity, setConflictSeverity] = useState<boolean>(false);
   const [tClassConflicts, setTClassConflicts] = useState<boolean>(false);
   const [hasSomeConflict, setHasSomeConflict] = useState<boolean>(false);
@@ -58,7 +53,7 @@ const CombinedProvider = ({ children }: Props) => {
   }
 
   return (
-    <SessionContext.Provider value={{ signedIn: userSignedIn, setSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
+    <SessionContext.Provider value={{ signedIn: userSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
           <CourseContext.Provider value={
