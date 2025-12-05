@@ -1,11 +1,16 @@
 import useAdminExchangeStatistics from '../../hooks/admin/useAdminExchangeStatistics';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { PackageIcon, CheckIcon, XIcon, FileClockIcon} from "lucide-react";
 
-const StatCard = ({ label, value }: { label: string; value: number | string}) => (
+const StatCard = ({ label, value, bgColor, icon}: { label: string; value: number | string; bgColor: string; icon : React.ReactNode}) => (
     <Card className="flex-1 min-w-[200px] shadow-md">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{label}</CardTitle>
+            <div className={`h-8 w-8 rounded-full flex items-center justify-center ${bgColor}`}>
+                {icon}
+            </div>
         </CardHeader>
+        
         <CardContent>
             <div className="text-2xl font-bold">
                 
@@ -23,7 +28,7 @@ export const AdminStatisticsView = () => {
     const aceites = adminStatistics?.accepted_exchanges ?? 'N/A';
     const recusados = adminStatistics?.rejected_exchanges ?? 'N/A';
     const pendentes = adminStatistics?.pending_exchanges ?? 'N/A';
-    const estudantesUnicos = 'N/A'; 
+
     
     if (error) {
         return (
@@ -46,24 +51,33 @@ export const AdminStatisticsView = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard 
-                    label={`Total de Pedidos (de ${estudantesUnicos} estudantes)`} 
-                    value={totalPedidos} 
+                    label="Total de Pedidos" 
+                    value={totalPedidos}
+                    bgColor="bg-blue-100" 
+                    icon={<PackageIcon className="w-5 h-5 text-blue-600" />}
                     
                 />
                 <StatCard 
                     label="Aceites" 
                     value={aceites} 
+                    bgColor="bg-green-100" 
+                    icon={<CheckIcon className="w-5 h-5 text-green-600" />}
+                    
                     
                 />
                 <StatCard 
                     label="Recusados" 
                     value={recusados} 
+                    bgColor="bg-red-100" 
+                    icon={<XIcon className="w-5 h-5 text-red-600" />}
     
                 />
                 <StatCard 
                     label="Pendentes" 
-                    value={pendentes} 
-                    
+                    value={pendentes}
+                    bgColor="bg-yellow-100" 
+                    icon={<FileClockIcon className="w-5 h-5 text-yellow-600" />}
+
                 />
             </div>
             
