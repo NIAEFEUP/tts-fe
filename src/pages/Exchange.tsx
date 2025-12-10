@@ -138,16 +138,19 @@ const ExchangePage = () => {
         </div>
       </div>
 
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-hidden">
-        <Tabs defaultValue="requests" className="flex flex-col h-full">
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest 
+px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] min-h-0 overflow-hidden">
+        <Tabs defaultValue="requests" className="flex flex-col h-full min-h-0">
+
           {/* Cabeçalho fixo */}
           <TabsList className="w-full mb-2 flex-shrink-0">
             <TabsTrigger value="requests">Pedidos</TabsTrigger>
             <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
           </TabsList>
           {/* Conteúdo */}
-          <div className="flex-grow">
-          <TabsContent value="requests">
+          <div className="flex-grow flex flex-col min-h-0">
+
+          <TabsContent value="requests" className="flex-1 min-h-0">
             {!isSessionLoading && user?.eligible_exchange
               ? <ExchangeSidebarStatusView
                 sidebarStatus={sidebarStatus}
@@ -163,7 +166,7 @@ const ExchangePage = () => {
                 </div>
                 }</>}
           </TabsContent>
-          <TabsContent value="enrollments">
+          <TabsContent value="enrollments" className="flex-1 min-h-0 overflow-y-auto">
             <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
           </TabsContent>
         </div>
