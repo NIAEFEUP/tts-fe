@@ -112,6 +112,7 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
       </CardHeader>
 
       <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
+
         {open &&
           Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
             const [nmec, name] = participant.split(",");
