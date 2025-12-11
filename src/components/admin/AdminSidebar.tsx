@@ -8,7 +8,7 @@ import { CornerDownLeftIcon, PieChartIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
-import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon, ChartPieIcon } from "@heroicons/react/24/outline";
+import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
