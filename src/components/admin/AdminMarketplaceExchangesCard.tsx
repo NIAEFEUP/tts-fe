@@ -16,7 +16,7 @@ type Props = {
     exchange: MarketplaceRequest
 }
 
-export const AdminMarketplaceExhangesCard = ({
+export const AdminMarketplaceExchangesCard = ({
     exchange
 }: Props) => {
 
@@ -75,10 +75,11 @@ export const AdminMarketplaceExhangesCard = ({
                                             <h2 className="font-bold">{option.course_info.acronym}</h2>
                                             <div className="flex gap-2 items-center">
                                                 <p>{option.class_issuer_goes_from.name}</p>
-                                                <p>{option.class_issuer_goes_from.vacancies ?? 'N/A'} vagas</p>
                                                 <ArrowRightIcon className="w-5 h-5" />
                                                 <p>{option.class_issuer_goes_to.name}</p>
-                                                <p>{option.class_issuer_goes_to.vacancies ?? 'N/A'} vagas</p>
+                                                <p> {"("} {option.class_issuer_goes_from.vacancies ?? 'N/A'}
+                                                <ArrowRightIcon className="w-5 h-5" />
+                                                {option.class_issuer_goes_to.vacancies ?? 'N/A'} {"vagas)"}</p>
                                             </div>
                                         </div>
                                     ))}

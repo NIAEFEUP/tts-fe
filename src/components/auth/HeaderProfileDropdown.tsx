@@ -13,13 +13,13 @@ import ScheduleContext from "../../contexts/ScheduleContext";
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false);
 
-  const { user, setSignedIn } = useContext(SessionContext);
+  const { user, forceScheduleRevalidation } = useContext(SessionContext);
   const { setExchangeSchedule } = useContext(ScheduleContext);
 
   const logout = async () => {
     setLoggingOut(true);
     setExchangeSchedule([]);
-    await authService.logout(user.token, setSignedIn, setLoggingOut);
+    await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut);
   }
 
   return <HoverCard>
