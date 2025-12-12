@@ -1,10 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, ReactNode } from "react";
 import { ClassDescriptor, SlotInfo } from "../../../@types";
 import ScheduleContext from "../../../contexts/ScheduleContext";
 import { Schedule } from "../../planner";
 import ConflictsContext from "../../../contexts/ConflictsContext";
 
-const ExchangeSchedule = () => {
+type ExchangeScheduleProps = {
+  footerLeftContent?: ReactNode;
+}
+
+
+const ExchangeSchedule = ({ footerLeftContent }: ExchangeScheduleProps) => {
+
   const { exchangeSchedule } = useContext(ScheduleContext);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [classes, setClasses] = useState<ClassDescriptor[]>([]);
@@ -59,6 +65,7 @@ const ExchangeSchedule = () => {
   return <Schedule
       classes={classes}
       slots={slots}
+      footerLeftContent={footerLeftContent}
     />;
 }
 
