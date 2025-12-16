@@ -49,8 +49,8 @@ export const StudentEnrollmentCard = ({
                     </div>
                     {!open && <>
                         <Person
-                            key={"enrollment-person-" + enrollment.user_nmec}
-                            name={enrollment.user_nmec}
+                            key={"enrollment-person-" + enrollment.user_name}
+                            name={enrollment.user_name}
                             nmec={enrollment.user_nmec}
                         />
                     </>}
@@ -71,7 +71,7 @@ export const StudentEnrollmentCard = ({
                 {open && (
                     <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
                         <div className="flex flex-row justify-between">
-                            <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
+                            <Person name={enrollment.user_name} nmec={enrollment.user_nmec} />
                             <div className="flex flex-row gap-x-2">
                                 {enrollment.options.map((option) => (
                                     <div
