@@ -49,8 +49,8 @@ export const StudentEnrollmentCard = ({
                     </div>
                     {!open && <>
                         <Person
-                            key={"enrollment-person-" + enrollment.user_nmec}
-                            name={enrollment.user_nmec}
+                            key={"enrollment-person-" + enrollment.user_name}
+                            name={enrollment.user_name}
                             nmec={enrollment.user_nmec}
                         />
                     </>}
@@ -72,11 +72,10 @@ export const StudentEnrollmentCard = ({
             </CardHeader>
             <CardContent className={`w-full ${open ? "pt-0 pb-4 px-9" : "p-0"}`}>
                 {open && (
-                    <div className="flex flex-col gap-y-6" key={crypto.randomUUID()}>
-                        <div className="flex justify-between items-center gap-6 py-2">
-                            <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
-                        <div className="flex-1 max-w-md">
-                            <div className="flex flex-col gap-y-2 border-gray-200 border-2 rounded-md p-2 px-4">
+                    <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
+                        <div className="flex flex-row justify-between">
+                            <Person name={enrollment.user_name} nmec={enrollment.user_nmec} />
+                            <div className="flex flex-row gap-x-2">
                                 {enrollment.options.map((option) => (
                                     <div
                                         key={crypto.randomUUID()}

@@ -188,6 +188,7 @@ export type CourseUnitEnrollment = {
   id: number,
   date: string,
   user_nmec: string,
+  user_name: string,
   admin_state: string,
   accepted: boolean,
   schedule: Array<ClassDescriptor>,
