@@ -18,7 +18,10 @@ export default (courseId: number) => {
 
   }
 
-  const { data, error, mutate, isValidating } = useSWR(`classes-of-${courseId}`, getClasses, {});
+  const { data, error, mutate, isValidating } = useSWR(`classes-of-${courseId}`, getClasses, {
+    revalidateOnMount: true,
+    dedupingInterval: 0
+  });
 
   const classes = useMemo(() => data ? data : null, [data]);
 

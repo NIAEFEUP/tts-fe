@@ -19,6 +19,7 @@ type Props = {
   removePreview: () => void
   contentRef: any
   triggerRef: any
+  classesLoading: boolean
 }
 
 const buildTeacherFilters = (teachers, filteredTeachers) => {
@@ -53,13 +54,14 @@ const ClassSelectorDropdownController = ({
   setPreview,
   removePreview,
   contentRef,
-  triggerRef
+  triggerRef,
+  classesLoading
 }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
-  const { pickedCourses } = useContext(CourseContext);
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
   const [selectedClassId, setSelectedClassId] = selectedClassIdHook;
 
-  // This is used to store the ids of the teachers so it is easy to verify if a teacher is filtered or not
+
   const [filteredTeachers, setFilteredTeachers] = useState<Array<number>>(() => {
     return StorageAPI.getCourseFilteredTeachersStorage(selectedOption, course.id) ?? teacherIdsFromCourseInfo(course)
   });
@@ -72,6 +74,7 @@ const ClassSelectorDropdownController = ({
       setMultipleOptions(newMultipleOptions);
     }
   }, [filteredTeachers]);
+
 
   /**
       * This is used to retrieve the teachers from a course and to populate the filter of the teachers
@@ -162,7 +165,7 @@ const ClassSelectorDropdownController = ({
 
   return <>
     <div>
-      {course.classes === null ? (
+      {classesLoading ? (
         <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
       ) : (
         <>
@@ -213,11 +216,11 @@ const ClassSelectorDropdownController = ({
               {!course.classes || course.classes.length === 0
                 ? <NoOptionsFound mobile={false} />
                 : <>
-                {selectedClassId && (
-                  <DropdownMenuItem onSelect={() => deleteOption()}>
-                    <span className="text-sm tracking-tighter">Remover Seleção</span>
-                  </DropdownMenuItem>
-                )}
+                  {selectedClassId && (
+                    <DropdownMenuItem onSelect={() => deleteOption()}>
+                      <span className="text-sm tracking-tighter">Remover Seleção</span>
+                    </DropdownMenuItem>
+                  )}
                   {course.classes &&
                     getOptions().map((classInfo) => (
                       <ClassItem
@@ -245,7 +248,7 @@ const ClassSelectorDropdownController = ({
               </TabsList>
               <TabsContent value="turmas">
                 <DropdownMenuGroup className="max-h-96 overflow-y-auto">
-                  {course.classes.length === 0
+                  {course.classes?.length === 0
                     ? <NoOptionsFound mobile={true} />
                     : <>
                       <DropdownMenuItem onSelect={() => deleteOption()}>

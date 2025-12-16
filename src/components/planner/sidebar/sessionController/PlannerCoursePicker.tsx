@@ -7,20 +7,22 @@ import BackendAPI from '../../../../api/backend'
 import { Major } from '../../../../@types'
 
 export const PlannerCoursePicker = () => {
-  const { 
+  const {
     pickedCourses, setPickedCourses, checkboxedCourses, setCheckboxedCourses,
     choosingNewCourse,
     setChoosingNewCourse, ucsModalOpen, coursesInfo, setCoursesInfo,
-    setUcsModalOpen 
+    setUcsModalOpen
   } = useContext(CourseContext)
 
   const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
 
   useEffect(() => {
-    BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
-      StorageAPI.setPickedCoursesStorage(courseWithClasses);
-      setPickedCourses(courseWithClasses);
-    })
+    setPickedCourses(checkboxedCourses);
+    StorageAPI.setPickedCoursesStorage(checkboxedCourses);
+    // BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
+    //   StorageAPI.setPickedCoursesStorage(courseWithClasses);
+    //   setPickedCourses(courseWithClasses);
+    // })
   }, [checkboxedCourses])
 
   useEffect(() => {
@@ -29,9 +31,9 @@ export const PlannerCoursePicker = () => {
   }, [selectedMajor, setCoursesInfo])
 
   return (
-    <CoursePickerContext.Provider value={{ 
-      coursesStorage: pickedCourses, setCoursesStorage: setPickedCourses, 
-      checkboxedCourses, setCheckboxedCourses, choosingNewCourse, 
+    <CoursePickerContext.Provider value={{
+      coursesStorage: pickedCourses, setCoursesStorage: setPickedCourses,
+      checkboxedCourses, setCheckboxedCourses, choosingNewCourse,
       setChoosingNewCourse, ucsModalOpen, setUcsModalOpen, coursesInfo, setCoursesInfo,
       selectedMajor, setSelectedMajor
     }}
