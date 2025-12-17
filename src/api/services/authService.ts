@@ -1,12 +1,12 @@
 import api from "../backend";
 
-const logout = async (token, setSignedIn, setLoggingOut) => {
+const logout = async (token, forceScheduleRevalidation, setLoggingOut) => {
    fetch(`${api.OIDC_LOGOUT_URL}`, {
       method: "POST", credentials: "include", headers: {
         "X-CSRFToken": api.getCSRFToken()
       }
     }).then(() => {
-      setSignedIn(false);
+      forceScheduleRevalidation();
       setLoggingOut(false);
     }).catch((e) => {
       console.error(e);
