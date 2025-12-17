@@ -200,6 +200,7 @@ export type CourseUnitEnrollmentOption = {
   course: Major,
   enrolling: boolean,
   class_user_goes_to: ClassInfo,
+  id: number,
 }
 
 export enum AdminRequestType {
