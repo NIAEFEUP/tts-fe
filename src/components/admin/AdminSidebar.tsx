@@ -9,9 +9,11 @@ import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
 import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const navigate = useNavigate(); 
 
   const { user, forceScheduleRevalidation } = useContext(SessionContext);
@@ -72,7 +74,7 @@ export const AdminSidebar = () => {
                     <Button
                         variant="secondary"
                         className="w-full flex flex-row justify-center gap-2 bg-primary text-white hover:bg-primary/90"
-                        onClick={logout}
+                        onClick={() => setConfirmOpen(true)}
                         disabled={loggingOut}
                     >
                         <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-white" />
@@ -80,6 +82,23 @@ export const AdminSidebar = () => {
                     </Button>
                 </SidebarMenuButton>
             </SidebarFooter>
+            <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                <AlertDialogContent className="w-full max-w-[22rem] p-5">
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Sair</AlertDialogTitle>
+                    <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="mt-2 flex !justify-center gap-4">
+                    <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+                    Cancelar
+                    </Button>
+                    <Button variant="destructive"
+                    onClick={() => { setConfirmOpen(false); logout();}}>
+                    Confirmar
+                    </Button>
+                </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Sidebar>
     );
 };
