@@ -48,7 +48,7 @@ export const HeaderProfileDropdown = () => {
           />
           :
           <Button
-            variant="secondary"
+            variant="destructive"
             className="w-full flex flex-row justify-center gap-2"
             onClick={() => setConfirmOpen(true)}
           >
