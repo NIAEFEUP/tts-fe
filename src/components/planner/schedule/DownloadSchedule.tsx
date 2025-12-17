@@ -42,7 +42,7 @@ const DownloadSchedule = ({classes} : Props) => {
                 
                 icsContent += 'BEGIN:VEVENT\n'
                 icsContent += `SUMMARY:${courseInfo.acronym} - ${slot.lesson_type}\n`  
-                icsContent += `LOCATION:${slot.location}/n`
+                icsContent += `LOCATION:${slot.location}\n`
                 icsContent += `DTSTART:${formatDate(startDate)}\n`
                 icsContent += `DTEND:${formatDate(endDate)}\n`
                 icsContent += 'RRULE:FREQ=WEEKLY\n'
