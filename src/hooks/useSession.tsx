@@ -16,8 +16,9 @@ const useSession = () => {
     }
   }
 
-  const { data, isLoading, mutate } = useSwr("auth/info/", trySession, {
-    focusThrottleInterval: 1800000
+  const { data, isLoading, mutate, isValidating } = useSwr("auth/info/", trySession, {
+    focusThrottleInterval: 1800000,
+    revalidateOnMount: true
   });
 
   if (data) {
@@ -28,7 +29,7 @@ const useSession = () => {
     signedIn: data ? data.signed : false,
     user: data ? data : null,
     forceScheduleRevalidation: mutate,
-    isLoading
+    isLoading: isLoading || isValidating || data === undefined
   }
 }
 
