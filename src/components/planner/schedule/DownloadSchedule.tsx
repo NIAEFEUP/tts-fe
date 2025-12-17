@@ -1,4 +1,7 @@
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { ClassDescriptor } from "../../../@types";
+import { Button } from "../../ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip";
 
 type Props = {classes: ClassDescriptor[]}
 
@@ -48,5 +51,31 @@ const DownloadSchedule = ({classes} : Props) => {
             })
         })
         icsContent += 'END:VCALENDAR'
-    }
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'horario_tts.ics')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline" size="icon" onClick={downloadIcs}>
+            <ArrowDownTrayIcon className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Descarregar Horário</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
 }
+
+export default DownloadSchedule;
