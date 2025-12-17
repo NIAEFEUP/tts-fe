@@ -37,9 +37,16 @@ const DownloadSchedule = ({classes} : Props) => {
                     return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`
                 }
                 
-
+                icsContent += 'BEGIN:VEVENT\n'
+                icsContent += `SUMMARY:${courseInfo.acronym} - ${slot.lesson_type}\n`  
+                icsContent += `LOCATION:${slot.location}/n`
+                icsContent += `DTSTART:${formatDate(startDate)}\n`
+                icsContent += `DTEND:${formatDate(endDate)}\n`
+                icsContent += 'RRULE:FREQ=WEEKLY\n'
+                icsContent += 'END:VEVENT\n'
 
             })
         })
+        icsContent += 'END:VCALENDAR'
     }
 }
