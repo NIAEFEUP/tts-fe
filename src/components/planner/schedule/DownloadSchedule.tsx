@@ -66,7 +66,7 @@ const DownloadSchedule = ({classes} : Props) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon" onClick={downloadIcs}>
+          <Button variant="icon" className="bg-lightish text-black dark:bg-darkish dark:text-white" onClick={downloadIcs}>
             <ArrowDownTrayIcon className="h-4 w-4" />
           </Button>
         </TooltipTrigger>
