@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CourseInfo, Major, MultipleOptions } from "../@types";
 import StorageAPI from "../api/storage";
 import MultipleOptionsContext from "./MultipleOptionsContext";
@@ -31,12 +31,6 @@ const CombinedProvider = ({ children }: Props) => {
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
-  const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
-
-
-  useEffect(() => {
-    setSignedIn(userSignedIn);
-  }, [userSignedIn]);
 
   const [conflictSeverity, setConflictSeverity] = useState<boolean>(false);
   const [tClassConflicts, setTClassConflicts] = useState<boolean>(false);
@@ -59,7 +53,7 @@ const CombinedProvider = ({ children }: Props) => {
   }
 
   return (
-    <SessionContext.Provider value={{ signedIn, setSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
+    <SessionContext.Provider value={{ signedIn: userSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
           <CourseContext.Provider value={
