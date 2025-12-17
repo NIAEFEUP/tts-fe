@@ -73,21 +73,22 @@ export const StudentEnrollmentCard = ({
                         <div className="flex flex-row justify-between">
                             <Person name={enrollment.user_name} nmec={enrollment.user_nmec} />
                             <div className="flex flex-row gap-x-2">
-                                {enrollment.options.map((option) => (
-                                    <div
-                                        key={crypto.randomUUID()}
-                                    >
-                                        <div
-                                            className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
-                                        >
-                                            <h2 className="font-bold">{option.course_unit.acronym}</h2>
-                                            {option.enrolling
-                                                ? <Check className="text-green-400" />
-                                                : <X className="text-red-400" />
-                                            }
+                                {[...enrollment.options]
+                                    .sort((a, b) => a.course_unit.id - b.course_unit.id)
+                                    .map((option) => (
+                                        <div key={option.id}>
+                                            <div className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4">
+                                                <h2 className="font-bold">
+                                                    {option.course_unit.acronym}
+                                                </h2>
+                                                {option.enrolling ? (
+                                                    <Check className="text-green-400" />
+                                                ) : (
+                                                    <X className="text-red-400" />
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
                             </div>
                             <div>
                                 <AdminPreviewSchedule
