@@ -22,8 +22,13 @@ const AdminPage = ({ page }: Props) => {
     }
   }, [isSessionLoading, isAuthorized, navigate]);
 
+  if (isSessionLoading) {
+    return <div>Loading...</div>;
+  }
 
-  if (isSessionLoading || !isAuthorized) return null;
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <SidebarProvider>
