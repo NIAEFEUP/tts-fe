@@ -102,7 +102,7 @@ export const Enrollments = ({
             {alreadyEnrolledCourseUnits.length === 0 
                ? <h3 className="flex flex-col items-center justify-center text-center font-bold text-md">
               <LockClosedIcon className="w-12 h-12 mb-2" />
-              Não existem cadeiras com período de inscrição aberto 
+              Não tens inscrição em nenhuma cadeira com período de inscrição aberto
               </h3>
             
             
