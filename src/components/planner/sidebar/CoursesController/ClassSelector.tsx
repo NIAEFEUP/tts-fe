@@ -27,17 +27,15 @@ const ClassSelector = ({
 
   useEffect(() => {
     if (classes) {
-      if (classes) {
-        setPickedCourses(prevCourses =>
-          prevCourses.map((c) =>
-            c.id === course.id
-              ? { ...c, classes: classes }
-              : c
-          )
-        );
-      }
+      setPickedCourses(prevCourses =>
+        prevCourses.map((c) =>
+          c.id === course.id
+            ? { ...c, classes: classes }
+            : c
+        )
+      );
     }
-  }, [classes])
+  }, [classes, setPickedCourses])
 
   const {
     selectedClassId,

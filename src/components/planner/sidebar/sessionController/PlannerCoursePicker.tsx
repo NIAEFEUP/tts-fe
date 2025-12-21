@@ -19,10 +19,6 @@ export const PlannerCoursePicker = () => {
   useEffect(() => {
     setPickedCourses(checkboxedCourses);
     StorageAPI.setPickedCoursesStorage(checkboxedCourses);
-    // BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
-    //   StorageAPI.setPickedCoursesStorage(courseWithClasses);
-    //   setPickedCourses(courseWithClasses);
-    // })
   }, [checkboxedCourses])
 
   useEffect(() => {
