@@ -38,7 +38,10 @@ const CopyOption = ({ currentOption, className }: Props) => {
 
   const copyOption = () => {
     const scheduleHash = optionToString(currentOption);
-    navigator.clipboard.writeText(scheduleHash);
+    
+    const shareableLink = window.location.origin + '/timetable?schedule=' + scheduleHash;
+
+    navigator.clipboard.writeText(shareableLink);
     setIcon(true);
 
     if (scheduleHash === "") {
