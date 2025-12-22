@@ -2,7 +2,6 @@
 import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
 import { useState, useContext, useRef, useEffect } from 'react'
 import CopyOption from './selectedOptionController/CopyOption'
-import PasteOption from './selectedOptionController/PasteOption'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { ThemeContext } from '../../../contexts/ThemeContext'
@@ -119,7 +118,6 @@ const SelectedOptionController = ({
       </div>
       <div className="order-1 flex items-center gap-1 p-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
-        <PasteOption />
         <RandomFill className="sm:py-0 xl:p-1" />
       </div>
     </div>
