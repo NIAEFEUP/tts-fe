@@ -123,18 +123,20 @@ const ExchangePage = () => {
               </Alert>
             </>
           )}
-          {!loadingSchedule &&
-            <div className="relative bottom-2">
-              <div className="absolute hidden md:block">
-                <RefreshScheduleButton
-                  forceRefreshStudentSchedule={forceRefreshStudentSchedule}
-                  loadingSchedule={loadingSchedule}
-                  isRefreshingStudentSchedule={isRefreshingStudentSchedule}
-                />
-              </div>
-            </div>
-          }
-          <ExchangeSchedule />
+          
+          <ExchangeSchedule 
+            refresh = {!loadingSchedule &&(
+
+                <div className="hidden md:block">
+                  <RefreshScheduleButton
+                    forceRefreshStudentSchedule={forceRefreshStudentSchedule}
+                    loadingSchedule={loadingSchedule}
+                    isRefreshingStudentSchedule={isRefreshingStudentSchedule}
+                  />
+                </div>
+              )
+            }
+          />
         </div>
       </div>
 
