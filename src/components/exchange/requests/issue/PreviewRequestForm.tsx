@@ -79,17 +79,30 @@ const PreviewRequestForm = ({
         <DialogTitle className="text-center mb-4">
           Prever visualização do pedido
           </DialogTitle>
-          {hasSomeConflict && (
-            <Alert type={conflictSeverity ? AlertType.error : AlertType.warning}>
-              <p>
-                {conflictSeverity ? (
-                  <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
-                ) : (
-                  <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
-                )}
-              </p>
-            </Alert>
+          {currentView === CurrentView.CONFIRMATION && (
+            <>
+              {hasSomeConflict && (
+                <Alert type={conflictSeverity ? AlertType.error : AlertType.warning}>
+                  <p>
+                    {conflictSeverity ? (
+                      <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
+                    ) : (
+                      <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
+                    )}
+                  </p>
+                </Alert>
+              )}
+
+              {hasDuplicate && (
+                <Alert type={AlertType.warning}>
+                  <p>
+                    Foi detetado que já existe um pedido semelhante ao que estás a tentar submeter. Pretende cancelar o pedido anterior e submeter este novo pedido?
+                  </p>
+                </Alert>
+              )}
+            </>
           )}
+
 
         <DialogDescription>
           {currentView === CurrentView.CONFIRMATION &&
