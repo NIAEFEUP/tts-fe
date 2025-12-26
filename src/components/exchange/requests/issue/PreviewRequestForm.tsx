@@ -128,6 +128,7 @@ const PreviewRequestForm = ({
         requestSubmitHandler={submitRequest}
         submittingRequest={submittingRequest}
         sendUrgentMessage={sendUrgentMessage}
+        hasDuplicate={hasDuplicate}
         setSendUrgentMessage={setSendUrgentMessage}
       />}
 
