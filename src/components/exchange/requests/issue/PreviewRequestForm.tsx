@@ -56,6 +56,7 @@ const PreviewRequestForm = ({
       }
     } catch (e) {
       console.error(e);
+      setCurrentView(CurrentView.FAILURE);
       setError("Erro desconhecido")
     } finally {
       setSubmittingRequest(false);
