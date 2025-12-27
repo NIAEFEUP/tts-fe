@@ -58,7 +58,7 @@ const ClassSelectorDropdownController = ({
   classesLoading
 }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
+  const { pickedCourses } = useContext(CourseContext);
   const [selectedClassId, setSelectedClassId] = selectedClassIdHook;
 
 

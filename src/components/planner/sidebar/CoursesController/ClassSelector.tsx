@@ -21,9 +21,9 @@ const ClassSelector = ({
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
 
-  const { setPickedCourses } = useContext(CourseContext);
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
 
-  const { classes, loading: classesLoading } = useCourseUnitClasses(course.id);
+  const { classes, loading: classesLoading } = useCourseUnitClasses(course.id, pickedCourses);
 
   useEffect(() => {
     if (classes) {
