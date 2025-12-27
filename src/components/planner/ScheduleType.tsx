@@ -1,4 +1,4 @@
-import { getClassType, cn } from '../../utils'
+import { getClassType} from '../../utils'
 import { Badge } from '../ui/badge'
 
 type Props = {
