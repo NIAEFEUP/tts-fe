@@ -31,22 +31,32 @@ const PreviewRequestForm = ({
   const [previewingForm, setPreviewingForm] = previewingFormHook;
   const [sendUrgentMessage, setSendUrgentMessage] = useState<boolean>(false);
   const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
+  const [hasDuplicate, setHasDuplicate] = useState<boolean>(false);
 
   const [error, setError] = useState<string>("");
 
   const submitRequest = async (urgentMessage: string) => {
     setSubmittingRequest(true);
-    const res = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage);
+
+    const replace = hasDuplicate;  // If there's a duplicate, ask to replace it
+    const res = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage, replace);
 
     try {
       if (res.ok) {
         setCurrentView(CurrentView.ACCEPTANCE)
       } else {
-        setCurrentView(CurrentView.FAILURE)
-        setError(exchangeErrorToText[(await res.json())["error"]])
+        const error = (await res.json())["error"];
+
+        if (error === "duplicate-request") {
+          setHasDuplicate(true);
+        } else {
+          setCurrentView(CurrentView.FAILURE)
+          setError(exchangeErrorToText[error] || "Erro desconhecido")
+        }
       }
     } catch (e) {
-      console.error(e)
+      console.error(e);
+      setCurrentView(CurrentView.FAILURE);
       setError("Erro desconhecido")
     } finally {
       setSubmittingRequest(false);
@@ -69,17 +79,30 @@ const PreviewRequestForm = ({
         <DialogTitle className="text-center mb-4">
           Prever visualização do pedido
           </DialogTitle>
-          {hasSomeConflict && (
-            <Alert type={conflictSeverity ? AlertType.error : AlertType.warning}>
-              <p>
-                {conflictSeverity ? (
-                  <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
-                ) : (
-                  <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
-                )}
-              </p>
-            </Alert>
+          {currentView === CurrentView.CONFIRMATION && (
+            <>
+              {hasSomeConflict && (
+                <Alert type={conflictSeverity ? AlertType.error : AlertType.warning}>
+                  <p>
+                    {conflictSeverity ? (
+                      <>Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.</>
+                    ) : (
+                      <>Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem inevitáveis ou se for possível assistir à aula teórica noutro turno.</>
+                    )}
+                  </p>
+                </Alert>
+              )}
+
+              {hasDuplicate && (
+                <Alert type={AlertType.warning}>
+                  <p>
+                    Foi detetado que já existe um pedido semelhante ao que estás a tentar submeter. Pretende cancelar o pedido anterior e submeter este novo pedido?
+                  </p>
+                </Alert>
+              )}
+            </>
           )}
+
 
         <DialogDescription>
           {currentView === CurrentView.CONFIRMATION &&
@@ -105,6 +128,7 @@ const PreviewRequestForm = ({
         requestSubmitHandler={submitRequest}
         submittingRequest={submittingRequest}
         sendUrgentMessage={sendUrgentMessage}
+        hasDuplicate={hasDuplicate}
         setSendUrgentMessage={setSendUrgentMessage}
       />}
 
