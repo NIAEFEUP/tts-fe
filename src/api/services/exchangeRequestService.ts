@@ -38,7 +38,8 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
 
   if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
 
-  if (replace) formData.append("replace", "true");
+  formData.append("replace", replace.toString());
+
   try {
     const res = await fetch(
       `${api.BACKEND_URL}/exchange/${isDirectExchange(requests.values()) ? "direct/" : "marketplace/"}`,
