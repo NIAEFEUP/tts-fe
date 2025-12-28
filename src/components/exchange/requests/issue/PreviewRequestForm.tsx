@@ -102,7 +102,7 @@ const PreviewRequestForm = ({
               {hasDuplicate && (
                 <Alert type={AlertType.warning}>
                   <p>
-                    Foi detetado que já existe um pedido semelhante ao que estás a tentar submeter. Pretendes cancelar o pedido anterior e submeter este novo pedido?
+                    Foi detetado que já existe um pedido semelhante ao que estás a tentar submeter. Pretendes <span className="font-bold">cancelar o pedido anterior</span> e submeter este novo pedido?
                   </p>
                 </Alert>
               )}
