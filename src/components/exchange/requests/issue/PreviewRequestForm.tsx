@@ -43,7 +43,8 @@ const PreviewRequestForm = ({
 
     try {
       if (res.ok) {
-        setCurrentView(CurrentView.ACCEPTANCE)
+        setHasDuplicate(false);
+        setCurrentView(CurrentView.ACCEPTANCE);
       } else {
         const error = (await res.json())["error"];
 
@@ -96,13 +97,12 @@ const PreviewRequestForm = ({
               {hasDuplicate && (
                 <Alert type={AlertType.warning}>
                   <p>
-                    Foi detetado que já existe um pedido semelhante ao que estás a tentar submeter. Pretende cancelar o pedido anterior e submeter este novo pedido?
+                    Foi detetado que já existe um pedido semelhante ao que estás a tentar submeter. Pretendes cancelar o pedido anterior e submeter este novo pedido?
                   </p>
                 </Alert>
               )}
             </>
           )}
-
 
         <DialogDescription>
           {currentView === CurrentView.CONFIRMATION &&
