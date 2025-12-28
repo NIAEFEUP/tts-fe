@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { CreateRequestData, MarketplaceRequest } from "../../../../@types";
 import exchangeUtils from "../../../../utils/exchange";
 import { Button } from "../../../ui/button";
@@ -27,6 +27,11 @@ const PreviewRequestForm = ({
   requests, previewingFormHook, currentView, relatedExchanges, setCurrentView
 }: Props) => {
   const navigate = useNavigate();
+
+  // Reset duplicate state when requests change
+  useEffect(() => {
+    setHasDuplicate(false);
+  }, [requests]);
 
   const [previewingForm, setPreviewingForm] = previewingFormHook;
   const [sendUrgentMessage, setSendUrgentMessage] = useState<boolean>(false);
