@@ -35,7 +35,7 @@ interface ManageAdminCoursesProps {
 export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: ManageAdminCoursesProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourse, setSelectedCourse] = useState<CourseInfo | null>(null);
-  const { courses: searchCourses, loading: searchLoading, error: searchError } = useAdminExchangeCoursesSearch(searchTerm);
+  const { courses: searchCourses, error: searchError } = useAdminExchangeCoursesSearch(searchTerm);
   const { courses: adminCourses, loading: adminLoading, error: adminError, mutate } = useAdminExchangeCourses(selectedAdmin?.username);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [courseToRemove, setCourseToRemove] = useState<number | null>(null);

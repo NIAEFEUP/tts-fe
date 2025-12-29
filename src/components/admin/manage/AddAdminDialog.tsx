@@ -22,7 +22,7 @@ interface AddAdminDialogProps {
 export function AddAdminDialog({ open, onOpenChange, onAddAdmin }: AddAdminDialogProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<Candidate | null>(null);
-  const { candidates, loading, error } = useAdminExchangeCandidates(searchTerm);
+  const { candidates, error } = useAdminExchangeCandidates(searchTerm);
 
   const handleAdd = () => {
     if (selectedUser) {
