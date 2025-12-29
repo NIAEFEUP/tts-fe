@@ -18,6 +18,7 @@ export const AdminSidebar = () => {
 
   const { user, forceScheduleRevalidation } = useContext(SessionContext);
   const { setExchangeSchedule } = useContext(ScheduleContext);
+  const is_super = user?.is_superuser || false;
 
   const logout = async () => {
     setLoggingOut(true);
@@ -25,7 +26,6 @@ export const AdminSidebar = () => {
     await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut);
     navigate("/");
   };
-
     return (
         <Sidebar className="bg-white h-screen flex flex-col">
             <SidebarHeader className="flex flex-row gap-2 p-4">
@@ -47,12 +47,14 @@ export const AdminSidebar = () => {
                             <span>Vagas</span>
                         </Link>
                     </SidebarMenuButton>
-                    <SidebarMenuButton asChild>
-                        <Link to="/admin/admins" className="flex items-center gap-2">
-                            <ShieldCheckIcon className="w-6 h-6" />
-                            <span>Gerir Admins</span>
-                        </Link>
-                    </SidebarMenuButton>
+                    {is_super && (
+                        <SidebarMenuButton asChild>
+                            <Link to="/admin/admins" className="flex items-center gap-2">
+                                <ShieldCheckIcon className="w-6 h-6" />
+                                <span>Gerir Admins</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    )}
                     <SidebarMenuButton asChild>
                         <Link to="/admin/settings" className="flex items-center gap-2">
                             <AdjustmentsHorizontalIcon className="w-6 h-6" />
