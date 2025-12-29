@@ -27,8 +27,7 @@ export const AdminSidebar = () => {
     await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut);
     navigate("/");
   };
-  console.log(user);
-
+  
     return (
         <Sidebar className="bg-white h-screen flex flex-col">
             <SidebarHeader className="flex flex-row gap-2 p-4">
