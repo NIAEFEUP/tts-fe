@@ -39,7 +39,7 @@ interface ManageAdminCourseUnitsProps {
 export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: ManageAdminCourseUnitsProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourseUnit, setSelectedCourseUnit] = useState<CourseUnitInfo | null>(null);
-  const { courseUnits: searchCourseUnits, loading: searchLoading, error: searchError } = useAdminExchangeCourseUnitsSearch(searchTerm);
+  const { courseUnits: searchCourseUnits, error: searchError } = useAdminExchangeCourseUnitsSearch(searchTerm);
   const { courseUnits: adminCourseUnits, loading: adminLoading, error: adminError, mutate } = useAdminExchangeCourseUnits(selectedAdmin?.username);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [courseUnitToRemove, setCourseUnitToRemove] = useState<number | null>(null);

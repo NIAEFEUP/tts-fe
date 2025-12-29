@@ -8,7 +8,7 @@ import { CornerDownLeftIcon, PieChartIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
-import { ArrowRightStartOnRectangleIcon, ArrowLeftEndOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon, ShieldCheckIcon  } from "@heroicons/react/24/outline";
+import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon, ShieldCheckIcon  } from "@heroicons/react/24/outline";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 
