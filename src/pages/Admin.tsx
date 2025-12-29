@@ -1,6 +1,7 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdminMainContent } from "../components/admin/AdminMainContent";
+import { AdminStatisticsView } from "../components/admin/AdminStatisticsView";
 import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
 import AdminExchangeManageAdmins from "../components/admin/AdminExchangeManageAdmins";
@@ -24,16 +25,22 @@ const AdminPage = ({ page }: Props) => {
     }
   }, [isSessionLoading, isAuthorized, navigate]);
 
+  if (isSessionLoading) {
+    return <div>Loading...</div>;
+  }
 
-  if (isSessionLoading || !isAuthorized) return null;
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider> 
       <AdminSidebar />
       <main className="m-8 w-full">
         {page === "pedidos" && <AdminMainContent />}
         {page === "settings" && <AdminExchangeSettings />}
         {page === "admins" &&  <AdminExchangeManageAdmins />}
+        {page === "statistics" && <AdminStatisticsView />}
       </main>
       <Toaster />
     </SidebarProvider>

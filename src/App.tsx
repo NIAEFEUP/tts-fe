@@ -107,6 +107,14 @@ const App = () => {
             key="page-admin-settings"
             element={
               <AdminPage page="settings" />
+          
+            }
+          />
+          <Route
+            path="admin/statistics"
+            key="page-admin-statistics"
+            element={
+              <AdminPage page="statistics" />
             }
           />
         </SentryRoutes>

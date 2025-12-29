@@ -27,12 +27,12 @@ export const PersonExchanges = ({
         <>
             <div className="flex w-full items-center">
                 {/* Nome + NMEC (40%) */}
-                <div className="basis-[40%] shrink-0 overflow-hidden">
+                <div className="basis-[25%] shrink-0 overflow-hidden">
                 <Person name={participant_name} nmec={participant_nmec} />
             </div>
 
             {/* Trocas de turmas (30%) */}
-            <div className="basis-[30%] flex justify-end overflow-hidden">
+            <div className="basis-[45%] flex justify-end overflow-hidden">
                 <div className="flex flex-wrap gap-2">
                     {exchanges.map((exchange) => (
                         <div
@@ -43,10 +43,11 @@ export const PersonExchanges = ({
                                 <h2 className="font-bold truncate">{exchange.course_info.acronym}</h2>
                                 <div className="flex gap-2 items-center">
                                     <p className="truncate" >{exchange.class_participant_goes_from.name}</p>
-                                    <p>{exchange.class_participant_goes_from.vacancies ?? 'N/A'} vagas</p>
                                     <ArrowRightIcon className="w-5 h-5" />
                                     <p className="truncate" >{exchange.class_participant_goes_to.name}</p>
-                                    <p>{exchange.class_participant_goes_to.vacancies ?? 'N/A'} vagas</p>
+                                    <p>{"("}{exchange.class_participant_goes_from.vacancies ?? 'N/A'}
+                                    <ArrowRightIcon className="w-5 h-5" />
+                                    {exchange.class_participant_goes_to.vacancies ?? 'N/A'} {"vagas)"}</p>
                                 </div>
                             </div>
                         </div>
