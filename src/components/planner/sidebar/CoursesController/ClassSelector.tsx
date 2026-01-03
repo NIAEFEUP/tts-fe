@@ -1,4 +1,4 @@
-import { useRef, useState, useContext } from 'react'
+import { useRef, useState, useContext, useEffect } from 'react'
 import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
 import { CourseInfo } from '../../../../@types'
 import { getClassDisplayText } from '../../../../utils'
@@ -6,6 +6,8 @@ import { Button } from '../../../ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
 import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
+import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
+import CourseContext from '../../../../contexts/CourseContext'
 
 type Props = {
   course: CourseInfo,
@@ -18,6 +20,22 @@ const ClassSelector = ({
 }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
+
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
+
+  const { classes, loading: classesLoading } = useCourseUnitClasses(course.id, pickedCourses);
+
+  useEffect(() => {
+    if (classes) {
+      setPickedCourses(prevCourses =>
+        prevCourses.map((c) =>
+          c.id === course.id
+            ? { ...c, classes: classes }
+            : c
+        )
+      );
+    }
+  }, [classes, setPickedCourses])
 
   const {
     selectedClassId,
@@ -68,6 +86,7 @@ const ClassSelector = ({
                 removePreview={removePreview}
                 contentRef={classSelectorContentRef}
                 triggerRef={classSelectorTriggerRef}
+                classesLoading={classesLoading}
               />
             </DropdownMenuContent>
           </div>
