@@ -66,8 +66,11 @@ const ClassSelectorDropdownController = ({
 
   useEffect(() => {
     const newMultipleOptions = [...multipleOptions];
-    newMultipleOptions[selectedOption].course_options.find((option) => option.course_id === course.id).filteredTeachers = filteredTeachers;
-    setMultipleOptions(newMultipleOptions);
+    const courseOption = newMultipleOptions[selectedOption]?.course_options?.find((option) => option.course_id === course.id);
+    if (courseOption) {
+      courseOption.filteredTeachers = filteredTeachers;
+      setMultipleOptions(newMultipleOptions);
+    }
   }, [filteredTeachers]);
 
   /**

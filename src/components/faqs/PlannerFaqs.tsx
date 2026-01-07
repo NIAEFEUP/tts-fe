@@ -170,7 +170,7 @@ const PlannerFaqs = () => {
           >
             {({ open }) => (
               <>
-                <Disclosure.Button className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition hover:bg-slate-700 hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base">
+                <Disclosure.Button className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition hover:bg-primary hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base">
                   <span className="text-left">{faq.question}</span>
                   <ChevronUpIcon
                     className={classNames(

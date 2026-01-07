@@ -16,9 +16,10 @@ type Props = {
     exchange: MarketplaceRequest
 }
 
-export const AdminMarketplaceExhangesCard = ({
+export const AdminMarketplaceExchangesCard = ({
     exchange
 }: Props) => {
+
     const [open, setOpen] = useState<boolean>(false);
     const [exchangeState, setExchangeState] = useState(exchange);
 
@@ -76,6 +77,9 @@ export const AdminMarketplaceExhangesCard = ({
                                                 <p>{option.class_issuer_goes_from.name}</p>
                                                 <ArrowRightIcon className="w-5 h-5" />
                                                 <p>{option.class_issuer_goes_to.name}</p>
+                                                <p> {"("} {option.class_issuer_goes_from.vacancies ?? 'N/A'}
+                                                <ArrowRightIcon className="w-5 h-5" />
+                                                {option.class_issuer_goes_to.vacancies ?? 'N/A'} {"vagas)"}</p>
                                             </div>
                                         </div>
                                     ))}

@@ -54,6 +54,8 @@ export const CommonRequestCard = ({
   }, [open]);
 
   useEffect(() => {
+    if (!request) return;
+
     const ucs = new Set(request.options?.map((option) => option.course_info.acronym));
 
     const newSelectedOptions = new Map();
@@ -87,13 +89,13 @@ export const CommonRequestCard = ({
       }
     );
 
-    if(!exchangeSchedule) return;
+    if (!exchangeSchedule) return;
 
     if (anySelected) {
       request.options.forEach((option) => {
         if (updatedOptions.get(option.course_info.acronym) === true) {
           const matchingClass = (type === "directexchange" ? option.class_participant_goes_to : option.class_issuer_goes_from);
-          if(!matchingClass) return;
+          if (!matchingClass) return;
           matchingClass.slots.forEach((slot) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,

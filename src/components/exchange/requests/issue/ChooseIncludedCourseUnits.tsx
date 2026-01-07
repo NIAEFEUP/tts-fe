@@ -21,7 +21,8 @@ export const ChooseIncludedCourseUnits = ({
 }: Props) => {
   const {originalExchangeSchedule, setExchangeSchedule} = useContext(ScheduleContext);
 
-  return <div className="flex flex-col gap-y-2">
+  return (
+<div className="flex flex-col gap-y-2 h-full">
     <div className="flex flex-row gap-2 mb-2">
       <Checkbox
         id="selecting-course-units"
@@ -38,6 +39,8 @@ export const ChooseIncludedCourseUnits = ({
         Selecionar todas as disciplinas
       </label>
     </div>
+  {/* Scrollable container */}
+  <div className="flex-1 overflow-auto flex flex-col gap-y-2">
     {enrolledCourseUnits?.map((courseInfo: CourseInfo) => (
       <IncludeCourseUnitCard
         key={"include-course-unit-" + courseInfo.id}
@@ -45,9 +48,10 @@ export const ChooseIncludedCourseUnits = ({
         selectedCourseUnitsHook={[selectedCourseUnits, setSelectedCourseUnits]}
       />
     ))}
+  </div>
 
     <Button
-      className="w-full success-button hover:bg-white flex flex-row gap-x-2"
+      className="w-full success-button hover:bg-white flex flex-row gap-x-2 mt-2"
       onClick={() => { 
         setSelectingCourseUnits(false) 
         setExchangeSchedule(originalExchangeSchedule);
@@ -56,6 +60,6 @@ export const ChooseIncludedCourseUnits = ({
       Confirmar disciplinas
       <CheckBadgeIcon className="h-5 w-5" />
     </Button>
-
   </div >
+);
 }

@@ -2,29 +2,37 @@ import { useMemo } from "react";
 import api from "../api/backend";
 import useSWRMutation from "swr/mutation";
 
-export default (id: number) => {
-    const isValid = async (url: string, { arg: id }: { arg: number }) => {
-        try {
-            const res = await fetch(`${api.BACKEND_URL}/exchange/direct/validate/${id}`);
-            return res.ok;
-        } catch (error) {
-            console.error(error);
-            return false;
-        }
-    };
-
-    const { data, error, trigger, isMutating } = useSWRMutation(
-        `${api.BACKEND_URL}/exchange/direct/validate/${id}`, 
-        isValid
-    );
-    const directExchangeValid = useMemo(() => data ? data : null, [data]);
-
-    return {
-        directExchangeValid,
-        error,
-        trigger,
-        isMutating
-    };
+type ValidationResponse = {
+  valid: boolean;
+  last_validated?: string;
 };
 
+export default function useValidateExchange(id: number) {
+  const validateRequest = async (url: string): Promise<ValidationResponse> => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return { valid: false };
 
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      return { valid: false };
+    }
+  };
+
+  const { data, error, trigger, isMutating } = useSWRMutation(
+    `${api.BACKEND_URL}/exchange/direct/validate/${id}`,
+    validateRequest
+  );
+
+  const directExchangeValid = useMemo(() => data?.valid ?? null, [data]);
+  const lastValidated = useMemo(() => data?.last_validated ?? null, [data]);
+
+  return {
+    directExchangeValid,
+    lastValidated,
+    error,
+    trigger,
+    isMutating,
+  };
+}

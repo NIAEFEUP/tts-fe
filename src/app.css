@@ -3,8 +3,10 @@
 @tailwind utilities;
 
 html {
-  @apply scroll-smooth;
+  @apply scroll-smooth overflow-y-scroll;
 }
+
+
 
 body {
   @apply text-gray-800 bg-light font-prose dark:bg-darkest dark:text-white;

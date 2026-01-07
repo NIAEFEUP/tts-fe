@@ -3,12 +3,14 @@ import { ClassDescriptor, SlotInfo } from "../../../@types";
 import CourseContext from "../../../contexts/CourseContext";
 import MultipleOptionsContext from "../../../contexts/MultipleOptionsContext";
 import Schedule from "../Schedule";
+import ConflictsContext from "../../../contexts/ConflictsContext";
 
 const PlannerSchedule = () => {
   const { pickedCourses } = useContext(CourseContext);
   const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext);
   const [classes, setClasses] = useState<ClassDescriptor[]>([]);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
+  const { setTClassConflicts } = useContext(ConflictsContext);
 
   useEffect(() => {
     //TODO: Improvements by functional programming
@@ -33,6 +35,10 @@ const PlannerSchedule = () => {
     setSlots(newClasses.map((newClass) => newClass.classInfo.slots).flat())
   }, [multipleOptions, pickedCourses, selectedOption])
 
+  // Disable T-class conflicts
+  useEffect(() => {
+    setTClassConflicts(false)
+  }, []);
 
   return (
     <Schedule

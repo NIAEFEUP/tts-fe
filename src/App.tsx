@@ -1,6 +1,5 @@
-import React from "react";
 import { Toaster } from './components/ui/toaster'
-import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
 import { AboutPage, TimeTableSelectorPage, FaqsPage, NotFoundPage, PrivacyPolicyPage, ExchangeVerifyPage, AdminPage } from './pages'
@@ -42,31 +41,7 @@ const App = () => {
     fetch(`${api.BACKEND_URL}/csrf/`, { credentials: "include" }).then(() => {
     }).catch((e) => console.error(e));
   });
-  
-  // Enable Error Tracking, Performance Monitoring and Session Replay
-  Sentry.init({
-    environment: Number(import.meta.env.VITE_APP_PROD) ? "production" : "development",
-    dsn: import.meta.env.VITE_APP_SENTRY_DSN,
-    integrations: [
-      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.browserTracingIntegration() : null,
-      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.replayIntegration() : null,
-      import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.reactRouterV6BrowserTracingIntegration({
-        useEffect: React.useEffect,
-        useLocation,
-        useNavigationType,
-        createRoutesFromChildren,
-        matchRoutes,
-      }) : null,
-    ],
 
-    // Performance monitoring
-    tracesSampleRate: 1.0,
-    //tracePropagationTargets: ["localhost", /^https:\/\/yourserver\.io\/api/],
-
-    // Session Replay
-    replaysSessionSampleRate: Number(import.meta.env.VITE_APP_PROD) ? 0.1 : 1.0,
-    replaysOnErrorSampleRate: 1.0,
-  });
   const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
   return (
@@ -81,14 +56,14 @@ const App = () => {
                 <Layout location={page.location} title={page.location} liquid={page.liquid}>
                   <div>
                     <page.element />
-                    <Toaster/>
+                    <Toaster />
                   </div>
                 </Layout>
               }
             />
           ))}
-          <Route 
-            path="/exchange/verify/:token" 
+          <Route
+            path="/exchange/verify/:token"
             key="exchange-verify-page"
             element={
               <Layout location="Exchange" title="Exchange" liquid={true}>
@@ -110,14 +85,29 @@ const App = () => {
             path="admin"
             key="page-admin"
             element={
-              <AdminPage page="pedidos"/>
+              <AdminPage page="pedidos" />
+            }
+          />
+          <Route
+            path="admin/vacancies"
+            key="page-admin-vacancies"
+            element={
+              <AdminPage page="vacancies"/>
             }
           />
           <Route
             path="admin/settings"
             key="page-admin-settings"
             element={
-              <AdminPage page="settings"/>
+              <AdminPage page="settings" />
+          
+            }
+          />
+          <Route
+            path="admin/statistics"
+            key="page-admin-statistics"
+            element={
+              <AdminPage page="statistics" />
             }
           />
         </SentryRoutes>

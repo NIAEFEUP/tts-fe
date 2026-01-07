@@ -10,6 +10,23 @@ const isDirectExchange = (requests: IterableIterator<CreateRequestData>) => {
   return true;
 }
 
+const getRelatedExchanges = async (requests: Map<number, CreateRequestData>) => {
+  const formData = new FormData();
+
+  for (const request of requests.values()) {
+    formData.append("exchangeChoices[]", JSON.stringify(request));
+  }
+
+  return fetch(`${api.BACKEND_URL}/exchange/related/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: formData
+  });
+}
+
 const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string = "") => {
   const formData = new FormData();
 
@@ -17,7 +34,7 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
     formData.append("exchangeChoices[]", JSON.stringify(request));
   }
 
-  if(!isDirectExchange(requests.values()) && requests.values()[0]?.marketplace_id) formData.append("marketplace_id", requests.values()[0]?.marketplace_id);
+  if (!isDirectExchange(requests.values()) && requests.values()[0]?.marketplace_id) formData.append("marketplace_id", requests.values()[0]?.marketplace_id);
 
   if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
 
@@ -33,11 +50,9 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
         body: formData
       }
     );
-
     return res;
-  } 
-  catch (error) 
-  {
+  }
+  catch (error) {
     console.error(error);
     throw new Error("Network error");
   }
@@ -93,7 +108,7 @@ const adminMarkRequestAsAwaitingInformation = async (requestType: AdminRequestTy
   })
 }
 
-const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
+const verifyExchangeRequest = async (token: string): Promise<boolean> => {
   token = atob(token);
   return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
     method: "POST",
@@ -101,7 +116,7 @@ const verifyExchangeRequest = async (token: string): Promise<boolean>=> {
       "X-CSRFToken": api.getCSRFToken(),
     }
   }).then(async (res) => {
-    if(res.ok) {
+    if (res.ok) {
       const json = await res.json();
       return json;
     } else {
@@ -133,6 +148,86 @@ const cancelMarketplaceRequest = async (id: number) => {
   });
 }
 
+const addCourseExchangePeriod = async (startDate: Date, endDate: Date, selectedCourse: number) => {
+  const formData = new FormData();
+  formData.append("startDate", startDate.toISOString());
+  formData.append("endDate", endDate.toISOString());
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: formData
+  });
+}
+
+const addCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selectedCourseUnit: number) => {
+  const formData = new FormData();
+  formData.append("startDate", startDate.toISOString());
+  formData.append("endDate", endDate.toISOString());
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: formData
+  });
+}
+
+const editCourseExchangePeriod = async (startDate: Date, endDate: Date, selectedCourse: number, periodId: number) => {
+  const payload = {
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString()
+  };
+
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/${periodId}/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: JSON.stringify(payload)
+  });
+};
+
+const editCourseUnitExchangePeriod = async (startDate: Date, endDate: Date, selectedCourseUnit: number, periodId: number) => {
+  const payload = {
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString()
+  };
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/${periodId}/`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    },
+    body: JSON.stringify(payload)
+  });
+}
+
+const deleteCourseExchangePeriod = async (selectedCourse: number, periodId: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course/${selectedCourse}/period/${periodId}/`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
+const deleteCourseUnitExchangePeriod = async (selectedCourseUnit: number, periodId: number) => {
+  return fetch(`${api.BACKEND_URL}/exchange/admin/course_unit/${selectedCourseUnit}/period/${periodId}/`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "X-CSRFToken": api.getCSRFToken(),
+    }
+  });
+}
+
 const revalidateExchangeRequest = async (exchangeRequestId: number) => {
   return fetch(`${api.BACKEND_URL}/exchange/${exchangeRequestId}/revalidate/`, {
     method: "POST",
@@ -153,7 +248,14 @@ const exchangeRequestService = {
   acceptDirectExchangeRequest,
   cancelMarketplaceRequest,
   isDirectExchange,
+  addCourseExchangePeriod,
+  addCourseUnitExchangePeriod,
+  editCourseExchangePeriod,
+  editCourseUnitExchangePeriod,
+  deleteCourseExchangePeriod,
+  deleteCourseUnitExchangePeriod,
   revalidateExchangeRequest,
+  getRelatedExchanges
 }
 
 export default exchangeRequestService;

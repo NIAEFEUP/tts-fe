@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DirectExchangeParticipant, DirectExchangeRequest } from "../../../../@types"
+import { DirectExchangeParticipant, DirectExchangeRequest } from "../../../../@types";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
@@ -7,125 +7,146 @@ import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { PersonExchanges } from "./PersonExchanges";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
-import { RequestDate } from "./RequestDate";
+import { RequestDate, RequestLastUpdatedDate } from "./RequestDate";
 import { listEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
-import { ValidateRequestButton } from "./ValidateRequestButton";
+import { ValidateRequestButton } from "./ValidateRequestButton"; 
 
 type Props = {
-    exchange: DirectExchangeRequest
-}
+  exchange: DirectExchangeRequest;
+};
 
 const participantExchangesMap = (exchange: DirectExchangeRequest) => {
-    const participants = exchange.options;
-    const map = new Map<string, Array<DirectExchangeParticipant>>();
+  const participants = exchange.options;
+  const map = new Map<string, Array<DirectExchangeParticipant>>();
 
-    participants.forEach((participant) => {
-        const key = `${participant.participant_nmec},${participant.participant_name}`;
-        const existingEntry = map.get(key);
+  participants.forEach((participant) => {
+    const key = `${participant.participant_nmec},${participant.participant_name}`;
+    const existingEntry = map.get(key);
 
-        if (existingEntry) {
-            existingEntry.push(participant);
-        } else {
-            map.set(key, [participant]);
-        }
-    })
+    if (existingEntry) {
+      existingEntry.push(participant);
+    } else {
+      map.set(key, [participant]);
+    }
+  });
 
-    return map;
-}
+  return map;
+};
 
-export const MultipleStudentExchangeCard = ({
-    exchange
-}: Props) => {
-    const [open, setOpen] = useState<boolean>(false);
-    const [exchangeState, setExchangeState] = useState(exchange);
+export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
+  const [open, setOpen] = useState(false);
+  const [exchangeState, setExchangeState] = useState(exchange);
+  const [justValidated, setJustValidated] = useState<"valid" | "invalid" | false>(false);
 
-    return (
-        <>
-            <Card>
-                <CardHeader className="flex flex-row justify-between items-center">
-                    <div className="flex gap-4 items-center">
-                        <div className="flex flex-col gap-2 ">
-                            <div className="flex gap-2 items-center">
-                                <CardTitle>
-                                    <h2 className="font-bold">
-                                        {`#${exchange.id}`}
-                                    </h2>
-                                </CardTitle>
-                                <ExchangeStatus exchange={exchangeState} />
-                            </div>
-                            <RequestDate
-                                date={exchange.date}
-                            />
-                            <div className="mt-4">
-                                <ValidateRequestButton
-                                    id={exchange.id}
-                                />
-                            </div>
-                        </div>
-                        {!open && <>
-                            {[...new Map(exchange.options.map((p: DirectExchangeParticipant) => [p.participant_nmec, p])).values()]
-                                .map((participant) => (
-                                    <Person
-                                        key={"multiple-student-person-" + participant.participant_nmec}
-                                        name={participant.participant_name}
-                                        nmec={participant.participant_nmec}
-                                    />
-                                ))}
-                        </>}
+  const handleValidation = (result: { valid: boolean; last_validated?: string | null }) => {
+    if (result.valid && result.last_validated) {
+      setExchangeState(prev => ({
+        ...prev,
+        last_validated: result.last_validated,
+      }));
+      setJustValidated("valid"); // Validado agora mesmo
+    } else {
+      setJustValidated("invalid"); // Inválido!
+    }
+  };
 
-                    </div>
-                    <div>
-                        <Button
-                            onClick={() => setOpen(prev => !prev)}
-                            className="bg-white text-black border-2 border-black hover:text-white"
-                        >
-                            {open
-                                ? <ChevronUpIcon className="w-5 h-5" />
-                                : <ChevronDownIcon className="w-5 h-5" />
-                            }
-                        </Button>
-                    </div>
-                </CardHeader>
+  return (
+    <Card>
+      <CardHeader className="flex flex-row justify-between items-start gap-4">
+        {/* Coluna da esquerda - 30% */}
+        <div className="flex flex-col w-1/3 gap-2 relative">
+          <div className="flex gap-2 items-center">
+            <CardTitle>
+              <h2 className="font-bold">#{exchangeState.id}</h2>
+            </CardTitle>
+            <ExchangeStatus exchange={exchangeState} />
+          </div>
 
-                <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
-                    {open &&
-                        Array.from(participantExchangesMap(exchange).entries()).map(([participant, exchanges]) => {
-                            const nmec = participant.split(",")[0];
-                            const name = participant.split(",")[1];
-                            return <PersonExchanges
-                                key={"multiple-student-person-exchanges-" + nmec}
-                                exchanges={exchanges}
-                                participant_name={name}
-                                participant_nmec={nmec}
-                                showTreatButton={true}
-                            />
-                        })
-                    }
-                </CardContent>
+          <RequestDate date={exchangeState.date} />
 
-                {open &&
-                    <AdminRequestCardFooter
-                        nmecs={
-                            [...new Set(exchange.options.map(option => option.participant_nmec))]
-                        }
-                        exchangeMessage={listEmailExchanges(
-                            exchange.options.map(option => ({
-                                participant_nmec: option.participant_nmec,
-                                participant_name: option.participant_name,
-                                goes_from: option.class_participant_goes_from.name,
-                                goes_to: option.class_participant_goes_to.name,
-                                course_acronym: option.course_unit
-                            }))
-                        )}
-                        requestType={AdminRequestType.DIRECT_EXCHANGE}
-                        requestId={exchange.id}
-                        showTreatButton={false}
-                        setExchange={setExchangeState}
-                        courseId={exchange.options.map(option => option.course_info.course)}
-                    />
-                }
-            </Card>
-        </>
-    )
-}
+          <RequestLastUpdatedDate
+            date={exchangeState.last_validated}
+            justValidated={justValidated}
+          />
+
+          {/* Mostrar botão de validação apenas quando fechado */}
+          {!open && justValidated !== "invalid" && (
+            <div className="mt-4 relative">
+              <ValidateRequestButton id={exchangeState.id} onValidation={handleValidation} />
+            </div>
+          )}
+
+
+        </div>
+
+        {/* Coluna da direita - 60% */}
+        <div className="flex flex-wrap w-2/3 gap-2">
+          {!open &&
+            [...new Map(exchangeState.options.map((p) => [p.participant_nmec, p])).values()].map(
+              (participant) => (
+                <div
+                  key={"multiple-student-person-" + participant.participant_nmec}
+                  className="max-w-[45%] truncate whitespace-nowrap"
+                >
+                  <Person
+                    name={participant.participant_name}
+                    nmec={participant.participant_nmec}
+                  />
+                </div>
+              )
+            )}
+        </div>
+
+
+
+        {/* Botão de expandir */}
+        <div>
+          <Button
+            onClick={() => setOpen((prev) => !prev)}
+            className="bg-white text-black border-2 border-black hover:text-white"
+          >
+            {open ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
+          </Button>
+        </div>
+      </CardHeader>
+
+      <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
+
+        {open &&
+          Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
+            const [nmec, name] = participant.split(",");
+            return (
+              <PersonExchanges
+                key={"multiple-student-person-exchanges-" + nmec}
+                exchanges={exchanges}
+                participant_name={name}
+                participant_nmec={nmec}
+                showTreatButton={true}
+              />
+            );
+          })}
+      </CardContent>
+
+      {open && (
+        <AdminRequestCardFooter
+          nmecs={[...new Set(exchangeState.options.map((option) => option.participant_nmec))]}
+          exchangeMessage={listEmailExchanges(
+            exchangeState.options.map((option) => ({
+              participant_nmec: option.participant_nmec,
+              participant_name: option.participant_name,
+              goes_from: option.class_participant_goes_from.name,
+              goes_to: option.class_participant_goes_to.name,
+              course_acronym: option.course_unit,
+            }))
+          )}
+          requestType={AdminRequestType.DIRECT_EXCHANGE}
+          requestId={exchangeState.id}
+          showTreatButton={false}
+          setExchange={setExchangeState}
+          courseId={exchangeState.options.map((option) => option.course_info.course)}
+        />
+      )}
+    </Card>
+  );
+};

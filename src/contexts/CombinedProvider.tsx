@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CourseInfo, Major, MultipleOptions } from "../@types";
 import StorageAPI from "../api/storage";
 import MultipleOptionsContext from "./MultipleOptionsContext";
@@ -15,6 +15,7 @@ type Props = {
 }
 
 const CombinedProvider = ({ children }: Props) => {
+  StorageAPI.storeCurrentVisit();
   const [majors, setMajors] = useState<Major[]>([])
   const [coursesInfo, setCoursesInfo] = useState([]);
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage());
@@ -26,15 +27,14 @@ const CombinedProvider = ({ children }: Props) => {
 
   const [enabled, setEnabled] = useDarkMode()  // TODO (Process-ing): Stop using a hook (who smoked here?)
   const [multipleOptions, setMultipleOptionsState] = useState<MultipleOptions>(StorageAPI.getMultipleOptionsStorage());
+
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage());
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession();
-  const [signedIn, setSignedIn] = useState<boolean>(Boolean(localStorage.getItem("signedIn") ?? false));
-  useEffect(() => {
-    setSignedIn(userSignedIn);
-  }, [userSignedIn]);
 
-  const [isConflictSevere, setConflictSeverity] = useState<boolean>(false);
+  const [conflictSeverity, setConflictSeverity] = useState<boolean>(false);
+  const [tClassConflicts, setTClassConflicts] = useState<boolean>(false);
+  const [hasSomeConflict, setHasSomeConflict] = useState<boolean>(false);
 
   const setMultipleOptions = (newMultipleOptions: MultipleOptions | ((prevMultipleOptions: MultipleOptions) => MultipleOptions)) => {
     if (newMultipleOptions instanceof Function)
@@ -53,7 +53,7 @@ const CombinedProvider = ({ children }: Props) => {
   }
 
   return (
-    <SessionContext.Provider value={{ signedIn, setSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
+    <SessionContext.Provider value={{ signedIn: userSignedIn, user, isSessionLoading, forceScheduleRevalidation }}>
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
         <MajorContext.Provider value={{ majors, setMajors }}>
           <CourseContext.Provider value={
@@ -66,7 +66,7 @@ const CombinedProvider = ({ children }: Props) => {
             }
           }>
             <MultipleOptionsContext.Provider value={{ multipleOptions, setMultipleOptions, selectedOption, setSelectedOption }}>
-              <ConflictsContext.Provider value={{ isConflictSevere, setConflictSeverity }}>
+              <ConflictsContext.Provider value={{ conflictSeverity, setConflictSeverity, tClassConflicts, setTClassConflicts, hasSomeConflict, setHasSomeConflict }}>
                 {children}
               </ConflictsContext.Provider>
             </MultipleOptionsContext.Provider>
