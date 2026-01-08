@@ -21,12 +21,14 @@ const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHo
 
 type Props = {
   classes: Array<ClassDescriptor>,
-  slots: Array<SlotInfo>
+  slots: Array<SlotInfo>,
+  refresh?: React.ReactNode
 }
 
 const Schedule = ({
   classes,
-  slots
+  slots,
+  refresh
 }: Props) => {
   const scheduleRef = useRef(null);
 
@@ -140,6 +142,7 @@ const Schedule = ({
           <div className="flex gap-x-4">
             <ScheduleTypes types={slotTypes} hiddenLessonsTypes={hiddenLessonsTypes} setHiddenLessonsTypes={setHiddenLessonsTypes} />
             <div className="flex flex-row gap-x-2">
+              {refresh}
               <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
               <PrintSchedule component={scheduleRef} optionName={currentOptionName} />
             </div>
