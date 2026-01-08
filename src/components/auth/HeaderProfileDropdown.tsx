@@ -9,9 +9,11 @@ import authService from "../../api/services/authService";
 import studentInfoService from "../../api/services/studentInfo";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import ScheduleContext from "../../contexts/ScheduleContext";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const { user, forceScheduleRevalidation } = useContext(SessionContext);
   const { setExchangeSchedule } = useContext(ScheduleContext);
@@ -22,7 +24,8 @@ export const HeaderProfileDropdown = () => {
     await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut);
   }
 
-  return <HoverCard>
+  return (
+  <HoverCard>
     <HoverCardTrigger className="w-fit">
       <Avatar className="border shadow-sm">
         <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
@@ -47,16 +50,33 @@ export const HeaderProfileDropdown = () => {
           <Button
             variant="secondary"
             className="w-full flex flex-row justify-center gap-2"
-            onClick={logout}
+            onClick={() => setConfirmOpen(true)}
           >
             <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
             {!loggingOut && <span>Sair</span>}
           </Button>
         }
-
       </div>
     </HoverCardContent>
+    <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent className="w-full max-w-[22rem] p-5">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sair</AlertDialogTitle>
+            <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-2 flex !justify-center gap-4">
+            <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive" onClick={() => { setConfirmOpen(false); logout();}}>
+              Confirmar
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
   </HoverCard>
+  )
 }
 
 
