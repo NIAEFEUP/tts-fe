@@ -15,6 +15,7 @@ import { ThemeContext } from '../../contexts/ThemeContext'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 
 import ConflictsContext from '../../contexts/ConflictsContext'
+import DownloadSchedule from './schedule/DownloadSchedule'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -142,6 +143,7 @@ const Schedule = ({
             <div className="flex flex-row gap-x-2">
               <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
               <PrintSchedule component={scheduleRef} optionName={currentOptionName} />
+              <DownloadSchedule classes={classes}/>
             </div>
           </div>
         </div>
