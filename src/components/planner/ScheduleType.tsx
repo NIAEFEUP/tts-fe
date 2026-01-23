@@ -1,5 +1,4 @@
 import { getClassType} from '../../utils'
-import { Badge } from '../ui/badge'
 
 type Props = {
   types: string[],
