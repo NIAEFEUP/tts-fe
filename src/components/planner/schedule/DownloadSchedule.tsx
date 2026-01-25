@@ -1,4 +1,4 @@
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { ClassDescriptor } from "../../../@types";
 import { Button } from "../../ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip";
@@ -39,9 +39,9 @@ const DownloadSchedule = ({classes} : Props) => {
                     const pad = (n: number) => n < 10 ? '0' + n : n
                     return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`
                 }
-                
+
                 icsContent += 'BEGIN:VEVENT\n'
-                icsContent += `SUMMARY:${courseInfo.acronym} - ${slot.lesson_type}\n`  
+                icsContent += `SUMMARY:${courseInfo.acronym} - ${slot.lesson_type}\n`
                 icsContent += `LOCATION:${slot.location}\n`
                 icsContent += `DTSTART:${formatDate(startDate)}\n`
                 icsContent += `DTEND:${formatDate(endDate)}\n`
@@ -67,7 +67,7 @@ const DownloadSchedule = ({classes} : Props) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="icon" className="bg-lightish text-black dark:bg-darkish dark:text-white" onClick={downloadIcs}>
-            <ArrowDownTrayIcon className="h-5 w-5" />
+            <CalendarDaysIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
