@@ -30,7 +30,6 @@ const participantExchangesMap = (exchange: DirectExchangeRequest) => {
       map.set(key, [participant]);
     }
   });
-
   return map;
 };
 
@@ -62,13 +61,13 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
             </CardTitle>
             <ExchangeStatus exchange={exchangeState} />
           </div>
-
+          {!open && <>
           <RequestDate date={exchangeState.date} />
 
           <RequestLastUpdatedDate
             date={exchangeState.last_validated}
             justValidated={justValidated}
-          />
+          /> </> }
 
           {/* Mostrar botão de validação apenas quando fechado */}
           {!open && justValidated !== "invalid" && (
@@ -104,7 +103,6 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
         <div>
           <Button
             onClick={() => setOpen((prev) => !prev)}
-            className="bg-white text-black border-2 border-black hover:text-white"
           >
             {open ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
           </Button>
