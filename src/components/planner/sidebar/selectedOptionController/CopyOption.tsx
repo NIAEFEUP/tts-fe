@@ -4,8 +4,9 @@ import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline'
 import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
-import { CourseOption } from '../../../../@types'
+import { CourseInfo, CourseOption } from '../../../../@types'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
+import api from '../../../../api/backend'
 
 type Props = {
   currentOption: CourseOption[]
@@ -24,21 +25,26 @@ const CopyOption = ({ currentOption, className }: Props) => {
    * @param selectedOption current schedule
    * @returns stringified schedule
    */
-
-  //TODO (thePeras): Add link here
-  const optionToString = (selectedOption: CourseOption[]) => {
+  const optionToString = async (selectedOption: CourseOption[]) => {
     if (selectedOption.filter((course) => !course.picked_class_id).length === selectedOption.length) return "";
 
-    const copyOption = selectedOption.map((element) => {
+    const selectedCourses = selectedOption.map((element) => {
       return element.course_id + '#' + element.picked_class_id;
     }).join(';');
 
+    const uc : CourseInfo = await api.getCourseUnit(Number(selectedOption.at(0).course_id))
+    const majorID = uc.course
+
+    const copyOption = majorID + ";" + selectedCourses
     return Buffer.from(copyOption).toString('base64')
   }
 
-  const copyOption = () => {
-    const scheduleHash = optionToString(currentOption);
-    navigator.clipboard.writeText(scheduleHash);
+  const copyOption = async () => {
+    const scheduleHash = await optionToString(currentOption);
+    const copyLink = scheduleHash === ""
+      ? ""
+      : window.location.origin + `/planner?classes=${scheduleHash}`
+    navigator.clipboard.writeText(copyLink);
     setIcon(true);
 
     if (scheduleHash === "") {
