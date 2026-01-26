@@ -56,12 +56,12 @@ const Header = ({ siteTitle, location }: Props) => {
   return (
     <Disclosure
       as="nav"
-      className="max-sm:flex max-sm:flex-col max-sm:gap-y-12 sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
+      className="max-sm:flex max-sm:flex-col sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
     >
       {({ open }) => {
         return (
           <>
-            <div className={`${open ? 'p-0' : 'p-2'} relative flex items-center justify-between md:py-0`}>
+            <div className={'p-2 relative flex items-center justify-between md:py-0'}>
               <Hamburger open={open} signedIn = {signedIn} />
               <div className="flex md:flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
@@ -129,25 +129,14 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
 
   return (
     <div
-      className={`z-50 md:hidden ${open
-        ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
-        : 'flex w-full items-center justify-between'
-        }`}
+      className={'z-50 md:hidden flex w-full items-center justify-between'}
     >
       <Link to={config.pathPrefix}>
-        {open ? (
-          <img
-            className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
-            src={LogoNIAEFEUPImage}
-            alt="Time Table Selector"
-          />
-        ) : (
-          <img
-            className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
-            src={LogoNIAEFEUPImage}
-            alt="Time Table Selector"
-          />
-        )}
+        <img
+          className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
+          src={LogoNIAEFEUPImage}
+          alt="Time Table Selector"
+        />
       </Link>
 
       <div className="flex items-center space-x-1">
