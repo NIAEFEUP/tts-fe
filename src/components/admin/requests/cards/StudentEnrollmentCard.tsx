@@ -77,7 +77,13 @@ export const StudentEnrollmentCard = ({
                             <Person name={enrollment.user_name} nmec={enrollment.user_nmec} />
                             <div className="flex flex-row gap-x-2">
                                 {[...enrollment.options]
-                                    .sort((a, b) => a.course_unit.id - b.course_unit.id)
+                                    .sort((a, b) => {
+                                        const acronymComparison = a.course_unit.acronym.localeCompare(b.course_unit.acronym);
+                                        if (acronymComparison !== 0) {
+                                            return acronymComparison;
+                                        }
+                                        return a.course_unit.id - b.course_unit.id;
+                                    })
                                     .map((option) => (
                                         <div key={option.id}>
                                             <div className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4">
