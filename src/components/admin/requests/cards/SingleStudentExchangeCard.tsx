@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ClassDescriptor, UrgentRequest } from "../../../../@types"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
+import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon} from "lucide-react";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
@@ -10,6 +11,7 @@ import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 import { RequestDate } from "./RequestDate";
 import { listEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
+
 
 type Props = {
   exchange: UrgentRequest
