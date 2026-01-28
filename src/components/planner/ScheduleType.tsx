@@ -1,4 +1,4 @@
-import { getClassType} from '../../utils'
+import { getClassType } from '../../utils'
 
 type Props = {
   types: string[],
@@ -17,7 +17,7 @@ const ScheduleTypes = ({ types, hiddenLessonsTypes, setHiddenLessonsTypes }: Pro
       setHiddenLessonsTypes([...hiddenLessonsTypes, lessonType])
     }
   }
-  
+
   return (
     <>
       {types.map((lessonType) => {
