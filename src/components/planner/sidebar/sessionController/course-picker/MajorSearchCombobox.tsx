@@ -60,13 +60,22 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
             if (value === 'remove') return 1
             const major = majors.find((major) => major.id === parseInt(value))
             if (!major) return 0;
-            return Number(match(major.name, search) || match(major?.name, search) || match(major?.acronym, search) || match(major?.acronym, search))
+            
+            const searchWords = search.toLowerCase().replace(/\s+/g, ' ').trim().split(' ')
+            
+            const allWordsMatch = searchWords.every(word => 
+              match(major.name, word) || 
+              match(major.acronym, word) || 
+              match(major.faculty_id, word)
+            )
+            
+            return Number(allWordsMatch)
           }}
         >
           <CommandInput placeholder="Procurar curso..." className="h-9" />
           <CommandEmpty>Nenhum curso corresponde à tua pesquisa.</CommandEmpty>
           <CommandList
-            className="min-h-fit overflow-y-auto"
+            className="max-h-[300px] overflow-y-auto"
             // This is needed to allow scroll of the result contents with the mouse wheel. Without this,
             // the event would be handled by the <Popover> component, not allowing the <CommandList> to
             // handle that event and actually be scrollable with the mouse wheel
