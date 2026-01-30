@@ -35,7 +35,7 @@ const RandomFill = ({ className }: Props) => {
   const getClassesCombinations = () => {
     return pickedCourses.map((course) => {
       if (!course.classes) return []
-      return course.classes.map((cls) => {
+      return course.classes?.map((cls) => {
         return {
           course_info: course,
           class_info: cls,
@@ -94,7 +94,7 @@ const RandomFill = ({ className }: Props) => {
   const getSchedulesGenerator = () => {
     const allSchedules = courseOptions.map((course) => {
       if (course.locked && course.picked_class_id) {
-        return [pickedCourses.find((picked) => picked.id === course.course_id)?.classes.find(
+        return [pickedCourses.find((picked) => picked.id === course.course_id)?.classes?.find(
           (cls) => cls.id === course.picked_class_id
         )]
       }
@@ -197,7 +197,7 @@ const RandomFill = ({ className }: Props) => {
           if (!classInfo) continue
 
           const courseUnit = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id);
-          const matchedClassInfo = courseUnit.classes.find((courseUnitClass) => courseUnitClass.id === classInfo.id);
+          const matchedClassInfo = courseUnit.classes?.find((courseUnitClass) => courseUnitClass.id === classInfo.id);
           if (matchedClassInfo) {
             return {
               ...course,

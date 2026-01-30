@@ -105,7 +105,7 @@ const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
-  const classInfo = course.classes && course.classes.find((classInfo) => classInfo.id === picked_class_id)
+  const classInfo = course.classes && course.classes?.find((classInfo) => classInfo.id === picked_class_id)
   if (!classInfo) return 'Selecionar Opção...'
 
   const classTitle = classInfo.name
@@ -214,7 +214,7 @@ const getClassType = (type: string) => {
 }
 
 const getCourseTeachers = (courseInfo: CourseInfo) => {
-  return courseInfo.classes.reduce((acc, classInfo) =>
+  return courseInfo.classes?.reduce((acc, classInfo) =>
     [...acc, ...classInfo.slots.map(slot => slot.professors)],
     []);
 }
@@ -329,7 +329,7 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
   return option.course_options.flatMap((course) => {
     if (!course.picked_class_id) return []
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
-    const classInfo = courseInfo.classes.find((classInfo) => classInfo.id === course.picked_class_id)
+    const classInfo = courseInfo.classes?.find((classInfo) => classInfo.id === course.picked_class_id)
 
     if (!classInfo) return [];
 
@@ -341,7 +341,7 @@ const teachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] => {
   const classes = courseInfo.classes;
   if (!classes) return [];
 
-  return courseInfo.classes.flatMap((c) => c.slots.flatMap((s) => s.professors));
+  return courseInfo.classes?.flatMap((c) => c.slots.flatMap((s) => s.professors));
 }
 
 const uniqueTeachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] => {
