@@ -64,7 +64,7 @@ const createCourseClass = async (course: CourseInfo) => {
   if (course.classes) return course;
 
   course.classes = await getCourseClass(course);
-  course.classes = course.classes.map((c) => {
+  course.classes = course.classes?.map((c) => {
     return {
       ...c,
       filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
