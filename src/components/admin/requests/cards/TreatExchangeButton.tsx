@@ -30,7 +30,7 @@ export const TreatExchangeButton = ({
                 uniqueMetadata.map((metadata) => (
                     <a
                         href={`https://sigarra.up.pt/feup/pt/it_adm.adm_selecciona_turmas_livre?pv_estudante_id=${metadata.fest_id}&pv_curso_id=${metadata.course.id}`}
-                        key={metadata.fest_id}
+                        key={`${metadata.fest_id}-${metadata.course.id}`}
                     >
                         <Button
                             variant={variant}
