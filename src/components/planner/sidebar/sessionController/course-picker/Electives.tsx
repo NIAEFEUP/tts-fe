@@ -2,11 +2,11 @@ import { useContext, useState } from 'react'
 import { CourseInfo } from '../../../../../@types'
 import CoursePickerContext from '../../../../../contexts/coursePicker/CoursePickerContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
-import { Switch } from '../../../../ui/switch'
 import { Label } from '../../../../ui/label'
 import { ScrollArea } from '../../../../ui/scroll-area'
 import { Checkbox } from '../../../../ui/checkbox'
 import { addCourseOption, removeCourseOption } from '../../../../../utils'
+import { ChevronRightIcon } from '@heroicons/react/24/solid'
 
 const Electives = () => {
   const { checkboxedCourses, setCheckboxedCourses, electiveCourses } = useContext(CoursePickerContext)
@@ -52,13 +52,14 @@ const Electives = () => {
 
   return (
         <div className="flex flex-col gap-4 pt-4 border-t mt-2">
-            <div className="flex items-center space-x-2">
-                <Switch 
-                    id="competencias-transversais" 
-                    checked={showElectives} 
-                    onCheckedChange={setShowElectives} 
+            <div 
+                className="flex items-center space-x-2 cursor-pointer select-none"
+                onClick={() => setShowElectives(!showElectives)}
+            >
+                <ChevronRightIcon 
+                    className={`h-4 w-4 transition-transform duration-200 ${showElectives ? 'rotate-90' : ''}`} 
                 />
-                <Label htmlFor="competencias-transversais">Competências Transversais</Label>
+                <Label className="cursor-pointer">Competências Transversais</Label>
             </div>
 
             {showElectives && (
