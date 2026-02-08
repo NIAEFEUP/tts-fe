@@ -123,6 +123,26 @@ const getCourseUnitHashes = async (ids: number[]) => {
   }
 };
 
+/**
+ * Retrieves the groups of a course
+ * @param courseId ID of the course
+ * @returns List of groups
+ */
+const getCourseGroups = async (courseId: number) => {
+  if (!courseId) return Promise.resolve([]);
+  return await apiRequest(`/course/${courseId}/groups`);
+}
+
+/**
+ * Retrieves the course units of a group
+ * @param groupId ID of the group
+ * @returns List of course units
+ */
+const getCourseGroupUnits = async (groupId: number) => {
+  if (!groupId) return Promise.resolve([]);
+  return await apiRequest(`/course_group/${groupId}/course_units`);
+}
+
 const getCSRFToken = () => {
   return Cookies.get('csrftoken');
 }
@@ -138,6 +158,8 @@ const api = {
   getCourseClass,
   getCoursesClasses,
   getCourseUnit,
+  getCourseGroups,
+  getCourseGroupUnits,
   getInfo,
   getCourseUnitHashes,
   getCSRFToken,

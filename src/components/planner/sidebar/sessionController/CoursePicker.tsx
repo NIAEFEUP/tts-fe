@@ -1,4 +1,4 @@
-import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects, Electives } from './course-picker'
 import { PencilSquareIcon } from '@heroicons/react/24/solid'
 import { useContext, useEffect } from 'react'
 import { Desert } from '../../../svgs'
@@ -17,6 +17,7 @@ import useCourseUnits from '../../../../hooks/useCourseUnits'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
+import BackendAPI from '../../../../api/backend'
 
 //TODO: absolute imports with @
 
@@ -29,7 +30,8 @@ const CoursePicker = () => {
     setChoosingNewCourse,
     ucsModalOpen,
     selectedMajor,
-    setSelectedMajor
+    setSelectedMajor,
+    setElectiveCourses
   } = useContext(CoursePickerContext)
 
   const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
@@ -39,6 +41,37 @@ const CoursePicker = () => {
     if (!courseUnits) return;
     setCoursesInfo(courseUnits);
   }, [courseUnits, setCoursesInfo])
+
+  useEffect(() => {
+    if (!selectedMajor) return;
+
+    const fetchElectives = async () => {
+      try {
+        const groups = await BackendAPI.getCourseGroups(selectedMajor.id);
+        if (!groups) return;
+
+        const targetGroups = groups.filter((g: any) => {
+             const name = g.name ? g.name.toLowerCase() : "";
+             return name.includes("transversais");
+        });
+        
+        const electivesPromises = targetGroups.map((g: any) => BackendAPI.getCourseGroupUnits(g.id));
+        const electivesArrays = await Promise.all(electivesPromises);
+        let allElectives = electivesArrays.flat();
+        
+        // remove duplicates by id
+        allElectives = allElectives.filter((course, index, self) => 
+            index === self.findIndex((c) => c.id === course.id)
+        );
+
+        setElectiveCourses(allElectives);
+      } catch (error) {
+        console.error("Failed to fetch electives", error);
+      }
+    };
+
+    fetchElectives();
+  }, [selectedMajor, setElectiveCourses]);
 
   const handleOpenChange = (open: boolean) => {
     setChoosingNewCourse((prev) => !prev);
@@ -78,7 +111,10 @@ const CoursePicker = () => {
             <div className="flex flex-col lg:flex-row flex-grow w-full lg:w-[60rem]">
               <div className="w-full lg:w-1/2">
                 {!loadingCourseUnits ? (
-                  <CourseYearTabs />
+                  <>
+                    <CourseYearTabs />
+                    <Electives />
+                  </>
                 ) : (
                   <div className="flex flex-col space-y-3">
                     <Skeleton className="h-8 rounded-xl" />
