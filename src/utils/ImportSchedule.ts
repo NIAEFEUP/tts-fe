@@ -38,18 +38,7 @@ export const importSchedule = async (
 
   const majorID = tokens.shift();
   const majors: Major[] = await api.getMajors();
-  const major = majors.find((m) => m.id === parseInt(majorID));
-
-  if (!major) {
-    toast({
-      title: 'Erro ao colar opção',
-      description: 'O curso selecionado não foi encontrado',
-      duration: 3000,
-    });
-    return;
-  }
-
-  setSelectedMajor(major);
+  
   
   //TODO (thePeras): A more function programming oportunity here
   const importedCourses: ImportedCourses = {}
