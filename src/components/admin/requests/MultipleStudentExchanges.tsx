@@ -4,7 +4,6 @@ import { MultipleStudentExchangeCard } from "./cards/MultipleStudentExchangeCard
 import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
 import { useContext, useEffect } from "react";
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
-import { PageSizeSelector } from "./cards/PageSizeSelector";
 
 export const MultipleStudentExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
@@ -18,10 +17,6 @@ export const MultipleStudentExchanges = () => {
     
     return (
         <>
-            <PageSizeSelector
-                value={itemsPerPage}
-                onChange={setItemsPerPage}
-            />
             <div className="flex flex-col gap-y-2">
                 {loading && <BarLoader className="w-full"/>}
 

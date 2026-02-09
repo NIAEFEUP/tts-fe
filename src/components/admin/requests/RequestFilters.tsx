@@ -7,6 +7,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Command, CommandGroup, CommandItem } from "../../ui/command";
 import { Check, ChevronDownIcon } from "lucide-react";
 import { Badge } from "../../ui/badge";
+import { PageSizeSelector } from "./cards/PageSizeSelector";
+import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
 
 /**
  * This component is the view that allows the user to control which filters are active and applied to the requests.
@@ -16,6 +18,9 @@ export const RequestFilters = () => {
         activeCourse, setActiveCourse, activeCurricularYear,
         setActiveCurricularYear, activeStates, setActiveStates
     } = useContext(RequestFiltersContext);
+
+    const { itemsPerPage, setItemsPerPage, setCurrPage } =
+    useContext(AdminPaginationContext);
 
     const { courses } = useAdminExchangeCourses();
 
@@ -104,5 +109,13 @@ export const RequestFilters = () => {
         >
             Reset
         </Button>
+        <PageSizeSelector
+            value={itemsPerPage}
+            onChange={(value) => {
+            setCurrPage(1);
+            setItemsPerPage(value);
+        }}
+        />
+
     </div>
 }

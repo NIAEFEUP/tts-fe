@@ -4,7 +4,6 @@ import useAdminAllMarketplaceExchanges from "../../../hooks/admin/useAdminAllMar
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
 import { BarLoader } from "react-spinners";
 import { AdminMarketplaceExhangesCard } from "../AdminMarketplaceExchangesCard";
-import { PageSizeSelector } from "./cards/PageSizeSelector";
 
 
 export const AdminMarketplaceExhanges = () => {
@@ -14,10 +13,6 @@ export const AdminMarketplaceExhanges = () => {
 
     return (<>
         {loading && <BarLoader className="w-full" />}
-        <PageSizeSelector
-                value={itemsPerPage}
-                onChange={setItemsPerPage}
-            />
         {exchanges?.map((exchange) => (
             <AdminMarketplaceExhangesCard 
                 key={`admin-marketplace-${exchange.id}`}

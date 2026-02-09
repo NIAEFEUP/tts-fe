@@ -1,47 +1,40 @@
-import React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../ui/select";
 
 interface PageSizeSelectorProps {
-    value: number;
-    onChange: (value: number) => void;
-    min?: number;
-    max?: number;
+  value: number;
+  onChange: (value: number) => void;
 }
 
-export const PageSizeSelector: React.FC<PageSizeSelectorProps> = ({
-    value,
-    onChange,
-    min = 1,
-    max = 100,
-}) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = e.target.value;
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
-        if (raw === "") {
-            onChange(min);
-            return;
-        }
+export const PageSizeSelector = ({
+  value,
+  onChange,
+}: PageSizeSelectorProps) => {
+  return (
+    <div className="flex items-center gap-2">
+      <Select
+        value={value.toString()}
+        onValueChange={(val) => onChange(Number(val))}
+      >
+        <SelectTrigger className="h-8 w-[72px] text-xs">
+          <SelectValue placeholder="Number of Cards"/>
+        </SelectTrigger>
 
-        const parsed = parseInt(raw, 10);
-        if (Number.isNaN(parsed)) return;
-
-        const clamped = Math.min(Math.max(parsed, min), max);
-        onChange(clamped);
-    };
-
-    return (
-        <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-gray-700">
-                Cards por página:
-            </span>
-
-            <input
-                type="number"
-                className="w-20 rounded border px-2 py-1 text-sm"
-                value={value}
-                min={min}
-                max={max}
-                onChange={handleChange}
-            />
-        </div>
-    );
+        <SelectContent>
+          {PAGE_SIZE_OPTIONS.map((size) => (
+            <SelectItem key={size} value={size.toString()}>
+              {size}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
 };
