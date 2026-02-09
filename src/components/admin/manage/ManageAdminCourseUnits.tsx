@@ -50,7 +50,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
     setSearchTerm(`${courseUnit.acronym} - ${courseUnit.name}`);
   };
 
-  const handleAddCourseUnit = async () => {
+  const addAdminExchangesCourseUnits = async () => {
     if (!selectedCourseUnit) return;
     try {
       const res = await fetch(`${api.BACKEND_URL}/exchange/admin/course_units/`, {
@@ -96,7 +96,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
     setConfirmDialogOpen(true);
   };
 
-  const confirmRemoveCourseUnit = async () => {
+  const removeAdminExchangesCourseUnits = async () => {
     if (!courseUnitToRemove) return;
     try {
       const url = new URL(`${api.BACKEND_URL}/exchange/admin/course_units/${courseUnitToRemove}/`);
@@ -144,7 +144,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
           <DialogHeader>
             <DialogTitle>Gerir cadeiras de {selectedAdmin ? `${selectedAdmin.first_name} ${selectedAdmin.last_name}`.trim() || selectedAdmin.username : 'Admin'}</DialogTitle>
             <DialogDescription>
-              Adicione ou remova cadeiras que você administra.
+              Adiciona ou remove cadeiras que administras.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -181,7 +181,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
                     </div>
                   )}
                 </div>
-                <Button onClick={handleAddCourseUnit} disabled={!selectedCourseUnit || adminCourseUnits?.some(cu => cu.id === selectedCourseUnit.id)}>
+                <Button onClick={addAdminExchangesCourseUnits} disabled={!selectedCourseUnit || adminCourseUnits?.some(cu => cu.id === selectedCourseUnit.id)}>
                   Adicionar Cadeira
                 </Button>
               </div>
@@ -226,12 +226,12 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
           <AlertDialogHeader>
             <AlertDialogTitle>Remover Cadeira</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja remover esta cadeira? Esta ação não pode ser desfeita.
+              Tens certeza que desejas remover esta cadeira? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmRemoveCourseUnit} className="bg-red-600 text-white hover:bg-red-700">
+            <AlertDialogAction onClick={removeAdminExchangesCourseUnits} className="bg-red-600 text-white hover:bg-red-700">
               Remover
             </AlertDialogAction>
           </AlertDialogFooter>
