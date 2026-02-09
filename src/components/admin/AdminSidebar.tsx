@@ -19,7 +19,7 @@ export const AdminSidebar = () => {
 
   const { user, forceScheduleRevalidation } = useContext(SessionContext);
   const { setExchangeSchedule } = useContext(ScheduleContext);
-  const is_super = user?.is_superuser || false;
+
 
   const logout = async () => {
     setLoggingOut(true);
@@ -50,7 +50,7 @@ export const AdminSidebar = () => {
                         </Link>
                     </SidebarMenuButton>
                     
-                    {is_super && (
+                    { (
                         <SidebarMenuButton asChild>
                             <Link to="/admin/admins" className="flex items-center gap-2">
                                 <ShieldCheckIcon className="w-6 h-6" />

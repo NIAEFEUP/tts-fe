@@ -46,7 +46,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
     setSearchTerm(`${course.acronym} - ${course.name}`);
   };
 
-  const handleAddCourse = async () => {
+  const addAdminExchangesCourses = async () => {
     if (!selectedCourse) return;
     try {
       const res = await fetch(`${api.BACKEND_URL}/exchange/admin/courses/`, {
@@ -87,7 +87,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
     }
   };
 
-  const handleRemoveCourse = (courseId: number) => {
+  const removeAdminExchangesCourses = (courseId: number) => {
     setCourseToRemove(courseId);
     setConfirmDialogOpen(true);
   };
@@ -140,7 +140,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
           <DialogHeader>
             <DialogTitle>Gerir cursos de {selectedAdmin ? `${selectedAdmin.first_name} ${selectedAdmin.last_name}`.trim() || selectedAdmin.username : 'Admin'}</DialogTitle>
             <DialogDescription>
-              Adicione ou remova cursos que você administra.
+              Adiciona ou remove cursos que administras.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -177,7 +177,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
                     </div>
                   )}
                 </div>
-                <Button onClick={handleAddCourse} disabled={!selectedCourse || adminCourses?.some(c => c.id === selectedCourse.id)}>
+                <Button onClick={addAdminExchangesCourses} disabled={!selectedCourse || adminCourses?.some(c => c.id === selectedCourse.id)}>
                   Adicionar Curso
                 </Button>
               </div>
@@ -197,7 +197,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleRemoveCourse(c.id)}
+                        onClick={() => removeAdminExchangesCourses(c.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -222,7 +222,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
           <AlertDialogHeader>
             <AlertDialogTitle>Remover Curso</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja remover este curso? Esta ação não pode ser desfeita.
+              Tens certeza que desejas remover este curso? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
