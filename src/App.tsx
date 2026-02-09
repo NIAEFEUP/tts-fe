@@ -95,6 +95,13 @@ const App = () => {
               <AdminPage page="vacancies"/>
             }
           />
+           <Route
+            path="admin/admins"
+            key="page-admin-admins"
+            element={
+              <AdminPage page="admins" />
+            }
+          />
           <Route
             path="admin/settings"
             key="page-admin-settings"

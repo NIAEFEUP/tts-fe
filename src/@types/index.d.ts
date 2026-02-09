@@ -1,5 +1,6 @@
 import { DirectExchangePendingMotive } from "../utils/exchange"
 
+
 enum lesson_type {
   T = "T",    // Ensino teórico
   TP = "TP",  // Ensino teórico-prático
@@ -34,6 +35,16 @@ export type CourseInfo = {
   hash: string,
   classes?: Array<ClassInfo>
 }
+
+type CourseUnitInfo = {
+  id: number;
+  name: string;
+  acronym: string;
+  course_name: string;
+  course_acronym: string;
+  semester: number;
+  year: number;
+};
 
 export type ClassInfo = {
   // course_unit_id: number, // é mesmo necessário ??
@@ -224,6 +235,26 @@ export type Participant = {
   name: string
 }
 
+// Possible admin candidate (really just a user xd feel free to rename)
+export type Candidate = {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+};
+
+
+// Admin info 
+export type AdminInfo = {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  is_active: boolean;
+  date_joined: string | null;
+}
 // TODO(Process-ing): Maybe join Student and Participant into a single type
 
 export type CollabSession = {
@@ -234,3 +265,5 @@ export type CollabSession = {
   link: string
   participants: Array<Participant>
 }
+
+
