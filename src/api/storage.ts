@@ -171,6 +171,34 @@ const updateBackendDataVersion = async (): Promise<void> => {
   writeStorage(key, liveVersion);
 }
 
+const SHOW_EXCHANGE_ALERT_KEY = 'niaefeup-tts.show-exchange-alert'
+const SHOW_EXCHANGE_ALERT_DATE_KEY = SHOW_EXCHANGE_ALERT_KEY + '.date'
+
+const setShowExchangeAlertStorage = (value: boolean): void => {
+  localStorage.setItem(SHOW_EXCHANGE_ALERT_KEY, JSON.stringify(value))
+  localStorage.setItem(SHOW_EXCHANGE_ALERT_DATE_KEY, JSON.stringify(new Date()))
+}
+
+const getShowExchangeAlertStorage = (): boolean => {
+  const storedValue = localStorage.getItem(SHOW_EXCHANGE_ALERT_KEY)
+  const storedDate = localStorage.getItem(SHOW_EXCHANGE_ALERT_DATE_KEY)
+
+  if (!storedValue || !storedDate) return true
+
+  const value = JSON.parse(storedValue) as boolean
+  const date = new Date(JSON.parse(storedDate))
+
+  const now = new Date()
+  const diffMilliseconds = now.getTime() - date.getTime()
+  const diffMonths = diffMilliseconds / (1000 * 60 * 60 * 24 * 30)
+  if (diffMonths >= 3) {
+    setShowExchangeAlertStorage(true)
+    return true
+  }
+
+  return value
+}
+
 const StorageAPI = {
   getMultipleOptionsStorage,
   setMultipleOptionsStorage,
@@ -182,7 +210,10 @@ const StorageAPI = {
   getPickedCoursesStorage,
   setPickedCoursesStorage,
   getCourseFilteredTeachersStorage,
-  storeCurrentVisit
+  storeCurrentVisit,
+  getShowExchangeAlertStorage,
+  setShowExchangeAlertStorage
+
 }
 
 export default StorageAPI

@@ -15,6 +15,8 @@ import {
 import Alert, { AlertType }  from '../components/planner/Alert'
 import { AlertDescription } from '../components/ui/alert'
 import SessionContext from '../contexts/SessionContext'
+import { useState } from 'react';
+import StorageAPI from '../api/storage'
 
 const TimeTableSelectorPage = () => {
   const { setMajors } = useContext(MajorContext);
@@ -37,6 +39,17 @@ const TimeTableSelectorPage = () => {
 const Content = () => {
   const { sidebarPosition } = useSidebarContext();
   const { user } = useContext(SessionContext);
+
+  const [showExchangeAlert, setShowExchangeAlert] = useState<boolean>(true)
+
+  useEffect(() => {
+    setShowExchangeAlert(StorageAPI.getShowExchangeAlertStorage())
+  }, [])
+
+  const handleCloseAlert = () => {
+    setShowExchangeAlert(false)
+    StorageAPI.setShowExchangeAlertStorage(false)
+  }
 
   return (
     <div className='h-full w-full'>
@@ -63,12 +76,17 @@ const Content = () => {
       
     </div>
     <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-      {user?.eligible_exchange && (
+      {user?.eligible_exchange && showExchangeAlert && (
         <div className="col-span-12 mb-2">
-          <Alert type={AlertType.info}>
+          <Alert type={AlertType.info} className="relative p-4">
             <AlertDescription>
               Esta secção funciona apenas como Planner de horários. As inscrições e trocas reais são realizadas na página de Inscrições e Trocas de Turmas.
             </AlertDescription>
+            <button
+              onClick={handleCloseAlert}
+              className="absolute top-1 right-1 text-current hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/10 px-2 py-1 rounded">
+              x
+            </button>
           </Alert>
         </div>
       )}
