@@ -71,18 +71,16 @@ export const importSchedule = async (
     setCheckboxedCourses(courses)
 
     const newMultipleOptions = [...multipleOptions]
+    newMultipleOptions.forEach((option) => {
+      option.course_options = option.course_options.concat(
+        courses.map((course) => convertCourseInfoToCourseOption(course))
+      )
+    })
 
-    const optionIndex = newMultipleOptions.findIndex(o => o.id == selectedOption);
-
-    if(optionIndex !== -1){
-      const newCourso = courses.map((course) => convertCourseInfoToCourseOption(course));
-
-      newMultipleOptions[optionIndex].course_options = newCourso;
-
-      fillOptions(importedCourses, newMultipleOptions, setMultipleOptions, selectedOption)
-    }
+    setMultipleOptions(newMultipleOptions)
   }
 
+  fillOptions(importedCourses, multipleOptions, setMultipleOptions, selectedOption)
 
   toast({
     title: 'Horário colado!',
