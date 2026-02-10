@@ -42,6 +42,7 @@ const CoursePicker = () => {
     setCoursesInfo(courseUnits);
   }, [courseUnits, setCoursesInfo])
 
+
   useEffect(() => {
     if (!selectedMajor) return;
 
@@ -64,7 +65,32 @@ const CoursePicker = () => {
             index === self.findIndex((c) => c.id === course.id)
         );
 
-        setElectiveCourses(allElectives);
+        // fetch ects by looking up the course list of the major 
+        const uniqueCourseIds = [...new Set(allElectives.map((e: any) => e.course_id).filter((id: any) => id))];
+        
+        // look in BOTH semesters
+        const coursesListsPromises = uniqueCourseIds.flatMap(id => [
+            BackendAPI.getCoursesByMajorIdAndSemester(id as number, 1),
+            BackendAPI.getCoursesByMajorIdAndSemester(id as number, 2)
+        ]);
+
+        const coursesLists = await Promise.all(coursesListsPromises);
+        
+        // create a lookup map from the fetched full course lists
+        const lookupList = coursesLists.flat().filter(c => c);
+        const courseLookup = new Map(lookupList.map((c: any) => [c.id, c]));
+
+        // merge ects into our electives
+        const enrichedElectives = allElectives.map((e: any) => {
+           const detailed = courseLookup.get(e.id);
+           if (detailed && detailed.ects) {
+               return { ...e, ects: detailed.ects };
+           }
+      
+           return e;
+        });
+
+        setElectiveCourses(enrichedElectives);
       } catch (error) {
         console.error("Failed to fetch electives", error);
       }

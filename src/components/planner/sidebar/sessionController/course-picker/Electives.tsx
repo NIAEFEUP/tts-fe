@@ -63,7 +63,7 @@ const Electives = () => {
             </div>
 
             {showElectives && (
-                 <div className="w-full border rounded-md p-4">
+                 <div className="w-full p-2">
                     <div className="flex flex-col gap-2">
                         {electives.map((course) => (
                              <div key={course.id} className="flex items-center space-x-2">
