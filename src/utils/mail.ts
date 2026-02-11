@@ -17,8 +17,29 @@ export const listEmailExchanges = (items: Array<{
     participant_nmec: string,
     participant_name: string,
     course_acronym: string
+
 }>) => {
-    return items.map(item => `${item.participant_name ?? ""} (${item.participant_nmec}) pediu para trocar de turma na unidade curricular ${item.course_acronym}.`).join("%0D%0A")
+    if (items.length === 0) return "";
+
+    const name = items[0].participant_name ?? "";
+    const nmec = items[0].participant_nmec;
+    const courses = items.map(item => item.course_acronym);
+
+    let coursesFormatted: string;
+    let label: string;
+
+    if (courses.length === 1) {
+        // Caso: Apenas 1 unidade curricular
+        coursesFormatted = courses[0];
+        label = "na unidade curricular";
+    } else {
+        // Caso: Múltiplas unidades curriculares
+        const lastCourse = courses.pop();
+        coursesFormatted = `${courses.join(", ")} e ${lastCourse}`;
+        label = "nas unidades curriculares";
+    }
+
+    return `${name} (${nmec}) pediu para trocar de turma ${label} ${coursesFormatted}.`;
 }
 
 export const listEmailEnrollments = (items: Array<{
@@ -26,5 +47,5 @@ export const listEmailEnrollments = (items: Array<{
     goes_to: string,
     course_unit: CourseInfo
 }>) => {
-    return items.map(item => `${item.participant_nmec} pediu para ir para ${item.course_unit.acronym}.`).join("%0D%0A")
+    return items.map(item => `${item.participant_nmec} pediu para se inscrever ${item.course_unit.acronym}.`).join("%0D%0A")
 }
