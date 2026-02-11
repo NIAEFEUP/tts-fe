@@ -99,7 +99,7 @@ const getCourseUnit = async (id: number) => {
   if (class_info) {
     try {
       class_info['classes'] = await getCourseClass(class_info);
-    } catch (e) {
+    } catch {
       console.warn("Could not fetch classes for course unit", id);
       class_info['classes'] = [];
     }
