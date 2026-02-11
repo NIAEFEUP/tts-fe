@@ -50,7 +50,7 @@ export const StudentEnrollmentCard = ({
                     {!open && <>
                         <Person
                             key={"enrollment-person-" + enrollment.user_nmec}
-                            name={enrollment.user_nmec}
+                            name={enrollment.user_name}
                             nmec={enrollment.user_nmec}
                         />
                     </>}
@@ -71,7 +71,7 @@ export const StudentEnrollmentCard = ({
                 {open && (
                     <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
                         <div className="flex flex-row justify-between">
-                            <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
+                            <Person name={enrollment.user_name} nmec={enrollment.user_nmec} />
                             <div className="flex flex-row gap-x-2">
                                 {enrollment.options.map((option) => (
                                     <div
@@ -113,7 +113,7 @@ export const StudentEnrollmentCard = ({
                         exchangeMessage={
                             listEmailEnrollments(
                                 enrollment.options.map(option => ({
-                                    participant_name: enrollment.user_nmec,
+                                    participant_name: enrollment.user_name,
                                     participant_nmec: enrollment.user_nmec,
                                     goes_to: option.course_unit.name,
                                     course: option.course,

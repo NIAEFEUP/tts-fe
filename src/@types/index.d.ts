@@ -187,6 +187,7 @@ export type UrgentRequestOption = {
 export type CourseUnitEnrollment = {
   id: number,
   date: string,
+  user_name: string,
   user_nmec: string,
   admin_state: string,
   accepted: boolean,

@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect, Dispatch, SetStateAction } from "react";
-// import { Desert } from "../../svgs/";
 import { ExchangeCoursePicker } from "../../planner/sidebar/sessionController/ExchangeCoursePicker";
 import { CourseInfo, Major } from "../../../@types";
 import MajorContext from "../../../contexts/MajorContext";
@@ -12,7 +11,8 @@ import { useToast } from "../../ui/use-toast";
 import useStudentCourseUnits from "../../../hooks/useStudentCourseUnits";
 import { AlreadyEnrolledCourseUnitCard } from "./AlreadyEnrolledCourseUnitCard";
 import { EnrollingCourseUnitCard } from "./EnrollingCourseUnitCard";
-import {LockClosedIcon} from "@heroicons/react/24/outline";
+import { LockClosedIcon } from "@heroicons/react/24/outline";
+import SessionContext from "../../../contexts/SessionContext";
 
 export enum CourseUnitEnrollmentType {
   DISENROLLING = 1,
@@ -30,6 +30,7 @@ type Props = {
 export const Enrollments = ({
   setExchangeSidebarStatus
 }: Props) => {
+  const { user } = useContext(SessionContext);
   const parentCourseContext = useContext(CourseContext);
 
   const [enrollCourses, setEnrollCourses] = useState<CourseInfo[]>([]);
@@ -105,7 +106,6 @@ export const Enrollments = ({
               Não tens inscrição em nenhuma cadeira com período de inscrição aberto
               </h3>
             
-            
              : alreadyEnrolledCourseUnits?.map((courseUnit: CourseInfo) => (
               <AlreadyEnrolledCourseUnitCard
                 key={"already-enrolled-" + courseUnit.id}
@@ -120,7 +120,10 @@ export const Enrollments = ({
             <form onSubmit={async (e) => {
               e.preventDefault();
 
-              const res = await courseUnitEnrollmentService.submitEnrollmentRequest(new Map([...enrollmentChoices, ...disenrollmentChoices]));
+              const res = await courseUnitEnrollmentService.submitEnrollmentRequest(
+                new Map([...enrollmentChoices, ...disenrollmentChoices]),
+                user?.name || ""
+              );
 
               if (res.ok) {
                 setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS);
