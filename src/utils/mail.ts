@@ -1,4 +1,4 @@
-import { CourseInfo, Major } from "../@types";
+import { CourseInfo} from "../@types";
 
 export const mailtoStringBuilder = (nmec: string | Array<string>) => {
     if (Array.isArray(nmec)) {
