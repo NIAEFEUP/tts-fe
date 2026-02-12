@@ -49,8 +49,8 @@ export const StudentEnrollmentCard = ({
                     </div>
                     {!open && <>
                         <Person
-                            key={"enrollment-person-" + enrollment.user_nmec}
-                            name={enrollment.user_nmec}
+                            key={"enrollment-person-" + enrollment.user_name}
+                            name={enrollment.user_name}
                             nmec={enrollment.user_nmec}
                         />
                     </>}
@@ -71,23 +71,30 @@ export const StudentEnrollmentCard = ({
                 {open && (
                     <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
                         <div className="flex flex-row justify-between">
-                            <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
+                            <Person name={enrollment.user_name} nmec={enrollment.user_nmec} />
                             <div className="flex flex-row gap-x-2">
-                                {enrollment.options.map((option) => (
-                                    <div
-                                        key={crypto.randomUUID()}
-                                    >
-                                        <div
-                                            className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
-                                        >
-                                            <h2 className="font-bold">{option.course_unit.acronym}</h2>
-                                            {option.enrolling
-                                                ? <Check className="text-green-400" />
-                                                : <X className="text-red-400" />
-                                            }
+                                {[...enrollment.options]
+                                    .sort((a, b) => {
+                                        const acronymComparison = a.course_unit.acronym.localeCompare(b.course_unit.acronym);
+                                        if (acronymComparison !== 0) {
+                                            return acronymComparison;
+                                        }
+                                        return a.course_unit.id - b.course_unit.id;
+                                    })
+                                    .map((option) => (
+                                        <div key={option.id}>
+                                            <div className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4">
+                                                <h2 className="font-bold">
+                                                    {option.course_unit.acronym}
+                                                </h2>
+                                                {option.enrolling ? (
+                                                    <Check className="text-green-400" />
+                                                ) : (
+                                                    <X className="text-red-400" />
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
                             </div>
                             <div>
                                 <AdminPreviewSchedule
@@ -113,6 +120,7 @@ export const StudentEnrollmentCard = ({
                         exchangeMessage={
                             listEmailEnrollments(
                                 enrollment.options.map(option => ({
+                                    participant_name: enrollment.user_nmec,
                                     participant_nmec: enrollment.user_nmec,
                                     goes_to: option.course_unit.name,
                                     course: option.course,
