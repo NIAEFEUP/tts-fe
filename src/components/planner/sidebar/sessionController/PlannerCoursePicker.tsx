@@ -14,6 +14,7 @@ export const PlannerCoursePicker = () => {
   } = useContext(CourseContext)
 
   const [selectedMajor, setSelectedMajor] = useState<Major>(StorageAPI.getSelectedMajorStorage());
+  const [electiveCourses, setElectiveCourses] = useState<any[]>([]);
 
   useEffect(() => {
     setPickedCourses(checkboxedCourses);
@@ -30,6 +31,7 @@ export const PlannerCoursePicker = () => {
       coursesStorage: pickedCourses, setCoursesStorage: setPickedCourses,
       checkboxedCourses, setCheckboxedCourses, choosingNewCourse,
       setChoosingNewCourse, ucsModalOpen, setUcsModalOpen, coursesInfo, setCoursesInfo,
+      electiveCourses, setElectiveCourses,
       selectedMajor, setSelectedMajor
     }}
     >
