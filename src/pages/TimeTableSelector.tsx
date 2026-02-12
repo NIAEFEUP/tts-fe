@@ -1,5 +1,5 @@
 import BackendAPI from '../api/backend'
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useState } from 'react' // Adicionado useEffect aqui
 import { Sidebar } from '../components/planner'
 import { Major } from '../@types'
 import MajorContext from '../contexts/MajorContext'
@@ -15,7 +15,8 @@ import {
 import Alert, { AlertType }  from '../components/planner/Alert'
 import { AlertDescription } from '../components/ui/alert'
 import SessionContext from '../contexts/SessionContext'
-
+import StorageAPI from '../api/storage'
+import { X } from "lucide-react" 
 const TimeTableSelectorPage = () => {
   const { setMajors } = useContext(MajorContext);
 
@@ -37,6 +38,16 @@ const TimeTableSelectorPage = () => {
 const Content = () => {
   const { sidebarPosition } = useSidebarContext();
   const { user } = useContext(SessionContext);
+  const [showExchangeAlert, setShowExchangeAlert] = useState<boolean>(true)
+
+  useEffect(() => {
+    setShowExchangeAlert(StorageAPI.getShowExchangeAlertStorage())
+  }, [])
+
+  const handleCloseAlert = () => {
+    setShowExchangeAlert(false)
+    StorageAPI.setShowExchangeAlertStorage()
+  }
 
   return (
     <div className='h-full w-full'>
@@ -63,12 +74,18 @@ const Content = () => {
       
     </div>
     <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-      {user?.eligible_exchange && (
+      {user?.eligible_exchange && showExchangeAlert && (
         <div className="col-span-12 mb-2">
-          <Alert type={AlertType.info}>
-            <AlertDescription>
+          <Alert type={AlertType.info} className="relative p-4">
+            <AlertDescription className="pr-8"> 
               Esta secção funciona apenas como Planner de horários. As inscrições e trocas reais são realizadas na página de Inscrições e Trocas de Turmas.
             </AlertDescription>
+            <button
+              onClick={handleCloseAlert}
+              className="absolute top-1.5 right-3 text-current opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/10 p-1 rounded-full transition-all"
+            >
+              <X size={18} />
+            </button>
           </Alert>
         </div>
       )}
