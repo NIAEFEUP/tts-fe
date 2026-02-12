@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Disclosure } from '@headlessui/react'
+import { Popover, Transition } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
 import {
   Bars3Icon,
@@ -54,14 +54,14 @@ const Header = ({ siteTitle, location }: Props) => {
   const { signedIn, user } = useContext(SessionContext);
 
   return (
-    <Disclosure
+    <Popover
       as="nav"
-      className="max-sm:flex max-sm:flex-col max-sm:gap-y-12 sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
+      className="max-sm:flex max-sm:flex-col sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
     >
       {({ open }) => {
         return (
           <>
-            <div className={`${open ? 'p-0' : 'p-2'} relative flex items-center justify-between md:py-0`}>
+            <div className={'p-2 relative flex items-center justify-between md:py-0'}>
               <Hamburger open={open} signedIn = {signedIn} />
               <div className="flex md:flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
@@ -114,7 +114,7 @@ const Header = ({ siteTitle, location }: Props) => {
           </>
         )
       }}
-    </Disclosure >
+    </Popover >
   )
 }
 
@@ -129,25 +129,14 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
 
   return (
     <div
-      className={`z-50 md:hidden ${open
-        ? 'absolute top-2 right-2 my-auto flex h-6 items-center justify-end space-x-2'
-        : 'flex w-full items-center justify-between'
-        }`}
+      className={'z-50 md:hidden flex w-full items-center justify-between'}
     >
       <Link to={config.pathPrefix}>
-        {open ? (
-          <img
-            className="top-0.5 h-5 w-auto rounded-full transition hover:opacity-80 dark:inline-flex md:hidden"
-            src={LogoNIAEFEUPImage}
-            alt="Time Table Selector"
-          />
-        ) : (
-          <img
-            className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
-            src={LogoNIAEFEUPImage}
-            alt="Time Table Selector"
-          />
-        )}
+        <img
+          className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
+          src={LogoNIAEFEUPImage}
+          alt="Time Table Selector"
+        />
       </Link>
 
       <div className="flex items-center space-x-1">
@@ -156,7 +145,7 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
         <FeedbackReport />
         {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
 
-        <Disclosure.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
+        <Popover.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
           <span className="sr-only">Open nav menu</span>
           {open ? (
             <XMarkIcon
@@ -169,7 +158,7 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
               aria-hidden="true"
             />
           )}
-        </Disclosure.Button>
+        </Popover.Button>
       </div>
     </div>
   );
@@ -183,31 +172,39 @@ const Mobile = ({ location }: MobileProps) => {
   const { signedIn, user} = useContext(SessionContext);
   
   return (
-    <Disclosure.Panel className="flex flex-col space-y-3 py-2 md:hidden">
-      {navigation
-        .filter((link) => !link.wip)
-        .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin)) 
-        .map((link, index) => (
-          <Link to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
-            <button
-              type="button"
-              className={`flex h-auto items-center justify-center font-medium capitalize tracking-wide transition ${
-                location === link.title
-                  ? 'text-primary dark:text-white'
-                  : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
-              }`}
-            >
-              <span className="flex items-center justify-center space-x-2">
-                <span>{link.icon}</span>
-                <span>{link.title}</span>
+    <Transition
+      enter="transition duration-200 ease-out"
+      enterFrom="transform -translate-y-2 opacity-0"
+      enterTo="transform translate-y-0 opacity-100"
+      leave="transition duration-150 ease-out"
+      leaveFrom="transform translate-y-0 opacity-100"
+      leaveTo="transform -translate-y-2 opacity-0"
+      className="absolute top-full left-0 w-full z-40 bg-light dark:bg-darkest shadow-xl rounded-b-lg md:hidden origin-top !ml-0"
+    >
+      <Popover.Panel className="flex flex-col space-y-3 px-3 pl-8 py-4">
+        {navigation
+          .filter((link) => !link.wip)
+          .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin))
+          .map((link, index) => (
+            <Popover.Button as={Link} to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
+              <span
+                className={`flex h-auto items-center justify-start font-medium capitalize tracking-wide transition ${location === link.title
+                    ? 'text-primary dark:text-white'
+                    : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
+                  }`}
+              >
+                <span className="flex items-center justify-start space-x-2">
+                  <span>{link.icon}</span>
+                  <span>{link.title}</span>
+                </span>
+                {location === link.title && (
+                  <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
+                )}
               </span>
-              {location === link.title && (
-                <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
-              )}
-            </button>
-          </Link>
-        ))}
-    </Disclosure.Panel>
+            </Popover.Button>
+          ))}
+      </Popover.Panel>
+    </Transition>
   );
 };
 
