@@ -38,9 +38,9 @@ export const SingleStudentExchangeCard = ({
                 </CardTitle>
                 <ExchangeStatus exchange={exchangeState} />
               </div>
-              {!open && <><RequestDate
+              {!open && <RequestDate
                 date={exchange.date}
-              /></>}
+              />}
             </div>
             {!open && <>
               <Person name={exchange.issuer_name} nmec={exchange.issuer_nmec} />
