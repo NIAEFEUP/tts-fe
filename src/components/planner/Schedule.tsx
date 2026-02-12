@@ -15,6 +15,7 @@ import { ThemeContext } from '../../contexts/ThemeContext'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 
 import ConflictsContext from '../../contexts/ConflictsContext'
+import DownloadSchedule from './schedule/DownloadSchedule'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -145,13 +146,14 @@ const Schedule = ({
               {refresh}
               <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
               <PrintSchedule component={scheduleRef} optionName={currentOptionName} />
+              <DownloadSchedule classes={classes}/>
             </div>
           </div>
         </div>
       </div>
 
       {/*Schedule mobile*/}
-      <div className="flex h-full w-full flex-col items-center justify-start space-y-4 md:hidden">
+      <div className="flex h-full w-full flex-col items-center justify-start space-y-4 lg:hidden">
         {slots.length === 0 ? (
           <p className="w-full p-4 text-center">Ainda não foram selecionadas turmas!</p>
         ) : (

@@ -101,7 +101,7 @@ const ExchangePage = () => {
   </ScheduleContext.Provider>
 
   return <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
-    <div className="block md:hidden mx-4">
+    <div className="block lg:hidden mx-4">
       <RefreshScheduleButton
         forceRefreshStudentSchedule={forceRefreshStudentSchedule}
         loadingSchedule={loadingSchedule}
