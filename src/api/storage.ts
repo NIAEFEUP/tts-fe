@@ -197,7 +197,7 @@ const getShowExchangeAlertStorage = (): boolean => {
       return true
     }
     return false
-  } catch (e) {
+  } catch {
     return true
   }
 }
