@@ -1,4 +1,4 @@
-import { CourseInfo, Major } from "../@types";
+import { CourseInfo} from "../@types";
 
 export const mailtoStringBuilder = (nmec: string | Array<string>) => {
     if (Array.isArray(nmec)) {
@@ -25,7 +25,6 @@ export const listEmailExchanges = (items: Array<{
     const name = items[0].participant_name ?? "";
     const nmec = items[0].participant_nmec;
 
-    // 1. Criar a string formatada para cada item (Sigla + Turmas)
     const detailedCourses = items.map(item => 
         `${item.course_acronym} (${item.goes_from} para ${item.goes_to})`
     );
