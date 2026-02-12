@@ -10,8 +10,7 @@ import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 import { RequestDate, RequestLastUpdatedDate } from "./RequestDate";
 import { listEmailExchanges } from "../../../../utils/mail";
 import { AdminRequestType } from "../../../../utils/exchange";
-import { ValidateRequestButton } from "./ValidateRequestButton";
-import Alert, { AlertType } from '../../../planner/Alert';
+import { ValidateRequestButton } from "./ValidateRequestButton"; 
 
 type Props = {
   exchange: DirectExchangeRequest;
@@ -111,14 +110,6 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
       </CardHeader>
 
       <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
-        {/* Aviso de conflitos quando aberto */}
-        {open && (
-          <Alert type={AlertType.warning}>
-            <p>
-              O pedido apresenta conflitos com aulas teóricas e práticas em um ou ambos os alunos.
-            </p>
-          </Alert>
-        )}
 
         {open &&
           Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
