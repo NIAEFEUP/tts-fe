@@ -120,6 +120,7 @@ export const StudentEnrollmentCard = ({
                         exchangeMessage={
                             listEmailEnrollments(
                                 enrollment.options.map(option => ({
+                                    participant_name: enrollment.user_nmec,
                                     participant_nmec: enrollment.user_nmec,
                                     goes_to: option.course_unit.name,
                                     course: option.course,
