@@ -171,32 +171,35 @@ const updateBackendDataVersion = async (): Promise<void> => {
   writeStorage(key, liveVersion);
 }
 
-const SHOW_EXCHANGE_ALERT_KEY = 'niaefeup-tts.show-exchange-alert'
-const SHOW_EXCHANGE_ALERT_DATE_KEY = SHOW_EXCHANGE_ALERT_KEY + '.date'
+const SHOW_EXCHANGE_ALERT_SESSION_KEY =  'niaefeup-tts.show-exchange-alert.session'
 
-const setShowExchangeAlertStorage = (value: boolean): void => {
-  localStorage.setItem(SHOW_EXCHANGE_ALERT_KEY, JSON.stringify(value))
-  localStorage.setItem(SHOW_EXCHANGE_ALERT_DATE_KEY, JSON.stringify(new Date()))
+const setShowExchangeAlertStorage = (): void => {
+  
+  const session = {
+    year: getSchoolYear(),
+    semester: String(import.meta.env.VITE_APP_SEMESTER)
+  }
+  localStorage.setItem(SHOW_EXCHANGE_ALERT_SESSION_KEY, JSON.stringify(session))
 }
 
 const getShowExchangeAlertStorage = (): boolean => {
-  const storedValue = localStorage.getItem(SHOW_EXCHANGE_ALERT_KEY)
-  const storedDate = localStorage.getItem(SHOW_EXCHANGE_ALERT_DATE_KEY)
+  const storedSession = localStorage.getItem(SHOW_EXCHANGE_ALERT_SESSION_KEY)
 
-  if (!storedValue || !storedDate) return true
+  if (storedSession === null) return true
 
-  const value = JSON.parse(storedValue) as boolean
-  const date = new Date(JSON.parse(storedDate))
+  try {
+    const lastSession = JSON.parse(storedSession)
 
-  const now = new Date()
-  const diffMilliseconds = now.getTime() - date.getTime()
-  const diffMonths = diffMilliseconds / (1000 * 60 * 60 * 24 * 30)
-  if (diffMonths >= 3) {
-    setShowExchangeAlertStorage(true)
+    const currentYear = String(getSchoolYear())
+    const currentSemester = String(import.meta.env.VITE_APP_SEMESTER)
+
+    if (currentYear !== String(lastSession.year) || currentSemester !== String(lastSession.semester)) {
+      return true
+    }
+    return false
+  } catch (e) {
     return true
   }
-
-  return value
 }
 
 const StorageAPI = {
