@@ -29,7 +29,7 @@ export const StudentEnrollmentCard = ({
 
     return (
         <Card>
-            <CardHeader className="flex flex-row justify-between items-center">
+            <CardHeader className="flex flex-row justify-between items-center py-4 px-9">
                 <div className="flex gap-4 items-center">
                     <div className="flex flex-col gap-1 ">
                         <div className="flex gap-2 items-center">
@@ -43,9 +43,9 @@ export const StudentEnrollmentCard = ({
                             />
                         </div>
 
-                        <RequestDate
+                        {!open && <RequestDate
                             date={enrollment.date}
-                        />
+                        />}
                     </div>
                     {!open && <>
                         <Person
@@ -58,36 +58,38 @@ export const StudentEnrollmentCard = ({
                 <div>
                     <Button
                         onClick={() => setOpen(prev => !prev)}
-                        className="bg-white text-black border-2 border-black hover:text-white"
+                        variant="outline"
+                        className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-sm"
                     >
-                        {open
-                            ? <ChevronUpIcon className="w-5 h-5" />
-                            : <ChevronDownIcon className="w-5 h-5" />
+                        {open ? (
+                            <ChevronUpIcon size={18} strokeWidth={2.5} />
+                        ) : (
+                            <ChevronDownIcon size={18} strokeWidth={2.5} />
+                        )
                         }
                     </Button>
                 </div>
             </CardHeader>
-            <CardContent className="w-full ">
+            <CardContent className={`w-full ${open ? "pt-0 pb-4 px-9" : "p-0"}`}>
                 {open && (
-                    <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
-                        <div className="flex flex-row justify-between">
+                    <div className="flex flex-col gap-y-6" key={crypto.randomUUID()}>
+                        <div className="flex justify-between items-center gap-6 py-2">
                             <Person name={enrollment.user_nmec} nmec={enrollment.user_nmec} />
-                            <div className="flex flex-row gap-x-2">
+                        <div className="flex-1 max-w-md">
+                            <div className="flex flex-col gap-y-2 border-gray-200 border-2 rounded-md p-2 px-4">
                                 {enrollment.options.map((option) => (
                                     <div
                                         key={crypto.randomUUID()}
-                                    >
-                                        <div
-                                            className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4"
+                                            className="flex justify-between items-center gap-3"
                                         >
-                                            <h2 className="font-bold">{option.course_unit.acronym}</h2>
+                                            <span className="font-bold">{option.course_unit.acronym}</span>
                                             {option.enrolling
                                                 ? <Check className="text-green-400" />
                                                 : <X className="text-red-400" />
                                             }
                                         </div>
+                                    ))}
                                     </div>
-                                ))}
                             </div>
                             <div>
                                 <AdminPreviewSchedule
@@ -106,6 +108,7 @@ export const StudentEnrollmentCard = ({
                         </div>
                     </div>
                 )}
+                </CardContent>
 
                 {open &&
                     <AdminRequestCardFooter
@@ -127,7 +130,7 @@ export const StudentEnrollmentCard = ({
                         courseId={enrollment.options.map(option => option.course_unit.course)}
                     />
                 }
-            </CardContent>
+            
         </Card>
     )
 }
