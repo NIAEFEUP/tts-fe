@@ -14,12 +14,54 @@ const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
 
 // Configures the path for pages.
 const pages = [
-  { path: getPath(configToUse.paths.about), location: 'Sobre', element: AboutPage, liquid: true },
-  { path: getPath(configToUse.paths.planner), location: 'Horários', element: TimeTableSelectorPage, liquid: true },
-  { path: getPath(configToUse.paths.faqs), location: 'FAQs', element: FaqsPage, liquid: true },
-  { path: getPath(configToUse.paths.notfound), location: 'NotFound', element: NotFoundPage, liquid: true },
-  { path: getPath(config.paths.exchange), location: 'Turmas', element: Exchange, liquid: true },
-  { path: getPath(config.paths.privacypolicy), location: 'Privacidade', element: PrivacyPolicyPage, liquid: true },
+  { 
+    path: getPath(configToUse.paths.about), 
+    location: 'Sobre', 
+    element: AboutPage, 
+    liquid: true,
+    description: 'Sobre o Time Table Selector - Plataforma desenvolvida por NIAEFEUP para ajudar estudantes da FEUP a criar e gerir horários.',
+    canonical: 'https://tts.niaefeup.pt/about'
+  },
+  { 
+    path: getPath(configToUse.paths.planner), 
+    location: 'Horários', 
+    element: TimeTableSelectorPage, 
+    liquid: true,
+    description: 'Crie e experimente diferentes combinações de horários para o seu semestre na FEUP. Visualize conflitos e otimize a sua agenda.',
+    canonical: 'https://tts.niaefeup.pt/planner'
+  },
+  { 
+    path: getPath(configToUse.paths.faqs), 
+    location: 'FAQs', 
+    element: FaqsPage, 
+    liquid: true,
+    description: 'Perguntas frequentes sobre o Time Table Selector - Tire as suas dúvidas sobre a plataforma de horários da FEUP.',
+    canonical: 'https://tts.niaefeup.pt/faqs'
+  },
+  { 
+    path: getPath(configToUse.paths.notfound), 
+    location: 'NotFound', 
+    element: NotFoundPage, 
+    liquid: true,
+    description: 'Página não encontrada - Time Table Selector',
+    canonical: 'https://tts.niaefeup.pt/404'
+  },
+  { 
+    path: getPath(config.paths.exchange), 
+    location: 'Turmas', 
+    element: Exchange, 
+    liquid: true,
+    description: 'Troque de turmas com outros estudantes da FEUP. Pedidos de troca diretos e gestão de trocas de horários.',
+    canonical: 'https://tts.niaefeup.pt/exchange'
+  },
+  { 
+    path: getPath(config.paths.privacypolicy), 
+    location: 'Privacidade', 
+    element: PrivacyPolicyPage, 
+    liquid: true,
+    description: 'Política de privacidade do Time Table Selector - Como tratamos os seus dados.',
+    canonical: 'https://tts.niaefeup.pt/privacy'
+  },
 ]
 
 const redirects = [
@@ -53,7 +95,13 @@ const App = () => {
               path={page.path}
               key={`page-${pageIdx}`}
               element={
-                <Layout location={page.location} title={page.location} liquid={page.liquid}>
+                <Layout 
+                  location={page.location} 
+                  title={page.location} 
+                  liquid={page.liquid}
+                  description={page.description}
+                  canonical={page.canonical}
+                >
                   <div>
                     <page.element />
                     <Toaster />
