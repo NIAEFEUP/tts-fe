@@ -40,10 +40,12 @@ const PlannerSchedule = () => {
     setTClassConflicts(false)
   }, []);
 
-  return <Schedule
-    classes={classes}
-    slots={slots}
-  />;
+  return (
+    <Schedule
+      classes={classes}
+      slots={slots}
+    />
+  )
 }
 
 export default PlannerSchedule;
