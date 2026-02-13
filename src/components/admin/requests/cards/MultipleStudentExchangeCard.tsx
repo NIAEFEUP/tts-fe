@@ -145,6 +145,10 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
           showTreatButton={false}
           setExchange={setExchangeState}
           courseId={exchangeState.options.map((option) => option.course_info.course)}
+          courseInfo={exchangeState.options.map((option) => ({
+            id: option.course_info.course,
+            acronym: option.course_info.acronym
+          }))}
         />
       )}
     </Card>
