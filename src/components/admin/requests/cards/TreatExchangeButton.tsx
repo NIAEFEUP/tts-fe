@@ -12,7 +12,9 @@ export const TreatExchangeButton = ({
     courseId,
     variant = "default",
 }: Props) => {
-    const { studentCourseMetadata } = useStudentCourseMetadata(nmec, courseId);
+    const uniqueCourseIds = Array.from(new Set(courseId));
+    
+    const { studentCourseMetadata } = useStudentCourseMetadata(nmec, uniqueCourseIds);
 
     const uniqueMetadata = studentCourseMetadata
         ? Array.from(studentCourseMetadata.values())
@@ -23,6 +25,9 @@ export const TreatExchangeButton = ({
                     index === self.findIndex(m => m.fest_id === metadata.fest_id && m.course.id === metadata.course.id)
             )
         : [];
+
+    const coursesWithMetadata = new Set(uniqueMetadata.map(m => m.course.id));
+    const coursesWithoutMetadata = uniqueCourseIds.filter(id => !coursesWithMetadata.has(id));
         
     return (
         <>
@@ -34,6 +39,22 @@ export const TreatExchangeButton = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         
+                    >
+                        <Button
+                            variant={variant}
+                        >
+                            Tratar
+                        </Button>
+                    </a>
+                ))
+            }
+            {
+                coursesWithoutMetadata.map((course_id) => (
+                    <a
+                        href={`https://sigarra.up.pt/feup/pt/it_adm.adm_t_livre_escolhe_aluno?pv_curso_id=${course_id}`}
+                        key={`no-metadata-${course_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
                         <Button
                             variant={variant}
