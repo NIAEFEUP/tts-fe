@@ -136,6 +136,10 @@ export const StudentEnrollmentCard = ({
                         requestId={enrollment.id}
                         setExchange={setEnrollmentState}
                         courseId={enrollment.options.map(option => option.course_unit.course)}
+                        courseInfo={enrollment.options.map(option => ({
+                            id: option.course_unit.course,
+                            acronym: option.course.acronym
+                        }))}
                     />
                 }
             
