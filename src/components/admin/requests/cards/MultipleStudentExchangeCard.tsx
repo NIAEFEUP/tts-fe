@@ -53,9 +53,9 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row justify-between items-start gap-4">
-        {/* Coluna da esquerda - 30% */}
-        <div className="flex flex-col w-1/3 gap-2 relative">
+      <CardHeader className="flex flex-row justify-between items-center py-4 px-9">
+        <div className="flex gap-4 items-center">
+        <div className="flex flex-col gap-1">
           <div className="flex gap-2 items-center">
             <CardTitle>
               <h2 className="font-bold">#{exchangeState.id}</h2>
@@ -63,58 +63,53 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
             <ExchangeStatus exchange={exchangeState} />
           </div>
 
-          <RequestDate date={exchangeState.date} />
-
+          {!open && (
+            <>
+              <RequestDate date={exchangeState.date} />
           <RequestLastUpdatedDate
             date={exchangeState.last_validated}
             justValidated={justValidated}
           />
+              </>
+            )}
+          </div>
 
-          {/* Mostrar botão de validação apenas quando fechado */}
-          {!open && justValidated !== "invalid" && (
-            <div className="mt-4 relative">
-              <ValidateRequestButton id={exchangeState.id} onValidation={handleValidation} />
-            </div>
-          )}
-
-
-        </div>
-
-        {/* Coluna da direita - 60% */}
-        <div className="flex flex-wrap w-2/3 gap-2">
           {!open &&
             [...new Map(exchangeState.options.map((p) => [p.participant_nmec, p])).values()].map(
               (participant) => (
-                <div
+                <Person
                   key={"multiple-student-person-" + participant.participant_nmec}
-                  className="max-w-[45%] truncate whitespace-nowrap"
-                >
-                  <Person
                     name={participant.participant_name}
                     nmec={participant.participant_nmec}
                   />
-                </div>
               )
             )}
         </div>
 
-
-
-        {/* Botão de expandir */}
-        <div>
+        <div className="flex gap-2 items-center">
+          {!open && justValidated !== "invalid" && (
+            <ValidateRequestButton id={exchangeState.id} onValidation={handleValidation} />
+          )}
+          
           <Button
             onClick={() => setOpen((prev) => !prev)}
-            className="bg-white text-black border-2 border-black hover:text-white"
+            variant="outline"
+            className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-sm"
           >
-            {open ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
+            {open ? (
+              <ChevronUpIcon size={18} strokeWidth={2.5} />
+            ) : (
+              <ChevronDownIcon size={18} strokeWidth={2.5} />
+            )
+            }
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
-
-        {open &&
-          Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
+    <CardContent className={`w-full ${open ? "pt-0 pb-4 px-9" : "p-0"}`}>
+      {open && (
+        <div className="flex flex-col gap-y-6">
+          {Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
             const [nmec, name] = participant.split(",");
             return (
               <PersonExchanges
@@ -126,6 +121,8 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
               />
             );
           })}
+        </div>
+      )}
       </CardContent>
 
       {open && (
