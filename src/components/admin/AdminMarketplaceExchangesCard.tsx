@@ -122,6 +122,10 @@ export const AdminMarketplaceExchangesCard = ({
                     requestId={exchange.id}
                     setExchange={setExchangeState}
                     courseId={exchange.options.map(option => option.course_info.course)}
+                    courseInfo={exchange.options.map(option => ({
+                        id: option.course_info.course,
+                        acronym: option.course_info.acronym
+                    }))}
                 />
             }
         </Card>
