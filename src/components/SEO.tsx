@@ -15,6 +15,34 @@ const SEO = ({
   ogImage = 'https://tts.niaefeup.pt/logo512.png',
   ogType = 'website'
 }: SEOProps) => {
+  // Structured Data for Organization
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'NIAEFEUP',
+    url: 'https://ni.fe.up.pt',
+    logo: 'https://tts.niaefeup.pt/logo512.png',
+    sameAs: [
+      'https://github.com/NIAEFEUP',
+      'https://www.instagram.com/niaefeup/',
+      'https://www.linkedin.com/company/niaefeup/'
+    ]
+  }
+
+  // Structured Data for WebSite
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Time Table Selector',
+    alternateName: 'TTS',
+    url: 'https://tts.niaefeup.pt',
+    description: description,
+    publisher: {
+      '@type': 'Organization',
+      name: 'NIAEFEUP'
+    }
+  }
+
   return (
     <Helmet>
       {/* Primary Meta Tags */}
@@ -38,6 +66,14 @@ const SEO = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
+
+      {/* Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify(organizationSchema)}
+      </script>
+      <script type="application/ld+json">
+        {JSON.stringify(websiteSchema)}
+      </script>
     </Helmet>
   )
 }
