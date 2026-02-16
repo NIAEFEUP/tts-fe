@@ -18,7 +18,7 @@ const SEO = ({
   title = 'Time Table Selector - NIAEFEUP',
   description = 'Plataforma para estudantes da FEUP criarem e experimentarem diferentes combinações de horários no início do semestre. Criado por NIAEFEUP.',
   canonical = 'https://tts.niaefeup.pt/',
-  ogImage = 'https://tts.niaefeup.pt/logo512.png',
+  ogImage = 'https://tts.niaefeup.pt/og-image.png',
   ogType = 'website',
   breadcrumbs
 }: SEOProps) => {
