@@ -5,6 +5,11 @@ import classNames from 'classnames'
 import { FeedbackReport } from '../FeedbackReport'
 import SEO from '../SEO'
 
+type BreadcrumbItem = {
+  name: string
+  url: string
+}
+
 type Props = {
   children: JSX.Element
   title: string
@@ -12,9 +17,10 @@ type Props = {
   liquid?: boolean
   description?: string
   canonical?: string
+  breadcrumbs?: BreadcrumbItem[]
 }
 
-const Layout = ({ children, location, liquid, title, description, canonical }: Props) => {
+const Layout = ({ children, location, liquid, title, description, canonical, breadcrumbs }: Props) => {
   const fullTitle = `${title} | ${import.meta.env.VITE_APP_SITE_TITLE || 'Time Table Selector'}`
   
   useEffect(() => {
@@ -30,6 +36,7 @@ const Layout = ({ children, location, liquid, title, description, canonical }: P
         title={fullTitle}
         description={description}
         canonical={canonical}
+        breadcrumbs={breadcrumbs}
       />
       
       <div className="hidden md:flex fixed bottom-0 left-0 mb-6 ml-5 rounded-full shadow-lg bg-white border z-40">

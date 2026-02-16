@@ -1,11 +1,17 @@
 import { Helmet } from 'react-helmet-async'
 
+type BreadcrumbItem = {
+  name: string
+  url: string
+}
+
 type SEOProps = {
   title?: string
   description?: string
   canonical?: string
   ogImage?: string
   ogType?: string
+  breadcrumbs?: BreadcrumbItem[]
 }
 
 const SEO = ({
@@ -13,7 +19,8 @@ const SEO = ({
   description = 'Plataforma para estudantes da FEUP criarem e experimentarem diferentes combinações de horários no início do semestre. Criado por NIAEFEUP.',
   canonical = 'https://tts.niaefeup.pt/',
   ogImage = 'https://tts.niaefeup.pt/logo512.png',
-  ogType = 'website'
+  ogType = 'website',
+  breadcrumbs
 }: SEOProps) => {
   // Structured Data for Organization
   const organizationSchema = {
@@ -42,6 +49,18 @@ const SEO = ({
       name: 'NIAEFEUP'
     }
   }
+
+  // BreadcrumbList Schema
+  const breadcrumbSchema = breadcrumbs ? {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url
+    }))
+  } : null
 
   return (
     <Helmet>
@@ -74,6 +93,11 @@ const SEO = ({
       <script type="application/ld+json">
         {JSON.stringify(websiteSchema)}
       </script>
+      {breadcrumbSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbSchema)}
+        </script>
+      )}
     </Helmet>
   )
 }

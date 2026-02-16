@@ -20,7 +20,11 @@ const pages = [
     element: AboutPage, 
     liquid: true,
     description: 'Sobre o Time Table Selector - Plataforma desenvolvida por NIAEFEUP para ajudar estudantes da FEUP a criar e gerir horários.',
-    canonical: 'https://tts.niaefeup.pt/about'
+    canonical: 'https://tts.niaefeup.pt/about',
+    breadcrumbs: [
+      { name: 'Início', url: 'https://tts.niaefeup.pt/' },
+      { name: 'Sobre', url: 'https://tts.niaefeup.pt/about' }
+    ]
   },
   { 
     path: getPath(configToUse.paths.planner), 
@@ -28,7 +32,11 @@ const pages = [
     element: TimeTableSelectorPage, 
     liquid: true,
     description: 'Crie e experimente diferentes combinações de horários para o seu semestre na FEUP. Visualize conflitos e otimize a sua agenda.',
-    canonical: 'https://tts.niaefeup.pt/planner'
+    canonical: 'https://tts.niaefeup.pt/planner',
+    breadcrumbs: [
+      { name: 'Início', url: 'https://tts.niaefeup.pt/' },
+      { name: 'Horários', url: 'https://tts.niaefeup.pt/planner' }
+    ]
   },
   { 
     path: getPath(configToUse.paths.faqs), 
@@ -36,7 +44,11 @@ const pages = [
     element: FaqsPage, 
     liquid: true,
     description: 'Perguntas frequentes sobre o Time Table Selector - Tire as suas dúvidas sobre a plataforma de horários da FEUP.',
-    canonical: 'https://tts.niaefeup.pt/faqs'
+    canonical: 'https://tts.niaefeup.pt/faqs',
+    breadcrumbs: [
+      { name: 'Início', url: 'https://tts.niaefeup.pt/' },
+      { name: 'FAQs', url: 'https://tts.niaefeup.pt/faqs' }
+    ]
   },
   { 
     path: getPath(configToUse.paths.notfound), 
@@ -52,7 +64,11 @@ const pages = [
     element: Exchange, 
     liquid: true,
     description: 'Troque de turmas com outros estudantes da FEUP. Pedidos de troca diretos e gestão de trocas de horários.',
-    canonical: 'https://tts.niaefeup.pt/exchange'
+    canonical: 'https://tts.niaefeup.pt/exchange',
+    breadcrumbs: [
+      { name: 'Início', url: 'https://tts.niaefeup.pt/' },
+      { name: 'Turmas', url: 'https://tts.niaefeup.pt/exchange' }
+    ]
   },
   { 
     path: getPath(config.paths.privacypolicy), 
@@ -60,7 +76,11 @@ const pages = [
     element: PrivacyPolicyPage, 
     liquid: true,
     description: 'Política de privacidade do Time Table Selector - Como tratamos os seus dados.',
-    canonical: 'https://tts.niaefeup.pt/privacy'
+    canonical: 'https://tts.niaefeup.pt/privacy',
+    breadcrumbs: [
+      { name: 'Início', url: 'https://tts.niaefeup.pt/' },
+      { name: 'Privacidade', url: 'https://tts.niaefeup.pt/privacy' }
+    ]
   },
 ]
 
@@ -101,6 +121,7 @@ const App = () => {
                   liquid={page.liquid}
                   description={page.description}
                   canonical={page.canonical}
+                  breadcrumbs={page.breadcrumbs}
                 >
                   <div>
                     <page.element />
