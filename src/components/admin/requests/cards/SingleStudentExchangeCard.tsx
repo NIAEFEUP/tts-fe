@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ClassDescriptor, UrgentRequest } from "../../../../@types"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
-import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, BadgeAlert, BadgeCheck, BadgeX  } from "lucide-react";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
@@ -80,6 +80,7 @@ export const SingleStudentExchangeCard = ({
                           <p>{option.class_issuer_goes_to.name}</p>
                           <p>{option.class_issuer_goes_to.vacancies ?? 'N/A'} vagas</p>
                         </div>
+                        
                       </div>
                     ))}
                     </>

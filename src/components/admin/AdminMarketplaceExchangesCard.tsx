@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { ExchangeStatus } from "./requests/cards/ExchangeStatus"
 import { Person } from "./requests/cards/Person"
 import { RequestDate } from "./requests/cards/RequestDate"
-import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, BadgeCheck, BadgeX, BadgeInfo   } from "lucide-react"
 import { AdminPreviewSchedule } from "./requests/AdminPreviewSchedule"
 import useStudentsSchedule from "../../hooks/admin/useStudentsSchedule"
 import { ClassDescriptor, MarketplaceRequest } from "../../@types"
@@ -12,14 +12,28 @@ import { AdminRequestCardFooter } from "./requests/cards/AdminRequestCardFooter"
 import { listEmailExchanges } from "../../utils/mail"
 import { AdminRequestType } from "../../utils/exchange"
 
+
+
 type Props = {
     exchange: MarketplaceRequest
 }
 
 export const AdminMarketplaceExhangesCard = ({
     exchange
-}: Props) => {
+}: Props) => { 
 
+    const diffvacancies = (from: number | null | undefined, to: number | null | undefined) => {
+        const diff = (to ?? 0 ) - (from ?? 0);
+        if (diff <= 0) { 
+            return <BadgeX className="w-5 h-5 stroke-red-400"  />;
+        }
+        if (diff === 1) {
+            return <BadgeInfo className="w-5 h-5 stroke-yellow-300 "  />;
+        }
+        if (diff>=2) {
+            return <BadgeCheck className="w-5 h-5 stroke-green-500"  />;
+        }
+    }
     const [open, setOpen] = useState<boolean>(false);
     const [exchangeState, setExchangeState] = useState(exchange);
 
@@ -80,6 +94,12 @@ export const AdminMarketplaceExhangesCard = ({
                                                 <p>{option.class_issuer_goes_to.name}</p>
                                                 <p>{option.class_issuer_goes_to.vacancies ?? 'N/A'} vagas</p>
                                             </div>
+                                            
+                                            {diffvacancies(
+                                                option.class_issuer_goes_from.vacancies,
+                                                option.class_issuer_goes_to.vacancies
+                                            )}
+
                                         </div>
                                     ))}
                                     </>
