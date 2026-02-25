@@ -171,6 +171,37 @@ const updateBackendDataVersion = async (): Promise<void> => {
   writeStorage(key, liveVersion);
 }
 
+const SHOW_EXCHANGE_ALERT_SESSION_KEY =  'niaefeup-tts.show-exchange-alert.session'
+
+const setShowExchangeAlertStorage = (): void => {
+  
+  const session = {
+    year: getSchoolYear(),
+    semester: String(import.meta.env.VITE_APP_SEMESTER)
+  }
+  localStorage.setItem(SHOW_EXCHANGE_ALERT_SESSION_KEY, JSON.stringify(session))
+}
+
+const getShowExchangeAlertStorage = (): boolean => {
+  const storedSession = localStorage.getItem(SHOW_EXCHANGE_ALERT_SESSION_KEY)
+
+  if (storedSession === null) return true
+
+  try {
+    const lastSession = JSON.parse(storedSession)
+
+    const currentYear = String(getSchoolYear())
+    const currentSemester = String(import.meta.env.VITE_APP_SEMESTER)
+
+    if (currentYear !== String(lastSession.year) || currentSemester !== String(lastSession.semester)) {
+      return true
+    }
+    return false
+  } catch {
+    return true
+  }
+}
+
 const StorageAPI = {
   getMultipleOptionsStorage,
   setMultipleOptionsStorage,
@@ -182,7 +213,10 @@ const StorageAPI = {
   getPickedCoursesStorage,
   setPickedCoursesStorage,
   getCourseFilteredTeachersStorage,
-  storeCurrentVisit
+  storeCurrentVisit,
+  getShowExchangeAlertStorage,
+  setShowExchangeAlertStorage
+
 }
 
 export default StorageAPI

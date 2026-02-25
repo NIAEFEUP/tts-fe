@@ -36,7 +36,7 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
     const otherClasses = [];
     chosenCourses.forEach((option) => {
       const courseInfo = pickedCourses.find((course) => course.id === option.course_id);
-      const pickedClass = courseInfo?.classes.find((classInfo) => classInfo.id === option.picked_class_id);
+      const pickedClass = courseInfo?.classes?.find((classInfo) => classInfo.id === option.picked_class_id);
 
       if (pickedClass) otherClasses.push(pickedClass);
     });

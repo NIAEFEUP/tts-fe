@@ -1,4 +1,4 @@
-import { CourseInfo, Major } from "../@types";
+import { CourseInfo} from "../@types";
 
 export const mailtoStringBuilder = (nmec: string | Array<string>) => {
     if (Array.isArray(nmec)) {
@@ -20,14 +20,55 @@ export const listEmailExchanges = (items: Array<{
     goes_to: string,
     course_acronym: string
 }>) => {
-    return items.map(item => `${item.participant_name ?? ""} (${item.participant_nmec}) pediu para trocar de ${item.goes_from} para ${item.goes_to} no curso ${item.course_acronym}.`).join("%0D%0A")
+    if (items.length === 0) return "";
+
+    const name = items[0].participant_name ?? "";
+    const nmec = items[0].participant_nmec;
+
+    const detailedCourses = items.map(item => 
+        `${item.course_acronym} (${item.goes_from} para ${item.goes_to})`
+    );
+
+    let coursesFormatted: string;
+    let label: string;
+
+    if (detailedCourses.length === 1) {
+        coursesFormatted = detailedCourses[0];
+        label = "na unidade curricular";
+    } else {
+        const lastCourse = detailedCourses.pop();
+        coursesFormatted = `${detailedCourses.join(", ")} e ${lastCourse}`;
+        label = "nas unidades curriculares";
+    }
+
+    return `${name} (${nmec}) pediu para trocar de turma ${label} ${coursesFormatted}.`;
 }
+
 
 export const listEmailEnrollments = (items: Array<{
     participant_nmec: string,
+    participant_name?: string,
     goes_to: string,
-    course: Major,
     course_unit: CourseInfo
 }>) => {
-    return items.map(item => `${item.participant_nmec} pediu para ir para ${item.goes_to} (${item.course_unit.acronym}) no curso ${item.course.acronym}.`).join("%0D%0A")
+    if (items.length === 0) return "";
+
+    const name = items[0].participant_name ?? "";
+    const nmec = items[0].participant_nmec;
+    
+    const courseAcronyms = items.map(item => item.course_unit.acronym);
+
+    let coursesFormatted: string;
+    let label: string;
+
+    if (courseAcronyms.length === 1) {
+        coursesFormatted = courseAcronyms[0];
+        label = "na unidade curricular";
+    } else {
+        const lastCourse = courseAcronyms.pop();
+        coursesFormatted = `${courseAcronyms.join(", ")} e ${lastCourse}`;
+        label = "nas unidades curriculares";
+    }
+
+    return `${name} (${nmec}) pediu para se inscrever ${label} ${coursesFormatted}.`;
 }

@@ -101,7 +101,7 @@ const ExchangePage = () => {
   </ScheduleContext.Provider>
 
   return <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
-    <div className="block md:hidden mx-4">
+    <div className="block lg:hidden mx-4">
       <RefreshScheduleButton
         forceRefreshStudentSchedule={forceRefreshStudentSchedule}
         loadingSchedule={loadingSchedule}
@@ -111,7 +111,7 @@ const ExchangePage = () => {
 
     <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
       {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-6 py-6 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-6 py-6 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5  ">
         <div className="h-full w-full">
           {(!sigarraSynced && !loadingSchedule) && (
             <>
@@ -123,22 +123,24 @@ const ExchangePage = () => {
               </Alert>
             </>
           )}
-          {!loadingSchedule &&
-            <div className="relative bottom-2">
-              <div className="absolute hidden md:block">
-                <RefreshScheduleButton
-                  forceRefreshStudentSchedule={forceRefreshStudentSchedule}
-                  loadingSchedule={loadingSchedule}
-                  isRefreshingStudentSchedule={isRefreshingStudentSchedule}
-                />
-              </div>
-            </div>
-          }
-          <ExchangeSchedule />
+          
+          <ExchangeSchedule 
+            refresh = {!loadingSchedule &&(
+
+                <div className="hidden md:block">
+                  <RefreshScheduleButton
+                    forceRefreshStudentSchedule={forceRefreshStudentSchedule}
+                    loadingSchedule={loadingSchedule}
+                    isRefreshingStudentSchedule={isRefreshingStudentSchedule}
+                  />
+                </div>
+              )
+            }
+          />
         </div>
       </div>
 
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-hidden">
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-y-auto">
         <Tabs defaultValue="requests" className="flex flex-col h-full">
           {/* Cabeçalho fixo */}
           <TabsList className="w-full mb-2 flex-shrink-0">

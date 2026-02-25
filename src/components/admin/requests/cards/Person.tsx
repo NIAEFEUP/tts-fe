@@ -7,7 +7,12 @@ export const Person = ({ name, nmec }: { name: string, nmec: string }) => (
         <img src={studentInfoService.getStudentPictureUrl(nmec)} alt="Foto do estudante" className="w-16 h-16 rounded-full" />
         <div className="flex flex-col gap-1">
             <CardTitle>
-                <a className="hover:underline" href={`https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=${nmec}`}>
+                <a 
+                    className="hover:underline" 
+                    href={`https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=${nmec}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                >
                     {name}
                 </a>
             </CardTitle>
