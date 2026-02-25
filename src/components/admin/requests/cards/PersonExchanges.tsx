@@ -43,10 +43,10 @@ export const PersonExchanges = ({
                                 <h2 className="font-bold truncate">{exchange.course_info.acronym}</h2>
                                 <div className="flex gap-2 items-center">
                                     <p className="truncate" >{exchange.class_participant_goes_from.name}</p>
-                                    <p>{exchange.class_participant_goes_from.vacancies ?? 'N/A'} vangas</p>
+                                    <p>{exchange.class_participant_goes_from.vacancies ?? 'N/A'} vagas</p>
                                     <ArrowRightIcon className="w-5 h-5" />
                                     <p className="truncate" >{exchange.class_participant_goes_to.name}</p>
-                                    <p>{exchange.class_participant_goes_to.vacancies ?? 'N/A'} vagsas</p>
+                                    <p>{exchange.class_participant_goes_to.vacancies ?? 'N/A'} vagas</p>
                                 </div>
                             </div>
                         </div>

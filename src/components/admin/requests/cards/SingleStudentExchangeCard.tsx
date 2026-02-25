@@ -2,7 +2,6 @@ import { useState } from "react";
 import { ClassDescriptor, UrgentRequest } from "../../../../@types"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card";
 import { Button } from "../../../ui/button";
-import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, BadgeAlert, BadgeCheck, BadgeX  } from "lucide-react";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
