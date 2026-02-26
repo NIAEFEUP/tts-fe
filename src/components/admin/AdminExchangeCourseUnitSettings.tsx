@@ -31,6 +31,18 @@ export const AdminExchangeCourseUnitSettings = () => {
 
   const courseUnits = courseUnitPeriods?.courseUnits || [];
 
+  const getResponseErrorMessage = async (response: Response, fallback: string) => {
+    const raw = await response.text();
+    if (!raw) return fallback;
+
+    try {
+      const data = JSON.parse(raw);
+      return data.error || fallback;
+    } catch {
+      return raw;
+    }
+  };
+
   useEffect(() => {
     if (courseUnits.length > 0 && !selectedCourseUnit) {
       setSelectedCourseUnit(courseUnits[0].id);
@@ -53,8 +65,7 @@ export const AdminExchangeCourseUnitSettings = () => {
         startDate, endDate, selectedCourseUnit
       );
       if (!response.ok) {
-        const data = await response.json();
-        setErrorMessage(data.error || "Erro ao adicionar período.");
+        setErrorMessage(await getResponseErrorMessage(response, "Erro ao adicionar período."));
         return;
       }
       setAddingPeriod(false);
@@ -79,8 +90,7 @@ export const AdminExchangeCourseUnitSettings = () => {
         editingStartDate, editingEndDate, selectedCourseUnit, editingPeriodId
       );
       if (!response.ok) {
-        const data = await response.json();
-        setErrorMessage(data.error || "Erro ao atualizar período.");
+        setErrorMessage(await getResponseErrorMessage(response, "Erro ao atualizar período."));
         return;
       }
       setEditingPeriodId(null);

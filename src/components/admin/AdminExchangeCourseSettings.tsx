@@ -28,6 +28,18 @@ export const AdminExchangeCourseSettings = () => {
 
   const courses = exchangeCoursePeriods?.courses || [];
 
+  const getResponseErrorMessage = async (response: Response, fallback: string) => {
+    const raw = await response.text();
+    if (!raw) return fallback;
+
+    try {
+      const data = JSON.parse(raw);
+      return data.error || fallback;
+    } catch {
+      return raw;
+    }
+  };
+
   useEffect(() => {
     if (courses.length > 0 && !selectedCourse) {
       setSelectedCourse(courses[0].courseId);
@@ -50,8 +62,7 @@ export const AdminExchangeCourseSettings = () => {
         startDate, endDate, selectedCourse
       );
       if (!response.ok) {
-        const data = await response.json();
-        setErrorMessage(data.error || "Erro ao adicionar período.");
+        setErrorMessage(await getResponseErrorMessage(response, "Erro ao adicionar período."));
         return;
       }
       setAddingPeriod(false);
@@ -79,8 +90,7 @@ export const AdminExchangeCourseSettings = () => {
         editingPeriodId
       );
       if (!response.ok) {
-        const data = await response.json();
-        setErrorMessage(data.error || "Erro ao atualizar período.");
+        setErrorMessage(await getResponseErrorMessage(response, "Erro ao atualizar período."));
         return;
       }
       setEditingPeriodId(null);
