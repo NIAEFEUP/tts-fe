@@ -31,7 +31,11 @@ export const listEmailExchanges = (items: Array<{
         greeting = `Olá ${firstNames.join(", ")} e ${lastPref}`;
     }
 
-    const detailedCourses = items.map(item => 
+    const itemsForCourses = participants.length > 1
+        ? items.filter(item => item.participant_nmec === participants[0][0])
+        : items;
+
+    const detailedCourses = itemsForCourses.map(item =>
         `${item.course_acronym} (${item.goes_from} ${participants.length > 1 ? '<->' : 'para'} ${item.goes_to})`
     );
 
