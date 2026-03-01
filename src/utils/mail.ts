@@ -24,7 +24,7 @@ export const listEmailExchanges = (items: Array<{
 
     const participants = Array.from(new Map(items.map(item => [item.participant_nmec, item.participant_name])).entries());
     
-    const firstNames = participants.map(([_, name]) => name.split(' ')[0]);
+    const firstNames = participants.map(([, name]) => name.split(' ')[0]);
     let greeting = `Olá ${firstNames[0]}`;
     if (firstNames.length > 1) {
         const lastPref = firstNames.pop();
