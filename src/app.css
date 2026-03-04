@@ -3,7 +3,8 @@
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/forms';
 
-@custom-variant dark (&:is(.dark *));
+/* Combined variant to support both your .dark class and Significa's data-theme */
+@custom-variant dark (&:is(.dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @utility container {
   margin-inline: auto;
@@ -16,7 +17,64 @@
   }
 }
 
+/* prettier-ignore */
+@utility mix-with-* {
+  --color-mix-with: --value(--color-*, [*]);
+}
+
+/* prettier-ignore */
+@utility border-mix-* {
+  border-color: color-mix(
+    in oklab,
+    --value(--color-*, [*]),
+    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
+  );
+}
+
+/* prettier-ignore */
+@utility bg-mix-* {
+  background-color: color-mix(
+    in oklab,
+    --value(--color-*, [*]),
+    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
+  );
+}
+
 @theme {
+  /* --- Significa Typography --- */
+  --text-2xs: 0.625rem;
+
+  /* --- Significa Colors --- */
+  --color-background: light-dark(oklch(100% 0 0), oklch(12% 0 0));
+  --color-background-secondary: light-dark(oklch(96% 0 0), oklch(22% 0 0));
+
+  --color-foreground: light-dark(oklch(0% 0 0), oklch(95% 0 0));
+  --color-foreground-secondary: light-dark(oklch(65% 0 0), oklch(53% 0 0));
+
+  --color-accent: var(--color-foreground);
+  --color-accent-foreground: var(--color-background);
+
+  --color-border: light-dark(oklch(94% 0 0), oklch(26% 0 0));
+
+  --color-ring: light-dark(
+    color-mix(in oklab, var(--color-accent) 30%, transparent),
+    color-mix(in oklab, var(--color-accent) 30%, transparent)
+  );
+
+  /* --- Significa Shadows --- */
+  --shadow-*: initial;
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.03);
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.02), 0 2px 4px oklch(0 0 0 / 0.02);
+  --shadow-md: 0 2px 3px oklch(0 0 0 / 0.02), 0 3px 6px oklch(0 0 0 / 0.02);
+  --shadow-lg:
+    0 2px 4px oklch(0 0 0 / 0.02), 0 4px 8px oklch(0 0 0 / 0.02),
+    0 8px 16px oklch(0 0 0 / 0.02);
+
+  /* --- Significa Easings --- */
+  --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* --- Your Existing Theme Variables --- */
   --color-inherit: inherit;
   --color-current: currentColor;
   --color-transparent: transparent;
@@ -478,21 +536,54 @@
   }
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
+  /* Significa Base Styles */
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body:has(dialog[open]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  /* Your Existing Base Styles */
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+
+  :root {
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -628,28 +719,5 @@
 
   .rdp-caption {
     @apply flex flex-row gap-x-2;
-  }
-}
-
-@layer base {
-  :root {
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-  .dark {
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
