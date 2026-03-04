@@ -3,12 +3,7 @@ import Header from './Header'
 import Footer from './Footer'
 import classNames from 'classnames'
 import { FeedbackReport } from '../FeedbackReport'
-import SEO from '../SEO'
-
-type BreadcrumbItem = {
-  name: string
-  url: string
-}
+import SEO, { BreadcrumbItem } from '../SEO'
 
 type Props = {
   children: JSX.Element

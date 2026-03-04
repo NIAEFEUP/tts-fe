@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-type BreadcrumbItem = {
+export type BreadcrumbItem = {
   name: string
   url: string
 }
