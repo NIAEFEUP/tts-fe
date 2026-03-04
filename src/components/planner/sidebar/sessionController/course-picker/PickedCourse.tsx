@@ -19,12 +19,12 @@ const PickedCourse = ({ course }: Props) => {
   }
 
   return (
-    <div className="flex h-full gap-2 grow items-center rounded-md bg-lightish p-2 px-3 justify-between">
-      <span className="font-light align-top self-start text-sm w-5 text-center">{course.ects}</span>
-      <div className="grow text-sm font-medium leading-tight max-w-5/6">
-        {course.name} <span className="w-full text-sm font-light">({course.acronym})</span>
+    <div className="flex w-full gap-2 items-start rounded-md bg-lightish p-2 px-3 justify-between">
+      <span className="font-light align-top self-start text-sm w-5 text-center shrink-0">{course.ects}</span>
+      <div className="grow text-sm font-medium leading-tight min-w-0 break-words">
+        {course.name} <span className="text-sm font-light">({course.acronym})</span>
       </div>
-      <XMarkIcon className="w-5 hover:cursor-pointer hover:opacity-70 self-center justify-end" onClick={removeCourse} />
+      <XMarkIcon className="w-5 shrink-0 hover:cursor-pointer hover:opacity-70 self-start justify-end" onClick={removeCourse} />
     </div>
   )
 }

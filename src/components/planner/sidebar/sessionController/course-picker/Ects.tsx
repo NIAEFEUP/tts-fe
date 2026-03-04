@@ -7,8 +7,10 @@ const Ects = () => {
   const { coursesStorage } = useContext(CoursePickerContext)
 
   const totalEcts = coursesStorage.reduce(
-    (acc, course) => acc + parseFloat(String(course.ects).replace(',', '.')
-    ), 0)
+    (acc, course) => {
+      const val = parseFloat(String(course.ects || 0).replace(',', '.'))
+      return acc + (isNaN(val) ? 0 : val)
+    }, 0)
   const warning = totalEcts > 42 ? 2 : totalEcts > 36 ? 1 : 0
 
   return (

@@ -10,11 +10,13 @@ import { Checkbox } from '../../../../ui/checkbox'
 import { Label } from '../../../../ui/label'
 
 const CourseYearTabs = () => {
-  const { coursesInfo, checkboxedCourses, setCheckboxedCourses } = useContext(CoursePickerContext)
+  const { coursesInfo, checkboxedCourses, setCheckboxedCourses, electiveCourses } = useContext(CoursePickerContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [selectedTab, setSelectedTab] = useState('1')
   
-  const coursesByYear = useMemo(() => groupCoursesByYear(coursesInfo), [coursesInfo])
+  const coursesByYear = useMemo(() => {
+    return groupCoursesByYear(coursesInfo.filter(c => !electiveCourses.some(e => e.id === c.id)))
+  }, [coursesInfo, electiveCourses])
 
   const getYearStatus = (yearIndex: number) => {
     const yearCourses = coursesByYear[yearIndex]
