@@ -58,7 +58,7 @@ const CopyOption = ({ currentOption, className }: Props) => {
         <TooltipTrigger asChild>
           <Button
             variant="icon"
-            className={className.concat(' h-min w-min flex-grow bg-primary')}
+            className={className.concat(' h-min w-min grow bg-primary')}
             onClick={() => copyOption()}
           >
             {icon ? <CheckIcon className="h-5 w-5" /> : <DocumentDuplicateIcon className="h-5 w-5" />}

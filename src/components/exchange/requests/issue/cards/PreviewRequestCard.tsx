@@ -7,7 +7,7 @@ type Props = {
 }
 
 const PreviewRequestCard = ({ request }: Props) => {
-  return <Card className="shadow-sm">
+  return <Card className="shadow-xs">
     <CardContent className="p-4">
       <div className="flex flex-row items-center align-middle w-full justify-center gap-x-8">
         <div className="flex flex-col items-center">

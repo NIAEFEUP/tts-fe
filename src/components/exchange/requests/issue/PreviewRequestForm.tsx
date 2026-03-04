@@ -147,7 +147,7 @@ const PreviewRequestForm = ({
             </p>
             <div className="bg-red-50 border border-red-200 rounded-md p-3 mt-2">
               <div className="flex items-center space-x-2">
-                <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                <AlertCircle className="h-4 w-4 text-red-500 shrink-0" />
                 <p className="text-sm text-red-700 font-medium">{error}</p>
               </div>
             </div>

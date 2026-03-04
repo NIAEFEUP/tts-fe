@@ -60,7 +60,7 @@ const OptionButton = ({ option }: Props) => {
           className={`
             group relative box-border flex aspect-square h-10 w-15 cursor-pointer flex-col
             items-center justify-center rounded-md border-2 border-transparent p-2
-            dark:shadow hover:dark:border-primary/50
+            dark:shadow-sm dark:hover:border-primary/50
             ${multipleOptions[selectedOption].id === option.id
               ? 'bg-primary/75 dark:bg-primary/50'
               : 'bg-lightish dark:bg-darkish'}

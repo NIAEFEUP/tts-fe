@@ -14,7 +14,7 @@ const NitSigExport = () => {
             className="group flex w-full items-center gap-2 rounded-md p-1 text-sm text-white-900 disabled:cursor-not-allowed disabled:opacity-50"
             disabled
           >
-            <NitSigIconSVG className="h-4 w-4 black:brightness-150 rounded" />
+            <NitSigIconSVG className="h-4 w-4 black:brightness-150 rounded-sm" />
             <span className=" dark:text-white">Exportar para o Sigarra</span>
           </button>
         </TooltipTrigger>

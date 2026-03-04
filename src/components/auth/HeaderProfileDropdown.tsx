@@ -27,7 +27,7 @@ export const HeaderProfileDropdown = () => {
   return (
   <HoverCard>
     <HoverCardTrigger className="w-fit">
-      <Avatar className="border shadow-sm">
+      <Avatar className="border shadow-xs">
         <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
         <AvatarFallback>{user?.name?.charAt(0) ?? ""}</AvatarFallback>
       </Avatar>
@@ -59,12 +59,12 @@ export const HeaderProfileDropdown = () => {
       </div>
     </HoverCardContent>
     <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent className="w-full max-w-[22rem] p-5">
+        <AlertDialogContent className="w-full max-w-88 p-5">
           <AlertDialogHeader>
             <AlertDialogTitle>Sair</AlertDialogTitle>
             <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-2 flex !justify-center gap-4">
+          <AlertDialogFooter className="mt-2 flex justify-center! gap-4">
             <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
               Cancelar
             </Button>

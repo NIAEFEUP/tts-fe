@@ -83,7 +83,7 @@ const ConflictsPopover = ({
                     type="button"
                     onClick={closeModal}
                     className="rounded border-2 border-transparent bg-secondary px-4 py-2 text-sm font-medium 
-                    text-white transition hover:opacity-80 focus:outline-none"
+                    text-white transition hover:opacity-80 focus:outline-hidden"
                   >
                     Ok, Entendido!
                   </button>

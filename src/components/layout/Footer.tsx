@@ -32,7 +32,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <social.icon className="hover:-trangray-y-1 h-8 w-8 rounded text-white transition hover:opacity-80" />
+                <social.icon className="hover:-trangray-y-1 h-8 w-8 rounded-sm text-white transition hover:opacity-80" />
               </a>
             </li>
           ))}
