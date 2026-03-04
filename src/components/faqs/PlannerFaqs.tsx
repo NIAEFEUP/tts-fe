@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Transition, Disclosure } from '@headlessui/react'
-import { ChevronUpIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import { AnalyticsTracker } from '../../utils/AnalyticsTracker'
 
 const PlannerFaqs = () => {
@@ -172,7 +172,7 @@ const PlannerFaqs = () => {
               <>
                 <Disclosure.Button className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition hover:bg-primary hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base">
                   <span className="text-left">{faq.question}</span>
-                  <ChevronUpIcon
+                  <ChevronDownIcon
                     className={classNames(
                       'h-5 w-5 min-w-[1.25rem] transition group-hover:text-white lg:h-6 lg:w-6 lg:min-w-[1.5rem]',
                       open ? 'rotate-180 transform' : ''
