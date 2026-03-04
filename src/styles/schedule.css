@@ -1,3 +1,5 @@
+@reference "../app.css";
+
 .schedule-area {
   @apply flex-none hidden w-full h-full lg:flex lg:flex-col;
 }
