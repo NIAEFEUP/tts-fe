@@ -104,11 +104,13 @@
 }
 
 .schedule-cell:nth-child(even) {
-  border-bottom: 1px solid theme('colors.gray.200');
+  /* Updated for Tailwind v4 CSS variables */
+  border-bottom: 1px solid var(--color-gray-200);
 }
 
 .schedule-cell:nth-child(odd) {
-  border-bottom: 1px solid theme('colors.gray.100');
+  /* Updated for Tailwind v4 CSS variables */
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
 .dark .schedule-cell:nth-child(even) {
@@ -185,7 +187,8 @@
 }
 
 .show-grid-yes {
-  @apply border-2 border-gray-200 shadow dark:border-[#f0f0ff33];
+  /* Changed 'shadow' to 'shadow-sm' to match Significa's defined sizes */
+  @apply border-2 border-gray-200 shadow-sm dark:border-[#f0f0ff33];
 }
 
 .show-grid-no {
