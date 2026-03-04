@@ -179,7 +179,7 @@ const Mobile = ({ location }: MobileProps) => {
       leave="transition duration-150 ease-out"
       leaveFrom="transform translate-y-0 opacity-100"
       leaveTo="transform -translate-y-2 opacity-0"
-      className="absolute top-full left-0 w-full z-40 bg-light dark:bg-darkest shadow-xl rounded-b-lg md:hidden origin-top !ml-0"
+      className="absolute top-full left-0 w-full z-40 bg-light dark:bg-darkest shadow-xl rounded-b-lg md:hidden origin-top ml-0!"
     >
       <Popover.Panel className="flex flex-col space-y-3 px-3 pl-8 py-4">
         {navigation
@@ -198,7 +198,7 @@ const Mobile = ({ location }: MobileProps) => {
                   <span>{link.title}</span>
                 </span>
                 {location === link.title && (
-                  <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
+                  <span className="absolute -left-4 h-full w-1 rounded-sm bg-primary dark:bg-primary" />
                 )}
               </span>
             </Popover.Button>

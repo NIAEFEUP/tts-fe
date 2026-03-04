@@ -174,7 +174,7 @@ const PlannerFaqs = () => {
                   <span className="text-left">{faq.question}</span>
                   <ChevronDownIcon
                     className={classNames(
-                      'h-5 w-5 min-w-[1.25rem] transition group-hover:text-white lg:h-6 lg:w-6 lg:min-w-[1.5rem]',
+                      'h-5 w-5 min-w-5 transition group-hover:text-white lg:h-6 lg:w-6 lg:min-w-6',
                       open ? 'rotate-180 transform' : ''
                     )}
                   />

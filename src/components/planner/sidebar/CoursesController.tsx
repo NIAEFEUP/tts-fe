@@ -18,7 +18,7 @@ const CoursesController = () => {
           <div className="text-center text-md">
             Ainda sem nenhuma unidade curricular selecionada
           </div>
-          <Button variant="icon" className="flex-grow gap-2 bg-primary" title="Selecionar Unidades Curriculares" onClick={() => setUcsModalOpen(true)}>
+          <Button variant="icon" className="grow gap-2 bg-primary" title="Selecionar Unidades Curriculares" onClick={() => setUcsModalOpen(true)}>
             <span>Selecionar</span>
           </Button>
         </div>

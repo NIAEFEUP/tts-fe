@@ -11,28 +11,28 @@ export const ComingSoon = () => {
         <div className="relative m-8 space-y-4">
           <div className="flex items-center justify-between space-x-8 rounded-xl bg-white p-5">
             <div className="flex-1">
-              <div className="h-4 w-36 rounded bg-gray-300 md:w-48"></div>
+              <div className="h-4 w-36 rounded-sm bg-gray-300 md:w-48"></div>
             </div>
             <div>
-              <div className="h-6 w-12 rounded bg-primary md:w-24"></div>
+              <div className="h-6 w-12 rounded-sm bg-primary md:w-24"></div>
             </div>
           </div>
 
           <div className="flex items-center justify-between space-x-8 rounded-xl bg-white p-5">
             <div className="flex-1">
-              <div className="h-4 w-24 rounded bg-gray-300 md:w-44"></div>
+              <div className="h-4 w-24 rounded-sm bg-gray-300 md:w-44"></div>
             </div>
             <div>
-              <div className="h-6 w-14 rounded bg-secondary md:w-28"></div>
+              <div className="h-6 w-14 rounded-sm bg-secondary md:w-28"></div>
             </div>
           </div>
 
           <div className="flex items-center justify-between space-x-8 rounded-xl bg-white p-5">
             <div className="flex-1">
-              <div className="h-4 w-32 rounded bg-gray-300 md:w-56"></div>
+              <div className="h-4 w-32 rounded-sm bg-gray-300 md:w-56"></div>
             </div>
             <div>
-              <div className="h-6 w-16 rounded bg-tertiary md:w-20"></div>
+              <div className="h-6 w-16 rounded-sm bg-tertiary md:w-20"></div>
             </div>
           </div>
         </div>

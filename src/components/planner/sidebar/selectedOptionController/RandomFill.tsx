@@ -264,19 +264,19 @@ const RandomFill = ({ className }: Props) => {
           <Button
             onClick={applyRandomSchedule}
             variant="icon"
-            className={`${className} h-min w-min flex-grow bg-secondary`}
+            className={`${className} h-min w-min grow bg-secondary`}
           >
             <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" asChild>
-          <ScrollArea className="max-h-72 rounded px-3 w-full overflow-y-auto">
+          <ScrollArea className="max-h-72 rounded-sm px-3 w-full overflow-y-auto">
             <div className="p-1">Preenchimento aleatório</div>
             <Separator />
             {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
               <div
                 key={key}
-                className="mt-1 flex items-center space-x-2 rounded p-1 hover:cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-700"
+                className="mt-1 flex items-center space-x-2 rounded-sm p-1 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <Checkbox id={key} checked={uniqueClasses.includes(key)} onClick={toggleRandomClasses} />
                 <label
