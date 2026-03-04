@@ -36,15 +36,9 @@ Sentry.init({
 });
 
 
-root.render(strictMode
-  ?
-  <React.StrictMode>
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
-  </React.StrictMode>
-  : 
+const app = (
   <HelmetProvider>
     <App />
   </HelmetProvider>
 )
+root.render(strictMode ? <React.StrictMode>{app}</React.StrictMode> : app)
