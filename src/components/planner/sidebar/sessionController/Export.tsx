@@ -1,5 +1,5 @@
 import { Button } from '../../../ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
+import { Dropdown, DropdownItems, DropdownItem, DropdownTrigger } from '../../../ui/dropdown'
 import CsvExport from './CsvExport'
 import NitSigExport from './NitSigExport'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
@@ -9,21 +9,21 @@ import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
  */
 const Export = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Dropdown>
+      <DropdownTrigger asChild>
         <Button variant="icon" className="bg-primary">
           <ArrowDownTrayIcon className="h-5 w-5" />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>
+      </DropdownTrigger>
+      <DropdownItems className="p-1">
+        <DropdownItem asChild>
           <CsvExport />
-        </DropdownMenuItem>
-        <DropdownMenuItem>
+        </DropdownItem>
+        <DropdownItem asChild>
           <NitSigExport />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownItem>
+      </DropdownItems>
+    </Dropdown>
   )
 }
 
