@@ -47,7 +47,11 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
           open={isDropdownOpen}
           onOpenChange={(open: boolean) => {
             setIsDropdownOpen(open)
-            if (!open) removePreview()
+            if (!open) {
+              window.setTimeout(() => {
+                removePreview()
+              }, 0)
+            }
           }}
         >
           <div className="w-full">
@@ -65,7 +69,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
               </Button>
             </DropdownTrigger>
             <DropdownItems
-              className="bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
+              className="z-60 pointer-events-auto bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
               ref={classSelectorContentRef}
             >
               <ClassSelectorDropdownController

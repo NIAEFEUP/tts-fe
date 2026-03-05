@@ -238,6 +238,7 @@ const DropdownItem = ({
   return (
     <Comp
       ref={ref}
+      type={asChild ? undefined : 'button'}
       data-item-id={itemId}
       data-highlighted={isHighlighted || undefined}
       tabIndex={isHighlighted ? 0 : -1}
