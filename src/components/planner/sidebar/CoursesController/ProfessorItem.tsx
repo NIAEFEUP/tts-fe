@@ -1,5 +1,6 @@
-import { ProfessorInfo } from "../../../../@types"
-import { DropdownMenuCheckboxItem } from "../../../ui/dropdown-menu"
+import { ProfessorInfo } from '../../../../@types'
+import { DropdownItem } from '../../../ui/dropdown'
+import { Check } from 'lucide-react'
 
 type Props = {
   professorInformation: ProfessorInfo
@@ -9,7 +10,8 @@ type Props = {
 
 const ProfessorItem = ({ professorInformation, filtered, onSelect }: Props) => {
   return (
-    <DropdownMenuCheckboxItem onSelect={(e) => onSelect(e)} checked={filtered} className="group gap-2">
+    <DropdownItem onSelect={(e) => onSelect(e)} className="group gap-2">
+      {filtered && <Check className="h-4 w-4" />}
       <span className="text-sm tracking-tighter">{professorInformation.name}</span>
       <span className="text-xs text-gray-500">{professorInformation.acronym}</span>
 
@@ -17,7 +19,7 @@ const ProfessorItem = ({ professorInformation, filtered, onSelect }: Props) => {
 
       {/* <span className="group-hover:hidden">{professorInformation.acronym}</span>
       <span className="hidden truncate group-hover:block">{professorInformation.name}</span> */}
-    </DropdownMenuCheckboxItem>
+    </DropdownItem>
   )
 }
 
