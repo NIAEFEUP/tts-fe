@@ -2,7 +2,6 @@ import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useContext, useEffect, useState } from 'react'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from '../../../ui/dropdown-menu'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/tooltip'
 import { ImportedCourses, CourseOption, CourseInfo } from '../../../../@types'
 import api from '../../../../api/backend'
@@ -12,6 +11,7 @@ import { convertCourseInfoToCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { useToast } from '../../../ui/use-toast'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
+import { Dropdown, DropdownTrigger, DropdownItems } from '../../../ui/dropdown'
 
 const PasteOption = () => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
@@ -143,11 +143,11 @@ const PasteOption = () => {
           </Tooltip>
         </TooltipProvider>
       ) : (
-        <DropdownMenu open={isDropdownOpen}>
+        <Dropdown open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <TooltipProvider delayDuration={300}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
+                <DropdownTrigger asChild>
                   <Button
                     onClick={() => setIsDropdownOpen(true)}
                     variant="icon"
@@ -155,27 +155,30 @@ const PasteOption = () => {
                   >
                     <ClipboardDocumentIcon className="h-5 w-5" />
                   </Button>
-                </DropdownMenuTrigger>
+                </DropdownTrigger>
               </TooltipTrigger>
               <TooltipContent>Colar horário</TooltipContent>
-              <DropdownMenuContent>
-                <input
-                  autoFocus
-                  type="text"
-                  placeholder="Colar aqui opção"
-                  className="w-full rounded-sm border border-slate-200 p-2 text-slate-950 focus:outline-hidden focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
-                  onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      importSchedule(e.currentTarget.value)
-                    }
-                  }}
-                  onBlur={() => setIsDropdownOpen(false)}
-                />
-              </DropdownMenuContent>
             </Tooltip>
           </TooltipProvider>
-        </DropdownMenu>
+
+          <DropdownItems className="p-2 w-64 md:w-80">
+            <input
+              autoFocus
+              type="text"
+              placeholder="Colar aqui opção"
+              className="w-full rounded-sm border border-slate-200 p-2 text-slate-950 focus:outline-hidden focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
+              onPaste={(e) => {
+                e.preventDefault()
+                importSchedule(e.clipboardData.getData('text/plain'))
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  importSchedule(e.currentTarget.value)
+                }
+              }}
+            />
+          </DropdownItems>
+        </Dropdown>
       )}
     </>
   )
