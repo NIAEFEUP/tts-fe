@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react'
 import { Button } from './ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { useForm } from 'react-hook-form'
-import { Input } from './ui/input'
+import { Input } from './ui/newInput'
 import { Textarea } from './ui/textarea'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,6 +48,7 @@ export const FeedbackReport = () => {
     Sentry.captureFeedback(userFeedback)
 
     setOpen(false)
+    form.reset()
 
     toast({
       title: 'Enviado! Obrigado pelo teu feedback',
@@ -77,17 +78,19 @@ export const FeedbackReport = () => {
         </Tabs>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-3">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col" onKeyDown={(e) => e.stopPropagation()}>
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem className="w-full min-h-[80px]">
+                <FormItem className="relative flex w-full flex-col pb-1 gap-1">
                   <FormLabel>Email (opcional)</FormLabel>
                   <FormControl>
                     <Input placeholder="Email" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <div className="absolute bottom-0 left-0">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -96,17 +99,19 @@ export const FeedbackReport = () => {
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem className="min-h-[100px]">
+                <FormItem className="relative flex w-full flex-col gap-1 pb-6">
                   <FormLabel>Descrição</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Descrição" className="resize-none" {...field} />
+                    <Textarea placeholder="Descrição" className="resize-none" rows={3} {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <div className="absolute bottom-0 left-0">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="mt-2 w-full">
+            <Button type="submit" className="w-full mt-2">
               Submeter
             </Button>
           </form>
