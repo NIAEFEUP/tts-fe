@@ -3,7 +3,7 @@ import { Button } from './ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { useForm } from 'react-hook-form'
 import { Input } from './ui/newInput'
-import { Textarea } from './ui/textarea'
+import { Textarea } from './ui/newTextarea'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from './ui/use-toast'
@@ -84,7 +84,7 @@ export const FeedbackReport = () => {
               name="email"
               render={({ field }) => (
                 <FormItem className="relative flex w-full flex-col pb-1 gap-1">
-                  <FormLabel>Email (opcional)</FormLabel>
+                  <FormLabel className="w-fit">Email (opcional)</FormLabel>
                   <FormControl>
                     <Input placeholder="Email" {...field} />
                   </FormControl>
@@ -100,7 +100,7 @@ export const FeedbackReport = () => {
               name="description"
               render={({ field }) => (
                 <FormItem className="relative flex w-full flex-col gap-1 pb-6">
-                  <FormLabel>Descrição</FormLabel>
+                  <FormLabel className="w-fit">Descrição</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Descrição" className="resize-none" rows={3} {...field} />
                   </FormControl>
