@@ -1,7 +1,7 @@
 import { Button, buttonVariants } from './button'
 import type { CalendarProps } from './calendar'
 import { Input } from './newInput'
-import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { Popover, PopoverContent, PopoverTrigger } from './newPopover'
 import { cn } from '../../utils'
 import { add, format } from 'date-fns'
 import { type Locale, enUS } from 'date-fns/locale'
@@ -749,7 +749,7 @@ const DateTimePicker = React.forwardRef<Partial<DateTimePickerRef>, DateTimePick
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent className="w-fit max-w-[calc(100vw-1rem)] p-0">
           <Calendar
             mode="single"
             selected={displayDate}
