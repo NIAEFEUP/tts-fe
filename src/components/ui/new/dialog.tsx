@@ -16,11 +16,16 @@ interface DialogContentProps extends React.ComponentProps<typeof ModalContent> {
 const DialogContent = ({ className, children, align = 'center', ...props }: DialogContentProps) => {
   return (
     <ModalContent
+      backdropClassName={cn(
+        'bg-black/20 backdrop-blur-sm',
+        'transition-all duration-300 motion-reduce:transition-none',
+        'not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150',
+      )}
       className={cn(
         'bg-background border-border m-auto w-full max-w-md rounded-3xl border p-4 shadow-lg',
-        'max-h-[calc(100svh-2rem)] overflow-y-auto backdrop:bg-black/20 backdrop:backdrop-blur-sm',
-        'transition-all duration-300 backdrop:transition-all motion-reduce:transition-none motion-reduce:backdrop:transition-none',
-        'not-data-[status=open]:translate-y-2 not-data-[status=open]:scale-95 not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150 not-data-[status=open]:backdrop:opacity-0',
+        'max-h-[calc(100svh-2rem)] overflow-y-auto',
+        'transition-all duration-300 motion-reduce:transition-none',
+        'not-data-[status=open]:translate-y-2 not-data-[status=open]:scale-95 not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150',
         align === 'top' && 'mt-4',
         className,
       )}
