@@ -31,7 +31,7 @@ const DatePickerTrigger = ({ children, className, variant, placeholder, ...props
           className,
         )}
       >
-        <CalendarIcon className="text-foreground-secondary shrink-0" />
+        <CalendarIcon size="18" className="text-foreground-secondary shrink-0" />
         {children ?? <span className="text-foreground-secondary">{placeholder}</span>}
         <ChevronUp className="text-foreground/80 absolute top-1/2 right-3 -translate-y-1/2 text-base" />
       </button>
