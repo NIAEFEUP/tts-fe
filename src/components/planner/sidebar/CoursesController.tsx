@@ -1,24 +1,25 @@
 import { useContext } from 'react'
-import { PlannerClassSelector }from './CoursesController/PlannerClassSelector'
+import { PlannerClassSelector } from './CoursesController/PlannerClassSelector'
 import CourseContext from '../../../contexts/CourseContext'
 import { NoMajorSelectedSVG } from '../../svgs'
-import { Button } from '../../ui/button'
+import { Button } from '../../ui/new/newButton'
 
 const CoursesController = () => {
-  const { pickedCourses, setUcsModalOpen } = useContext(CourseContext);
+  const { pickedCourses, setUcsModalOpen } = useContext(CourseContext)
 
-  const noCoursesPicked = pickedCourses.length === 0;
-
+  const noCoursesPicked = pickedCourses.length === 0
 
   return (
     <div className={`flex ${noCoursesPicked ? 'h-max justify-center' : ''} w-full flex-col gap-4 px-0 py-2`}>
       {noCoursesPicked ? (
         <div className="my-20 w-full flex flex-col items-center gap-3 justify-center mt-5">
           <NoMajorSelectedSVG className="h-32" />
-          <div className="text-center text-md">
-            Ainda sem nenhuma unidade curricular selecionada
-          </div>
-          <Button variant="icon" className="grow gap-2 bg-primary" title="Selecionar Unidades Curriculares" onClick={() => setUcsModalOpen(true)}>
+          <div className="text-center text-md">Ainda sem nenhuma unidade curricular selecionada</div>
+          <Button
+            className="grow gap-2 bg-primary hover:bg-primary/90 transition-all"
+            title="Selecionar Unidades Curriculares"
+            onClick={() => setUcsModalOpen(true)}
+          >
             <span>Selecionar</span>
           </Button>
         </div>
@@ -26,14 +27,9 @@ const CoursesController = () => {
         pickedCourses
           .sort((course1, course2) => course1.id - course2.id) // Same order as Sigarra
           .map((course, courseIdx) => (
-            <PlannerClassSelector
-              course={course} 
-              key={`course-schedule-${courseIdx}-${course.id}`} 
-            />
+            <PlannerClassSelector course={course} key={`course-schedule-${courseIdx}-${course.id}`} />
           ))
       )}
-
-
     </div>
   )
 }
