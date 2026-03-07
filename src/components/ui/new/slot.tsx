@@ -1,7 +1,7 @@
 import { Children, cloneElement, isValidElement, forwardRef } from 'react'
 import { useMergeRefs } from '@floating-ui/react'
 
-import { cn } from '../../lib/utils'
+import { cn } from '../../../lib/utils'
 
 const isValidSlottableElement = (
   value: unknown,

@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { ClassInfo } from '../../../../@types/index'
-import { DropdownItem } from '../../../ui/dropdown'
+import { DropdownItem } from '../../../ui/new/dropdown'
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import { classesConflictSeverity } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'

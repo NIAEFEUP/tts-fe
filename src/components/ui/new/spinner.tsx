@@ -2,7 +2,7 @@
 
 import type { VariantProps } from 'cva'
 
-import { cva } from '../../lib/utils'
+import { cva } from '../../../lib/utils'
 
 const spinnerStyle = cva({
   base: [

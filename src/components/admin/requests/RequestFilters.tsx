@@ -5,7 +5,7 @@ import RequestFiltersContext, {
   adminRequestStateToText,
 } from '../../../contexts/admin/RequestFiltersContext'
 import useAdminExchangeCourses from '../../../hooks/admin/useAdminExchangeCourses'
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/newPopover'
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/newPopover'
 import { Command, CommandGroup, CommandItem } from '../../ui/command'
 import { Check, ChevronDownIcon } from 'lucide-react'
 import { Badge } from '../../ui/badge'

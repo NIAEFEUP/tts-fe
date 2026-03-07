@@ -1,5 +1,5 @@
 import { ProfessorInfo } from '../../../../@types'
-import { DropdownItem } from '../../../ui/dropdown'
+import { DropdownItem } from '../../../ui/new/dropdown'
 import { Check } from 'lucide-react'
 
 type Props = {

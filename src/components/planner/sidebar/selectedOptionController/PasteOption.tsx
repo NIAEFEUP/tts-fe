@@ -11,7 +11,7 @@ import { convertCourseInfoToCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/button'
 import { useToast } from '../../../ui/use-toast'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
-import { Dropdown, DropdownTrigger, DropdownItems } from '../../../ui/dropdown'
+import { Dropdown, DropdownTrigger, DropdownItems } from '../../../ui/new/dropdown'
 
 const PasteOption = () => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
@@ -74,7 +74,7 @@ const PasteOption = () => {
         await Promise.all(
           uncheckedCoursesIds.map(async (course_unit_id) => {
             return await api.getCourseUnit(Number(course_unit_id))
-          })
+          }),
         )
       ).flat()
 
@@ -84,7 +84,7 @@ const PasteOption = () => {
       const newMultipleOptions = [...multipleOptions]
       newMultipleOptions.forEach((option) => {
         option.course_options = option.course_options.concat(
-          courses.map((course) => convertCourseInfoToCourseOption(course))
+          courses.map((course) => convertCourseInfoToCourseOption(course)),
         )
       })
 
@@ -99,7 +99,7 @@ const PasteOption = () => {
       duration: 1500,
     })
 
-    AnalyticsTracker.trackFeature(Feature.PASTE);
+    AnalyticsTracker.trackFeature(Feature.PASTE)
   }
 
   /**
@@ -119,7 +119,7 @@ const PasteOption = () => {
       if (isNaN(Number(course[0])) || isNaN(Number(course[1]))) return false
     })
 
-    return true;
+    return true
   }
 
   return (

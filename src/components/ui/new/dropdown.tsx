@@ -25,7 +25,7 @@ import React, {
 } from 'react'
 
 import { Slot } from './slot'
-import { useStableCallback } from '../../hooks/useStableCallback'
+import { useStableCallback } from '../../../hooks/useStableCallback'
 import { Divider } from './divider'
 import {
   Popover,
@@ -37,7 +37,7 @@ import {
   usePopoverContext,
   usePopoverFloating,
 } from './newPopover'
-import { cn } from '../../lib/utils'
+import { cn } from '../../../lib/utils'
 
 type Item = {
   id: string

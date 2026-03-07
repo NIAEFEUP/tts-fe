@@ -4,8 +4,8 @@ import { VariantProps } from 'cva'
 import { useEffect, useRef, useState } from 'react'
 
 import { inputStyle } from './newInput'
-import { composeRefs } from '../../lib/compose-refs'
-import { cn } from '../../lib/utils'
+import { composeRefs } from '../../../lib/compose-refs'
+import { cn } from '../../../lib/utils'
 
 interface TextareaProps extends React.ComponentPropsWithRef<'textarea'> {
   invalid?: boolean

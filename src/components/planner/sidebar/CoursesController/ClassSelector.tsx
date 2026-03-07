@@ -3,7 +3,7 @@ import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//rea
 import { CourseInfo } from '../../../../@types'
 import { getClassDisplayText } from '../../../../utils'
 import { Button } from '../../../ui/button'
-import { Dropdown, DropdownItems, DropdownTrigger } from '../../../ui/dropdown'
+import { Dropdown, DropdownItems, DropdownTrigger } from '../../../ui/new/dropdown'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
 import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
 import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'

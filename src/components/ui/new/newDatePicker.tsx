@@ -6,7 +6,7 @@ import { VariantProps } from 'cva'
 import { Calendar } from './newCalendar'
 import { Dropdown, DropdownItems, DropdownTrigger, useDropdownContext } from './dropdown'
 import { inputStyle } from './newInput'
-import { cn } from '../../utils'
+import { cn } from '../../../utils'
 
 const DatePicker = ({ children, ...props }: React.ComponentProps<typeof Dropdown>) => {
   return <Dropdown {...props}>{children}</Dropdown>

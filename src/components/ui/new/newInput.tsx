@@ -4,8 +4,8 @@ import { VariantProps } from 'cva'
 import { Children, createContext, isValidElement, use, useLayoutEffect, useRef, useState } from 'react'
 
 import { Slot } from './slot'
-import { composeRefs } from '../../lib/compose-refs'
-import { cn, cva } from '../../lib/utils'
+import { composeRefs } from '../../../lib/compose-refs'
+import { cn, cva } from '../../../lib/utils'
 
 const inputStyle = cva({
   base: [

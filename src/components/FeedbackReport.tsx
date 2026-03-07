@@ -2,15 +2,15 @@ import * as Sentry from '@sentry/react'
 import { Button } from './ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { useForm } from 'react-hook-form'
-import { Input } from './ui/newInput'
-import { Textarea } from './ui/newTextarea'
+import { Input } from './ui/new/newInput'
+import { Textarea } from './ui/new/newTextarea'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from './ui/use-toast'
 import { useState } from 'react'
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 import { FlagIcon } from '@heroicons/react/24/outline'
-import { Dropdown, DropdownItems, DropdownTrigger } from './ui/dropdown'
+import { Dropdown, DropdownItems, DropdownTrigger } from './ui/new/dropdown'
 
 enum ReportType {
   Suggestion = 'Sugestão',

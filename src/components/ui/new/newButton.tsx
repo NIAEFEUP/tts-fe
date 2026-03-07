@@ -4,7 +4,7 @@ import { VariantProps } from 'cva'
 
 import { Slot, Slottable } from './slot'
 import { Spinner } from './spinner'
-import { cn, cva } from '../../lib/utils'
+import { cn, cva } from '../../../lib/utils'
 
 const buttonStyle = cva({
   base: 'shrink-0 relative whitespace-nowrap inline-flex items-center justify-center gap-1.5 font-medium shadow-xs transition focus-visible:outline-none focus-visible:ring-4 disabled:opacity-40 enabled:cursor-pointer h-(--button-height) ring-ring active:scale-98 text-(--button-text-color) [--button-text-color:var(--color-foreground)]',

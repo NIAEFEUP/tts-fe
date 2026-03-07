@@ -5,7 +5,7 @@ import { add, format, isSameDay, isSameMonth } from 'date-fns'
 import { useMemo, useState } from 'react'
 
 import { Button } from './newButton'
-import { cn } from '../../lib/utils'
+import { cn } from '../../../lib/utils'
 
 /**
  * Generate a matrix of dates for a given month

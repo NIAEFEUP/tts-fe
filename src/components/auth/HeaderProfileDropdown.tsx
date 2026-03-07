@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { DropdownDivider } from '../ui/dropdown'
+import { DropdownDivider } from '../ui/new/dropdown'
 import { Button } from '../ui/button'
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/solid'
 import { useContext, useState } from 'react'
