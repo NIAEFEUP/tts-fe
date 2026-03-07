@@ -347,20 +347,24 @@ const PopoverClose = ({ asChild = false, children, ...props }: PopoverCloseProps
   )
 }
 
-const PopoverSearchInput = ({ className, ...props }: React.ComponentPropsWithRef<'input'>) => {
-  return (
-    <div className="border-border relative flex items-center rounded-t-lg border-b bg-transparent">
-      <Search weight="bold" className="text-foreground absolute left-4 size-4 shrink-0" />
-      <input
-        className={cn(
-          'placeholder:text-foreground-secondary h-10 w-full border-0 bg-transparent p-4 pl-10 text-base font-medium transition-colors outline-none focus:ring-0',
-          className,
-        )}
-        {...props}
-      />
-    </div>
-  )
-}
+const PopoverSearchInput = React.forwardRef<HTMLInputElement, React.ComponentPropsWithoutRef<'input'>>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div className="border-border relative flex items-center rounded-t-lg border-b bg-transparent">
+        <Search weight="bold" className="text-foreground absolute left-4 size-4 shrink-0" />
+        <input
+          ref={ref}
+          className={cn(
+            'placeholder:text-foreground-secondary h-10 w-full border-0 bg-transparent p-4 pl-10 text-base font-medium transition-colors outline-none focus:ring-0',
+            className,
+          )}
+          {...props}
+        />
+      </div>
+    )
+  },
+)
+PopoverSearchInput.displayName = 'PopoverSearchInput'
 
 const PopoverEmpty = ({ children, className, ...props }: React.ComponentPropsWithRef<'div'>) => {
   return (
