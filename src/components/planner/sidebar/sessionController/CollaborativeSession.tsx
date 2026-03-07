@@ -28,6 +28,7 @@ const CollaborativeSession = () => {
       <div>
         <Button
           variant="primary"
+          square
           className={!currentSessionId ? 'bg-primary hover:bg-primary/90' : 'bg-green-600 hover:bg-green-600/90'}
           onClick={openModal}
         >

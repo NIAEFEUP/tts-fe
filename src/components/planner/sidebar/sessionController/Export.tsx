@@ -11,7 +11,7 @@ const Export = () => {
   return (
     <Dropdown>
       <DropdownTrigger asChild>
-        <Button variant="primary" className="bg-primary hover:bg-primary/90">
+        <Button variant="primary" square className="bg-primary hover:bg-primary/90">
           <ArrowDownTrayIcon className="h-5 w-5" />
         </Button>
       </DropdownTrigger>
