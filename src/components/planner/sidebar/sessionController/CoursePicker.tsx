@@ -1,5 +1,5 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
-import { PencilSquareIcon } from '@heroicons/react/24/solid'
+import { PenSquare } from 'lucide-react'
 import { useContext, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { Desert } from '../../../svgs'
@@ -48,9 +48,13 @@ const CoursePicker = () => {
   return (
     <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="primary" className="grow gap-2 bg-primary hover:bg-primary/90 transition-all" title="Editar Unidades Curriculares">
+        <Button
+          variant="primary"
+          className="grow gap-2 bg-primary hover:bg-primary/90 transition-all"
+          title="Editar Unidades Curriculares"
+        >
           <span className="hidden md:block lg:hidden xl:block">Unidades Curriculares</span>
-          <PencilSquareIcon className="h-5 w-5 text-white" />
+          <PenSquare size="16" />
         </Button>
       </DialogTrigger>
 
