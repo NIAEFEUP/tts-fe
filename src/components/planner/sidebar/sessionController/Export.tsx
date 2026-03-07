@@ -1,4 +1,4 @@
-import { Button } from '../../../ui/button'
+import { Button } from '../../../ui/new/newButton'
 import { Dropdown, DropdownItems, DropdownItem, DropdownTrigger } from '../../../ui/new/dropdown'
 import CsvExport from './CsvExport'
 import NitSigExport from './NitSigExport'
@@ -11,7 +11,7 @@ const Export = () => {
   return (
     <Dropdown>
       <DropdownTrigger asChild>
-        <Button variant="icon" className="bg-primary">
+        <Button variant="primary" className="bg-primary hover:bg-primary/90">
           <ArrowDownTrayIcon className="h-5 w-5" />
         </Button>
       </DropdownTrigger>
