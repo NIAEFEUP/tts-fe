@@ -52,7 +52,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   return (
     <Dropdown
       onOpenChange={(isOpen) => {
-        if (!isOpen) setSearch('')
+        if (!isOpen) setTimeout(() => setSearch(''), 200)
       }}
     >
       <DropdownTrigger
