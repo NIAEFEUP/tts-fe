@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { removeAllCourseOptions } from '../../../../../utils'
-import { Button } from '../../../../ui/button'
+import { Button } from '../../../../ui/new/newButton'
 import { DialogClose } from '../../../../ui/new/dialog'
 
 export const ClearAllCoursesButton = () => {
@@ -17,14 +17,14 @@ export const ClearAllCoursesButton = () => {
           setCheckboxedCourses([])
           removeAllCourseOptions(multipleOptions)
         }}
-        variant="icon"
+        variant="primary"
         className="bg-lightish text-darkish gap-1.5"
       >
         <TrashIcon className="h-5 w-5" />
         <span>Limpar</span>
       </Button>
       <DialogClose asChild>
-        <Button variant="icon" className="bg-primary gap-1.5">
+        <Button variant="primary" className="bg-primary gap-1.5">
           <CheckCircleIcon className="h-5 w-5" />
           <p>Está feito</p>
         </Button>
