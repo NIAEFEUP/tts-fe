@@ -1,6 +1,7 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon } from '@heroicons/react/24/solid'
 import { useContext, useEffect } from 'react'
+import { X } from 'lucide-react'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/new/newButton'
 import {
@@ -10,12 +11,13 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from '../../../ui/new/dialog'
-import { Separator } from '../../../ui/separator'
 import useCourseUnits from '../../../../hooks/useCourseUnits'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
+import { Divider } from '../../../ui/new/divider'
 
 //TODO: absolute imports with @
 
@@ -52,19 +54,29 @@ const CoursePicker = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-auto">
+      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-auto py-6">
         <DialogTitle className="mx-4">Seleciona as tuas unidades curriculares</DialogTitle>
+        <DialogClose asChild>
+          <Button variant="ghost" className="absolute top-3 right-3 ">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </Button>
+        </DialogClose>
         <DialogDescription className="mx-4 mt-2">
           Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
         </DialogDescription>
 
-        <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
+        <div className="mx-4 mt-6 mb-2">
+          <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
+        </div>
 
-        <Separator />
+        <div className="my-4">
+          <Divider />
+        </div>
 
         {showContent ? (
           <>
-            <div className="flex flex-col lg:flex-row grow w-full lg:w-240">
+            <div className="flex flex-col lg:flex-row grow w-full lg:w-240 px-4 mb-6">
               <div className="w-full lg:w-1/2">
                 {!loadingCourseUnits ? (
                   <CourseYearTabs />
@@ -81,14 +93,17 @@ const CoursePicker = () => {
                   </div>
                 )}
               </div>
-              <div className="flex flex-row w-full lg:w-1/2 mt-4">
-                <Separator orientation="vertical" className="mx-5 hidden lg:block" />
-                <PickedCoursesList />
+
+              <div className="flex flex-row w-full lg:w-1/2 mt-8 lg:mt-0">
+                <Divider orientation="vertical" className="mx-5 hidden lg:block" />
+                <div className="w-full">
+                  <PickedCoursesList />
+                </div>
               </div>
             </div>
 
-            <DialogActions className="flex flex-row justify-center">
-              <div className="flex flex-row items-center justify-between dark:text-white pr-4 pb-4">
+            <DialogActions className="flex flex-row justify-center mt-auto px-4">
+              <div className="flex flex-row items-center justify-between w-full dark:text-white pb-4">
                 <Ects />
                 <div className="flex gap-2 mt-4">
                   <ClearAllCoursesButton />
