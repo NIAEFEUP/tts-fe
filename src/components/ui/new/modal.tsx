@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, use, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { Slot } from './slot'
 import { useElementTransition } from '../../../hooks/useElementTransition'
@@ -16,26 +16,15 @@ const useDialogElement = (open: boolean, setOpen: (isOpen: boolean) => void) => 
     if (!element) return
 
     if (!element.open) {
-      // use native showModal() to ensure it receives focus when opened, and ESC closes it
-      element.showModal()
+      // Use show() instead of showModal() so the dialog does not enter the CSS top layer.
+      // showModal() places the dialog in the top layer, which causes Radix UI portals
+      // (rendered at document.body) to be blocked by the ::backdrop pseudo-element.
+      element.show()
     }
 
     const abortController = new AbortController()
     const { signal } = abortController
 
-    // Prevent the default cancel event and use internal state to close the drawer instead
-    // This ensures drawer closing is synchronized with internal state, preventing layout shifts
-    element.addEventListener(
-      'cancel',
-      (event: Event) => {
-        event.preventDefault()
-        setOpen(false)
-      },
-      { signal },
-    )
-
-    // Prevent ESC from closing the dialog when the cancel event is prevented.
-    // Unsure if this is a browser bug or intended behavior — the ESC key can push through the cancel event for some reason
     element.addEventListener(
       'keydown',
       (event: KeyboardEvent) => {
@@ -65,32 +54,6 @@ const useDialogElement = (open: boolean, setOpen: (isOpen: boolean) => void) => 
     }
   }, [open, ref, setOpen])
 
-  useEffect(() => {
-    const element = ref.current
-    if (!element || !open) return
-
-    const handleDialogClick = (event: MouseEvent) => {
-      // if the click is on the backdrop, close the drawer
-      if ((event.target as HTMLElement).nodeName === 'DIALOG') {
-        const dialog = event.target as HTMLDialogElement
-        const { top, left, width, height } = dialog.getBoundingClientRect()
-        const isOutsideModal =
-          top > event.clientY || event.clientY > top + height || left > event.clientX || event.clientX > left + width
-
-        if (isOutsideModal) {
-          event.stopPropagation()
-          setOpen(false)
-        }
-      }
-    }
-
-    element.addEventListener('click', handleDialogClick)
-
-    return () => {
-      element.removeEventListener('click', handleDialogClick)
-    }
-  }, [setOpen, open])
-
   return ref
 }
 
@@ -104,7 +67,7 @@ const ModalContext = createContext<{
 } | null>(null)
 
 const useModalContext = () => {
-  const context = use(ModalContext)
+  const context = useContext(ModalContext)
 
   if (!context) {
     throw new Error('Modal component must be used within a Modal')
@@ -146,14 +109,15 @@ const Modal = ({ open: propsOpen, onOpenChange, children }: ModalProps) => {
     [descriptionId, labelId, open, setOpen],
   )
 
-  return <ModalContext value={ctx}>{children}</ModalContext>
+  return <ModalContext.Provider value={ctx}>{children}</ModalContext.Provider>
 }
 
 interface ModalContentProps extends React.ComponentPropsWithRef<'dialog'> {
   catchFocus?: boolean
+  backdropClassName?: string
 }
 
-const ModalContent = ({ className, children, catchFocus = true, ...props }: ModalContentProps) => {
+const ModalContent = ({ className, children, catchFocus = true, backdropClassName, ...props }: ModalContentProps) => {
   const { open, labelId, descriptionId, setOpen } = useModalContext()
   const dialogRef = useDialogElement(open, setOpen)
 
@@ -162,23 +126,31 @@ const ModalContent = ({ className, children, catchFocus = true, ...props }: Moda
   if (!isMounted) return
 
   return (
-    <dialog
-      ref={composeRefs(dialogRef, transitionRef)}
-      data-status={status}
-      aria-labelledby={labelId}
-      aria-describedby={descriptionId}
-      className={cn('m-auto', className)}
-      {...props}
-    >
-      {catchFocus && (
-        // By default, the HTML <dialog> element focuses the first focusable child when opened.
-        // If that element is scrolled out of view, the dialog may jump to it, causing a jarring and confusing scroll.
-        // Additionally, browsers like Safari may show focus-visible styles on that element, which can look odd.
-        // The following element catches initial focus to prevent these issues.
-        <div className="sr-only" autoFocus tabIndex={-1} data-modal-focus-catcher="" />
-      )}
-      {children}
-    </dialog>
+    <>
+      {/* Backdrop — rendered as a sibling so Radix portals (z-50) stack above it correctly */}
+      <div
+        className={cn('fixed inset-0 z-[49]', backdropClassName)}
+        data-status={status}
+        onClick={() => setOpen(false)}
+      />
+      <dialog
+        ref={composeRefs(dialogRef, transitionRef)}
+        data-status={status}
+        aria-labelledby={labelId}
+        aria-describedby={descriptionId}
+        className={cn('fixed inset-0 z-50 m-auto border-0 bg-transparent p-0', className)}
+        {...props}
+      >
+        {catchFocus && (
+          // By default, the HTML <dialog> element focuses the first focusable child when opened.
+          // If that element is scrolled out of view, the dialog may jump to it, causing a jarring and confusing scroll.
+          // Additionally, browsers like Safari may show focus-visible styles on that element, which can look odd.
+          // The following element catches initial focus to prevent these issues.
+          <div className="sr-only" autoFocus tabIndex={-1} data-modal-focus-catcher="" />
+        )}
+        {children}
+      </dialog>
+    </>
   )
 }
 
