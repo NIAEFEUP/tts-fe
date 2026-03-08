@@ -1,9 +1,8 @@
 import { Option } from '../../../@types/index'
 import { ReactSortable } from 'react-sortablejs'
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import { useContext } from 'react'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import { Button } from '../../ui/new/newButton'
 
@@ -16,7 +15,7 @@ const OptionsController = () => {
 
   return (
     <ReactSortable
-      className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start border-red-500 border-2"
+      className="m-y-2 flex flex-row justify-center gap-2 overflow-x-auto py-2 text-center w-full lg:justify-start"
       list={multipleOptions}
       setList={(newMultipleOptions) => {
         const prevId = multipleOptions[selectedOption].id
@@ -51,20 +50,21 @@ const OptionButton = ({ option }: Props) => {
   const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <Tooltip>
-        <TooltipTrigger
+    <Tooltip delayIn={300}>
+      <TooltipTrigger asChild>
+        <Button
+          square
+          size="md"
+          className="p-2 bg-lightish hover:bg-primary/50 dark:bg-darkish"
           onClick={() => {
             setSelectedOption(multipleOptions.findIndex((currentOption) => currentOption.id === option.id))
           }}
         >
-          <Button square size="md" className="p-2 bg-lightish hover:bg-primary/50 dark:bg-darkish">
-            <img src={option.icon} alt={option.name} />{' '}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent className="w-32 truncate">{option.name}</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+          <img src={option.icon} alt={option.name} />{' '}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent className="w-32 truncate">{option.name}</TooltipContent>
+    </Tooltip>
   )
 }
 
