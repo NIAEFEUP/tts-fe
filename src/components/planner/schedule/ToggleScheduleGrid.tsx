@@ -13,15 +13,14 @@ const ToggleScheduleGrid = ({ showGridHook }: Props) => {
 
   return (
     <Tooltip delayIn={300}>
-      <TooltipTrigger asChild>
-        <Button
-          square
-          className="bg-lightish text-black dark:bg-darkish dark:text-white"
-          onClick={() => {
-            setShowGrid(!showGrid)
-            AnalyticsTracker.trackFeature(Feature.GRID)
-          }}
-        >
+      <TooltipTrigger
+        asChild
+        onClick={() => {
+          setShowGrid(!showGrid)
+          AnalyticsTracker.trackFeature(Feature.GRID)
+        }}
+      >
+        <Button square className="bg-lightish text-black dark:bg-darkish dark:text-white">
           <Columns3 size="18" />
         </Button>
       </TooltipTrigger>
