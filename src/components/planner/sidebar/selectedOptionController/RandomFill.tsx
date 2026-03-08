@@ -1,9 +1,9 @@
-import { Zap } from 'lucide-react'
+import { ChevronDown, Dices } from 'lucide-react'
 import { ClassInfo } from '../../../../@types'
 import { useContext, useEffect, useState } from 'react'
 import { Button } from '../../../ui/new/newButton'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
-import { ScrollArea } from '../../../ui/scroll-area'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
+import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/new/newPopover'
 import { Checkbox } from '../../../ui/checkbox'
 import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
@@ -62,11 +62,11 @@ const RandomFill = ({ className }: Props) => {
     setUniqueClasses(getUniqueClasses())
   }, [classesCombinations])
 
-  /* 
+  /*
   Usage:
-   
+
   ~~~~~~~~~~~~~~~~~~~~~~~~~
-    const generator = cartesianGenerator(...schedules); 
+    const generator = cartesianGenerator(...schedules);
     const combination = generator.next().value;
   */
   function* cartesianGenerator(...arrays) {
@@ -262,42 +262,53 @@ const RandomFill = ({ className }: Props) => {
   }, [pickedCourses, uniqueClasses])
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button onClick={applyRandomSchedule} square size="sm" className="bg-secondary hover:bg-secondary/90">
-            <Zap size="18" />
+    <div className="flex">
+      <Tooltip placement="bottom">
+        <TooltipTrigger asChild onClick={applyRandomSchedule}>
+          <Button square size="sm" className="bg-secondary hover:bg-secondary/90 rounded-r-none">
+            <Dices size="18" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" asChild>
-          <ScrollArea className="max-h-72 rounded-sm px-3 w-full overflow-y-auto">
-            <div className="p-1">Preenchimento aleatório</div>
-            <Separator />
-            {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
-              <div
-                key={key}
-                className="mt-1 flex items-center space-x-2 rounded-sm p-1 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
-              >
-                <Checkbox id={key} checked={uniqueClasses.includes(key)} onClick={toggleRandomClasses} />
-                <label
-                  htmlFor={key}
-                  className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {key}
-                </label>
-              </div>
-            ))}
-
-            {classesCombinations.length === 0 && (
-              <div className="flex flex-col mx-auto m-4 w-full">
-                <Desert className="w-full h-24" />
-                <p className="mt-2 text-sm text-center">Não foi encontrada nenhuma turma</p>
-              </div>
-            )}
-          </ScrollArea>
-        </TooltipContent>
+        <TooltipContent>Preenchimento aleatório</TooltipContent>
       </Tooltip>
-    </TooltipProvider>
+
+      <Popover placement="bottom-end">
+        <PopoverTrigger asChild>
+          <Button
+            square
+            size="sm"
+            className="bg-secondary hover:bg-secondary/90 rounded-l-none border-l border-foreground/10"
+          >
+            <ChevronDown size="14" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-52 p-1">
+          <p className="px-1 py-1 text-sm font-medium">Preenchimento aleatório</p>
+          <Separator />
+          {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
+            <div
+              key={key}
+              className="mt-1 flex items-center space-x-2 rounded-sm p-1 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+            >
+              <Checkbox id={key} checked={uniqueClasses.includes(key)} onClick={toggleRandomClasses} />
+              <label
+                htmlFor={key}
+                className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                {key}
+              </label>
+            </div>
+          ))}
+
+          {classesCombinations.length === 0 && (
+            <div className="flex flex-col mx-auto m-4 w-full">
+              <Desert className="w-full h-24" />
+              <p className="mt-2 text-sm text-center">Não foi encontrada nenhuma turma</p>
+            </div>
+          )}
+        </PopoverContent>
+      </Popover>
+    </div>
   )
 }
 
