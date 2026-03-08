@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/new/avatar'
 import { Button } from '../ui/new/newButton'
-import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/solid'
+import { LogOut } from 'lucide-react'
 import { useContext, useState } from 'react'
 import { ClipLoader } from 'react-spinners'
 import SessionContext from '../../contexts/SessionContext'
@@ -32,7 +32,7 @@ export const HeaderProfileDropdown = () => {
   }
 
   return (
-    <Popover placement='bottom-end'>
+    <Popover placement="bottom-end">
       <PopoverTrigger asChild>
         <div className="cursor-pointer w-fit">
           <Avatar className="border shadow-xs">
@@ -52,7 +52,7 @@ export const HeaderProfileDropdown = () => {
             <ClipLoader className="w-2 h-2 mx-auto" loading={true} aria-label="Loading Spinner" data-testid="loader" />
           ) : (
             <Button variant="destructive" className="w-full" onClick={() => setConfirmOpen(true)}>
-              <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
+              <LogOut size="16" />
               {!loggingOut && <span>Sair</span>}
             </Button>
           )}
