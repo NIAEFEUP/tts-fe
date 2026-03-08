@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
 import RandomFill from './selectedOptionController/RandomFill'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import { Input } from '../../ui/new/newInput'
+import { Button } from '../../ui/new/newButton'
 
 type Props = {
   currentOption: CourseOption[]
@@ -74,8 +75,10 @@ const SelectedOptionController = ({ currentOption }: Props) => {
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between gap-2">
       <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="aspect-square h-10 w-15 rounded-md p-1 px-2 text-xl bg-lightish dark:bg-darkish border border-slate-200 dark:border-slate-800">
-            <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
+          <PopoverTrigger>
+            <Button square size="md" className="p-2 bg-lightish dark:bg-darkish">
+              <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
+            </Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
             <EmojiPicker
