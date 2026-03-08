@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Button } from '../../../ui/new/newButton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/new/newPopover'
-import { Checkbox } from '../../../ui/checkbox'
+import { Checkbox } from '../../../ui/new/checkbox'
 import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
@@ -290,7 +290,12 @@ const RandomFill = ({ className }: Props) => {
               key={key}
               className="mt-1 flex items-center space-x-2 rounded-sm p-1 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
             >
-              <Checkbox id={key} checked={uniqueClasses.includes(key)} onClick={toggleRandomClasses} />
+              <Checkbox
+                id={key}
+                checked={uniqueClasses.includes(key)}
+                onClick={toggleRandomClasses}
+                className="[--color-accent:var(--color-primary)] [--color-accent-foreground:#fff]"
+              />
               <label
                 htmlFor={key}
                 className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
