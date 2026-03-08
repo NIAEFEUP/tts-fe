@@ -1,4 +1,4 @@
-import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
+import { Clipboard } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
@@ -8,7 +8,7 @@ import api from '../../../../api/backend'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { convertCourseInfoToCourseOption } from '../../../../utils'
-import { Button } from '../../../ui/button'
+import { Button } from '../../../ui/new/newButton'
 import { useToast } from '../../../ui/use-toast'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 import { Dropdown, DropdownTrigger, DropdownItems } from '../../../ui/new/dropdown'
@@ -129,14 +129,15 @@ const PasteOption = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="icon"
+                square
+                size="sm"
                 onClick={async () => {
                   const value = await navigator.clipboard.readText()
                   importSchedule(value)
                 }}
-                className="h-min w-min grow bg-primary sm:py-0 xl:p-1"
+                className="bg-primary"
               >
-                <ClipboardDocumentIcon className="h-5 w-5" />
+                <Clipboard size="18" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Colar horário</TooltipContent>
@@ -148,12 +149,8 @@ const PasteOption = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <DropdownTrigger asChild>
-                  <Button
-                    onClick={() => setIsDropdownOpen(true)}
-                    variant="icon"
-                    className="h-min w-min grow bg-primary sm:py-0 xl:p-1"
-                  >
-                    <ClipboardDocumentIcon className="h-5 w-5" />
+                  <Button onClick={() => setIsDropdownOpen(true)} square className="bg-primary">
+                    <Clipboard size="18" />
                   </Button>
                 </DropdownTrigger>
               </TooltipTrigger>
