@@ -1,5 +1,5 @@
 import { useRef, useState, useContext, useEffect } from 'react'
-import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
+import { Lock, Unlock, ChevronsUpDown } from 'lucide-react'
 import { CourseInfo } from '../../../../@types'
 import { getClassDisplayText } from '../../../../utils'
 import { Button } from '../../../ui/new/newButton'
@@ -41,7 +41,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
         <span>&nbsp;&middot;&nbsp;</span>
         <span className="truncate tracking-tighter">{course.name}&nbsp;</span>
       </p>
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         {/* Dropdown Menu */}
         <Dropdown
           open={isDropdownOpen}
@@ -65,7 +65,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
                 <span className={`${selectedClassId === null ? 'opacity-50' : ''}`}>
                   {getClassDisplayText(course, selectedClassId)}
                 </span>
-                {!courseOption?.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
+                {!courseOption?.locked && <ChevronsUpDown size="14" className="text-blackish dark:text-lightish" />}
               </Button>
             </DropdownTrigger>
             <DropdownItems
@@ -89,15 +89,16 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
         {/* Lock Button */}
         {lockFunctionality && (
           <Button
+            square
             variant="ghost"
             title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
             onClick={toggleLocker}
             disabled={display === null}
           >
             {courseOption?.locked ? (
-              <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+              <Unlock size="18" className="text-darkish dark:text-lightish" />
             ) : (
-              <LockOpenIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+              <Lock size="18" className="text-darkish dark:text-lightish" />
             )}
           </Button>
         )}
