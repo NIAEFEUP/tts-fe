@@ -5,8 +5,8 @@ import SelectedOptionController from './sidebar/SelectedOptionController'
 import CoursesController from './sidebar/CoursesController'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import { useSidebarContext } from '../layout/SidebarPosition'
-import { ArrowsRightLeftIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { Button } from '../ui/button'
+import { ArrowLeftRight, Trash } from 'lucide-react'
+import { Button } from '../ui/new/newButton'
 
 /**
  * Sidebar with all the main schedule interactions
@@ -49,21 +49,18 @@ const Sidebar = () => {
         <CoursesController />
       </div>
       <footer className=" gap-x-1 border-white-300 text-center flex items-end justify-end">
-        <Button
-          onClick={eraseClasses}
-          variant="icon"
-          className={`bg-lightish text-darkish gap-1.5 ${noClassesPicked ? 'opacity-50 pointer-events-none' : ''}`}
-        >
-          <TrashIcon className="h-5 w-5" />
+        <Button onClick={eraseClasses} className={`bg-lightish text-darkish gap-1.5`} disabled={noClassesPicked}>
+          <Trash size="18" />
           <span>Limpar</span>
         </Button>
-        <button
+        <Button
           title="Mudar o lado da Sidebar"
           onClick={toggleSidebarPosition}
-          className="hidden md:flex items-center justify-center gap-2 w-[48px] h-[40px] bg-primary hover:opacity-80 dark:text-white rounded-md p-1 text-gray text-sm"
+          square
+          className="bg-primary hover:opacity-80 dark:text-white "
         >
-          <ArrowsRightLeftIcon className="h-5 w-5 text-white dark:text-white" />
-        </button>
+          <ArrowLeftRight className="text-white dark:text-white" size="18" />
+        </Button>
       </footer>
     </div>
   )
