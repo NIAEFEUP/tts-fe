@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { VariantProps } from 'cva'
 
 import { Slot, Slottable } from './slot'
@@ -32,60 +33,56 @@ const buttonStyle = cva({
   },
 })
 
-export interface ButtonProps extends React.ComponentPropsWithRef<'button'>, VariantProps<typeof buttonStyle> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonStyle> {
   asChild?: boolean
   isLoading?: boolean
 }
 
-const Button = ({
-  children,
-  className,
-  variant,
-  asChild = false,
-  isLoading,
-  size = 'md',
-  square,
-  type = 'button',
-  ref,
-  ...props
-}: ButtonProps) => {
-  const Comp = asChild ? Slot : 'button'
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    { children, className, variant, asChild = false, isLoading, size = 'md', square, type = 'button', ...props },
+    ref,
+  ) => {
+    const Comp = asChild ? Slot : 'button'
 
-  return (
-    <Comp
-      className={cn(
-        buttonStyle({
-          className,
-          variant,
-          size,
-          square,
-        }),
-        isLoading && 'text-transparent transition-none',
-      )}
-      ref={ref}
-      type={type}
-      {...props}
-    >
-      <Slottable asChild={asChild} child={children}>
-        {(child) => (
-          <>
-            {child}
-            {isLoading && (
-              <span
-                data-button-spinner
-                className={cn(
-                  'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-                  'text-(--button-text-color)',
-                )}
-              >
-                <Spinner size={size} />
-              </span>
-            )}
-          </>
+    return (
+      <Comp
+        className={cn(
+          buttonStyle({
+            className,
+            variant,
+            size,
+            square,
+          }),
+          isLoading && 'text-transparent transition-none',
         )}
-      </Slottable>
-    </Comp>
-  )
-}
+        ref={ref}
+        type={type}
+        {...props}
+      >
+        <Slottable asChild={asChild} child={children}>
+          {(child) => (
+            <>
+              {child}
+              {isLoading && (
+                <span
+                  data-button-spinner
+                  className={cn(
+                    'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+                    'text-(--button-text-color)',
+                  )}
+                >
+                  <Spinner size={size} />
+                </span>
+              )}
+            </>
+          )}
+        </Slottable>
+      </Comp>
+    )
+  },
+)
+
+Button.displayName = 'Button'
 
 export { Button, buttonStyle }
