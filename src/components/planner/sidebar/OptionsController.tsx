@@ -51,14 +51,16 @@ const OptionButton = ({ option }: Props) => {
 
   return (
     <Tooltip delayIn={300}>
-      <TooltipTrigger asChild>
+      <TooltipTrigger
+        asChild
+        onClick={() => {
+          setSelectedOption(multipleOptions.findIndex((currentOption) => currentOption.id === option.id))
+        }}
+      >
         <Button
           square
           size="md"
-          className="p-2 bg-lightish hover:bg-primary/50 dark:bg-darkish"
-          onClick={() => {
-            setSelectedOption(multipleOptions.findIndex((currentOption) => currentOption.id === option.id))
-          }}
+          className={`p-2 hover:bg-primary/75 ${multipleOptions[selectedOption].id === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
         >
           <img src={option.icon} alt={option.name} />{' '}
         </Button>
