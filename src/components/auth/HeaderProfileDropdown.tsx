@@ -8,14 +8,7 @@ import authService from '../../api/services/authService'
 import studentInfoService from '../../api/services/studentInfo'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/new/newPopover'
 import ScheduleContext from '../../contexts/ScheduleContext'
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '../ui/alert-dialog'
+import { Dialog, DialogActions, DialogClose, DialogContent, DialogDescription, DialogTitle } from '../ui/new/dialog'
 import { Divider } from '../ui/new/divider'
 
 export const HeaderProfileDropdown = () => {
@@ -58,16 +51,14 @@ export const HeaderProfileDropdown = () => {
           )}
         </div>
       </PopoverContent>
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent className="w-full max-w-88 p-5">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Sair</AlertDialogTitle>
-            <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="mt-2 flex justify-center! gap-4">
-            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
-              Cancelar
-            </Button>
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="max-w-88 p-5">
+          <DialogTitle>Sair</DialogTitle>
+          <DialogDescription>Tem a certeza que deseja sair?</DialogDescription>
+          <DialogActions className="justify-center">
+            <DialogClose asChild>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
             <Button
               variant="destructive"
               onClick={() => {
@@ -77,9 +68,9 @@ export const HeaderProfileDropdown = () => {
             >
               Confirmar
             </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
     </Popover>
   )
 }
