@@ -33,7 +33,7 @@ const Alert = ({ children, type, className }: Props) => {
       role="alert"
       className={classNames(
         animationClass,
-        'flex items-center justify-between rounded border-2 px-2 py-2',
+        'flex items-center justify-between rounded-sm border-2 px-2 py-2',
         type === undefined ? 'border-gray-700/20 bg-gray-50 text-gray-700' : '',
         type === AlertType.info ? 'border-sky-700/20 bg-sky-50 text-sky-700 dark:bg-transparent dark:text-white dark:border-white/20' : '',
         type === AlertType.error ? 'border-rose-700/20 bg-rose-50 text-rose-800' : '',

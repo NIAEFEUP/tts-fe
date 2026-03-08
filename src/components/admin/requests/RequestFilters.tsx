@@ -1,108 +1,141 @@
-import { useContext } from "react";
-import { Button } from "../../ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
-import RequestFiltersContext, { activeStatesPossibleValues, adminRequestStateToText } from "../../../contexts/admin/RequestFiltersContext";
-import useAdminExchangeCourses from "../../../hooks/admin/useAdminExchangeCourses";
-import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { Command, CommandGroup, CommandItem } from "../../ui/command";
-import { Check, ChevronDownIcon } from "lucide-react";
-import { Badge } from "../../ui/badge";
+import { useContext, useState } from 'react'
+import { Button } from '../../ui/button'
+import RequestFiltersContext, {
+  activeStatesPossibleValues,
+  adminRequestStateToText,
+} from '../../../contexts/admin/RequestFiltersContext'
+import useAdminExchangeCourses from '../../../hooks/admin/useAdminExchangeCourses'
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/newPopover'
+import { Command, CommandGroup, CommandItem } from '../../ui/command'
+import { Check, ChevronDownIcon } from 'lucide-react'
+import { Badge } from '../../ui/badge'
 
-/**
- * This component is the view that allows the user to control which filters are active and applied to the requests.
-*/
 export const RequestFilters = () => {
-    const {
-        activeCourse, setActiveCourse, activeCurricularYear,
-        setActiveCurricularYear, activeStates, setActiveStates
-    } = useContext(RequestFiltersContext);
+  const {
+    activeCourse,
+    setActiveCourse,
+    activeCurricularYear,
+    setActiveCurricularYear,
+    activeStates,
+    setActiveStates,
+  } = useContext(RequestFiltersContext)
 
-    const { courses } = useAdminExchangeCourses();
+  const { courses } = useAdminExchangeCourses()
 
-    return <div className="flex flex-row gap-x-2">
-        <Select
-            value={`${activeCourse || ""}`}
-            defaultValue={`${activeCourse || ""}`}
-            onValueChange={(val) => setActiveCourse(parseInt(val))}
-        >
-            <SelectTrigger className="flex flex-row gap-x-4">
-                <SelectValue placeholder="Curso" />
-            </SelectTrigger>
-            <SelectContent>
-                {courses?.length === 0 && <p>Nenhum</p>}
-                {courses?.map((course) => (
-                    <SelectItem
-                        key={`course-select-item-${course.id}`}
-                        value={`${course.id}`}
-                    >
-                        {course.acronym}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
-        <Select
-            value={`${activeCurricularYear || ""}`}
-            defaultValue={`${activeCurricularYear || ""}`}
-            onValueChange={(val) => setActiveCurricularYear(parseInt(val))}
-        >
-            <SelectTrigger className="flex flex-row gap-x-4">
-                <SelectValue placeholder="Ano" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5">5</SelectItem>
-            </SelectContent>
-        </Select>
-        <Popover>
-            <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full flex flex-row gap-x-2">
-                    <p>
-                        Estado
-                        {activeStates.length > 0 && <Badge variant="outline" className="ml-2">{activeStates.length}</Badge>}
-                    </p>
-                    <ChevronDownIcon className="w-5 h-5" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-56 p-0">
-                <div className="flex flex-col">
-                    <Command>
-                        <CommandGroup>
-                            {activeStatesPossibleValues.map((state) => (
-                                <CommandItem
-                                    key={`state-${state}`}
-                                    className="w-full"
-                                    onSelect={() => {
-                                        const newActiveStates = [...activeStates];
+  const [courseOpen, setCourseOpen] = useState(false)
+  const [yearOpen, setYearOpen] = useState(false)
 
-                                        if (newActiveStates.includes(state)) {
-                                            setActiveStates(newActiveStates.filter((currentState) => currentState !== state));
-                                        } else {
-                                            setActiveStates([...newActiveStates, state]);
-                                        }
-                                    }}
-                                >
-                                    <div className="flex flex-row gap-x-2">
-                                        <p>{adminRequestStateToText[state]}</p>
-                                        { activeStates.includes(state) && <Check className="w-5 h-5" /> }
-                                    </div>
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </Command>
-                </div>
-            </PopoverContent>
-        </Popover>
-        <Button
-            onClick={() => {
-                setActiveCourse(undefined);
-                setActiveCurricularYear(undefined);
-                setActiveStates([]);
-            }}
-        >
-            Reset
-        </Button>
+  return (
+    <div className="flex flex-row flex-wrap gap-2">
+      <Popover open={courseOpen} onOpenChange={setCourseOpen} placement="bottom-start">
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="justify-between w-36">
+            {activeCourse ? courses?.find((c) => c.id === activeCourse)?.acronym : 'Curso'}
+            <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-36 p-0">
+          <Command>
+            <CommandGroup>
+              {(!courses || courses.length === 0) && <CommandItem disabled>Nenhum</CommandItem>}
+              {courses?.map((course) => (
+                <CommandItem
+                  key={`course-${course.id}`}
+                  onSelect={() => {
+                    setActiveCourse(course.id === activeCourse ? undefined : course.id)
+                    setCourseOpen(false)
+                  }}
+                >
+                  <div className="flex flex-row items-center gap-x-2">
+                    <div className="w-4 h-4">{activeCourse === course.id && <Check className="w-4 h-4" />}</div>
+                    <p>{course.acronym}</p>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <Popover open={yearOpen} onOpenChange={setYearOpen} placement="bottom-start">
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="justify-between w-28">
+            {activeCurricularYear ? `${activeCurricularYear}º Ano` : 'Ano'}
+            <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-28 p-0">
+          <Command>
+            <CommandGroup>
+              {[1, 2, 3, 4, 5].map((year) => (
+                <CommandItem
+                  key={`year-${year}`}
+                  onSelect={() => {
+                    setActiveCurricularYear(year === activeCurricularYear ? undefined : year)
+                    setYearOpen(false)
+                  }}
+                >
+                  <div className="flex flex-row items-center gap-x-2">
+                    <div className="w-4 h-4">{activeCurricularYear === year && <Check className="w-4 h-4" />}</div>
+                    <p>{year}</p>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <Popover placement="bottom-start">
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="justify-between w-32">
+            <span className="flex items-center">
+              Estado
+              {activeStates.length > 0 && (
+                <Badge variant="secondary" className="px-1 py-0 ml-2 rounded-sm">
+                  {activeStates.length}
+                </Badge>
+              )}
+            </span>
+            <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-48 p-0">
+          <Command>
+            <CommandGroup>
+              {activeStatesPossibleValues.map((state) => (
+                <CommandItem
+                  key={`state-${state}`}
+                  onSelect={() => {
+                    const newActiveStates = [...activeStates]
+                    if (newActiveStates.includes(state)) {
+                      setActiveStates(newActiveStates.filter((currentState) => currentState !== state))
+                    } else {
+                      setActiveStates([...newActiveStates, state])
+                    }
+                  }}
+                >
+                  <div className="flex flex-row items-center gap-x-2">
+                    <div className="w-4 h-4">{activeStates.includes(state) && <Check className="w-4 h-4" />}</div>
+                    <p>{adminRequestStateToText[state]}</p>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <Button
+        variant="ghost"
+        onClick={() => {
+          setActiveCourse(undefined)
+          setActiveCurricularYear(undefined)
+          setActiveStates([])
+        }}
+      >
+        Limpar
+      </Button>
     </div>
+  )
 }

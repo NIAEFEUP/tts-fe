@@ -1,25 +1,25 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
-import { PencilSquareIcon } from '@heroicons/react/24/solid'
+import { PenSquare } from 'lucide-react'
 import { useContext, useEffect } from 'react'
+import { X } from 'lucide-react'
 import { Desert } from '../../../svgs'
-import { Button } from '../../../ui/button'
-import { 
-  DialogHeader, 
-  DialogFooter, 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogTitle, 
-  DialogTrigger 
-} from '../../../ui/dialog'
-import { Separator } from '../../../ui/separator'
+import { Button } from '../../../ui/new/newButton'
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '../../../ui/new/dialog'
 import useCourseUnits from '../../../../hooks/useCourseUnits'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
+import { Divider } from '../../../ui/new/divider'
 
 //TODO: absolute imports with @
-
 
 const CoursePicker = () => {
   const {
@@ -29,53 +29,58 @@ const CoursePicker = () => {
     setChoosingNewCourse,
     ucsModalOpen,
     selectedMajor,
-    setSelectedMajor
+    setSelectedMajor,
   } = useContext(CoursePickerContext)
 
-  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
+  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null)
   const showContent = selectedMajor || coursesStorage.length > 0
 
   useEffect(() => {
-    if (!courseUnits) return;
-    setCoursesInfo(courseUnits);
+    if (!courseUnits) return
+    setCoursesInfo(courseUnits)
   }, [courseUnits, setCoursesInfo])
 
   const handleOpenChange = (open: boolean) => {
-    setChoosingNewCourse((prev) => !prev);
-    if (!open) {
-      setUcsModalOpen(false)
-    }
+    setChoosingNewCourse((prev) => !prev)
+    setUcsModalOpen(open)
   }
 
   return (
     <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button 
-          variant="icon" 
-          className="flex-grow gap-2 bg-primary" 
-          title="Editar Unidades Curriculares" 
-          onClick={() => setUcsModalOpen(true)}
+        <Button
+          variant="primary"
+          className="grow gap-2 bg-primary hover:bg-primary/90 transition-all"
+          title="Editar Unidades Curriculares"
         >
           <span className="hidden md:block lg:hidden xl:block">Unidades Curriculares</span>
-          <PencilSquareIcon className="h-5 w-5 text-white" />
+          <PenSquare size="16" />
         </Button>
       </DialogTrigger>
-      
-      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-scroll">
-        <DialogHeader className="mx-4">
-          <DialogTitle>Seleciona as tuas unidades curriculares</DialogTitle>
-          <DialogDescription className="mt-2">
-            Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
-          </DialogDescription>
-        </DialogHeader>
 
-        <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
-        
-        <Separator />
+      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-auto py-6">
+        <DialogTitle className="mx-4">Seleciona as tuas unidades curriculares</DialogTitle>
+        <DialogClose asChild>
+          <Button variant="ghost" className="absolute top-3 right-3 ">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </Button>
+        </DialogClose>
+        <DialogDescription className="mx-4 mt-2">
+          Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
+        </DialogDescription>
+
+        <div className="mx-4 mt-6 mb-2">
+          <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
+        </div>
+
+        <div className="my-4">
+          <Divider />
+        </div>
 
         {showContent ? (
           <>
-            <div className="flex flex-col lg:flex-row flex-grow w-full lg:w-[60rem]">
+            <div className="flex flex-col lg:flex-row grow w-full lg:w-240 px-4 mb-6">
               <div className="w-full lg:w-1/2">
                 {!loadingCourseUnits ? (
                   <CourseYearTabs />
@@ -92,23 +97,26 @@ const CoursePicker = () => {
                   </div>
                 )}
               </div>
-              <div className="flex flex-row w-full lg:w-1/2 mt-4">
-                <Separator orientation="vertical" className="mx-5 hidden lg:block" />
-                <PickedCoursesList />
+
+              <div className="flex flex-row w-full lg:w-1/2 mt-8 lg:mt-0">
+                <Divider orientation="vertical" className="mx-5 hidden lg:block" />
+                <div className="w-full">
+                  <PickedCoursesList />
+                </div>
               </div>
             </div>
 
-            <DialogFooter className="flex flex-row justify-center">
-              <div className="flex flex-row items-center justify-between dark:text-white pr-4 pb-4">
+            <DialogActions className="flex flex-row justify-center mt-auto px-4">
+              <div className="flex flex-row items-center justify-between w-full dark:text-white pb-4">
                 <Ects />
                 <div className="flex gap-2 mt-4">
                   <ClearAllCoursesButton />
                 </div>
               </div>
-            </DialogFooter>
+            </DialogActions>
           </>
         ) : (
-          <div className="flex flex-col items-center flex-grow w-full lg:w-[60rem] py-10">
+          <div className="flex flex-col items-center grow w-full lg:w-240 py-10">
             <Desert className="h-64 w-full" />
             <p className="mt-4 text-muted-foreground">Seleciona um curso primeiro.</p>
           </div>

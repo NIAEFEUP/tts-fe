@@ -48,7 +48,7 @@ export const AdminPreviewSchedule = ({
                     enrolledCourseUnits: [],
                     loadingSchedule: false
                 }}>
-                    <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+                    <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
                         <ExchangeSchedule />
                     </div>
                 </ScheduleContext.Provider>

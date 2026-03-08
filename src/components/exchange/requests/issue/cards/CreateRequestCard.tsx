@@ -148,7 +148,7 @@ export const CreateRequestCard = ({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-full">
-                  <ScrollArea className="max-h-72 rounded overflow-y-auto">
+                  <ScrollArea className="max-h-72 rounded-sm overflow-y-auto">
                     {requestMetadata?.classes?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
                       .map((currentClass) => (
                         <DropdownMenuItem
@@ -192,14 +192,14 @@ export const CreateRequestCard = ({
                 }
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full w-[var(--radix-popper-anchor-width)]">
+            <PopoverContent className="w-full w-(--radix-popper-anchor-width)">
               <Command>
                 <CommandInput
                   placeholder="Pesquisar por estudante"
                   className="w-full"
                 />
 
-                <ScrollArea className="max-h-72 overflow-y-auto rounded">
+                <ScrollArea className="max-h-72 overflow-y-auto rounded-sm">
                   <CommandList>
                     <CommandEmpty>Sem pessoas encontradas</CommandEmpty>
                   </CommandList>
