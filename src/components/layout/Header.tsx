@@ -1,15 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Popover, Transition } from '@headlessui/react'
 import { DarkModeSwitch } from './DarkModeSwitch'
-import {
-  Bars3Icon,
-  XMarkIcon,
-  AtSymbolIcon,
-  RectangleStackIcon,
-  QuestionMarkCircleIcon,
-  ArrowsRightLeftIcon,
-  WrenchScrewdriverIcon,
-} from '@heroicons/react/24/outline'
+import { Menu, X, AtSign, Layers, CircleQuestionMark, ArrowLeftRight, Wrench } from 'lucide-react'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
 import { FeedbackReport } from '../FeedbackReport'
@@ -22,26 +14,26 @@ const navigation = [
   {
     title: 'Horários',
     location: getPath(config.paths.planner),
-    icon: <RectangleStackIcon className="h-5 w-5" />,
+    icon: <Layers className="h-5 w-5" />,
     wip: false,
   },
   {
     title: 'Turmas',
     location: getPath(config.paths.exchange),
-    icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
+    icon: <ArrowLeftRight className="h-5 w-5" />,
     wip: false,
   },
-  { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSymbolIcon className="h-5 w-5" />, wip: false },
+  { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSign className="h-5 w-5" />, wip: false },
   {
     title: 'FAQs',
     location: getPath(config.paths.faqs),
-    icon: <QuestionMarkCircleIcon className="h-5 w-5" />,
+    icon: <CircleQuestionMark className="h-5 w-5" />,
     wip: false,
   },
   {
     title: 'Admin',
     location: getPath(config.paths.admin),
-    icon: <WrenchScrewdriverIcon className="h-5 w-5" />,
+    icon: <Wrench className="h-5 w-5" />,
     wip: false,
   },
 ]
@@ -147,12 +139,12 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
         <Popover.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
           <span className="sr-only">Open nav menu</span>
           {open ? (
-            <XMarkIcon
+            <X
               className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
               aria-hidden="true"
             />
           ) : (
-            <Bars3Icon
+            <Menu
               className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
               aria-hidden="true"
             />
