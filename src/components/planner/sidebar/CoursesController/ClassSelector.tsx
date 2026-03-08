@@ -2,7 +2,7 @@ import { useRef, useState, useContext, useEffect } from 'react'
 import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
 import { CourseInfo } from '../../../../@types'
 import { getClassDisplayText } from '../../../../utils'
-import { Button } from '../../../ui/button'
+import { Button } from '../../../ui/new/newButton'
 import { Dropdown, DropdownItems, DropdownTrigger } from '../../../ui/new/dropdown'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
 import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
@@ -89,7 +89,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
         {/* Lock Button */}
         {lockFunctionality && (
           <Button
-            variant="icon"
+            variant="ghost"
             title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
             onClick={toggleLocker}
             disabled={display === null}
