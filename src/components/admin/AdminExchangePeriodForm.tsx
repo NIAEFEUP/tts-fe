@@ -1,7 +1,7 @@
 "use client";
 
 import { DateTimePicker } from '../ui/datetime-picker';
-import { Button } from '../ui/button';
+import { Button } from '../ui/new/newButton';
 import { CheckIcon } from 'lucide-react';
 import React from 'react';
 
@@ -26,8 +26,8 @@ export const ExchangePeriodForm: React.FC<ExchangePeriodFormProps> = ({
     <form onSubmit={onSubmit} className="flex flex-col xl:flex-row gap-4 mb-6">
       <DateTimePicker value={startDate} onChange={setStartDate} placeholder="Início" />
       <DateTimePicker value={endDate} onChange={setEndDate} placeholder="Fim" />
-      <Button type="submit" disabled={isLoading} className="md:mt-0">
-        <CheckIcon className="h-5 w-5" />
+      <Button type="submit" disabled={isLoading} square size="md">
+        <CheckIcon size="18" />
       </Button>
     </form>
   );
