@@ -6,14 +6,14 @@ import { groupCoursesByYear, removeCourseOption, addCourseOption, replaceCourseO
 import { NoMajorSelectedSVG } from '../../../../svgs'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../../ui/tabs'
 import { CourseInfo } from '../../../../../@types'
-import { Checkbox } from '../../../../ui/checkbox'
+import { Checkbox } from '../../../../ui/new/checkbox'
 import { Label } from '../../../../ui/label'
 
 const CourseYearTabs = () => {
   const { coursesInfo, checkboxedCourses, setCheckboxedCourses } = useContext(CoursePickerContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [selectedTab, setSelectedTab] = useState('1')
-  
+
   const coursesByYear = useMemo(() => groupCoursesByYear(coursesInfo), [coursesInfo])
 
   const getYearStatus = (yearIndex: number) => {
@@ -23,7 +23,7 @@ const CourseYearTabs = () => {
     }
 
     const selectedCount = yearCourses.filter((course: CourseInfo) =>
-      checkboxedCourses.some((c: CourseInfo) => c.id === course.id)
+      checkboxedCourses.some((c: CourseInfo) => c.id === course.id),
     ).length
 
     if (selectedCount === 0) {
@@ -49,7 +49,7 @@ const CourseYearTabs = () => {
       })
     } else {
       newCheckboxedCourses = newCheckboxedCourses.filter(
-        (course: CourseInfo) => course.course_unit_year !== yearIndex + 1
+        (course: CourseInfo) => course.course_unit_year !== yearIndex + 1,
       )
     }
 
@@ -75,18 +75,14 @@ const CourseYearTabs = () => {
     <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
       <TabsList className="w-full">
         {coursesByYear.map((_, idx) => (
-          <TabsTrigger
-            className="select-none"
-            key={idx}
-            value={`${idx + 1}`}
-          >
+          <TabsTrigger className="select-none" key={idx} value={`${idx + 1}`}>
             {`${idx + 1}º Ano`}
           </TabsTrigger>
         ))}
       </TabsList>
       {coursesByYear.map((yearCourses, idx) => {
         const yearStatus = getYearStatus(idx)
-        
+
         return (
           <TabsContent key={idx} value={`${idx + 1}`}>
             <ScrollArea className="h-[200px]">
@@ -97,15 +93,13 @@ const CourseYearTabs = () => {
                     id={`select-all-year-${idx}`}
                     checked={yearStatus.checked}
                     indeterminate={yearStatus.indeterminate}
-                    onCheckedChange={(checked) => {
-                      const shouldSelect = yearStatus.indeterminate ? true : checked === true
+                    className="[--color-accent:var(--color-primary)] [--color-accent-foreground:#fff]"
+                    onChange={() => {
+                      const shouldSelect = yearStatus.indeterminate ? true : !yearStatus.checked
                       toggleYear(idx, shouldSelect)
                     }}
                   />
-                  <Label
-                    htmlFor={`select-all-year-${idx}`}
-                    className="font-medium hover:cursor-pointer"
-                  >
+                  <Label htmlFor={`select-all-year-${idx}`} className="font-medium hover:cursor-pointer">
                     Selecionar Todas
                   </Label>
                 </div>
@@ -121,7 +115,8 @@ const CourseYearTabs = () => {
                         id={`checkbox-${course.id}`}
                         title={course.name}
                         checked={isCourseSelected(course)}
-                        onCheckedChange={() => toggleCourse(course)}
+                        className="[--color-accent:var(--color-primary)] [--color-accent-foreground:#fff]"
+                        onChange={() => toggleCourse(course)}
                       />
                       <Label
                         htmlFor={`checkbox-${course.id}`}
