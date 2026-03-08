@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import { Button } from './ui/button'
+import { Button } from './ui/new/newButton'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { useForm } from 'react-hook-form'
 import { Input } from './ui/new/newInput'
@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from './ui/use-toast'
 import { useState } from 'react'
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
-import { FlagIcon } from '@heroicons/react/24/outline'
+import { Flag } from 'lucide-react'
 import { Dropdown, DropdownItems, DropdownTrigger } from './ui/new/dropdown'
 
 enum ReportType {
@@ -59,13 +59,13 @@ export const FeedbackReport = () => {
   return (
     <Dropdown open={open} onOpenChange={setOpen}>
       <DropdownTrigger asChild>
-        <Button variant="icon" className="rounded-full flex flex-row gap-x-2">
-          <FlagIcon className="h-5 w-5 text-black dark:text-white md:dark:text-black" />
+        <Button className="bg-white" variant="outline">
+          <Flag size="16" className="text-black dark:text-white md:dark:text-black" />
           <p className="hidden sm:block text-black dark:text-white md:dark:text-black">Feedback</p>
         </Button>
       </DropdownTrigger>
 
-      <DropdownItems className="ml-5 p-4 w-[320px] flex flex-col gap-y-4">
+      <DropdownItems className="p-4 w-[320px] flex flex-col gap-y-4">
         <Tabs defaultValue="suggestion">
           <TabsList className="w-full">
             <TabsTrigger value="suggestion" onClick={() => setReportType(ReportType.Suggestion)} className="w-full">
