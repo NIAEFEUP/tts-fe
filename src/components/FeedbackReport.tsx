@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from './ui/use-toast'
 import { useState } from 'react'
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
+import { Tabs, TabsItem, TabsItems } from './ui/new/tabs'
 import { Flag } from 'lucide-react'
 import { Dropdown, DropdownItems, DropdownTrigger } from './ui/new/dropdown'
 
@@ -66,15 +66,14 @@ export const FeedbackReport = () => {
       </DropdownTrigger>
 
       <DropdownItems className="p-4 w-[320px] flex flex-col gap-y-4">
-        <Tabs defaultValue="suggestion">
-          <TabsList className="w-full">
-            <TabsTrigger value="suggestion" onClick={() => setReportType(ReportType.Suggestion)} className="w-full">
-              Sugestão
-            </TabsTrigger>
-            <TabsTrigger value="bug" onClick={() => setReportType(ReportType.Bug)} className="w-full">
-              Bug
-            </TabsTrigger>
-          </TabsList>
+        <Tabs
+          selectedIndex={reportType === ReportType.Suggestion ? 0 : 1}
+          onChange={(index) => setReportType(index === 0 ? ReportType.Suggestion : ReportType.Bug)}
+        >
+          <TabsItems className="w-full pb-0">
+            <TabsItem className="flex-1">Sugestão</TabsItem>
+            <TabsItem className="flex-1">Bug</TabsItem>
+          </TabsItems>
         </Tabs>
 
         <Form {...form}>
