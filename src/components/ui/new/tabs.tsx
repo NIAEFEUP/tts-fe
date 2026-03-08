@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'motion/react'
-import { Children, createContext, use, useCallback, useId, useLayoutEffect, useMemo, useState } from 'react'
+import { Children, createContext, useCallback, useContext, useId, useLayoutEffect, useMemo, useState } from 'react'
 
 import { Slot } from './slot'
 import { cn } from '../../../lib/utils'
@@ -20,7 +20,7 @@ interface TabsContextValue {
 const TabsContext = createContext<TabsContextValue | null>(null)
 
 const useTabsContext = () => {
-  const context = use(TabsContext)
+  const context = useContext(TabsContext)
   if (!context) throw new Error('TabsContext must be used within a Tabs component')
   return context
 }
@@ -102,9 +102,9 @@ const Tabs = ({
   )
 
   return (
-    <TabsContext value={ctx}>
+    <TabsContext.Provider value={ctx}>
       <div {...props}>{children}</div>
-    </TabsContext>
+    </TabsContext.Provider>
   )
 }
 
@@ -231,7 +231,7 @@ const TabsPanels = ({ children, className, ...props }: TabsPanelsProps) => {
   return (
     <div className={cn('ring-ring transition has-focus-visible:ring-4', className)} {...props}>
       {Children.map(children, (child, index) => (
-        <PanelIdContext value={tabs[index]}>{child}</PanelIdContext>
+        <PanelIdContext.Provider value={tabs[index]}>{child}</PanelIdContext.Provider>
       ))}
     </div>
   )
@@ -247,7 +247,7 @@ const PanelIdContext = createContext<string | undefined>(undefined)
 const getPanelId = (id: string | undefined) => (id ? `tab-panel${id}` : undefined)
 
 const TabsPanel = ({ children, asChild, className, ...props }: TabsPanelProps) => {
-  const id = use(PanelIdContext)
+  const id = useContext(PanelIdContext)
   const { selectedTab } = useTabsContext()
   const Comp = asChild ? Slot : 'div'
 
