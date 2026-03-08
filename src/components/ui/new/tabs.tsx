@@ -182,7 +182,7 @@ const TabsItem = ({ children, asChild, onClick, onKeyDown, className, ...props }
       id={getItemId(id)}
       type="button"
       className={cn(
-        'ring-ring text-foreground/50 hover:text-foreground data-selected:text-foreground relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-4 py-2 transition outline-none focus-visible:ring-4',
+        'ring-ring text-foreground/50 hover:text-foreground data-selected:text-white relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-4 py-2 transition outline-none focus-visible:ring-4',
         '[&>*:not([data-tab-indicator])]:z-10',
         className,
       )}
@@ -213,7 +213,7 @@ const TabsItem = ({ children, asChild, onClick, onKeyDown, className, ...props }
           data-tab-indicator="true"
           layoutId={tabsId}
           aria-hidden="true"
-          className="bg-background-secondary absolute inset-0 z-0 rounded-xl"
+          className="bg-primary absolute inset-0 z-0 rounded-xl"
           transition={{ type: 'spring', duration: 0.3, bounce: 0.2 }}
         />
       )}
