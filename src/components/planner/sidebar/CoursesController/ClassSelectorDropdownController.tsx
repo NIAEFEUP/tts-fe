@@ -7,7 +7,7 @@ import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils'
 import { Desert } from '../../../svgs'
 import { DropdownItem } from '../../../ui/new/dropdown'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../ui/tabs'
+import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../../../ui/new/tabs'
 import ClassItem from './ClassItem'
 import ProfessorItem from './ProfessorItem'
 
@@ -179,76 +179,78 @@ const ClassSelectorDropdownController = ({
         {classesLoading ? (
           <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
         ) : (
-          <Tabs defaultValue="turmas" className="w-full">
-            <TabsList className="w-full">
-              <TabsTrigger value="turmas">Turmas</TabsTrigger>
-              <TabsTrigger value="professores">Professores</TabsTrigger>
-            </TabsList>
-            <TabsContent value="turmas">
-              <div className="max-h-96 overflow-y-auto">
-                {course.classes?.length === 0 ? (
-                  <NoOptionsFound mobile={false} />
-                ) : (
-                  <>
-                    {selectedClassId && (
-                      <DropdownItem onSelect={() => deleteOption()}>
-                        <span className="text-sm tracking-tighter">Remover Seleção</span>
+          <Tabs className="w-full">
+            <TabsItems className="w-full">
+              <TabsItem className="flex-1">Turmas</TabsItem>
+              <TabsItem className="flex-1">Professores</TabsItem>
+            </TabsItems>
+            <TabsPanels>
+              <TabsPanel>
+                <div className="max-h-96 overflow-y-auto">
+                  {course.classes?.length === 0 ? (
+                    <NoOptionsFound mobile={false} />
+                  ) : (
+                    <>
+                      {selectedClassId && (
+                        <DropdownItem onSelect={() => deleteOption()}>
+                          <span className="text-sm tracking-tighter">Remover Seleção</span>
+                        </DropdownItem>
+                      )}
+                      {course.classes &&
+                        getOptions().map((classInfo) => (
+                          <ClassItem
+                            key={`schedule-${classInfo.name}`}
+                            course_id={course.id}
+                            classInfo={classInfo}
+                            onSelect={() => {
+                              setSelectedClassId(classInfo.id)
+                              setPreview(null)
+                            }}
+                            onMouseEnter={() => {
+                              if (isDropdownOpen) showPreview(classInfo)
+                            }}
+                            onMouseLeave={() => removePreview()}
+                          />
+                        ))}
+                    </>
+                  )}
+                </div>
+              </TabsPanel>
+              <TabsPanel>
+                <div>
+                  {teacherFilters.length === 0 ? (
+                    <NoTeachersFound mobile={false} />
+                  ) : (
+                    <>
+                      <DropdownItem
+                        className="mb-2"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          toggleAllTeachers(teachers)
+                        }}
+                      >
+                        <span className="block truncate dark:text-white">
+                          {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
+                        </span>
                       </DropdownItem>
-                    )}
-                    {course.classes &&
-                      getOptions().map((classInfo) => (
-                        <ClassItem
-                          key={`schedule-${classInfo.name}`}
-                          course_id={course.id}
-                          classInfo={classInfo}
-                          onSelect={() => {
-                            setSelectedClassId(classInfo.id)
-                            setPreview(null)
-                          }}
-                          onMouseEnter={() => {
-                            if (isDropdownOpen) showPreview(classInfo)
-                          }}
-                          onMouseLeave={() => removePreview()}
-                        />
-                      ))}
-                  </>
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="professores">
-              <div>
-                {teacherFilters.length === 0 ? (
-                  <NoTeachersFound mobile={false} />
-                ) : (
-                  <>
-                    <DropdownItem
-                      className="mb-2"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        toggleAllTeachers(teachers)
-                      }}
-                    >
-                      <span className="block truncate dark:text-white">
-                        {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
-                      </span>
-                    </DropdownItem>
-                    {teacherFilters.map((option) => {
-                      return (
-                        <ProfessorItem
-                          key={`${course.acronym}-teacher-${option.acronym}`}
-                          professorInformation={option}
-                          filtered={option.isFiltered}
-                          onSelect={(e) => {
-                            e.preventDefault()
-                            toggleTeacher(option.id)
-                          }}
-                        />
-                      )
-                    })}
-                  </>
-                )}
-              </div>
-            </TabsContent>
+                      {teacherFilters.map((option) => {
+                        return (
+                          <ProfessorItem
+                            key={`${course.acronym}-teacher-${option.acronym}`}
+                            professorInformation={option}
+                            filtered={option.isFiltered}
+                            onSelect={(e) => {
+                              e.preventDefault()
+                              toggleTeacher(option.id)
+                            }}
+                          />
+                        )
+                      })}
+                    </>
+                  )}
+                </div>
+              </TabsPanel>
+            </TabsPanels>
           </Tabs>
         )}
       </div>
