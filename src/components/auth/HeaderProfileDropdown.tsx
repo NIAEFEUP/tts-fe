@@ -1,13 +1,12 @@
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { DropdownDivider } from '../ui/new/dropdown'
-import { Button } from '../ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/new/avatar'
+import { Button } from '../ui/new/newButton'
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/solid'
 import { useContext, useState } from 'react'
 import { ClipLoader } from 'react-spinners'
 import SessionContext from '../../contexts/SessionContext'
 import authService from '../../api/services/authService'
 import studentInfoService from '../../api/services/studentInfo'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/new/newPopover'
 import ScheduleContext from '../../contexts/ScheduleContext'
 import {
   AlertDialog,
@@ -17,6 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog'
+import { Divider } from '../ui/new/divider'
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false)
@@ -32,34 +32,32 @@ export const HeaderProfileDropdown = () => {
   }
 
   return (
-    <HoverCard>
-      <HoverCardTrigger className="w-fit">
-        <Avatar className="border shadow-xs">
-          <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
-          <AvatarFallback>{user?.name?.charAt(0) ?? ''}</AvatarFallback>
-        </Avatar>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-44 p-4 mx-4">
+    <Popover placement='bottom-end'>
+      <PopoverTrigger asChild>
+        <div className="cursor-pointer w-fit">
+          <Avatar className="border shadow-xs">
+            <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
+            <AvatarFallback>{user?.name?.charAt(0) ?? ''}</AvatarFallback>
+          </Avatar>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-44 p-4">
         <div className="flex flex-col">
           <article className="flex flex-col">
             <p className="text-md font-bold">{user?.name}</p>
             <p className="text-sm">{user?.username}</p>
           </article>
-          <DropdownDivider className="my-2" />
+          <Divider className="my-2" />
           {loggingOut ? (
             <ClipLoader className="w-2 h-2 mx-auto" loading={true} aria-label="Loading Spinner" data-testid="loader" />
           ) : (
-            <Button
-              variant="secondary"
-              className="w-full flex flex-row justify-center gap-2"
-              onClick={() => setConfirmOpen(true)}
-            >
+            <Button variant="destructive" className="w-full" onClick={() => setConfirmOpen(true)}>
               <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
               {!loggingOut && <span>Sair</span>}
             </Button>
           )}
         </div>
-      </HoverCardContent>
+      </PopoverContent>
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent className="w-full max-w-88 p-5">
           <AlertDialogHeader>
@@ -67,7 +65,7 @@ export const HeaderProfileDropdown = () => {
             <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-2 flex justify-center! gap-4">
-            <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
               Cancelar
             </Button>
             <Button
@@ -82,6 +80,6 @@ export const HeaderProfileDropdown = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </HoverCard>
+    </Popover>
   )
 }
