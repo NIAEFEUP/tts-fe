@@ -58,7 +58,7 @@ const CopyOption = ({ currentOption, className }: Props) => {
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button size="sm" square className="bg-primary" onClick={() => copyOption()}>
+          <Button size="sm" square className="bg-primary hover:bg-primary/90" onClick={() => copyOption()}>
             {icon ? <Check size="18" /> : <Files size="18" />}
           </Button>
         </TooltipTrigger>

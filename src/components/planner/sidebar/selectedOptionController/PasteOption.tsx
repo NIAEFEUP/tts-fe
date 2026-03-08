@@ -135,7 +135,7 @@ const PasteOption = () => {
                   const value = await navigator.clipboard.readText()
                   importSchedule(value)
                 }}
-                className="bg-primary"
+                className="bg-primary hover:bg-primary/90"
               >
                 <Clipboard size="18" />
               </Button>
