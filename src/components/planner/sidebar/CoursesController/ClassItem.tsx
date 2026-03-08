@@ -56,8 +56,8 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
       onMouseEnter={() => onMouseEnter()}
       onMouseLeave={() => onMouseLeave()}
     >
-      <div className="grow">
-        <span className="text-sm tracking-tighter">{classInfo.name}</span>
+      <div className="grow text-left">
+        <span className="text-sm tracking-tighter font-semibold">{classInfo.name}</span>
         <div>
           {classInfo.slots.map((slot, idx) => (
             <div key={`${classInfo.name}-${idx}`} className="flex items-center space-x-2">

@@ -35,18 +35,18 @@ const buildTeacherFilters = (teachers, filteredTeachers) => {
 
 const NoTeachersFound = ({ mobile }: { mobile: boolean }) => {
   return (
-    <div className="mx-2">
+    <div className="mx-2 w-full">
       {mobile ? <></> : <Desert className="w-full h-24" />}
-      <p className="text-sm text-center my-4">Não há professores associados a nenhuma turma desta disciplina.</p>
+      <p className="text-sm text-left my-4 w-full">Não há professores associados a nenhuma turma desta disciplina.</p>
     </div>
   )
 }
 
 const NoOptionsFound = ({ mobile }: { mobile: boolean }) => {
   return (
-    <div>
+    <div className="w-full">
       {mobile ? <></> : <Desert className="w-full h-24" />}
-      <p className="text-sm text-center my-4">Esta disciplina não tem nenhuma turma.</p>
+      <p className="text-sm text-left my-4 w-full">Esta disciplina não tem nenhuma turma.</p>
     </div>
   )
 }
@@ -175,9 +175,9 @@ const ClassSelectorDropdownController = ({
 
   return (
     <>
-      <div>
+      <div className="p-2 w-full">
         {classesLoading ? (
-          <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
+          <p className="w-full select-none p-2 text-left">A carregar as aulas...</p>
         ) : (
           <Tabs className="w-full">
             <TabsItems className="w-full">
@@ -186,14 +186,15 @@ const ClassSelectorDropdownController = ({
             </TabsItems>
             <TabsPanels>
               <TabsPanel>
-                <div className="max-h-96 overflow-y-auto">
+                {/* Removed max-h-96 and overflow-y-auto to fix the double scrollbar issue */}
+                <div className="pt-2 w-full">
                   {course.classes?.length === 0 ? (
                     <NoOptionsFound mobile={false} />
                   ) : (
                     <>
                       {selectedClassId && (
                         <DropdownItem onSelect={() => deleteOption()}>
-                          <span className="text-sm tracking-tighter">Remover Seleção</span>
+                          <span className="text-sm tracking-tighter text-left block w-full">Remover Seleção</span>
                         </DropdownItem>
                       )}
                       {course.classes &&
@@ -217,7 +218,7 @@ const ClassSelectorDropdownController = ({
                 </div>
               </TabsPanel>
               <TabsPanel>
-                <div>
+                <div className="pt-2 w-full">
                   {teacherFilters.length === 0 ? (
                     <NoTeachersFound mobile={false} />
                   ) : (
@@ -229,7 +230,7 @@ const ClassSelectorDropdownController = ({
                           toggleAllTeachers(teachers)
                         }}
                       >
-                        <span className="block truncate dark:text-white">
+                        <span className="block truncate text-left w-full dark:text-white">
                           {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
                         </span>
                       </DropdownItem>
