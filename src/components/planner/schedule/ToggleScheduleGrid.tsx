@@ -1,5 +1,5 @@
 import { Button } from '../../ui/new/newButton'
-import { ViewColumnsIcon } from '@heroicons/react/24/outline'
+import { Columns3 } from 'lucide-react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import React from 'react'
@@ -22,7 +22,7 @@ const ToggleScheduleGrid = ({ showGridHook }: Props) => {
             AnalyticsTracker.trackFeature(Feature.GRID)
           }}
         >
-          <ViewColumnsIcon className="h-5 w-5" />
+          <Columns3 size="18" />
         </Button>
       </TooltipTrigger>
       <TooltipContent>{showGrid ? 'Ocultar a grelha do horário' : 'Mostrar a grelha do horário'}</TooltipContent>
