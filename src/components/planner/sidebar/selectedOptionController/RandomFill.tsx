@@ -221,8 +221,7 @@ const RandomFill = ({ className }: Props) => {
     })
   }
 
-  const toggleRandomClasses = (event) => {
-    const className = event.target.id
+  const toggleRandomClass = (className: string) => {
     setUniqueClasses((prevRandomClasses) => {
       if (prevRandomClasses.includes(className)) {
         return prevRandomClasses.filter((name) => name !== className)
@@ -282,26 +281,21 @@ const RandomFill = ({ className }: Props) => {
             <ChevronDown size="14" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-52 p-1">
+        <PopoverContent className="w-52 p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
           <p className="px-1 py-1 text-sm font-medium">Preenchimento aleatório</p>
           <Separator />
           {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
             <div
               key={key}
-              className="mt-1 flex items-center space-x-2 rounded-sm p-1 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+              onClick={() => toggleRandomClass(key)}
+              className="mt-1 flex w-full items-center space-x-2 rounded-sm p-1.5 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 select-none"
             >
               <Checkbox
                 id={key}
                 checked={uniqueClasses.includes(key)}
-                onClick={toggleRandomClasses}
-                className="[--color-accent:var(--color-primary)] [--color-accent-foreground:#fff]"
+                className="pointer-events-none [--color-accent:var(--color-primary)] [--color-accent-foreground:#fff]"
               />
-              <label
-                htmlFor={key}
-                className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {key}
-              </label>
+              <span className="text-sm font-medium leading-none flex-1">{key}</span>
             </div>
           ))}
 
