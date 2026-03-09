@@ -281,7 +281,7 @@ const RandomFill = ({ className }: Props) => {
             <ChevronDown size="14" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-52 p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <PopoverContent className="w-52 p-1">
           <p className="px-1 py-1 text-sm font-medium">Preenchimento aleatório</p>
           <Separator />
           {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (

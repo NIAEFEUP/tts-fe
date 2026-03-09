@@ -18,7 +18,9 @@ export const useTopLayer = <T extends HTMLElement>(active: boolean = true): Reac
 
     if (active) {
       element.setAttribute('popover', 'manual')
-      element.showPopover()
+      if ('showPopover' in element && typeof element.showPopover === 'function') {
+        element.showPopover()
+      }
     }
 
     return () => {

@@ -259,14 +259,16 @@ const PopoverPanel = React.forwardRef<HTMLDivElement, Omit<PopoverPanelProps, 'r
             'data-[state=open]:translate-x-0 data-[state=open]:translate-y-0 data-[state=open]:scale-100',
             className,
           )}
-          style={{
-            position: context.strategy,
-            top: context.y ?? 0,
-            left: context.x ?? 0,
-            '--transform-origin': placementToTransformOrigin(context.placement),
-            visibility: context.middlewareData.hide?.referenceHidden ? 'hidden' : 'visible',
-            ...style,
-          }}
+          style={
+            {
+              position: context.strategy,
+              top: context.y ?? 0,
+              left: context.x ?? 0,
+              '--transform-origin': placementToTransformOrigin(context.placement),
+              visibility: context.middlewareData.hide?.referenceHidden ? 'hidden' : 'visible',
+              ...style,
+            } as React.CSSProperties
+          }
           {...props}
         />
       </FloatingFocusManager>
@@ -351,7 +353,7 @@ const PopoverSearchInput = React.forwardRef<HTMLInputElement, React.ComponentPro
   ({ className, ...props }, ref) => {
     return (
       <div className="border-border relative flex items-center rounded-t-lg border-b bg-transparent">
-        <Search weight="bold" className="text-foreground absolute left-4 size-4 shrink-0" />
+        <Search className="text-foreground absolute left-4 size-4 shrink-0" />
         <input
           ref={ref}
           className={cn(

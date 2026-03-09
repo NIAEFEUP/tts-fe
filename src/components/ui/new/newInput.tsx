@@ -1,7 +1,7 @@
 'use client'
 
 import { VariantProps } from 'cva'
-import { Children, createContext, isValidElement, use, useLayoutEffect, useRef, useState } from 'react'
+import { Children, createContext, isValidElement, useContext, useLayoutEffect, useRef, useState } from 'react'
 
 import { Slot } from './slot'
 import { composeRefs } from '../../../lib/compose-refs'
@@ -49,15 +49,10 @@ interface InputGroupContextType {
   setSuffixWidth: (width: number) => void
 }
 
-const InputGroupContext = createContext<InputGroupContextType>({
-  prefixWidth: 0,
-  suffixWidth: 0,
-  setPrefixWidth: () => {},
-  setSuffixWidth: () => {},
-})
+const InputGroupContext = createContext<InputGroupContextType | null>(null)
 
 const useInputGroup = () => {
-  const ctx = use(InputGroupContext)
+  const ctx = useContext(InputGroupContext)
 
   if (!ctx) {
     throw new Error('InputGroup must be used within an InputGroupContext')
@@ -82,7 +77,7 @@ const InputGroup = ({ className, style, ...props }: React.ComponentPropsWithRef<
   }
 
   return (
-    <InputGroupContext value={{ prefixWidth, suffixWidth, setPrefixWidth, setSuffixWidth }}>
+    <InputGroupContext.Provider value={{ prefixWidth, suffixWidth, setPrefixWidth, setSuffixWidth }}>
       <div
         className={cn('relative', className)}
         style={{
@@ -96,7 +91,7 @@ const InputGroup = ({ className, style, ...props }: React.ComponentPropsWithRef<
         }}
         {...props}
       />
-    </InputGroupContext>
+    </InputGroupContext.Provider>
   )
 }
 

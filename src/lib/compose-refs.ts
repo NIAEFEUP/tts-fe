@@ -1,6 +1,6 @@
-import { RefCallback, RefObject } from 'react'
+import { MutableRefObject, RefCallback } from 'react'
 
-type Ref<T> = RefCallback<T> | RefObject<T> | null
+type Ref<T> = RefCallback<T> | MutableRefObject<T | null> | null
 
 export function composeRefs<T>(...refs: (Ref<T> | undefined)[]): RefCallback<T> {
   return (instance: T) => {
@@ -8,7 +8,7 @@ export function composeRefs<T>(...refs: (Ref<T> | undefined)[]): RefCallback<T> 
       if (typeof ref === 'function') {
         ref(instance)
       } else if (ref !== null && typeof ref === 'object' && 'current' in ref) {
-        ;(ref as RefObject<T>).current = instance
+        ref.current = instance
       }
     })
   }
