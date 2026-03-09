@@ -1,4 +1,3 @@
-import { User } from 'lucide-react'
 import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
 import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from '../../../../@types'
 import StorageAPI from '../../../../api/storage'

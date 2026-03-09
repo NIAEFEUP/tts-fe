@@ -22,7 +22,8 @@ type SlotMetadata = {
   duration: number
 }
 
-const RandomFill = ({ className }: Props) => {
+const RandomFill = (props: Props) => {
+  void props
   const { pickedCourses } = useContext(CourseContext)
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const courseOptions = multipleOptions[selectedOption].course_options

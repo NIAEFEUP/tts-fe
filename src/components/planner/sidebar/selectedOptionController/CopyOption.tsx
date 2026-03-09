@@ -15,7 +15,7 @@ type Props = {
 /**
  * Copy currently selected option to clipboard
  */
-const CopyOption = ({ currentOption, className }: Props) => {
+const CopyOption = ({ currentOption }: Props) => {
   const { toast } = useToast()
   const [icon, setIcon] = useState(false)
 
