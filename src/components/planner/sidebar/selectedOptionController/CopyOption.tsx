@@ -3,7 +3,7 @@ import { Button } from '../../../ui/new/newButton'
 import { Check, Files } from 'lucide-react'
 import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
 import { CourseOption } from '../../../../@types'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
@@ -55,16 +55,14 @@ const CopyOption = ({ currentOption }: Props) => {
   }
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button size="sm" square className="bg-primary hover:bg-primary/90" onClick={() => copyOption()}>
-            {icon ? <Check size="18" /> : <Files size="18" />}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Copiar horário</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip delayIn={300}>
+      <TooltipTrigger asChild>
+        <Button size="sm" square className="bg-primary hover:bg-primary/90" onClick={() => copyOption()}>
+          {icon ? <Check size="18" /> : <Files size="18" />}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>Copiar horário</TooltipContent>
+    </Tooltip>
   )
 }
 

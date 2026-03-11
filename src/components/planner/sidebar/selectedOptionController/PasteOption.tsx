@@ -2,7 +2,7 @@ import { Clipboard } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/tooltip'
+import { Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/new/tooltip'
 import { ImportedCourses, CourseOption, CourseInfo } from '../../../../@types'
 import api from '../../../../api/backend'
 import CourseContext from '../../../../contexts/CourseContext'
@@ -125,38 +125,34 @@ const PasteOption = () => {
   return (
     <>
       {isClipboardSupported ? (
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
+        <Tooltip delayIn={300}>
+          <TooltipTrigger asChild>
+            <Button
+              square
+              size="sm"
+              onClick={async () => {
+                const value = await navigator.clipboard.readText()
+                importSchedule(value)
+              }}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Clipboard size="18" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Colar horário</TooltipContent>
+        </Tooltip>
+      ) : (
+        <Dropdown open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+          <Tooltip delayIn={300}>
             <TooltipTrigger asChild>
-              <Button
-                square
-                size="sm"
-                onClick={async () => {
-                  const value = await navigator.clipboard.readText()
-                  importSchedule(value)
-                }}
-                className="bg-primary hover:bg-primary/90"
-              >
-                <Clipboard size="18" />
-              </Button>
+              <DropdownTrigger asChild>
+                <Button onClick={() => setIsDropdownOpen(true)} square className="bg-primary">
+                  <Clipboard size="18" />
+                </Button>
+              </DropdownTrigger>
             </TooltipTrigger>
             <TooltipContent>Colar horário</TooltipContent>
           </Tooltip>
-        </TooltipProvider>
-      ) : (
-        <Dropdown open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-          <TooltipProvider delayDuration={300}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DropdownTrigger asChild>
-                  <Button onClick={() => setIsDropdownOpen(true)} square className="bg-primary">
-                    <Clipboard size="18" />
-                  </Button>
-                </DropdownTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Colar horário</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
 
           <DropdownItems className="p-2 w-64 md:w-80">
             <input
