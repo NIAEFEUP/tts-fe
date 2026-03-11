@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence } from 'motion/react'
 import { useToast } from '../use-toast'
 import { NewToast, NewToastClose, NewToastDescription, NewToastTitle } from './newToast'
@@ -9,40 +10,49 @@ import { cn } from '../../../lib/utils'
 export function NewToaster() {
   const { toasts } = useToast()
   const [isExpanded, setIsExpanded] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  return (
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
+  // Filter ONLY active toasts
+  const activeToasts = toasts.filter((t) => t.open !== false)
+
+  return createPortal(
     <div
       className={cn(
-        'fixed top-0 left-1/2 -translate-x-1/2 z-100 flex max-h-screen w-full flex-col p-4 md:max-w-[420px] pointer-events-none h-auto',
+        'fixed top-0 left-1/2 -translate-x-1/2 z-[9999] flex w-full flex-col items-center pointer-events-none p-4 md:max-w-[420px]',
       )}
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
     >
-      <div className="relative w-full pointer-events-auto group">
-        <AnimatePresence mode="popLayout">
-          {toasts
-            .filter((t) => t.open !== false)
-            .map(function ({ id, title, description, action, onOpenChange, position: _position, ...props }, index) {
-              return (
-                <NewToast
-                  key={id}
-                  index={index}
-                  total={toasts.length}
-                  isExpanded={isExpanded}
-                  onOpenChange={onOpenChange}
-                  {...props}
-                >
-                  <div className="grid gap-1 pr-8">
-                    {title && <NewToastTitle>{title}</NewToastTitle>}
-                    {description && <NewToastDescription>{description}</NewToastDescription>}
-                  </div>
-                  {action}
-                  <NewToastClose onClick={() => onOpenChange?.(false)} />
-                </NewToast>
-              )
-            })}
+      <div
+        className="relative w-full h-auto pointer-events-auto min-h-[1px]"
+        onMouseEnter={() => setIsExpanded(true)}
+        onMouseLeave={() => setIsExpanded(false)}
+      >
+        <AnimatePresence initial={false}>
+          {activeToasts.map((toast, index) => (
+            <NewToast
+              key={toast.id}
+              index={index}
+              total={activeToasts.length}
+              isExpanded={isExpanded}
+              onOpenChange={toast.onOpenChange}
+              {...toast}
+            >
+              <div className="grid gap-1 pr-8 text-left">
+                {toast.title && <NewToastTitle>{toast.title}</NewToastTitle>}
+                {toast.description && <NewToastDescription>{toast.description}</NewToastDescription>}
+              </div>
+              {toast.action}
+              <NewToastClose onClick={() => toast.onOpenChange?.(false)} />
+            </NewToast>
+          ))}
         </AnimatePresence>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

@@ -23,14 +23,8 @@ export const Slot = forwardRef<HTMLElement, React.ComponentPropsWithRef<React.El
       const mergedRef = useMergeRefs([childRef, forwardedRef])
 
       return cloneElement(element, {
-        ...element.props,
-        ...props,
+        ...mergeProps(props, element.props),
         ref: mergedRef,
-        style: {
-          ...element.props.style,
-          ...props.style,
-        },
-        className: cn(element.props.className, props.className),
       })
     }
 
@@ -39,6 +33,37 @@ export const Slot = forwardRef<HTMLElement, React.ComponentPropsWithRef<React.El
 )
 
 Slot.displayName = 'Slot'
+
+type AnyProps = Record<string, any>
+
+function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
+  const result: AnyProps = { ...slotProps }
+
+  for (const propName in childProps) {
+    const slotPropValue = slotProps[propName]
+    const childPropValue = childProps[propName]
+
+    const isHandler = /^on[A-Z]/.test(propName)
+    if (isHandler) {
+      if (slotPropValue && childPropValue) {
+        result[propName] = (...args: unknown[]) => {
+          childPropValue(...args)
+          slotPropValue(...args)
+        }
+      } else if (childPropValue) {
+        result[propName] = childPropValue
+      }
+    } else if (propName === 'className') {
+      result[propName] = cn(slotPropValue, childPropValue)
+    } else if (propName === 'style') {
+      result[propName] = { ...slotPropValue, ...childPropValue }
+    } else {
+      result[propName] = childPropValue
+    }
+  }
+
+  return result
+}
 
 type SlottableProps = {
   asChild: boolean

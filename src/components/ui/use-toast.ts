@@ -87,8 +87,6 @@ export const reducer = (state: State, action: Action): State => {
     case 'DISMISS_TOAST': {
       const { toastId } = action
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId)
       } else {
@@ -169,6 +167,7 @@ function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
 
   React.useEffect(() => {
+    // Only register listener once, and use a stable identity if possible
     listeners.push(setState)
     return () => {
       const index = listeners.indexOf(setState)
@@ -176,7 +175,7 @@ function useToast() {
         listeners.splice(index, 1)
       }
     }
-  }, [state])
+  }, []) // REMOVED [state] dependency to avoid re-registering every time state changes
 
   return {
     ...state,

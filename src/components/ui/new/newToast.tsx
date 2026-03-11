@@ -63,8 +63,8 @@ const NewToast = React.forwardRef<HTMLDivElement, ToastProps>(
       }
     }, [open, onOpenChange, duration])
 
-    // Sonner stacking logic
-    const offset = isExpanded ? index * 80 : index * 12
+    // Simplified Sonner-inspired stacking logic
+    const offset = isExpanded ? index * 80 : index * 10
     const scale = isExpanded ? 1 : 1 - index * 0.05
     const zIndex = 100 - index
 
@@ -87,7 +87,10 @@ const NewToast = React.forwardRef<HTMLDivElement, ToastProps>(
           mass: 1,
         }}
         className={cn(toastVariants({ variant }), className)}
-        style={style}
+        style={{
+          ...style,
+          pointerEvents: 'auto',
+        }}
         {...props}
       >
         {children}
