@@ -6,7 +6,7 @@ import PasteOption from './selectedOptionController/PasteOption'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { ThemeContext } from '../../../contexts/ThemeContext'
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/newPopover'
 import RandomFill from './selectedOptionController/RandomFill'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import { Input } from '../../ui/new/newInput'
@@ -75,7 +75,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between gap-2">
       <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger>
+          <PopoverTrigger asChild>
             <Button square size="md" className="p-2 bg-lightish dark:bg-darkish">
               <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
             </Button>

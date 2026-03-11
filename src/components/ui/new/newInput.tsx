@@ -1,7 +1,7 @@
 'use client'
 
 import { VariantProps } from 'cva'
-import { Children, createContext, isValidElement, useContext, useLayoutEffect, useRef, useState } from 'react'
+import React, { Children, createContext, isValidElement, useContext, useLayoutEffect, useRef, useState } from 'react'
 
 import { Slot } from './slot'
 import { composeRefs } from '../../../lib/compose-refs'
@@ -31,16 +31,18 @@ interface InputProps extends Omit<React.ComponentPropsWithRef<'input'>, 'size'> 
   variant?: VariantProps<typeof inputStyle>['variant']
 }
 
-const Input = ({ className, invalid, variant, ...props }: InputProps) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, invalid, variant, ...props }, ref) => {
   return (
     <input
+      ref={ref}
       data-invalid={invalid}
       aria-invalid={invalid}
       className={cn(inputStyle({ variant }), className)}
       {...props}
     />
   )
-}
+})
+Input.displayName = 'Input'
 
 interface InputGroupContextType {
   prefixWidth: number
@@ -120,38 +122,41 @@ interface InputAddonProps extends React.ComponentPropsWithRef<'div'> {
   asChild?: boolean
 }
 
-const InputAddon = ({ ref, className, onSetWidth, asChild, ...props }: InputAddonProps) => {
-  const Comp = asChild ? Slot : 'div'
-  const internalRef = useRef<HTMLDivElement | null>(null)
+const InputAddon = React.forwardRef<HTMLDivElement, InputAddonProps>(
+  ({ className, onSetWidth, asChild, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'div'
+    const internalRef = useRef<HTMLDivElement | null>(null)
 
-  useLayoutEffect(() => {
-    onSetWidth?.(internalRef.current?.offsetWidth ?? 0)
+    useLayoutEffect(() => {
+      onSetWidth?.(internalRef.current?.offsetWidth ?? 0)
 
-    const observer = new ResizeObserver(([entry]) => {
-      if (entry?.contentRect.width) {
-        onSetWidth?.(Math.round(entry.contentRect.width))
+      const observer = new ResizeObserver(([entry]) => {
+        if (entry?.contentRect.width) {
+          onSetWidth?.(Math.round(entry.contentRect.width))
+        }
+      })
+
+      if (internalRef.current) {
+        observer.observe(internalRef.current)
       }
-    })
 
-    if (internalRef.current) {
-      observer.observe(internalRef.current)
-    }
+      return () => observer.disconnect()
+    }, [onSetWidth])
 
-    return () => observer.disconnect()
-  }, [onSetWidth])
-
-  return (
-    <Comp
-      data-input-addon
-      className={cn(
-        'absolute top-1/2 flex -translate-y-1/2 items-center justify-center text-base font-medium',
-        'text-foreground pointer-events-none first:left-4 last:right-4',
-        className,
-      )}
-      ref={composeRefs(ref, internalRef)}
-      {...props}
-    />
-  )
-}
+    return (
+      <Comp
+        data-input-addon
+        className={cn(
+          'absolute top-1/2 flex -translate-y-1/2 items-center justify-center text-base font-medium',
+          'text-foreground pointer-events-none first:left-4 last:right-4',
+          className,
+        )}
+        ref={composeRefs(ref, internalRef)}
+        {...props}
+      />
+    )
+  },
+)
+InputAddon.displayName = 'InputAddon'
 
 export { Input, InputGroup, InputPrefix, inputStyle, InputSuffix }

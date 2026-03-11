@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { StopIcon } from '@heroicons/react/24/solid';
-import { Button } from '../../../ui/button';
+import { Button } from '../../../ui/new/newButton';
 import { useToast } from '../../../ui/use-toast';
 import { CollabSession } from '../../../../@types';
 import { sessionsSocket } from '../../../../api/socket';
@@ -80,12 +80,13 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
             readOnly
           />
           <Button
-            variant="icon"
-            className={`ml-2 px-3 py-1 flex items-center ${copied ? 'bg-green-200 text-white' : 'bg-primary text-white'} text-sm font-medium rounded-lg min-w-[120px]`}
+            variant="primary"
+            size="sm"
+            className={`ml-2 flex items-center ${copied ? 'bg-green-200 text-green-700' : 'bg-primary text-white'} min-w-[120px]`}
             onClick={handleCopyLink}
           >
             {copied ? (
-              <CheckIcon className="h-5 w-5 text-green-700" />
+              <CheckIcon className="h-5 w-5" />
             ) : (
               <DocumentDuplicateIcon className="h-5 w-5" />
             )}
@@ -120,7 +121,8 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
       <div className="mt-6 text-center">
         <Button
           type="button"
-          className="px-4 py-2 bg-white border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-red-500"
+          variant="outline"
+          className="px-4 py-2 border-primary text-primary hover:bg-primary hover:text-white"
           onClick={onExitSession}
         >
           <StopIcon className="h-5 w-5 mr-2" />
