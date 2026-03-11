@@ -80,15 +80,17 @@ const ViewMoreButton = ({
   return (
     <>
       {hasNext && (
-        <Button
-          variant="ghost"
-          className="w-full border-border border"
-          onClick={() => {
-            setSize(size + 1)
-          }}
-        >
-          {isValidating ? <MoonLoader size={20} /> : 'Ver mais'}
-        </Button>
+        <div className="pt-2">
+          <Button
+            variant="ghost"
+            className="w-full border-border border"
+            onClick={() => {
+              setSize(size + 1)
+            }}
+          >
+            {isValidating ? <MoonLoader size={20} /> : 'Ver mais'}
+          </Button>
+        </div>
       )}
     </>
   )
@@ -102,7 +104,6 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
   const [filterCourseUnitNames, setFilterCourseUnitNames] = useState<Set<number>>(new Set())
   const [classesFilter, setClassesFilter] = useState<Map<string, Set<string>>>(new Map())
   const [requestStateFilter, setRequestStateFilter] = useState<string>('all')
-  // This is to keep track of the request of the request card that is currently open
   const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null)
 
   const { requests, size, setSize, isLoading, hasNext, isValidating, mutate } = useMarketplaceRequests(
@@ -112,7 +113,7 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
   )
 
   return (
-    <div className="relative flex flex-col items-center justify-center gap-x-2 gap-y-2 lg:justify-start w-full">
+    <div className="relative flex flex-col items-start gap-y-4 w-full overflow-x-hidden">
       <div className="flex flex-row justify-between items-center w-full">
         <h1 className="font-bold text-xl">Pedidos</h1>
         <div className="flex flex-row gap-x-2">
@@ -129,7 +130,7 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
         </div>
       </div>
 
-      <Tabs defaultIndex={0} onChange={setCurrentRequestTypeFilter} className="mt-2 w-full flex flex-col">
+      <Tabs defaultIndex={0} onChange={setCurrentRequestTypeFilter} className="w-full flex flex-col">
         <TabsItems className="flex flex-row justify-between w-full">
           <TabsItem className="flex-1">Todos</TabsItem>
           <TabsItem className="flex-1">Enviados</TabsItem>
@@ -145,7 +146,7 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
               setRequestStateFilter={setRequestStateFilter}
               stateFilterActive={false}
             />
-            <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-[70vh]">
+            <div ref={requestCardsContainerRef} className="mt-4 flex flex-col gap-y-3">
               {isLoading ? (
                 <RequestCardSkeletons />
               ) : (
@@ -183,7 +184,7 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
               setRequestStateFilter={setRequestStateFilter}
               stateFilterActive={true}
             />
-            <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-[70vh]">
+            <div className="mt-4 flex flex-col gap-y-3">
               {isLoading ? (
                 <RequestCardSkeletons />
               ) : (
@@ -217,7 +218,7 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
               setRequestStateFilter={setRequestStateFilter}
               stateFilterActive={true}
             />
-            <div className="mt-4 flex flex-col gap-y-3 overflow-y-auto max-h-[70vh]">
+            <div className="mt-4 flex flex-col gap-y-3">
               {isLoading ? (
                 <RequestCardSkeletons />
               ) : (
