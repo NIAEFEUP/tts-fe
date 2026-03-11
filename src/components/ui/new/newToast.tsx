@@ -1,18 +1,17 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { VariantProps } from 'cva'
 import { X } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 
 import { Button } from './newButton'
-import { useElementTransition } from '../../../hooks/useElementTransition'
 import { cn, cva } from '../../../lib/utils'
 
 const toastVariants = cva({
   base: cn(
-    'pointer-events-auto relative flex w-full flex-col gap-1 overflow-hidden rounded-3xl border p-4 shadow-lg transition-all duration-300',
+    'pointer-events-auto absolute top-0 left-0 right-0 flex w-full flex-col gap-1 overflow-hidden rounded-3xl border p-4 shadow-lg',
     'bg-background border-border',
-    'not-data-[status=open]:translate-y-2 not-data-[status=open]:scale-95 not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150',
   ),
   variants: {
     variant: {
@@ -28,24 +27,57 @@ const toastVariants = cva({
 export interface ToastProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof toastVariants> {
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  index?: number
+  total?: number
+  isExpanded?: boolean
 }
 
-const NewToast = React.forwardRef<HTMLDivElement, ToastProps>(({ className, variant, open = true, ...props }, ref) => {
-  const { ref: transitionRef, isMounted, status } = useElementTransition<HTMLDivElement>(open)
+const NewToast = React.forwardRef<HTMLDivElement, ToastProps>(
+  (
+    { className, variant, open = true, index = 0, total = 1, isExpanded = false, onOpenChange, children, ...props },
+    ref,
+  ) => {
+    useEffect(() => {
+      if (open && onOpenChange) {
+        const timer = setTimeout(() => {
+          onOpenChange(false)
+        }, 5000)
+        return () => clearTimeout(timer)
+      }
+    }, [open, onOpenChange])
 
-  if (!isMounted) return null
+    // Sonner stacking logic
+    // When expanded, we show them one after another with more space
+    // When collapsed, we stack them with 12px offset and scale down
+    const offset = isExpanded ? index * 80 : index * 12
+    const scale = isExpanded ? 1 : 1 - index * 0.05
+    const zIndex = 100 - index
 
-  return (
-    <div
-      ref={transitionRef}
-      data-status={status}
-      role="status"
-      aria-live="polite"
-      className={cn(toastVariants({ variant }), className)}
-      {...props}
-    />
-  )
-})
+    return (
+      <motion.div
+        layout
+        initial={{ y: -100, opacity: 0 }}
+        animate={{
+          y: offset,
+          scale: scale,
+          opacity: 1,
+          zIndex: zIndex,
+        }}
+        exit={{ y: -100, opacity: 0 }}
+        transition={{
+          type: 'spring',
+          stiffness: 400,
+          damping: 30,
+          mass: 1,
+        }}
+        className={cn(toastVariants({ variant }), className)}
+        {...props}
+      >
+        {children}
+      </motion.div>
+    )
+  },
+)
 NewToast.displayName = 'NewToast'
 
 const NewToastTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
