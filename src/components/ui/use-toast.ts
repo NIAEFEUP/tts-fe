@@ -1,7 +1,7 @@
 // Inspired by react-hot-toast library
 import * as React from 'react'
 
-import type { ToastActionElement, ToastProps } from './toast'
+import type { ToastProps } from './new/newToast'
 
 const TOAST_LIMIT = 5
 const TOAST_REMOVE_DELAY = 1000
@@ -10,7 +10,7 @@ type ToasterToast = ToastProps & {
   id: string
   title?: React.ReactNode
   description?: React.ReactNode
-  action?: ToastActionElement
+  action?: React.ReactNode
   position?: string
 }
 

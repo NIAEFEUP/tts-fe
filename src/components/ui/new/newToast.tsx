@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react'
 import { VariantProps } from 'cva'
 import { X } from 'lucide-react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, HTMLMotionProps } from 'motion/react'
 
 import { Button } from './newButton'
 import { cn, cva } from '../../../lib/utils'
@@ -24,37 +24,53 @@ const toastVariants = cva({
   },
 })
 
-export interface ToastProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof toastVariants> {
+// Use HTMLMotionProps to avoid the motion/drag event mismatch
+export interface ToastProps
+  extends Omit<HTMLMotionProps<'div'>, 'children' | 'style'>, VariantProps<typeof toastVariants> {
   open?: boolean
   onOpenChange?: (open: boolean) => void
   index?: number
   total?: number
   isExpanded?: boolean
+  children?: React.ReactNode
+  style?: React.CSSProperties
+  duration?: number
 }
 
 const NewToast = React.forwardRef<HTMLDivElement, ToastProps>(
   (
-    { className, variant, open = true, index = 0, total = 1, isExpanded = false, onOpenChange, children, ...props },
+    {
+      className,
+      variant,
+      open = true,
+      index = 0,
+      total = 1,
+      isExpanded = false,
+      onOpenChange,
+      children,
+      style,
+      duration = 5000,
+      ...props
+    },
     ref,
   ) => {
     useEffect(() => {
       if (open && onOpenChange) {
         const timer = setTimeout(() => {
           onOpenChange(false)
-        }, 5000)
+        }, duration)
         return () => clearTimeout(timer)
       }
-    }, [open, onOpenChange])
+    }, [open, onOpenChange, duration])
 
     // Sonner stacking logic
-    // When expanded, we show them one after another with more space
-    // When collapsed, we stack them with 12px offset and scale down
     const offset = isExpanded ? index * 80 : index * 12
     const scale = isExpanded ? 1 : 1 - index * 0.05
     const zIndex = 100 - index
 
     return (
       <motion.div
+        ref={ref}
         layout
         initial={{ y: -100, opacity: 0 }}
         animate={{
@@ -71,6 +87,7 @@ const NewToast = React.forwardRef<HTMLDivElement, ToastProps>(
           mass: 1,
         }}
         className={cn(toastVariants({ variant }), className)}
+        style={style}
         {...props}
       >
         {children}
@@ -92,7 +109,14 @@ NewToastDescription.displayName = 'NewToastDescription'
 
 const NewToastClose = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
   ({ className, ...props }, ref) => (
-    <Button ref={ref} variant="ghost" size="xs" square className={cn('absolute right-3 top-3', className)} {...props}>
+    <Button
+      ref={ref}
+      variant="ghost"
+      size="xs"
+      square
+      className={cn('absolute right-2 top-2 rounded-xl', className)}
+      {...props}
+    >
       <X className="h-4 w-4" />
     </Button>
   ),

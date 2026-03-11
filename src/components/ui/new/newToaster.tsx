@@ -22,7 +22,7 @@ export function NewToaster() {
         <AnimatePresence mode="popLayout">
           {toasts
             .filter((t) => t.open !== false)
-            .map(function ({ id, title, description, action, onOpenChange, ...props }, index) {
+            .map(function ({ id, title, description, action, onOpenChange, position: _position, ...props }, index) {
               return (
                 <NewToast
                   key={id}
