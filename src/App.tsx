@@ -1,4 +1,4 @@
-import { Toaster } from './components/ui/toaster'
+import { NewToaster } from './components/ui/new/newToaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
@@ -125,7 +125,7 @@ const App = () => {
                 >
                   <div>
                     <page.element />
-                    <Toaster />
+                    <NewToaster />
                   </div>
                 </Layout>
               }
@@ -138,7 +138,7 @@ const App = () => {
               <Layout location="Exchange" title="Exchange" liquid={true}>
                 <div>
                   <ExchangeVerifyPage />
-                  <Toaster />
+                  <NewToaster />
                 </div>
               </Layout>
             }
