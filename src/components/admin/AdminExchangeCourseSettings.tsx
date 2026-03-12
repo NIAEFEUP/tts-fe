@@ -9,6 +9,7 @@ import { AdminExchangePeriodDeleteConfirmation } from './AdminExchangePeriodDele
 import { ExchangePeriodForm } from './AdminExchangePeriodForm'
 import { ExchangePeriodTable, ExchangePeriod } from './AdminExchangePeriodTable'
 import { useEffect, useState } from 'react'
+import { cn } from '../../lib/utils'
 
 export const AdminExchangeCourseSettings = () => {
   const { exchangeCoursePeriods, mutate } = useAdminExchangeCoursePeriods()

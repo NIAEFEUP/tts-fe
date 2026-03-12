@@ -9,6 +9,7 @@ import exchangeRequestService from '../../api/services/exchangeRequestService'
 import { AdminExchangePeriodDeleteConfirmation } from './AdminExchangePeriodDeleteConfirmation'
 import { ExchangePeriodForm } from './AdminExchangePeriodForm'
 import { ExchangePeriodTable, ExchangePeriod } from './AdminExchangePeriodTable'
+import { cn } from '../../lib/utils'
 
 export const AdminExchangeCourseUnitSettings = () => {
   const { courseUnitPeriods, mutate } = useAdminExchangeCourseUnitPeriods()

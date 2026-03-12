@@ -7,7 +7,7 @@ import RequestFiltersContext, {
 import useAdminExchangeCourses from '../../../hooks/admin/useAdminExchangeCourses'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/newPopover'
 import { Command, CommandGroup, CommandItem } from '../../ui/command'
-import { Check, ChevronDownIcon } from 'lucide-react'
+import { Check, ChevronDown } from 'lucide-react'
 import { Badge } from '../../ui/badge'
 
 export const RequestFilters = () => {
@@ -31,7 +31,7 @@ export const RequestFilters = () => {
         <PopoverTrigger asChild>
           <Button variant="outline" className="justify-between w-36 hover:bg-accent/5">
             {activeCourse ? courses?.find((c) => c.id === activeCourse)?.acronym : 'Curso'}
-            <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
+            <ChevronDown size="18" />{' '}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-36 p-0">
@@ -61,7 +61,7 @@ export const RequestFilters = () => {
         <PopoverTrigger asChild>
           <Button variant="outline" className="justify-between w-28 hover:bg-accent/5">
             {activeCurricularYear ? `${activeCurricularYear}º Ano` : 'Ano'}
-            <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
+            <ChevronDown size="18" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-28 p-0">
@@ -88,7 +88,7 @@ export const RequestFilters = () => {
 
       <Popover placement="bottom-start">
         <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-between w-32 hover:bg-accent/5">
+          <Button variant="outline" className="justify-between hover:bg-accent/5">
             <span className="flex items-center">
               Estado
               {activeStates.length > 0 && (
@@ -97,7 +97,7 @@ export const RequestFilters = () => {
                 </Badge>
               )}
             </span>
-            <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
+            <ChevronDown size="18" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-48 p-0">
