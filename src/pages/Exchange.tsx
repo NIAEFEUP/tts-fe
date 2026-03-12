@@ -150,7 +150,7 @@ const ExchangePage = () => {
           </div>
         </div>
 
-        <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-y-auto">
+        <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-y-auto no-scrollbar">
           <Tabs defaultIndex={0} className="flex flex-col h-full">
             <TabsItems className="w-full mb-2 shrink-0">
               <TabsItem className="flex-1">Pedidos</TabsItem>
