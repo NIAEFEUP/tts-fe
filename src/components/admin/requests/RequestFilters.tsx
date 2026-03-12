@@ -29,7 +29,7 @@ export const RequestFilters = () => {
     <div className="flex flex-row flex-wrap gap-2">
       <Popover open={courseOpen} onOpenChange={setCourseOpen} placement="bottom-start">
         <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-between w-36">
+          <Button variant="outline" className="justify-between w-36 hover:bg-accent/5">
             {activeCourse ? courses?.find((c) => c.id === activeCourse)?.acronym : 'Curso'}
             <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
           </Button>
@@ -59,7 +59,7 @@ export const RequestFilters = () => {
 
       <Popover open={yearOpen} onOpenChange={setYearOpen} placement="bottom-start">
         <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-between w-28">
+          <Button variant="outline" className="justify-between w-28 hover:bg-accent/5">
             {activeCurricularYear ? `${activeCurricularYear}º Ano` : 'Ano'}
             <ChevronDownIcon className="w-4 h-4 ml-2 opacity-50" />
           </Button>
@@ -88,7 +88,7 @@ export const RequestFilters = () => {
 
       <Popover placement="bottom-start">
         <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-between w-32">
+          <Button variant="outline" className="justify-between w-32 hover:bg-accent/5">
             <span className="flex items-center">
               Estado
               {activeStates.length > 0 && (
@@ -128,6 +128,7 @@ export const RequestFilters = () => {
 
       <Button
         variant="ghost"
+        className="hover:bg-foreground/5"
         onClick={() => {
           setActiveCourse(undefined)
           setActiveCurricularYear(undefined)

@@ -25,7 +25,7 @@ export const CreateRequest = ({ setExchangeSidebarStatus }: Props) => {
           {!selectingCourseUnits && (
             <Button
               size="md"
-              className="add-item-button bg-primary text-white"
+              className="add-item-button bg-primary hover:bg-primary/90 text-white"
               onClick={() => setSelectingCourseUnits(true)}
             >
               Disciplina +

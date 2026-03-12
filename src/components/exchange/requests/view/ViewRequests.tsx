@@ -118,7 +118,7 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
         <h1 className="font-bold text-xl">Pedidos</h1>
         <div className="flex flex-row gap-x-2">
           <Button
-            className="add-item-button bg-primary text-white"
+            className="add-item-button bg-primary hover:bg-primary/90 text-white"
             onClick={() => {
               setExchangeSidebarStatus(ExchangeSidebarStatus.CREATING_REQUEST)
               setExchangeSchedule(originalExchangeSchedule)

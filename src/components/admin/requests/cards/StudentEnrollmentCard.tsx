@@ -53,14 +53,14 @@ export const StudentEnrollmentCard = ({
                             name={enrollment.user_name}
                             nmec={enrollment.user_nmec}
                         />
-                    </>}
-                </div>
-                <div>
-                    <Button
-                        onClick={() => setOpen(prev => !prev)}
-                        variant="outline"
-                        className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-xs"
-                    >
+                    import { Button } from "../../../ui/new/newButton"
+                    ...
+                                    <div>
+                                        <Button
+                                            onClick={() => setOpen(prev => !prev)}
+                                            variant="outline"
+                                            className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-all duration-200 shadow-xs"
+                                        >
                         {open ? (
                             <ChevronUpIcon size={18} strokeWidth={2.5} />
                         ) : (

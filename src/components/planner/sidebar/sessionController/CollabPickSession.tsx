@@ -23,7 +23,7 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
     </p>
 
     <div className="flex justify-center mt-6 space-x-4 ">
-      <Button className="bg-primary" onClick={onCreateSession}>
+      <Button className="bg-primary hover:bg-primary/90 text-white" onClick={onCreateSession}>
         <PlayCircle size="18" />
         Iniciar nova sessão
       </Button>

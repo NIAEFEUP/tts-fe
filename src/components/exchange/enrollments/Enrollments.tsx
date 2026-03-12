@@ -141,7 +141,7 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
                 }
               }}
             >
-              <Button size="md" className="w-full bg-primary text-white">
+              <Button size="md" className="w-full bg-primary hover:bg-primary/90 text-white">
                 Submeter
               </Button>
             </form>

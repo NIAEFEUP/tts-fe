@@ -68,7 +68,7 @@ const PrintSchedule = ({ component, optionName }: Props) => {
   return (
     <Tooltip delayIn={300}>
       <TooltipTrigger asChild onClick={() => takeScreenshot(enabled)}>
-        <Button square className="bg-lightish text-black dark:bg-darkish dark:text-white">
+        <Button square className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white">
           <Camera size="18" />
         </Button>
       </TooltipTrigger>

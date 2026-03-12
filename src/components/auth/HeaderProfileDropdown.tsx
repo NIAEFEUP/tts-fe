@@ -57,7 +57,9 @@ export const HeaderProfileDropdown = () => {
           <DialogDescription>Tem a certeza que deseja sair?</DialogDescription>
           <DialogActions className="justify-center">
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline" className="hover:bg-accent/5">
+                Cancelar
+              </Button>
             </DialogClose>
             <Button
               variant="destructive"

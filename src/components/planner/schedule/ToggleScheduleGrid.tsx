@@ -20,7 +20,7 @@ const ToggleScheduleGrid = ({ showGridHook }: Props) => {
           AnalyticsTracker.trackFeature(Feature.GRID)
         }}
       >
-        <Button square className="bg-lightish text-black dark:bg-darkish dark:text-white">
+        <Button square className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white">
           <Columns3 size="18" />
         </Button>
       </TooltipTrigger>

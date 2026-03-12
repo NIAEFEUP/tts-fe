@@ -1,29 +1,29 @@
-"use client";
+'use client'
 
-import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table';
-import { DateTimePicker } from '../ui/datetime-picker';
-import { Button } from '../ui/button';
-import { Edit2Icon, Trash2Icon, CheckIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import React from 'react';
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
+import { DateTimePicker } from '../ui/datetime-picker'
+import { Button } from '../ui/button'
+import { Edit2Icon, Trash2Icon, CheckIcon } from 'lucide-react'
+import { format } from 'date-fns'
+import React from 'react'
 
 export interface ExchangePeriod {
-  id: number;
-  startDate: string;
-  endDate: string;
+  id: number
+  startDate: string
+  endDate: string
 }
 
 interface ExchangePeriodTableProps {
-  periods: ExchangePeriod[];
-  editingPeriodId: number | null;
-  editingStartDate: Date | undefined;
-  editingEndDate: Date | undefined;
-  isLoading: boolean;
-  onEditChange: (periodId: number, newStartDate: Date, newEndDate: Date) => void;
-  onEditSubmit: (e) => void;
-  onCancelEdit: () => void;
-  onDelete: (periodId: number) => void;
-  formatDate?: (dateString: string) => string;
+  periods: ExchangePeriod[]
+  editingPeriodId: number | null
+  editingStartDate: Date | undefined
+  editingEndDate: Date | undefined
+  isLoading: boolean
+  onEditChange: (periodId: number, newStartDate: Date, newEndDate: Date) => void
+  onEditSubmit: (e) => void
+  onCancelEdit: () => void
+  onDelete: (periodId: number) => void
+  formatDate?: (dateString: string) => string
 }
 
 export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
@@ -76,25 +76,29 @@ export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
               <TableCell className="flex justify-center gap-2">
                 {editingPeriodId === period.id ? (
                   <>
-                    <Button onClick={onEditSubmit} size="sm" disabled={isLoading}>
-                      <CheckIcon className="h-4 w-4" />
+                    <Button onClick={onEditSubmit} size="sm" disabled={isLoading} className="hover:bg-accent/90">
+                      <CheckIcon size="16" />
                     </Button>
-                    <Button onClick={onCancelEdit} variant="destructive" size="sm">
-                      Cancelar
+                    <Button onClick={onCancelEdit} variant="destructive" size="sm" className="hover:bg-red-700">
+                      <XMarkIcon size="16" />
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button
-                      onClick={() =>
-                        onEditChange(period.id, new Date(period.startDate), new Date(period.endDate))
-                      }
+                      onClick={() => onEditChange(period.id, new Date(period.startDate), new Date(period.endDate))}
                       size="sm"
                     >
                       <Edit2Icon className="h-4 w-4" />
                     </Button>
-                    <Button onClick={() => onDelete(period.id)} variant="destructive" size="sm" disabled={isLoading}>
-                      <Trash2Icon className="h-4 w-4" />
+                    <Button
+                      onClick={() => onDelete(period.id)}
+                      variant="destructive"
+                      size="sm"
+                      disabled={isLoading}
+                      className="hover:bg-red-700"
+                    >
+                      <TrashIcon size="16" />
                     </Button>
                   </>
                 )}
@@ -110,5 +114,5 @@ export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
         )}
       </TableBody>
     </Table>
-  );
-};
+  )
+}

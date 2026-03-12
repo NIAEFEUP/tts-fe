@@ -63,7 +63,7 @@ const DownloadSchedule = ({ classes }: Props) => {
   return (
     <Tooltip delayIn={300}>
       <TooltipTrigger asChild onClick={downloadIcs}>
-        <Button square className="bg-lightish text-black dark:bg-darkish dark:text-white">
+        <Button square className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white">
           <CalendarDays size="18" />
         </Button>
       </TooltipTrigger>

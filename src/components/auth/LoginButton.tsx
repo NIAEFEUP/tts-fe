@@ -1,6 +1,6 @@
-import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline"
-import api from "../../api/backend"
-import { Button } from "../ui/button"
+import { ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/outline'
+import api from '../../api/backend'
+import { Button } from '../ui/new/newButton'
 
 const FEDERATED_AUTH = Number(import.meta.env.VITE_APP_FEDERATED_AUTH)
 
@@ -9,14 +9,17 @@ type Props = {
 }
 
 const FederatedAuthButton = ({ expanded = false }: Props) => {
-  return <Button
-    variant={`${expanded ? "default" : "ghost"}`}
-  >
-    <a href={api.OIDC_LOGIN_URL} className="flex flex-row gap-1" >
-      <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
-      {expanded && "Entrar"}
-    </a>
-  </Button >
+  return (
+    <Button
+      variant={`${expanded ? 'primary' : 'ghost'}`}
+      className={`${expanded ? 'hover:bg-accent/90' : 'hover:bg-foreground/5'}`}
+    >
+      <a href={api.OIDC_LOGIN_URL} className="flex flex-row gap-1">
+        <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
+        {expanded && 'Entrar'}
+      </a>
+    </Button>
+  )
 }
 
 const SigarraAuthButton = ({ expanded = false }: Props) => {
@@ -26,8 +29,10 @@ const SigarraAuthButton = ({ expanded = false }: Props) => {
         e.preventDefault()
 
         await fetch(`${api.BACKEND_URL}/sigarra_login/`, {
-          method: "POST", credentials: "include", headers: {
-            "X-CSRFToken": api.getCSRFToken(),
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'X-CSRFToken': api.getCSRFToken(),
           },
         })
 
@@ -35,13 +40,14 @@ const SigarraAuthButton = ({ expanded = false }: Props) => {
       }}
     >
       <Button
-        variant={`${expanded ? "default" : "ghost"}`}
+        variant={`${expanded ? 'primary' : 'ghost'}`}
+        className={`${expanded ? 'hover:bg-accent/90' : 'hover:bg-foreground/5'}`}
       >
-        <a className="flex flex-row gap-1" >
+        <a className="flex flex-row gap-1">
           <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
-          {expanded && "Entrar"}
+          {expanded && 'Entrar'}
         </a>
-      </Button >
+      </Button>
     </form>
   )
 }
@@ -49,10 +55,7 @@ const SigarraAuthButton = ({ expanded = false }: Props) => {
 export const LoginButton = ({ expanded = false }: Props) => {
   return (
     <>
-      {FEDERATED_AUTH === 1
-        ? <FederatedAuthButton expanded={expanded} />
-        : <SigarraAuthButton expanded={expanded} />
-      }
+      {FEDERATED_AUTH === 1 ? <FederatedAuthButton expanded={expanded} /> : <SigarraAuthButton expanded={expanded} />}
     </>
   )
 }

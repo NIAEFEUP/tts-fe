@@ -49,7 +49,11 @@ const Sidebar = () => {
         <CoursesController />
       </div>
       <footer className=" gap-x-1 border-white-300 text-center flex items-end justify-end">
-        <Button onClick={eraseClasses} className={`bg-lightish text-darkish gap-1.5`} disabled={noClassesPicked}>
+        <Button
+          onClick={eraseClasses}
+          className={`bg-lightish hover:bg-lightish/90 text-darkish gap-1.5`}
+          disabled={noClassesPicked}
+        >
           <Trash size="18" />
           <span>Limpar</span>
         </Button>

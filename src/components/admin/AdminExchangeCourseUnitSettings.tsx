@@ -163,6 +163,7 @@ export const AdminExchangeCourseUnitSettings = () => {
                 }}
                 size="md"
                 square
+                className="hover:bg-accent/90"
               >
                 <PlusIcon className="h-5 w-5" />
               </Button>
@@ -206,7 +207,7 @@ export const AdminExchangeCourseUnitSettings = () => {
               <Button
                 key={courseUnit.id}
                 variant={selectedGroup === idx ? 'primary' : 'ghost'}
-                className="justify-start"
+                className={cn('justify-start', selectedGroup === idx && 'hover:bg-accent/90')}
                 onClick={() => {
                   setSelectedGroup(idx)
                   setSelectedCourseUnit(courseUnit.id)

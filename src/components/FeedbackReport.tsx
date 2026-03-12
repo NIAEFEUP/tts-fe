@@ -59,7 +59,7 @@ export const FeedbackReport = () => {
   return (
     <Dropdown open={open} onOpenChange={setOpen}>
       <DropdownTrigger asChild>
-        <Button className="bg-white" variant="outline">
+        <Button className="bg-white hover:bg-accent/5" variant="outline">
           <Flag size="16" className="text-black dark:text-white md:dark:text-black" />
           <p className="hidden sm:block text-black dark:text-white md:dark:text-black">Feedback</p>
         </Button>
@@ -110,7 +110,7 @@ export const FeedbackReport = () => {
               )}
             />
 
-            <Button type="submit" className="w-full mt-2">
+            <Button type="submit" className="w-full mt-2 hover:bg-accent/90">
               Submeter
             </Button>
           </form>

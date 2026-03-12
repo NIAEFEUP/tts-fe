@@ -76,7 +76,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
       <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <PopoverTrigger asChild>
-            <Button square size="md" className="p-2 bg-lightish dark:bg-darkish">
+            <Button square size="md" className="p-2 bg-lightish hover:bg-lightish/90 dark:bg-darkish">
               <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
             </Button>
           </PopoverTrigger>
