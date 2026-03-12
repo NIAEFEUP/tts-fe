@@ -49,10 +49,11 @@ export const ListRequestChanges = ({
             <Checkbox
               id={option.course_info.acronym}
               className="mt-1"
+              variant="primary"
               checked={selectedOptions.get(option.course_info.acronym) || false}
               onChange={() => handleOptionChange(option.course_info.acronym)}
             />
-          )}
+          )}{' '}
           <div className="flex-1 min-w-0">
             <label htmlFor={option.course_info.acronym} className="cursor-pointer">
               {/* Header com código e nome da disciplina */}

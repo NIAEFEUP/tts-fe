@@ -126,7 +126,12 @@ export const RequestCard = () => {
           <CardFooter className={open ? '' : 'hidden'}>
             <div className="flex flex-col w-full space-y-3">
               <div className="flex flex-row items-center justify-center gap-x-2">
-                <Checkbox id={`select-all-${request.id}`} checked={selectAll} onChange={handleSelectAll} />
+                <Checkbox
+                  id={`select-all-${request.id}`}
+                  variant="primary"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                />
                 <label htmlFor={`select-all-${request.id}`} className="text-sm cursor-pointer select-none">
                   Selecionar todas
                 </label>
