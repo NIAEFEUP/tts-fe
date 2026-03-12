@@ -32,7 +32,7 @@ export const StudentEnrollmentCard = ({ enrollment }: Props) => {
           <div className="flex flex-col gap-1 ">
             <div className="flex gap-2 items-center text-left">
               <CardTitle>
-                <h2 className="font-bold">{`#${enrollment.id}`}</h2>
+                <span className="font-bold">{`#${enrollment.id}`}</span>
               </CardTitle>
               <ExchangeStatus exchange={enrollmentState} />
             </div>
@@ -76,11 +76,11 @@ export const StudentEnrollmentCard = ({ enrollment }: Props) => {
                   .map((option) => (
                     <div key={option.id}>
                       <div className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4">
-                        <h2 className="font-bold">{option.course_unit.acronym}</h2>
+                        <span className="font-bold text-lg">{option.course_unit?.acronym || 'N/A'}</span>
                         {option.enrolling ? <Check className="text-green-400" /> : <X className="text-red-400" />}
                       </div>
                     </div>
-                  ))}
+                  ))}{' '}
               </div>
               <div>
                 <AdminPreviewSchedule

@@ -58,7 +58,7 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
         <div className="flex flex-col w-1/3 gap-2 relative">
           <div className="flex gap-2 items-center text-left">
             <CardTitle>
-              <h2 className="font-bold">#{exchangeState.id}</h2>
+              <span className="font-bold">#{exchangeState.id}</span>
             </CardTitle>
             <ExchangeStatus exchange={exchangeState} />
           </div>
@@ -123,8 +123,8 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
             exchangeState.options.map((option) => ({
               participant_nmec: option.participant_nmec,
               participant_name: option.participant_name,
-              goes_from: option.class_participant_goes_from.name,
-              goes_to: option.class_participant_goes_to.name,
+              goes_from: option.class_participant_goes_from?.name || 'N/A',
+              goes_to: option.class_participant_goes_to?.name || 'N/A',
               course_acronym: option.course_unit,
             })),
           )}

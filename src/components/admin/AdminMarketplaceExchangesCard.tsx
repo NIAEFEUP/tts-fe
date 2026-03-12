@@ -41,7 +41,7 @@ export const AdminMarketplaceExchangesCard = ({ exchange }: Props) => {
           <div className="flex flex-col gap-1 ">
             <div className="flex gap-2 items-center text-left">
               <CardTitle>
-                <h2 className="font-bold">{`#${exchange.id}`}</h2>
+                <span className="font-bold">{`#${exchange.id}`}</span>
               </CardTitle>
               <ExchangeStatus exchange={exchangeState} />
             </div>
@@ -75,16 +75,18 @@ export const AdminMarketplaceExchangesCard = ({ exchange }: Props) => {
                     <div key={crypto.randomUUID()} className="flex justify-between items-center gap-3 text-left">
                       <span className="font-bold">{option.course_info.acronym}</span>
                       <div className="flex gap-2 items-center text-muted-foreground">
-                        <span>{option.class_issuer_goes_from.name}</span>
+                        <span>{option.class_issuer_goes_from?.name || 'N/A'}</span>
                         <ArrowRightIcon size={14} />
-                        <span className="text-foreground font-medium">{option.class_issuer_goes_to.name}</span>
+                        <span className="text-foreground font-medium">
+                          {option.class_issuer_goes_to?.name || 'N/A'}
+                        </span>
                       </div>
                       <span className="text-xs italic">
-                        ({option.class_issuer_goes_from.vacancies ?? 'N/A'}
+                        ({option.class_issuer_goes_from?.vacancies ?? 'N/A'}
                         <ArrowRightIcon className="inline mx-0.5" size={10} />
-                        {option.class_issuer_goes_to.vacancies ?? 'N/A'} {'vagas'})
+                        {option.class_issuer_goes_to?.vacancies ?? 'N/A'} {'vagas'})
                       </span>
-                      {diffvacancies(option.class_issuer_goes_from.vacancies, option.class_issuer_goes_to.vacancies)}
+                      {diffvacancies(option.class_issuer_goes_from?.vacancies, option.class_issuer_goes_to?.vacancies)}
                     </div>
                   ))}
                 </div>
@@ -114,7 +116,7 @@ export const AdminMarketplaceExchangesCard = ({ exchange }: Props) => {
               participant_name: exchange.issuer_name,
               participant_nmec: exchange.issuer_nmec,
               goes_from: option.class_issuer_goes_from?.name,
-              goes_to: option.class_issuer_goes_to.name,
+              goes_to: option.class_issuer_goes_to?.name,
               course_acronym: option.course_info.acronym,
             })),
           )}

@@ -30,7 +30,7 @@ export const SingleStudentExchangeCard = ({ exchange }: Props) => {
             <div className="flex flex-col gap-1 ">
               <div className="flex gap-2 items-center text-left">
                 <CardTitle>
-                  <h2 className="font-bold">{`#${exchange.id}`}</h2>
+                  <span className="font-bold">{`#${exchange.id}`}</span>
                 </CardTitle>
                 <ExchangeStatus exchange={exchangeState} />
               </div>
@@ -67,16 +67,18 @@ export const SingleStudentExchangeCard = ({ exchange }: Props) => {
                           key={option.course_info.course}
                           className="flex justify-between items-center gap-3 text-left"
                         >
-                          <span className="font-bold">{option.course_info.acronym}</span>
+                          <span className="font-bold">{option.course_info?.acronym || 'N/A'}</span>
                           <div className="flex gap-2 items-center text-muted-foreground">
-                            <span>{option.class_issuer_goes_from.name}</span>
+                            <span>{option.class_issuer_goes_from?.name || 'N/A'}</span>
                             <ArrowRightIcon size={14} />
-                            <span className="text-foreground font-medium">{option.class_issuer_goes_to.name}</span>
+                            <span className="text-foreground font-medium">
+                              {option.class_issuer_goes_to?.name || 'N/A'}
+                            </span>
                           </div>
                           <span className="text-xs italic">
-                            ({option.class_issuer_goes_from.vacancies ?? 'N/A'}
+                            ({option.class_issuer_goes_from?.vacancies ?? 'N/A'}
                             <ArrowRightIcon className="inline mx-0.5" size={10} />
-                            {option.class_issuer_goes_to.vacancies ?? 'N/A'} {'vagas'})
+                            {option.class_issuer_goes_to?.vacancies ?? 'N/A'} {'vagas'})
                           </span>
                         </div>
                       ))}
