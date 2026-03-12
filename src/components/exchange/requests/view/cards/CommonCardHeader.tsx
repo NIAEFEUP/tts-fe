@@ -1,6 +1,6 @@
 import { ArchiveBoxIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { DirectExchangeRequest, MarketplaceRequest } from '../../../../../@types'
-import { Button } from '../../../../ui/button'
+import { Button } from '../../../../ui/new/newButton'
 import { CardDescription, CardHeader, CardTitle } from '../../../../ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../../ui/new/tooltip'
 import RequestCardClassBadge from './RequestCardClassBadge'
@@ -60,7 +60,7 @@ export const CommonCardHeader = ({
     <CardHeader className="flex flex-row gap-x-2 items-center p-4">
       <img className="w-10 h-10 rounded-full shadow-md" src={studentInfoService.getStudentPictureUrl(username)}></img>
       <div className="flex flex-row justify-between items-center w-full">
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full text-left">
           <div className="flex flex-row justify-between w-full items-center">
             <CardTitle>{name}</CardTitle>
             {showRequestStatus && (
@@ -73,7 +73,9 @@ export const CommonCardHeader = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant="icon"
+                      variant="ghost"
+                      size="sm"
+                      square
                       className="text-black dark:text-white"
                       onClick={() => {
                         hideHandler()
@@ -89,12 +91,20 @@ export const CommonCardHeader = ({
               )}
 
               {open ? (
-                <Button variant="icon" className="text-black dark:text-white" onClick={() => setOpen(false)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  square
+                  className="text-black dark:text-white"
+                  onClick={() => setOpen(false)}
+                >
                   <ChevronUpIcon className="h-5 w-5" />
                 </Button>
               ) : (
                 <Button
-                  variant="icon"
+                  variant="ghost"
+                  size="sm"
+                  square
                   className="text-black dark:text-white"
                   onClick={() => {
                     setOpen(true)
