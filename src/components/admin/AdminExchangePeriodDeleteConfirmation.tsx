@@ -1,6 +1,6 @@
 'use client'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
-import { Button } from '../ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../ui/new/dialog'
+import { Button } from '../ui/new/newButton'
 
 interface DeleteConfirmationDialogProps {
   open: boolean
@@ -16,10 +16,10 @@ export const AdminExchangePeriodDeleteConfirmation = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <DialogHeader>
+        <div className="flex flex-col">
           <DialogTitle>Confirmar Exclusão</DialogTitle>
-          <DialogDescription>Tem certeza que deseja excluir este período de troca?</DialogDescription>
-        </DialogHeader>
+          <DialogDescription className="mt-2">Tem certeza que deseja excluir este período de troca?</DialogDescription>
+        </div>
         <div className="flex justify-end gap-2 mt-4">
           <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
             Cancelar

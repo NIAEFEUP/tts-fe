@@ -3,7 +3,7 @@ import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, Urgent
 import { AdminRequestType } from '../../../../utils/exchange'
 import exchangeRequestService from '../../../../api/services/exchangeRequestService'
 import { mailtoStringBuilder } from '../../../../utils/mail'
-import { Button } from '../../../ui/button'
+import { Button } from '../../../ui/new/newButton'
 import { CardFooter } from '../../../ui/card'
 import { Separator } from '../../../ui/separator'
 import { AdminSendEmail } from '../AdminSendEmail'
@@ -96,10 +96,10 @@ export const AdminRequestCardFooter = ({
 }: Props) => {
   const awaitInfo = async () => {
     await markRequestAsAwaitingInformation(requestType, requestId)
-    setExchange((prev) => {
+    setExchange?.((prev) => {
       const newPrev = { ...prev }
       newPrev.admin_state = 'awaiting-information'
-      return newPrev
+      return newPrev as any
     })
   }
 
@@ -107,17 +107,17 @@ export const AdminRequestCardFooter = ({
 
   return (
     <>
-      import {Button} from "../../../ui/new/newButton" ...
+      <Separator className="my-4" />
       <CardFooter className="justify-end gap-4">
         <Button
           variant="destructive"
           className="hover:bg-red-700"
           onClick={async () => {
             await rejectRequest(nmecs, exchangeMessage, requestType, requestId, user.name)
-            setExchange((prev) => {
+            setExchange?.((prev) => {
               const newPrev = { ...prev }
               newPrev.admin_state = 'rejected'
-              return newPrev
+              return newPrev as any
             })
           }}
         >
@@ -127,10 +127,10 @@ export const AdminRequestCardFooter = ({
         <Button
           onClick={async () => {
             await acceptRequest(nmecs, exchangeMessage, requestType, requestId, user.name)
-            setExchange((prev) => {
+            setExchange?.((prev) => {
               const newPrev = { ...prev }
               newPrev.admin_state = 'accepted'
-              return newPrev
+              return newPrev as any
             })
           }}
           className="bg-green-600 text-white hover:bg-green-700"

@@ -2,8 +2,8 @@
 
 import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
 import { DateTimePicker } from '../ui/datetime-picker'
-import { Button } from '../ui/button'
-import { Edit2Icon, Trash2Icon, CheckIcon } from 'lucide-react'
+import { Button } from '../ui/new/newButton'
+import { Edit2Icon, Trash2Icon, CheckIcon, XIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import React from 'react'
 
@@ -80,7 +80,7 @@ export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
                       <CheckIcon size="16" />
                     </Button>
                     <Button onClick={onCancelEdit} variant="destructive" size="sm" className="hover:bg-red-700">
-                      <XMarkIcon size="16" />
+                      <XIcon size="16" />
                     </Button>
                   </>
                 ) : (
@@ -88,6 +88,7 @@ export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
                     <Button
                       onClick={() => onEditChange(period.id, new Date(period.startDate), new Date(period.endDate))}
                       size="sm"
+                      variant="ghost"
                     >
                       <Edit2Icon className="h-4 w-4" />
                     </Button>
@@ -98,7 +99,7 @@ export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
                       disabled={isLoading}
                       className="hover:bg-red-700"
                     >
-                      <TrashIcon size="16" />
+                      <Trash2Icon size="16" />
                     </Button>
                   </>
                 )}

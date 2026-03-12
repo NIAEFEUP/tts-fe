@@ -1,4 +1,4 @@
-import { Button } from '../ui/button'
+import { Button } from '../ui/new/newButton'
 import { BoltIcon, FunnelIcon, CameraIcon, ShareIcon, HashtagIcon, PencilIcon } from '@heroicons/react/24/outline'
 
 const features = [
@@ -43,11 +43,14 @@ const FeatureCards = () => {
     <div className="m-4 grid grid-cols-1 gap-4 sm:m-8 sm:grid-cols-2 sm:gap-6 lg:m-12 lg:grid-cols-3 lg:gap-12">
       {features.map((feature, index) => (
         <div key={index} className="rounded-lg bg-white p-4 text-center shadow-lg dark:bg-dark sm:p-5">
-          <Button className="relative left-0 top-0 mx-auto h-16 w-16 grow cursor-default rounded-full border-4 border-primary bg-inherit text-primary hover:bg-secondary dark:bg-inherit dark:text-primary sm:h-20 sm:w-20">
+          <Button
+            variant="ghost"
+            className="relative left-0 top-0 mx-auto h-16 w-16 grow cursor-default rounded-full border-4 border-primary bg-inherit text-primary hover:bg-secondary dark:bg-inherit dark:text-primary sm:h-20 sm:w-20 active:scale-100"
+          >
             <feature.Icon className="sm:h-15 sm:w-15 mx-auto h-10 w-10" />
           </Button>
-          <h3 className="sm:text-md py-2 text-sm font-bold">{feature.title}</h3>
-          <p className="text-xs sm:text-sm">{feature.description}</p>
+          <h3 className="sm:text-md py-2 text-sm font-bold text-left">{feature.title}</h3>
+          <p className="text-xs sm:text-sm text-left">{feature.description}</p>
         </div>
       ))}
     </div>

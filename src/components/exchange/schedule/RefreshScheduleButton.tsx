@@ -1,6 +1,6 @@
-import { cn } from "../../../utils";
-import { RotateCwIcon } from "lucide-react";
-import { Button } from "../../ui/button";
+import { cn } from '../../../utils'
+import { RotateCwIcon } from 'lucide-react'
+import { Button } from '../../ui/new/newButton'
 
 type Props = {
   forceRefreshStudentSchedule: () => void
@@ -11,17 +11,17 @@ type Props = {
 export default function RefreshScheduleButton({
   forceRefreshStudentSchedule,
   loadingSchedule,
-  isRefreshingStudentSchedule
+  isRefreshingStudentSchedule,
 }: Props) {
   return (
     <Button
-      variant="icon"
-      className="bg-lightish text-black dark:bg-darkish dark:text-white"
+      square
+      className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white"
       onClick={() => {
-        forceRefreshStudentSchedule();
+        forceRefreshStudentSchedule()
       }}
     >
-      <RotateCwIcon className={cn("h-4 w-4", (!loadingSchedule && isRefreshingStudentSchedule) ? "animate-spin" : "")} />
+      <RotateCwIcon size="18" className={!loadingSchedule && isRefreshingStudentSchedule ? 'animate-spin' : ''} />
     </Button>
   )
 }
