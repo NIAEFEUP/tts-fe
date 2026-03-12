@@ -74,13 +74,13 @@ const SelectedOptionController = ({ currentOption }: Props) => {
   return (
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between gap-2">
       <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
-        <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
+        <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen} placement="bottom">
           <PopoverTrigger asChild>
             <Button square size="md" className="p-2 bg-lightish hover:bg-lightish/90 dark:bg-darkish">
               <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
             </Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
+          <PopoverContent className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
             <EmojiPicker
               width="100%"
               searchDisabled={true}

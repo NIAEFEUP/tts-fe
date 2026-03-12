@@ -1,4 +1,4 @@
-import { ArrowRightIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { ArrowRight, Trash, ChevronDown } from 'lucide-react'
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from '../../../../../@types'
 import { ScrollArea } from '../../../../ui/scroll-area'
@@ -134,7 +134,7 @@ export const CreateRequestCard = ({
         <CardTitle className="text-md">{courseInfo.name}</CardTitle>
         <div className="flex flex-row items-center gap-x-2">
           <Button variant="destructive" size="md" square className="p-2 h-8 w-8" onClick={() => excludeClass()}>
-            <TrashIcon className="w-5 h-5" />
+            <Trash size="18" />
           </Button>
         </div>
       </CardHeader>
@@ -142,7 +142,7 @@ export const CreateRequestCard = ({
         {(!hasStudentToExchange || (selectedDestinationStudent && hasStudentToExchange)) && (
           <div className="flex flex-row items-center gap-x-2">
             <p>{issuerOriginClassName}</p>
-            <ArrowRightIcon className="w-5 h-5" />
+            <ArrowRight size="18" />
             <div className="p-2 rounded-md w-full">
               {hasStudentToExchange && selectedDestinationStudent && selectedDestinationStudent.classInfo ? (
                 <p>{selectedDestinationStudent.classInfo.name}</p>
@@ -151,7 +151,7 @@ export const CreateRequestCard = ({
                   <DropdownTrigger asChild className="w-full">
                     <Button variant="outline" size="md" className="w-full justify-between">
                       {selectedDestinationClass?.name ?? 'Escolher turma...'}
-                      <ArrowRightIcon className="h-4 w-4 opacity-50" />
+                      <ArrowRight size="18" />
                     </Button>
                   </DropdownTrigger>
                   <DropdownItems className="w-full w-(--radix-popper-anchor-width) p-1">
@@ -200,7 +200,7 @@ export const CreateRequestCard = ({
                   ) : (
                     <span>Escolher estudante</span>
                   )}
-                  <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  <ChevronDown size="18" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-full w-(--radix-popper-anchor-width) p-0">

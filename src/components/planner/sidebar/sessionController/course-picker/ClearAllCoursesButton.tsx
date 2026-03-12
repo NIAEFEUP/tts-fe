@@ -8,17 +8,20 @@ import { DialogClose } from '../../../../ui/new/dialog'
 
 export const ClearAllCoursesButton = () => {
   const { setCheckboxedCourses } = useContext(CourseContext)
-  const { multipleOptions } = useContext(MultipleOptionsContext)
+  const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext)
+
+  const clearAllCourses = () => {
+    setCheckboxedCourses([])
+    const newOptions = removeAllCourseOptions(multipleOptions)
+    setMultipleOptions([...newOptions])
+  }
 
   return (
     <>
       <Button
-        onClick={() => {
-          setCheckboxedCourses([])
-          removeAllCourseOptions(multipleOptions)
-        }}
+        onClick={clearAllCourses}
         variant="primary"
-        className="bg-lightish text-darkish gap-1.5"
+        className="bg-lightish hover:bg-lightish/90 text-darkish gap-1.5"
       >
         <TrashIcon className="h-5 w-5" />
         <span>Limpar</span>
