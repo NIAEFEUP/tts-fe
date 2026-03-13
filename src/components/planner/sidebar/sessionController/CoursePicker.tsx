@@ -1,6 +1,7 @@
 import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
 import { PencilSquareIcon } from '@heroicons/react/24/solid'
 import { useContext, useEffect } from 'react'
+// TODO: import useCourseUnits from '../../../../hooks/useCourseUnits'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/button'
 import { 
@@ -13,7 +14,6 @@ import {
   DialogTrigger 
 } from '../../../ui/dialog'
 import { Separator } from '../../../ui/separator'
-import useCourseUnits from '../../../../hooks/useCourseUnits'
 import { Skeleton } from '../../../ui/skeleton'
 import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
 import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
@@ -32,7 +32,7 @@ const CoursePicker = () => {
     setSelectedMajor
   } = useContext(CoursePickerContext)
 
-  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
+  const [courseUnits, loadingCourseUnits] = [[], false];
   const showContent = selectedMajor || coursesStorage.length > 0
 
   useEffect(() => {
