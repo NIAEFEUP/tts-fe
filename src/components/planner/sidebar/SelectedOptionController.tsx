@@ -43,7 +43,9 @@ const SelectedOptionController = ({
 
   const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '');
 
-  // TODO: add useEffect to sync optionName when selectedOption changes
+  useEffect(() => {
+    setOptionName(multipleOptions[selectedOption].name)
+  }, [selectedOption, multipleOptions])
 
   const renameOptionName = (event) => {
     const newName = event.target.value;
