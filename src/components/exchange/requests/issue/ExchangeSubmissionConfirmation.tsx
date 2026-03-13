@@ -1,24 +1,24 @@
-import { CheckBadgeIcon } from "@heroicons/react/24/outline";
-import { BeatLoader } from "react-spinners";
-import { Desert } from "../../../svgs";
-import { Button } from "../../../ui/button";
-import PreviewRequestCard from "./cards/PreviewRequestCard";
-import { Checkbox } from "../../../ui/checkbox";
-import { Textarea } from "../../../ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
-import exchangeRequestService from "../../../../api/services/exchangeRequestService";
-import { CreateRequestData } from "../../../../@types";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckBadgeIcon } from '@heroicons/react/24/outline'
+import { BeatLoader } from 'react-spinners'
+import { Desert } from '../../../svgs'
+import { Button } from '../../../ui/button'
+import PreviewRequestCard from './cards/PreviewRequestCard'
+import { Checkbox } from '../../../ui/checkbox'
+import { Textarea } from '../../../ui/textarea'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
+import exchangeRequestService from '../../../../api/services/exchangeRequestService'
+import { CreateRequestData } from '../../../../@types'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-import { z } from "zod";
-import { Dispatch, SetStateAction } from "react";
+import { z } from 'zod'
+import { Dispatch, SetStateAction } from 'react'
 
 type Props = {
-  requests: Map<number, CreateRequestData>,
-  requestSubmitHandler: (message: string) => void,
-  submittingRequest: boolean,
-  sendUrgentMessage: boolean,
+  requests: Map<number, CreateRequestData>
+  requestSubmitHandler: (message: string) => void
+  submittingRequest: boolean
+  sendUrgentMessage: boolean
   setSendUrgentMessage: Dispatch<SetStateAction<boolean>>
 }
 
@@ -27,21 +27,25 @@ export const ExchangeSubmissionConfirmation = ({
   requestSubmitHandler,
   submittingRequest,
   sendUrgentMessage,
-  setSendUrgentMessage
+  setSendUrgentMessage,
 }: Props) => {
-
   const schema = z.object({
-    urgentMessage: sendUrgentMessage ? z.string().min(1, {
-      message: "Tens de especificar um motivo!"
-    }).max(2048) : z.string().optional()
-  });
+    urgentMessage: sendUrgentMessage
+      ? z
+          .string()
+          .min(1, {
+            message: 'Tens de especificar um motivo!',
+          })
+          .max(2048)
+      : z.string().optional(),
+  })
 
   const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema)
-  });
+    resolver: zodResolver(schema),
+  })
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    await requestSubmitHandler(data.urgentMessage);
+    await requestSubmitHandler(data.urgentMessage)
   }
 
   // const { conflictSeverity } = useContext(ConflictsContext);
@@ -49,39 +53,36 @@ export const ExchangeSubmissionConfirmation = ({
   return (
     <>
       <div>
-        {requests.size === 0 ?
-          <div className="flex flex-col justify-center items-center">
+        {requests.size === 0 ? (
+          <div className="flex flex-col items-center justify-center">
             <Desert className="w-full" />
             <p>Ainda não escolheste nenhuma turma em nenhuma das disciplinas selecionadas.</p>
           </div>
-          : <div>
-            {
-              Array.from(requests.values()).map((request) => (
-                <PreviewRequestCard
-                  key={request.courseUnitId}
-                  request={request}
-                />
-              ))
-            }
+        ) : (
+          <div>
+            {Array.from(requests.values()).map((request) => (
+              <PreviewRequestCard key={request.courseUnitId} request={request} />
+            ))}
           </div>
-        }
+        )}
       </div>
 
-      {requests.size > 0 &&
+      {requests.size > 0 && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 items-center mx-auto">
-            {!exchangeRequestService.isDirectExchange(requests.values()) && <div className="flex flex-row gap-x-2 items-center">
-              <Checkbox
-                checked={sendUrgentMessage}
-                onCheckedChange={(checked: boolean) => {
-                  setSendUrgentMessage(checked)
-                  if (!checked) form.setValue("urgentMessage", "")
-                }}
-              />
-              <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p>
-            </div>
-            }
-            {sendUrgentMessage &&
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto flex flex-col items-center gap-y-4">
+            {!exchangeRequestService.isDirectExchange(requests.values()) && (
+              <div className="flex flex-row items-center gap-x-2">
+                <Checkbox
+                  checked={sendUrgentMessage}
+                  onCheckedChange={(checked: boolean) => {
+                    setSendUrgentMessage(checked)
+                    if (!checked) form.setValue('urgentMessage', '')
+                  }}
+                />
+                <p className="text-justify">O meu pedido é urgente por razões médicas ou outras</p>
+              </div>
+            )}
+            {sendUrgentMessage && (
               <FormField
                 control={form.control}
                 name="urgentMessage"
@@ -93,32 +94,36 @@ export const ExchangeSubmissionConfirmation = ({
                           {...field}
                           placeholder="Justifica a urgência do teu pedido de troca. Irá ser enviado diretamente para a comissão de inscrição de turmas."
                         />
-                        <p className="text-sm font-bold">Se quiseres enviar ficheiros como comprovativo, podes enviar para a comissão de inscrição de turmas.</p>
+                        <p className="text-sm font-bold">
+                          Se quiseres enviar ficheiros como comprovativo, podes enviar para a comissão de inscrição de
+                          turmas.
+                        </p>
                       </>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
-              />}
+              />
+            )}
 
             <Button
-              className="flex flex-row gap-x-2 success-button"
+              className="success-button flex flex-row gap-x-2"
               type="submit"
-            // disabled={sendUrgentMessage ? false : conflictSeverity}
+              // disabled={sendUrgentMessage ? false : conflictSeverity}
             >
-              {submittingRequest
-                ? <p>A processar pedido...</p>
-                : <>
+              {submittingRequest ? (
+                <p>A processar pedido...</p>
+              ) : (
+                <>
                   <p>Submeter pedido</p>
                   <CheckBadgeIcon className="h-5 w-5" />
                 </>
-              }
+              )}
             </Button>
             {submittingRequest && <BeatLoader size={10} />}
           </form>
         </Form>
-      }
-
+      )}
     </>
   )
 }

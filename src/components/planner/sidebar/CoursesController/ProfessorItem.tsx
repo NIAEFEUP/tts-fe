@@ -1,5 +1,5 @@
-import { ProfessorInfo } from "../../../../@types"
-import { DropdownMenuCheckboxItem } from "../../../ui/dropdown-menu"
+import { ProfessorInfo } from '../../../../@types'
+import { DropdownMenuCheckboxItem } from '../../../ui/dropdown-menu'
 
 type Props = {
   professorInformation: ProfessorInfo

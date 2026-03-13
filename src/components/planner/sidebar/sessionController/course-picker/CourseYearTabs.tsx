@@ -13,7 +13,7 @@ const CourseYearTabs = () => {
   const { coursesInfo, checkboxedCourses, setCheckboxedCourses } = useContext(CoursePickerContext)
   const { setMultipleOptions, multipleOptions } = useContext(MultipleOptionsContext)
   const [selectedTab, setSelectedTab] = useState('1')
-  
+
   const coursesByYear = useMemo(() => groupCoursesByYear(coursesInfo), [coursesInfo])
 
   const getYearStatus = (yearIndex: number) => {
@@ -75,24 +75,20 @@ const CourseYearTabs = () => {
     <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
       <TabsList className="w-full">
         {coursesByYear.map((_, idx) => (
-          <TabsTrigger
-            className="select-none"
-            key={idx}
-            value={`${idx + 1}`}
-          >
+          <TabsTrigger className="select-none" key={idx} value={`${idx + 1}`}>
             {`${idx + 1}º Ano`}
           </TabsTrigger>
         ))}
       </TabsList>
       {coursesByYear.map((yearCourses, idx) => {
         const yearStatus = getYearStatus(idx)
-        
+
         return (
           <TabsContent key={idx} value={`${idx + 1}`}>
             <ScrollArea className="h-[200px]">
               <div className="flex flex-col gap-2 p-4">
                 {/* Select All checkbox for this year */}
-                <div className="flex items-center space-x-2 mb-2">
+                <div className="mb-2 flex items-center space-x-2">
                   <Checkbox
                     id={`select-all-year-${idx}`}
                     checked={yearStatus.checked}
@@ -102,10 +98,7 @@ const CourseYearTabs = () => {
                       toggleYear(idx, shouldSelect)
                     }}
                   />
-                  <Label
-                    htmlFor={`select-all-year-${idx}`}
-                    className="font-medium hover:cursor-pointer"
-                  >
+                  <Label htmlFor={`select-all-year-${idx}`} className="font-medium hover:cursor-pointer">
                     Selecionar Todas
                   </Label>
                 </div>
@@ -115,7 +108,7 @@ const CourseYearTabs = () => {
                   .map((course: CourseInfo) => (
                     <div
                       key={`course-checkbox-${course.course_unit_year}-${course.id}`}
-                      className="flex items-center space-x-2 ml-6"
+                      className="ml-6 flex items-center space-x-2"
                     >
                       <Checkbox
                         id={`checkbox-${course.id}`}

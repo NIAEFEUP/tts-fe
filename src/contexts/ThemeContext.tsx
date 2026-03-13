@@ -4,5 +4,5 @@ import { createContext } from 'react'
 export const ThemeContext = createContext({
   enabled: false,
   // eslint-disable-next-line
-  setEnabled: (enabled: boolean) => { },
+  setEnabled: (enabled: boolean) => {},
 })

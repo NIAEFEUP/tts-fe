@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'inline-flex h-10 items-center justify-around rounded-md bg-lightish p-1 text-slate-500 dark:bg-darker dark:text-slate-400 gap-1.5',
+      'bg-lightish dark:bg-darker inline-flex h-10 items-center justify-around gap-1.5 rounded-md p-1 text-slate-500 dark:text-slate-400',
       className
     )}
     {...props}
@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'focus-visible:ring-slate-950 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-sm dark:ring-offset-slate-950 dark:data-[state=active]:bg-primary/50 dark:data-[state=active]:text-slate-50 inline-flex w-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-slate-300',
+      'data-[state=active]:bg-primary dark:data-[state=active]:bg-primary/50 inline-flex w-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-white data-[state=active]:shadow-sm dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:data-[state=active]:text-slate-50',
       className
     )}
     {...props}
@@ -42,7 +42,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      'focus-visible:ring-slate-950 dark:ring-offset-slate-950 mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-slate-300',
+      'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300',
       className
     )}
     {...props}

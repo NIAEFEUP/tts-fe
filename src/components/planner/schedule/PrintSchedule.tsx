@@ -6,7 +6,6 @@ import { toPng } from 'html-to-image'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 
-
 type Props = {
   component: any
   optionName?: string
@@ -37,7 +36,7 @@ const PrintSchedule = ({ component, optionName }: Props) => {
 
       // Remove bottom bar
       const bottomBars = clone.querySelectorAll('div.flex.justify-end')
-      bottomBars.forEach(bar => bar.remove())
+      bottomBars.forEach((bar) => bar.remove())
       const lastChild = clone.lastElementChild
       if (lastChild && lastChild.classList.contains('flex') && lastChild.classList.contains('justify-end')) {
         lastChild.remove()
@@ -46,28 +45,25 @@ const PrintSchedule = ({ component, optionName }: Props) => {
       container.appendChild(clone)
       document.body.appendChild(container)
 
-      container.style.display = 'inline-block' 
-      toPng(container, { cacheBust: true, pixelRatio: 2})
-          .then((dataUrl) => {
-            const link = document.createElement('a')
-            link.href = dataUrl
-            link.download = optionName ? `${optionName}.png` : 'horario.png'
-            link.click()
-          })
-          .catch((err) => {
+      container.style.display = 'inline-block'
+      toPng(container, { cacheBust: true, pixelRatio: 2 })
+        .then((dataUrl) => {
+          const link = document.createElement('a')
+          link.href = dataUrl
+          link.download = optionName ? `${optionName}.png` : 'horario.png'
+          link.click()
+        })
+        .catch((err) => {
           console.error(err)
         })
         .finally(() => {
           container.remove() // remove do DOM
         })
 
-
       AnalyticsTracker.trackFeature(Feature.SCREENSHOT)
     },
     [component, enabled, optionName]
   )
-
-
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -75,7 +71,7 @@ const PrintSchedule = ({ component, optionName }: Props) => {
         <TooltipTrigger asChild>
           <Button
             variant="icon"
-            className="bg-lightish text-black dark:bg-darkish dark:text-white"
+            className="bg-lightish dark:bg-darkish text-black dark:text-white"
             onClick={() => takeScreenshot(enabled)}
           >
             <CameraIcon className="h-5 w-5" />

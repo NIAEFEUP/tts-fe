@@ -35,7 +35,9 @@ const Alert = ({ children, type, className }: Props) => {
         animationClass,
         'flex items-center justify-between rounded border-2 px-2 py-2',
         type === undefined ? 'border-gray-700/20 bg-gray-50 text-gray-700' : '',
-        type === AlertType.info ? 'border-sky-700/20 bg-sky-50 text-sky-700 dark:bg-transparent dark:text-white dark:border-white/20' : '',
+        type === AlertType.info
+          ? 'border-sky-700/20 bg-sky-50 text-sky-700 dark:border-white/20 dark:bg-transparent dark:text-white'
+          : '',
         type === AlertType.error ? 'border-rose-700/20 bg-rose-50 text-rose-800' : '',
         type === AlertType.warning ? 'border-amber-900/10 bg-orange-50 text-orange-700' : '',
         type === AlertType.success ? 'border-teal-700/30 bg-teal-50 text-teal-600' : '',

@@ -1,11 +1,9 @@
 type Props = {
-  children: JSX.Element;
-};
+  children: JSX.Element
+}
 
 const DevMode = ({ children }: Props) => {
-  return import.meta.env.VITE_APP_PROD === '0' ? (
-    <>{children}</>
-  ) : null;
-};
+  return import.meta.env.VITE_APP_PROD === '0' ? <>{children}</> : null
+}
 
-export default DevMode;
+export default DevMode

@@ -11,10 +11,9 @@ type Props = {
 }
 
 const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: Props) => {
-
   const updateSlotBoxConflict = (courseId: number, conflictData: number) => {
-    setSlotBoxConflict(courseId, conflictData);
-  };
+    setSlotBoxConflict(courseId, conflictData)
+  }
 
   return (
     <>
@@ -29,7 +28,7 @@ const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: P
         />
       </div>
 
-      <div className="lg:hidden flex flex-col w-full ">
+      <div className="flex w-full flex-col lg:hidden ">
         <ResponsiveLessonBox
           key={`course[${courseInfo.id}]-class[${classInfo.id}]-${slot.lesson_type}-${slot.id}`}
           courseInfo={courseInfo}
@@ -41,4 +40,4 @@ const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: P
   )
 }
 
-export default SlotBox;
+export default SlotBox

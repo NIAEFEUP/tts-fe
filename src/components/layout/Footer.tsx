@@ -20,7 +20,7 @@ const socials: Social[] = [
 
 const Footer = () => {
   return (
-    <footer className="mt-8 bg-navy px-2 py-4 transition dark:bg-darker md:px-6 md:py-8">
+    <footer className="bg-navy dark:bg-darker mt-8 px-2 py-4 transition md:px-6 md:py-8">
       <div className="flex flex-col items-center justify-between space-y-4 lg:flex-row">
         {/* Social Media */}
         <ul className="order-2 mt-4 flex items-center justify-center space-x-4 lg:order-1">
@@ -46,8 +46,8 @@ const Footer = () => {
 
         {/* Direitos */}
         <div className="order-3 flex flex-col items-center justify-center">
-          <p className="text-base font-medium text-white dark:text-gray-300 sm:text-center">
-            © {new Date().getFullYear()+' '}
+          <p className="text-base font-medium text-white sm:text-center dark:text-gray-300">
+            © {new Date().getFullYear() + ' '}
             <a href="https://niaefeup.pt" className="hover:underline" target="_blank" rel="noopener noreferrer">
               NIAEFEUP
             </a>

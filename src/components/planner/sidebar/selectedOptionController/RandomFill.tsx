@@ -17,8 +17,8 @@ type Props = {
 }
 
 type SlotMetadata = {
-  day: number,
-  start_time: number,
+  day: number
+  start_time: number
   duration: number
 }
 
@@ -33,22 +33,24 @@ const RandomFill = ({ className }: Props) => {
 
   // Get all course_unit-class combinations
   const getClassesCombinations = () => {
-    return pickedCourses.map((course) => {
-      if (!course.classes) return []
-      return course.classes?.map((cls) => {
-        return {
-          course_info: course,
-          class_info: cls,
-        }
+    return pickedCourses
+      .map((course) => {
+        if (!course.classes) return []
+        return course.classes?.map((cls) => {
+          return {
+            course_info: course,
+            class_info: cls,
+          }
+        })
       })
-    }).flat()
+      .flat()
   }
 
-  const [classesCombinations, setClassesCombinations] = useState([]);
+  const [classesCombinations, setClassesCombinations] = useState([])
   useEffect(() => {
     const combinations = getClassesCombinations()
-    setClassesCombinations(combinations);
-  }, [pickedCourses, selectedOption]);
+    setClassesCombinations(combinations)
+  }, [pickedCourses, selectedOption])
 
   const getUniqueClasses = () => {
     return Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name)))
@@ -94,9 +96,11 @@ const RandomFill = ({ className }: Props) => {
   const getSchedulesGenerator = () => {
     const allSchedules = courseOptions.map((course) => {
       if (course.locked && course.picked_class_id) {
-        return [pickedCourses.find((picked) => picked.id === course.course_id)?.classes?.find(
-          (cls) => cls.id === course.picked_class_id
-        )]
+        return [
+          pickedCourses
+            .find((picked) => picked.id === course.course_id)
+            ?.classes?.find((cls) => cls.id === course.picked_class_id),
+        ]
       }
 
       const availableClasses = classesCombinations.filter((class_info) => {
@@ -127,7 +131,8 @@ const RandomFill = ({ className }: Props) => {
             duration: slot.duration,
           }
         })
-      }).flat()
+      })
+      .flat()
       .sort((a: SlotMetadata, b: SlotMetadata) => {
         if (a.day == b.day) return a.start_time - b.start_time
         return a.day - b.day
@@ -157,7 +162,7 @@ const RandomFill = ({ className }: Props) => {
 
   const applyRandomSchedule = () => {
     const newPermutations = [...permutations]
-    const STEP = 1000; //TODO(thePeras): Not a good number for a big number of pickedCourses
+    const STEP = 1000 //TODO(thePeras): Not a good number for a big number of pickedCourses
     for (let i = 0; i < STEP; i++) {
       const permutation = generator.next().value
       if (!permutation) break
@@ -169,7 +174,7 @@ const RandomFill = ({ className }: Props) => {
     const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
     applySchedule(newPermutations[randomNumber])
 
-    AnalyticsTracker.trackFeature(Feature.RANDOM_FILL);
+    AnalyticsTracker.trackFeature(Feature.RANDOM_FILL)
   }
 
   const applySchedule = (classesCombinations: ClassInfo[]) => {
@@ -178,7 +183,7 @@ const RandomFill = ({ className }: Props) => {
         title: 'Não foi possível gerar turmas!',
         description: 'Não encontramos uma combinação com as turmas das disciplinas selecionadas sem conflitos',
         position: 'top-right',
-      });
+      })
     }
 
     setMultipleOptions((prevMultipleOptions) => {
@@ -196,8 +201,8 @@ const RandomFill = ({ className }: Props) => {
         for (const classInfo of classesCombinations) {
           if (!classInfo) continue
 
-          const courseUnit = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id);
-          const matchedClassInfo = courseUnit.classes?.find((courseUnitClass) => courseUnitClass.id === classInfo.id);
+          const courseUnit = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id)
+          const matchedClassInfo = courseUnit.classes?.find((courseUnitClass) => courseUnitClass.id === classInfo.id)
           if (matchedClassInfo) {
             return {
               ...course,
@@ -236,8 +241,7 @@ const RandomFill = ({ className }: Props) => {
 
     const selected = newMultipleOptions[selectedOption]?.course_options
     // Updating locked courses
-    const newLockedCourses = selected?.filter((course) => course.locked)
-      .map((course) => course.course_id)
+    const newLockedCourses = selected?.filter((course) => course.locked).map((course) => course.course_id)
     // Only update if locked courses changed
     if (newLockedCourses?.join() !== lockedCourses?.join()) {
       setLockedCourses(newLockedCourses)
@@ -264,13 +268,13 @@ const RandomFill = ({ className }: Props) => {
           <Button
             onClick={applyRandomSchedule}
             variant="icon"
-            className={`${className} h-min w-min flex-grow bg-secondary`}
+            className={`${className} bg-secondary h-min w-min flex-grow`}
           >
             <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" asChild>
-          <ScrollArea className="max-h-72 rounded px-3 w-full overflow-y-auto">
+          <ScrollArea className="max-h-72 w-full overflow-y-auto rounded px-3">
             <div className="p-1">Preenchimento aleatório</div>
             <Separator />
             {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
@@ -288,11 +292,12 @@ const RandomFill = ({ className }: Props) => {
               </div>
             ))}
 
-            {classesCombinations.length === 0 &&
-              <div className="flex flex-col mx-auto m-4 w-full">
-                <Desert className="w-full h-24" />
-                <p className="mt-2 text-sm text-center">Não foi encontrada nenhuma turma</p>
-              </div>}
+            {classesCombinations.length === 0 && (
+              <div className="m-4 mx-auto flex w-full flex-col">
+                <Desert className="h-24 w-full" />
+                <p className="mt-2 text-center text-sm">Não foi encontrada nenhuma turma</p>
+              </div>
+            )}
           </ScrollArea>
         </TooltipContent>
       </Tooltip>

@@ -17,7 +17,7 @@ const ToggleScheduleGrid = ({ showGridHook }: Props) => {
         <TooltipTrigger asChild>
           <Button
             variant="icon"
-            className="bg-lightish text-black dark:bg-darkish dark:text-white"
+            className="bg-lightish dark:bg-darkish text-black dark:text-white"
             onClick={() => {
               setShowGrid(!showGrid)
               AnalyticsTracker.trackFeature(Feature.GRID)

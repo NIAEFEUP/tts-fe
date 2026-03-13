@@ -8,7 +8,7 @@ import {
   RectangleStackIcon,
   QuestionMarkCircleIcon,
   ArrowsRightLeftIcon,
-  WrenchScrewdriverIcon
+  WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
@@ -24,7 +24,8 @@ const navigation = [
     location: getPath(config.paths.planner),
     icon: <RectangleStackIcon className="h-5 w-5" />,
     wip: false,
-  }, {
+  },
+  {
     title: 'Turmas',
     location: getPath(config.paths.exchange),
     icon: <ArrowsRightLeftIcon className="h-5 w-5" />,
@@ -51,19 +52,19 @@ type Props = {
 }
 
 const Header = ({ siteTitle, location }: Props) => {
-  const { signedIn, user } = useContext(SessionContext);
+  const { signedIn, user } = useContext(SessionContext)
 
   return (
     <Popover
       as="nav"
-      className="max-sm:flex max-sm:flex-col sticky top-0 z-50 space-x-4 bg-light px-3 py-2 text-gray-800 dark:bg-darkest dark:text-white md:py-0 md:px-3"
+      className="bg-light dark:bg-darkest sticky top-0 z-50 space-x-4 px-3 py-2 text-gray-800 max-sm:flex max-sm:flex-col md:px-3 md:py-0 dark:text-white"
     >
       {({ open }) => {
         return (
           <>
-            <div className={'p-2 relative flex items-center justify-between md:py-0'}>
-              <Hamburger open={open} signedIn = {signedIn} />
-              <div className="flex md:flex-1 items-center justify-between md:items-stretch md:justify-between">
+            <div className={'relative flex items-center justify-between p-2 md:py-0'}>
+              <Hamburger open={open} signedIn={signedIn} />
+              <div className="flex items-center justify-between md:flex-1 md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
                   <Link to={config.pathPrefix} className="flex items-center space-x-2">
                     <img
@@ -77,16 +78,22 @@ const Header = ({ siteTitle, location }: Props) => {
 
                 <div className="hidden space-x-8 self-center md:inline-flex">
                   {navigation
-                    .filter((link) => (!link.wip || (link.wip && (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1'))))
-                    .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin)) 
+                    .filter(
+                      (link) =>
+                        !link.wip ||
+                        (link.wip &&
+                          (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1'))
+                    )
+                    .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin))
                     .map((link, index) => (
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button
                           type="button"
-                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${location === link.title
-                            ? 'text-primary dark:text-white'
-                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
-                            }`}
+                          className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
+                            location === link.title
+                              ? 'text-primary dark:text-white'
+                              : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
+                          }`}
                         >
                           <span className="flex items-center justify-center space-x-1.5">
                             <span>{link.icon}</span>
@@ -94,43 +101,36 @@ const Header = ({ siteTitle, location }: Props) => {
                           </span>
                         </button>
                         {location === link.title ? (
-                          <span className="absolute bottom-0 h-1 w-full rounded-t bg-primary dark:bg-primary" />
+                          <span className="bg-primary dark:bg-primary absolute bottom-0 h-1 w-full rounded-t" />
                         ) : null}
                       </Link>
-                    ))}    
+                    ))}
                 </div>
 
-
-                <div className="hidden self-center md:inline-flex items-center gap-x-2">
+                <div className="hidden items-center gap-x-2 self-center md:inline-flex">
                   <DarkModeSwitch />
-                  {signedIn ?
-                    <HeaderProfileDropdown />
-                    : <LoginButton expanded={false} />
-                  }
+                  {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
                 </div>
               </div>
-            </div >
+            </div>
             <Mobile location={location} />
           </>
         )
       }}
-    </Popover >
+    </Popover>
   )
 }
 
 export default Header
 
 type HamburgerProps = {
-  open: boolean,
+  open: boolean
   signedIn: boolean
 }
 
 const Hamburger = ({ open, signedIn }: HamburgerProps) => {
-
   return (
-    <div
-      className={'z-50 md:hidden flex w-full items-center justify-between'}
-    >
+    <div className={'z-50 flex w-full items-center justify-between md:hidden'}>
       <Link to={config.pathPrefix}>
         <img
           className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
@@ -140,37 +140,36 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
       </Link>
 
       <div className="flex items-center space-x-1">
-
         <DarkModeSwitch />
         <FeedbackReport />
         {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
 
-        <Popover.Button className="group text-gray-800 transition duration-200 ease-in dark:text-white md:hidden">
+        <Popover.Button className="group text-gray-800 transition duration-200 ease-in md:hidden dark:text-white">
           <span className="sr-only">Open nav menu</span>
           {open ? (
             <XMarkIcon
-              className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
+              className="ease group-hover:text-primary/75 dark:group-hover:text-primary/75 block h-6 w-6 transition duration-200"
               aria-hidden="true"
             />
           ) : (
             <Bars3Icon
-              className="ease block h-6 w-6 transition duration-200 group-hover:text-primary/75 dark:group-hover:text-primary/75"
+              className="ease group-hover:text-primary/75 dark:group-hover:text-primary/75 block h-6 w-6 transition duration-200"
               aria-hidden="true"
             />
           )}
         </Popover.Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 type MobileProps = {
   location: string
 }
 
 const Mobile = ({ location }: MobileProps) => {
-  const { signedIn, user} = useContext(SessionContext);
-  
+  const { signedIn, user } = useContext(SessionContext)
+
   return (
     <Transition
       enter="transition duration-200 ease-out"
@@ -179,32 +178,32 @@ const Mobile = ({ location }: MobileProps) => {
       leave="transition duration-150 ease-out"
       leaveFrom="transform translate-y-0 opacity-100"
       leaveTo="transform -translate-y-2 opacity-0"
-      className="absolute top-full left-0 w-full z-40 bg-light dark:bg-darkest shadow-xl rounded-b-lg md:hidden origin-top !ml-0"
+      className="bg-light dark:bg-darkest absolute left-0 top-full z-40 !ml-0 w-full origin-top rounded-b-lg shadow-xl md:hidden"
     >
-      <Popover.Panel className="flex flex-col space-y-3 px-3 pl-8 py-4">
+      <Popover.Panel className="flex flex-col space-y-3 px-3 py-4 pl-8">
         {navigation
           .filter((link) => !link.wip)
           .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin))
           .map((link, index) => (
             <Popover.Button as={Link} to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
               <span
-                className={`flex h-auto items-center justify-start font-medium capitalize tracking-wide transition ${location === link.title
+                className={`flex h-auto items-center justify-start font-medium capitalize tracking-wide transition ${
+                  location === link.title
                     ? 'text-primary dark:text-white'
                     : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
-                  }`}
+                }`}
               >
                 <span className="flex items-center justify-start space-x-2">
                   <span>{link.icon}</span>
                   <span>{link.title}</span>
                 </span>
                 {location === link.title && (
-                  <span className="absolute -left-4 h-full w-1 rounded bg-primary dark:bg-primary" />
+                  <span className="bg-primary dark:bg-primary absolute -left-4 h-full w-1 rounded" />
                 )}
               </span>
             </Popover.Button>
           ))}
       </Popover.Panel>
     </Transition>
-  );
-};
-
+  )
+}

@@ -6,15 +6,13 @@ import { TooltipTrigger, TooltipContent, TooltipProvider, Tooltip } from '../../
 const Ects = () => {
   const { coursesStorage } = useContext(CoursePickerContext)
 
-  const totalEcts = coursesStorage.reduce(
-    (acc, course) => acc + parseFloat(String(course.ects).replace(',', '.')
-    ), 0)
+  const totalEcts = coursesStorage.reduce((acc, course) => acc + parseFloat(String(course.ects).replace(',', '.')), 0)
   const warning = totalEcts > 42 ? 2 : totalEcts > 36 ? 1 : 0
 
   return (
-    <div className="mx-2 flex flex-row gap-1 items-center">
+    <div className="mx-2 flex flex-row items-center gap-1">
       <div className="text-sm">Total ECTS:</div>
-      <div className="font-semibold text-sm">{totalEcts}</div>
+      <div className="text-sm font-semibold">{totalEcts}</div>
       {warning ? (
         <TooltipProvider delayDuration={300}>
           <Tooltip>
@@ -25,8 +23,8 @@ const Ects = () => {
             </TooltipTrigger>
             <TooltipContent>
               {warning === 1
-                ? "Nós recomendamos escolher 36 ou menos ECTS."
-                : "Por norma, o limite de créditos por semestre é 42 ECTS."}
+                ? 'Nós recomendamos escolher 36 ou menos ECTS.'
+                : 'Por norma, o limite de créditos por semestre é 42 ECTS.'}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

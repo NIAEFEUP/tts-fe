@@ -7,7 +7,11 @@ const storeCurrentVisit = () => {
   const multipleOptions = getMultipleOptionsStorage()
   const storedVisit = JSON.parse(localStorage.getItem('niaefeup-tts.current-visit'))
 
-  if ((storedVisit == null && multipleOptions[0]?.course_options.length === 0)|| storedVisit?.year !== currentYear || storedVisit?.semester !== currentSemester) {
+  if (
+    (storedVisit == null && multipleOptions[0]?.course_options.length === 0) ||
+    storedVisit?.year !== currentYear ||
+    storedVisit?.semester !== currentSemester
+  ) {
     localStorage.clear()
   }
 
@@ -92,52 +96,52 @@ const getMultipleOptionsStorage = (): MultipleOptions => {
       name: 'Horário 10',
       course_options: [],
     },
-  ];
+  ]
 
   try {
     if (isStorageValid(key)) {
       const multipleOptions: MultipleOptions = JSON.parse(localStorage.getItem(key))
-      return multipleOptions;
-
+      return multipleOptions
     } else {
-      writeStorageInvalid(key, defaultValue);
-      return defaultValue;
+      writeStorageInvalid(key, defaultValue)
+      return defaultValue
     }
   } catch (error) {
     console.warn(error)
-    return defaultValue;
+    return defaultValue
   }
 }
 
 const setMultipleOptionsStorage = (multipleOptions: MultipleOptions) => {
-  const key = 'niaefeup-tts.multiple-options';
-  writeStorage(key, multipleOptions);
+  const key = 'niaefeup-tts.multiple-options'
+  writeStorage(key, multipleOptions)
 }
 
 const getCourseFilteredTeachersStorage = (selectedOption: number, courseUnitId: number) => {
-  return getMultipleOptionsStorage()[selectedOption].course_options.find((option) => option.course_id === courseUnitId).filteredTeachers;
+  return getMultipleOptionsStorage()[selectedOption].course_options.find((option) => option.course_id === courseUnitId)
+    .filteredTeachers
 }
 
 const getSelectedOptionStorage = () => {
-  const key = 'niaefeup-tts.selected-option';
+  const key = 'niaefeup-tts.selected-option'
 
-  let selectedOption = parseInt(localStorage.getItem(key));
+  let selectedOption = parseInt(localStorage.getItem(key))
   if (isNaN(selectedOption)) {
-    selectedOption = 0;
-    writeStorageInvalid(key, selectedOption);
+    selectedOption = 0
+    writeStorageInvalid(key, selectedOption)
   }
 
-  return selectedOption;
+  return selectedOption
 }
 
 const setSelectedOptionStorage = (selectedOption: number) => {
-  const key = 'niaefeup-tts.selected-option';
-  writeStorage(key, selectedOption);
+  const key = 'niaefeup-tts.selected-option'
+  writeStorage(key, selectedOption)
 }
 
 const getSelectedMajorStorage = (): Major => {
-  const key = 'niaefeup-tts.selected-major';
-  return JSON.parse(localStorage.getItem(key)) || null;
+  const key = 'niaefeup-tts.selected-major'
+  return JSON.parse(localStorage.getItem(key)) || null
 }
 
 const setSelectedMajorStorage = (selectedMajor: Major): void => {
@@ -147,9 +151,9 @@ const setSelectedMajorStorage = (selectedMajor: Major): void => {
 
 const getPickedCoursesStorage = (): PickedCourses => {
   const key = 'niaefeup-tts.picked-courses'
-  const pickedCourses = JSON.parse(localStorage.getItem(key))  || []
+  const pickedCourses = JSON.parse(localStorage.getItem(key)) || []
   const multipleOptions = getMultipleOptionsStorage()
-  if (multipleOptions.every(option => option.course_options.length === 0) && (pickedCourses.length > 0)) {
+  if (multipleOptions.every((option) => option.course_options.length === 0) && pickedCourses.length > 0) {
     writeStorageInvalid(key, [])
     return []
   }
@@ -168,16 +172,15 @@ const updateBackendDataVersion = async (): Promise<void> => {
   //const currentVersion = ;
   const liveVersion = await API.getInfo()
   // If != versions, invalidate the others storages
-  writeStorage(key, liveVersion);
+  writeStorage(key, liveVersion)
 }
 
-const SHOW_EXCHANGE_ALERT_SESSION_KEY =  'niaefeup-tts.show-exchange-alert.session'
+const SHOW_EXCHANGE_ALERT_SESSION_KEY = 'niaefeup-tts.show-exchange-alert.session'
 
 const setShowExchangeAlertStorage = (): void => {
-  
   const session = {
     year: getSchoolYear(),
-    semester: String(import.meta.env.VITE_APP_SEMESTER)
+    semester: String(import.meta.env.VITE_APP_SEMESTER),
   }
   localStorage.setItem(SHOW_EXCHANGE_ALERT_SESSION_KEY, JSON.stringify(session))
 }
@@ -215,8 +218,7 @@ const StorageAPI = {
   getCourseFilteredTeachersStorage,
   storeCurrentVisit,
   getShowExchangeAlertStorage,
-  setShowExchangeAlertStorage
-
+  setShowExchangeAlertStorage,
 }
 
 export default StorageAPI

@@ -25,8 +25,8 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   const [triggerWidth, setTriggerWidth] = useState<number | undefined>(undefined)
 
   const match = (string: string, query: string) =>
-    string.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
-    || string
+    string.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, '')) ||
+    string
       .toLowerCase()
       .normalize('NFD')
       .replace(/\p{Diacritic}/gu, '')
@@ -36,7 +36,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
       .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   return (
-    <Popover open={open} onOpenChange={setOpen}> 
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           ref={(node) => {
@@ -45,11 +45,9 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between dark:bg-darker dark:text-slate-50"
+          className="dark:bg-darker w-full justify-between dark:text-slate-50"
         >
-          <p className="truncate">
-            {selectedMajor ? selectedMajor.name : 'Seleciona um curso...'}
-          </p>
+          <p className="truncate">{selectedMajor ? selectedMajor.name : 'Seleciona um curso...'}</p>
           <ChevronUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -59,16 +57,14 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
           filter={(value, search) => {
             if (value === 'remove') return 1
             const major = majors.find((major) => major.id === parseInt(value))
-            if (!major) return 0;
-            
+            if (!major) return 0
+
             const searchWords = search.toLowerCase().replace(/\s+/g, ' ').trim().split(' ')
-            
-            const allWordsMatch = searchWords.every(word => 
-              match(major.name, word) || 
-              match(major.acronym, word) || 
-              match(major.faculty_id, word)
+
+            const allWordsMatch = searchWords.every(
+              (word) => match(major.name, word) || match(major.acronym, word) || match(major.faculty_id, word)
             )
-            
+
             return Number(allWordsMatch)
           }}
         >
@@ -81,11 +77,11 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
             // handle that event and actually be scrollable with the mouse wheel
             onWheel={(e) => e.stopPropagation()}
           >
-          {selectedMajor && (
-            <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
-              Remover Seleção
-            </CommandItem>
-          )}
+            {selectedMajor && (
+              <CommandItem value="remove" onSelect={() => setSelectedMajor(null)}>
+                Remover Seleção
+              </CommandItem>
+            )}
             {majors &&
               majors.map((major) => (
                 <CommandItem

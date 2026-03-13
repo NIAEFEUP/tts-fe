@@ -9,18 +9,13 @@ type Props = {
   conflict?: boolean
 }
 
-const ResponsiveLessonBox = ({
-  courseInfo,
-  classInfo,
-  slotInfo,
-  conflict
-}: Props) => {
+const ResponsiveLessonBox = ({ courseInfo, classInfo, slotInfo, conflict }: Props) => {
   const lessonType = slotInfo.lesson_type
 
   return (
     <div
       className={classNames(
-        'flex  group rounded w-full',
+        'group  flex w-full rounded',
         getClassTypeClassName(lessonType),
         conflict ? 'schedule-class-conflict' : ''
       )}
@@ -31,20 +26,21 @@ const ResponsiveLessonBox = ({
           'flex h-full w-full flex-col items-center justify-between gap-4'
         )}
       >
-        <div className='flex w-full justify-between gap-2'>
-          <strong title="Sigla da Unidade Curricular" className='text-lg'>{courseInfo.acronym}</strong>
-          <span title={getLessonTypeLongName(lessonType)} className='text-lg'>{lessonType}</span>
-
+        <div className="flex w-full justify-between gap-2">
+          <strong title="Sigla da Unidade Curricular" className="text-lg">
+            {courseInfo.acronym}
+          </strong>
+          <span title={getLessonTypeLongName(lessonType)} className="text-lg">
+            {lessonType}
+          </span>
         </div>
 
         <div className="flex flex-col gap-2">
           <span title="Duração">{getLessonBoxTime(slotInfo)}</span>
-          <span title="Nome da Turma">
-            {classInfo.name}
-          </span>
+          <span title="Nome da Turma">{classInfo.name}</span>
         </div>
 
-        <div className='flex w-full justify-between'>
+        <div className="flex w-full justify-between">
           <span title="Sala">{slotInfo.location}</span>
           <span title="Professor(es)" className="whitespace-nowrap">
             {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
@@ -72,8 +68,6 @@ const ResponsiveLessonBox = ({
             {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
           </span>
         </div>*/}
-
-
       </div>
     </div>
   )

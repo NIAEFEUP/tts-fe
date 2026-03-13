@@ -36,11 +36,11 @@ const HeroPlanner = () => {
             </p>
             <p>
               O TTS é a ferramenta que torna o processo de escolher turmas mais simples, mais flexível e da forma a
-              perderes o menos tempo possível. Molda o horário à tua maneira, quer seja por preferires certos professores
-              ou dias livres. Partilha facilmente os horários com os amigos e{' '}
+              perderes o menos tempo possível. Molda o horário à tua maneira, quer seja por preferires certos
+              professores ou dias livres. Partilha facilmente os horários com os amigos e{' '}
               <strong> não deixes o horário perfeito escapar</strong>. Tens dúvidas sobre a plataforma? A{' '}
               <Link
-                className="font-medium text-primary transition-all hover:underline hover:opacity-80"
+                className="text-primary font-medium transition-all hover:underline hover:opacity-80"
                 to={getPath(config.paths.faqs)}
               >
                 página das FAQs
@@ -82,7 +82,7 @@ const HeroPlanner = () => {
       <div className="w-15 flex flex-row items-center justify-center">
         <button
           onClick={scrollToComponentTop}
-          className="w-15 relative text-center font-headings text-3xl font-bold capitalize text-primary transition 
+          className="w-15 font-headings text-primary relative text-center text-3xl font-bold capitalize transition 
               before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
         >
           Time Table Selector
@@ -105,7 +105,7 @@ const HeroPlanner = () => {
                 >
                   {item.title}
                 </button>
-                <p className="mb-3 text-lg font-medium tracking-tight text-primary">{item.subtitle}</p>
+                <p className="text-primary mb-3 text-lg font-medium tracking-tight">{item.subtitle}</p>
                 <div className="prose text-justify text-sm 2xl:text-base">{item.content}</div>
               </div>
               <img className="max-w-lg rounded shadow 2xl:max-w-xl" src={item.image} alt="card" />
@@ -116,7 +116,7 @@ const HeroPlanner = () => {
               <img className="w-full rounded shadow" src={item.image} alt="card" />
               <div className="container grow">
                 <h3 className="text-center text-xl font-semibold">{item.title}</h3>
-                <h5 className="mb-3 text-center text-base font-medium tracking-tight text-primary">{item.subtitle}</h5>
+                <h5 className="text-primary mb-3 text-center text-base font-medium tracking-tight">{item.subtitle}</h5>
                 <div className="prose text-justify text-sm leading-relaxed">{item.content}</div>
               </div>
             </div>
@@ -128,7 +128,7 @@ const HeroPlanner = () => {
         <div className="w-15 flex flex-row items-center justify-center">
           <button
             onClick={() => scrollToComponentSection('features')}
-            className="w-15 relative pt-12 text-center font-headings text-2xl font-bold capitalize text-primary transition 
+            className="w-15 font-headings text-primary relative pt-12 text-center text-2xl font-bold capitalize transition 
                 before:absolute before:-left-8 hover:opacity-80 hover:before:content-['#'] dark:text-white"
           >
             Principais Funcionalidades
@@ -144,7 +144,7 @@ const HeroPlanner = () => {
         <div className="relative mr-4">
           <Link
             to={config.pathPrefix}
-            className="group inline-flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 text-center 
+            className="bg-primary group inline-flex items-center justify-center gap-2 rounded px-6 py-3 text-center 
             text-lg font-normal uppercase tracking-wider text-white transition-all hover:opacity-90"
           >
             <span>Experimentar</span>

@@ -17,8 +17,7 @@ const InspectLessonBox = ({ courseInfo, classInfo, slotInfo, conflict }: Props) 
   const professors = slotInfo.professors
     .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
     .join('\n')
-  const professorDescription =
-    'Professor' + (slotInfo.professors.length > 1 ? 'es' : '') + ':\n' + professors
+  const professorDescription = 'Professor' + (slotInfo.professors.length > 1 ? 'es' : '') + ':\n' + professors
   return (
     <div
       className={classNames(
@@ -45,19 +44,12 @@ const InspectLessonBox = ({ courseInfo, classInfo, slotInfo, conflict }: Props) 
               </span>
             </a>
           </div>
-          <span title="Nome da Turma">
-            {classInfo.name}
-          </span>
+          <span title="Nome da Turma">{classInfo.name}</span>
         </div>
 
         <div className="flex w-full items-center justify-between gap-2">
           <span title="Sala">{slotInfo.location}</span>
-          <a
-            href={slotInfo.professors_link}
-            target="_blank"
-            rel="noreferrer"
-            className="cursor-pointer underline"
-          >
+          <a href={slotInfo.professors_link} target="_blank" rel="noreferrer" className="cursor-pointer underline">
             <span title={professorDescription} className="whitespace-nowrap">
               {slotInfo.professors.map((prof_info) => prof_info.acronym).join(', ')}
             </span>

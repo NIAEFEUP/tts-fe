@@ -27,21 +27,23 @@ const CopyOption = ({ currentOption, className }: Props) => {
 
   //TODO (thePeras): Add link here
   const optionToString = (selectedOption: CourseOption[]) => {
-    if (selectedOption.filter((course) => !course.picked_class_id).length === selectedOption.length) return "";
+    if (selectedOption.filter((course) => !course.picked_class_id).length === selectedOption.length) return ''
 
-    const copyOption = selectedOption.map((element) => {
-      return element.course_id + '#' + element.picked_class_id;
-    }).join(';');
+    const copyOption = selectedOption
+      .map((element) => {
+        return element.course_id + '#' + element.picked_class_id
+      })
+      .join(';')
 
     return Buffer.from(copyOption).toString('base64')
   }
 
   const copyOption = () => {
-    const scheduleHash = optionToString(currentOption);
-    navigator.clipboard.writeText(scheduleHash);
-    setIcon(true);
+    const scheduleHash = optionToString(currentOption)
+    navigator.clipboard.writeText(scheduleHash)
+    setIcon(true)
 
-    if (scheduleHash === "") {
+    if (scheduleHash === '') {
       toast({ title: 'Horário não copiado', description: 'Não tens nenhuma aula selecionada para copiar.' })
     } else {
       toast({ title: 'Horário copiado', description: 'Podes colar o horário noutra opção ou enviar a um amigo.' })
@@ -49,7 +51,7 @@ const CopyOption = ({ currentOption, className }: Props) => {
     setTimeout(() => {
       setIcon(false)
     }, 1500)
-    AnalyticsTracker.trackFeature(Feature.COPY);
+    AnalyticsTracker.trackFeature(Feature.COPY)
   }
 
   return (
@@ -58,7 +60,7 @@ const CopyOption = ({ currentOption, className }: Props) => {
         <TooltipTrigger asChild>
           <Button
             variant="icon"
-            className={className.concat(' h-min w-min flex-grow bg-primary')}
+            className={className.concat(' bg-primary h-min w-min flex-grow')}
             onClick={() => copyOption()}
           >
             {icon ? <CheckIcon className="h-5 w-5" /> : <DocumentDuplicateIcon className="h-5 w-5" />}

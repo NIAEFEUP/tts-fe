@@ -159,10 +159,10 @@ const PlannerFaqs = () => {
             as="div"
             defaultOpen={faqIdx === 0}
             key={`planner-faq-${faqIdx}`}
-            className={`rounded-2xl bg-white p-3 dark:bg-dark faq-disclosure-${faqIdx}`}
+            className={`dark:bg-dark rounded-2xl bg-white p-3 faq-disclosure-${faqIdx}`}
             onClick={() => {
-              const disclosure = document.querySelector(`.faq-disclosure-${faqIdx}`);
-              const isOpen = disclosure?.getAttribute('data-headlessui-state') !== 'open';
+              const disclosure = document.querySelector(`.faq-disclosure-${faqIdx}`)
+              const isOpen = disclosure?.getAttribute('data-headlessui-state') !== 'open'
               if (isOpen && faq.question.type === 'span') {
                 AnalyticsTracker.trackFaq(faq.question.props.children)
               }
@@ -170,7 +170,7 @@ const PlannerFaqs = () => {
           >
             {({ open }) => (
               <>
-                <Disclosure.Button className="group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition hover:bg-primary hover:text-white dark:bg-primary/40 dark:text-white dark:hover:bg-primary/60 lg:px-4 lg:text-base">
+                <Disclosure.Button className="hover:bg-primary dark:bg-primary/40 dark:hover:bg-primary/60 group flex w-full items-center justify-between gap-1 rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium tracking-tight text-slate-800 transition hover:text-white lg:px-4 lg:text-base dark:text-white">
                   <span className="text-left">{faq.question}</span>
                   <ChevronDownIcon
                     className={classNames(

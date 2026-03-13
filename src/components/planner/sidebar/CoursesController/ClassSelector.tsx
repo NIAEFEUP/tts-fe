@@ -10,44 +10,28 @@ import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
 import CourseContext from '../../../../contexts/CourseContext'
 
 type Props = {
-  course: CourseInfo,
-  lockFunctionality?: boolean,
+  course: CourseInfo
+  lockFunctionality?: boolean
 }
 
-const ClassSelector = ({
-  course,
-  lockFunctionality = true,
-}: Props) => {
+const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
 
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
 
-  const { classes, loading: classesLoading } = useCourseUnitClasses(course.id, pickedCourses);
+  const { classes, loading: classesLoading } = useCourseUnitClasses(course.id, pickedCourses)
 
   useEffect(() => {
     if (classes) {
-      setPickedCourses(prevCourses =>
-        prevCourses.map((c) =>
-          c.id === course.id
-            ? { ...c, classes: classes }
-            : c
-        )
-      );
+      setPickedCourses((prevCourses) => prevCourses.map((c) => (c.id === course.id ? { ...c, classes: classes } : c)))
     }
   }, [classes, setPickedCourses])
 
-  const {
-    selectedClassId,
-    setSelectedClassId,
-    display,
-    setPreview,
-    removePreview,
-    toggleLocker,
-    courseOption
-  } = useContext(ClassSelectorContext);
+  const { selectedClassId, setSelectedClassId, display, setPreview, removePreview, toggleLocker, courseOption } =
+    useContext(ClassSelectorContext)
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   return (
     <div className="text-sm" key={`course-option-${course.acronym}`}>
@@ -59,19 +43,24 @@ const ClassSelector = ({
       </p>
       <div className="flex items-center">
         {/* Dropdown Menu */}
-        <DropdownMenu open={isDropdownOpen} onOpenChange={(open: boolean) => {
-          setIsDropdownOpen(open);
-          if (!open) removePreview();
-        }}>
+        <DropdownMenu
+          open={isDropdownOpen}
+          onOpenChange={(open: boolean) => {
+            setIsDropdownOpen(open)
+            if (!open) removePreview()
+          }}
+        >
           <div className="w-full">
             <DropdownMenuTrigger asChild disabled={courseOption?.locked} ref={classSelectorTriggerRef}>
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
+                className="bg-lightish hover:bg-primary/75 dark:bg-darkish w-full justify-between truncate text-xs font-normal tracking-tighter hover:text-white"
               >
-                <span className={`${selectedClassId === null ? "opacity-50" : ""}`}>{getClassDisplayText(course, selectedClassId)}</span>
-                {!courseOption?.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
+                <span className={`${selectedClassId === null ? 'opacity-50' : ''}`}>
+                  {getClassDisplayText(course, selectedClassId)}
+                </span>
+                {!courseOption?.locked && <ChevronUpDownIcon className="text-blackish dark:text-lightish h-6 w-6" />}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -93,7 +82,7 @@ const ClassSelector = ({
         </DropdownMenu>
 
         {/* Lock Button */}
-        {lockFunctionality &&
+        {lockFunctionality && (
           <Button
             variant="icon"
             title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
@@ -101,12 +90,12 @@ const ClassSelector = ({
             disabled={display === null}
           >
             {courseOption?.locked ? (
-              <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+              <LockClosedIcon className="text-darkish dark:text-lightish h-6 w-6" />
             ) : (
-              <LockOpenIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+              <LockOpenIcon className="text-darkish dark:text-lightish h-6 w-6" />
             )}
           </Button>
-        }
+        )}
       </div>
     </div>
   )

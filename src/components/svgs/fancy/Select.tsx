@@ -1,7 +1,7 @@
 const SelectIcon = () => {
   return (
     <svg
-      className="h-11 w-11 shrink-0 transform-cpu rounded-lg shadow-md shadow-primary/[.12]"
+      className="shadow-primary/[.12] h-11 w-11 shrink-0 transform-cpu rounded-lg shadow-md"
       viewBox="0 0 40 40"
       fill="none"
       strokeWidth="1.5"

@@ -99,7 +99,7 @@ const PasteOption = () => {
       duration: 1500,
     })
 
-    AnalyticsTracker.trackFeature(Feature.PASTE);
+    AnalyticsTracker.trackFeature(Feature.PASTE)
   }
 
   /**
@@ -119,7 +119,7 @@ const PasteOption = () => {
       if (isNaN(Number(course[0])) || isNaN(Number(course[1]))) return false
     })
 
-    return true;
+    return true
   }
 
   return (
@@ -134,7 +134,7 @@ const PasteOption = () => {
                   const value = await navigator.clipboard.readText()
                   importSchedule(value)
                 }}
-                className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
+                className="bg-primary h-min w-min flex-grow sm:py-0 xl:p-1"
               >
                 <ClipboardDocumentIcon className="h-5 w-5" />
               </Button>
@@ -151,7 +151,7 @@ const PasteOption = () => {
                   <Button
                     onClick={() => setIsDropdownOpen(true)}
                     variant="icon"
-                    className="h-min w-min flex-grow bg-primary sm:py-0 xl:p-1"
+                    className="bg-primary h-min w-min flex-grow sm:py-0 xl:p-1"
                   >
                     <ClipboardDocumentIcon className="h-5 w-5" />
                   </Button>
@@ -163,7 +163,7 @@ const PasteOption = () => {
                   autoFocus
                   type="text"
                   placeholder="Colar aqui opção"
-                  className="w-full rounded border border-slate-200 p-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
+                  className="focus:ring-primary w-full rounded border border-slate-200 p-2 text-slate-950 focus:outline-none focus:ring-2 dark:border-slate-800 dark:text-slate-50"
                   onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {

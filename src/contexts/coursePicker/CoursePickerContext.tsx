@@ -18,17 +18,17 @@ interface CoursePickerContextContent {
 
 const CoursePickerContext: Context<CoursePickerContextContent> = createContext({
   coursesStorage: [],
-  setCoursesStorage: () => { },
+  setCoursesStorage: () => {},
   checkboxedCourses: [],
-  setCheckboxedCourses: () => { },
+  setCheckboxedCourses: () => {},
   choosingNewCourse: false,
-  setChoosingNewCourse: () => { },
+  setChoosingNewCourse: () => {},
   ucsModalOpen: false,
-  setUcsModalOpen: () => { },
+  setUcsModalOpen: () => {},
   coursesInfo: [],
-  setCoursesInfo: () => { },
+  setCoursesInfo: () => {},
   selectedMajor: null,
-  setSelectedMajor: () => { }
+  setSelectedMajor: () => {},
 })
 
 export default CoursePickerContext

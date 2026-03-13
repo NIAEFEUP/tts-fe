@@ -3,14 +3,14 @@ import { PencilSquareIcon } from '@heroicons/react/24/solid'
 import { useContext, useEffect } from 'react'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/button'
-import { 
-  DialogHeader, 
-  DialogFooter, 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  DialogHeader,
+  DialogFooter,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
 } from '../../../ui/dialog'
 import { Separator } from '../../../ui/separator'
 import useCourseUnits from '../../../../hooks/useCourseUnits'
@@ -20,7 +20,6 @@ import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerC
 
 //TODO: absolute imports with @
 
-
 const CoursePicker = () => {
   const {
     coursesStorage,
@@ -29,19 +28,19 @@ const CoursePicker = () => {
     setChoosingNewCourse,
     ucsModalOpen,
     selectedMajor,
-    setSelectedMajor
+    setSelectedMajor,
   } = useContext(CoursePickerContext)
 
-  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null);
+  const { courseUnits, loading: loadingCourseUnits } = useCourseUnits(selectedMajor ? selectedMajor.id : null)
   const showContent = selectedMajor || coursesStorage.length > 0
 
   useEffect(() => {
-    if (!courseUnits) return;
-    setCoursesInfo(courseUnits);
+    if (!courseUnits) return
+    setCoursesInfo(courseUnits)
   }, [courseUnits, setCoursesInfo])
 
   const handleOpenChange = (open: boolean) => {
-    setChoosingNewCourse((prev) => !prev);
+    setChoosingNewCourse((prev) => !prev)
     if (!open) {
       setUcsModalOpen(false)
     }
@@ -50,18 +49,18 @@ const CoursePicker = () => {
   return (
     <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button 
-          variant="icon" 
-          className="flex-grow gap-2 bg-primary" 
-          title="Editar Unidades Curriculares" 
+        <Button
+          variant="icon"
+          className="bg-primary flex-grow gap-2"
+          title="Editar Unidades Curriculares"
           onClick={() => setUcsModalOpen(true)}
         >
           <span className="hidden md:block lg:hidden xl:block">Unidades Curriculares</span>
           <PencilSquareIcon className="h-5 w-5 text-white" />
         </Button>
       </DialogTrigger>
-      
-      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-scroll">
+
+      <DialogContent className="flex h-fit max-h-screen w-screen flex-col overflow-scroll lg:min-w-fit">
         <DialogHeader className="mx-4">
           <DialogTitle>Seleciona as tuas unidades curriculares</DialogTitle>
           <DialogDescription className="mt-2">
@@ -70,12 +69,12 @@ const CoursePicker = () => {
         </DialogHeader>
 
         <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
-        
+
         <Separator />
 
         {showContent ? (
           <>
-            <div className="flex flex-col lg:flex-row flex-grow w-full lg:w-[60rem]">
+            <div className="flex w-full flex-grow flex-col lg:w-[60rem] lg:flex-row">
               <div className="w-full lg:w-1/2">
                 {!loadingCourseUnits ? (
                   <CourseYearTabs />
@@ -92,25 +91,25 @@ const CoursePicker = () => {
                   </div>
                 )}
               </div>
-              <div className="flex flex-row w-full lg:w-1/2 mt-4">
+              <div className="mt-4 flex w-full flex-row lg:w-1/2">
                 <Separator orientation="vertical" className="mx-5 hidden lg:block" />
                 <PickedCoursesList />
               </div>
             </div>
 
             <DialogFooter className="flex flex-row justify-center">
-              <div className="flex flex-row items-center justify-between dark:text-white pr-4 pb-4">
+              <div className="flex flex-row items-center justify-between pb-4 pr-4 dark:text-white">
                 <Ects />
-                <div className="flex gap-2 mt-4">
+                <div className="mt-4 flex gap-2">
                   <ClearAllCoursesButton />
                 </div>
               </div>
             </DialogFooter>
           </>
         ) : (
-          <div className="flex flex-col items-center flex-grow w-full lg:w-[60rem] py-10">
+          <div className="flex w-full flex-grow flex-col items-center py-10 lg:w-[60rem]">
             <Desert className="h-64 w-full" />
-            <p className="mt-4 text-muted-foreground">Seleciona um curso primeiro.</p>
+            <p className="text-muted-foreground mt-4">Seleciona um curso primeiro.</p>
           </div>
         )}
       </DialogContent>

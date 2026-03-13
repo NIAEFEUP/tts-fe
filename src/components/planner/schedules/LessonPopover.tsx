@@ -11,12 +11,7 @@ type Props = {
   isOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const LessonPopover = ({
-  courseInfo,
-  classInfo,
-  slotInfo,
-  isOpenHook
-}: Props) => {
+const LessonPopover = ({ courseInfo, classInfo, slotInfo, isOpenHook }: Props) => {
   const [isOpen, setIsOpen] = isOpenHook
 
   const closeModal = () => {
@@ -28,9 +23,9 @@ const LessonPopover = ({
       <div className="fixed inset-0 bg-black/50 dark:bg-black/50" />
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center px-8 py-4 text-center">
-
-          <DialogContent className="w-full max-w-xl transform space-y-4 overflow-hidden rounded-2xl 
-                bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-dark"
+          <DialogContent
+            className="dark:bg-dark w-full max-w-xl transform space-y-4 overflow-hidden 
+                rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
           >
             <DialogTitle>
               <h3 className="mb-3 text-lg font-medium leading-none text-gray-700 dark:text-white">

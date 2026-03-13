@@ -3,7 +3,16 @@ import { useState, useEffect, useContext } from 'react'
 import LessonPopover from './LessonPopover'
 import ConflictsPopover from './ConflictsPopover'
 import { CourseInfo, ClassInfo, SlotInfo, ClassDescriptor, ConflictInfo } from '../../../@types'
-import { getLessonBoxTime, schedulesConflict, conflictsSeverity, getLessonBoxStyles, maxHour, minHour, getClassTypeClassName, getLessonTypeLongName } from '../../../utils'
+import {
+  getLessonBoxTime,
+  schedulesConflict,
+  conflictsSeverity,
+  getLessonBoxStyles,
+  maxHour,
+  minHour,
+  getClassTypeClassName,
+  getLessonTypeLongName,
+} from '../../../utils'
 import ConflictsContext from '../../../contexts/ConflictsContext'
 import ScheduleContext from '../../../contexts/ScheduleContext'
 
@@ -15,13 +24,7 @@ type Props = {
   setLessonBoxConflict: (courseId: number, conflictData: number) => void
 }
 
-const LessonBox = ({
-  courseInfo,
-  classInfo,
-  slotInfo,
-  classes,
-  setLessonBoxConflict
-}: Props) => {
+const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConflict }: Props) => {
   const classTitle = classInfo.name
   const lessonType = slotInfo.lesson_type
   const timeSpan = getLessonBoxTime(slotInfo)
@@ -33,61 +36,65 @@ const LessonBox = ({
     'Professor' +
     (slotInfo.professors.length > 1 ? 'es' : '') +
     ':\n' +
-    slotInfo.professors
-      .map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name)
-      .join('\n')
+    slotInfo.professors.map((prof_info) => (slotInfo.professors.length > 1 ? '- ' : '') + prof_info.name).join('\n')
 
-  const conflicts = [];
+  const conflicts = []
   const [inspectShown, setInspectShown] = useState(false)
   const [conflictsShown, setConflictsShown] = useState(false) // Controls if the popover showing the conflicts appear
   const [isHovered, setIsHovered] = useState(false)
-  const [conflict, setConflict] = useState(conflicts[slotInfo.id]);
-  const hasConflict = conflict?.conflictingClasses?.length > 1;
-  const { tClassConflicts } = useContext(ConflictsContext);
-  const { originalExchangeSchedule } = useContext(ScheduleContext);
+  const [conflict, setConflict] = useState(conflicts[slotInfo.id])
+  const hasConflict = conflict?.conflictingClasses?.length > 1
+  const { tClassConflicts } = useContext(ConflictsContext)
+  const { originalExchangeSchedule } = useContext(ScheduleContext)
 
   // Needs to change the entry with the id of this lesson to contain the correct ConflictInfo when the classes change
   useEffect(() => {
     const newConflictInfo: ConflictInfo = {
       severe: 0,
-      conflictingClasses: [{
-        classInfo: classInfo,
-        courseInfo: courseInfo,
-        slotInfo: slotInfo
-      }]
-    };
+      conflictingClasses: [
+        {
+          classInfo: classInfo,
+          courseInfo: courseInfo,
+          slotInfo: slotInfo,
+        },
+      ],
+    }
 
-    for (let i = 0; i < classes.length; i++) {                                // classes
-      const classDescriptor = classes[i];
-      for (let j = 0; j < classDescriptor.classInfo.slots.length; j++) {      // slots
-        const slot = classDescriptor.classInfo.slots[j];
+    for (let i = 0; i < classes.length; i++) {
+      // classes
+      const classDescriptor = classes[i]
+      for (let j = 0; j < classDescriptor.classInfo.slots.length; j++) {
+        // slots
+        const slot = classDescriptor.classInfo.slots[j]
         if (schedulesConflict(slotInfo, slot)) {
           // The highest severity of the all the conflicts is the overall severity
           newConflictInfo.severe = conflictsSeverity(slotInfo, slot, tClassConflicts) //|| newConflictInfo.severe;
           const newClassDescriptor = {
             classInfo: classDescriptor.classInfo,
             courseInfo: classDescriptor.courseInfo,
-            slotInfo: slot
+            slotInfo: slot,
           }
-          newConflictInfo.conflictingClasses.push(newClassDescriptor);
+          newConflictInfo.conflictingClasses.push(newClassDescriptor)
         }
       }
     }
 
-    const hasNewClasses = !newConflictInfo.conflictingClasses.every((conflictingClass) => originalExchangeSchedule.some((originalClass) => originalClass.classInfo.id === conflictingClass.classInfo.id));
+    const hasNewClasses = !newConflictInfo.conflictingClasses.every((conflictingClass) =>
+      originalExchangeSchedule.some((originalClass) => originalClass.classInfo.id === conflictingClass.classInfo.id)
+    )
 
     if (!hasNewClasses && newConflictInfo.severe === 0) {
-      newConflictInfo.severe = 0;
+      newConflictInfo.severe = 0
     }
 
-    setConflict(newConflictInfo);
-  }, [classInfo, classes, hasConflict]);
+    setConflict(newConflictInfo)
+  }, [classInfo, classes, hasConflict])
 
   useEffect(() => {
     if (conflict?.severe !== undefined) {
-      setLessonBoxConflict(courseInfo.id, conflict?.severe);
+      setLessonBoxConflict(courseInfo.id, conflict?.severe)
     }
-  }, [classInfo]);
+  }, [classInfo])
 
   const showConflicts = () => {
     setConflictsShown(true)
@@ -101,10 +108,15 @@ const LessonBox = ({
 
   return (
     <>
-      {inspectShown && <LessonPopover courseInfo={courseInfo} classInfo={classInfo} slotInfo={slotInfo} isOpenHook={[inspectShown, setInspectShown]} />}
-      {hasConflict && (
-        <ConflictsPopover conflictsInfo={conflict} isOpenHook={[conflictsShown, setConflictsShown]} />
+      {inspectShown && (
+        <LessonPopover
+          courseInfo={courseInfo}
+          classInfo={classInfo}
+          slotInfo={slotInfo}
+          isOpenHook={[inspectShown, setInspectShown]}
+        />
       )}
+      {hasConflict && <ConflictsPopover conflictsInfo={conflict} isOpenHook={[conflictsShown, setConflictsShown]} />}
       {
         <button
           onClick={hasConflict ? showConflicts : inspectLesson}
@@ -117,35 +129,50 @@ const LessonBox = ({
           className={classNames(
             'schedule-class group',
             getClassTypeClassName(lessonType),
-            (hasConflict && conflict.severe === 2) ? (isHovered ? 'schedule-class-conflict-info' : 'schedule-class-conflict') : '',
-            (hasConflict && conflict.severe === 1) ? (isHovered ? 'schedule-class-conflict-warn-info' : 'schedule-class-conflict-warn') : '',
+            hasConflict && conflict.severe === 2
+              ? isHovered
+                ? 'schedule-class-conflict-info'
+                : 'schedule-class-conflict'
+              : '',
+            hasConflict && conflict.severe === 1
+              ? isHovered
+                ? 'schedule-class-conflict-warn-info'
+                : 'schedule-class-conflict-warn'
+              : '',
             'overflow-hidden'
           )}
         >
           <span>
-            {hasConflict && isHovered && <div
-              className={`absolute top-0 left-0 w-full py-2 text-center text-xs font-extrabold xl:text-sm ${conflict.severe ? 'text-red-600' : 'text-amber-500'
+            {hasConflict && isHovered && (
+              <div
+                className={`absolute left-0 top-0 w-full py-2 text-center text-xs font-extrabold xl:text-sm ${
+                  conflict.severe ? 'text-red-600' : 'text-amber-500'
                 }`}
-            >
-              {conflictTitle}
-              <div className="px-1 py-1 font-normal text-white">
-                <ul className="flex flex-wrap justify-center gap-1">
-                  {conflict.conflictingClasses
-                    .sort((a, b) => (a.classInfo.name.length + a.courseInfo.acronym.length) - (b.classInfo.name.length + b.courseInfo.acronym.length))
-                    .map((conflictingClass, index) => (
-                      <li key={index}>
-                        {`${conflictingClass.classInfo.name} (${conflictingClass.courseInfo.acronym})`}
-                        {index < conflict.conflictingClasses.length - 1 ? ',' : ''}
-                      </li>
-                    ))}
-                </ul>
+              >
+                {conflictTitle}
+                <div className="px-1 py-1 font-normal text-white">
+                  <ul className="flex flex-wrap justify-center gap-1">
+                    {conflict.conflictingClasses
+                      .sort(
+                        (a, b) =>
+                          a.classInfo.name.length +
+                          a.courseInfo.acronym.length -
+                          (b.classInfo.name.length + b.courseInfo.acronym.length)
+                      )
+                      .map((conflictingClass, index) => (
+                        <li key={index}>
+                          {`${conflictingClass.classInfo.name} (${conflictingClass.courseInfo.acronym})`}
+                          {index < conflict.conflictingClasses.length - 1 ? ',' : ''}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
               </div>
-            </div>}
-
+            )}
 
             {lgLesson && (
               <div
-                className={`flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white
+                className={`text-xxs flex h-full w-full flex-col items-center justify-between p-1 leading-none tracking-tighter text-white
               ${conflictTitle ? 'group-hover:blur-md' : ''} lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs`}
               >
                 {/* Top */}
@@ -180,8 +207,9 @@ const LessonBox = ({
             )}
             {mdLesson && (
               <div
-                className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${conflictTitle ? 'group-hover:blur-md' : ''
-                  }
+                className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${
+                  conflictTitle ? 'group-hover:blur-md' : ''
+                }
               xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
               >
                 <div className="flex w-full items-center justify-between gap-1">

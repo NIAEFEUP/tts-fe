@@ -17,47 +17,45 @@ type Props = {
 /**
  * Interactions with the currently selected option
  */
-const SelectedOptionController = ({
-  currentOption,
-}: Props) => {
+const SelectedOptionController = ({ currentOption }: Props) => {
   const { enabled } = useContext(ThemeContext)
-  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
+  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
   const input = useRef(null)
 
-  const inputIsActive = () => document.activeElement === input.current;
+  const inputIsActive = () => document.activeElement === input.current
 
   //TODO(thePeras): Fix these functions using states and setInterval
   const startScroll = () => {
-    if (inputIsActive()) return;
+    if (inputIsActive()) return
 
     input.current.scrollLeft += 5
   }
 
   const stopScroll = () => {
-    if (inputIsActive()) return;
+    if (inputIsActive()) return
 
     input.current.scrollLeft = 0
   }
 
-  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '');
+  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '')
 
   useEffect(() => {
     setOptionName(multipleOptions[selectedOption].name)
   }, [selectedOption, multipleOptions])
 
   const renameOptionName = (event) => {
-    const newName = event.target.value;
-    if (newName.length > 35) return;
+    const newName = event.target.value
+    if (newName.length > 35) return
     event.target.value = newName
     setMultipleOptions((prevMultipleOptions) => {
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
         item.id === multipleOptions[selectedOption].id ? { ...item, name: newName } : item
       )
-      return updatedMultipleOptions;
+      return updatedMultipleOptions
     })
-    AnalyticsTracker.trackFeature(Feature.OPTION_RENAME);
+    AnalyticsTracker.trackFeature(Feature.OPTION_RENAME)
   }
 
   const changeOptionIcon = (newIcon) => {
@@ -65,23 +63,20 @@ const SelectedOptionController = ({
       const updatedMultipleOptions = prevMultipleOptions.map((item) =>
         item.id === multipleOptions[selectedOption].id ? { ...item, icon: newIcon.imageUrl } : item
       )
-      return updatedMultipleOptions;
+      return updatedMultipleOptions
     })
-    AnalyticsTracker.trackFeature(Feature.OPTION_EMOJI);
-    AnalyticsTracker.emoji(newIcon.emoji);
+    AnalyticsTracker.trackFeature(Feature.OPTION_EMOJI)
+    AnalyticsTracker.emoji(newIcon.emoji)
   }
 
   return (
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between xl:gap-5">
       <div className="order-2 flex flex-grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
-          <PopoverTrigger className="aspect-square h-10 w-15 rounded-md p-1 px-2 text-xl bg-lightish dark:bg-darkish border border-slate-200 dark:border-slate-800">
-            <img
-              src={multipleOptions[selectedOption]?.icon}
-              alt={multipleOptions[selectedOption].name}
-            />
+          <PopoverTrigger className="w-15 bg-lightish dark:bg-darkish aspect-square h-10 rounded-md border border-slate-200 p-1 px-2 text-xl dark:border-slate-800">
+            <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
           </PopoverTrigger>
-          <PopoverContent side="bottom" className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
+          <PopoverContent side="bottom" className="bg-lightish dark:bg-darkish mx-5 w-96 rounded-full p-0">
             <EmojiPicker
               width="100%"
               searchDisabled={true}
@@ -103,7 +98,7 @@ const SelectedOptionController = ({
           spellCheck="false"
           ref={input}
           value={optionName}
-          className="w-full resize-none overflow-x-auto scroll-smooth rounded border-none bg-inherit p-1 transition-all font-medium"
+          className="w-full resize-none overflow-x-auto scroll-smooth rounded border-none bg-inherit p-1 font-medium transition-all"
           onChange={renameOptionName}
           onBlur={renameOptionName}
           onKeyDown={(e) => {

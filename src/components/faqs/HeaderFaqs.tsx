@@ -1,7 +1,7 @@
 const HeaderFaqs = () => {
   return (
     <div>
-      <h2 className="mb-4 text-center text-3xl font-bold capitalize text-primary dark:text-white">
+      <h2 className="text-primary mb-4 text-center text-3xl font-bold capitalize dark:text-white">
         Perguntas mais frequentes
       </h2>
       <p className="mx-auto w-3/4 text-center text-lg">

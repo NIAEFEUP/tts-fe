@@ -4,23 +4,19 @@ import Alert, { AlertType } from '../Alert'
 import InspectLessonBox from './InspectLessonBox'
 import { ConflictInfo, ClassDescriptor } from '../../../@types'
 
-
 type Props = {
-  conflictsInfo: ConflictInfo,
+  conflictsInfo: ConflictInfo
   isOpenHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
-const ConflictsPopover = ({ 
-  conflictsInfo,
-  isOpenHook 
-}: Props) => {
+const ConflictsPopover = ({ conflictsInfo, isOpenHook }: Props) => {
   const [isOpen, setIsOpen] = isOpenHook
-  
+
   // 1. Find better way to see the severe conflicts which are conflicts between tp and other tp classes.
   // We need to find a better way since before we were receiving a Lesson[] array, and now we are receiving an array
   // of conflict infos, which is far more intuitive
   //const severe = useMemo(() => lessons.filter((item) => item.schedule.lesson_type !== 'T').length > 1, [lessons])
-  const severe = conflictsInfo.severe;
+  const severe = conflictsInfo.severe
 
   const closeModal = () => {
     setIsOpen(false)
@@ -53,8 +49,8 @@ const ConflictsPopover = ({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className="w-full max-w-5xl transform space-y-4 overflow-hidden rounded-2xl 
-                bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-dark"
+                className="dark:bg-dark w-full max-w-5xl transform space-y-4 overflow-hidden 
+                rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <Dialog.Title as="header">
                   <h3 className="mb-3 text-lg font-medium leading-none text-gray-700 dark:text-white">
@@ -62,8 +58,8 @@ const ConflictsPopover = ({
                   </h3>
                   <Alert type={severe ? AlertType.error : AlertType.warning}>
                     <p>
-                      Colisões com <strong>aulas teóricas</strong> são geralmente permitidas na maioria dos
-                      casos. O mesmo <strong>não</strong> se verifica quando colidem <strong>aulas práticas</strong>.
+                      Colisões com <strong>aulas teóricas</strong> são geralmente permitidas na maioria dos casos. O
+                      mesmo <strong>não</strong> se verifica quando colidem <strong>aulas práticas</strong>.
                     </p>
                   </Alert>
                 </Dialog.Title>
@@ -74,7 +70,7 @@ const ConflictsPopover = ({
                       key={`conflict-inspect-lesson-box-${lessonIdx}`}
                       courseInfo={classDescriptor.courseInfo}
                       classInfo={classDescriptor.classInfo}
-                      slotInfo={classDescriptor.slotInfo} 
+                      slotInfo={classDescriptor.slotInfo}
                     />
                   ))}
                 </div>
@@ -82,7 +78,7 @@ const ConflictsPopover = ({
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="rounded border-2 border-transparent bg-secondary px-4 py-2 text-sm font-medium 
+                    className="bg-secondary rounded border-2 border-transparent px-4 py-2 text-sm font-medium 
                     text-white transition hover:opacity-80 focus:outline-none"
                   >
                     Ok, Entendido!
