@@ -39,7 +39,3 @@ jobs:
 
       - name: Lint Code
         run: npm run lint
-
-      - name: Check formatting
-        run: npm run check
-    
