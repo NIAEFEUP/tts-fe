@@ -56,19 +56,17 @@ Find an issue → get assigned by PM → branch from milestone branch
 Every PR **must** be linked to:
 
 - **An issue** — use `Closes #<number>` (or `Fixes`/`Resolves`) in the PR description. GitHub will close the issue automatically on merge.
-- **A milestone** — assign the PR (and the issue) to the relevant milestone in the sidebar. If you're unsure, ask in the team channel.
 
 ### Active Milestones & Their Branches
 
 | Milestone | GitHub Milestone | Branch to target |
 |-----------|-----------------|-----------------|
-| UI/UX mobile improvements | [#5](https://github.com/NIAEFEUP/tts-fe/milestone/5) | `feature/mobile` *(or ask coordinator)* |
-| Feup Exchange | [#6](https://github.com/NIAEFEUP/tts-fe/milestone/6) | `feature/exchange` |
+| UI/UX mobile improvements | [#5](https://github.com/NIAEFEUP/tts-fe/milestone/5) | `refactor/ui` |
+| Feup Exchange | [#6](https://github.com/NIAEFEUP/tts-fe/milestone/6) | `enhancement/exchange` |
 | Collaborative Sessions | [#7](https://github.com/NIAEFEUP/tts-fe/milestone/7) | `feature/collaborative-sessions` |
 | Random Features | [#8](https://github.com/NIAEFEUP/tts-fe/milestone/8) | `develop` |
 
 > **Random Features** don't fit a dedicated milestone branch, so those PRs target `develop` directly.
-
 
 ### Issue Labels
 
@@ -92,12 +90,14 @@ Branch **from the milestone branch** (see table above). Use this naming conventi
 <type>/<short-description>
 ```
 
+
 | Type | When to use |
 |------|-------------|
 | `feat` | New feature |
 | `fix` | Bug fix |
 | `refactor` | Code restructure without behaviour change |
 | `style` | CSS / visual-only changes |
+| `enhancement` | Broad updates (combining features, refactors, and polish) |
 | `chore` | Tooling, deps, config |
 | `docs` | Documentation only |
 | `test` | Tests only |
@@ -143,27 +143,9 @@ chore(deps): bump vite to 5.4.0
 3. In the sidebar:
    - Link the issue under **Development** (GitHub will show "Closes #..." automatically if you use the keyword in the description)
    - Assign the correct **Milestone**
-   - Add relevant **Labels**
-   - Add at least one **Reviewer**
+   - Add at least one **Reviewer** 
 4. Keep PRs focused — one feature or fix per PR.
 5. If the PR is not ready for review, open it as a **Draft**.
-
-
-## Code Standards
-
-### TypeScript / React
-
-- **TypeScript everywhere** — no implicit `any`. Define shared types in `src/@types/`.
-- Reusable visual components go in `src/components/`. Route-level components go in `src/pages/`.
-- **API calls belong in `src/api/`** — never call `fetch()` directly inside a component.
-- Use existing contexts (`SessionContext`, etc.) instead of prop drilling.
-- Custom hooks go in `src/hooks/` to keep components clean.
-
-### Styling
-
-- Use **Tailwind CSS** utility classes as the primary styling method.
-- Avoid inline styles.
-- Test your changes on mobile viewports.
 
 ### Linting & Formatting
 
@@ -190,6 +172,5 @@ If your change:
 ## Getting Help
 
 - Check the [Wiki](https://github.com/NIAEFEUP/tts-fe/wiki) first.
-- Ask in the team channel.
+- Ask in slack.
 - Comment on the relevant issue.
-- Reach out via [NIAEFEUP socials](https://linktr.ee/niaefeup).
