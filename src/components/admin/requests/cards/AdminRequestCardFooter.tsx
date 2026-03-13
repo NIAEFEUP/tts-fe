@@ -33,14 +33,16 @@ const rejectRequest = async (
     const a = document.createElement('a');
     a.target = "_blank";
     a.rel = "noopener noreferrer";
+    const [greeting, ...rest] = exchangeMessage.split('%0D%0A%0D%0A');
+    const bodyRest = rest.join('%0D%0A%0D%0A');
 
     if (requestType === AdminRequestType.DIRECT_EXCHANGE) {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AO seguinte pedido de troca de turmas não pode ser efetuado.%0A%0D%0A${exchangeMessage}%0D%0A%0D%0ACumprimentos,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
-    } else if (requestType === AdminRequestType.URGENT_EXCHANGE) {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca Individual de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AO seguinte pedido de troca de turmas não pode ser efetuado.%0A%0D%0A${exchangeMessage}%0D%0A%0D%0ACumprimentos,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de troca de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+    } else if (requestType === AdminRequestType.ENROLLMENT) {
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alocação de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alocação de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
     } else {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Inscrição em Unidades Curriculares&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AO seguinte pedido de inscriçao em unidades curriculares não pode ser efetuado.%0A%0D%0A${exchangeMessage}%0D%0A%0D%0ACumprimentos,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
-    } 
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alteração de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+    }
 
     a.click();
   } catch (e) {
@@ -57,17 +59,17 @@ const acceptRequest = async (
 ) => {
   try {
     await exchangeRequestService.adminAcceptExchangeRequest(requestType, id);
-
+    const [greeting, ...rest] = exchangeMessage.split('%0D%0A%0D%0A');
+    const bodyRest = rest.join('%0D%0A%0D%0A');
     const a = document.createElement('a');
     a.target = "_blank";
     a.rel = "noopener noreferrer";
     if (requestType === AdminRequestType.DIRECT_EXCHANGE) {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AO seguinte pedido de troca de turmas foi efetuado.%0A%0D%0A${exchangeMessage}%0D%0A%0D%0ACumprimentos,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
-    } else if (requestType === AdminRequestType.URGENT_EXCHANGE){
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca Individual de Turma&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AO seguinte pedido de troca de turmas foi efetuado.%0A%0D%0A${exchangeMessage}%0D%0A%0D%0ACumprimentos,%0A%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
-
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de troca de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+    } else if (requestType === AdminRequestType.ENROLLMENT) {
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alocação de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alocação de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
     } else {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Inscrição em Unidades Curriculares&cc=inscricoes.turmas.leic@fe.up.pt&body=Viva,%0D%0A%0D%0AO seguinte pedido de inscrição foi efetuado.%0A%0D%0A${exchangeMessage}%0D%0A%0D%0ACumprimentos,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alteração de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
     }
 
     a.click();
@@ -148,6 +150,7 @@ export const AdminRequestCardFooter = ({
 
       <AdminSendEmail
         nmec={nmecs}
+        requestType={requestType}
         subject={
           requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE
             ? "Pedido de troca de turma"
