@@ -1,9 +1,12 @@
 on:
   push:
     branches: [develop]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
 jobs:
   deploy:
-    name: "Deploy to netlify"
+    name: "Wait for Netlify Preview"
     runs-on: ubuntu-latest
     steps:
       - name: Wait for the Netlify Preview
@@ -13,4 +16,18 @@ jobs:
           site_name: 'tts-fe-preview'
           max_timeout: 300 # 5 minutes
         env:
-          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}	
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.waitForNetlify.outputs.url }}';
+            if (!url) return;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🌐 **Netlify Preview:** ${url}`
+            });
