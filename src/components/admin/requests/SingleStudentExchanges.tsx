@@ -7,8 +7,8 @@ import AdminPaginationContext from "../../../contexts/admin/AdminPaginationConte
 
 export const SingleStudentExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
-    const { currPage, setTotalPages } = useContext(AdminPaginationContext);
-    const { exchanges, loading, totalPages } = useSingleStudentExchanges(filterContext, currPage);
+    const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext);
+    const { exchanges, loading, totalPages } = useSingleStudentExchanges(filterContext, currPage, itemsPerPage);
 
     useEffect(() => {
         setTotalPages(totalPages)
