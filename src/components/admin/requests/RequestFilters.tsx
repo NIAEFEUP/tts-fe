@@ -133,14 +133,6 @@ export const RequestFilters = () => {
             </PopoverContent>
         </Popover>
 
-        <PageSizeSelector
-            value={itemsPerPage}
-            onChange={(value) => {
-                setCurrPage(1);
-                setItemsPerPage(value);
-            }}
-        />
-
         <Button
             onClick={() => {
                 setActiveCourse(undefined);
@@ -150,5 +142,13 @@ export const RequestFilters = () => {
         >
             Reset
         </Button>
+
+        <PageSizeSelector
+            value={itemsPerPage}
+            onChange={(value) => {
+                setCurrPage(1);
+                setItemsPerPage(value);
+            }}
+        />
     </div>
 }
