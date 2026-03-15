@@ -1,6 +1,7 @@
 {
   "name": "Time Table Selector",
   "short_name": "TTS",
+  "description": "Plataforma para estudantes da FEUP criarem e experimentarem diferentes combinações de horários",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,8 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#b33636",
+  "background_color": "#ffffff",
+  "lang": "pt-PT",
+  "scope": "/"
 }

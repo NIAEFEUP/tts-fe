@@ -22,10 +22,10 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Build project
-        run: yarn build
+        run: npm run build
 
       - name: Determine release version (default to commit hash)
         id: get_version

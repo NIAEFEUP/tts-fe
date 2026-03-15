@@ -61,8 +61,8 @@ export const FeedbackReport = () => {
   return <DropdownMenu open={open} onOpenChange={setOpen}>
     <DropdownMenuTrigger asChild>
       <Button variant="icon" className="rounded-full flex flex-row gap-x-2">
-        <FlagIcon className="h-5 w-5 text-black" />
-        <p className="hidden sm:block text-black">Feedback</p>
+        <FlagIcon className="h-5 w-5 text-black dark:text-white md:dark:text-black" />
+        <p className="hidden sm:block text-black dark:text-white md:dark:text-black">Feedback</p>
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent className="ml-5">

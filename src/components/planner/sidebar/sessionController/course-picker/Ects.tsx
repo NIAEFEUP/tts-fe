@@ -5,10 +5,10 @@ import { TooltipTrigger, TooltipContent, TooltipProvider, Tooltip } from '../../
 
 const Ects = () => {
   const { coursesStorage } = useContext(CoursePickerContext)
+
   const totalEcts = coursesStorage.reduce(
-  (acc, course) => acc + parseFloat(course.ects.toString().replace(',', '.')),
-  0
-);
+    (acc, course) => acc + parseFloat(String(course.ects).replace(',', '.')
+    ), 0)
   const warning = totalEcts > 42 ? 2 : totalEcts > 36 ? 1 : 0
 
   return (

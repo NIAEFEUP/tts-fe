@@ -1,10 +1,12 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdminMainContent } from "../components/admin/AdminMainContent";
+import { AdminStatisticsView } from "../components/admin/AdminStatisticsView";
 import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
 import { SidebarProvider } from "../components/ui/sidebar";
 import SessionContext from "../contexts/SessionContext";
+import api from "../api/backend";
 
 type Props = {
   page: string;
@@ -18,19 +20,29 @@ const AdminPage = ({ page }: Props) => {
 
   useEffect(() => {
     if (!isSessionLoading && !isAuthorized) {
-      navigate("/planner");
+      if (!signedIn) {
+        window.location.href = api.OIDC_LOGIN_URL;
+      } else {
+        navigate("/exchange");
+      }
     }
-  }, [isSessionLoading, isAuthorized, navigate]);
+  }, [isSessionLoading, isAuthorized, signedIn, navigate]);
 
+  if (isSessionLoading) {
+    return <div>Loading...</div>;
+  }
 
-  if (isSessionLoading || !isAuthorized) return null;
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider> 
       <AdminSidebar />
       <main className="m-8 w-full">
         {page === "pedidos" && <AdminMainContent />}
         {page === "settings" && <AdminExchangeSettings />}
+        {page === "statistics" && <AdminStatisticsView />}
       </main>
     </SidebarProvider>
   );

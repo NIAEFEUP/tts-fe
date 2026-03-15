@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './api/socket'
+import { HelmetProvider } from 'react-helmet-async'
 
 import * as Sentry from "@sentry/react";
 
@@ -35,9 +36,9 @@ Sentry.init({
 });
 
 
-root.render(strictMode
-  ?
-  <React.StrictMode>
+const app = (
+  <HelmetProvider>
     <App />
-  </React.StrictMode>
-  : <App />)
+  </HelmetProvider>
+)
+root.render(strictMode ? <React.StrictMode>{app}</React.StrictMode> : app)
