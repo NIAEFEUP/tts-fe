@@ -112,7 +112,7 @@ export const CommonCardHeader = ({
                                         key={option.course_info.acronym + `${crypto.randomUUID()}`}
                                         option={option}
                                         requestCardHovered={hovered}
-                                        classUserGoesToName={option[classUserGoesToName].name}
+                                        classUserGoesToName={option[classUserGoesToName]?.name}
                                     />)
                                 })}
                             </div>

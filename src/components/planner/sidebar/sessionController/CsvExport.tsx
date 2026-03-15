@@ -29,7 +29,7 @@ const CsvExport = () => {
       const line = [course.course_unit_year, csvEncode(course.name), course.acronym]
       multipleOptions.forEach(option => {
         const courseOption = option.course_options.find(courseOption => courseOption.course_id === course.id)
-        const pickedClass = course.classes.find(c => c.id === courseOption?.picked_class_id);
+        const pickedClass = course.classes?.find(c => c.id === courseOption?.picked_class_id);
 
         line.push(csvEncode(pickedClass?.name))
       })
