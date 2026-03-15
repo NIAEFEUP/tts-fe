@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
 import useAdminAllMarketplaceExchanges from "../../../hooks/admin/useAdminAllMarketplaceExchanges"
 import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
@@ -7,8 +7,12 @@ import { AdminMarketplaceExchangesCard } from "../AdminMarketplaceExchangesCard"
 
 export const AdminMarketplaceExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
-    const { currPage, itemsPerPage } = useContext(AdminPaginationContext);
-    const { exchanges, loading } = useAdminAllMarketplaceExchanges(filterContext, currPage, itemsPerPage);
+    const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext);
+    const { exchanges, totalPages, loading } = useAdminAllMarketplaceExchanges(filterContext, currPage, itemsPerPage);
+
+    useEffect(() => {
+        setTotalPages(totalPages)
+    }, [exchanges]);
 
     return (<>
         {loading && <BarLoader className="w-full" />}
