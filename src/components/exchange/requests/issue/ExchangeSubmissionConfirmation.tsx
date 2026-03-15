@@ -1,4 +1,4 @@
-import { CheckBadgeIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import { Desert } from "../../../svgs";
 import { Button } from "../../../ui/button";
@@ -19,6 +19,7 @@ type Props = {
   requestSubmitHandler: (message: string) => void,
   submittingRequest: boolean,
   sendUrgentMessage: boolean,
+  hasDuplicate: boolean,
   setSendUrgentMessage: Dispatch<SetStateAction<boolean>>
 }
 
@@ -27,6 +28,7 @@ export const ExchangeSubmissionConfirmation = ({
   requestSubmitHandler,
   submittingRequest,
   sendUrgentMessage,
+  hasDuplicate,
   setSendUrgentMessage
 }: Props) => {
 
@@ -104,14 +106,20 @@ export const ExchangeSubmissionConfirmation = ({
             <Button
               className="flex flex-row gap-x-2 success-button"
               type="submit"
+              disabled={submittingRequest}
             // disabled={sendUrgentMessage ? false : conflictSeverity}
             >
               {submittingRequest
                 ? <p>A processar pedido...</p>
-                : <>
-                  <p>Submeter pedido</p>
-                  <CheckBadgeIcon className="h-5 w-5" />
-                </>
+                : hasDuplicate
+                  ? <>
+                      <p>Submeter pedido e cancelar anterior</p>
+                      <ArrowPathIcon className="h-5 w-5" />
+                    </>
+                  : <>
+                      <p>Submeter pedido</p>
+                      <CheckBadgeIcon className="h-5 w-5" />
+                    </>
               }
             </Button>
             {submittingRequest && <BeatLoader size={10} />}
