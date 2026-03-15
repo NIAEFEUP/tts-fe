@@ -1,6 +1,5 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button } from "../../ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import RequestFiltersContext, { activeStatesPossibleValues, adminRequestStateToText } from "../../../contexts/admin/RequestFiltersContext";
 import useAdminExchangeCourses from "../../../hooks/admin/useAdminExchangeCourses";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
@@ -19,48 +18,81 @@ export const RequestFilters = () => {
         setActiveCurricularYear, activeStates, setActiveStates
     } = useContext(RequestFiltersContext);
 
-    const { itemsPerPage, setItemsPerPage, setCurrPage } =
-    useContext(AdminPaginationContext);
+    const { itemsPerPage, setItemsPerPage, setCurrPage } = useContext(AdminPaginationContext);
 
     const { courses } = useAdminExchangeCourses();
 
+    const [courseOpen, setCourseOpen] = useState(false);
+    const [yearOpen, setYearOpen] = useState(false);
+
+    const years = [1, 2, 3, 4, 5];
+
     return <div className="flex flex-row gap-x-2">
-        <Select
-            value={`${activeCourse || ""}`}
-            defaultValue={`${activeCourse || ""}`}
-            onValueChange={(val) => setActiveCourse(parseInt(val))}
-        >
-            <SelectTrigger className="flex flex-row gap-x-4">
-                <SelectValue placeholder="Curso" />
-            </SelectTrigger>
-            <SelectContent>
-                {courses?.length === 0 && <p>Nenhum</p>}
-                {courses?.map((course) => (
-                    <SelectItem
-                        key={`course-select-item-${course.id}`}
-                        value={`${course.id}`}
-                    >
-                        {course.acronym}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
-        <Select
-            value={`${activeCurricularYear || ""}`}
-            defaultValue={`${activeCurricularYear || ""}`}
-            onValueChange={(val) => setActiveCurricularYear(parseInt(val))}
-        >
-            <SelectTrigger className="flex flex-row gap-x-4">
-                <SelectValue placeholder="Ano" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5">5</SelectItem>
-            </SelectContent>
-        </Select>
+        <Popover open={courseOpen} onOpenChange={setCourseOpen}>
+            <PopoverTrigger asChild>
+                <Button variant="outline" className="flex flex-row gap-x-2">
+                    <p>
+                        {activeCourse ? courses?.find(c => c.id === activeCourse)?.acronym ?? "Curso" : "Curso"}
+                        {activeCourse && <Badge variant="outline" className="ml-2">1</Badge>}
+                    </p>
+                    <ChevronDownIcon className="w-5 h-5" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-40 p-0">
+                <Command>
+                    <CommandGroup>
+                        {courses?.length === 0 && <p className="p-2 text-sm">Nenhum</p>}
+                        {courses?.map((course) => (
+                            <CommandItem
+                                key={`course-select-item-${course.id}`}
+                                onSelect={() => {
+                                    setActiveCourse(course.id);
+                                    setCourseOpen(false);
+                                }}
+                            >
+                                <div className="flex flex-row gap-x-2 items-center">
+                                    <p>{course.acronym}</p>
+                                    {activeCourse === course.id && <Check className="w-4 h-4" />}
+                                </div>
+                            </CommandItem>
+                        ))}
+                    </CommandGroup>
+                </Command>
+            </PopoverContent>
+        </Popover>
+
+        <Popover open={yearOpen} onOpenChange={setYearOpen}>
+            <PopoverTrigger asChild>
+                <Button variant="outline" className="flex flex-row gap-x-2">
+                    <p>
+                        {activeCurricularYear ? `Ano ${activeCurricularYear}` : "Ano"}
+                        {activeCurricularYear && <Badge variant="outline" className="ml-2">1</Badge>}
+                    </p>
+                    <ChevronDownIcon className="w-5 h-5" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-32 p-0">
+                <Command>
+                    <CommandGroup>
+                        {years.map((year) => (
+                            <CommandItem
+                                key={`year-${year}`}
+                                onSelect={() => {
+                                    setActiveCurricularYear(year);
+                                    setYearOpen(false);
+                                }}
+                            >
+                                <div className="flex flex-row gap-x-2 items-center">
+                                    <p>{year}</p>
+                                    {activeCurricularYear === year && <Check className="w-4 h-4" />}
+                                </div>
+                            </CommandItem>
+                        ))}
+                    </CommandGroup>
+                </Command>
+            </PopoverContent>
+        </Popover>
+
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="outline" className="w-full flex flex-row gap-x-2">
@@ -100,6 +132,15 @@ export const RequestFilters = () => {
                 </div>
             </PopoverContent>
         </Popover>
+
+        <PageSizeSelector
+            value={itemsPerPage}
+            onChange={(value) => {
+                setCurrPage(1);
+                setItemsPerPage(value);
+            }}
+        />
+
         <Button
             onClick={() => {
                 setActiveCourse(undefined);
@@ -109,13 +150,5 @@ export const RequestFilters = () => {
         >
             Reset
         </Button>
-        <PageSizeSelector
-            value={itemsPerPage}
-            onChange={(value) => {
-            setCurrPage(1);
-            setItemsPerPage(value);
-        }}
-        />
-
     </div>
 }

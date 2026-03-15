@@ -1,10 +1,8 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../ui/select";
+import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover";
+import { Button } from "../../../ui/button";
+import { Command, CommandGroup, CommandItem } from "../../../ui/command";
+import { Check, ChevronDownIcon } from "lucide-react";
 
 interface PageSizeSelectorProps {
   value: number;
@@ -17,24 +15,36 @@ export const PageSizeSelector = ({
   value,
   onChange,
 }: PageSizeSelectorProps) => {
-  return (
-    <div className="flex items-center gap-2">
-      <Select
-        value={value.toString()}
-        onValueChange={(val) => onChange(Number(val))}
-      >
-        <SelectTrigger className="h-8 w-[72px] text-xs">
-          <SelectValue placeholder="Number of Cards"/>
-        </SelectTrigger>
+  const [open, setOpen] = useState(false);
 
-        <SelectContent>
-          {PAGE_SIZE_OPTIONS.map((size) => (
-            <SelectItem key={size} value={size.toString()}>
-              {size}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="flex flex-row gap-x-2">
+          <p>{value}</p>
+          <ChevronDownIcon className="w-5 h-5" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-36 p-0">
+        <Command>
+          <CommandGroup>
+            {PAGE_SIZE_OPTIONS.map((size) => (
+              <CommandItem
+                key={size}
+                onSelect={() => {
+                  onChange(size);
+                  setOpen(false);
+                }}
+              >
+                <div className="flex flex-row gap-x-2 items-center">
+                  <p>{size}</p>
+                  {value === size && <Check className="w-4 h-4" />}
+                </div>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 };
