@@ -7,7 +7,7 @@ import { AdminMarketplaceExchangesCard } from "../AdminMarketplaceExchangesCard"
 
 export const AdminMarketplaceExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
-    const { currPage, itemsPerPage, setItemsPerPage } = useContext(AdminPaginationContext);
+    const { currPage, itemsPerPage } = useContext(AdminPaginationContext);
     const { exchanges, loading } = useAdminAllMarketplaceExchanges(filterContext, currPage, itemsPerPage);
 
     return (<>
