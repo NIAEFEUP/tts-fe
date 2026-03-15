@@ -27,7 +27,7 @@ const getRelatedExchanges = async (requests: Map<number, CreateRequestData>) => 
   });
 }
 
-const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string = "") => {
+const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, urgentMessage: string = "", replace: boolean = false) => {
   const formData = new FormData();
 
   for (const request of requests.values()) {
@@ -37,6 +37,8 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
   if (!isDirectExchange(requests.values()) && requests.values()[0]?.marketplace_id) formData.append("marketplace_id", requests.values()[0]?.marketplace_id);
 
   if (urgentMessage !== "") formData.append("urgentMessage", urgentMessage);
+
+  formData.append("replace", replace.toString());
 
   try {
     const res = await fetch(
