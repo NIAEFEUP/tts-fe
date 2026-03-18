@@ -1,7 +1,6 @@
 import Export from './sessionController/Export'
 import Refresh from './sessionController/Refresh'
 import CollaborativeSession from './sessionController/CollaborativeSession'
-import DevMode from '../../ui/DevMode'
 import { PlannerCoursePicker } from './sessionController/PlannerCoursePicker'
 /**
  * Sidebar with all the main schedule interactions
@@ -11,9 +10,7 @@ const SessionController = () => {
     <div className="flex w-full gap-1">
       <PlannerCoursePicker />
       <Refresh />
-      <DevMode>
-        <CollaborativeSession />
-      </DevMode>
+      <CollaborativeSession />
       <Export />
     </div>
   )
