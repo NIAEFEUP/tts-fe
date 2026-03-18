@@ -53,7 +53,7 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row justify-between items-start gap-4">
+      <CardHeader className="flex flex-row justify-between items-start gap-4 py-4 px-9">
         {/* Coluna da esquerda - 30% */}
         <div className="flex flex-col w-1/3 gap-2 relative">
           <div className="flex gap-2 items-center text-left">
@@ -63,19 +63,16 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
             <ExchangeStatus exchange={exchangeState} />
           </div>
 
-          <RequestDate date={exchangeState.date} />
-
-          <RequestLastUpdatedDate date={exchangeState.last_validated} justValidated={justValidated} />
-
-          {/* Mostrar botão de validação apenas quando fechado */}
-          {!open && justValidated !== 'invalid' && (
-            <div className="mt-4 relative text-left">
-              <ValidateRequestButton id={exchangeState.id} onValidation={handleValidation} />
-            </div>
+          {/* Oculta as datas quando o card está expandido (lógica da main branch) */}
+          {!open && (
+            <>
+              <RequestDate date={exchangeState.date} />
+              <RequestLastUpdatedDate date={exchangeState.last_validated} justValidated={justValidated} />
+            </>
           )}
         </div>
 
-        {/* Coluna da direita - 60% */}
+        {/* Coluna da direita (Participantes) - 60% */}
         <div className="flex flex-wrap w-2/3 gap-2">
           {!open &&
             [...new Map(exchangeState.options.map((p) => [p.participant_nmec, p])).values()].map((participant) => (
@@ -88,32 +85,39 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
             ))}
         </div>
 
-        {/* Botão de expandir */}
-        <div>
+        {/* Ações (Botão de Validação e Expandir) */}
+        <div className="flex gap-2 items-center">
+          {!open && justValidated !== 'invalid' && (
+            <ValidateRequestButton id={exchangeState.id} onValidation={handleValidation} />
+          )}
+
           <Button
             onClick={() => setOpen((prev) => !prev)}
             variant="outline"
-            className="bg-white text-black border-2 border-black hover:bg-slate-50 hover:border-slate-400 transition-all"
+            className="ml-2 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-sm"
           >
-            {open ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
+            {open ? <ChevronUpIcon size={18} strokeWidth={2.5} /> : <ChevronDownIcon size={18} strokeWidth={2.5} />}
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="w-full flex flex-col flex-wrap gap-y-4">
-        {open &&
-          Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
-            const [nmec, name] = participant.split(',')
-            return (
-              <PersonExchanges
-                key={'multiple-student-person-exchanges-' + nmec}
-                exchanges={exchanges}
-                participant_name={name}
-                participant_nmec={nmec}
-                showTreatButton={true}
-              />
-            )
-          })}
+      <CardContent className={`w-full ${open ? 'pt-0 pb-4 px-9' : 'p-0'}`}>
+        {open && (
+          <div className="flex flex-col gap-y-6">
+            {Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
+              const [nmec, name] = participant.split(',')
+              return (
+                <PersonExchanges
+                  key={'multiple-student-person-exchanges-' + nmec}
+                  exchanges={exchanges}
+                  participant_name={name}
+                  participant_nmec={nmec}
+                  showTreatButton={true}
+                />
+              )
+            })}
+          </div>
+        )}
       </CardContent>
 
       {open && (

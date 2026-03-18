@@ -1,4 +1,4 @@
-import { CheckBadgeIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, CheckBadgeIcon } from '@heroicons/react/24/outline'
 import { BeatLoader } from 'react-spinners'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/new/newButton'
@@ -19,6 +19,7 @@ type Props = {
   requestSubmitHandler: (message: string) => void
   submittingRequest: boolean
   sendUrgentMessage: boolean
+  hasDuplicate: boolean
   setSendUrgentMessage: Dispatch<SetStateAction<boolean>>
 }
 
@@ -27,6 +28,7 @@ export const ExchangeSubmissionConfirmation = ({
   requestSubmitHandler,
   submittingRequest,
   sendUrgentMessage,
+  hasDuplicate,
   setSendUrgentMessage,
 }: Props) => {
   const schema = z.object({
@@ -45,7 +47,7 @@ export const ExchangeSubmissionConfirmation = ({
   })
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    await requestSubmitHandler(data.urgentMessage)
+    await requestSubmitHandler(data.urgentMessage ?? '')
   }
 
   // const { conflictSeverity } = useContext(ConflictsContext);
@@ -70,15 +72,15 @@ export const ExchangeSubmissionConfirmation = ({
       {requests.size > 0 && (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 items-center mx-auto w-full">
-            {!exchangeRequestService.isDirectExchange(requests.values()) && (
+            {!exchangeRequestService.isDirectExchange(Array.from(requests.values())) && (
               <div className="flex flex-row gap-x-2 items-center w-full">
                 <Checkbox
                   id="urgent-checkbox"
                   checked={sendUrgentMessage}
-                  onChange={(e) => {
-                    const checked = e.target.checked
-                    setSendUrgentMessage(checked)
-                    if (!checked) form.setValue('urgentMessage', '')
+                  onCheckedChange={(checked) => {
+                    const isChecked = checked === true
+                    setSendUrgentMessage(isChecked)
+                    if (!isChecked) form.setValue('urgentMessage', '')
                   }}
                 />
                 <label htmlFor="urgent-checkbox" className="text-sm cursor-pointer select-none">
@@ -115,10 +117,16 @@ export const ExchangeSubmissionConfirmation = ({
               size="md"
               className="flex flex-row gap-x-2 bg-green-600 text-white hover:bg-green-700 w-full"
               type="submit"
+              disabled={submittingRequest}
               // disabled={sendUrgentMessage ? false : conflictSeverity}
             >
               {submittingRequest ? (
                 <p>A processar pedido...</p>
+              ) : hasDuplicate ? (
+                <>
+                  <p>Submeter pedido e cancelar anterior</p>
+                  <ArrowPathIcon className="h-5 w-5" />
+                </>
               ) : (
                 <>
                   <p>Submeter pedido</p>

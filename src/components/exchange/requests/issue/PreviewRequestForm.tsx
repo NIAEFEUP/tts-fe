@@ -1,10 +1,10 @@
 'use client'
 
-import { Dispatch, SetStateAction, useContext, useState } from 'react'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import { CreateRequestData, MarketplaceRequest } from '../../../../@types'
 import exchangeUtils from '../../../../utils/exchange'
 import { Button } from '../../../ui/new/newButton'
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../../../ui/new/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import { ExchangeSubmissionConfirmation } from './ExchangeSubmissionConfirmation'
 import { RelatedExchanges } from './RelatedExchanges'
 import { CurrentView } from './CustomizeRequest'
@@ -26,30 +26,47 @@ type Props = {
 const PreviewRequestForm = ({ requests, previewingFormHook, currentView, relatedExchanges, setCurrentView }: Props) => {
   const navigate = useNavigate()
 
+  // Reset duplicate state when requests change
+  useEffect(() => {
+    setHasDuplicate(false)
+  }, [requests])
+
   const [previewingForm, setPreviewingForm] = previewingFormHook
   const [sendUrgentMessage, setSendUrgentMessage] = useState<boolean>(false)
   const [submittingRequest, setSubmittingRequest] = useState<boolean>(false)
+  const [hasDuplicate, setHasDuplicate] = useState<boolean>(false)
 
   const [error, setError] = useState<string>('')
 
   const submitRequest = async (urgentMessage: string) => {
     setSubmittingRequest(true)
-    const res = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage)
+
+    const replace = hasDuplicate // If there's a duplicate, ask to replace it
+    const res = await exchangeRequestService.submitExchangeRequest(requests, urgentMessage, replace)
 
     try {
       if (res.ok) {
+        setHasDuplicate(false)
         setCurrentView(CurrentView.ACCEPTANCE)
       } else {
-        setCurrentView(CurrentView.FAILURE)
-        setError(exchangeErrorToText[(await res.json())['error']])
+        const error = (await res.json())['error']
+
+        if (error === 'duplicate-request') {
+          setHasDuplicate(true)
+        } else {
+          setCurrentView(CurrentView.FAILURE)
+          setError(exchangeErrorToText[error] || 'Erro desconhecido')
+        }
       }
     } catch (e) {
       console.error(e)
+      setCurrentView(CurrentView.FAILURE)
       setError('Erro desconhecido')
     } finally {
       setSubmittingRequest(false)
     }
   }
+
   const { conflictSeverity, hasSomeConflict } = useContext(ConflictsContext)
 
   return (
@@ -64,33 +81,48 @@ const PreviewRequestForm = ({ requests, previewingFormHook, currentView, related
           Submeter pedido
         </Button>
       </DialogTrigger>
+
       <DialogContent className="flex flex-col max-w-lg">
         <div className="flex flex-col">
-          <DialogTitle className="text-center mb-4">Prever visualização do pedido</DialogTitle>
-          {hasSomeConflict && (
-            <div className="mb-4">
-              <Alert type={conflictSeverity ? AlertType.error : AlertType.warning}>
-                <p className="text-sm">
-                  {conflictSeverity ? (
-                    <>
-                      Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.
-                    </>
-                  ) : (
-                    <>
-                      Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem
-                      inevitáveis ou se for possível assistir à aula teórica noutro turno.
-                    </>
-                  )}
-                </p>
-              </Alert>
+          <DialogHeader>
+            <DialogTitle className="text-center mb-4">Prever visualização do pedido</DialogTitle>
+          </DialogHeader>
+
+          {currentView === CurrentView.CONFIRMATION && (
+            <div className="flex flex-col gap-y-4 mb-4">
+              {hasSomeConflict && (
+                <Alert type={conflictSeverity ? AlertType.error : AlertType.warning}>
+                  <p className="text-sm">
+                    {conflictSeverity ? (
+                      <>
+                        Colisões com aulas práticas são <strong>severas</strong> e não é possível fazer trocas.
+                      </>
+                    ) : (
+                      <>
+                        Colisões com <strong>aulas teóricas e práticas</strong> só devem ser submetidas se forem
+                        inevitáveis ou se for possível assistir à aula teórica noutro turno.
+                      </>
+                    )}
+                  </p>
+                </Alert>
+              )}
+
+              {hasDuplicate && (
+                <Alert type={AlertType.warning}>
+                  <p className="text-sm">
+                    Foi detetado que já existe um pedido semelhante ao que estás a tentar submeter. Pretendes{' '}
+                    <span className="font-bold">cancelar o pedido anterior</span> e submeter este novo pedido?
+                  </p>
+                </Alert>
+              )}
             </div>
           )}
 
           <DialogDescription>
             {currentView === CurrentView.CONFIRMATION &&
               (exchangeUtils.isDirectExchange(Array.from(requests.values()))
-                ? 'Após submeteres o pedido, irá ser enviado e-mails de confirmação para todos os estudantes de destino que selecionaste.'
-                : 'Após submeteres o pedido, irá ser mostrado na página de visualização de pedidos.')}
+                ? 'Após submeteres o pedido, irão ser enviados e-mails de confirmação para todos os estudantes de destino que selecionaste.'
+                : 'Após submeteres o pedido, ele irá ser mostrado na página de visualização de pedidos.')}
 
             {currentView === CurrentView.OTHER_REQUESTS &&
               'Foram encontrados pedidos de troca que já satisfazem o teu. Podes escolher das opções.'}
@@ -111,6 +143,7 @@ const PreviewRequestForm = ({ requests, previewingFormHook, currentView, related
             requestSubmitHandler={submitRequest}
             submittingRequest={submittingRequest}
             sendUrgentMessage={sendUrgentMessage}
+            hasDuplicate={hasDuplicate}
             setSendUrgentMessage={setSendUrgentMessage}
           />
         )}
@@ -122,10 +155,10 @@ const PreviewRequestForm = ({ requests, previewingFormHook, currentView, related
               <h3 className="text-lg font-semibold text-green-700">Pedido submetido com sucesso!</h3>
               <p className="text-sm text-muted-foreground">
                 {exchangeUtils.isDirectExchange(Array.from(requests.values()))
-                  ? 'A proposta de troca foi realizada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.'
+                  ? 'A proposta de troca foi enviada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.'
                   : sendUrgentMessage
-                    ? 'O pedido foi enviado para a comissão de inscrição de turmas'
-                    : 'O pedido de troca foi submetido no marketplace. Podes consultar o estado na aba "Enviados"'}
+                    ? 'O pedido foi enviado para a comissão de inscrição de turmas.'
+                    : 'O pedido de troca foi submetido no marketplace. Podes consultar o estado na aba "Enviados".'}
               </p>
             </div>
             <div className="flex space-x-2">
@@ -164,8 +197,8 @@ const PreviewRequestForm = ({ requests, previewingFormHook, currentView, related
                 </div>
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Podes tentar novamente alterando o teu pedido. Se achares que deveria ser um pedido válido contacta
-                ni@aefeup.pt.
+                Podes tentar novamente alterando o teu pedido. Se achares que deveria ser um pedido válido contacta o NI
+                (ni@aefeup.pt).
               </p>
             </div>
             <Button size="md" variant="outline" onClick={() => setPreviewingForm(false)}>

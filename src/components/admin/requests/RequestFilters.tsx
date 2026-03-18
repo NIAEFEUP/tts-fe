@@ -9,6 +9,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/newPopover
 import { Command, CommandGroup, CommandItem } from '../../ui/command'
 import { Check, ChevronDown } from 'lucide-react'
 import { Badge } from '../../ui/badge'
+import { PageSizeSelector } from './cards/PageSizeSelector'
+import AdminPaginationContext from '../../../contexts/admin/AdminPaginationContext'
 
 export const RequestFilters = () => {
   const {
@@ -19,6 +21,9 @@ export const RequestFilters = () => {
     activeStates,
     setActiveStates,
   } = useContext(RequestFiltersContext)
+
+  // From main branch: Pagination context
+  const { itemsPerPage, setItemsPerPage, setCurrPage } = useContext(AdminPaginationContext)
 
   const { courses } = useAdminExchangeCourses()
 
@@ -34,7 +39,7 @@ export const RequestFilters = () => {
             <ChevronDown size="18" />{' '}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-36 p-0">
+        <PopoverContent className="w-40 p-0">
           <Command>
             <CommandGroup>
               {(!courses || courses.length === 0) && <CommandItem disabled>Nenhum</CommandItem>}
@@ -64,7 +69,7 @@ export const RequestFilters = () => {
             <ChevronDown size="18" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-28 p-0">
+        <PopoverContent className="w-32 p-0">
           <Command>
             <CommandGroup>
               {[1, 2, 3, 4, 5].map((year) => (
@@ -100,7 +105,7 @@ export const RequestFilters = () => {
             <ChevronDown size="18" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0">
+        <PopoverContent className="w-56 p-0">
           <Command>
             <CommandGroup>
               {activeStatesPossibleValues.map((state) => (
@@ -137,6 +142,15 @@ export const RequestFilters = () => {
       >
         Limpar
       </Button>
+
+      {/* From main branch: Page Size Selector */}
+      <PageSizeSelector
+        value={itemsPerPage}
+        onChange={(value) => {
+          setCurrPage(1)
+          setItemsPerPage(value)
+        }}
+      />
     </div>
   )
 }

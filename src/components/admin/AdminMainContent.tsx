@@ -20,6 +20,8 @@ export const AdminMainContent = () => {
 
   const [currPage, setCurrPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
+  // Brought in from the main branch
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10)
 
   return (
     <AdminPaginationContext.Provider
@@ -28,6 +30,8 @@ export const AdminMainContent = () => {
         setCurrPage,
         totalPages,
         setTotalPages,
+        itemsPerPage, // Added from main
+        setItemsPerPage, // Added from main
       }}
     >
       <RequestFiltersContext.Provider
@@ -45,6 +49,8 @@ export const AdminMainContent = () => {
             <h1 className="text-3xl font-bold">Pedidos</h1>
             <RequestFilters />
           </div>
+
+          {/* Kept your new Tabs component structure */}
           <Tabs onChange={() => setCurrPage(1)}>
             <TabsItems className="w-full">
               <TabsItem className="flex-1">Trocas entre estudantes</TabsItem>
@@ -52,6 +58,7 @@ export const AdminMainContent = () => {
               <TabsItem className="flex-1">Inscrições</TabsItem>
               <TabsItem className="flex-1">Trocas individuais</TabsItem>
             </TabsItems>
+
             <TabsPanels>
               <TabsPanel>
                 <MultipleStudentExchanges />
@@ -66,6 +73,7 @@ export const AdminMainContent = () => {
                 <AdminMarketplaceExchanges />
               </TabsPanel>
             </TabsPanels>
+
             <div className="mt-8">
               <AdminPagination />
             </div>
