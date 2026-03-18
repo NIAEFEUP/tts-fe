@@ -72,13 +72,13 @@ export const ExchangeSubmissionConfirmation = ({
       {requests.size > 0 && (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4 items-center mx-auto w-full">
-            {!exchangeRequestService.isDirectExchange(Array.from(requests.values())) && (
+            {!exchangeRequestService.isDirectExchange(requests.values()) && (
               <div className="flex flex-row gap-x-2 items-center w-full">
                 <Checkbox
                   id="urgent-checkbox"
                   checked={sendUrgentMessage}
-                  onCheckedChange={(checked) => {
-                    const isChecked = checked === true
+                  onChange={(e) => {
+                    const isChecked = e.target.checked
                     setSendUrgentMessage(isChecked)
                     if (!isChecked) form.setValue('urgentMessage', '')
                   }}
