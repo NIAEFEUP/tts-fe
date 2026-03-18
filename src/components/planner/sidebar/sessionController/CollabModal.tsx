@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react';
+import React, { useContext, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
