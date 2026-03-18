@@ -46,7 +46,7 @@ export const HeaderProfileDropdown = () => {
           ) : (
             <Button variant="destructive" className="w-full" onClick={() => setConfirmOpen(true)}>
               <LogOut size="16" />
-              {!loggingOut && <span>Sair</span>}
+              <span>Sair</span>
             </Button>
           )}
         </div>
