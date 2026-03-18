@@ -65,7 +65,7 @@ export const CommonCardHeader = ({
             <CardTitle>{name}</CardTitle>
             {showRequestStatus && (
               <div className="flex items-center space-x-2">
-                {showRequestStatus && <RequestCardStatus status={requestStatus} />}
+                <RequestCardStatus status={requestStatus} />
               </div>
             )}
             <div className="flex flex-row items-center">
