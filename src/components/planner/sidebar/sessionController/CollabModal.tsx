@@ -67,7 +67,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           id: sessionsSocket.sessionId,
           name: Math.random().toString(36).substr(2, 9),
           lastEdited: Date.now(),
-          expirationTime: new Date(sessionsSocket.sessionInfo['expiration_time']).getTime(),
+          expirationTime: sessionsSocket.sessionInfo['expiration_time'],
           currentUser: 'AnotherUser',
           link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
           participants: sessionsSocket.sessionInfo['participants'],
