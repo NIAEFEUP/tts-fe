@@ -27,11 +27,7 @@ export const ClearAllCoursesButton = () => {
         <span>Limpar</span>
       </Button>
       <DialogClose asChild>
-        <Button
-          variant="primary"
-          className="bg-primary hover:bg-primary/90 text-white gap-1.5"
-          onClick={clearAllCourses}
-        >
+        <Button variant="primary" className="bg-primary hover:bg-primary/90 text-white gap-1.5">
           <CheckCircleIcon className="h-5 w-5" />
           <p>Está feito</p>
         </Button>
