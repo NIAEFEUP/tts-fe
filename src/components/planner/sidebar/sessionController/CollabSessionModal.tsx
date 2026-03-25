@@ -22,7 +22,8 @@ type Props = {
 
 const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => {
   const { toast } = useToast();
-  const [copied, setCopied] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
   const [lastValidUser, setLastValidUser] = useState(session.participants.find(p => p.client_id === sessionsSocket.clientId)?.name ?? '');
 
   const handleCopyLink = () => {
@@ -31,11 +32,23 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
       title: 'Link copiado',
       description: 'Podes partilhar o link com amigos para colaborar contigo.',
     });
-    setCopied(true);
+    setCopiedLink(true);
     setTimeout(() => {
-      setCopied(false);
+      setCopiedLink(false);
     }, 2000);
   };
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(session.id);
+    toast({
+      title: 'Código copiado',
+      description: 'Podes partilhar o código com amigos para colaborar contigo.'
+    });
+    setCopiedCode(true);
+    setTimeout(() => {
+      setCopiedCode(false);
+    }, 2000);
+  }
 
   const handleUserChange = (e) => {
     const newValue = e.target.value.trim();
@@ -71,6 +84,30 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
       </div>
 
       <div className="mt-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Código da Sessão</label>
+        <div className="flex items-center mt-1">
+          <input
+            type="text"
+            value={session.id}
+            className="flex-1 block w-full rounded-md bg-gray-50 border-gray-300 shadow-sm sm:text-sm text-center font-mono font-bold tracking-wider"
+            readOnly
+          />
+          <Button
+            variant="icon"
+            className={`ml-2 px-3 py-1 flex items-center ${copiedCode ? 'bg-green-200 text-white' : 'bg-primary text-white'} text-sm font-medium rounded-lg min-w-[120px]`}
+            onClick={handleCopyCode}
+          >
+            {copiedCode ? (
+              <CheckIcon className="h-5 w-5 text-green-700" />
+            ) : (
+              <DocumentDuplicateIcon className="h-5 w-5" />
+            )}
+            {copiedCode ? '' : ' Copiar código'}
+          </Button>
+        </div>
+      </div>
+
+      <div className="mt-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">Link</label>
         <div className="flex items-center mt-1">
           <input
@@ -81,15 +118,15 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
           />
           <Button
             variant="icon"
-            className={`ml-2 px-3 py-1 flex items-center ${copied ? 'bg-green-200 text-white' : 'bg-primary text-white'} text-sm font-medium rounded-lg min-w-[120px]`}
+            className={`ml-2 px-3 py-1 flex items-center ${copiedLink ? 'bg-green-200 text-white' : 'bg-primary text-white'} text-sm font-medium rounded-lg min-w-[120px]`}
             onClick={handleCopyLink}
           >
-            {copied ? (
+            {copiedLink ? (
               <CheckIcon className="h-5 w-5 text-green-700" />
             ) : (
               <DocumentDuplicateIcon className="h-5 w-5" />
             )}
-            {copied ? '' : ' Copiar link'}
+            {copiedLink ? '' : ' Copiar link'}
           </Button>
         </div>
       </div>
