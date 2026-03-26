@@ -48,7 +48,7 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
     setTimeout(() => {
       setCopiedCode(false);
     }, 2000);
-  }
+  };
 
   const handleUserChange = (e) => {
     const newValue = e.target.value.trim();
