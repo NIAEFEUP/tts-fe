@@ -36,6 +36,12 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == 'Enter') {
+      onStartSession(sessionCode);
+    }
+  }
+
   return(
     <div className="text-center">
     <UserGroupIcon className="h-40 w-40 mx-auto text-primary" />
@@ -68,6 +74,7 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
             placeholder="Código" 
             value={sessionCode}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             className="uppercase text-center tracking-widest"
           />
           <Button 
