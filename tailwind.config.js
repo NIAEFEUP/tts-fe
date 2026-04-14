@@ -8,6 +8,14 @@ module.exports = {
   	extend: {
   		colors: {
                 ...colors,
+				
+			background: 'var(--color-background)',
+            foreground: 'var(--color-foreground)',
+            'background-secondary': 'var(--color-background-secondary)',
+            border: 'var(--color-border)',
+            accent: 'var(--color-accent)',
+            'accent-foreground': 'var(--color-accent-foreground)',
+			
   			navy: '#18222e',
   			lightNavy: '#212a36',
   			darkish: '#333640',

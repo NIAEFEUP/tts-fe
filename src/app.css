@@ -9,7 +9,7 @@ html {
 
 
 body {
-  @apply text-gray-800 bg-light font-prose dark:bg-darkest dark:text-white;
+  @apply bg-background text-foreground font-prose;
 }
 
 ::-webkit-scrollbar {
@@ -135,6 +135,14 @@ button {
 
 @layer base {
   :root {
+
+    --color-background: #f2f4f7;
+    --color-foreground: #1f2937;
+    --color-background-secondary: #ebedf0;
+    --color-border: #e5e7eb;
+    --color-accent: #b33636;
+    --color-accent-foreground: #ffffff;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -145,6 +153,14 @@ button {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
+
+    --color-background: #1a1c23;
+    --color-foreground: #ffffff;
+    --color-background-secondary: #333640;
+    --color-border: #252832;
+    --color-accent: #b33636;
+    --color-accent-foreground: #ffffff;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
