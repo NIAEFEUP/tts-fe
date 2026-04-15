@@ -32,6 +32,14 @@ export const ReceivedRequestCard = ({
 
   const { trigger: acceptDirectExchange, isMutating: isAcceptingDirectExchange } = useAcceptDirectExchange(request?.id);
 
+  const myOptions = request?.options.filter(
+    (option) => option.participant_nmec === user?.username
+  );
+
+  const isNotEnrolledInExpectedClass = myOptions?.some(
+    (option) => option.is_enrolled_in_expected_class === false
+  );
+
   return <>
     {request?.type === "directexchange" &&
       <Card
@@ -74,43 +82,58 @@ export const ReceivedRequestCard = ({
             <form className="flex flex-row gap-2">
               {!request.accepted
                 && requestStatus !== StudentRequestCardStatus.CANCELED && request.pending_motive === DirectExchangePendingMotive.USER_DID_NOT_ACCEPT &&
-                <Button
-                  type="submit"
-                  className="success-button hover:bg-white"
-                  onClick={async (e) => {
-                    e.preventDefault();
+                (isNotEnrolledInExpectedClass
+                  ? (
+                      <Button
+                        type="button"
+                        disabled
+                        title="Não estás inscrito na turma necessária para aceitar esta troca"
+                        className="flex items-center gap-1 cursor-not-allowed opacity-50"
+                      >
+                        <span className="text-gray-400 font-bold">✕</span>
+                        <span className="text-gray-400">Não inscrito</span>
+                      </Button>
+                    )
+                    : (
+                  <Button
+                    type="submit"
+                    className="success-button hover:bg-white"
+                    onClick={async (e) => {
+                      e.preventDefault();
 
-                    const res = await acceptDirectExchange();
-                    const json = await res.json();
+                      const res = await acceptDirectExchange();
+                      const json = await res.json();
 
-                    if (res.ok) {
-                      toast({
-                        title: "Troca aceita com sucesso!",
-                        description: "A troca foi aceita com sucesso.",
-                        variant: "default",
-                      });
+                      if (res.ok) {
+                        toast({
+                          title: "Troca aceita com sucesso!",
+                          description: "A troca foi aceita com sucesso.",
+                          variant: "default",
+                        });
 
-                      setRequestStatus(StudentRequestCardStatus.PENDING);
+                        setRequestStatus(StudentRequestCardStatus.PENDING);
 
-                      const newRequest = { ...request };
-                      newRequest.pending_motive = DirectExchangePendingMotive.OTHERS_DID_NOT_ACCEPT;
-                      setRequest(newRequest);
+                        const newRequest = { ...request };
+                        newRequest.pending_motive = DirectExchangePendingMotive.OTHERS_DID_NOT_ACCEPT;
+                        setRequest(newRequest);
+                      }
+                      else {
+                        toast({
+                          title: "Erro ao aceitar troca.",
+                          description: exchangeErrorToText[json["error"]],
+                          variant: "destructive",
+                        });
+                        setRequestStatus(StudentRequestCardStatus.CANCELED);
+                      }
+                    }}
+                  >
+                    {isAcceptingDirectExchange
+                      ? <MoonLoader size={20} />
+                      : <span>Aceitar</span>
                     }
-                    else {
-                      toast({
-                        title: "Erro ao aceitar troca.",
-                        description: exchangeErrorToText[json["error"]],
-                        variant: "destructive",
-                      });
-                      setRequestStatus(StudentRequestCardStatus.CANCELED);
-                    }
-                  }}
-                >
-                  {isAcceptingDirectExchange
-                    ? <MoonLoader size={20} />
-                    : <span>Aceitar</span>
-                  }
-                </Button>
+                  </Button>
+                  )
+                )
               }
             </form>
           </div>
