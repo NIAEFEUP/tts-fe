@@ -10,6 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import useSession from '../../../../hooks/useSession';
 import { Participant } from '../../../../@types';
+import backendApi from '../../../../api/backend';
 
 type Props = {
   isOpen: boolean,
@@ -125,6 +126,11 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   };
 
   const handleCreateSession = () => {
+    if (!userSignedIn) {
+      window.location.href = backendApi.OIDC_LOGIN_URL;
+      return;
+    }
+
     sessionsSocket.sessionId = null;
     sessionsSocket.connect(getName())
       .then(sessionsSocket => {
