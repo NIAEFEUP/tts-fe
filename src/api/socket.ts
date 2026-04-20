@@ -81,7 +81,7 @@ class SessionsSocket {
     }
 
     isConnected() {
-        this.socket.is_set();
+        return this.socket.is_set();
     }
 
     async connect(participantName: string): Promise<SessionsSocket> {
