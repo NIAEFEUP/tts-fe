@@ -17,7 +17,7 @@ type Props = {
 
 const Layout = ({ children, location, liquid, title, description, canonical, breadcrumbs }: Props) => {
   const fullTitle = `${title} | ${import.meta.env.VITE_APP_SITE_TITLE || 'Time Table Selector'}`
-  
+
   useEffect(() => {
     document.title = fullTitle
   }, [fullTitle])
@@ -25,24 +25,17 @@ const Layout = ({ children, location, liquid, title, description, canonical, bre
   return (
     <div
       id="layout"
-      className="bg-light font-prose font-normal text-gray-800 opacity-99 dark:bg-darkest dark:text-white"
+      className="bg-light font-prose font-normal text-gray-800 opacity-[.99] dark:bg-darkest dark:text-white"
     >
-      <SEO
-        title={fullTitle}
-        description={description}
-        canonical={canonical}
-        breadcrumbs={breadcrumbs}
-      />
-      
+      <SEO title={fullTitle} description={description} canonical={canonical} breadcrumbs={breadcrumbs} />
+
       <div className="hidden md:flex fixed bottom-0 left-0 mb-6 ml-5 rounded-full shadow-lg bg-white border z-40">
         <FeedbackReport />
       </div>
 
       <div className="min-h-screen flex flex-col">
         <Header location={location} siteTitle="Time Table Selector" />
-        <div className={classNames('grow', liquid ? 'sm:my-auto' : '')}>
-          {children}
-        </div>
+        <div className={classNames('grow', liquid ? 'sm:my-auto' : '')}>{children}</div>
       </div>
       <Footer />
     </div>
