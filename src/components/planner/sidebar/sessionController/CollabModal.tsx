@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react';
+import React, { useContext, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
@@ -9,8 +9,6 @@ import { toast } from '../../../ui/use-toast';
 import { useSearchParams } from 'react-router-dom';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import useSession from '../../../../hooks/useSession';
-
-const generateUniqueId = () => Date.now();
 
 type Props = {
   isOpen: boolean,
@@ -29,30 +27,6 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       handleStartSession(sessionId);
     }
   }, []);
-
-  // TODO: Remove this
-  const [interval, setInt] = useState<number | null>(null);
-  const [uid, ] = useState(generateUniqueId());
-  useEffect(() => {
-    if (!currentSessionId) {
-      if (interval)
-        clearInterval(interval!);
-      setInt(null);
-      return;
-    }
-
-    sessionsSocket.on('ping', data => {
-      // eslint-disable-next-line no-console
-      console.log('Received ping', data['id']);
-    });
-
-    setInt(setInterval(() => {
-      sessionsSocket.emit('ping', { id: uid });
-      // eslint-disable-next-line no-console
-      console.log('Sent ping', uid);
-    }, 1000));
-  }, [currentSessionId]);
-
 
   const updatedSession = (sessionId: string, sessionInfo: any) => {
     setSessions(prevSessions =>
@@ -84,7 +58,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       });
     }
   }
-  
+
   const handleStartSession = (sessionId) => {
     sessionsSocket.sessionId = sessionId;
     sessionsSocket.connect(getName())
@@ -103,10 +77,10 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           ...prevSessions.filter(session => session.id !== sessionId),
           newSession
         ]);
-  
+
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
-  
+
         toast({ title: 'Entrou na sessão', description: 'Convida mais pessoas para se juntarem!'});
       })
       .catch(() => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
@@ -124,11 +98,11 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
           participants: sessionsSocket.sessionInfo['participants'],
         };
-        
+
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
         setSessions(prevSessions => [...prevSessions, newSession]);
-  
+
         toast({ title: 'Sessão criada', description: 'Convida mais pessoas para se juntarem!'});
       })
       .catch(() => toast({ title: 'Erro ao criar a sessão', description: 'Tente novamente mais tarde.' }));
