@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, Fragment } from 'react';
+import { useContext, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
@@ -59,16 +59,25 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     }
   }
 
+  const getSessionName = () => {
+    return uniqueNamesGenerator({
+      dictionaries: [adjectives, animals],
+      length: 2,
+      separator: ' ',
+      style: 'capital'
+    });
+  };
+
   const handleStartSession = (sessionId) => {
     sessionsSocket.sessionId = sessionId;
     sessionsSocket.connect(getName())
       .then(sessionsSocket => {
         const newSession = {
           id: sessionsSocket.sessionId,
-          name: Math.random().toString(36).substr(2, 9),
+          name: getSessionName(),
           lastEdited: Date.now(),
           expirationTime: sessionsSocket.sessionInfo['expiration_time'],
-          currentUser: 'AnotherUser',
+          currentUser: user,
           link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
           participants: sessionsSocket.sessionInfo['participants'],
         }
@@ -92,7 +101,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
       .then(sessionsSocket => {
         const newSession = {
           id: sessionsSocket.sessionId,
-          name: Math.random().toString(36).substr(2, 9),
+          name: getSessionName(),
           lastEdited: Date.now(),
           expirationTime: sessionsSocket.sessionInfo['expiration_time'],
           link: `${window.location.origin}/planner?session=${sessionsSocket.sessionId}`,
