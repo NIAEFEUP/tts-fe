@@ -68,7 +68,7 @@ const HeroPlanner = () => {
   return (
     <div id={id} className="relative flex flex-col items-center justify-center pt-12 xl:pt-16">
       <div className="flex w-full flex-col items-center justify-center">
-        <div className="stamp-card relative bottom-10 h-10 w-20 sm:bottom-10 md:bottom-5 md:left-[200px] md:rotate-[17deg]">
+        <div className="stamp-card relative bottom-10 h-10 w-20 sm:bottom-10 md:bottom-5 md:left-[200px] md:rotate-17">
           <div className="stamp-card-inner text-align-center w-100% h-100% relative transform transition">
             <div className="stamp-card-front w-100% h-100% absolute">
               <img src={StampNIAEFEUPImage} alt="NIAEFEUP" className="h-auto w-40" />
@@ -108,12 +108,12 @@ const HeroPlanner = () => {
                 <p className="mb-3 text-lg font-medium tracking-tight text-primary">{item.subtitle}</p>
                 <div className="prose text-justify text-sm 2xl:text-base">{item.content}</div>
               </div>
-              <img className="max-w-lg rounded shadow 2xl:max-w-xl" src={item.image} alt="card" />
+              <img className="max-w-lg rounded-sm shadow-sm 2xl:max-w-xl" src={item.image} alt="card" />
             </div>
 
             {/* Mobile */}
             <div className="flex flex-col items-start justify-between gap-y-4 xl:hidden">
-              <img className="w-full rounded shadow" src={item.image} alt="card" />
+              <img className="w-full rounded-sm shadow-sm" src={item.image} alt="card" />
               <div className="container grow">
                 <h3 className="text-center text-xl font-semibold">{item.title}</h3>
                 <h5 className="mb-3 text-center text-base font-medium tracking-tight text-primary">{item.subtitle}</h5>

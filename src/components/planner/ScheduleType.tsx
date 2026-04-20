@@ -50,7 +50,7 @@ const ScheduleTypes = ({ types, hiddenLessonsTypes, setHiddenLessonsTypes }: Pro
 
             {getClassType(lessonType)}
           
-            <div className="z-5 absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-shine" />
+            <div className="z-5 absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-linear-to-r from-transparent to-white opacity-40 group-hover:animate-shine" />
           </label>
         )
       })}

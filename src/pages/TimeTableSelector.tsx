@@ -58,7 +58,7 @@ const Content = () => {
           <TabsTrigger value="sidebar">Turmas</TabsTrigger>
         </TabsList>
         <TabsContent value="planner">
-          <div className="rounded bg-lightest px-3 py-3 dark:bg-dark ">
+          <div className="rounded-sm bg-lightest px-3 py-3 dark:bg-dark ">
             <div className="h-full w-full ">
               <PlannerSchedule />
             </div>

@@ -205,7 +205,7 @@ const LessonBox = ({
             {smLesson && (
               <div
                 className={`flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter
-                ${conflictTitle ? 'group-hover:blur-md' : ''} xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-[0.6rem]`}
+                ${conflictTitle ? 'group-hover:blur-md' : ''} xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-xxs`}
               >
                 <span title="Duração">{timeSpan}</span>
                 <span title="Sala">{slotInfo.location}</span>

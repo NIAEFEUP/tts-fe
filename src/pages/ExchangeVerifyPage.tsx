@@ -18,7 +18,7 @@ const ExchangeVerifyPage = () => {
     const { verified, expired, loading, exchange_id} = useExchangeVerify(token);
 
 
-    return (<div className="flex flex-col flex-grow items-center justify-center min-h-screen mb-48">
+    return (<div className="flex flex-col grow items-center justify-center min-h-screen mb-48">
         {loading
             ? <div>
                 <MoonLoader size={20} />

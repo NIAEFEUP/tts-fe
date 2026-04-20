@@ -159,7 +159,7 @@ export const AdminExchangeClasses = () => {
                   <TabsTrigger
                     key={course.id}
                     value={course.id}
-                    className="flex-grow data-[state=active]:bg-primary data-[state=active]:text-white"
+                    className="grow data-[state=active]:bg-primary data-[state=active]:text-white"
                     title={course.acronym}
                   >
                     {course.acronym}

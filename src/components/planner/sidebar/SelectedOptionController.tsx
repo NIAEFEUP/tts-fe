@@ -73,7 +73,7 @@ const SelectedOptionController = ({
 
   return (
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between xl:gap-5">
-      <div className="order-2 flex flex-grow gap-2 sm:order-1 lg:order-2 xl:order-1">
+      <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <PopoverTrigger className="aspect-square h-10 w-15 rounded-md p-1 px-2 text-xl bg-lightish dark:bg-darkish border border-slate-200 dark:border-slate-800">
             <img
@@ -103,7 +103,7 @@ const SelectedOptionController = ({
           spellCheck="false"
           ref={input}
           value={optionName}
-          className="w-full resize-none overflow-x-auto scroll-smooth rounded border-none bg-inherit p-1 transition-all font-medium"
+          className="w-full resize-none overflow-x-auto scroll-smooth rounded-sm border-none bg-inherit p-1 transition-all font-medium"
           onChange={renameOptionName}
           onBlur={renameOptionName}
           onKeyDown={(e) => {
