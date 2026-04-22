@@ -11,20 +11,20 @@ jobs:
 
     steps:
       - name: Checkout PR branch code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Get PR package version
         id: pr_version
         run: |
           PR_VERSION=$(jq -r .version < package.json)
-          echo "::set-output name=pr_version::$PR_VERSION"
+          echo "pr_version=$PR_VERSION" >> $GITHUB_OUTPUT
 
       - name: Fetch and checkout the main branch
         run: |
