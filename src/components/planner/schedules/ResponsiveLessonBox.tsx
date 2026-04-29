@@ -20,7 +20,7 @@ const ResponsiveLessonBox = ({
   return (
     <div
       className={classNames(
-        'flex  group rounded w-full',
+        'flex  group rounded-sm w-full',
         getClassTypeClassName(lessonType),
         conflict ? 'schedule-class-conflict' : ''
       )}

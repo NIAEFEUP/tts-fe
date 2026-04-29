@@ -81,7 +81,7 @@ const ExchangePage = () => {
 
   if (!signedIn) return <ScheduleContext.Provider value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}>
     <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
         <div className="h-full w-full">
           <Schedule
             classes={[]}
@@ -90,7 +90,7 @@ const ExchangePage = () => {
         </div>
       </div>
 
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
         <div className="flex flex-col items-center justify-center gap-4 h-full">
           <ShieldExclamationIcon className="w-12 h-12" />
           <p className="text-center">Tens de iniciar sessão para começares a trocar de turmas</p>
@@ -111,7 +111,7 @@ const ExchangePage = () => {
 
     <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
       {/* Schedule Preview */}
-      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded bg-lightest px-6 py-6 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5  ">
+      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded-sm bg-lightest px-6 py-6 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5  ">
         <div className="h-full w-full">
           {(!sigarraSynced && !loadingSchedule) && (
             <>
@@ -140,15 +140,15 @@ const ExchangePage = () => {
         </div>
       </div>
 
-      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-y-auto">
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-y-auto">
         <Tabs defaultValue="requests" className="flex flex-col h-full">
           {/* Cabeçalho fixo */}
-          <TabsList className="w-full mb-2 flex-shrink-0">
+          <TabsList className="w-full mb-2 shrink-0">
             <TabsTrigger value="requests">Pedidos</TabsTrigger>
             <TabsTrigger value="enrollments">Inscrições</TabsTrigger>
           </TabsList>
           {/* Conteúdo */}
-          <div className="flex-grow">
+          <div className="grow">
           <TabsContent value="requests">
             {!isSessionLoading && user?.eligible_exchange
               ? <ExchangeSidebarStatusView

@@ -3,7 +3,7 @@ import { Button } from "../../../ui/button"
 
 type Props = {
     nmec: string,
-    variant?: "icon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link",
+    variant?: "icon" | "default" | "destructive" | "outline-solid" | "secondary" | "ghost" | "link",
     courseId: Array<number>
 }
 

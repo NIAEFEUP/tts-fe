@@ -52,7 +52,7 @@ const CoursePicker = () => {
       <DialogTrigger asChild>
         <Button 
           variant="icon" 
-          className="flex-grow gap-2 bg-primary" 
+          className="grow gap-2 bg-primary" 
           title="Editar Unidades Curriculares" 
           onClick={() => setUcsModalOpen(true)}
         >
@@ -75,7 +75,7 @@ const CoursePicker = () => {
 
         {showContent ? (
           <>
-            <div className="flex flex-col lg:flex-row flex-grow w-full lg:w-[60rem]">
+            <div className="flex flex-col lg:flex-row grow w-full lg:w-240">
               <div className="w-full lg:w-1/2">
                 {!loadingCourseUnits ? (
                   <CourseYearTabs />
@@ -108,7 +108,7 @@ const CoursePicker = () => {
             </DialogFooter>
           </>
         ) : (
-          <div className="flex flex-col items-center flex-grow w-full lg:w-[60rem] py-10">
+          <div className="flex flex-col items-center grow w-full lg:w-240 py-10">
             <Desert className="h-64 w-full" />
             <p className="mt-4 text-muted-foreground">Seleciona um curso primeiro.</p>
           </div>

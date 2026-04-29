@@ -25,7 +25,7 @@ const Layout = ({ children, location, liquid, title, description, canonical, bre
   return (
     <div
       id="layout"
-      className="bg-light font-prose font-normal text-gray-800 opacity-[99%] dark:bg-darkest dark:text-white"
+      className="bg-light font-prose font-normal text-gray-800 opacity-99 dark:bg-darkest dark:text-white"
     >
       <SEO
         title={fullTitle}
@@ -40,7 +40,7 @@ const Layout = ({ children, location, liquid, title, description, canonical, bre
 
       <div className="min-h-screen flex flex-col">
         <Header location={location} siteTitle="Time Table Selector" />
-        <div className={classNames('flex-grow', liquid ? 'sm:my-auto' : '')}>
+        <div className={classNames('grow', liquid ? 'sm:my-auto' : '')}>
           {children}
         </div>
       </div>
