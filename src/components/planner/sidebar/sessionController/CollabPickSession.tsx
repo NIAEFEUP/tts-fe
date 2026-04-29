@@ -17,7 +17,7 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
   const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.toUpperCase().trim();
+    const val = e.target.value.toUpperCase().replace(/\s+/g, '');
 
     if (val && !/^[0-9A-Z]*$/.test(val)) {
       setError('Apenas números e letras são permitidos');
