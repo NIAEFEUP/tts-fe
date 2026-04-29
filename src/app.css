@@ -136,12 +136,12 @@ button {
 @layer base {
   :root {
 
-    --color-background: #f2f4f7;
-    --color-foreground: #1f2937;
-    --color-background-secondary: #ebedf0;
-    --color-border: #e5e7eb;
-    --color-accent: #b33636;
-    --color-accent-foreground: #ffffff;
+    --color-background: 216 2% 97%;
+    --color-foreground: 215 44% 22%;
+    --color-background-secondary: 210 2% 94%;
+    --color-border: 214 3% 92%;
+    --color-accent: 0 70% 70%;
+    --color-accent-foreground: 0 0% 100%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -154,12 +154,12 @@ button {
   }
   .dark {
 
-    --color-background: #1a1c23;
-    --color-foreground: #ffffff;
-    --color-background-secondary: #333640;
-    --color-border: #252832;
-    --color-accent: #b33636;
-    --color-accent-foreground: #ffffff;
+    --color-background: 227 26% 14%;
+    --color-foreground: 0 0% 100%;
+    --color-background-secondary: 227 20% 25%;
+    --color-border: 227 26% 20%;
+    --color-accent: 0 70% 70%;
+    --color-accent-foreground: 0 0% 100%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
