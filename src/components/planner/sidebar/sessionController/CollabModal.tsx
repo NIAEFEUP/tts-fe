@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react';
+import React, { useContext, useState, useEffect, useRef, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import CollabPickSession from './CollabPickSession';
@@ -9,6 +9,7 @@ import { toast } from '../../../ui/use-toast';
 import { useSearchParams } from 'react-router-dom';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import useSession from '../../../../hooks/useSession';
+import { Participant } from '../../../../@types';
 
 const generateUniqueId = () => Date.now();
 
@@ -22,6 +23,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   const currentSession = sessions.find(s => s.id === currentSessionId) || null;
   const [searchParams, ] = useSearchParams();
   const { signedIn: userSignedIn, user } = useSession();
+  const previousParticipantsRef = useRef<Participant[] | null>(null);
 
   useEffect(() => {
     if (searchParams.has('session')) {
@@ -55,14 +57,42 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
 
 
   const updatedSession = (sessionId: string, sessionInfo: any) => {
+    const newParticipants = sessionInfo['participants'] ?? [];
+    const previousParticipants = previousParticipantsRef.current ?? [];
+    const previousParticipantsById = new Map(previousParticipants.map(participant => [participant.client_id, participant]));
+    const newParticipantsById = new Map(newParticipants.map(participant => [participant.client_id, participant]));
+
+    newParticipants.forEach(participant => {
+      if (participant.client_id === sessionsSocket.clientId) {
+        return;
+      }
+
+      if (!previousParticipantsById.has(participant.client_id)) {
+        toast({
+          title: `${participant.name} entrou na sessão`,
+        });
+      }
+    });
+
+    previousParticipants.forEach(participant => {
+      if (!newParticipantsById.has(participant.client_id)) {
+        toast({
+          title: `${participant.name} saiu da sessão`,
+        });
+      }
+    });
+
+    previousParticipantsRef.current = newParticipants;
+
     setSessions(prevSessions =>
       prevSessions.map(session =>
-        session.id === sessionId ? { ...session, participants: sessionInfo['participants'] } : session
+        session.id === sessionId ? { ...session, participants: newParticipants } : session
       )
     );
   }
 
   const handleUnexpectedDisconnect = () => {
+    previousParticipantsRef.current = null;
     setCurrentSessionId(null);
     toast({ title: 'Foste desconectado inesperadamente', description: 'Por favor, tenta novamente mais tarde.' });
   };
@@ -104,10 +134,9 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
           newSession
         ]);
   
+        previousParticipantsRef.current = sessionsSocket.sessionInfo['participants'] ?? [];
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
-  
-        toast({ title: 'Entrou na sessão', description: 'Convida mais pessoas para se juntarem!'});
       })
       .catch(() => toast({ title: 'Erro ao entrar na sessão', description: 'Tente novamente mais tarde.' }));
   };
@@ -128,6 +157,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
         addSocketListeners(sessionsSocket);
         setCurrentSessionId(sessionsSocket.sessionId);
         setSessions(prevSessions => [...prevSessions, newSession]);
+        previousParticipantsRef.current = sessionsSocket.sessionInfo['participants'] ?? [];
   
         toast({ title: 'Sessão criada', description: 'Convida mais pessoas para se juntarem!'});
       })
@@ -135,6 +165,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
   };
 
   const handleExitSession = () => {
+    previousParticipantsRef.current = null;
     sessionsSocket.off('disconnect', handleUnexpectedDisconnect);
     sessionsSocket.disconnect();
     toast({ title: 'Sessão abandonada', description: 'Podes voltar a ela mais tarde, ou iniciar/entrar noutra sessão.'});
