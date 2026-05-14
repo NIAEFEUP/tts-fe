@@ -49,7 +49,7 @@ export const AdminsExchangeManageAdmins = () => {
     return () => clearTimeout(t);
   }, [searchInput]);
 
-  const addExchangeAdmins = async (username: string) => {
+  const addExchangeAdmin = async (username: string) => {
     try {
       const res = await fetch(`${api.BACKEND_URL}/exchange/admin/admins/`, {
         method: 'POST',
@@ -89,7 +89,7 @@ export const AdminsExchangeManageAdmins = () => {
     setConfirmDialogOpen(true);
   };
 
-  const removeExchangeAdmins = async () => {
+  const removeExchangeAdmin = async () => {
     if (!adminToRemove) return;
     try {
       const res = await fetch(`${api.BACKEND_URL}/exchange/admin/admins/${adminToRemove}/`, {
@@ -211,7 +211,7 @@ export const AdminsExchangeManageAdmins = () => {
       <AddAdminDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onAddAdmin={addExchangeAdmins}
+        onAddAdmin={addExchangeAdmin}
       />
       <ManageAdminCourses
         open={coursesDialogOpen}
@@ -233,7 +233,7 @@ export const AdminsExchangeManageAdmins = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={removeExchangeAdmins} className="bg-red-600 text-white hover:bg-red-700">
+            <AlertDialogAction onClick={removeExchangeAdmin} className="bg-red-600 text-white hover:bg-red-700">
               Remover
             </AlertDialogAction>
           </AlertDialogFooter>

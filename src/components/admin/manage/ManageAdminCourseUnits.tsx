@@ -50,7 +50,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
     setSearchTerm(`${courseUnit.acronym} - ${courseUnit.name}`);
   };
 
-  const addAdminExchangesCourseUnits = async () => {
+  const addAdminExchangeCourseUnits = async () => {
     if (!selectedCourseUnit) return;
     try {
       const res = await fetch(`${api.BACKEND_URL}/exchange/admin/course_units/`, {
@@ -96,7 +96,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
     setConfirmDialogOpen(true);
   };
 
-  const removeAdminExchangesCourseUnits = async () => {
+  const removeAdminExchangeCourseUnits = async () => {
     if (!courseUnitToRemove) return;
     try {
       const url = new URL(`${api.BACKEND_URL}/exchange/admin/course_units/${courseUnitToRemove}/`);
@@ -181,7 +181,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
                     </div>
                   )}
                 </div>
-                <Button onClick={addAdminExchangesCourseUnits} disabled={!selectedCourseUnit || adminCourseUnits?.some(cu => cu.id === selectedCourseUnit.id)}>
+                <Button onClick={addAdminExchangeCourseUnits} disabled={!selectedCourseUnit || adminCourseUnits?.some(cu => cu.id === selectedCourseUnit.id)}>
                   Adicionar Cadeira
                 </Button>
               </div>
@@ -231,7 +231,7 @@ export function ManageAdminCourseUnits({ open, onOpenChange, selectedAdmin }: Ma
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={removeAdminExchangesCourseUnits} className="bg-red-600 text-white hover:bg-red-700">
+            <AlertDialogAction onClick={removeAdminExchangeCourseUnits} className="bg-red-600 text-white hover:bg-red-700">
               Remover
             </AlertDialogAction>
           </AlertDialogFooter>

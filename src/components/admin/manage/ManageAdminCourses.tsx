@@ -46,7 +46,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
     setSearchTerm(`${course.acronym} - ${course.name}`);
   };
 
-  const addAdminExchangesCourses = async () => {
+  const addAdminExchangeCourses = async () => {
     if (!selectedCourse) return;
     try {
       const res = await fetch(`${api.BACKEND_URL}/exchange/admin/courses/`, {
@@ -87,7 +87,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
     }
   };
 
-  const removeAdminExchangesCourses = (courseId: number) => {
+  const removeAdminExchangeCourses = (courseId: number) => {
     setCourseToRemove(courseId);
     setConfirmDialogOpen(true);
   };
@@ -177,7 +177,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
                     </div>
                   )}
                 </div>
-                <Button onClick={addAdminExchangesCourses} disabled={!selectedCourse || adminCourses?.some(c => c.id === selectedCourse.id)}>
+                <Button onClick={addAdminExchangeCourses} disabled={!selectedCourse || adminCourses?.some(c => c.id === selectedCourse.id)}>
                   Adicionar Curso
                 </Button>
               </div>
@@ -197,7 +197,7 @@ export function ManageAdminCourses({ open, onOpenChange, selectedAdmin }: Manage
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => removeAdminExchangesCourses(c.id)}
+                        onClick={() => removeAdminExchangeCourses(c.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
