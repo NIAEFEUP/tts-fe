@@ -52,7 +52,7 @@ export const SingleStudentExchangeCard = ({
             <Button
               onClick={() => setOpen(prev => !prev)}
               variant="outline"
-              className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-sm"
+              className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-xs"
             >
               {open ? (
                 <ChevronUpIcon size={18} strokeWidth={2.5} />
@@ -130,6 +130,10 @@ export const SingleStudentExchangeCard = ({
             requestId={exchange.id}
             setExchange={setExchangeState}
             courseId={exchange.options.map(option => option.course_info.course)}
+            courseInfo={exchange.options.map(option => ({
+              id: option.course_info.course,
+              acronym: option.course_info.acronym
+            }))}
           />
         }
       </Card>

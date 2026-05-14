@@ -59,7 +59,7 @@ export const StudentEnrollmentCard = ({
                     <Button
                         onClick={() => setOpen(prev => !prev)}
                         variant="outline"
-                        className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-sm"
+                        className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 transition-all duration-200 shadow-xs"
                     >
                         {open ? (
                             <ChevronUpIcon size={18} strokeWidth={2.5} />
@@ -124,7 +124,7 @@ export const StudentEnrollmentCard = ({
                         exchangeMessage={
                             listEmailEnrollments(
                                 enrollment.options.map(option => ({
-                                    participant_name: enrollment.user_nmec,
+                                    participant_name: enrollment.user_name,
                                     participant_nmec: enrollment.user_nmec,
                                     goes_to: option.course_unit.name,
                                     course: option.course,
@@ -136,6 +136,10 @@ export const StudentEnrollmentCard = ({
                         requestId={enrollment.id}
                         setExchange={setEnrollmentState}
                         courseId={enrollment.options.map(option => option.course_unit.course)}
+                        courseInfo={enrollment.options.map(option => ({
+                            id: option.course_unit.course,
+                            acronym: option.course.acronym
+                        }))}
                     />
                 }
             
