@@ -105,7 +105,7 @@
     "eslint": "^8.23.0",
     "eslint-plugin-react": "^7.36.1",
     "globals": "^15.9.0",
-    "postcss": "^8.4.41",
+    "postcss": "^8.5.14",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.2.4",
