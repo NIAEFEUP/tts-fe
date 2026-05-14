@@ -84,35 +84,54 @@ class SessionsSocket {
         return this.socket.is_set();
     }
 
+    private async fetchSocketToken(): Promise<string> {
+        const res = await fetch(`${backendApi.BACKEND_URL}/auth/socket-token/`, {
+            credentials: 'include'
+        });
+
+        if (!res.ok) {
+            throw new Error('Not authenticated');
+        }
+
+        const data = await res.json();
+        return data.token;
+    }
+
     async connect(participantName: string): Promise<SessionsSocket> {
         return new Promise((resolve, reject) => {
-            const query = { 
-                ...(this.sessionId ? { session_id: this.sessionId } : {}),
-                participant_name: participantName,
-            };
+            this.fetchSocketToken()
+                .then(token => {
+                    const query = {
+                        ...(this.sessionId ? { session_id: this.sessionId } : {}),
+                        participant_name: participantName,
+                    };
 
-            const newSocket = io(this.config.url, {
-                query,
-                auth: {
-                    token: 'dummy',  // TODO: Replace with actual federated authentication token
-                },
-                path: this.config.path,
-                secure: this.config.secure,
-            });
+                    const newSocket = io(this.config.url, {
+                        query,
+                        auth: {
+                            token,
+                        },
+                        path: this.config.path,
+                        secure: this.config.secure,
+                    });
 
-            this.socket.set(newSocket);
+                    this.socket.set(newSocket);
 
-            newSocket.on('connected', data => {
-                this._clientId = data['client_id'];
-                this._sessionId = data['session_id'];
-                this._sessionInfo = data['session_info'];
-                resolve(this);
-            });
+                    newSocket.on('connected', data => {
+                        this._clientId = data['client_id'];
+                        this._sessionId = data['session_id'];
+                        this._sessionInfo = data['session_info'];
+                        resolve(this);
+                    });
 
-            newSocket.on('connect_error', (err) => {
-                this.socket.unset();
-                reject(err);
-            });
+                    newSocket.on('connect_error', (err) => {
+                        this.socket.unset();
+                        reject(err);
+                    });
+                })
+                .catch(err => {
+                    reject(err);
+                });
         });
     }
 
