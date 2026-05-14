@@ -2,6 +2,8 @@ import { PlayCircleIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 import { Button } from '../../../ui/button';
 import { CollabSession } from '../../../../@types';
 import toHumanReadableTimeDiff from '../../../../utils/human-time';
+import { useState } from 'react';
+import { Input } from '../../../ui/input';
 
 type Props = {
   sessions: Array<CollabSession>,
@@ -10,8 +12,38 @@ type Props = {
   onDeleteSession: (arg: string | null) => void
 }
 
-const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDeleteSession }: Props) => (
-  <div className="text-center">
+const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDeleteSession }: Props) => {
+  const [sessionCode, setSessionCode] = useState('');
+  const [error, setError] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.toUpperCase().replace(/\s+/g, '');
+
+    if (val && !/^[0-9A-Z]*$/.test(val)) {
+      setError('Apenas números e letras são permitidos');
+      return;
+    }
+
+    setError('');
+    if (val.length <= 4) {
+      setSessionCode(val);
+    }
+  };
+
+  const handleJoinClick = () => {
+    if (sessionCode.length === 4) {
+      onStartSession(sessionCode);
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleJoinClick();
+    }
+  }
+
+  return(
+    <div className="text-center">
     <UserGroupIcon className="h-40 w-40 mx-auto text-primary" />
     <h3 className="text-xl font-bold leading-6 text-primary">
       Colaboração ao vivo...
@@ -34,6 +66,27 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
         Iniciar nova sessão
       </Button>
     </div>
+
+    <div className="mt-6 flex flex-col items-center justify-center space-y-2">
+        <div className="flex w-full max-w-[250px] items-center space-x-2">
+          <Input 
+            type="text" 
+            placeholder="Código" 
+            value={sessionCode}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            className="uppercase text-center tracking-widest"
+          />
+          <Button 
+            onClick={handleJoinClick}
+            disabled={sessionCode.length < 4}
+            className="whitespace-nowrap"
+          >
+            Entrar
+          </Button>
+        </div>
+        {error && <span className="text-xs text-red-500 font-medium">{error}</span>}
+      </div>
 
     <div className="mt-6 text-center">
       <h4 className="text-md font-bold ">Sessões anteriores</h4>
@@ -66,6 +119,8 @@ const CollabPickSession = ({ sessions, onStartSession, onCreateSession, onDelete
       </ul>
     </div>
   </div>
-);
+  )
+  
+};
 
 export default CollabPickSession;
