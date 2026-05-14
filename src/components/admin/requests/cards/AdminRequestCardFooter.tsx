@@ -10,6 +10,11 @@ import { AdminSendEmail } from '../AdminSendEmail'
 import { TreatExchangeButton } from './TreatExchangeButton'
 import SessionContext from '../../../../contexts/SessionContext'
 
+type CourseInfo = {
+  id: number
+  acronym: string
+}
+
 type Props = {
   nmecs: Array<string>
   exchangeMessage: string
@@ -20,6 +25,7 @@ type Props = {
     SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest>
   >
   courseId: Array<number>
+  courseInfo?: Array<CourseInfo>
 }
 
 const rejectRequest = async (
@@ -102,6 +108,7 @@ export const AdminRequestCardFooter = ({
   showTreatButton = true,
   setExchange,
   courseId,
+  courseInfo,
 }: Props) => {
   const awaitInfo = async () => {
     await markRequestAsAwaitingInformation(requestType, requestId)
@@ -149,7 +156,12 @@ export const AdminRequestCardFooter = ({
 
         {showTreatButton &&
           nmecs.map((nmec) => (
-            <TreatExchangeButton key={'treat-exchange-button-' + nmec} nmec={nmec} courseId={courseId} />
+            <TreatExchangeButton
+              key={'treat-exchange-button-' + nmec}
+              nmec={nmec}
+              courseId={courseId}
+              courseInfo={courseInfo}
+            />
           ))}
 
         <AdminSendEmail

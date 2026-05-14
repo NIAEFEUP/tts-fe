@@ -108,24 +108,28 @@ export const AdminMarketplaceExchangesCard = ({ exchange }: Props) => {
         )}
       </CardContent>
 
-      {open && (
-        <AdminRequestCardFooter
-          nmecs={[exchange.issuer_nmec]}
-          exchangeMessage={listEmailExchanges(
-            exchange.options.map((option) => ({
-              participant_name: exchange.issuer_name,
-              participant_nmec: exchange.issuer_nmec,
-              goes_from: option.class_issuer_goes_from?.name,
-              goes_to: option.class_issuer_goes_to?.name,
-              course_acronym: option.course_info.acronym,
-            })),
-          )}
-          requestType={AdminRequestType.URGENT_EXCHANGE}
-          requestId={exchange.id}
-          setExchange={setExchangeState}
-          courseId={exchange.options.map((option) => option.course_info.course)}
-        />
-      )}
-    </Card>
-  )
+            {open &&
+                <AdminRequestCardFooter
+                    nmecs={[exchange.issuer_nmec]}
+                    exchangeMessage={listEmailExchanges(
+                        exchange.options.map(option => ({
+                            participant_name: exchange.issuer_name,
+                            participant_nmec: exchange.issuer_nmec,
+                            goes_from: option.class_issuer_goes_from?.name,
+                            goes_to: option.class_issuer_goes_to?.name,
+                            course_acronym: option.course_info.acronym
+                        }))
+                    )}
+                    requestType={AdminRequestType.URGENT_EXCHANGE}
+                    requestId={exchange.id}
+                    setExchange={setExchangeState}
+                    courseId={exchange.options.map(option => option.course_info.course)}
+                    courseInfo={exchange.options.map(option => ({
+                        id: option.course_info.course,
+                        acronym: option.course_info.acronym
+                    }))}
+                />
+            }
+        </Card>
+    )
 }

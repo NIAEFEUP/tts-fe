@@ -25,11 +25,11 @@ const Layout = ({ children, location, liquid, title, description, canonical, bre
   return (
     <div
       id="layout"
-      className="bg-light font-prose font-normal text-gray-800 opacity-99 dark:bg-darkest dark:text-white"
+      className="bg-light font-prose font-normal text-gray-800 opacity-[.99] dark:bg-darkest dark:text-white"
     >
       <SEO title={fullTitle} description={description} canonical={canonical} breadcrumbs={breadcrumbs} />
 
-      <div className="hidden md:flex fixed bottom-0 left-0 mb-6 ml-5 rounded-full shadow-lg z-40">
+      <div className="hidden md:flex fixed bottom-0 left-0 mb-6 ml-5 rounded-full shadow-lg bg-white border z-40">
         <FeedbackReport />
       </div>
 
