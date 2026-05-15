@@ -1,7 +1,7 @@
 import { ArrowPathIcon, CheckBadgeIcon } from '@heroicons/react/24/outline'
 import { BeatLoader } from 'react-spinners'
 import { Desert } from '../../../svgs'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import PreviewRequestCard from './cards/PreviewRequestCard'
 import { Checkbox } from '../../../ui/new/checkbox'
 import { Textarea } from '../../../ui/new/newTextarea'

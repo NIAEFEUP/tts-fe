@@ -1,5 +1,5 @@
 import { RotateCwIcon } from 'lucide-react'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 
 type Props = {
   forceRefreshStudentSchedule: () => void

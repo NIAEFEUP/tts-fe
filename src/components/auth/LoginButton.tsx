@@ -1,6 +1,6 @@
 import { ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/outline'
 import api from '../../api/backend'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 
 const FEDERATED_AUTH = Number(import.meta.env.VITE_APP_FEDERATED_AUTH)
 

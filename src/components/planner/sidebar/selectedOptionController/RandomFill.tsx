@@ -1,7 +1,7 @@
 import { ChevronDown, Dices } from 'lucide-react'
 import { ClassInfo } from '../../../../@types'
 import { useContext, useEffect, useState } from 'react'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/new/newPopover'
 import { Checkbox } from '../../../ui/new/checkbox'

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { Check, Files } from 'lucide-react'
 import { useToast } from '../../../ui/use-toast'
 import { Buffer } from 'buffer'

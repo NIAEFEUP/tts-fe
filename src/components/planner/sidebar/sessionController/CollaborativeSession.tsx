@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { UsersIcon } from '@heroicons/react/24/solid'
 import CollabModal from './CollabModal'
 import CollabSessionContext from '../../../../contexts/CollabSessionContext'

@@ -3,7 +3,7 @@ import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, Urgent
 import { AdminRequestType } from '../../../../utils/exchange'
 import exchangeRequestService from '../../../../api/services/exchangeRequestService'
 import { mailtoStringBuilder } from '../../../../utils/mail'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { CardFooter } from '../../../ui/card'
 import { Separator } from '../../../ui/separator'
 import { AdminSendEmail } from '../AdminSendEmail'

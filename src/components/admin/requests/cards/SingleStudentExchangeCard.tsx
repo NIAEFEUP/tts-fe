@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ClassDescriptor, UrgentRequest } from '../../../../@types'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../ui/card'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 import { Person } from './Person'
 import { ExchangeStatus } from './ExchangeStatus'
@@ -120,10 +120,10 @@ export const SingleStudentExchangeCard = ({ exchange }: Props) => {
             requestType={AdminRequestType.URGENT_EXCHANGE}
             requestId={exchange.id}
             setExchange={setExchangeState}
-            courseId={exchange.options.map(option => option.course_info.course)}
-            courseInfo={exchange.options.map(option => ({
+            courseId={exchange.options.map((option) => option.course_info.course)}
+            courseInfo={exchange.options.map((option) => ({
               id: option.course_info.course,
-              acronym: option.course_info.acronym
+              acronym: option.course_info.acronym,
             }))}
           />
         )}

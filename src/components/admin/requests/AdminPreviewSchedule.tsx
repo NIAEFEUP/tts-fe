@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { ClassDescriptor } from '../../../@types'
 import ScheduleContext from '../../../contexts/ScheduleContext'
 import ExchangeSchedule from '../../exchange/schedule/ExchangeSchedule'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog'
 
 type Props = {

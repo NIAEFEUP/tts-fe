@@ -1,4 +1,4 @@
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 import { BoltIcon, FunnelIcon, CameraIcon, ShareIcon, HashtagIcon, PencilIcon } from '@heroicons/react/24/outline'
 
 const features = [

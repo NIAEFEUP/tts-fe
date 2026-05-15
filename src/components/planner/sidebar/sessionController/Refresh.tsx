@@ -2,7 +2,7 @@ import { useContext, useState } from 'react'
 import { ArrowPathIcon } from '@heroicons/react/24/solid'
 import BackendAPI from '../../../../api/backend'
 import StorageAPI from '../../../../api/storage'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import CourseContext from '../../../../contexts/CourseContext'
 import useVerifyCourseUnitHashes from '../../../../hooks/useVerifyCourseUnitHashes'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
@@ -84,12 +84,12 @@ const Refresh = () => {
     <Tooltip delayIn={300}>
       <TooltipTrigger asChild>
         <div className="relative group pointer-events-auto">
-          <Button 
-            variant="ghost" 
-            square 
+          <Button
+            variant="ghost"
+            square
             size="sm"
-            className="bg-emerald-800 text-white hover:bg-emerald-700 relative" 
-            onClick={updateCourses} 
+            className="bg-emerald-800 text-white hover:bg-emerald-700 relative"
+            onClick={updateCourses}
             disabled={isLoading}
           >
             <span className="absolute -top-1 -right-1 block h-3 w-3 rounded-full bg-red-600 border border-white"></span>

@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 import useAdminExchangeCoursePeriods from '../../hooks/admin/useAdminExchangeCoursePeriods'
 import exchangeRequestService from '../../api/services/exchangeRequestService'
 import { PlusIcon } from 'lucide-react'

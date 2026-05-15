@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { DirectExchangeParticipant, DirectExchangeRequest } from '../../../../@types'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../ui/card'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 import { Person } from './Person'
 import { ExchangeStatus } from './ExchangeStatus'
@@ -139,7 +139,7 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
           courseId={exchangeState.options.map((option) => option.course_info.course)}
           courseInfo={exchangeState.options.map((option) => ({
             id: option.course_info.course,
-            acronym: option.course_info.acronym
+            acronym: option.course_info.acronym,
           }))}
         />
       )}

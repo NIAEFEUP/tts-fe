@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/new/avatar'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 import { LogOut } from 'lucide-react'
 import { useContext, useState } from 'react'
 import { ClipLoader } from 'react-spinners'

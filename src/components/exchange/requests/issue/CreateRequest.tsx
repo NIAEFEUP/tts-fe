@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import { CourseInfo, CreateRequestData } from '../../../../@types'
 import useStudentCourseUnits from '../../../../hooks/useStudentCourseUnits'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { ChooseIncludedCourseUnits } from './ChooseIncludedCourseUnits'
 import { CustomizeRequest } from './CustomizeRequest'
 import { ExchangeSidebarStatus } from '../../../../pages/Exchange'

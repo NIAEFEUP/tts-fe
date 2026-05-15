@@ -2,7 +2,7 @@
 
 import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
 import { DateTimePicker } from '../ui/datetime-picker'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 import { Edit2Icon, Trash2Icon, CheckIcon, XIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import React from 'react'

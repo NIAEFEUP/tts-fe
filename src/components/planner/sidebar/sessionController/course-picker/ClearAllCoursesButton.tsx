@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import CourseContext from '../../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { removeAllCourseOptions } from '../../../../../utils'
-import { Button } from '../../../../ui/new/newButton'
+import { Button } from '../../../../ui/new/button'
 import { DialogClose } from '../../../../ui/new/dialog'
 
 export const ClearAllCoursesButton = () => {

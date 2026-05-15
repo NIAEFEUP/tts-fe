@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import { Button } from './ui/new/newButton'
+import { Button } from './ui/new/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { useForm } from 'react-hook-form'
 import { Input } from './ui/new/newInput'
@@ -59,7 +59,7 @@ export const FeedbackReport = () => {
   return (
     <Dropdown open={open} onOpenChange={setOpen}>
       <DropdownTrigger asChild>
-        <Button className="bg-white hover:bg-accent/5" variant="outline">
+        <Button variant="outline">
           <Flag size="16" className="text-black dark:text-white md:dark:text-black" />
           <p className="hidden sm:block text-black dark:text-white md:dark:text-black">Feedback</p>
         </Button>

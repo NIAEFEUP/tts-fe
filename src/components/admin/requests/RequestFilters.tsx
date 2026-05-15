@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 import RequestFiltersContext, {
   activeStatesPossibleValues,
   adminRequestStateToText,

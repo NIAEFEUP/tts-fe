@@ -1,5 +1,5 @@
 import { PlayCircle, Users } from 'lucide-react'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { CollabSession } from '../../../../@types'
 import toHumanReadableTimeDiff from '../../../../utils/human-time'
 

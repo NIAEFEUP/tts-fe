@@ -6,7 +6,7 @@ import ScheduleContext from '../../contexts/ScheduleContext'
 import authService from '../../api/services/authService'
 import { CornerDownLeftIcon, PieChartIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from '../ui/sidebar'
 import {
   ArrowRightStartOnRectangleIcon,

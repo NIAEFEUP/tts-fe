@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 import { Camera } from 'lucide-react'
 import { toPng } from 'html-to-image'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../../ui/new/tooltip'

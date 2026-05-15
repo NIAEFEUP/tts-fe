@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { PlannerClassSelector } from './CoursesController/PlannerClassSelector'
 import CourseContext from '../../../contexts/CourseContext'
 import { NoMajorSelectedSVG } from '../../svgs'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 
 const CoursesController = () => {
   const { pickedCourses, setUcsModalOpen } = useContext(CourseContext)

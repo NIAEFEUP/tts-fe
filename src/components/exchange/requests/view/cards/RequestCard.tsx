@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react'
-import { Button } from '../../../../ui/new/newButton'
+import { Button } from '../../../../ui/new/button'
 import { Card, CardContent, CardFooter } from '../../../../ui/card'
 import { Checkbox } from '../../../../ui/new/checkbox'
 import { Divider } from '../../../../ui/new/divider'
