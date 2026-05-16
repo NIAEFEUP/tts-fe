@@ -3,7 +3,7 @@
 import { Calendar as CalendarIcon, ChevronUp } from 'lucide-react'
 import { VariantProps } from 'cva'
 
-import { Calendar } from './newCalendar'
+import { Calendar } from './calendar'
 import { Dropdown, DropdownItems, DropdownTrigger, useDropdownContext } from './dropdown'
 import { inputStyle } from './newInput'
 import { cn } from '../../../utils'
