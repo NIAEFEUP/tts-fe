@@ -7,7 +7,7 @@ import useRequestCardCourseMetadata from '../../../../../hooks/useRequestCardCou
 import { Button } from '../../../../ui/new/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../ui/card'
 import { Dropdown, DropdownItem, DropdownItems, DropdownTrigger } from '../../../../ui/new/dropdown'
-import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/new/newPopover'
+import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/new/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../../../../ui/command'
 
 type Props = {

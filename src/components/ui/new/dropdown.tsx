@@ -36,7 +36,7 @@ import {
   PopoverTrigger,
   usePopoverContext,
   usePopoverFloating,
-} from './newPopover'
+} from './popover'
 import { cn } from '../../../lib/utils'
 
 type Item = {
