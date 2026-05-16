@@ -1,4 +1,4 @@
-import { NewToaster } from './components/ui/new/newToaster'
+import { NewToaster } from './components/ui/new/toaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
