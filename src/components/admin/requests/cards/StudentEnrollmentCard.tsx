@@ -99,31 +99,28 @@ export const StudentEnrollmentCard = ({ enrollment }: Props) => {
         )}
       </CardContent>
 
-                {open &&
-                    <AdminRequestCardFooter
-                        nmecs={[enrollment.user_nmec]}
-                        exchangeMessage={
-                            listEmailEnrollments(
-                                enrollment.options.map(option => ({
-                                    participant_name: enrollment.user_name,
-                                    participant_nmec: enrollment.user_nmec,
-                                    goes_to: option.course_unit.name,
-                                    course: option.course,
-                                    course_unit: option.course_unit
-                                }))
-                            )
-                        }
-                        requestType={AdminRequestType.ENROLLMENT}
-                        requestId={enrollment.id}
-                        setExchange={setEnrollmentState}
-                        courseId={enrollment.options.map(option => option.course_unit.course)}
-                        courseInfo={enrollment.options.map(option => ({
-                            id: option.course_unit.course,
-                            acronym: option.course.acronym
-                        }))}
-                    />
-                }
-            
-        </Card>
-    )
+      {open && (
+        <AdminRequestCardFooter
+          nmecs={[enrollment.user_nmec]}
+          exchangeMessage={listEmailEnrollments(
+            enrollment.options.map((option) => ({
+              participant_name: enrollment.user_name,
+              participant_nmec: enrollment.user_nmec,
+              goes_to: option.course_unit.name,
+              course: option.course,
+              course_unit: option.course_unit,
+            })),
+          )}
+          requestType={AdminRequestType.ENROLLMENT}
+          requestId={enrollment.id}
+          setExchange={setEnrollmentState}
+          courseId={enrollment.options.map((option) => option.course_unit.course)}
+          courseInfo={enrollment.options.map((option) => ({
+            id: option.course_unit.course,
+            acronym: option.course.acronym,
+          }))}
+        />
+      )}
+    </Card>
+  )
 }
