@@ -1,4 +1,4 @@
-import { DatePicker, DatePickerPanel, DatePickerTrigger } from './new/newDatePicker'
+import { DatePicker, DatePickerPanel, DatePickerTrigger } from './new/datePicker'
 import { Input } from './new/newInput'
 import { cn } from '../../utils'
 import { format } from 'date-fns'
