@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { ExchangeStatus } from './requests/cards/ExchangeStatus'
 import { Person } from './requests/cards/Person'

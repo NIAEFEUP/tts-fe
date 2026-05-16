@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import SessionContext from '../../../contexts/SessionContext'
 import { mailtoStringBuilder } from '../../../utils/mail'
 import { AdminRequestType } from '../../../utils/exchange'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 
 type Props = {
   nmec: string | Array<string>

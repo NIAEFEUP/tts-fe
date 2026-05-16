@@ -1,5 +1,5 @@
 import useDirectExchangeValidation from '../../../../hooks/useDirectExchangeValidation'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 
 type Props = {
   id: number

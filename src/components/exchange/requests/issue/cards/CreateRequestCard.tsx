@@ -4,7 +4,7 @@ import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, St
 import { ScrollArea } from '../../../../ui/scroll-area'
 import ScheduleContext from '../../../../../contexts/ScheduleContext'
 import useRequestCardCourseMetadata from '../../../../../hooks/useRequestCardCourseMetadata'
-import { Button } from '../../../../ui/new/newButton'
+import { Button } from '../../../../ui/new/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../ui/card'
 import { Dropdown, DropdownItem, DropdownItems, DropdownTrigger } from '../../../../ui/new/dropdown'
 import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/new/newPopover'

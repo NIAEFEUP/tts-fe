@@ -5,7 +5,7 @@ import { VariantProps } from 'cva'
 import { X } from 'lucide-react'
 import { motion, HTMLMotionProps } from 'motion/react'
 
-import { Button } from './newButton'
+import { Button } from './button'
 import { cn, cva } from '../../../lib/utils'
 
 const toastVariants = cva({

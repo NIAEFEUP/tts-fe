@@ -1,5 +1,5 @@
 import useStudentCourseMetadata from '../../../../hooks/admin/useStudentCourseMetadata'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { cn } from '../../../../lib/utils'
 
 type CourseInfo = {

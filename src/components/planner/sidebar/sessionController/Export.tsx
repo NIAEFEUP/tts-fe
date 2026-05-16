@@ -1,4 +1,4 @@
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { Dropdown, DropdownItems, DropdownItem, DropdownTrigger } from '../../../ui/new/dropdown'
 import CsvExport from './CsvExport'
 import NitSigExport from './NitSigExport'

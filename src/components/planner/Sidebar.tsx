@@ -6,7 +6,7 @@ import CoursesController from './sidebar/CoursesController'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import { useSidebarContext } from '../layout/SidebarPosition'
 import { ArrowLeftRight, Trash } from 'lucide-react'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 
 /**
  * Sidebar with all the main schedule interactions

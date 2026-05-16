@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { CourseInfo } from '../../../@types'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 import { Card, CardHeader, CardTitle } from '../../ui/card'
 import { EnrollmentOption } from './Enrollments'
 

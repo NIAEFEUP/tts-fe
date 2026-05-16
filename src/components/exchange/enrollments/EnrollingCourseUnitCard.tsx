@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { CourseInfo } from '../../../@types'
 import { EnrollmentOption } from './Enrollments'
 import { Card, CardHeader, CardTitle } from '../../ui/card'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 
 type Props = {
   courseUnit: CourseInfo

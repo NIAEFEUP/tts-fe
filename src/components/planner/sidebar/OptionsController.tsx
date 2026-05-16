@@ -4,7 +4,7 @@ import { useContext } from 'react'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 
 /**
  * Sortable list of schedule options

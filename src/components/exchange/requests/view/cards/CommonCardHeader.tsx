@@ -1,6 +1,6 @@
 import { ArchiveBoxIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { DirectExchangeRequest, MarketplaceRequest } from '../../../../../@types'
-import { Button } from '../../../../ui/new/newButton'
+import { Button } from '../../../../ui/new/button'
 import { CardDescription, CardHeader, CardTitle } from '../../../../ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../../ui/new/tooltip'
 import RequestCardClassBadge from './RequestCardClassBadge'

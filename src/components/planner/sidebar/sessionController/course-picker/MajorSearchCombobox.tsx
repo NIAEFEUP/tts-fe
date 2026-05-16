@@ -3,7 +3,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
 import { Major } from '../../../../../@types'
 import MajorContext from '../../../../../contexts/MajorContext'
 import { cn } from '../../../../../utils'
-import { buttonStyle } from '../../../../ui/new/newButton'
+import { buttonStyle } from '../../../../ui/new/button'
 import {
   Dropdown,
   DropdownEmpty,

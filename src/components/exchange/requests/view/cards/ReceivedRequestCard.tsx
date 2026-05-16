@@ -3,7 +3,7 @@ import { DirectExchangeParticipant, DirectExchangeRequest } from '../../../../..
 import ExchangeRequestCommonContext from '../../../../../contexts/ExchangeRequestCommonContext'
 import SessionContext from '../../../../../contexts/SessionContext'
 import { DirectExchangePendingMotive } from '../../../../../utils/exchange'
-import { Button } from '../../../../ui/new/newButton'
+import { Button } from '../../../../ui/new/button'
 import { Card, CardContent, CardFooter } from '../../../../ui/card'
 import { CommonCardHeader } from './CommonCardHeader'
 import { ListRequestChanges } from './ListRequestChanges'

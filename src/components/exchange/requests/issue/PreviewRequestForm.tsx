@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import { CreateRequestData, MarketplaceRequest } from '../../../../@types'
 import exchangeUtils from '../../../../utils/exchange'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog'
 import { ExchangeSubmissionConfirmation } from './ExchangeSubmissionConfirmation'
 import { RelatedExchanges } from './RelatedExchanges'

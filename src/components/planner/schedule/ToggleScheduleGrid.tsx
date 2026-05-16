@@ -1,4 +1,4 @@
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 import { Columns3 } from 'lucide-react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'

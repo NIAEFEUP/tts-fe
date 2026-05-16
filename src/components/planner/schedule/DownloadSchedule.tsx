@@ -1,6 +1,6 @@
 import { CalendarDays } from 'lucide-react'
 import { ClassDescriptor } from '../../../@types'
-import { Button } from '../../ui/new/newButton'
+import { Button } from '../../ui/new/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/new/tooltip'
 
 type Props = { classes: ClassDescriptor[] }

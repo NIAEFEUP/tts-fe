@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { add, format, isSameDay, isSameMonth } from 'date-fns'
 import { useMemo, useState } from 'react'
 
-import { Button } from './newButton'
+import { Button } from './button'
 import { cn } from '../../../lib/utils'
 
 /**

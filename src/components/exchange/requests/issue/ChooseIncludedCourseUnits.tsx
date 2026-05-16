@@ -1,6 +1,6 @@
 import { CheckBadgeIcon } from '@heroicons/react/24/outline'
 import { CourseInfo } from '../../../../@types'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { Checkbox } from '../../../ui/new/checkbox'
 import { IncludeCourseUnitCard } from './cards/IncludeCourseUnitCard'
 import ScheduleContext from '../../../../contexts/ScheduleContext'

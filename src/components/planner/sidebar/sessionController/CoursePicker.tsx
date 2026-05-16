@@ -3,7 +3,7 @@ import { PenSquare } from 'lucide-react'
 import { useContext, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { Desert } from '../../../svgs'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import {
   Dialog,
   DialogActions,

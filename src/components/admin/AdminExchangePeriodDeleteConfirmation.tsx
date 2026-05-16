@@ -1,6 +1,6 @@
 'use client'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../ui/new/dialog'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 
 interface DeleteConfirmationDialogProps {
   open: boolean

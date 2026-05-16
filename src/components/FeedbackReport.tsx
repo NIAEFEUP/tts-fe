@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import { Button } from './ui/new/newButton'
+import { Button } from './ui/new/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { useForm } from 'react-hook-form'
 import { Input } from './ui/new/newInput'

@@ -1,6 +1,6 @@
 import { Check, ChevronDownIcon, ChevronUpIcon, X } from 'lucide-react'
 import { ClassDescriptor, CourseUnitEnrollment } from '../../../../@types'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../ui/card'
 import { Person } from './Person'
 import { useState } from 'react'

@@ -9,7 +9,7 @@ import { useSearchParams } from 'react-router-dom'
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator'
 import useSession from '../../../../hooks/useSession'
 import { Dialog, DialogClose, DialogContent } from '../../../ui/new/dialog'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 
 const generateUniqueId = () => Date.now()
 

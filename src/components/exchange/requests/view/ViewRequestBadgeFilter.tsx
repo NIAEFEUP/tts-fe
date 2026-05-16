@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { ClassInfo, CourseInfo } from '../../../../@types'
 import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
 import { Badge } from '../../../ui/badge'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { Checkbox } from '../../../ui/new/checkbox'
 import { Dropdown, DropdownItem, DropdownItems, DropdownTrigger } from '../../../ui/new/dropdown'
 

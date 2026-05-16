@@ -1,7 +1,7 @@
 'use client'
 
 import { DateTimePicker } from '../ui/datetime-picker'
-import { Button } from '../ui/new/newButton'
+import { Button } from '../ui/new/button'
 import { CheckIcon } from 'lucide-react'
 import React from 'react'
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { StopIcon } from '@heroicons/react/24/solid'
-import { Button } from '../../../ui/new/newButton'
+import { Button } from '../../../ui/new/button'
 import { useToast } from '../../../ui/use-toast'
 import { CollabSession } from '../../../../@types'
 import { sessionsSocket } from '../../../../api/socket'
