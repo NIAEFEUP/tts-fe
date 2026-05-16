@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence } from 'motion/react'
 import { useToast } from '../use-toast'
-import { NewToast, NewToastClose, NewToastDescription, NewToastTitle } from './newToast'
+import { NewToast, NewToastClose, NewToastDescription, NewToastTitle } from './toast'
 import { cn } from '../../../lib/utils'
 
 export function NewToaster() {
