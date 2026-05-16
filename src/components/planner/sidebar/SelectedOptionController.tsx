@@ -9,7 +9,7 @@ import { ThemeContext } from '../../../contexts/ThemeContext'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/newPopover'
 import RandomFill from './selectedOptionController/RandomFill'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
-import { Input } from '../../ui/new/newInput'
+import { Input } from '../../ui/new/input'
 import { Button } from '../../ui/new/button'
 
 type Props = {

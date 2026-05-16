@@ -1,5 +1,5 @@
 import { DatePicker, DatePickerPanel, DatePickerTrigger } from './new/datePicker'
-import { Input } from './new/newInput'
+import { Input } from './new/input'
 import { cn } from '../../utils'
 import { format } from 'date-fns'
 import { type Locale, enUS } from 'date-fns/locale'

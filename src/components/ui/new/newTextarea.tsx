@@ -3,7 +3,7 @@
 import { VariantProps } from 'cva'
 import { useEffect, useRef, useState } from 'react'
 
-import { inputStyle } from './newInput'
+import { inputStyle } from './input'
 import { composeRefs } from '../../../lib/compose-refs'
 import { cn } from '../../../lib/utils'
 
