@@ -46,6 +46,7 @@ export const RequestFilters = () => {
                             <CommandItem
                                 key={`course-select-item-${course.id}`}
                                 onSelect={() => {
+                                    setCurrPage(1);
                                     setActiveCourse(course.id);
                                     setCourseOpen(false);
                                 }}
@@ -78,6 +79,7 @@ export const RequestFilters = () => {
                             <CommandItem
                                 key={`year-${year}`}
                                 onSelect={() => {
+                                    setCurrPage(1);
                                     setActiveCurricularYear(year);
                                     setYearOpen(false);
                                 }}
@@ -113,12 +115,16 @@ export const RequestFilters = () => {
                                     className="w-full"
                                     onSelect={() => {
                                         const newActiveStates = [...activeStates];
-
+                                        
+                                        let updatedStates;
                                         if (newActiveStates.includes(state)) {
-                                            setActiveStates(newActiveStates.filter((currentState) => currentState !== state));
+                                            updatedStates = newActiveStates.filter((currentState) => currentState !== state);
                                         } else {
-                                            setActiveStates([...newActiveStates, state]);
+                                            updatedStates = [...newActiveStates, state];
                                         }
+
+                                        setCurrPage(1); //reset da página
+                                        setActiveStates(updatedStates);
                                     }}
                                 >
                                     <div className="flex flex-row gap-x-2">
@@ -135,6 +141,7 @@ export const RequestFilters = () => {
 
         <Button
             onClick={() => {
+                setCurrPage(1);
                 setActiveCourse(undefined);
                 setActiveCurricularYear(undefined);
                 setActiveStates([]);

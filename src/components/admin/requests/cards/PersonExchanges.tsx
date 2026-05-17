@@ -68,6 +68,10 @@ export const PersonExchanges = ({
                             nmec={participant_nmec}
                             variant="secondary"
                             courseId={exchanges.map(exchange => exchange.course_info.course)}
+                            courseInfo={exchanges.map(exchange => ({
+                                id: exchange.course_info.course,
+                                acronym: exchange.course_info.acronym
+                            }))}
                         />
                     }
                     <AdminSendEmail
