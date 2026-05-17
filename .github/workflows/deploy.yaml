@@ -36,7 +36,7 @@ jobs:
               repo: context.repo.repo,
             });
             const existing = comments.data.find(c =>
-              c.user.type === 'Bot' && c.body.includes('Netlify Preview disponível')
+              c.user.login === 'github-actions[bot]' && c.body.includes('Netlify Preview disponível')
             );
             return existing ? existing.id : '';
 
