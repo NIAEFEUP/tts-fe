@@ -6,7 +6,7 @@ import { cn, cva } from '../../../lib/utils'
 
 const paginationLinkStyle = cva({
   base: [
-    'inline-flex h-(--pagination-height) min-w-(--pagination-height) shrink-0 items-center justify-center px-2',
+    'inline-flex h-(--pagination-height) w-(--pagination-height) shrink-0 items-center justify-center',
     'rounded-lg font-medium text-foreground-secondary text-sm',
     'transition enabled:cursor-pointer disabled:opacity-40',
     'hover:bg-foreground/5 hover:text-foreground',
@@ -75,7 +75,7 @@ const PaginationPrevious = ({ asChild, children, ...props }: PaginationStepProps
       <Slottable asChild={asChild ?? false} child={children}>
         {(child) => (
           <>
-            <ChevronLeft />
+            <ChevronLeft size={16} />
             {child}
           </>
         )}
@@ -91,7 +91,7 @@ const PaginationNext = ({ asChild, children, ...props }: PaginationStepProps) =>
         {(child) => (
           <>
             {child}
-            <ChevronRight />
+            <ChevronRight size={16} />
           </>
         )}
       </Slottable>
