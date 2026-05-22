@@ -112,8 +112,8 @@ export const SingleStudentExchangeCard = ({ exchange }: Props) => {
               exchange.options.map((option) => ({
                 participant_name: exchange.issuer_name,
                 participant_nmec: exchange.issuer_nmec,
-                goes_from: option.class_issuer_goes_from.name,
-                goes_to: option.class_issuer_goes_to.name,
+                goes_from: option.class_issuer_goes_from?.name ?? 'N/A',
+                goes_to: option.class_issuer_goes_to?.name ?? 'N/A',
                 course_acronym: option.course_info.acronym,
               })),
             )}
