@@ -81,8 +81,8 @@ export const PersonExchanges = ({
                             exchanges.map(option => ({
                                 participant_nmec: option.participant_nmec,
                                 participant_name: option.participant_name,
-                                goes_from: option.class_participant_goes_from.name,
-                                goes_to: option.class_participant_goes_to.name,
+                                goes_from: option.class_participant_goes_from?.name ?? 'N/A',
+                                goes_to: option.class_participant_goes_to?.name ?? 'N/A',
                                 course_acronym: option.course_unit
                             }))
                         )}
