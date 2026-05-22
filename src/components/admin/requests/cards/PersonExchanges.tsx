@@ -36,14 +36,14 @@ export const PersonExchanges = ({
                             >
                                 <span className="font-bold">{exchange.course_info.acronym}</span>
                                 <div className="flex gap-2 items-center text-muted-foreground">
-                                    <span>{exchange.class_participant_goes_from.name}</span>
+                                    <span>{exchange.class_participant_goes_from?.name ?? 'N/A'}</span>
                                     <ArrowRightIcon size={14} />
-                                    <span className="text-foreground font-medium">{exchange.class_participant_goes_to.name}</span>
+                                    <span className="text-foreground font-medium">{exchange.class_participant_goes_to?.name ?? 'N/A'}</span>
                             </div>
                             <span className="text-xs italic">
-                                ({exchange.class_participant_goes_from.vacancies ?? 'N/A'}
+                                ({exchange.class_participant_goes_from?.vacancies ?? 'N/A'}
                                 <ArrowRightIcon className="inline mx-0.5" size={10} />
-                                {exchange.class_participant_goes_to.vacancies ?? 'N/A'} {"vagas"})
+                                {exchange.class_participant_goes_to?.vacancies ?? 'N/A'} {"vagas"})
                             </span>
                         </div>
                     ))}
