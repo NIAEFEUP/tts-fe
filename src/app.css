@@ -9,7 +9,7 @@
 
 /* Custom dark mode variant using data-theme attribute */
 @variant dark {
-  &:where([data-theme="dark"], [data-theme="dark"] *) {
+  &:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *) {
     @slot;
   }
 }
