@@ -9,14 +9,7 @@ import { Link } from "react-router-dom"
 import { Button, buttonStyle } from "../ui/new/button"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar"
 import { cn } from "../../lib/utils"
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "../ui/alert-dialog"
+import { Dialog } from "../ui/new/dialog"
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false)
@@ -83,13 +76,11 @@ export const AdminSidebar = () => {
           {!loggingOut && <span>Sair</span>}
         </Button>
       </SidebarFooter>
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent className="w-full max-w-88 p-5">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Sair</AlertDialogTitle>
-            <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="mt-2 flex justify-center! gap-4">
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <Dialog.Content className="w-full max-w-88 p-5">
+          <Dialog.Title>Sair</Dialog.Title>
+          <Dialog.Description>Tem a certeza que deseja sair?</Dialog.Description>
+          <Dialog.Actions className="mt-2 flex justify-center gap-4">
             <Button variant="outline" onClick={() => setConfirmOpen(false)}>
               Cancelar
             </Button>
@@ -102,9 +93,9 @@ export const AdminSidebar = () => {
             >
               Confirmar
             </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+          </Dialog.Actions>
+        </Dialog.Content>
+      </Dialog>
     </Sidebar>
   )
 }
