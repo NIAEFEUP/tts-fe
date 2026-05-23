@@ -1,6 +1,5 @@
 import useStudentCourseMetadata from '../../../../hooks/admin/useStudentCourseMetadata'
 import { Button } from '../../../ui/new/button'
-import { cn } from '../../../../lib/utils'
 
 type CourseInfo = {
   id: number
@@ -49,7 +48,7 @@ export const TreatExchangeButton = ({ nmec, courseId, courseInfo, variant = 'def
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant={variant}>{showCourseLabel && acronym ? `Tratar (${acronym})` : 'Tratar'}</Button>
+            <Button variant="outline">{showCourseLabel && acronym ? `Tratar (${acronym})` : 'Tratar'}</Button>
           </a>
         )
       })}
@@ -62,7 +61,7 @@ export const TreatExchangeButton = ({ nmec, courseId, courseInfo, variant = 'def
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant={variant}>{showCourseLabel && acronym ? `Tratar (${acronym})` : 'Tratar'}</Button>
+            <Button variant="outline">{showCourseLabel && acronym ? `Tratar (${acronym})` : 'Tratar'}</Button>
           </a>
         )
       })}
