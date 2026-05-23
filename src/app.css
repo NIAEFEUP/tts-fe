@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* ============================================================================
    TAILWIND PLUGINS & EXTENSIONS
@@ -9,7 +9,7 @@
 
 /* Custom dark mode variant using data-theme attribute */
 @variant dark {
-  &:where([data-theme='dark'], [data-theme='dark'] *) {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
     @slot;
   }
 }
@@ -201,13 +201,13 @@
   /* --- Typography Families --- */
   --font-flow: Flow;
   --font-prose:
-    Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+    Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
   --font-headings:
-    Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+    Montserrat, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
   --font-mono:
-    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- Custom Animations --- */
   --animate-accordion-down: accordion-down 0.2s ease-out;
@@ -290,7 +290,7 @@
 
 @layer base {
   /* Dark theme styling */
-  [data-theme='dark'] {
+  [data-theme="dark"] {
     color-scheme: dark;
   }
 
@@ -302,11 +302,6 @@
     scrollbar-gutter: stable;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Prevent body scroll when dialog is open */
-  body:has(dialog[open]) {
-    overflow: hidden;
   }
 
   /* Universal border color default */
@@ -449,12 +444,12 @@
 
   .stamp::after {
     @apply absolute left-5 top-5 right-5 bottom-5 z-[-1];
-    content: '';
+    content: "";
   }
 
   .stamp::before {
     @apply absolute bottom-0 left-0 font-bold text-white opacity-75 text-4xl leading-normal p-5;
-    content: 'CSS3';
+    content: "CSS3";
   }
 
   /* Flip card animation */

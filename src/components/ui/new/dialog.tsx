@@ -1,7 +1,5 @@
-'use client'
-
-import { Modal, ModalClose, ModalContent, ModalDescription, ModalTitle, ModalTrigger } from './modal'
-import { cn } from '../../../lib/utils'
+import { Modal } from "./modal"
+import { cn } from "../../../lib/utils"
 
 type DialogProps = React.ComponentProps<typeof Modal>
 
@@ -9,57 +7,62 @@ const Dialog = ({ ...props }: DialogProps) => {
   return <Modal {...props} />
 }
 
-interface DialogContentProps extends React.ComponentProps<typeof ModalContent> {
-  align?: 'center' | 'top'
+interface DialogContentProps extends React.ComponentProps<typeof Modal.Content> {
+  align?: "center" | "top"
 }
 
-const DialogContent = ({ className, children, align = 'center', ...props }: DialogContentProps) => {
+const DialogContent = ({ className, children, align = "center", ...props }: DialogContentProps) => {
   return (
-    <ModalContent
-      backdropClassName={cn(
-        'bg-black/20 backdrop-blur-sm',
-        'transition-all duration-300 motion-reduce:transition-none',
-        'not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150',
-      )}
+    <Modal.Content
       className={cn(
-        'bg-background border-border m-auto w-full max-w-md rounded-3xl border p-4 shadow-lg',
-        'max-h-[calc(100svh-2rem)] overflow-y-auto',
-        'transition-all duration-300 motion-reduce:transition-none',
-        'not-data-[status=open]:translate-y-2 not-data-[status=open]:scale-95 not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150',
-        align === 'top' && 'mt-4',
+        "bg-background border-border m-auto w-full max-w-md rounded-3xl border p-4 shadow-lg",
+        "max-h-[calc(100svh-2rem)] overflow-y-auto",
+        "transition-all duration-300 motion-reduce:transition-none",
+        "not-data-[status=open]:translate-y-2 not-data-[status=open]:scale-95 not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150",
+        align === "top" && "mt-4",
         className,
       )}
       {...props}
     >
       {children}
-    </ModalContent>
+    </Modal.Content>
   )
 }
 
-const DialogTrigger = ModalTrigger
+const DialogTrigger = Modal.Trigger
 
-const DialogClose = ModalClose
+const DialogClose = Modal.Close
 
-const DialogTitle = ({ children, className, ...props }: React.ComponentProps<typeof ModalTitle>) => {
+const DialogTitle = ({ children, className, ...props }: React.ComponentProps<typeof Modal.Title>) => {
   return (
-    <ModalTitle className={cn('pb-2 font-semibold', className)} {...props}>
+    <Modal.Title className={cn("pb-2 font-semibold", className)} {...props}>
       {children}
-    </ModalTitle>
+    </Modal.Title>
   )
 }
 
-const DialogDescription = ({ children, className, ...props }: React.ComponentProps<typeof ModalDescription>) => {
+const DialogDescription = ({ children, className, ...props }: React.ComponentProps<typeof Modal.Description>) => {
   return (
-    <ModalDescription className={cn('pb-2', className)} {...props}>
+    <Modal.Description className={cn("pb-2", className)} {...props}>
       {children}
-    </ModalDescription>
+    </Modal.Description>
   )
 }
 
-const DialogActions = ({ className, children, ...props }: React.ComponentPropsWithRef<'div'>) => (
-  <div className={cn('flex flex-col gap-2 pt-4 sm:flex-row sm:justify-start', className)} {...props}>
+const DialogActions = ({ className, children, ...props }: React.ComponentPropsWithRef<"div">) => (
+  <div className={cn("flex flex-col gap-2 pt-4 sm:flex-row sm:justify-start", className)} {...props}>
     {children}
   </div>
 )
 
-export { Dialog, DialogActions, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger }
+const CompoundDialog = Object.assign(Dialog, {
+  Content: DialogContent,
+  Title: DialogTitle,
+  Description: DialogDescription,
+  Actions: DialogActions,
+  Trigger: DialogTrigger,
+  Close: DialogClose,
+})
+
+export { CompoundDialog as Dialog }
+export { DialogContent, DialogTitle, DialogDescription, DialogActions, DialogTrigger, DialogClose }

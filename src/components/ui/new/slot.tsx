@@ -1,7 +1,7 @@
-import { Children, cloneElement, isValidElement, forwardRef } from 'react'
-import { useMergeRefs } from '@floating-ui/react'
+import { Children, cloneElement, isValidElement, forwardRef } from "react"
+import { useMergeRefs } from "@floating-ui/react"
 
-import { cn } from '../../../lib/utils'
+import { cn } from "../../../lib/utils"
 
 const isValidSlottableElement = (
   value: unknown,
@@ -11,7 +11,30 @@ const isValidSlottableElement = (
   style?: React.CSSProperties
   ref?: React.Ref<any>
 }> => {
-  return isValidElement(value) && !!value.props && typeof value.props === 'object' && 'key' in value
+  return isValidElement(value) && !!value.props && typeof value.props === "object" && "key" in value
+}
+
+type AnyProps = Record<string, any>
+
+function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
+  const result: AnyProps = { ...slotProps }
+
+  for (const key in childProps) {
+    const slotPropValue = slotProps[key]
+    const childPropValue = childProps[key]
+
+    const isHandler = typeof slotPropValue === "function" && typeof childPropValue === "function"
+    if (isHandler) {
+      result[key] = (...args: any[]) => {
+        childPropValue?.(...args)
+        slotPropValue?.(...args)
+      }
+    } else if (childPropValue !== undefined) {
+      result[key] = childProps[key]
+    }
+  }
+
+  return result
 }
 
 export const Slot = forwardRef<HTMLElement, React.ComponentPropsWithRef<React.ElementType>>(
@@ -28,42 +51,11 @@ export const Slot = forwardRef<HTMLElement, React.ComponentPropsWithRef<React.El
       })
     }
 
-    throw new Error('Slot needs a valid react element child')
-  },
+    throw new Error("Slot needs a valid react element child")
+  }
 )
 
-Slot.displayName = 'Slot'
-
-type AnyProps = Record<string, any>
-
-function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
-  const result: AnyProps = { ...slotProps }
-
-  for (const propName in childProps) {
-    const slotPropValue = slotProps[propName]
-    const childPropValue = childProps[propName]
-
-    const isHandler = /^on[A-Z]/.test(propName)
-    if (isHandler) {
-      if (slotPropValue && childPropValue) {
-        result[propName] = (...args: unknown[]) => {
-          childPropValue(...args)
-          slotPropValue(...args)
-        }
-      } else if (childPropValue) {
-        result[propName] = childPropValue
-      }
-    } else if (propName === 'className') {
-      result[propName] = cn(slotPropValue, childPropValue)
-    } else if (propName === 'style') {
-      result[propName] = { ...slotPropValue, ...childPropValue }
-    } else {
-      result[propName] = childPropValue
-    }
-  }
-
-  return result
-}
+Slot.displayName = "Slot"
 
 type SlottableProps = {
   asChild: boolean
