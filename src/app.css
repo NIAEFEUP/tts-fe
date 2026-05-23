@@ -123,13 +123,25 @@
   --animate-spinner-bar: spinner-bar 1.2s ease-in-out infinite both;
 
   @keyframes spinner-dot {
-    0%, 80%, 100% { opacity: 0.25; }
-    40% { opacity: 1; }
+    0%,
+    80%,
+    100% {
+      opacity: 0.25;
+    }
+    40% {
+      opacity: 1;
+    }
   }
 
   @keyframes spinner-bar {
-    0%, 40%, 100% { transform: scaleY(0.4); }
-    20% { transform: scaleY(1); }
+    0%,
+    40%,
+    100% {
+      transform: scaleY(0.4);
+    }
+    20% {
+      transform: scaleY(1);
+    }
   }
 
   /* --- Legacy Color Palette --- */
@@ -155,14 +167,14 @@
 
   /* Class/Schedule type colors */
   --color-schedule-lunch: #be123c;
-  --color-schedule-t: #91897f;      /* Theoretical */
-  --color-schedule-tp: #115e59;     /* Theoretical-Practical */
-  --color-schedule-pl: #003d7a;     /* Practical-Lab */
-  --color-schedule-ot: #5c8fc2;     /* Tutorial */
-  --color-schedule-s: #7d3179;      /* Seminar */
-  --color-schedule-p: #b66046;      /* Practical */
-  --color-schedule-tc: #733c3c;     /* Theoretical-Clinical */
-  --color-schedule-o: #69656a;      /* Other */
+  --color-schedule-t: #91897f; /* Theoretical */
+  --color-schedule-tp: #115e59; /* Theoretical-Practical */
+  --color-schedule-pl: #003d7a; /* Practical-Lab */
+  --color-schedule-ot: #5c8fc2; /* Tutorial */
+  --color-schedule-s: #7d3179; /* Seminar */
+  --color-schedule-p: #b66046; /* Practical */
+  --color-schedule-tc: #733c3c; /* Theoretical-Clinical */
+  --color-schedule-o: #69656a; /* Other */
 
   /* Sidebar colors (mapped from HSL variables) */
   --color-sidebar: hsl(var(--sidebar-background));
@@ -188,9 +200,14 @@
 
   /* --- Typography Families --- */
   --font-flow: Flow;
-  --font-prose: Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-headings: Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-mono: Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-prose:
+    Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-headings:
+    Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-mono:
+    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   /* --- Custom Animations --- */
   --animate-accordion-down: accordion-down 0.2s ease-out;
@@ -207,33 +224,63 @@
 
   /* Keyframe animations */
   @keyframes wiggle {
-    0% { transform: rotate(-0.5deg); }
-    25% { transform: rotate(0.5deg); }
-    50% { transform: rotate(-0.5deg); }
-    75% { transform: rotate(0.5deg); }
-    100% { transform: rotate(0); }
+    0% {
+      transform: rotate(-0.5deg);
+    }
+    25% {
+      transform: rotate(0.5deg);
+    }
+    50% {
+      transform: rotate(-0.5deg);
+    }
+    75% {
+      transform: rotate(0.5deg);
+    }
+    100% {
+      transform: rotate(0);
+    }
   }
 
   @keyframes fade {
-    0% { opacity: 100%; }
-    25% { opacity: 50%; }
-    50% { opacity: 10%; }
-    75% { opacity: 50%; }
-    100% { opacity: 100%; }
+    0% {
+      opacity: 100%;
+    }
+    25% {
+      opacity: 50%;
+    }
+    50% {
+      opacity: 10%;
+    }
+    75% {
+      opacity: 50%;
+    }
+    100% {
+      opacity: 100%;
+    }
   }
 
   @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
 
   @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
   }
 
   @keyframes shine {
-    100% { left: 125%; }
+    100% {
+      left: 125%;
+    }
   }
 }
 
@@ -370,7 +417,7 @@
   }
 
   /* --- Component-Specific Styles --- */
-  
+
   /* Emoji Picker styling */
   #option-header .EmojiPickerReact {
     --epr-bg-color: rgb(242, 244, 247);
@@ -389,7 +436,7 @@
 
   #option-name {
     -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none;    /* Firefox */
+    scrollbar-width: none; /* Firefox */
   }
 
   /* --- Stamp/Card Components --- */
@@ -446,7 +493,7 @@
 
   .no-scrollbar {
     -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none;    /* Firefox */
+    scrollbar-width: none; /* Firefox */
   }
 }
 
