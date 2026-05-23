@@ -1,25 +1,25 @@
-import * as Sentry from '@sentry/react'
-import { Button } from './ui/new/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
-import { useForm } from 'react-hook-form'
-import { Input } from './ui/new/input'
-import { Textarea } from './ui/new/textArea'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useToast } from './ui/use-toast'
-import { useState } from 'react'
-import { Tabs, TabsItem, TabsItems } from './ui/new/tabs'
-import { Flag } from 'lucide-react'
-import { Dropdown, DropdownItems, DropdownTrigger } from './ui/new/dropdown'
+import * as Sentry from "@sentry/react"
+import { Button } from "./ui/new/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import { useForm } from "react-hook-form"
+import { Input } from "./ui/new/input"
+import { Textarea } from "./ui/new/textArea"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useToast } from "./ui/use-toast"
+import { useState } from "react"
+import { Tabs, TabsItem, TabsItems } from "./ui/new/tabs"
+import { Flag } from "lucide-react"
+import { Dropdown, DropdownItems, DropdownTrigger } from "./ui/new/dropdown"
 
 enum ReportType {
-  Suggestion = 'Sugestão',
-  Bug = 'Bug',
+  Suggestion = "Sugestão",
+  Bug = "Bug",
 }
 
 const bugSchema = z.object({
   email: z.string().optional(),
-  description: z.string().trim().min(1, { message: 'É necessário descreveres' }),
+  description: z.string().trim().min(1, { message: "É necessário descreveres" }),
 })
 
 export const FeedbackReport = () => {
@@ -41,7 +41,7 @@ export const FeedbackReport = () => {
 
     const userFeedback = {
       type: reportType,
-      email: values.email ?? '',
+      email: values.email ?? "",
       message: values.description,
       associatedEventId: eventId,
     }
@@ -51,7 +51,7 @@ export const FeedbackReport = () => {
     form.reset()
 
     toast({
-      title: 'Enviado! Obrigado pelo teu feedback',
+      title: "Enviado! Obrigado pelo teu feedback",
       duration: 3000,
     })
   }
@@ -59,7 +59,7 @@ export const FeedbackReport = () => {
   return (
     <Dropdown open={open} onOpenChange={setOpen}>
       <DropdownTrigger asChild>
-        <Button className="hover:bg-foreground/2" variant="outline">
+        <Button variant="outline">
           <Flag size="16" className="text-black dark:text-white md:dark:text-black" />
           <p className="hidden sm:block text-black dark:text-white md:dark:text-black">Feedback</p>
         </Button>
@@ -110,7 +110,7 @@ export const FeedbackReport = () => {
               )}
             />
 
-            <Button type="submit" className="w-full mt-2 hover:bg-accent/90">
+            <Button type="submit" className="w-full mt-2">
               Submeter
             </Button>
           </form>

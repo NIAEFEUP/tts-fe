@@ -11,9 +11,9 @@ const buttonStyle = cva({
   base: "shrink-0 relative whitespace-nowrap inline-flex items-center justify-center gap-1.5 font-medium shadow-xs transition focus-visible:outline-none focus-visible:ring-4 disabled:opacity-40 enabled:cursor-pointer h-(--button-height) ring-ring active:scale-98 text-(--button-text-color) [--button-text-color:var(--color-foreground)]",
   variants: {
     variant: {
-      primary: "bg-accent [--button-text-color:var(--color-accent-foreground)]",
-      outline: "border border-border bg-background focus-visible:border-accent",
-      ghost: "border-none bg-transparent ring-0 shadow-none hover:bg-foreground/5",
+      primary: "bg-accent [--button-text-color:var(--color-accent-foreground)] hover:bg-accent/90 active:bg-accent/80",
+      outline: "border border-border bg-background hover:bg-foreground/2 focus-visible:border-accent active:bg-foreground/4",
+      ghost: "border-none bg-transparent ring-0 shadow-none hover:bg-foreground/5 active:bg-foreground/10",
       destructive: "bg-red-600 [--button-text-color:var(--color-white)] ring-red-600/50 hover:bg-red-700",
     },
     size: {
