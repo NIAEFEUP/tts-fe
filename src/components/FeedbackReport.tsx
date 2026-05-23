@@ -60,8 +60,8 @@ export const FeedbackReport = () => {
     <Dropdown open={open} onOpenChange={setOpen}>
       <DropdownTrigger asChild>
         <Button variant="outline">
-          <Flag size="16" className="text-black dark:text-white md:dark:text-black" />
-          <p className="hidden sm:block text-black dark:text-white md:dark:text-black">Feedback</p>
+          <Flag size="16" />
+          <p className="hidden sm:block ">Feedback</p>
         </Button>
       </DropdownTrigger>
 
