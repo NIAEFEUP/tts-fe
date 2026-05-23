@@ -1,35 +1,35 @@
-'use client'
+"use client"
 
-import React from 'react'
-import { VariantProps } from 'cva'
+import React from "react"
+import { VariantProps } from "cva"
 
-import { Slot, Slottable } from './slot'
-import { Spinner } from './spinner'
-import { cn, cva } from '../../../lib/utils'
+import { Slot, Slottable } from "./slot"
+import { Spinner } from "./spinner"
+import { cn, cva } from "../../../lib/utils"
 
 const buttonStyle = cva({
-  base: 'shrink-0 relative whitespace-nowrap inline-flex items-center justify-center gap-1.5 font-medium shadow-xs transition focus-visible:outline-none focus-visible:ring-4 disabled:opacity-40 enabled:cursor-pointer h-(--button-height) ring-ring active:scale-98 text-(--button-text-color) [--button-text-color:var(--color-foreground)]',
+  base: "shrink-0 relative whitespace-nowrap inline-flex items-center justify-center gap-1.5 font-medium shadow-xs transition focus-visible:outline-none focus-visible:ring-4 disabled:opacity-40 enabled:cursor-pointer h-(--button-height) ring-ring active:scale-98 text-(--button-text-color) [--button-text-color:var(--color-foreground)]",
   variants: {
     variant: {
-      primary: 'bg-accent [--button-text-color:var(--color-accent-foreground)]',
-      outline: 'border border-border bg-background focus-visible:border-accent',
-      ghost: 'border-none bg-transparent ring-0 shadow-none hover:bg-foreground/5',
-      destructive: 'bg-red-600 [--button-text-color:var(--color-white)] ring-red-600/50 hover:bg-red-700',
+      primary: "bg-accent [--button-text-color:var(--color-accent-foreground)]",
+      outline: "border border-border bg-background focus-visible:border-accent",
+      ghost: "border-none bg-transparent ring-0 shadow-none hover:bg-foreground/5",
+      destructive: "bg-red-600 [--button-text-color:var(--color-white)] ring-red-600/50 hover:bg-red-700",
     },
     size: {
-      xs: 'rounded-lg px-2 text-sm [--button-height:--spacing(6)]',
-      sm: 'rounded-lg px-3 text-sm [--button-height:--spacing(8)]',
-      md: 'rounded-xl px-4 text-base [--button-height:--spacing(10)]',
-      lg: 'rounded-2xl px-5 text-base [--button-height:--spacing(12)]',
+      xs: "rounded-lg px-2 text-sm [--button-height:--spacing(6)]",
+      sm: "rounded-lg px-3 text-sm [--button-height:--spacing(8)]",
+      md: "rounded-xl px-4 text-base [--button-height:--spacing(10)]",
+      lg: "rounded-2xl px-5 text-base [--button-height:--spacing(12)]",
     },
     square: {
-      true: 'w-(--button-height) px-0',
-      false: '',
+      true: "w-(--button-height) px-0",
+      false: "",
     },
   },
   defaultVariants: {
-    variant: 'primary',
-    size: 'md',
+    variant: "primary",
+    size: "md",
   },
 })
 
@@ -40,10 +40,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { children, className, variant, asChild = false, isLoading, size = 'md', square, type = 'button', ...props },
+    { children, className, variant, asChild = false, isLoading, size = "md", square, type = "button", ...props },
     ref,
   ) => {
-    const Comp = asChild ? Slot : 'button'
+    const Comp = asChild ? Slot : "button"
 
     return (
       <Comp
@@ -54,7 +54,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             size,
             square,
           }),
-          isLoading && 'text-transparent transition-none',
+          isLoading && "text-transparent transition-none",
         )}
         ref={ref}
         type={type}
@@ -68,8 +68,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 <span
                   data-button-spinner
                   className={cn(
-                    'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-                    'text-(--button-text-color)',
+                    "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+                    "text-(--button-text-color)",
                   )}
                 >
                   <Spinner size={size} />
@@ -83,6 +83,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   },
 )
 
-Button.displayName = 'Button'
+Button.displayName = "Button"
 
 export { Button, buttonStyle }

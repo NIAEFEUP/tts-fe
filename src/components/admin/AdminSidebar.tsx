@@ -1,19 +1,13 @@
-import { useNavigate } from 'react-router-dom'
-import { Separator } from '../ui/separator'
-import { useContext, useState } from 'react'
-import SessionContext from '../../contexts/SessionContext'
-import ScheduleContext from '../../contexts/ScheduleContext'
-import authService from '../../api/services/authService'
-import { CornerDownLeftIcon, PieChartIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { Button } from '../ui/new/button'
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from '../ui/sidebar'
-import {
-  ArrowRightStartOnRectangleIcon,
-  RectangleGroupIcon,
-  PaperAirplaneIcon,
-  AdjustmentsHorizontalIcon,
-} from '@heroicons/react/24/outline'
+import { useNavigate } from "react-router-dom"
+import { Separator } from "../ui/separator"
+import { useContext, useState } from "react"
+import SessionContext from "../../contexts/SessionContext"
+import ScheduleContext from "../../contexts/ScheduleContext"
+import authService from "../../api/services/authService"
+import { CornerDownLeftIcon, LogOut, PieChartIcon, Group, SendHorizontal, SlidersHorizontal } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Button } from "../ui/new/button"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -21,7 +15,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../ui/alert-dialog'
+} from "../ui/alert-dialog"
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false)
@@ -35,13 +29,13 @@ export const AdminSidebar = () => {
     setLoggingOut(true)
     setExchangeSchedule([])
     await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut)
-    navigate('/')
+    navigate("/")
   }
 
   return (
     <Sidebar className="bg-white h-screen flex flex-col">
       <SidebarHeader className="flex flex-row gap-2 p-4">
-        <RectangleGroupIcon className="w-6 h-6" />
+        <Group />
         <h1 className="font-bold">Admin</h1>
       </SidebarHeader>
       <Separator />
@@ -49,42 +43,36 @@ export const AdminSidebar = () => {
         <SidebarMenu>
           <SidebarMenuButton asChild>
             <Link to="/admin" className="flex items-center gap-2">
-              <PaperAirplaneIcon className="w-6 h-6" />
+              <SendHorizontal />
               <span>Pedidos</span>
             </Link>
           </SidebarMenuButton>
           <SidebarMenuButton asChild>
             <Link to="/admin/settings" className="flex items-center gap-2">
-              <AdjustmentsHorizontalIcon className="w-6 h-6" />
+              <SlidersHorizontal />
               <span>Definições</span>
             </Link>
           </SidebarMenuButton>
           <SidebarMenuButton asChild>
             <Link to="/admin/statistics" className="flex items-center gap-2">
-              <PieChartIcon className="w-6 h-6" />
+              <PieChartIcon />
               <span>Estatísticas</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="mt-auto flex flex-col gap-2">
-        <SidebarMenuButton asChild>
-          <a href="/planner" className="flex items-center gap-2">
-            <CornerDownLeftIcon className="w-6 h-6" />
+        <Button variant="ghost" asChild>
+          <a href="/planner">
+            <CornerDownLeftIcon size={16} />
             <span>Planner</span>
           </a>
-        </SidebarMenuButton>
-        <SidebarMenuButton asChild>
-          <Button
-            variant="primary"
-            className="w-full flex flex-row justify-center gap-2 bg-primary text-white hover:bg-primary/90"
-            onClick={() => setConfirmOpen(true)}
-            disabled={loggingOut}
-          >
-            <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-white" />
-            {!loggingOut && <span className="text-white">Sair</span>}
-          </Button>
-        </SidebarMenuButton>
+        </Button>
+
+        <Button variant="destructive" onClick={() => setConfirmOpen(true)} disabled={loggingOut}>
+          <LogOut size={16} />
+          {!loggingOut && <span>Sair</span>}
+        </Button>
       </SidebarFooter>
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent className="w-full max-w-88 p-5">
@@ -93,12 +81,11 @@ export const AdminSidebar = () => {
             <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-2 flex justify-center! gap-4">
-            <Button variant="outline" className="hover:bg-accent/5" onClick={() => setConfirmOpen(false)}>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
               Cancelar
             </Button>
             <Button
               variant="destructive"
-              className="hover:bg-red-700"
               onClick={() => {
                 setConfirmOpen(false)
                 logout()
