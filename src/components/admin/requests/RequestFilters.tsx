@@ -8,7 +8,7 @@ import useAdminExchangeCourses from '../../../hooks/admin/useAdminExchangeCourse
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/popover'
 import { Command, CommandGroup, CommandItem } from '../../ui/command'
 import { Check, ChevronDown } from 'lucide-react'
-import { Badge } from '../../ui/badge'
+import { Badge } from '../../ui/new/badge'
 import { PageSizeSelector } from './cards/PageSizeSelector'
 import AdminPaginationContext from '../../../contexts/admin/AdminPaginationContext'
 
@@ -96,11 +96,7 @@ export const RequestFilters = () => {
           <Button variant="outline" className="justify-between hover:bg-accent/5">
             <span className="flex items-center">
               Estado
-              {activeStates.length > 0 && (
-                <Badge variant="secondary" className="px-1 py-0 ml-2 rounded-sm">
-                  {activeStates.length}
-                </Badge>
-              )}
+              {activeStates.length > 0 && <Badge className="ml-2">{activeStates.length}</Badge>}
             </span>
             <ChevronDown size="18" />
           </Button>

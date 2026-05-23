@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import { Dispatch, SetStateAction } from 'react'
 import { ClassInfo, CourseInfo } from '../../../../@types'
 import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
-import { Badge } from '../../../ui/badge'
+import { Badge } from '../../../ui/new/badge'
 import { Button } from '../../../ui/new/button'
 import { Checkbox } from '../../../ui/new/checkbox'
 import { Dropdown, DropdownItem, DropdownItems, DropdownTrigger } from '../../../ui/new/dropdown'
@@ -35,8 +35,7 @@ export const ViewRequestBadgeFilter = ({ courseUnit, filterCourseUnitsHook, clas
   return (
     <div className="flex flex-row items-center gap-x-2">
       <Badge
-        className={`${filterCourseUnits.has(courseUnit.id) ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'} 
-                    cursor-pointer hover:text-white hover:bg-primary flex flex-row items-center gap-x-1`}
+        className="ml-2"
         onClick={() => {
           const newFilterCourseUnits = new Set(filterCourseUnits)
 
