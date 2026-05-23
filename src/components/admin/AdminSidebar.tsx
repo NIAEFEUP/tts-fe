@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { Separator } from "../ui/separator"
 import { useContext, useState } from "react"
 import SessionContext from "../../contexts/SessionContext"
@@ -6,8 +6,9 @@ import ScheduleContext from "../../contexts/ScheduleContext"
 import authService from "../../api/services/authService"
 import { CornerDownLeftIcon, LogOut, PieChartIcon, Group, SendHorizontal, SlidersHorizontal } from "lucide-react"
 import { Link } from "react-router-dom"
-import { Button } from "../ui/new/button"
+import { Button, buttonStyle } from "../ui/new/button"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar"
+import { cn } from "../../lib/utils"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -21,6 +22,7 @@ export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
 
   const { user, forceScheduleRevalidation } = useContext(SessionContext)
   const { setExchangeSchedule } = useContext(ScheduleContext)
@@ -32,6 +34,14 @@ export const AdminSidebar = () => {
     navigate("/")
   }
 
+  const menuItems = [
+    { to: "/admin", label: "Pedidos", icon: SendHorizontal },
+    { to: "/admin/settings", label: "Definições", icon: SlidersHorizontal },
+    { to: "/admin/statistics", label: "Estatísticas", icon: PieChartIcon },
+  ]
+
+  const isActive = (path: string) => location.pathname === path
+
   return (
     <Sidebar className="bg-white h-screen flex flex-col">
       <SidebarHeader className="flex flex-row gap-2 p-4">
@@ -41,24 +51,23 @@ export const AdminSidebar = () => {
       <Separator />
       <SidebarContent className="flex-1 m-4 overflow-auto">
         <SidebarMenu>
-          <SidebarMenuButton asChild>
-            <Link to="/admin" className="flex items-center gap-2">
-              <SendHorizontal />
-              <span>Pedidos</span>
-            </Link>
-          </SidebarMenuButton>
-          <SidebarMenuButton asChild>
-            <Link to="/admin/settings" className="flex items-center gap-2">
-              <SlidersHorizontal />
-              <span>Definições</span>
-            </Link>
-          </SidebarMenuButton>
-          <SidebarMenuButton asChild>
-            <Link to="/admin/statistics" className="flex items-center gap-2">
-              <PieChartIcon />
-              <span>Estatísticas</span>
-            </Link>
-          </SidebarMenuButton>
+          {menuItems.map((item) => {
+            const Icon = item.icon
+            const active = isActive(item.to)
+            return (
+              <Button
+                key={item.to}
+                variant="ghost"
+                asChild
+                className={cn("w-full justify-start text-sm", active && "bg-foreground/10")}
+              >
+                <Link to={item.to} className="flex items-center gap-2">
+                  <Icon size={16} />
+                  <span>{item.label}</span>
+                </Link>
+              </Button>
+            )
+          })}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="mt-auto flex flex-col gap-2">
