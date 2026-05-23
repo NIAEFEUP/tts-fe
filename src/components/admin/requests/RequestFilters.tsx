@@ -3,6 +3,7 @@ import { Button } from '../../ui/new/button'
 import RequestFiltersContext, {
   activeStatesPossibleValues,
   adminRequestStateToText,
+  adminRequestStateToBadgeVariant,
 } from '../../../contexts/admin/RequestFiltersContext'
 import useAdminExchangeCourses from '../../../hooks/admin/useAdminExchangeCourses'
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/popover'
@@ -96,7 +97,11 @@ export const RequestFilters = () => {
           <Button variant="outline" className="justify-between hover:bg-accent/5">
             <span className="flex items-center">
               Estado
-              {activeStates.length > 0 && <Badge className="ml-2">{activeStates.length}</Badge>}
+              {activeStates.length > 0 && (
+                <Badge className="ml-2" variant="neutral">
+                  {activeStates.length}
+                </Badge>
+              )}
             </span>
             <ChevronDown size="18" />
           </Button>
@@ -116,9 +121,11 @@ export const RequestFilters = () => {
                     }
                   }}
                 >
-                  <div className="flex flex-row items-center gap-x-2">
+                  <div className="flex flex-row items-center gap-x-3">
                     <div className="w-4 h-4">{activeStates.includes(state) && <Check className="w-4 h-4" />}</div>
-                    <p>{adminRequestStateToText[state]}</p>
+                    <Badge variant={adminRequestStateToBadgeVariant[state] as any} size="sm">
+                      {adminRequestStateToText[state]}
+                    </Badge>
                   </div>
                 </CommandItem>
               ))}

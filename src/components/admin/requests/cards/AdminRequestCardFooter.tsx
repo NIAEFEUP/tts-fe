@@ -127,7 +127,6 @@ export const AdminRequestCardFooter = ({
       <CardFooter className="justify-end gap-4">
         <Button
           variant="destructive"
-          className="hover:bg-red-700"
           onClick={async () => {
             await rejectRequest(nmecs, exchangeMessage, requestType, requestId, user.name)
             setExchange?.((prev) => {
@@ -141,6 +140,7 @@ export const AdminRequestCardFooter = ({
         </Button>
 
         <Button
+          variant="primary"
           onClick={async () => {
             await acceptRequest(nmecs, exchangeMessage, requestType, requestId, user.name)
             setExchange?.((prev) => {
@@ -149,7 +149,6 @@ export const AdminRequestCardFooter = ({
               return newPrev as any
             })
           }}
-          className="bg-green-600 text-white hover:bg-green-700"
         >
           Marcar como aceite
         </Button>
