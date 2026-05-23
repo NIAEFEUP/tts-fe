@@ -1,11 +1,11 @@
-'use client'
+"use client"
 
-import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
-import { DateTimePicker } from '../ui/datetime-picker'
-import { Button } from '../ui/new/button'
-import { Edit2Icon, Trash2Icon, CheckIcon, XIcon } from 'lucide-react'
-import { format } from 'date-fns'
-import React from 'react'
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from "../ui/table"
+import { DateTimePicker } from "../ui/datetime-picker"
+import { Button } from "../ui/new/button"
+import { Edit2Icon, Trash2Icon, CheckIcon, XIcon } from "lucide-react"
+import { format } from "date-fns"
+import React from "react"
 
 export interface ExchangePeriod {
   id: number
@@ -36,7 +36,7 @@ export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
   onEditSubmit,
   onCancelEdit,
   onDelete,
-  formatDate = (dateString: string) => format(new Date(dateString), 'yyyy-MM-dd HH:mm'),
+  formatDate = (dateString: string) => format(new Date(dateString), "yyyy-MM-dd HH:mm"),
 }) => {
   return (
     <Table className="w-full table-auto">
@@ -76,10 +76,10 @@ export const ExchangePeriodTable: React.FC<ExchangePeriodTableProps> = ({
               <TableCell className="flex justify-center gap-2">
                 {editingPeriodId === period.id ? (
                   <>
-                    <Button onClick={onEditSubmit} size="sm" disabled={isLoading} className="hover:bg-accent/90">
+                    <Button onClick={onEditSubmit} size="sm" disabled={isLoading}>
                       <CheckIcon size="16" />
                     </Button>
-                    <Button onClick={onCancelEdit} variant="destructive" size="sm" className="hover:bg-red-700">
+                    <Button onClick={onCancelEdit} variant="destructive" size="sm">
                       <XIcon size="16" />
                     </Button>
                   </>

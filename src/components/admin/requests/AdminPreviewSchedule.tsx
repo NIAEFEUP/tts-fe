@@ -34,7 +34,7 @@ export const AdminPreviewSchedule = ({ originalSchedule, classesToAdd }: Props) 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="hover:bg-accent/5">
+        <Button variant="outline">
           Visualizar
         </Button>
       </DialogTrigger>

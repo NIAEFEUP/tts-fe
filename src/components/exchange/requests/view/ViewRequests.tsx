@@ -83,7 +83,7 @@ const ViewMoreButton = ({
         <div className="pt-2">
           <Button
             variant="ghost"
-            className="w-full border-border border"
+            className="w-full"
             onClick={() => {
               setSize(size + 1)
             }}

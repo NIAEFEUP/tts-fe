@@ -1,39 +1,39 @@
-import { Button } from '../ui/new/button'
-import { BoltIcon, FunnelIcon, CameraIcon, ShareIcon, HashtagIcon, PencilIcon } from '@heroicons/react/24/outline'
+import { Button } from "../ui/new/button"
+import { BoltIcon, FunnelIcon, CameraIcon, ShareIcon, HashtagIcon, PencilIcon } from "@heroicons/react/24/outline"
 
 const features = [
   {
-    title: 'Reordenar e personalizar as opções de horário',
+    title: "Reordenar e personalizar as opções de horário",
     description:
-      'Dá-te controlo total para ajustar e personalizar as tuas opções de horário conforme a tua disponibilidade e necessidade.',
+      "Dá-te controlo total para ajustar e personalizar as tuas opções de horário conforme a tua disponibilidade e necessidade.",
     Icon: PencilIcon,
   },
   {
-    title: 'Partilhar horários com amigos',
+    title: "Partilhar horários com amigos",
     description:
-      'Permite que compartilhes facilmente o teu horário de modo a que escolhas as mesmas turmas que os teus amigos.',
+      "Permite que compartilhes facilmente o teu horário de modo a que escolhas as mesmas turmas que os teus amigos.",
     Icon: ShareIcon,
   },
   {
-    title: 'Definir até 10 opções de horários',
+    title: "Definir até 10 opções de horários",
     description:
-      'Oferece a flexibilidade de gerir múltiplas opções de horários conforme a definido nos parâmetros do SIGARRA.',
+      "Oferece a flexibilidade de gerir múltiplas opções de horários conforme a definido nos parâmetros do SIGARRA.",
     Icon: HashtagIcon,
   },
   {
-    title: 'Completar o horário com cadeiras aleatórias',
+    title: "Completar o horário com cadeiras aleatórias",
     description:
-      'No caso de indecisão, preenche automaticamente o teu horário com cadeiras aleatórias para explorar as diferentes possibilidades.',
+      "No caso de indecisão, preenche automaticamente o teu horário com cadeiras aleatórias para explorar as diferentes possibilidades.",
     Icon: BoltIcon,
   },
   {
-    title: 'Tirar print ao horário',
-    description: 'Permite que guardes ou imprimas o teu horário para referência rápida.',
+    title: "Tirar print ao horário",
+    description: "Permite que guardes ou imprimas o teu horário para referência rápida.",
     Icon: CameraIcon,
   },
   {
-    title: 'Filtrar as opções de horários pelos professores',
-    description: 'Facilita a escolha de horários com base nos teus professores preferidos.',
+    title: "Filtrar as opções de horários pelos professores",
+    description: "Facilita a escolha de horários com base nos teus professores preferidos.",
     Icon: FunnelIcon,
   },
 ]

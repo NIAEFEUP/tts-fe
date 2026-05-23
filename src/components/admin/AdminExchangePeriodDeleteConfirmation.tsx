@@ -1,6 +1,6 @@
-'use client'
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../ui/new/dialog'
-import { Button } from '../ui/new/button'
+"use client"
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "../ui/new/dialog"
+import { Button } from "../ui/new/button"
 
 interface DeleteConfirmationDialogProps {
   open: boolean
@@ -24,7 +24,7 @@ export const AdminExchangePeriodDeleteConfirmation = ({
           <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
             Cancelar
           </Button>
-          <Button variant="destructive" size="sm" onClick={onConfirm} className="hover:bg-red-700">
+          <Button variant="destructive" size="sm" onClick={onConfirm}>
             Remover
           </Button>
         </div>

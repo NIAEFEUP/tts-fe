@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/new/button'
-import { useEffect, useState } from 'react'
-import { PlusIcon } from 'lucide-react'
-import useAdminExchangeCourseUnitPeriods from '../../hooks/admin/useAdminExchangeCourseUnitPeriods'
-import exchangeRequestService from '../../api/services/exchangeRequestService'
-import { AdminExchangePeriodDeleteConfirmation } from './AdminExchangePeriodDeleteConfirmation'
-import { ExchangePeriodForm } from './AdminExchangePeriodForm'
-import { ExchangePeriodTable, ExchangePeriod } from './AdminExchangePeriodTable'
-import { cn } from '../../lib/utils'
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Button } from "../ui/new/button"
+import { useEffect, useState } from "react"
+import { PlusIcon } from "lucide-react"
+import useAdminExchangeCourseUnitPeriods from "../../hooks/admin/useAdminExchangeCourseUnitPeriods"
+import exchangeRequestService from "../../api/services/exchangeRequestService"
+import { AdminExchangePeriodDeleteConfirmation } from "./AdminExchangePeriodDeleteConfirmation"
+import { ExchangePeriodForm } from "./AdminExchangePeriodForm"
+import { ExchangePeriodTable, ExchangePeriod } from "./AdminExchangePeriodTable"
+import { cn } from "../../lib/utils"
 
 export const AdminExchangeCourseUnitSettings = () => {
   const { courseUnitPeriods, mutate } = useAdminExchangeCourseUnitPeriods()
@@ -53,7 +53,7 @@ export const AdminExchangeCourseUnitSettings = () => {
       const response = await exchangeRequestService.addCourseUnitExchangePeriod(startDate, endDate, selectedCourseUnit)
       if (!response.ok) {
         const data = await response.json()
-        setErrorMessage(data.error || 'Erro ao adicionar período.')
+        setErrorMessage(data.error || "Erro ao adicionar período.")
         return
       }
       setAddingPeriod(false)
@@ -61,8 +61,8 @@ export const AdminExchangeCourseUnitSettings = () => {
       setEndDate(undefined)
       mutate()
     } catch (error) {
-      console.error('Failed to add exchange period:', error)
-      setErrorMessage('Erro de rede ao adicionar o período.')
+      console.error("Failed to add exchange period:", error)
+      setErrorMessage("Erro de rede ao adicionar o período.")
     } finally {
       setIsLoading(false)
     }
@@ -82,7 +82,7 @@ export const AdminExchangeCourseUnitSettings = () => {
       )
       if (!response.ok) {
         const data = await response.json()
-        setErrorMessage(data.error || 'Erro ao atualizar período.')
+        setErrorMessage(data.error || "Erro ao atualizar período.")
         return
       }
       setEditingPeriodId(null)
@@ -90,8 +90,8 @@ export const AdminExchangeCourseUnitSettings = () => {
       setEditingEndDate(undefined)
       mutate()
     } catch (error) {
-      console.error('Failed to update exchange period:', error)
-      setErrorMessage('Erro de rede ao atualizar o período.')
+      console.error("Failed to update exchange period:", error)
+      setErrorMessage("Erro de rede ao atualizar o período.")
     } finally {
       setIsLoading(false)
     }
@@ -104,7 +104,7 @@ export const AdminExchangeCourseUnitSettings = () => {
       await exchangeRequestService.deleteCourseUnitExchangePeriod(selectedCourseUnit, periodId)
       mutate()
     } catch (error) {
-      console.error('Failed to delete exchange period:', error)
+      console.error("Failed to delete exchange period:", error)
     } finally {
       setIsLoading(false)
     }
@@ -207,8 +207,8 @@ export const AdminExchangeCourseUnitSettings = () => {
             {courseUnits.map((courseUnit, idx) => (
               <Button
                 key={courseUnit.id}
-                variant={selectedGroup === idx ? 'primary' : 'ghost'}
-                className={cn('justify-start', selectedGroup === idx && 'hover:bg-accent/90')}
+                variant={selectedGroup === idx ? "primary" : "ghost"}
+                className={cn("justify-start", selectedGroup === idx)}
                 onClick={() => {
                   setSelectedGroup(idx)
                   setSelectedCourseUnit(courseUnit.id)

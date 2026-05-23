@@ -49,7 +49,7 @@ export const ViewRequestBadgeFilter = ({ courseUnit, filterCourseUnitsHook, clas
       </Badge>
       <Dropdown>
         <DropdownTrigger asChild>
-          <Button variant="ghost" size="xs" square className="h-5 w-5 text-black dark:text-white">
+          <Button variant="ghost" size="xs" square className="h-5 w-5">
             <ChevronDownIcon className="h-5 w-5" />
           </Button>
         </DropdownTrigger>

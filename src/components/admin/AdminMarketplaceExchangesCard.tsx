@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { Button } from '../ui/new/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { ExchangeStatus } from './requests/cards/ExchangeStatus'
-import { Person } from './requests/cards/Person'
-import { RequestDate } from './requests/cards/RequestDate'
-import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, BadgeCheck, BadgeX, BadgeInfo } from 'lucide-react'
-import { AdminPreviewSchedule } from './requests/AdminPreviewSchedule'
-import useStudentsSchedule from '../../hooks/admin/useStudentsSchedule'
-import { ClassDescriptor, MarketplaceRequest } from '../../@types'
-import { AdminRequestCardFooter } from './requests/cards/AdminRequestCardFooter'
-import { listEmailExchanges } from '../../utils/mail'
-import { AdminRequestType } from '../../utils/exchange'
+import { useState } from "react"
+import { Button } from "../ui/new/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { ExchangeStatus } from "./requests/cards/ExchangeStatus"
+import { Person } from "./requests/cards/Person"
+import { RequestDate } from "./requests/cards/RequestDate"
+import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, BadgeCheck, BadgeX, BadgeInfo } from "lucide-react"
+import { AdminPreviewSchedule } from "./requests/AdminPreviewSchedule"
+import useStudentsSchedule from "../../hooks/admin/useStudentsSchedule"
+import { ClassDescriptor, MarketplaceRequest } from "../../@types"
+import { AdminRequestCardFooter } from "./requests/cards/AdminRequestCardFooter"
+import { listEmailExchanges } from "../../utils/mail"
+import { AdminRequestType } from "../../utils/exchange"
 
 type Props = {
   exchange: MarketplaceRequest
@@ -54,17 +54,13 @@ export const AdminMarketplaceExchangesCard = ({ exchange }: Props) => {
           )}
         </div>
         <div>
-          <Button
-            onClick={() => setOpen((prev) => !prev)}
-            variant="outline"
-            className="ml-6 h-9 w-9 p-0 border-2 border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 hover:bg-slate-50 transition-all duration-200 shadow-xs"
-          >
+          <Button onClick={() => setOpen((prev) => !prev)} variant="outline">
             {open ? <ChevronUpIcon size={18} strokeWidth={2.5} /> : <ChevronDownIcon size={18} strokeWidth={2.5} />}
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className={`w-full ${open ? 'pt-0 pb-4 px-9' : 'p-0'}`}>
+      <CardContent className={`w-full ${open ? "pt-0 pb-4 px-9" : "p-0"}`}>
         {open && (
           <div className="flex flex-col gap-y-6">
             <div className="flex justify-between items-center gap-6 py-2">
@@ -75,16 +71,16 @@ export const AdminMarketplaceExchangesCard = ({ exchange }: Props) => {
                     <div key={crypto.randomUUID()} className="flex justify-between items-center gap-3 text-left">
                       <span className="font-bold">{option.course_info.acronym}</span>
                       <div className="flex gap-2 items-center text-muted-foreground">
-                        <span>{option.class_issuer_goes_from?.name || 'N/A'}</span>
+                        <span>{option.class_issuer_goes_from?.name || "N/A"}</span>
                         <ArrowRightIcon size={14} />
                         <span className="text-foreground font-medium">
-                          {option.class_issuer_goes_to?.name || 'N/A'}
+                          {option.class_issuer_goes_to?.name || "N/A"}
                         </span>
                       </div>
                       <span className="text-xs italic">
-                        ({option.class_issuer_goes_from?.vacancies ?? 'N/A'}
+                        ({option.class_issuer_goes_from?.vacancies ?? "N/A"}
                         <ArrowRightIcon className="inline mx-0.5" size={10} />
-                        {option.class_issuer_goes_to?.vacancies ?? 'N/A'} {'vagas'})
+                        {option.class_issuer_goes_to?.vacancies ?? "N/A"} {"vagas"})
                       </span>
                       {diffvacancies(option.class_issuer_goes_from?.vacancies, option.class_issuer_goes_to?.vacancies)}
                     </div>

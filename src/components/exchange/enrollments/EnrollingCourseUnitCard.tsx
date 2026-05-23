@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction, useState } from 'react'
-import { CourseInfo } from '../../../@types'
-import { EnrollmentOption } from './Enrollments'
-import { Card, CardHeader, CardTitle } from '../../ui/card'
-import { Button } from '../../ui/new/button'
+import { Dispatch, SetStateAction, useState } from "react"
+import { CourseInfo } from "../../../@types"
+import { EnrollmentOption } from "./Enrollments"
+import { Card, CardHeader, CardTitle } from "../../ui/card"
+import { Button } from "../../ui/new/button"
 
 type Props = {
   courseUnit: CourseInfo
@@ -30,7 +30,7 @@ export const EnrollingCourseUnitCard = ({
             <Button
               variant="ghost"
               size="sm"
-              className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+              className="text-red-600"
               onClick={() => {
                 setRemove(false)
 

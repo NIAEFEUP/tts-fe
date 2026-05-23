@@ -12,7 +12,6 @@ export const ValidateRequestButton = ({ id, onValidation }: Props) => {
   return (
     <Button
       variant="primary"
-      className="hover:bg-accent/90"
       onClick={async () => {
         const result = await trigger()
         onValidation(result) // <-- envia para o pai

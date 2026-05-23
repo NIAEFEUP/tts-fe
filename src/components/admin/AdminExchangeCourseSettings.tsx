@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/new/button'
-import useAdminExchangeCoursePeriods from '../../hooks/admin/useAdminExchangeCoursePeriods'
-import exchangeRequestService from '../../api/services/exchangeRequestService'
-import { PlusIcon } from 'lucide-react'
-import { AdminExchangePeriodDeleteConfirmation } from './AdminExchangePeriodDeleteConfirmation'
-import { ExchangePeriodForm } from './AdminExchangePeriodForm'
-import { ExchangePeriodTable, ExchangePeriod } from './AdminExchangePeriodTable'
-import { useEffect, useState } from 'react'
-import { cn } from '../../lib/utils'
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Button } from "../ui/new/button"
+import useAdminExchangeCoursePeriods from "../../hooks/admin/useAdminExchangeCoursePeriods"
+import exchangeRequestService from "../../api/services/exchangeRequestService"
+import { PlusIcon } from "lucide-react"
+import { AdminExchangePeriodDeleteConfirmation } from "./AdminExchangePeriodDeleteConfirmation"
+import { ExchangePeriodForm } from "./AdminExchangePeriodForm"
+import { ExchangePeriodTable, ExchangePeriod } from "./AdminExchangePeriodTable"
+import { useEffect, useState } from "react"
+import { cn } from "../../lib/utils"
 
 export const AdminExchangeCourseSettings = () => {
   const { exchangeCoursePeriods, mutate } = useAdminExchangeCoursePeriods()
@@ -50,7 +50,7 @@ export const AdminExchangeCourseSettings = () => {
       const response = await exchangeRequestService.addCourseExchangePeriod(startDate, endDate, selectedCourse)
       if (!response.ok) {
         const data = await response.json()
-        setErrorMessage(data.error || 'Erro ao adicionar período.')
+        setErrorMessage(data.error || "Erro ao adicionar período.")
         return
       }
       setAddingPeriod(false)
@@ -58,8 +58,8 @@ export const AdminExchangeCourseSettings = () => {
       setEndDate(undefined)
       mutate()
     } catch (error) {
-      console.error('Failed to add exchange period:', error)
-      setErrorMessage('Erro de rede ao adicionar o período.')
+      console.error("Failed to add exchange period:", error)
+      setErrorMessage("Erro de rede ao adicionar o período.")
     } finally {
       setIsLoading(false)
     }
@@ -79,7 +79,7 @@ export const AdminExchangeCourseSettings = () => {
       )
       if (!response.ok) {
         const data = await response.json()
-        setErrorMessage(data.error || 'Erro ao atualizar período.')
+        setErrorMessage(data.error || "Erro ao atualizar período.")
         return
       }
       setEditingPeriodId(null)
@@ -87,8 +87,8 @@ export const AdminExchangeCourseSettings = () => {
       setEditingEndDate(undefined)
       mutate()
     } catch (error) {
-      console.error('Failed to update exchange period:', error)
-      setErrorMessage('Erro de rede ao atualizar o período.')
+      console.error("Failed to update exchange period:", error)
+      setErrorMessage("Erro de rede ao atualizar o período.")
     } finally {
       setIsLoading(false)
     }
@@ -101,7 +101,7 @@ export const AdminExchangeCourseSettings = () => {
       await exchangeRequestService.deleteCourseExchangePeriod(selectedCourse, periodId)
       mutate()
     } catch (error) {
-      console.error('Failed to delete exchange period:', error)
+      console.error("Failed to delete exchange period:", error)
     } finally {
       setIsLoading(false)
     }
@@ -207,8 +207,8 @@ export const AdminExchangeCourseSettings = () => {
             {courses.map((course, idx) => (
               <Button
                 key={course.courseId}
-                variant={selectedGroup === idx ? 'primary' : 'ghost'}
-                className={cn('w-full justify-start', selectedGroup === idx && 'hover:bg-accent/90')}
+                variant={selectedGroup === idx ? "primary" : "ghost"}
+                className={cn("w-full justify-start", selectedGroup === idx)}
                 onClick={() => {
                   setSelectedGroup(idx)
                   setSelectedCourse(course.courseId)

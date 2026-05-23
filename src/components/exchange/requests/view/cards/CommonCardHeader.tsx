@@ -76,7 +76,6 @@ export const CommonCardHeader = ({
                       variant="ghost"
                       size="sm"
                       square
-                      className="text-black dark:text-white"
                       onClick={() => {
                         hideHandler()
                       }}
@@ -95,7 +94,6 @@ export const CommonCardHeader = ({
                   variant="ghost"
                   size="sm"
                   square
-                  className="text-black dark:text-white"
                   onClick={() => setOpen(false)}
                 >
                   <ChevronUpIcon className="h-5 w-5" />
@@ -105,7 +103,6 @@ export const CommonCardHeader = ({
                   variant="ghost"
                   size="sm"
                   square
-                  className="text-black dark:text-white"
                   onClick={() => {
                     setOpen(true)
                   }}

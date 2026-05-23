@@ -1,8 +1,8 @@
-import { Ban, Check } from 'lucide-react'
-import { Button } from '../../ui/new/button'
-import { useNavigate } from 'react-router-dom'
-import exchangeRequestService from '../../../api/services/exchangeRequestService'
-import { toast } from '../../../components/ui/use-toast'
+import { Ban, Check } from "lucide-react"
+import { Button } from "../../ui/new/button"
+import { useNavigate } from "react-router-dom"
+import exchangeRequestService from "../../../api/services/exchangeRequestService"
+import { toast } from "../../../components/ui/use-toast"
 
 type Props = {
   verified: boolean
@@ -24,12 +24,7 @@ export const ExchangeVerifyStatus = ({ verified, expired, exchange_id }: Props) 
           <Check size={100} className="text-green-500" />
           <div className="flex flex-col gap-y-4 items-center">
             <p className="w-1/2 text-center">Verificaste com sucesso que aceitas a troca!</p>
-            <Button
-              size="md"
-              variant="primary"
-              className="bg-primary hover:bg-primary/90 text-white"
-              onClick={() => navigate('/exchange')}
-            >
+            <Button size="md" variant="primary" className="bg-primary" onClick={() => navigate("/exchange")}>
               Voltar para os pedidos
             </Button>
           </div>
@@ -40,21 +35,21 @@ export const ExchangeVerifyStatus = ({ verified, expired, exchange_id }: Props) 
           <div className="flex flex-col items-center gap-y-2">
             <p className="w-1/2 text-center">
               {expired
-                ? 'O token desta troca expirou, revalida a tua troca.'
-                : 'O token pode estar incorreto ou as trocas associadas a este pedido\
+                ? "O token desta troca expirou, revalida a tua troca."
+                : "O token pode estar incorreto ou as trocas associadas a este pedido\
                             foram invalidadas entretanto por outros pedidos feitos por ti ou pelas\
-                            outras pessoas envolvidas no pedido!'}
+                            outras pessoas envolvidas no pedido!"}
             </p>
             {expired && (
               <Button
                 size="md"
                 variant="primary"
-                className="bg-primary hover:bg-primary/90 text-white"
+                className="bg-primary"
                 onClick={() => {
                   exchangeRequestService.revalidateExchangeRequest(exchange_id)
                   toast({
-                    title: 'Troca revalidada',
-                    description: 'Verifica o teu email para verificares a troca.',
+                    title: "Troca revalidada",
+                    description: "Verifica o teu email para verificares a troca.",
                     duration: 2000,
                   })
                 }}
