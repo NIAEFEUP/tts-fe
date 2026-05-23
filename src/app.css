@@ -1,14 +1,24 @@
 @import 'tailwindcss';
 
+/* ============================================================================
+   TAILWIND PLUGINS & EXTENSIONS
+   ============================================================================ */
+
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/forms';
 
+/* Custom dark mode variant using data-theme attribute */
 @variant dark {
   &:where([data-theme='dark'], [data-theme='dark'] *) {
     @slot;
   }
 }
 
+/* ============================================================================
+   CUSTOM UTILITIES
+   ============================================================================ */
+
+/* Container utility with responsive max-width behavior */
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
@@ -20,6 +30,7 @@
   }
 }
 
+/* Color mixing utilities for dynamic color blending */
 /* prettier-ignore */
 @utility mix-with-* {
   --color-mix-with: --value(--color-*, [*]);
@@ -43,11 +54,16 @@
   );
 }
 
-@theme {
-  /* Typography */
-  --text-2xs: 0.625rem;
+/* ============================================================================
+   DESIGN TOKENS & THEME VARIABLES
+   ============================================================================ */
 
-  /* Colors */
+@theme {
+  /* --- Typography --- */
+  --text-2xs: 0.625rem;
+  --text-xxs: 0.6rem;
+
+  /* --- Core Colors (Light/Dark Mode Support) --- */
   --color-background: light-dark(oklch(100% 0 0), oklch(12% 0 0));
   --color-background-secondary: light-dark(oklch(96% 0 0), oklch(22% 0 0));
 
@@ -55,7 +71,6 @@
   --color-foreground-secondary: light-dark(oklch(65% 0 0), oklch(53% 0 0));
 
   --color-accent: var(--color-foreground);
-  /* Foreground at the end means it is used on top of the accent color */
   --color-accent-foreground: var(--color-background);
 
   --color-border: light-dark(oklch(94% 0 0), oklch(26% 0 0));
@@ -65,12 +80,14 @@
     color-mix(in oklab, var(--color-accent) 30%, transparent)
   );
 
+  /* --- Semantic Colors --- */
   --color-error: oklch(63.7% 0.237 25.331);
   --color-warning: oklch(79.5% 0.184 86.047);
   --color-success: oklch(69.6% 0.17 162.48);
   --color-info: oklch(62.3% 0.214 259.815);
 
-  /* Border radius — --radius is the dial; --radius-bump compensates squircles in supporting browsers (see @supports below) */
+  /* --- Border Radius System --- */
+  /* Base dial that scales all radius values; --radius-bump compensates for squircles */
   --radius: 0.125rem;
   --radius-bump: 1;
   --radius-xs: calc(var(--radius) * 1 * var(--radius-bump));
@@ -82,56 +99,43 @@
   --radius-3xl: calc(var(--radius) * 12 * var(--radius-bump));
   --radius-4xl: calc(var(--radius) * 16 * var(--radius-bump));
 
-  /* Panel-item inset, derived from radius (collapses to flush items at --radius: 0) */
+  /* Panel-item inset, scales with radius (flush at --radius: 0) */
   --inset: calc(var(--radius) * 1.5 * var(--radius-bump));
 
-  /* Focus ring */
+  /* --- Interactive States --- */
   --ring-width: 4px;
-
-  /* Corner shape (round | squircle) */
   --corner-shape: squircle;
 
-  /* Shadows */
+  /* --- Shadow System --- */
   --shadow-*: initial;
   --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.03);
   --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.02), 0 2px 4px oklch(0 0 0 / 0.02);
   --shadow-md: 0 2px 3px oklch(0 0 0 / 0.02), 0 3px 6px oklch(0 0 0 / 0.02);
   --shadow-lg: 0 2px 4px oklch(0 0 0 / 0.02), 0 4px 8px oklch(0 0 0 / 0.02), 0 8px 16px oklch(0 0 0 / 0.02);
+  --shadow-inner-xl: inset 0px 0px 4px 4px rgb(0 0 0 / 0.1);
 
-  /* easings */
+  /* --- Animation Easings --- */
   --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
   --ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
 
-  /* Spinner variants */
+  /* --- Loading Spinners --- */
   --animate-spinner-dot: spinner-dot 1.4s ease-in-out infinite both;
   --animate-spinner-bar: spinner-bar 1.2s ease-in-out infinite both;
 
   @keyframes spinner-dot {
-    0%,
-    80%,
-    100% {
-      opacity: 0.25;
-    }
-    40% {
-      opacity: 1;
-    }
+    0%, 80%, 100% { opacity: 0.25; }
+    40% { opacity: 1; }
   }
 
   @keyframes spinner-bar {
-    0%,
-    40%,
-    100% {
-      transform: scaleY(0.4);
-    }
-    20% {
-      transform: scaleY(1);
-    }
+    0%, 40%, 100% { transform: scaleY(0.4); }
+    20% { transform: scaleY(1); }
   }
 
-  /* --- Your Existing Theme Variables --- */
+  /* --- Legacy Color Palette --- */
+  /* Navigation & backgrounds */
   --color-inherit: inherit;
   --color-current: currentColor;
-
   --color-navy: #18222e;
   --color-lightNavy: #212a36;
   --color-darkish: #333640;
@@ -142,21 +146,25 @@
   --color-light: #f2f4f7;
   --color-lighter: #f7f7f7;
   --color-lightest: #fbfbfb;
+
+  /* Brand colors */
   --color-primary: #b33636;
   --color-secondary: #0c4a6e;
   --color-tertiary: #357672;
   --color-feup: #7d221e;
 
+  /* Class/Schedule type colors */
   --color-schedule-lunch: #be123c;
-  --color-schedule-t: #91897f;
-  --color-schedule-tp: #115e59;
-  --color-schedule-pl: #003d7a;
-  --color-schedule-ot: #5c8fc2;
-  --color-schedule-s: #7d3179;
-  --color-schedule-p: #b66046;
-  --color-schedule-tc: #733c3c;
-  --color-schedule-o: #69656a;
+  --color-schedule-t: #91897f;      /* Theoretical */
+  --color-schedule-tp: #115e59;     /* Theoretical-Practical */
+  --color-schedule-pl: #003d7a;     /* Practical-Lab */
+  --color-schedule-ot: #5c8fc2;     /* Tutorial */
+  --color-schedule-s: #7d3179;      /* Seminar */
+  --color-schedule-p: #b66046;      /* Practical */
+  --color-schedule-tc: #733c3c;     /* Theoretical-Clinical */
+  --color-schedule-o: #69656a;      /* Other */
 
+  /* Sidebar colors (mapped from HSL variables) */
   --color-sidebar: hsl(var(--sidebar-background));
   --color-sidebar-foreground: hsl(var(--sidebar-foreground));
   --color-sidebar-primary: hsl(var(--sidebar-primary));
@@ -166,33 +174,25 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  /* --- Spacing Utilities --- */
   --spacing-1\/6: 16.6666666667%;
   --spacing-5\/6: 83.3333333333%;
 
+  /* --- Layout & Sizing --- */
   --flex-end: 0 1 auto;
-
   --min-height-half-screen: 50vh;
-
   --container-8xl: 88rem;
   --container-9xl: 96rem;
-
   --grid-template-rows-7: repeat(7, minmax(0, 1fr));
   --grid-template-rows-8: repeat(8, minmax(0, 1fr));
 
-  --text-xxs: 0.6rem;
-
+  /* --- Typography Families --- */
   --font-flow: Flow;
-  --font-prose:
-    Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  --font-headings:
-    Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  --font-mono:
-    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-prose: Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-headings: Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-mono: Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
-  --shadow-inner-xl: inset 0px 0px 4px 4px rgb(0 0 0 / 0.1);
-
+  /* --- Custom Animations --- */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-fade: fade 1000ms ease-in-out infinite;
@@ -200,74 +200,54 @@
   --animate-shine: shine 1s;
   --animate-wiggle-infinity: wiggle 700ms infinite ease-in-out;
 
+  /* Background utilities for animations */
   --background-size-size-200: 200% 200%;
-
   --background-position-pos-0: 0% 0%;
   --background-position-pos-100: 100% 100%;
 
+  /* Keyframe animations */
   @keyframes wiggle {
-    0% {
-      transform: rotate(-0.5deg);
-    }
-    25% {
-      transform: rotate(0.5deg);
-    }
-    50% {
-      transform: rotate(-0.5deg);
-    }
-    75% {
-      transform: rotate(0.5deg);
-    }
-    100% {
-      transform: rotate(0);
-    }
+    0% { transform: rotate(-0.5deg); }
+    25% { transform: rotate(0.5deg); }
+    50% { transform: rotate(-0.5deg); }
+    75% { transform: rotate(0.5deg); }
+    100% { transform: rotate(0); }
   }
+
   @keyframes fade {
-    0% {
-      opacity: 100%;
-    }
-    25% {
-      opacity: 50%;
-    }
-    50% {
-      opacity: 10%;
-    }
-    75% {
-      opacity: 50%;
-    }
-    100% {
-      opacity: 100%;
-    }
+    0% { opacity: 100%; }
+    25% { opacity: 50%; }
+    50% { opacity: 10%; }
+    75% { opacity: 50%; }
+    100% { opacity: 100%; }
   }
+
   @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
   }
+
   @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
   }
+
   @keyframes shine {
-    100% {
-      left: 125%;
-    }
+    100% { left: 125%; }
   }
 }
 
+/* ============================================================================
+   BASE LAYER STYLES
+   ============================================================================ */
+
 @layer base {
-  /* Base Styles */
+  /* Dark theme styling */
   [data-theme='dark'] {
     color-scheme: dark;
   }
 
+  /* Global body styles */
   body {
     font-family: var(--font-prose);
     background-color: var(--color-background);
@@ -277,10 +257,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Prevent body scroll when dialog is open */
   body:has(dialog[open]) {
     overflow: hidden;
   }
 
+  /* Universal border color default */
   *,
   ::after,
   ::before,
@@ -289,6 +271,7 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 
+  /* Sidebar color scheme - light mode defaults */
   :root {
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -300,6 +283,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* Sidebar color scheme - dark mode overrides */
   .dark {
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -312,7 +296,12 @@
   }
 }
 
+/* ============================================================================
+   UTILITY LAYER - GLOBAL & COMPONENT STYLES
+   ============================================================================ */
+
 @layer utilities {
+  /* --- Global HTML/Body Utilities --- */
   html {
     @apply scroll-smooth overflow-y-scroll;
   }
@@ -321,6 +310,7 @@
     @apply text-gray-800 bg-light font-prose dark:bg-darkest dark:text-white;
   }
 
+  /* --- Scrollbar Styling (Webkit) --- */
   ::-webkit-scrollbar {
     @apply mx-2 w-3 rounded-full md:w-3.5;
   }
@@ -333,11 +323,13 @@
     @apply bg-inherit;
   }
 
+  /* --- Typography --- */
   h1,
   h2 {
     @apply font-headings;
   }
 
+  /* --- Form Elements --- */
   input:disabled + label {
     display: none;
   }
@@ -349,35 +341,58 @@
     -webkit-user-select: text;
   }
 
+  /* --- Checkbox Variants --- */
   .checkbox {
     @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-primary hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent;
   }
+
   .checkboxes {
     @apply flex flex-wrap items-center justify-center gap-y-2 gap-x-4 md:flex-row md:items-start lg:gap-y-6 lg:gap-x-14;
     margin-top: 1.5rem !important;
   }
+
   .checkbox-small {
     @apply h-3 w-3 cursor-pointer rounded-sm border-2 border-transparent bg-lightish p-0 text-primary transition 
-  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
-  dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
+    hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+    dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+    dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
   }
 
+  /* --- Layout Utilities --- */
   .min-h-adjusted {
-    min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
+    min-height: calc(100vh - 3.5rem - 2rem); /* pageHeight - headerHeight - footerHeight */
   }
 
   @media (min-width: 1024px) {
     .lg\:min-h-adjusted {
-      min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
+      min-height: calc(100vh - 3.5rem - 2rem);
     }
   }
 
+  /* --- Component-Specific Styles --- */
+  
+  /* Emoji Picker styling */
   #option-header .EmojiPickerReact {
     --epr-bg-color: rgb(242, 244, 247);
     --epr-category-label-bg-color: rgb(242, 244, 247);
   }
 
+  #option-header .EmojiPickerReact.epr-dark-theme {
+    --epr-bg-color: rgb(26, 28, 35);
+    --epr-category-label-bg-color: rgb(26, 28, 35);
+  }
+
+  /* Hide scrollbar in option name dropdown */
+  #option-name::-webkit-scrollbar {
+    display: none;
+  }
+
+  #option-name {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;    /* Firefox */
+  }
+
+  /* --- Stamp/Card Components --- */
   .stamp {
     @apply w-10 h-5 inline-block p-10 mt-5 bg-white relative text-center filter drop-shadow-md;
     background: radial-gradient(transparent 0px, transparent 4px, white 4px, white);
@@ -395,6 +410,7 @@
     content: 'CSS3';
   }
 
+  /* Flip card animation */
   .stamp-card-inner {
     transition: transform 0.5s;
     transform-style: preserve-3d;
@@ -413,46 +429,42 @@
     transform: rotateY(180deg);
   }
 
-  #option-header .EmojiPickerReact.epr-dark-theme {
-    --epr-bg-color: rgb(26, 28, 35);
-    --epr-category-label-bg-color: rgb(26, 28, 35);
-  }
-
-  /* For Webkit-based browsers (Chrome, Safari and Opera) */
-  #option-name::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* For IE, Edge and Firefox */
-  #option-name {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
+  /* --- Button Variants --- */
   .success-button {
     @apply bg-green-200 text-green-600 border border-green-600 hover:bg-white;
   }
 
+  /* --- Calendar/Date Picker --- */
   .rdp-caption {
     @apply flex flex-row gap-x-2;
   }
 
+  /* --- Scrollbar Utilities --- */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;    /* Firefox */
   }
 }
 
-/* Squircles where supported, with a carve-out for full circles and a radius bump to match perceived roundness */
+/* ============================================================================
+   GLOBAL STYLES - CORNER SHAPE & SQUIRCLES
+   ============================================================================ */
+
+/* Apply squircle corner shape globally for modern browsers */
 * {
   corner-shape: var(--corner-shape);
 }
+
+/* Preserve perfect circles for rounded-full utility */
 .rounded-full {
   corner-shape: round;
 }
+
+/* Increase radius bump in browsers that support squircles for better perceived roundness */
 @supports (corner-shape: squircle) {
   :root {
     --radius-bump: 1.6;
