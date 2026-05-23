@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/new/popover'
 import { Button } from '../../../ui/new/button'
 import { Command, CommandGroup, CommandItem } from '../../../ui/command'
-import { Check, ChevronDownIcon } from 'lucide-react'
+import { Check, ChevronDown } from 'lucide-react'
 
 interface PageSizeSelectorProps {
   value: number
@@ -15,14 +15,14 @@ export const PageSizeSelector = ({ value, onChange }: PageSizeSelectorProps) => 
   const [open, setOpen] = useState(false)
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} placement="bottom-start">
       <PopoverTrigger asChild>
-        <Button variant="outline" className="flex flex-row gap-x-2">
-          <p>{value}</p>
-          <ChevronDownIcon className="w-5 h-5" />
+        <Button variant="outline" className="justify-between w-32">
+          {value}
+          <ChevronDown size="18" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-36 p-0">
+      <PopoverContent className="w-32 p-0">
         <Command>
           <CommandGroup>
             {PAGE_SIZE_OPTIONS.map((size) => (
@@ -33,9 +33,9 @@ export const PageSizeSelector = ({ value, onChange }: PageSizeSelectorProps) => 
                   setOpen(false)
                 }}
               >
-                <div className="flex flex-row gap-x-2 items-center">
+                <div className="flex flex-row items-center gap-x-2">
+                  <div className="w-4 h-4">{value === size && <Check className="w-4 h-4" />}</div>
                   <p>{size}</p>
-                  {value === size && <Check className="w-4 h-4" />}
                 </div>
               </CommandItem>
             ))}
