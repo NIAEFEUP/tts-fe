@@ -263,15 +263,16 @@
 }
 
 @layer base {
-  /* Significa Base Styles */
+  /* Base Styles */
   [data-theme='dark'] {
     color-scheme: dark;
   }
 
   body {
-    font-family: var(--font-sans);
+    font-family: var(--font-prose);
     background-color: var(--color-background);
     color: var(--color-foreground);
+    scrollbar-gutter: stable;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -280,7 +281,6 @@
     overflow: hidden;
   }
 
-  /* Your Existing Base Styles */
   *,
   ::after,
   ::before,
@@ -446,10 +446,6 @@
   }
 }
 
-[data-theme='dark'] {
-  color-scheme: dark;
-}
-
 /* Squircles where supported, with a carve-out for full circles and a radius bump to match perceived roundness */
 * {
   corner-shape: var(--corner-shape);
@@ -461,20 +457,4 @@
   :root {
     --radius-bump: 1.6;
   }
-}
-
-body {
-  scrollbar-gutter: stable;
-
-  font-family: var(--font-ui);
-
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body:has(dialog[open]) {
-  overflow: hidden;
 }
