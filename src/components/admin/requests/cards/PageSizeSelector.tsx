@@ -1,21 +1,18 @@
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover";
-import { Button } from "../../../ui/button";
-import { Command, CommandGroup, CommandItem } from "../../../ui/command";
-import { Check, ChevronDownIcon } from "lucide-react";
+import { useState } from 'react'
+import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/popover'
+import { Button } from '../../../ui/new/button'
+import { Command, CommandGroup, CommandItem } from '../../../ui/command'
+import { Check, ChevronDownIcon } from 'lucide-react'
 
 interface PageSizeSelectorProps {
-  value: number;
-  onChange: (value: number) => void;
+  value: number
+  onChange: (value: number) => void
 }
 
-const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100]
 
-export const PageSizeSelector = ({
-  value,
-  onChange,
-}: PageSizeSelectorProps) => {
-  const [open, setOpen] = useState(false);
+export const PageSizeSelector = ({ value, onChange }: PageSizeSelectorProps) => {
+  const [open, setOpen] = useState(false)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -32,8 +29,8 @@ export const PageSizeSelector = ({
               <CommandItem
                 key={size}
                 onSelect={() => {
-                  onChange(size);
-                  setOpen(false);
+                  onChange(size)
+                  setOpen(false)
                 }}
               >
                 <div className="flex flex-row gap-x-2 items-center">
@@ -46,5 +43,5 @@ export const PageSizeSelector = ({
         </Command>
       </PopoverContent>
     </Popover>
-  );
-};
+  )
+}
