@@ -2,7 +2,7 @@ import { Button } from '../../ui/new/button'
 import { Columns3 } from 'lucide-react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
-import React from 'react'
+import * as React from 'react';
 
 type Props = {
   showGridHook: [boolean, React.Dispatch<React.SetStateAction<boolean>>]

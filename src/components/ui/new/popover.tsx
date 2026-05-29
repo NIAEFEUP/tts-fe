@@ -1,5 +1,4 @@
-'use client'
-
+'use client';
 import {
   autoUpdate,
   flip,
@@ -21,7 +20,8 @@ import {
   useTransitionStatus,
 } from '@floating-ui/react'
 import { Search } from 'lucide-react'
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import * as React from 'react';
 
 import { Slot } from './slot'
 import { useTopLayer } from '../../../hooks/useTopLayer'
