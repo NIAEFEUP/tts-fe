@@ -1,5 +1,5 @@
-import { ExchangeOption } from '../../../../../@types'
-import { Badge } from '../../../../ui/new/badge'
+import { ExchangeOption } from "../../../../../@types"
+import { Badge } from "../../../../ui/new/badge"
 
 type Props = {
   option: ExchangeOption
@@ -7,7 +7,7 @@ type Props = {
   classUserGoesToName: string
 }
 
-const RequestCardClassBadge = ({ option, requestCardHovered, classUserGoesToName }: Props) => {
+const RequestCardClassBadge = ({ option, classUserGoesToName }: Props) => {
   return (
     <div className="flex flex-row">
       <Badge className="ml-2">{option.course_info?.acronym}</Badge>
