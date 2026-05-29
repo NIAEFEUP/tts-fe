@@ -4,6 +4,7 @@ import Footer from "./Footer"
 import classNames from "classnames"
 import { FeedbackReport } from "../FeedbackReport"
 import SEO, { BreadcrumbItem } from "../SEO"
+import { JSX } from "react"
 
 type Props = {
   children: JSX.Element

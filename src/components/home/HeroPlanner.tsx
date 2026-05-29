@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, JSX } from 'react'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import FeatureCards from './FeatureCards'
 import { ThemeContext } from '../../contexts/ThemeContext'
