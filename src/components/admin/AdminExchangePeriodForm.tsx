@@ -3,7 +3,7 @@
 import { DateTimePicker } from '../ui/datetime-picker'
 import { Button } from '../ui/new/button'
 import { CheckIcon } from 'lucide-react'
-import React from 'react'
+import * as React from 'react';
 
 interface ExchangePeriodFormProps {
   startDate: Date | undefined

@@ -1,7 +1,17 @@
-'use client'
-
+'use client';
 import { VariantProps } from 'cva'
-import React, { Children, createContext, isValidElement, useContext, useLayoutEffect, useRef, useState } from 'react'
+
+import {
+  Children,
+  createContext,
+  isValidElement,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+
+import * as React from 'react';
 
 import { Slot } from './slot'
 import { composeRefs } from '../../../lib/compose-refs'

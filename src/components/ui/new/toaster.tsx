@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom'
 import { AnimatePresence } from 'motion/react'
 import { useToast } from '../use-toast'

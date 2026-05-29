@@ -5,7 +5,7 @@ import { DateTimePicker } from "../ui/datetime-picker"
 import { Button } from "../ui/new/button"
 import { Edit2Icon, Trash2Icon, CheckIcon, XIcon } from "lucide-react"
 import { format } from "date-fns"
-import React from "react"
+import * as React from "react";
 
 export interface ExchangePeriod {
   id: number

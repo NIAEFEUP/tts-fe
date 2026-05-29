@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import PropTypes from "prop-types";
 
 type SidebarContextType = {
     sidebarPosition: 'left' | 'right';
@@ -8,7 +7,13 @@ type SidebarContextType = {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export const SidebarProvider = ({ children }: { children: JSX.Element }) => {
+interface SidebarProviderProps {
+    children: React.ReactNode;
+}
+
+export const SidebarProvider = ({
+    children
+}: SidebarProviderProps) => {
     const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>(() => {
     const storedPosition = window.localStorage.getItem("sidebar-position");
     return storedPosition === "left" || storedPosition === "right" ? storedPosition : "right";
@@ -28,10 +33,6 @@ export const SidebarProvider = ({ children }: { children: JSX.Element }) => {
         </SidebarContext.Provider>
     );
 };
-
-SidebarProvider.propTypes = {
-    children: PropTypes.node.isRequired,
-}
 
 export const useSidebarContext = () => {
     const context = useContext(SidebarContext);

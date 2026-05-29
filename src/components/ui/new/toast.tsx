@@ -1,6 +1,6 @@
-'use client'
-
-import React, { useEffect } from 'react'
+'use client';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { VariantProps } from 'cva'
 import { X } from 'lucide-react'
 import { motion, HTMLMotionProps } from 'motion/react'

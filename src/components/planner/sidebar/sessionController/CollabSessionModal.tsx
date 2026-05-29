@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { StopIcon } from '@heroicons/react/24/solid'
 import { Button } from '../../../ui/new/button'

@@ -1,5 +1,4 @@
-'use client'
-
+'use client';
 import {
   FloatingList,
   useClick,
@@ -12,7 +11,8 @@ import {
   useRole,
   useTypeahead,
 } from '@floating-ui/react'
-import React, {
+
+import {
   createContext,
   useContext,
   useCallback,
@@ -22,7 +22,9 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react'
+} from 'react';
+
+import * as React from 'react';
 
 import { Slot } from './slot'
 import { useStableCallback } from '../../../hooks/useStableCallback'
