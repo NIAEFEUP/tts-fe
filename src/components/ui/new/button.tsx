@@ -1,20 +1,41 @@
-"use client"
-
-import * as React from "react";
-import { VariantProps } from "cva"
-
+import type { VariantProps } from "cva"
+import { Children, Fragment, isValidElement, useEffect } from "react"
 import { Slot, Slottable } from "./slot"
 import { Spinner } from "./spinner"
 import { cn, cva } from "../../../lib/utils"
+import { Divider } from "./divider"
 
 const buttonStyle = cva({
-  base: "shrink-0 relative whitespace-nowrap inline-flex items-center justify-center gap-1.5 font-medium shadow-xs transition focus-visible:outline-none focus-visible:ring-4 disabled:opacity-40 enabled:cursor-pointer h-(--button-height) ring-ring active:scale-98 text-(--button-text-color) [--button-text-color:var(--color-foreground)]",
+  base: [
+    "relative inline-flex h-(--button-height) shrink-0 items-center justify-center gap-1.5 whitespace-nowrap font-medium text-(--button-text-color) shadow-xs [--button-text-color:var(--color-foreground)]",
+    "transition enabled:cursor-pointer disabled:opacity-40",
+    "active:not-in-data-ui-button-group:scale-98",
+    "focus-visible:ring-(length:--ring-width) ring-ring focus-visible:outline-none",
+    // inside button group — horizontal merge (default; ToggleGroup may set
+    // data-orientation="vertical" on its container to flip the axis)
+    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-last:rounded-r-none",
+    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-last:border-r-0",
+    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-first:rounded-l-none",
+    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-first:border-l-0",
+    // inside button group — vertical merge
+    "in-data-ui-button-group:in-data-[orientation=vertical]:not-last:rounded-b-none",
+    "in-data-ui-button-group:in-data-[orientation=vertical]:not-last:border-b-0",
+    "in-data-ui-button-group:in-data-[orientation=vertical]:not-first:rounded-t-none",
+    "in-data-ui-button-group:in-data-[orientation=vertical]:not-first:border-t-0",
+    // pressed state — set via data-pressed by Toggle / ToggleGroup.Item.
+    // Subtle filled tint that layers over `ghost` and `outline` without flipping
+    // the text color; the higher selector specificity beats the variant background.
+    "data-pressed:bg-foreground/10 data-pressed:hover:bg-foreground/15",
+  ],
   variants: {
     variant: {
-      primary: "bg-accent [--button-text-color:var(--color-accent-foreground)] hover:bg-accent/90 active:bg-accent/80",
-      outline: "border border-border bg-background hover:bg-foreground/2 focus-visible:border-accent active:bg-foreground/4",
-      ghost: "border-none bg-transparent ring-0 shadow-none hover:bg-foreground/5 active:bg-foreground/10",
-      destructive: "bg-red-600 [--button-text-color:var(--color-white)] ring-red-600/50 hover:bg-red-700",
+      primary:
+        "bg-accent [--button-text-color:var(--color-accent-foreground)] hover:bg-accent/90 in-data-ui-button-group:active:bg-accent/80",
+      outline:
+        "border border-border bg-background hover:bg-foreground/2 not-in-data-ui-button-group:focus-visible:border-accent in-data-ui-button-group:active:bg-foreground/4",
+      ghost:
+        "border-none bg-transparent shadow-none ring-0 hover:bg-foreground/5 in-data-ui-button-group:active:bg-foreground/10",
+      destructive: "bg-error ring-error/50 [--button-text-color:var(--color-white)] hover:bg-error/90",
     },
     size: {
       xs: "rounded-lg px-2 text-sm [--button-height:--spacing(6)]",
@@ -33,56 +54,99 @@ const buttonStyle = cva({
   },
 })
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonStyle> {
+export interface ButtonProps extends React.ComponentPropsWithRef<"button">, VariantProps<typeof buttonStyle> {
   asChild?: boolean
   isLoading?: boolean
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { children, className, variant, asChild = false, isLoading, size = "md", square, type = "button", ...props },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : "button"
+const Button = ({
+  children,
+  className,
+  variant,
+  asChild = false,
+  isLoading,
+  size = "md",
+  square,
+  type = "button",
+  ref,
+  ...props
+}: ButtonProps) => {
+  const Comp = asChild ? Slot : "button"
 
-    return (
-      <Comp
-        className={cn(
-          buttonStyle({
-            className,
-            variant,
-            size,
-            square,
-          }),
-          isLoading && "text-transparent transition-none",
+  return (
+    <Comp
+      className={cn(
+        buttonStyle({
+          className,
+          variant,
+          size,
+          square,
+        }),
+        isLoading && "text-transparent transition-none",
+      )}
+      ref={ref}
+      type={type}
+      {...props}
+    >
+      <Slottable asChild={asChild} child={children}>
+        {(child) => (
+          <>
+            {child}
+            {isLoading && (
+              <span
+                data-button-spinner
+                className={cn(
+                  "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+                  "text-(--button-text-color)",
+                )}
+              >
+                <Spinner size={size} />
+              </span>
+            )}
+          </>
         )}
-        ref={ref}
-        type={type}
-        {...props}
-      >
-        <Slottable asChild={asChild} child={children}>
-          {(child) => (
-            <>
-              {child}
-              {isLoading && (
-                <span
-                  data-button-spinner
-                  className={cn(
-                    "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-                    "text-(--button-text-color)",
-                  )}
-                >
-                  <Spinner size={size} />
-                </span>
-              )}
-            </>
-          )}
-        </Slottable>
-      </Comp>
-    )
-  },
-)
+      </Slottable>
+    </Comp>
+  )
+}
 
-Button.displayName = "Button"
+export interface IconButtonProps extends Omit<ButtonProps, "square"> {
+  "aria-label": string
+}
 
-export { Button, buttonStyle }
+const IconButton = ({ ref, ...props }: IconButtonProps) => {
+  return <Button square {...props} ref={ref} />
+}
+
+type ButtonGroupProps = React.ComponentPropsWithRef<"div">
+
+const ButtonGroup = ({ className, children, ...props }: ButtonGroupProps) => {
+  // Validate children to ensure they are Button or IconButton components
+  useEffect(() => {
+    const childArray = Children.toArray(children)
+    childArray.forEach((child, index) => {
+      if (!isValidElement(child) || (child.type !== Button && child.type !== IconButton)) {
+        console.warn(`Warning: ButtonGroup child at index ${index} is not a Button or IconButton component.`)
+      }
+    })
+  }, [children])
+
+  return (
+    <div className={cn("flex items-center *:focus-visible:z-2", className)} data-ui-button-group {...props}>
+      {Children.toArray(children).map((child, index) => {
+        return (
+          <Fragment key={index}>
+            {index !== 0 && <Divider orientation="vertical" className="z-1 -mr-px h-[1em] w-px" />}
+            {child}
+          </Fragment>
+        )
+      })}
+    </div>
+  )
+}
+
+const CompoundButton = Object.assign(Button, {
+  Group: ButtonGroup,
+})
+
+export { buttonStyle, CompoundButton as Button, IconButton }
