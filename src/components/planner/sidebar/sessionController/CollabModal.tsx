@@ -8,7 +8,7 @@ import { toast } from '../../../ui/use-toast'
 import { useSearchParams } from 'react-router-dom'
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator'
 import useSession from '../../../../hooks/useSession'
-import { Dialog, DialogClose, DialogContent } from '../../../ui/new/dialog'
+import { Dialog } from '../../../ui/new/dialog'
 import { Button } from '../../../ui/new/button'
 
 const generateUniqueId = () => Date.now()
@@ -174,13 +174,13 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
         if (!open) closeModal()
       }}
     >
-      <DialogContent className="max-w-2xl p-6">
+      <Dialog.Content className="max-w-2xl p-6">
         <div className="flex justify-end">
-          <DialogClose asChild>
+          <Dialog.Close asChild>
             <Button variant="ghost" size="md" square>
               <X size="18" />
             </Button>
-          </DialogClose>
+          </Dialog.Close>
         </div>
 
         {currentSessionId === null && (
@@ -199,7 +199,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
             onUpdateUser={handleUpdateUser}
           />
         )}
-      </DialogContent>
+      </Dialog.Content>
     </Dialog>
   )
 }

@@ -1,23 +1,15 @@
-import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
-import { PenSquare } from 'lucide-react'
-import { useContext, useEffect } from 'react'
-import { X } from 'lucide-react'
-import { Desert } from '../../../svgs'
-import { Button } from '../../../ui/new/button'
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from '../../../ui/new/dialog'
-import useCourseUnits from '../../../../hooks/useCourseUnits'
-import { Skeleton } from '../../../ui/skeleton'
-import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
-import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
-import { Divider } from '../../../ui/new/divider'
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from "./course-picker"
+import { PenSquare } from "lucide-react"
+import { useContext, useEffect } from "react"
+import { X } from "lucide-react"
+import { Desert } from "../../../svgs"
+import { Button } from "../../../ui/new/button"
+import { Dialog } from "../../../ui/new/dialog"
+import useCourseUnits from "../../../../hooks/useCourseUnits"
+import { Skeleton } from "../../../ui/skeleton"
+import { ClearAllCoursesButton } from "./course-picker/ClearAllCoursesButton"
+import CoursePickerContext from "../../../../contexts/coursePicker/CoursePickerContext"
+import { Divider } from "../../../ui/new/divider"
 
 //TODO: absolute imports with @
 
@@ -47,7 +39,7 @@ const CoursePicker = () => {
 
   return (
     <Dialog open={ucsModalOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+      <Dialog.Trigger asChild>
         <Button
           variant="primary"
           className="grow gap-2 bg-primary hover:bg-primary/90 transition-all"
@@ -56,19 +48,19 @@ const CoursePicker = () => {
           <span className="hidden md:block lg:hidden xl:block">Unidades Curriculares</span>
           <PenSquare size="16" />
         </Button>
-      </DialogTrigger>
+      </Dialog.Trigger>
 
-      <DialogContent className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-auto py-6">
-        <DialogTitle className="mx-4">Seleciona as tuas unidades curriculares</DialogTitle>
-        <DialogClose asChild>
+      <Dialog.Content className="flex flex-col h-fit w-screen max-h-screen lg:min-w-fit overflow-auto py-6">
+        <Dialog.Title className="mx-4">Seleciona as tuas unidades curriculares</Dialog.Title>
+        <Dialog.Close asChild>
           <Button variant="ghost" className="absolute top-3 right-3 ">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </Button>
-        </DialogClose>
-        <DialogDescription className="mx-4 mt-2">
+        </Dialog.Close>
+        <Dialog.Description className="mx-4 mt-2">
           Pesquisa pelas tuas unidades curriculares. As disciplinas selecionadas aparecem no lado direito.
-        </DialogDescription>
+        </Dialog.Description>
 
         <div className="mx-4 mt-6 mb-2">
           <MajorSearchCombobox selectedMajor={selectedMajor} setSelectedMajor={setSelectedMajor} />
@@ -106,14 +98,14 @@ const CoursePicker = () => {
               </div>
             </div>
 
-            <DialogActions className="flex flex-row justify-center mt-auto px-4">
+            <Dialog.Actions className="flex flex-row justify-center mt-auto px-4">
               <div className="flex flex-row items-center justify-between w-full dark:text-white pb-4">
                 <Ects />
                 <div className="flex gap-2 mt-4">
                   <ClearAllCoursesButton />
                 </div>
               </div>
-            </DialogActions>
+            </Dialog.Actions>
           </>
         ) : (
           <div className="flex flex-col items-center grow w-full lg:w-240 py-10">
@@ -121,7 +113,7 @@ const CoursePicker = () => {
             <p className="mt-4 text-muted-foreground">Seleciona um curso primeiro.</p>
           </div>
         )}
-      </DialogContent>
+      </Dialog.Content>
     </Dialog>
   )
 }

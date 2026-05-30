@@ -8,7 +8,7 @@ import authService from "../../api/services/authService"
 import studentInfoService from "../../api/services/studentInfo"
 import { Popover } from "../ui/new/popover"
 import ScheduleContext from "../../contexts/ScheduleContext"
-import { Dialog, DialogActions, DialogClose, DialogContent, DialogDescription, DialogTitle } from "../ui/new/dialog"
+import { Dialog } from "../ui/new/dialog"
 import { Divider } from "../ui/new/divider"
 
 export const HeaderProfileDropdown = () => {
@@ -52,13 +52,13 @@ export const HeaderProfileDropdown = () => {
         </div>
       </Popover.Content>
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <DialogContent className="max-w-88 p-5">
-          <DialogTitle>Sair</DialogTitle>
-          <DialogDescription>Tem a certeza que deseja sair?</DialogDescription>
-          <DialogActions className="justify-center">
-            <DialogClose asChild>
+        <Dialog.Content className="max-w-88 p-5">
+          <Dialog.Title>Sair</Dialog.Title>
+          <Dialog.Description>Tem a certeza que deseja sair?</Dialog.Description>
+          <Dialog.Actions className="justify-center">
+            <Dialog.Close asChild>
               <Button variant="outline">Cancelar</Button>
-            </DialogClose>
+            </Dialog.Close>
             <Button
               variant="destructive"
               onClick={() => {
@@ -68,8 +68,8 @@ export const HeaderProfileDropdown = () => {
             >
               Confirmar
             </Button>
-          </DialogActions>
-        </DialogContent>
+          </Dialog.Actions>
+        </Dialog.Content>
       </Dialog>
     </Popover>
   )

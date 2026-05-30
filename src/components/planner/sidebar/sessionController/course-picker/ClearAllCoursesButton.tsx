@@ -1,10 +1,10 @@
-import { CheckCircleIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { useContext } from 'react'
-import CourseContext from '../../../../../contexts/CourseContext'
-import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
-import { removeAllCourseOptions } from '../../../../../utils'
-import { Button } from '../../../../ui/new/button'
-import { DialogClose } from '../../../../ui/new/dialog'
+import { CheckCircleIcon, TrashIcon } from "@heroicons/react/24/outline"
+import { useContext } from "react"
+import CourseContext from "../../../../../contexts/CourseContext"
+import MultipleOptionsContext from "../../../../../contexts/MultipleOptionsContext"
+import { removeAllCourseOptions } from "../../../../../utils"
+import { Button } from "../../../../ui/new/button"
+import { Dialog } from "../../../../ui/new/dialog"
 
 export const ClearAllCoursesButton = () => {
   const { setCheckboxedCourses } = useContext(CourseContext)
@@ -26,12 +26,12 @@ export const ClearAllCoursesButton = () => {
         <TrashIcon className="h-5 w-5" />
         <span>Limpar</span>
       </Button>
-      <DialogClose asChild>
+      <Dialog.Close asChild>
         <Button variant="primary" className="bg-primary hover:bg-primary/90 text-white gap-1.5">
           <CheckCircleIcon className="h-5 w-5" />
           <p>Está feito</p>
         </Button>
-      </DialogClose>
+      </Dialog.Close>
     </>
   )
 }
