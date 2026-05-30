@@ -49,7 +49,6 @@ export const ListRequestChanges = ({
             <Checkbox
               id={option.course_info.acronym}
               className="mt-1"
-              variant="primary"
               checked={selectedOptions.get(option.course_info.acronym) || false}
               onChange={() => handleOptionChange(option.course_info.acronym)}
             />

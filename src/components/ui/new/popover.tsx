@@ -373,14 +373,16 @@ const PopoverPanel = ({
           ],
           className,
         )}
-        style={{
-          position: context.strategy,
-          top: context.y ?? 0,
-          left: context.x ?? 0,
-          "--transform-origin": placementToTransformOrigin(context.placement),
-          visibility: hidden ? "hidden" : "visible",
-          ...style,
-        }}
+        style={
+          {
+            position: context.strategy,
+            top: context.y ?? 0,
+            left: context.x ?? 0,
+            "--transform-origin": placementToTransformOrigin(context.placement),
+            visibility: hidden ? "hidden" : "visible",
+            ...style,
+          } as React.CSSProperties
+        }
         {...props}
       />
     </FloatingFocusManager>

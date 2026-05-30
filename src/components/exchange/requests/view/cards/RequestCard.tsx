@@ -128,7 +128,6 @@ export const RequestCard = () => {
               <div className="flex flex-row items-center justify-center gap-x-2">
                 <Checkbox
                   id={`select-all-${request.id}`}
-                  variant="primary"
                   checked={selectAll}
                   onChange={handleSelectAll}
                 />
