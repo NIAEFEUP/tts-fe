@@ -1,11 +1,11 @@
-import { ChevronDownIcon } from "@heroicons/react/24/outline"
-import { Dispatch, SetStateAction } from "react"
-import { ClassInfo, CourseInfo } from "../../../../@types"
-import useCourseUnitClasses from "../../../../hooks/useCourseUnitClasses"
-import { Badge } from "../../../ui/new/badge"
-import { Button } from "../../../ui/new/button"
-import { Checkbox } from "../../../ui/new/checkbox"
-import { Menu } from "../../../ui/new/menu"
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { Dispatch, SetStateAction } from 'react'
+import { ClassInfo, CourseInfo } from '../../../../@types'
+import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
+import { Badge } from '../../../ui/new/badge'
+import { Button } from '../../../ui/new/button'
+import { Checkbox } from '../../../ui/new/checkbox'
+import { Menu } from '../../../ui/new/menu'
 
 type Props = {
   courseUnit: CourseInfo

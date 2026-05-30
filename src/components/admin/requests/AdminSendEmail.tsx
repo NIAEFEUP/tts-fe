@@ -1,8 +1,8 @@
-import { useContext } from "react"
-import SessionContext from "../../../contexts/SessionContext"
-import { mailtoStringBuilder } from "../../../utils/mail"
-import { AdminRequestType } from "../../../utils/exchange"
-import { Button } from "../../ui/new/button"
+import { useContext } from 'react'
+import SessionContext from '../../../contexts/SessionContext'
+import { mailtoStringBuilder } from '../../../utils/mail'
+import { AdminRequestType } from '../../../utils/exchange'
+import { Button } from '../../ui/new/button'
 
 type Props = {
   nmec: string | Array<string>
@@ -15,24 +15,24 @@ type Props = {
 /**
  * This component is so that the admin can send an email to the users without a pre defined subject and body.
  */
-export const AdminSendEmail = ({ nmec, subject = "", message = "", requestType, onClick: awaitInfo }: Props) => {
+export const AdminSendEmail = ({ nmec, subject = '', message = '', requestType, onClick: awaitInfo }: Props) => {
   const { user } = useContext(SessionContext)
 
-  const [greeting, ...rest] = message.split("%0D%0A%0D%0A")
-  const bodyRest = rest.join("%0D%0A%0D%0A")
+  const [greeting, ...rest] = message.split('%0D%0A%0D%0A')
+  const bodyRest = rest.join('%0D%0A%0D%0A')
 
   const infoPhrases: Partial<Record<AdminRequestType, string>> = {
     [AdminRequestType.DIRECT_EXCHANGE]:
-      "Relativamente ao pedido de troca de turmas realizado, será que nos podias enviar mais informação sobre ",
+      'Relativamente ao pedido de troca de turmas realizado, será que nos podias enviar mais informação sobre ',
     [AdminRequestType.ENROLLMENT]:
-      "Relativamente ao pedido de alocação de turmas realizado, será que nos podias enviar mais informação sobre ",
+      'Relativamente ao pedido de alocação de turmas realizado, será que nos podias enviar mais informação sobre ',
     [AdminRequestType.URGENT_EXCHANGE]:
-      "Relativamente ao pedido de alteração de turmas realizado, será que nos podias enviar mais informação sobre ",
+      'Relativamente ao pedido de alteração de turmas realizado, será que nos podias enviar mais informação sobre ',
   }
 
   const infoPhrase =
     (requestType && infoPhrases[requestType]) ??
-    "Relativamente ao pedido realizado, será que nos podias enviar mais informação sobre "
+    'Relativamente ao pedido realizado, será que nos podias enviar mais informação sobre '
 
   const mailHref = `${mailtoStringBuilder(
     nmec,

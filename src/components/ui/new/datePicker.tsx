@@ -1,10 +1,10 @@
-import { Calendar as CalendarIcon, ChevronsUpDown } from "lucide-react"
-import type { VariantProps } from "cva"
+import { Calendar as CalendarIcon, ChevronsUpDown } from 'lucide-react'
+import type { VariantProps } from 'cva'
 
-import { Calendar } from "@/components/ui/new/calendar"
-import { inputStyle } from "@/components/ui/new/input"
-import { Menu, useMenuPopoverContext } from "@/components/ui/new/menu"
-import { cn } from "@/lib/utils"
+import { Calendar } from '@/components/ui/new/calendar'
+import { inputStyle } from '@/components/ui/new/input'
+import { Menu, useMenuPopoverContext } from '@/components/ui/new/menu'
+import { cn } from '@/lib/utils'
 
 const DatePicker = ({ children, ...props }: React.ComponentProps<typeof Menu>) => {
   return <Menu {...props}>{children}</Menu>
@@ -13,7 +13,7 @@ const DatePicker = ({ children, ...props }: React.ComponentProps<typeof Menu>) =
 interface DatePickerTriggerProps extends React.ComponentProps<typeof Menu.Trigger> {
   className?: string
   children: React.ReactNode
-  variant?: VariantProps<typeof inputStyle>["variant"]
+  variant?: VariantProps<typeof inputStyle>['variant']
   placeholder?: string
 }
 
@@ -24,8 +24,8 @@ const DatePickerTrigger = ({ children, className, variant, placeholder, ...props
         type="button"
         className={cn(
           inputStyle({ variant }),
-          "flex items-center gap-1.5 enabled:cursor-pointer",
-          "relative w-full pr-10 pl-4",
+          'flex items-center gap-1.5 enabled:cursor-pointer',
+          'relative w-full pr-10 pl-4',
           className,
         )}
       >
@@ -39,20 +39,20 @@ const DatePickerTrigger = ({ children, className, variant, placeholder, ...props
 
 interface DatePickerContentCommonProps extends Omit<
   React.ComponentPropsWithRef<typeof Calendar>,
-  "mode" | "value" | "onDateChange"
+  'mode' | 'value' | 'onDateChange'
 > {
   className?: string
   children?: React.ReactNode
 }
 
 interface DatePickerContentSingleProps extends DatePickerContentCommonProps {
-  mode?: "single"
+  mode?: 'single'
   value: Date | null
   onDateChange: (date: Date) => void
 }
 
 interface DatePickerContentRangeProps extends DatePickerContentCommonProps {
-  mode: "range"
+  mode: 'range'
   value: [Date, Date] | null
   onDateChange: (dates: [Date, Date]) => void
 }

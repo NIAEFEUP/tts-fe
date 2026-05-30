@@ -1,15 +1,15 @@
-import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from "./course-picker"
-import { PenSquare } from "lucide-react"
-import { useContext, useEffect } from "react"
-import { X } from "lucide-react"
-import { Desert } from "../../../svgs"
-import { Button } from "../../../ui/new/button"
-import { Dialog } from "../../../ui/new/dialog"
-import useCourseUnits from "../../../../hooks/useCourseUnits"
-import { Skeleton } from "../../../ui/skeleton"
-import { ClearAllCoursesButton } from "./course-picker/ClearAllCoursesButton"
-import CoursePickerContext from "../../../../contexts/coursePicker/CoursePickerContext"
-import { Divider } from "../../../ui/new/divider"
+import { MajorSearchCombobox, CourseYearTabs, PickedCoursesList, Ects } from './course-picker'
+import { PenSquare } from 'lucide-react'
+import { useContext, useEffect } from 'react'
+import { X } from 'lucide-react'
+import { Desert } from '../../../svgs'
+import { Button } from '../../../ui/new/button'
+import { Dialog } from '../../../ui/new/dialog'
+import useCourseUnits from '../../../../hooks/useCourseUnits'
+import { Skeleton } from '../../../ui/skeleton'
+import { ClearAllCoursesButton } from './course-picker/ClearAllCoursesButton'
+import CoursePickerContext from '../../../../contexts/coursePicker/CoursePickerContext'
+import { Divider } from '../../../ui/new/divider'
 
 //TODO: absolute imports with @
 

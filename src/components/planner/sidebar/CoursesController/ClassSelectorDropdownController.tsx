@@ -1,14 +1,14 @@
-import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react"
-import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from "../../../../@types"
-import StorageAPI from "../../../../api/storage"
-import CourseContext from "../../../../contexts/CourseContext"
-import MultipleOptionsContext from "../../../../contexts/MultipleOptionsContext"
-import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from "../../../../utils"
-import { Desert } from "../../../svgs"
-import { Menu } from "../../../ui/new/menu"
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from "../../../ui/new/tabs"
-import ClassItem from "./ClassItem"
-import ProfessorItem from "./ProfessorItem"
+import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
+import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from '../../../../@types'
+import StorageAPI from '../../../../api/storage'
+import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils'
+import { Desert } from '../../../svgs'
+import { Menu } from '../../../ui/new/menu'
+import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../../../ui/new/tabs'
+import ClassItem from './ClassItem'
+import ProfessorItem from './ProfessorItem'
 
 type Props = {
   course: CourseInfo
@@ -230,7 +230,7 @@ const ClassSelectorDropdownController = ({
                         }}
                       >
                         <span className="block truncate text-left w-full dark:text-white">
-                          {filteredTeachers?.length > 0 ? "Apagar todos" : "Selecionar Todos"}
+                          {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
                         </span>
                       </Menu.Item>
                       {teacherFilters.map((option) => {

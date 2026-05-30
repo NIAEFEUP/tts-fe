@@ -1,14 +1,14 @@
-import { ArrowRight, Trash, ChevronDown } from "lucide-react"
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from "../../../../../@types"
-import { ScrollArea } from "../../../../ui/scroll-area"
-import ScheduleContext from "../../../../../contexts/ScheduleContext"
-import useRequestCardCourseMetadata from "../../../../../hooks/useRequestCardCourseMetadata"
-import { Button } from "../../../../ui/new/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../ui/card"
-import { Menu } from "../../../../ui/new/menu"
-import { Popover } from "../../../../ui/new/popover"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../../../../ui/command"
+import { ArrowRight, Trash, ChevronDown } from 'lucide-react'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
+import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from '../../../../../@types'
+import { ScrollArea } from '../../../../ui/scroll-area'
+import ScheduleContext from '../../../../../contexts/ScheduleContext'
+import useRequestCardCourseMetadata from '../../../../../hooks/useRequestCardCourseMetadata'
+import { Button } from '../../../../ui/new/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../../../../ui/card'
+import { Menu } from '../../../../ui/new/menu'
+import { Popover } from '../../../../ui/new/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../../../../ui/command'
 
 type Props = {
   courseInfo: CourseInfo
@@ -70,7 +70,7 @@ export const CreateRequestCard = ({
 
   const findIssuerOriginClassName = (): string | null => {
     const scheduleItem = originalExchangeSchedule
-      .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== "T")
+      .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== 'T')
       .find((item: ClassDescriptor) => item.courseInfo.id === courseInfo.id)
 
     return scheduleItem?.classInfo.name || null
@@ -150,7 +150,7 @@ export const CreateRequestCard = ({
                 <Menu>
                   <Menu.Trigger asChild className="w-full">
                     <Button variant="outline" size="md" className="w-full justify-between">
-                      {selectedDestinationClass?.name ?? "Escolher turma..."}
+                      {selectedDestinationClass?.name ?? 'Escolher turma...'}
                       <ArrowRight size="18" />
                     </Button>
                   </Menu.Trigger>
@@ -160,7 +160,7 @@ export const CreateRequestCard = ({
                         ?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
                         .map((currentClass) => (
                           <Menu.Item
-                            key={"dropdown-class-" + currentClass.name}
+                            key={'dropdown-class-' + currentClass.name}
                             className="w-full"
                             onMouseEnter={() => togglePreview(currentClass, currentClass.slots)}
                             onMouseLeave={() => {
@@ -185,7 +185,7 @@ export const CreateRequestCard = ({
         )}
 
         <div className="flex flex-col gap-y-4">
-          <div className={`${hasStudentToExchange ? "" : "hidden"}`}>
+          <div className={`${hasStudentToExchange ? '' : 'hidden'}`}>
             <Popover open={studentDropdownOpen} onOpenChange={setStudentDropdownOpen}>
               <Popover.Trigger asChild>
                 <Button
@@ -214,7 +214,7 @@ export const CreateRequestCard = ({
                     <CommandGroup>
                       {requestMetadata?.students?.map((student) => (
                         <CommandItem
-                          key={"dropdown-student-" + student.name}
+                          key={'dropdown-student-' + student.name}
                           className="w-full"
                           onSelect={() => {
                             if (requests.get(courseInfo.id)) {

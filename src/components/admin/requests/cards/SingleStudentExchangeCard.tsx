@@ -43,10 +43,7 @@ export const SingleStudentExchangeCard = ({ exchange }: Props) => {
             )}
           </div>
           <div>
-            <Button
-              onClick={() => setOpen((prev) => !prev)}
-              variant="outline"
-            >
+            <Button onClick={() => setOpen((prev) => !prev)} variant="outline">
               {open ? <ChevronUpIcon size={18} strokeWidth={2.5} /> : <ChevronDownIcon size={18} strokeWidth={2.5} />}
             </Button>
           </div>

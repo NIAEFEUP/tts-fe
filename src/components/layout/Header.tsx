@@ -1,37 +1,37 @@
-import { Link } from "react-router-dom"
-import { Popover, Transition } from "@headlessui/react"
-import { DarkModeSwitch } from "./DarkModeSwitch"
-import { Menu, X, AtSign, Layers, CircleQuestionMark, ArrowLeftRight, Wrench } from "lucide-react"
-import { LogoNIAEFEUPImage } from "../../images"
-import { getPath, config } from "../../utils"
-import { FeedbackReport } from "../FeedbackReport"
-import SessionContext from "../../contexts/SessionContext"
-import { useContext } from "react"
-import { LoginButton } from "../auth/LoginButton"
-import { HeaderProfileDropdown } from "../auth/HeaderProfileDropdown"
+import { Link } from 'react-router-dom'
+import { Popover, Transition } from '@headlessui/react'
+import { DarkModeSwitch } from './DarkModeSwitch'
+import { Menu, X, AtSign, Layers, CircleQuestionMark, ArrowLeftRight, Wrench } from 'lucide-react'
+import { LogoNIAEFEUPImage } from '../../images'
+import { getPath, config } from '../../utils'
+import { FeedbackReport } from '../FeedbackReport'
+import SessionContext from '../../contexts/SessionContext'
+import { useContext } from 'react'
+import { LoginButton } from '../auth/LoginButton'
+import { HeaderProfileDropdown } from '../auth/HeaderProfileDropdown'
 
 const navigation = [
   {
-    title: "Horários",
+    title: 'Horários',
     location: getPath(config.paths.planner),
     icon: <Layers className="h-5 w-5" />,
     wip: false,
   },
   {
-    title: "Turmas",
+    title: 'Turmas',
     location: getPath(config.paths.exchange),
     icon: <ArrowLeftRight className="h-5 w-5" />,
     wip: false,
   },
-  { title: "Sobre", location: getPath(config.paths.about), icon: <AtSign className="h-5 w-5" />, wip: false },
+  { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSign className="h-5 w-5" />, wip: false },
   {
-    title: "FAQs",
+    title: 'FAQs',
     location: getPath(config.paths.faqs),
     icon: <CircleQuestionMark className="h-5 w-5" />,
     wip: false,
   },
   {
-    title: "Admin",
+    title: 'Admin',
     location: getPath(config.paths.admin),
     icon: <Wrench className="h-5 w-5" />,
     wip: false,
@@ -54,7 +54,7 @@ const Header = ({ siteTitle, location }: Props) => {
       {({ open }) => {
         return (
           <>
-            <div className={"p-2 relative flex items-center justify-between md:py-0"}>
+            <div className={'p-2 relative flex items-center justify-between md:py-0'}>
               <Hamburger open={open} signedIn={signedIn} />
               <div className="flex md:flex-1 items-center justify-between md:items-stretch md:justify-between">
                 <div className="relative hidden h-auto space-x-12 self-center duration-200 hover:opacity-75 md:inline-flex">
@@ -74,17 +74,17 @@ const Header = ({ siteTitle, location }: Props) => {
                       (link) =>
                         !link.wip ||
                         (link.wip &&
-                          (import.meta.env.VITE_APP_PROD === "0" || import.meta.env.VITE_APP_STAGING === "1")),
+                          (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1')),
                     )
-                    .filter((link) => link.title !== "Admin" || (signedIn && user?.is_admin))
+                    .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin))
                     .map((link, index) => (
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
                         <button
                           type="button"
                           className={`flex h-12 items-center justify-center font-medium capitalize tracking-wide transition ${
                             location === link.title
-                              ? "text-primary dark:text-white"
-                              : "text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
+                              ? 'text-primary dark:text-white'
+                              : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white'
                           }`}
                         >
                           <span className="flex items-center justify-center space-x-1.5">
@@ -122,7 +122,7 @@ type HamburgerProps = {
 
 const Hamburger = ({ open, signedIn }: HamburgerProps) => {
   return (
-    <div className={"z-50 md:hidden flex w-full items-center justify-between"}>
+    <div className={'z-50 md:hidden flex w-full items-center justify-between'}>
       <Link to={config.pathPrefix}>
         <img
           className="h-6 w-auto rounded-full transition hover:opacity-80 md:hidden"
@@ -175,14 +175,14 @@ const Mobile = ({ location }: MobileProps) => {
         <Popover.Panel className="flex flex-col space-y-3 px-3 pl-8 py-4">
           {navigation
             .filter((link) => !link.wip)
-            .filter((link) => link.title !== "Admin" || (signedIn && user?.is_admin))
+            .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin))
             .map((link, index) => (
               <Popover.Button as={Link} to={link.location} className="relative h-auto" key={`mobile-nav-${index}`}>
                 <span
                   className={`flex h-auto items-center justify-start font-medium capitalize tracking-wide transition ${
                     location === link.title
-                      ? "text-primary dark:text-white"
-                      : "text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white"
+                      ? 'text-primary dark:text-white'
+                      : 'text-gray-800/70 hover:text-gray-800 dark:text-white/60 dark:hover:text-white'
                   }`}
                 >
                   <span className="flex items-center justify-start space-x-2">

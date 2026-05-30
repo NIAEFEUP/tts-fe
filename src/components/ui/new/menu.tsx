@@ -16,8 +16,8 @@ import {
   useMergeRefs,
   useRole,
   useTypeahead,
-} from "@floating-ui/react"
-import { ChevronRight } from "lucide-react"
+} from '@floating-ui/react'
+import { ChevronRight } from 'lucide-react'
 import {
   createContext,
   Fragment,
@@ -29,19 +29,19 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react"
+} from 'react'
 
-import { Slot } from "@/components/ui/new/slot"
-import { useStableCallback } from "@/hooks/useStableCallback"
-import { Divider } from "@/components/ui/new/divider"
+import { Slot } from '@/components/ui/new/slot'
+import { useStableCallback } from '@/hooks/useStableCallback'
+import { Divider } from '@/components/ui/new/divider'
 import {
   Popover,
   PopoverContext,
   type PopoverOrigin,
   usePopoverContext,
   usePopoverFloating,
-} from "@/components/ui/new/popover"
-import { cn, cva } from "@/lib/utils"
+} from '@/components/ui/new/popover'
+import { cn, cva } from '@/lib/utils'
 
 const HOVER_OPEN_DELAY = 75
 const HOVER_CLOSE_DELAY = 150
@@ -68,7 +68,7 @@ interface MenuContextType {
   setSearchInputEl: (el: HTMLInputElement | null) => void
   items: Items
   registerItem: (item: Item) => () => void
-  getItemProps: UseInteractionsReturn["getItemProps"]
+  getItemProps: UseInteractionsReturn['getItemProps']
 }
 
 const MenuContext = createContext<MenuContextType | null>(null)
@@ -77,7 +77,7 @@ const useMenuContext = () => {
   const context = use(MenuContext)
 
   if (context == null) {
-    throw new Error("Menu components must be wrapped in <Menu />")
+    throw new Error('Menu components must be wrapped in <Menu />')
   }
 
   return context
@@ -86,7 +86,7 @@ const useMenuContext = () => {
 interface MenuProps {
   open?: boolean
   onOpenChange?: (open: boolean) => void
-  placement?: React.ComponentProps<typeof Popover>["placement"]
+  placement?: React.ComponentProps<typeof Popover>['placement']
   offset?: number
   origin?: PopoverOrigin
   modal?: boolean
@@ -166,13 +166,13 @@ const MenuRoot = ({ children, modal = true, placement: propPlacement, ...props }
 
   const floating = usePopoverFloating({
     nodeId,
-    placement: propPlacement ?? (isNested ? "right-start" : "bottom-start"),
+    placement: propPlacement ?? (isNested ? 'right-start' : 'bottom-start'),
     offset: isNested ? -4 : 4,
     // On narrow viewports a 224px-wide submenu can't fit on either side of
     // the trigger. Letting `flip` fall back to vertical placements puts it
     // below (or above) the trigger inside the parent panel — same approach
     // as base-ui's `fallbackAxisSideDirection`.
-    flipFallbackPlacements: isNested ? ["left-start", "bottom-start", "top-start"] : undefined,
+    flipFallbackPlacements: isNested ? ['left-start', 'bottom-start', 'top-start'] : undefined,
     ...props,
   })
 
@@ -187,12 +187,12 @@ const MenuRoot = ({ children, modal = true, placement: propPlacement, ...props }
   })
 
   const click = useClick(floating.context, {
-    event: "click",
+    event: 'click',
     ignoreMouse: isNested,
     toggle: !isNested,
   })
 
-  const role = useRole(floating.context, { role: "menu" })
+  const role = useRole(floating.context, { role: 'menu' })
   const dismiss = useDismiss(floating.context, { bubbles: true })
 
   const listNavigation = useListNavigation(floating.context, {
@@ -230,18 +230,18 @@ const MenuRoot = ({ children, modal = true, placement: propPlacement, ...props }
       }
     }
 
-    tree.events.on("click", onTreeClick)
-    tree.events.on("menuopen", onSubMenuOpen)
+    tree.events.on('click', onTreeClick)
+    tree.events.on('menuopen', onSubMenuOpen)
 
     return () => {
-      tree.events.off("click", onTreeClick)
-      tree.events.off("menuopen", onSubMenuOpen)
+      tree.events.off('click', onTreeClick)
+      tree.events.off('menuopen', onSubMenuOpen)
     }
   }, [tree, nodeId, parentId, floating])
 
   useEffect(() => {
     if (floating.open && tree) {
-      tree.events.emit("menuopen", { parentId, nodeId })
+      tree.events.emit('menuopen', { parentId, nodeId })
     }
   }, [tree, nodeId, parentId, floating.open])
 
@@ -289,7 +289,7 @@ const MenuRoot = ({ children, modal = true, placement: propPlacement, ...props }
   )
 }
 
-interface MenuTriggerProps extends React.ComponentPropsWithRef<"button"> {
+interface MenuTriggerProps extends React.ComponentPropsWithRef<'button'> {
   asChild?: boolean
 }
 
@@ -306,7 +306,7 @@ const MenuTrigger = ({ ref: refProp, asChild, children, className, ...props }: M
   const ref = useMergeRefs([popover.refs.setReference, item.ref, refProp])
 
   const isHighlighted = parent?.highlightedIndex === item.index
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : 'button'
 
   // When nested, the trigger is also an item of the parent menu — so it must
   // pick up parent's getItemProps for keyboard nav and registration.
@@ -315,10 +315,10 @@ const MenuTrigger = ({ ref: refProp, asChild, children, className, ...props }: M
   return (
     <Comp
       ref={ref}
-      type={asChild ? undefined : "button"}
-      className={cn(!asChild && "disabled:opacity-40", className)}
+      type={asChild ? undefined : 'button'}
+      className={cn(!asChild && 'disabled:opacity-40', className)}
       tabIndex={isNested ? (isHighlighted ? 0 : -1) : 0}
-      data-state={popover.open ? "open" : "closed"}
+      data-state={popover.open ? 'open' : 'closed'}
       data-highlighted={isHighlighted || undefined}
       {...referenceProps}
     >
@@ -329,11 +329,11 @@ const MenuTrigger = ({ ref: refProp, asChild, children, className, ...props }: M
 
 const itemTriggerStyle = cva({
   base: [
-    "relative mx-(--inset) flex w-[calc(100%-calc(var(--inset)*2))] cursor-pointer select-none items-center gap-1.5 rounded-lg px-3 py-1.5",
-    "font-medium text-base text-foreground/80 outline-none",
-    "first-of-type:mt-(--inset) last-of-type:mb-(--inset)",
-    "data-disabled:pointer-events-none data-disabled:opacity-50",
-    "active:bg-background-secondary data-[state=open]:bg-background-secondary data-highlighted:bg-background-secondary",
+    'relative mx-(--inset) flex w-[calc(100%-calc(var(--inset)*2))] cursor-pointer select-none items-center gap-1.5 rounded-lg px-3 py-1.5',
+    'font-medium text-base text-foreground/80 outline-none',
+    'first-of-type:mt-(--inset) last-of-type:mb-(--inset)',
+    'data-disabled:pointer-events-none data-disabled:opacity-50',
+    'active:bg-background-secondary data-[state=open]:bg-background-secondary data-highlighted:bg-background-secondary',
   ],
 })
 
@@ -345,7 +345,7 @@ const MenuItemTrigger = ({ children, className, ...props }: MenuTriggerProps) =>
   const { parent } = useMenuContext()
 
   if (!parent) {
-    throw new Error("<Menu.ItemTrigger> must be rendered inside a nested <Menu>.")
+    throw new Error('<Menu.ItemTrigger> must be rendered inside a nested <Menu>.')
   }
 
   return (
@@ -358,7 +358,7 @@ const MenuItemTrigger = ({ children, className, ...props }: MenuTriggerProps) =>
   )
 }
 
-interface MenuItemsProps extends React.ComponentPropsWithRef<"div"> {
+interface MenuItemsProps extends React.ComponentPropsWithRef<'div'> {
   /**
    * Drop the floating panel and just render the items inline. Use this when
    * something else owns the surface — a Dialog for a command palette, a
@@ -380,7 +380,7 @@ const MenuItems = ({ ref: refProp, children, className, inline, ...props }: Menu
       <FloatingList elementsRef={elementsRef}>
         <div
           ref={ref}
-          className={cn("font-medium text-foreground outline-none", className)}
+          className={cn('font-medium text-foreground outline-none', className)}
           {...popover.getFloatingProps(props)}
         >
           {children}
@@ -402,7 +402,7 @@ const MenuItems = ({ ref: refProp, children, className, inline, ...props }: Menu
         returnFocus={!isNested}
         animate={!isNested}
         className={cn(
-          "z-50 max-h-(--max-height) w-56 scroll-py-(--inset) overflow-auto rounded-xl border border-border bg-background font-medium text-foreground shadow-lg outline-none",
+          'z-50 max-h-(--max-height) w-56 scroll-py-(--inset) overflow-auto rounded-xl border border-border bg-background font-medium text-foreground shadow-lg outline-none',
           className,
         )}
         {...popover.getFloatingProps(props)}
@@ -415,24 +415,24 @@ const MenuItems = ({ ref: refProp, children, className, inline, ...props }: Menu
 
 const itemStyle = cva({
   base: [
-    "relative mx-(--inset) flex w-[calc(100%-calc(var(--inset)*2))] cursor-pointer select-none items-center gap-1.5 rounded-lg px-3 py-1.5",
-    "font-medium text-base outline-none",
-    "first-of-type:mt-(--inset) last-of-type:mb-(--inset)",
-    "data-disabled:pointer-events-none data-disabled:opacity-50",
+    'relative mx-(--inset) flex w-[calc(100%-calc(var(--inset)*2))] cursor-pointer select-none items-center gap-1.5 rounded-lg px-3 py-1.5',
+    'font-medium text-base outline-none',
+    'first-of-type:mt-(--inset) last-of-type:mb-(--inset)',
+    'data-disabled:pointer-events-none data-disabled:opacity-50',
   ],
   variants: {
     variant: {
-      default: "text-foreground/80 active:bg-background-secondary data-highlighted:bg-background-secondary",
-      destructive: "text-error active:bg-error/10 data-highlighted:bg-error/10",
+      default: 'text-foreground/80 active:bg-background-secondary data-highlighted:bg-background-secondary',
+      destructive: 'text-error active:bg-error/10 data-highlighted:bg-error/10',
     },
   },
-  defaultVariants: { variant: "default" },
+  defaultVariants: { variant: 'default' },
 })
 
-interface MenuItemProps extends React.ComponentPropsWithRef<"button"> {
-  onSelect?: Item["onSelect"]
+interface MenuItemProps extends React.ComponentPropsWithRef<'button'> {
+  onSelect?: Item['onSelect']
   asChild?: boolean
-  variant?: "default" | "destructive"
+  variant?: 'default' | 'destructive'
 }
 
 const MenuItem = ({
@@ -458,7 +458,7 @@ const MenuItem = ({
   const ref = useMergeRefs([listItemRef, refProp, innerRef])
 
   const isHighlighted = highlightedIndex === index
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : 'button'
 
   useLayoutEffect(() => {
     const text = innerRef.current?.textContent
@@ -480,7 +480,7 @@ const MenuItem = ({
 
     // Close every menu in the tree (root + any open submenus).
     if (tree) {
-      tree.events.emit("click")
+      tree.events.emit('click')
     } else {
       popoverCtx.setOpen(false)
     }
@@ -495,7 +495,7 @@ const MenuItem = ({
     // input is present (rare — usually focus stays on the input in virtual
     // mode), forward subsequent keystrokes back to the input so typing keeps
     // working.
-    if (searchInputRef.current && e.key !== "Enter") {
+    if (searchInputRef.current && e.key !== 'Enter') {
       searchInputRef.current.focus()
     }
   }
@@ -503,7 +503,7 @@ const MenuItem = ({
   return (
     <Comp
       ref={ref}
-      type={asChild ? undefined : "button"}
+      type={asChild ? undefined : 'button'}
       role="menuitem"
       data-item-id={itemId}
       data-highlighted={isHighlighted || undefined}
@@ -528,7 +528,7 @@ interface MenuSectionContextType {
 
 const MenuSectionContext = createContext<MenuSectionContextType | null>(null)
 
-const MenuSection = ({ children, className, ...props }: React.ComponentPropsWithRef<"div">) => {
+const MenuSection = ({ children, className, ...props }: React.ComponentPropsWithRef<'div'>) => {
   const [titleId, setTitleId] = useState<string | undefined>(undefined)
 
   return (
@@ -537,7 +537,7 @@ const MenuSection = ({ children, className, ...props }: React.ComponentPropsWith
       <div
         role="group"
         aria-labelledby={titleId}
-        className={cn("flex flex-col items-stretch border-border not-first:border-t", className)}
+        className={cn('flex flex-col items-stretch border-border not-first:border-t', className)}
         {...props}
       >
         {children}
@@ -546,7 +546,7 @@ const MenuSection = ({ children, className, ...props }: React.ComponentPropsWith
   )
 }
 
-const MenuHeading = ({ children, id: propsId, className, ...props }: React.ComponentPropsWithRef<"div">) => {
+const MenuHeading = ({ children, id: propsId, className, ...props }: React.ComponentPropsWithRef<'div'>) => {
   const generatedId = useId()
   const id = propsId ?? generatedId
   const ctx = use(MenuSectionContext)
@@ -556,17 +556,17 @@ const MenuHeading = ({ children, id: propsId, className, ...props }: React.Compo
   }, [ctx, id])
 
   return (
-    <div id={id} className={cn("px-3.5 pt-3 pb-1 font-medium text-foreground-secondary text-sm", className)} {...props}>
+    <div id={id} className={cn('px-3.5 pt-3 pb-1 font-medium text-foreground-secondary text-sm', className)} {...props}>
       {children}
     </div>
   )
 }
 
-const MenuDivider = ({ className, ...props }: React.ComponentPropsWithRef<"div">) => {
-  return <Divider className={cn("my-(--inset)", className)} {...props} />
+const MenuDivider = ({ className, ...props }: React.ComponentPropsWithRef<'div'>) => {
+  return <Divider className={cn('my-(--inset)', className)} {...props} />
 }
 
-interface MenuSearchInputProps extends React.ComponentPropsWithRef<"input"> {
+interface MenuSearchInputProps extends React.ComponentPropsWithRef<'input'> {
   isLoading?: boolean
 }
 
@@ -588,7 +588,7 @@ const MenuSearchInput = ({ ref: refProp, onChange, onKeyDown, isLoading, ...prop
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && highlightedIndex !== null) {
+    if (e.key === 'Enter' && highlightedIndex !== null) {
       const id = elementsRef.current[highlightedIndex]?.dataset.itemId
       if (id && items[id]) {
         items[id].onSelect?.(e)
@@ -596,7 +596,7 @@ const MenuSearchInput = ({ ref: refProp, onChange, onKeyDown, isLoading, ...prop
         // unless onSelect explicitly preventDefault'd.
         if (!e.defaultPrevented) {
           if (tree) {
-            tree.events.emit("click")
+            tree.events.emit('click')
           } else {
             popoverCtx.setOpen(false)
           }

@@ -1,60 +1,60 @@
-import type { VariantProps } from "cva"
-import { Children, Fragment, isValidElement, useEffect } from "react"
-import { Slot, Slottable } from "@/components/ui/new/slot"
-import { Spinner } from "@/components/ui/new/spinner"
-import { cn, cva } from "@/lib/utils"
-import { Divider } from "@/components/ui/new/divider"
+import type { VariantProps } from 'cva'
+import { Children, Fragment, isValidElement, useEffect } from 'react'
+import { Slot, Slottable } from '@/components/ui/new/slot'
+import { Spinner } from '@/components/ui/new/spinner'
+import { cn, cva } from '@/lib/utils'
+import { Divider } from '@/components/ui/new/divider'
 
 const buttonStyle = cva({
   base: [
-    "relative inline-flex h-(--button-height) shrink-0 items-center justify-center gap-1.5 whitespace-nowrap font-medium text-(--button-text-color) shadow-xs [--button-text-color:var(--color-foreground)]",
-    "transition enabled:cursor-pointer disabled:opacity-40",
-    "active:not-in-data-ui-button-group:scale-98",
-    "focus-visible:ring-(length:--ring-width) ring-ring focus-visible:outline-none",
+    'relative inline-flex h-(--button-height) shrink-0 items-center justify-center gap-1.5 whitespace-nowrap font-medium text-(--button-text-color) shadow-xs [--button-text-color:var(--color-foreground)]',
+    'transition enabled:cursor-pointer disabled:opacity-40',
+    'active:not-in-data-ui-button-group:scale-98',
+    'focus-visible:ring-(length:--ring-width) ring-ring focus-visible:outline-none',
     // inside button group — horizontal merge (default; ToggleGroup may set
     // data-orientation="vertical" on its container to flip the axis)
-    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-last:rounded-r-none",
-    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-last:border-r-0",
-    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-first:rounded-l-none",
-    "in-data-ui-button-group:not-in-data-[orientation=vertical]:not-first:border-l-0",
+    'in-data-ui-button-group:not-in-data-[orientation=vertical]:not-last:rounded-r-none',
+    'in-data-ui-button-group:not-in-data-[orientation=vertical]:not-last:border-r-0',
+    'in-data-ui-button-group:not-in-data-[orientation=vertical]:not-first:rounded-l-none',
+    'in-data-ui-button-group:not-in-data-[orientation=vertical]:not-first:border-l-0',
     // inside button group — vertical merge
-    "in-data-ui-button-group:in-data-[orientation=vertical]:not-last:rounded-b-none",
-    "in-data-ui-button-group:in-data-[orientation=vertical]:not-last:border-b-0",
-    "in-data-ui-button-group:in-data-[orientation=vertical]:not-first:rounded-t-none",
-    "in-data-ui-button-group:in-data-[orientation=vertical]:not-first:border-t-0",
+    'in-data-ui-button-group:in-data-[orientation=vertical]:not-last:rounded-b-none',
+    'in-data-ui-button-group:in-data-[orientation=vertical]:not-last:border-b-0',
+    'in-data-ui-button-group:in-data-[orientation=vertical]:not-first:rounded-t-none',
+    'in-data-ui-button-group:in-data-[orientation=vertical]:not-first:border-t-0',
     // pressed state — set via data-pressed by Toggle / ToggleGroup.Item.
     // Subtle filled tint that layers over `ghost` and `outline` without flipping
     // the text color; the higher selector specificity beats the variant background.
-    "data-pressed:bg-foreground/10 data-pressed:hover:bg-foreground/15",
+    'data-pressed:bg-foreground/10 data-pressed:hover:bg-foreground/15',
   ],
   variants: {
     variant: {
       primary:
-        "bg-accent [--button-text-color:var(--color-accent-foreground)] hover:bg-accent/90 in-data-ui-button-group:active:bg-accent/80",
+        'bg-accent [--button-text-color:var(--color-accent-foreground)] hover:bg-accent/90 in-data-ui-button-group:active:bg-accent/80',
       outline:
-        "border border-border bg-background hover:bg-foreground/2 not-in-data-ui-button-group:focus-visible:border-accent in-data-ui-button-group:active:bg-foreground/4",
+        'border border-border bg-background hover:bg-foreground/2 not-in-data-ui-button-group:focus-visible:border-accent in-data-ui-button-group:active:bg-foreground/4',
       ghost:
-        "border-none bg-transparent shadow-none ring-0 hover:bg-foreground/5 in-data-ui-button-group:active:bg-foreground/10",
-      destructive: "bg-error ring-error/50 [--button-text-color:var(--color-white)] hover:bg-error/90",
+        'border-none bg-transparent shadow-none ring-0 hover:bg-foreground/5 in-data-ui-button-group:active:bg-foreground/10',
+      destructive: 'bg-error ring-error/50 [--button-text-color:var(--color-white)] hover:bg-error/90',
     },
     size: {
-      xs: "rounded-lg px-2 text-sm [--button-height:--spacing(6)]",
-      sm: "rounded-lg px-3 text-sm [--button-height:--spacing(8)]",
-      md: "rounded-xl px-4 text-base [--button-height:--spacing(10)]",
-      lg: "rounded-2xl px-5 text-base [--button-height:--spacing(12)]",
+      xs: 'rounded-lg px-2 text-sm [--button-height:--spacing(6)]',
+      sm: 'rounded-lg px-3 text-sm [--button-height:--spacing(8)]',
+      md: 'rounded-xl px-4 text-base [--button-height:--spacing(10)]',
+      lg: 'rounded-2xl px-5 text-base [--button-height:--spacing(12)]',
     },
     square: {
-      true: "w-(--button-height) px-0",
-      false: "",
+      true: 'w-(--button-height) px-0',
+      false: '',
     },
   },
   defaultVariants: {
-    variant: "primary",
-    size: "md",
+    variant: 'primary',
+    size: 'md',
   },
 })
 
-export interface ButtonProps extends React.ComponentPropsWithRef<"button">, VariantProps<typeof buttonStyle> {
+export interface ButtonProps extends React.ComponentPropsWithRef<'button'>, VariantProps<typeof buttonStyle> {
   asChild?: boolean
   isLoading?: boolean
 }
@@ -65,13 +65,13 @@ const Button = ({
   variant,
   asChild = false,
   isLoading,
-  size = "md",
+  size = 'md',
   square,
-  type = "button",
+  type = 'button',
   ref,
   ...props
 }: ButtonProps) => {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : 'button'
 
   return (
     <Comp
@@ -82,7 +82,7 @@ const Button = ({
           size,
           square,
         }),
-        isLoading && "text-transparent transition-none",
+        isLoading && 'text-transparent transition-none',
       )}
       ref={ref}
       type={type}
@@ -96,8 +96,8 @@ const Button = ({
               <span
                 data-button-spinner
                 className={cn(
-                  "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-                  "text-(--button-text-color)",
+                  'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+                  'text-(--button-text-color)',
                 )}
               >
                 <Spinner size={size} />
@@ -110,15 +110,15 @@ const Button = ({
   )
 }
 
-export interface IconButtonProps extends Omit<ButtonProps, "square"> {
-  "aria-label": string
+export interface IconButtonProps extends Omit<ButtonProps, 'square'> {
+  'aria-label': string
 }
 
 const IconButton = ({ ref, ...props }: IconButtonProps) => {
   return <Button square {...props} ref={ref} />
 }
 
-type ButtonGroupProps = React.ComponentPropsWithRef<"div">
+type ButtonGroupProps = React.ComponentPropsWithRef<'div'>
 
 const ButtonGroup = ({ className, children, ...props }: ButtonGroupProps) => {
   // Validate children to ensure they are Button or IconButton components
@@ -132,7 +132,7 @@ const ButtonGroup = ({ className, children, ...props }: ButtonGroupProps) => {
   }, [children])
 
   return (
-    <div className={cn("flex items-center *:focus-visible:z-2", className)} data-ui-button-group {...props}>
+    <div className={cn('flex items-center *:focus-visible:z-2', className)} data-ui-button-group {...props}>
       {Children.toArray(children).map((child, index) => {
         return (
           <Fragment key={index}>

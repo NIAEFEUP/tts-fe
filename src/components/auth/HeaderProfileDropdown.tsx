@@ -1,15 +1,15 @@
-import { Avatar } from "../ui/new/avatar"
-import { Button } from "../ui/new/button"
-import { LogOut } from "lucide-react"
-import { useContext, useState } from "react"
-import { ClipLoader } from "react-spinners"
-import SessionContext from "../../contexts/SessionContext"
-import authService from "../../api/services/authService"
-import studentInfoService from "../../api/services/studentInfo"
-import { Popover } from "../ui/new/popover"
-import ScheduleContext from "../../contexts/ScheduleContext"
-import { Dialog } from "../ui/new/dialog"
-import { Divider } from "../ui/new/divider"
+import { Avatar } from '../ui/new/avatar'
+import { Button } from '../ui/new/button'
+import { LogOut } from 'lucide-react'
+import { useContext, useState } from 'react'
+import { ClipLoader } from 'react-spinners'
+import SessionContext from '../../contexts/SessionContext'
+import authService from '../../api/services/authService'
+import studentInfoService from '../../api/services/studentInfo'
+import { Popover } from '../ui/new/popover'
+import ScheduleContext from '../../contexts/ScheduleContext'
+import { Dialog } from '../ui/new/dialog'
+import { Divider } from '../ui/new/divider'
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false)
@@ -30,7 +30,7 @@ export const HeaderProfileDropdown = () => {
         <div className="cursor-pointer w-fit">
           <Avatar className="border shadow-xs">
             <Avatar.Image src={studentInfoService.getStudentPictureUrl(user?.username)} />
-            <Avatar.Fallback>{user?.name?.charAt(0) ?? ""}</Avatar.Fallback>
+            <Avatar.Fallback>{user?.name?.charAt(0) ?? ''}</Avatar.Fallback>
           </Avatar>
         </div>
       </Popover.Trigger>

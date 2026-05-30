@@ -1,7 +1,7 @@
-import { Children, cloneElement, isValidElement, forwardRef } from "react"
-import { useMergeRefs } from "@floating-ui/react"
+import { Children, cloneElement, isValidElement, forwardRef } from 'react'
+import { useMergeRefs } from '@floating-ui/react'
 
-import { cn } from "../../../lib/utils"
+import { cn } from '../../../lib/utils'
 
 const isValidSlottableElement = (
   value: unknown,
@@ -11,7 +11,7 @@ const isValidSlottableElement = (
   style?: React.CSSProperties
   ref?: React.Ref<any>
 }> => {
-  return isValidElement(value) && !!value.props && typeof value.props === "object" && "key" in value
+  return isValidElement(value) && !!value.props && typeof value.props === 'object' && 'key' in value
 }
 
 type AnyProps = Record<string, any>
@@ -23,7 +23,7 @@ function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
     const slotPropValue = slotProps[key]
     const childPropValue = childProps[key]
 
-    const isHandler = typeof slotPropValue === "function" && typeof childPropValue === "function"
+    const isHandler = typeof slotPropValue === 'function' && typeof childPropValue === 'function'
     if (isHandler) {
       result[key] = (...args: any[]) => {
         childPropValue?.(...args)
@@ -51,11 +51,11 @@ export const Slot = forwardRef<HTMLElement, React.ComponentPropsWithRef<React.El
       })
     }
 
-    throw new Error("Slot needs a valid react element child")
-  }
+    throw new Error('Slot needs a valid react element child')
+  },
 )
 
-Slot.displayName = "Slot"
+Slot.displayName = 'Slot'
 
 type SlottableProps = {
   asChild: boolean

@@ -1,17 +1,17 @@
-import { useContext, useState } from "react"
-import { Button } from "../../ui/new/button"
+import { useContext, useState } from 'react'
+import { Button } from '../../ui/new/button'
 import RequestFiltersContext, {
   activeStatesPossibleValues,
   adminRequestStateToText,
   adminRequestStateToBadgeVariant,
-} from "../../../contexts/admin/RequestFiltersContext"
-import useAdminExchangeCourses from "../../../hooks/admin/useAdminExchangeCourses"
-import { Popover } from "../../ui/new/popover"
-import { Command, CommandGroup, CommandItem } from "../../ui/command"
-import { Check, ChevronDown } from "lucide-react"
-import { Badge } from "../../ui/new/badge"
-import { PageSizeSelector } from "./cards/PageSizeSelector"
-import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext"
+} from '../../../contexts/admin/RequestFiltersContext'
+import useAdminExchangeCourses from '../../../hooks/admin/useAdminExchangeCourses'
+import { Popover } from '../../ui/new/popover'
+import { Command, CommandGroup, CommandItem } from '../../ui/command'
+import { Check, ChevronDown } from 'lucide-react'
+import { Badge } from '../../ui/new/badge'
+import { PageSizeSelector } from './cards/PageSizeSelector'
+import AdminPaginationContext from '../../../contexts/admin/AdminPaginationContext'
 
 export const RequestFilters = () => {
   const {
@@ -36,8 +36,8 @@ export const RequestFilters = () => {
       <Popover open={courseOpen} onOpenChange={setCourseOpen} placement="bottom-start">
         <Popover.Trigger asChild>
           <Button variant="outline" className="justify-between w-32">
-            {activeCourse ? courses?.find((c) => c.id === activeCourse)?.acronym : "Curso"}
-            <ChevronDown size="18" />{" "}
+            {activeCourse ? courses?.find((c) => c.id === activeCourse)?.acronym : 'Curso'}
+            <ChevronDown size="18" />{' '}
           </Button>
         </Popover.Trigger>
         <Popover.Content className="w-40 p-0">
@@ -66,7 +66,7 @@ export const RequestFilters = () => {
       <Popover open={yearOpen} onOpenChange={setYearOpen} placement="bottom-start">
         <Popover.Trigger asChild>
           <Button variant="outline" className="justify-between w-32">
-            {activeCurricularYear ? `${activeCurricularYear}º Ano` : "Ano"}
+            {activeCurricularYear ? `${activeCurricularYear}º Ano` : 'Ano'}
             <ChevronDown size="18" />
           </Button>
         </Popover.Trigger>

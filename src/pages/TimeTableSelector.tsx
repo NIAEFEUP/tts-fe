@@ -65,7 +65,6 @@ const Content = () => {
             </TabsPanel>
           </TabsPanels>
         </Tabs>
-
       </div>
       <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
         {user?.eligible_exchange && showExchangeAlert && (

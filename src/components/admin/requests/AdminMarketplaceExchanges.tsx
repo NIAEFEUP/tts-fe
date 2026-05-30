@@ -1,31 +1,27 @@
-import { useContext, useEffect } from "react";
-import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
-import useAdminAllMarketplaceExchanges from "../../../hooks/admin/useAdminAllMarketplaceExchanges"
-import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
-import { BarLoader } from "react-spinners";
-import { AdminMarketplaceExchangesCard } from "../AdminMarketplaceExchangesCard";
+import { useContext, useEffect } from 'react'
+import RequestFiltersContext from '../../../contexts/admin/RequestFiltersContext'
+import useAdminAllMarketplaceExchanges from '../../../hooks/admin/useAdminAllMarketplaceExchanges'
+import AdminPaginationContext from '../../../contexts/admin/AdminPaginationContext'
+import { BarLoader } from 'react-spinners'
+import { AdminMarketplaceExchangesCard } from '../AdminMarketplaceExchangesCard'
 
 export const AdminMarketplaceExchanges = () => {
-    const filterContext = useContext(RequestFiltersContext);
-    const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext);
-    const { exchanges, totalPages, loading } = useAdminAllMarketplaceExchanges(filterContext, currPage, itemsPerPage);
+  const filterContext = useContext(RequestFiltersContext)
+  const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext)
+  const { exchanges, totalPages, loading } = useAdminAllMarketplaceExchanges(filterContext, currPage, itemsPerPage)
 
-    useEffect(() => {
-        setTotalPages(totalPages)
-    }, [exchanges]);
+  useEffect(() => {
+    setTotalPages(totalPages)
+  }, [exchanges])
 
-    return (<>
-        {loading && <BarLoader className="w-full" />}
+  return (
+    <>
+      {loading && <BarLoader className="w-full" />}
 
-        {!loading && (!exchanges || exchanges.length === 0) && (
-                    <h2>Nenhum pedido encontrado de momento</h2>
-            )}
-        {exchanges?.map((exchange) => (
-            <AdminMarketplaceExchangesCard 
-                key={`admin-marketplace-${exchange.id}`}
-                exchange={exchange}
-            /> 
-        ))}
+      {!loading && (!exchanges || exchanges.length === 0) && <h2>Nenhum pedido encontrado de momento</h2>}
+      {exchanges?.map((exchange) => (
+        <AdminMarketplaceExchangesCard key={`admin-marketplace-${exchange.id}`} exchange={exchange} />
+      ))}
     </>
-    )
+  )
 }

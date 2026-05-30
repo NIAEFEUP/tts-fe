@@ -1,16 +1,16 @@
-import { useState } from "react"
-import { DirectExchangeParticipant, DirectExchangeRequest } from "../../../../@types"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card"
-import { Button } from "../../../ui/new/button"
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
-import { Person } from "./Person"
-import { ExchangeStatus } from "./ExchangeStatus"
-import { PersonExchanges } from "./PersonExchanges"
-import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
-import { RequestDate, RequestLastUpdatedDate } from "./RequestDate"
-import { listEmailExchanges } from "../../../../utils/mail"
-import { AdminRequestType } from "../../../../utils/exchange"
-import { ValidateRequestButton } from "./ValidateRequestButton"
+import { useState } from 'react'
+import { DirectExchangeParticipant, DirectExchangeRequest } from '../../../../@types'
+import { Card, CardContent, CardHeader, CardTitle } from '../../../ui/card'
+import { Button } from '../../../ui/new/button'
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
+import { Person } from './Person'
+import { ExchangeStatus } from './ExchangeStatus'
+import { PersonExchanges } from './PersonExchanges'
+import { AdminRequestCardFooter } from './AdminRequestCardFooter'
+import { RequestDate, RequestLastUpdatedDate } from './RequestDate'
+import { listEmailExchanges } from '../../../../utils/mail'
+import { AdminRequestType } from '../../../../utils/exchange'
+import { ValidateRequestButton } from './ValidateRequestButton'
 
 type Props = {
   exchange: DirectExchangeRequest
@@ -37,7 +37,7 @@ const participantExchangesMap = (exchange: DirectExchangeRequest) => {
 export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
   const [open, setOpen] = useState(false)
   const [exchangeState, setExchangeState] = useState(exchange)
-  const [justValidated, setJustValidated] = useState<"valid" | "invalid" | false>(false)
+  const [justValidated, setJustValidated] = useState<'valid' | 'invalid' | false>(false)
 
   const handleValidation = (result: { valid: boolean; last_validated?: string | null }) => {
     if (result.valid && result.last_validated) {
@@ -45,9 +45,9 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
         ...prev,
         last_validated: result.last_validated,
       }))
-      setJustValidated("valid") // Validado agora mesmo
+      setJustValidated('valid') // Validado agora mesmo
     } else {
-      setJustValidated("invalid") // Inválido!
+      setJustValidated('invalid') // Inválido!
     }
   }
 
@@ -77,7 +77,7 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
           {!open &&
             [...new Map(exchangeState.options.map((p) => [p.participant_nmec, p])).values()].map((participant) => (
               <div
-                key={"multiple-student-person-" + participant.participant_nmec}
+                key={'multiple-student-person-' + participant.participant_nmec}
                 className="max-w-[45%] truncate whitespace-nowrap"
               >
                 <Person name={participant.participant_name} nmec={participant.participant_nmec} />
@@ -87,7 +87,7 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
 
         {/* Ações (Botão de Validação e Expandir) */}
         <div className="flex gap-2 items-center">
-          {!open && justValidated !== "invalid" && (
+          {!open && justValidated !== 'invalid' && (
             <ValidateRequestButton id={exchangeState.id} onValidation={handleValidation} />
           )}
 
@@ -97,14 +97,14 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
         </div>
       </CardHeader>
 
-      <CardContent className={`w-full ${open ? "pt-0 pb-4 px-9" : "p-0"}`}>
+      <CardContent className={`w-full ${open ? 'pt-0 pb-4 px-9' : 'p-0'}`}>
         {open && (
           <div className="flex flex-col gap-y-6">
             {Array.from(participantExchangesMap(exchangeState).entries()).map(([participant, exchanges]) => {
-              const [nmec, name] = participant.split(",")
+              const [nmec, name] = participant.split(',')
               return (
                 <PersonExchanges
-                  key={"multiple-student-person-exchanges-" + nmec}
+                  key={'multiple-student-person-exchanges-' + nmec}
                   exchanges={exchanges}
                   participant_name={name}
                   participant_nmec={nmec}
@@ -123,8 +123,8 @@ export const MultipleStudentExchangeCard = ({ exchange }: Props) => {
             exchangeState.options.map((option) => ({
               participant_nmec: option.participant_nmec,
               participant_name: option.participant_name,
-              goes_from: option.class_participant_goes_from?.name || "N/A",
-              goes_to: option.class_participant_goes_to?.name || "N/A",
+              goes_from: option.class_participant_goes_from?.name || 'N/A',
+              goes_to: option.class_participant_goes_to?.name || 'N/A',
               course_acronym: option.course_unit,
             })),
           )}

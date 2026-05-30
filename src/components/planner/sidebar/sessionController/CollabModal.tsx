@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import CollabPickSession from './CollabPickSession'
 import CollabSessionModal from './CollabSessionModal'

@@ -36,8 +36,8 @@ const HeroPlanner = () => {
             </p>
             <p>
               O TTS é a ferramenta que torna o processo de escolher turmas mais simples, mais flexível e da forma a
-              perderes o menos tempo possível. Molda o horário à tua maneira, quer seja por preferires certos professores
-              ou dias livres. Partilha facilmente os horários com os amigos e{' '}
+              perderes o menos tempo possível. Molda o horário à tua maneira, quer seja por preferires certos
+              professores ou dias livres. Partilha facilmente os horários com os amigos e{' '}
               <strong> não deixes o horário perfeito escapar</strong>. Tens dúvidas sobre a plataforma? A{' '}
               <Link
                 className="font-medium text-primary transition-all hover:underline hover:opacity-80"

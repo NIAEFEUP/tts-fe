@@ -1,16 +1,16 @@
-import { Check, ChevronDownIcon, ChevronUpIcon, X } from "lucide-react"
-import { ClassDescriptor, CourseUnitEnrollment } from "../../../../@types"
-import { Button } from "../../../ui/new/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card"
-import { Person } from "./Person"
-import { useState } from "react"
-import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
-import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
-import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
-import { RequestDate } from "./RequestDate"
-import { AdminRequestType } from "../../../../utils/exchange"
-import { ExchangeStatus } from "./ExchangeStatus"
-import { listEmailEnrollments } from "../../../../utils/mail"
+import { Check, ChevronDownIcon, ChevronUpIcon, X } from 'lucide-react'
+import { ClassDescriptor, CourseUnitEnrollment } from '../../../../@types'
+import { Button } from '../../../ui/new/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../../../ui/card'
+import { Person } from './Person'
+import { useState } from 'react'
+import { AdminPreviewSchedule } from '../AdminPreviewSchedule'
+import { AdminRequestCardFooter } from './AdminRequestCardFooter'
+import useStudentsSchedule from '../../../../hooks/admin/useStudentsSchedule'
+import { RequestDate } from './RequestDate'
+import { AdminRequestType } from '../../../../utils/exchange'
+import { ExchangeStatus } from './ExchangeStatus'
+import { listEmailEnrollments } from '../../../../utils/mail'
 
 type Props = {
   enrollment: CourseUnitEnrollment
@@ -42,7 +42,7 @@ export const StudentEnrollmentCard = ({ enrollment }: Props) => {
           {!open && (
             <>
               <Person
-                key={"enrollment-person-" + enrollment.user_name}
+                key={'enrollment-person-' + enrollment.user_name}
                 name={enrollment.user_name}
                 nmec={enrollment.user_nmec}
               />
@@ -55,7 +55,7 @@ export const StudentEnrollmentCard = ({ enrollment }: Props) => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className={`w-full ${open ? "pt-0 pb-4 px-9" : "p-0"}`}>
+      <CardContent className={`w-full ${open ? 'pt-0 pb-4 px-9' : 'p-0'}`}>
         {open && (
           <div className="flex flex-col gap-y-8" key={crypto.randomUUID()}>
             <div className="flex flex-row justify-between">
@@ -72,11 +72,11 @@ export const StudentEnrollmentCard = ({ enrollment }: Props) => {
                   .map((option) => (
                     <div key={option.id}>
                       <div className="flex flex-row gap-x-2 items-center border-gray-200 border-2 rounded-md p-2 px-4">
-                        <span className="font-bold text-lg">{option.course_unit?.acronym || "N/A"}</span>
+                        <span className="font-bold text-lg">{option.course_unit?.acronym || 'N/A'}</span>
                         {option.enrolling ? <Check className="text-green-400" /> : <X className="text-red-400" />}
                       </div>
                     </div>
-                  ))}{" "}
+                  ))}{' '}
               </div>
               <div>
                 <AdminPreviewSchedule

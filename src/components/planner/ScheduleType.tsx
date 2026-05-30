@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 import { getClassType } from '../../utils'
 import { Checkbox } from '../ui/new/checkbox'
 

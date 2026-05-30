@@ -1,5 +1,5 @@
-import useStudentCourseMetadata from "../../../../hooks/admin/useStudentCourseMetadata"
-import { Button } from "../../../ui/new/button"
+import useStudentCourseMetadata from '../../../../hooks/admin/useStudentCourseMetadata'
+import { Button } from '../../../ui/new/button'
 
 type CourseInfo = {
   id: number
@@ -8,7 +8,7 @@ type CourseInfo = {
 
 type Props = {
   nmec: string
-  variant?: "icon" | "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  variant?: 'icon' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
   courseId: Array<number>
   courseInfo?: Array<CourseInfo>
 }
@@ -48,7 +48,7 @@ export const TreatExchangeButton = ({ nmec, courseId, courseInfo }: Props) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="outline">{showCourseLabel && acronym ? `Tratar (${acronym})` : "Tratar"}</Button>
+            <Button variant="outline">{showCourseLabel && acronym ? `Tratar (${acronym})` : 'Tratar'}</Button>
           </a>
         )
       })}
@@ -61,7 +61,7 @@ export const TreatExchangeButton = ({ nmec, courseId, courseInfo }: Props) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="outline">{showCourseLabel && acronym ? `Tratar (${acronym})` : "Tratar"}</Button>
+            <Button variant="outline">{showCourseLabel && acronym ? `Tratar (${acronym})` : 'Tratar'}</Button>
           </a>
         )
       })}

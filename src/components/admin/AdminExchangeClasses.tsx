@@ -1,21 +1,21 @@
-import { useState, useMemo, useEffect } from "react"
-import useAdminClasses from "../../hooks/admin/useAdminClasses"
-import { BarLoader } from "react-spinners"
-import { Tabs, TabsItem, TabsItems } from "../ui/new/tabs"
-import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from "../ui/table"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { useState, useMemo, useEffect } from 'react'
+import useAdminClasses from '../../hooks/admin/useAdminClasses'
+import { BarLoader } from 'react-spinners'
+import { Tabs, TabsItem, TabsItems } from '../ui/new/tabs'
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 export const AdminExchangeClasses = () => {
   const { classes, loading } = useAdminClasses()
-  const [selectedCourseId, setSelectedCourseId] = useState<string>("all")
-  const [selectedCourseUnitId, setSelectedCourseUnitId] = useState<string>("all")
+  const [selectedCourseId, setSelectedCourseId] = useState<string>('all')
+  const [selectedCourseUnitId, setSelectedCourseUnitId] = useState<string>('all')
 
   const courses = useMemo(() => {
     if (!classes) return []
 
     const uniqueCourses = new Map()
 
-    uniqueCourses.set("all", { id: "all", acronym: "Todos" })
+    uniqueCourses.set('all', { id: 'all', acronym: 'Todos' })
 
     classes.forEach((cls: any) => {
       const courseId = cls.course_id
@@ -37,11 +37,11 @@ export const AdminExchangeClasses = () => {
 
     const uniqueCourseUnits = new Map()
 
-    uniqueCourseUnits.set("all", {
-      id: "all",
-      acronym: "Todas",
-      courseAcronym: "",
-      displayText: "Todas",
+    uniqueCourseUnits.set('all', {
+      id: 'all',
+      acronym: 'Todas',
+      courseAcronym: '',
+      displayText: 'Todas',
     })
 
     const validClasses = classes.filter((c: any) => {
@@ -50,7 +50,7 @@ export const AdminExchangeClasses = () => {
     })
 
     const relevantClasses =
-      selectedCourseId === "all"
+      selectedCourseId === 'all'
         ? validClasses
         : validClasses.filter((cls: any) => {
             const courseId = cls.course_id
@@ -83,20 +83,20 @@ export const AdminExchangeClasses = () => {
 
     const unsortedCourseUnits = Array.from(uniqueCourseUnits.values())
 
-    const allOption = unsortedCourseUnits.find((unit) => unit.id === "all")
+    const allOption = unsortedCourseUnits.find((unit) => unit.id === 'all')
     const sortedRest = unsortedCourseUnits
-      .filter((unit) => unit.id !== "all")
+      .filter((unit) => unit.id !== 'all')
       .sort((a, b) => {
-        const acronymA = a.acronym || ""
-        const acronymB = b.acronym || ""
-        return acronymA.localeCompare(acronymB, "pt")
+        const acronymA = a.acronym || ''
+        const acronymB = b.acronym || ''
+        return acronymA.localeCompare(acronymB, 'pt')
       })
 
     return allOption ? [allOption, ...sortedRest] : sortedRest
   }, [classes, selectedCourseId])
 
   useEffect(() => {
-    setSelectedCourseUnitId("all")
+    setSelectedCourseUnitId('all')
   }, [selectedCourseId])
 
   const filteredClasses = useMemo(() => {
@@ -109,10 +109,10 @@ export const AdminExchangeClasses = () => {
       const v = cls.vacancies
       const hasVacancies = v !== null && v !== undefined
 
-      const courseMatches = selectedCourseId === "all" || (courseId && courseId.toString() === selectedCourseId)
+      const courseMatches = selectedCourseId === 'all' || (courseId && courseId.toString() === selectedCourseId)
 
       const courseUnitMatches =
-        selectedCourseUnitId === "all" || (courseUnitId && courseUnitId.toString() === selectedCourseUnitId)
+        selectedCourseUnitId === 'all' || (courseUnitId && courseUnitId.toString() === selectedCourseUnitId)
 
       return courseMatches && courseUnitMatches && hasVacancies
     })
@@ -178,9 +178,9 @@ export const AdminExchangeClasses = () => {
                   filteredClasses.map((cls: any) => (
                     <TableRow key={cls.classId} className="hover:bg-muted/50">
                       <TableCell className="font-medium">{cls.name}</TableCell>
-                      <TableCell>{cls.course_acronym ?? "NA"}</TableCell>
-                      <TableCell>{cls.course_unit_acronym ?? "NA"}</TableCell>
-                      <TableCell>{cls.vacancies ?? "NA"}</TableCell>
+                      <TableCell>{cls.course_acronym ?? 'NA'}</TableCell>
+                      <TableCell>{cls.course_unit_acronym ?? 'NA'}</TableCell>
+                      <TableCell>{cls.vacancies ?? 'NA'}</TableCell>
                     </TableRow>
                   ))
                 ) : (

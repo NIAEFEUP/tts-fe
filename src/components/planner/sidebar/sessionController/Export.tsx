@@ -1,8 +1,8 @@
-import { Button } from "../../../ui/new/button"
-import { Menu } from "../../../ui/new/menu"
-import CsvExport from "./CsvExport"
-import NitSigExport from "./NitSigExport"
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid"
+import { Button } from '../../../ui/new/button'
+import { Menu } from '../../../ui/new/menu'
+import CsvExport from './CsvExport'
+import NitSigExport from './NitSigExport'
+import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
 
 /**
  * Sidebar with all the main schedule interactions

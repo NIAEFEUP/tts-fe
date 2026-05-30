@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction, useState } from "react"
-import { MarketplaceRequest } from "../../../../@types"
-import { Checkbox } from "../../../ui/checkbox"
-import { CommonRequestCard } from "../view/cards/CommonRequestCard"
-import { RequestCard } from "../view/cards/RequestCard"
-import { CurrentView } from "./CustomizeRequest"
+import { Dispatch, SetStateAction, useState } from 'react'
+import { MarketplaceRequest } from '../../../../@types'
+import { Checkbox } from '../../../ui/checkbox'
+import { CommonRequestCard } from '../view/cards/CommonRequestCard'
+import { RequestCard } from '../view/cards/RequestCard'
+import { CurrentView } from './CustomizeRequest'
 
 type Props = {
   requests: Array<MarketplaceRequest>
@@ -11,13 +11,9 @@ type Props = {
   setUrgentMessage: Dispatch<SetStateAction<boolean>>
 }
 
-export const RelatedExchanges = ({
-  requests,
-  setCurrentView,
-  setUrgentMessage
-}: Props) => {
-  const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set());
-  const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null);
+export const RelatedExchanges = ({ requests, setCurrentView, setUrgentMessage }: Props) => {
+  const [hiddenRequests, setHiddenRequests] = useState<Set<number>>(new Set())
+  const [chosenRequest, setChosenRequest] = useState<MarketplaceRequest | null>(null)
 
   return (
     <>
@@ -27,8 +23,7 @@ export const RelatedExchanges = ({
             setUrgentMessage(true)
             setCurrentView(CurrentView.CONFIRMATION)
           }}
-        >
-        </Checkbox>
+        ></Checkbox>
         <p>O meu pedido é urgente por razões médicas ou outras</p>
       </div>
       {requests.map((request) => (

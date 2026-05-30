@@ -1,8 +1,8 @@
-import { useState } from "react"
-import { Popover } from "../../../ui/new/popover"
-import { Button } from "../../../ui/new/button"
-import { Command, CommandGroup, CommandItem } from "../../../ui/command"
-import { Check, ChevronDown } from "lucide-react"
+import { useState } from 'react'
+import { Popover } from '../../../ui/new/popover'
+import { Button } from '../../../ui/new/button'
+import { Command, CommandGroup, CommandItem } from '../../../ui/command'
+import { Check, ChevronDown } from 'lucide-react'
 
 interface PageSizeSelectorProps {
   value: number

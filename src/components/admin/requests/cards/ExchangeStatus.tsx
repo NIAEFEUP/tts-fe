@@ -1,5 +1,5 @@
-import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, UrgentRequest } from "../../../../@types"
-import { Badge } from "../../../ui/new/badge"
+import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, UrgentRequest } from '../../../../@types'
+import { Badge } from '../../../ui/new/badge'
 
 type Props = {
   exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest
@@ -7,33 +7,33 @@ type Props = {
 
 type ExchangeStatusProperty = {
   message: string
-  variant: "success" | "error" | "warning" | "info" | "neutral"
+  variant: 'success' | 'error' | 'warning' | 'info' | 'neutral'
 }
 
 const exchangeStatusProperties = (
   exchange: DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest,
 ): ExchangeStatusProperty => {
   switch (exchange.admin_state) {
-    case "accepted":
-    case "treated":
+    case 'accepted':
+    case 'treated':
       return {
-        message: "Aceite",
-        variant: "success",
+        message: 'Aceite',
+        variant: 'success',
       }
-    case "rejected":
+    case 'rejected':
       return {
-        message: "Rejeitado",
-        variant: "error",
+        message: 'Rejeitado',
+        variant: 'error',
       }
-    case "untreated":
+    case 'untreated':
       return {
-        message: "Não tratado",
-        variant: "warning",
+        message: 'Não tratado',
+        variant: 'warning',
       }
-    case "awaiting-information":
+    case 'awaiting-information':
       return {
-        message: "A aguardar informação",
-        variant: "info",
+        message: 'A aguardar informação',
+        variant: 'info',
       }
   }
 }

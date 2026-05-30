@@ -1,15 +1,15 @@
-import { useNavigate, useLocation } from "react-router-dom"
-import { Separator } from "../ui/separator"
-import { useContext, useState } from "react"
-import SessionContext from "../../contexts/SessionContext"
-import ScheduleContext from "../../contexts/ScheduleContext"
-import authService from "../../api/services/authService"
-import { CornerDownLeftIcon, LogOut, PieChartIcon, Group, SendHorizontal, SlidersHorizontal } from "lucide-react"
-import { Link } from "react-router-dom"
-import { Button } from "../ui/new/button"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu } from "../ui/sidebar"
-import { cn } from "../../lib/utils"
-import { Dialog } from "../ui/new/dialog"
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Separator } from '../ui/separator'
+import { useContext, useState } from 'react'
+import SessionContext from '../../contexts/SessionContext'
+import ScheduleContext from '../../contexts/ScheduleContext'
+import authService from '../../api/services/authService'
+import { CornerDownLeftIcon, LogOut, PieChartIcon, Group, SendHorizontal, SlidersHorizontal } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Button } from '../ui/new/button'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu } from '../ui/sidebar'
+import { cn } from '../../lib/utils'
+import { Dialog } from '../ui/new/dialog'
 
 export const AdminSidebar = () => {
   const [loggingOut, setLoggingOut] = useState(false)
@@ -24,13 +24,13 @@ export const AdminSidebar = () => {
     setLoggingOut(true)
     setExchangeSchedule([])
     await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut)
-    navigate("/")
+    navigate('/')
   }
 
   const menuItems = [
-    { to: "/admin", label: "Pedidos", icon: SendHorizontal },
-    { to: "/admin/settings", label: "Definições", icon: SlidersHorizontal },
-    { to: "/admin/statistics", label: "Estatísticas", icon: PieChartIcon },
+    { to: '/admin', label: 'Pedidos', icon: SendHorizontal },
+    { to: '/admin/settings', label: 'Definições', icon: SlidersHorizontal },
+    { to: '/admin/statistics', label: 'Estatísticas', icon: PieChartIcon },
   ]
 
   const isActive = (path: string) => location.pathname === path
@@ -52,7 +52,7 @@ export const AdminSidebar = () => {
                 key={item.to}
                 variant="ghost"
                 asChild
-                className={cn("w-full justify-start text-sm", active && "bg-foreground/10")}
+                className={cn('w-full justify-start text-sm', active && 'bg-foreground/10')}
               >
                 <Link to={item.to} className="flex items-center gap-2">
                   <Icon size={16} />

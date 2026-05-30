@@ -90,12 +90,7 @@ export const CommonCardHeader = ({
               )}
 
               {open ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  square
-                  onClick={() => setOpen(false)}
-                >
+                <Button variant="ghost" size="sm" square onClick={() => setOpen(false)}>
                   <ChevronUpIcon className="h-5 w-5" />
                 </Button>
               ) : (

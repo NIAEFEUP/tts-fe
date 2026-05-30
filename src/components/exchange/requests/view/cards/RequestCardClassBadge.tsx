@@ -1,5 +1,5 @@
-import { ExchangeOption } from "../../../../../@types"
-import { Badge } from "../../../../ui/new/badge"
+import { ExchangeOption } from '../../../../../@types'
+import { Badge } from '../../../../ui/new/badge'
 
 type Props = {
   option: ExchangeOption

@@ -51,11 +51,7 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
   }
 
   return (
-    <Menu.Item
-      onSelect={() => selectOption()}
-      onMouseEnter={() => onMouseEnter()}
-      onMouseLeave={() => onMouseLeave()}
-    >
+    <Menu.Item onSelect={() => selectOption()} onMouseEnter={() => onMouseEnter()} onMouseLeave={() => onMouseLeave()}>
       <div className="grow text-left">
         <span className="text-sm tracking-tighter font-semibold">{classInfo.name}</span>
         <div>

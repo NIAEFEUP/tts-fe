@@ -1,21 +1,21 @@
-import { Context, Dispatch, createContext, SetStateAction } from "react";
+import { Context, Dispatch, createContext, SetStateAction } from 'react'
 
 interface ConflictsContextType {
-  conflictSeverity: boolean;
-  setConflictSeverity: Dispatch<SetStateAction<boolean>>;
-  tClassConflicts: boolean;
-  setTClassConflicts: Dispatch<SetStateAction<boolean>>;
-  hasSomeConflict: boolean;
-  setHasSomeConflict: Dispatch<SetStateAction<boolean>>;
+  conflictSeverity: boolean
+  setConflictSeverity: Dispatch<SetStateAction<boolean>>
+  tClassConflicts: boolean
+  setTClassConflicts: Dispatch<SetStateAction<boolean>>
+  hasSomeConflict: boolean
+  setHasSomeConflict: Dispatch<SetStateAction<boolean>>
 }
 
 const ConflictsContext: Context<ConflictsContextType> = createContext({
   conflictSeverity: false,
-  setConflictSeverity: () => { },
+  setConflictSeverity: () => {},
   tClassConflicts: false,
-  setTClassConflicts: () => { },
+  setTClassConflicts: () => {},
   hasSomeConflict: false,
-  setHasSomeConflict: () => { },
+  setHasSomeConflict: () => {},
 })
 
 export default ConflictsContext

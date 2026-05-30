@@ -1,6 +1,15 @@
 import config from '../config/prod.json'
 import dev_config from '../config/local.json'
-import { CourseInfo, CourseOption, SlotInfo, MultipleOptions, Option, PickedCourses, ProfessorInfo, ClassInfo } from '../@types'
+import {
+  CourseInfo,
+  CourseOption,
+  SlotInfo,
+  MultipleOptions,
+  Option,
+  PickedCourses,
+  ProfessorInfo,
+  ClassInfo,
+} from '../@types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import Plausible from 'plausible-tracker'
@@ -70,25 +79,25 @@ const convertHour = (hourNumber: string) => {
 }
 
 const isMandatory = (slot: SlotInfo, tClassConflict: boolean): boolean => {
-  return (tClassConflict || slot.lesson_type !== 'T') && slot.lesson_type !== 'O';
+  return (tClassConflict || slot.lesson_type !== 'T') && slot.lesson_type !== 'O'
 }
 
 const conflictsSeverity = (first: SlotInfo, second: SlotInfo, tClassConflict: boolean): number => {
-  return (isMandatory(first, tClassConflict) && isMandatory(second, tClassConflict)) ? 2 : 1;
+  return isMandatory(first, tClassConflict) && isMandatory(second, tClassConflict) ? 2 : 1
 }
 
 const classesConflictSeverity = (first: ClassInfo, second: ClassInfo, tClassConflict: boolean): number => {
-  let maxSeverity = 0;
+  let maxSeverity = 0
 
   for (const slot of first.slots) {
     for (const otherSlot of second.slots) {
       if (schedulesConflict(slot, otherSlot)) {
-        maxSeverity = Math.max(maxSeverity, conflictsSeverity(slot, otherSlot, tClassConflict));
+        maxSeverity = Math.max(maxSeverity, conflictsSeverity(slot, otherSlot, tClassConflict))
       }
     }
   }
 
-  return maxSeverity;
+  return maxSeverity
 }
 
 const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
@@ -101,7 +110,7 @@ const schedulesConflict = (first: SlotInfo, second: SlotInfo) => {
   const firstEnd = firstStart + firstDuration
   const secondEnd = secondStart + secondDuration
 
-  return firstEnd > secondStart && firstStart < secondEnd;
+  return firstEnd > secondStart && firstStart < secondEnd
 }
 
 const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
@@ -117,7 +126,10 @@ const getClassDisplayText = (course: CourseInfo, picked_class_id: number) => {
 }
 
 const getLessonBoxTime = (slot: SlotInfo) => {
-  return [convertHour(slot.start_time.toString()), convertHour(addHour(slot.start_time.toString(), slot.duration.toString()))].join('-')
+  return [
+    convertHour(slot.start_time.toString()),
+    convertHour(addHour(slot.start_time.toString(), slot.duration.toString())),
+  ].join('-')
 }
 
 const addHour = (hour1: string, hour2: string): string => {
@@ -194,29 +206,43 @@ const getClassTypeClassName = (type: string) => {
 
 const getClassType = (type: string) => {
   switch (type) {
-    case 'T': return 'Teórica';
-    case 'TP': return 'Teórico-Prática';
-    case 'PL': return 'Prática Laboratorial';
-    case 'OT': return 'Orientação Tutorial';
-    case 'S': return 'Seminário';
-    case 'P': return 'Prática';
-    case 'TC': return 'Teórica de Campo';
-    case 'O': return 'Outros';
-    case 'Teórica': return 'T';
-    case 'Teórico-Prática': return 'TP';
-    case 'Prática Laboratorial': return 'PL';
-    case 'Orientação Tutorial': return 'OT';
-    case 'Seminário': return 'S';
-    case 'Prática': return 'P';
-    case 'Teórica de Campo': return 'TC';
-    case 'Outros': return 'O';
+    case 'T':
+      return 'Teórica'
+    case 'TP':
+      return 'Teórico-Prática'
+    case 'PL':
+      return 'Prática Laboratorial'
+    case 'OT':
+      return 'Orientação Tutorial'
+    case 'S':
+      return 'Seminário'
+    case 'P':
+      return 'Prática'
+    case 'TC':
+      return 'Teórica de Campo'
+    case 'O':
+      return 'Outros'
+    case 'Teórica':
+      return 'T'
+    case 'Teórico-Prática':
+      return 'TP'
+    case 'Prática Laboratorial':
+      return 'PL'
+    case 'Orientação Tutorial':
+      return 'OT'
+    case 'Seminário':
+      return 'S'
+    case 'Prática':
+      return 'P'
+    case 'Teórica de Campo':
+      return 'TC'
+    case 'Outros':
+      return 'O'
   }
 }
 
 const getCourseTeachers = (courseInfo: CourseInfo) => {
-  return courseInfo.classes?.reduce((acc, classInfo) =>
-    [...acc, ...classInfo.slots.map(slot => slot.professors)],
-    []);
+  return courseInfo.classes?.reduce((acc, classInfo) => [...acc, ...classInfo.slots.map((slot) => slot.professors)], [])
 }
 
 const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
@@ -225,7 +251,7 @@ const convertCourseInfoToCourseOption = (course: CourseInfo): CourseOption => {
     picked_class_id: null,
     locked: false,
     filteredTeachers: null,
-    hide: []
+    hide: [],
   }
 }
 
@@ -270,52 +296,52 @@ const createDefaultCourseOption = (course: CourseInfo): CourseOption => {
     picked_class_id: null,
     locked: false,
     filteredTeachers: null,
-    hide: []
+    hide: [],
   }
 }
 
 const addCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions => {
   return multipleOptions.map((option) => {
-    const currentOption = createDefaultCourseOption(course);
-    currentOption.filteredTeachers = teacherIdsFromCourseInfo(course);
+    const currentOption = createDefaultCourseOption(course)
+    currentOption.filteredTeachers = teacherIdsFromCourseInfo(course)
     option.course_options.push(currentOption)
     return option
   })
 }
 
-const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions => (
+const removeCourseOption = (course: CourseInfo, multipleOptions: MultipleOptions): MultipleOptions =>
   multipleOptions.map((option) => {
     option.course_options = option.course_options.filter((courseOption) => courseOption.course_id !== course.id)
     return option
   })
-)
 
-const removeAllCourseOptions = (multipleOptions: MultipleOptions): MultipleOptions => (
+const removeAllCourseOptions = (multipleOptions: MultipleOptions): MultipleOptions =>
   multipleOptions.map((option) => {
     option.course_options = []
     return option
   })
-)
 
 const courseHasClassPicked = (course: CourseInfo, option: Option): CourseOption | null => {
-  const candidateOption = option.course_options.filter((courseOption) => courseOption.picked_class_id && (courseOption.course_id === course.course_unit_id));
+  const candidateOption = option.course_options.filter(
+    (courseOption) => courseOption.picked_class_id && courseOption.course_id === course.course_unit_id,
+  )
 
-  if (!candidateOption) return null;
+  if (!candidateOption) return null
 
-  return candidateOption[0];
+  return candidateOption[0]
 }
 
 const replaceCourseOptions = (courses: CourseInfo[], multipleOptions: MultipleOptions): MultipleOptions => {
   //  const courseOptions = courses.map((course) => createDefaultCourseOption(course))
 
   return multipleOptions.map((option) => {
-    const newCourseOptions = [];
+    const newCourseOptions = []
     for (const course of courses) {
-      const existingOption = courseHasClassPicked(course, option);
+      const existingOption = courseHasClassPicked(course, option)
       if (existingOption) {
-        newCourseOptions.push({ ...existingOption });
+        newCourseOptions.push({ ...existingOption })
       } else {
-        newCourseOptions.push(createDefaultCourseOption(course));
+        newCourseOptions.push(createDefaultCourseOption(course))
       }
     }
     // We have to use JSON.parse as well as JSON.stringify in order to create a copy for each option. Otherwise, they would
@@ -331,43 +357,43 @@ const getAllPickedSlots = (selected_courses: PickedCourses, option: Option) => {
     const courseInfo = selected_courses.find((selected_course) => selected_course.id === course.course_id)
     const classInfo = courseInfo.classes?.find((classInfo) => classInfo.id === course.picked_class_id)
 
-    if (!classInfo) return [];
+    if (!classInfo) return []
 
     return classInfo.slots
   })
 }
 
 const teachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] => {
-  const classes = courseInfo.classes;
-  if (!classes) return [];
+  const classes = courseInfo.classes
+  if (!classes) return []
 
-  return courseInfo.classes?.flatMap((c) => c.slots.flatMap((s) => s.professors));
+  return courseInfo.classes?.flatMap((c) => c.slots.flatMap((s) => s.professors))
 }
 
 const uniqueTeachersFromCourseInfo = (courseInfo: CourseInfo): ProfessorInfo[] => {
-  const uniqueIds = new Set();
-  return teachersFromCourseInfo(courseInfo).filter(item => {
+  const uniqueIds = new Set()
+  return teachersFromCourseInfo(courseInfo).filter((item) => {
     if (!uniqueIds.has(item.id)) {
-      uniqueIds.add(item.id);
-      return true;
+      uniqueIds.add(item.id)
+      return true
     }
-    return false;
-  });
+    return false
+  })
 }
 
 const teacherIdsFromCourseInfo = (courseInfo: CourseInfo): number[] => {
-  const teacherIds = [];
-  const uniqueTeachers = uniqueTeachersFromCourseInfo(courseInfo);
+  const teacherIds = []
+  const uniqueTeachers = uniqueTeachersFromCourseInfo(courseInfo)
 
   uniqueTeachers.forEach((teacher: ProfessorInfo) => {
-    teacherIds.push(teacher.id);
-  });
+    teacherIds.push(teacher.id)
+  })
 
-  return teacherIds;
+  return teacherIds
 }
 
 const scrollToTop = () => {
-  if (!window.location.href.split('#')[1]) document.getElementById('layout').scrollIntoView();
+  if (!window.location.href.split('#')[1]) document.getElementById('layout').scrollIntoView()
 }
 
 const plausible = Plausible({
@@ -413,5 +439,5 @@ export {
   teacherIdsFromCourseInfo,
   scrollToTop,
   classesConflictSeverity,
-  plausible
+  plausible,
 }

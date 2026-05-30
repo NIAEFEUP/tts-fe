@@ -1,13 +1,13 @@
-import { useRef, useState, useContext, useEffect } from "react"
-import { Lock, Unlock, ChevronsUpDown } from "lucide-react"
-import { CourseInfo } from "../../../../@types"
-import { getClassDisplayText } from "../../../../utils"
-import { Button } from "../../../ui/new/button"
-import { Menu } from "../../../ui/new/menu"
-import ClassSelectorDropdownController from "./ClassSelectorDropdownController"
-import ClassSelectorContext from "../../../../contexts/classSelector/ClassSelectorContext"
-import useCourseUnitClasses from "../../../../hooks/useCourseUnitClasses"
-import CourseContext from "../../../../contexts/CourseContext"
+import { useRef, useState, useContext, useEffect } from 'react'
+import { Lock, Unlock, ChevronsUpDown } from 'lucide-react'
+import { CourseInfo } from '../../../../@types'
+import { getClassDisplayText } from '../../../../utils'
+import { Button } from '../../../ui/new/button'
+import { Menu } from '../../../ui/new/menu'
+import ClassSelectorDropdownController from './ClassSelectorDropdownController'
+import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
+import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
+import CourseContext from '../../../../contexts/CourseContext'
 
 type Props = {
   course: CourseInfo
@@ -57,7 +57,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
           <div className="w-full">
             <Menu.Trigger asChild>
               <Button ref={classSelectorTriggerRef} disabled={courseOption?.locked} variant="outline">
-                <span className={`${selectedClassId === null ? "opacity-50" : ""}`}>
+                <span className={`${selectedClassId === null ? 'opacity-50' : ''}`}>
                   {getClassDisplayText(course, selectedClassId)}
                 </span>
                 {!courseOption?.locked && <ChevronsUpDown size="14" className="text-blackish dark:text-lightish" />}
@@ -86,7 +86,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
           <Button
             square
             variant="ghost"
-            title={courseOption?.locked ? "Desbloquear Horário" : "Bloquear Horário"}
+            title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
             onClick={toggleLocker}
             disabled={display === null}
           >

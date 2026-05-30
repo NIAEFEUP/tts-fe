@@ -95,4 +95,3 @@ export const useElementTransition = <T extends HTMLElement>(shouldMount: boolean
 
   return { ref, isMounted, status }
 }
-

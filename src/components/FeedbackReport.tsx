@@ -1,25 +1,25 @@
-import * as Sentry from "@sentry/react"
-import { Button } from "./ui/new/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
-import { useForm } from "react-hook-form"
-import { Input } from "./ui/new/input"
-import { Textarea } from "./ui/new/textArea"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useToast } from "./ui/use-toast"
-import { useState } from "react"
-import { Tabs, TabsItem, TabsItems } from "./ui/new/tabs"
-import { Flag } from "lucide-react"
-import { Menu } from "./ui/new/menu"
+import * as Sentry from '@sentry/react'
+import { Button } from './ui/new/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
+import { useForm } from 'react-hook-form'
+import { Input } from './ui/new/input'
+import { Textarea } from './ui/new/textArea'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useToast } from './ui/use-toast'
+import { useState } from 'react'
+import { Tabs, TabsItem, TabsItems } from './ui/new/tabs'
+import { Flag } from 'lucide-react'
+import { Menu } from './ui/new/menu'
 
 enum ReportType {
-  Suggestion = "Sugestão",
-  Bug = "Bug",
+  Suggestion = 'Sugestão',
+  Bug = 'Bug',
 }
 
 const bugSchema = z.object({
   email: z.string().optional(),
-  description: z.string().trim().min(1, { message: "É necessário descreveres" }),
+  description: z.string().trim().min(1, { message: 'É necessário descreveres' }),
 })
 
 export const FeedbackReport = () => {
@@ -41,7 +41,7 @@ export const FeedbackReport = () => {
 
     const userFeedback = {
       type: reportType,
-      email: values.email ?? "",
+      email: values.email ?? '',
       message: values.description,
       associatedEventId: eventId,
     }
@@ -51,7 +51,7 @@ export const FeedbackReport = () => {
     form.reset()
 
     toast({
-      title: "Enviado! Obrigado pelo teu feedback",
+      title: 'Enviado! Obrigado pelo teu feedback',
       duration: 3000,
     })
   }

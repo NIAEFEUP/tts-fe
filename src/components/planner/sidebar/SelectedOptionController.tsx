@@ -1,16 +1,16 @@
 //TODO(thePeras): Check this package, its extremely heavy (231.2k, gzipped: 50.8k)
-import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from "emoji-picker-react"
-import { useState, useContext, useRef, useEffect } from "react"
-import CopyOption from "./selectedOptionController/CopyOption"
-import PasteOption from "./selectedOptionController/PasteOption"
-import MultipleOptionsContext from "../../../contexts/MultipleOptionsContext"
-import { CourseOption } from "../../../@types"
-import { ThemeContext } from "../../../contexts/ThemeContext"
-import { Popover } from "../../ui/new/popover"
-import RandomFill from "./selectedOptionController/RandomFill"
-import { AnalyticsTracker, Feature } from "../../../utils/AnalyticsTracker"
-import { Input } from "../../ui/new/input"
-import { Button } from "../../ui/new/button"
+import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
+import { useState, useContext, useRef, useEffect } from 'react'
+import CopyOption from './selectedOptionController/CopyOption'
+import PasteOption from './selectedOptionController/PasteOption'
+import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
+import { CourseOption } from '../../../@types'
+import { ThemeContext } from '../../../contexts/ThemeContext'
+import { Popover } from '../../ui/new/popover'
+import RandomFill from './selectedOptionController/RandomFill'
+import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
+import { Input } from '../../ui/new/input'
+import { Button } from '../../ui/new/button'
 
 type Props = {
   currentOption: CourseOption[]
@@ -41,7 +41,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
     input.current.scrollLeft = 0
   }
 
-  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? "")
+  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '')
 
   useEffect(() => {
     setOptionName(multipleOptions[selectedOption].name)
@@ -105,7 +105,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
           onChange={renameOptionName}
           onBlur={renameOptionName}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === 'Enter') {
               e.preventDefault()
               renameOptionName(e)
               e.currentTarget.blur() // currentTarget is the element the event handler was attached to

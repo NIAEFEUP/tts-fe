@@ -20,7 +20,7 @@ const SEO = ({
   canonical = 'https://tts.niaefeup.pt/',
   ogImage = 'https://tts.niaefeup.pt/og-image.png',
   ogType = 'website',
-  breadcrumbs
+  breadcrumbs,
 }: SEOProps) => {
   // Structured Data for Organization
   const organizationSchema = {
@@ -32,8 +32,8 @@ const SEO = ({
     sameAs: [
       'https://github.com/NIAEFEUP',
       'https://www.instagram.com/niaefeup/',
-      'https://www.linkedin.com/company/niaefeup/'
-    ]
+      'https://www.linkedin.com/company/niaefeup/',
+    ],
   }
 
   // Structured Data for WebSite
@@ -46,21 +46,23 @@ const SEO = ({
     description: description,
     publisher: {
       '@type': 'Organization',
-      name: 'NIAEFEUP'
-    }
+      name: 'NIAEFEUP',
+    },
   }
 
   // BreadcrumbList Schema
-  const breadcrumbSchema = breadcrumbs ? {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: breadcrumbs.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      item: item.url
-    }))
-  } : null
+  const breadcrumbSchema = breadcrumbs
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: breadcrumbs.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.name,
+          item: item.url,
+        })),
+      }
+    : null
 
   return (
     <Helmet>
@@ -68,17 +70,17 @@ const SEO = ({
       <title>{title}</title>
       <meta name="title" content={title} />
       <meta name="description" content={description} />
-      
+
       {/* Canonical URL */}
       <link rel="canonical" href={canonical} />
-      
+
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={canonical} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
-      
+
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={canonical} />
@@ -87,17 +89,9 @@ const SEO = ({
       <meta name="twitter:image" content={ogImage} />
 
       {/* Structured Data */}
-      <script type="application/ld+json">
-        {JSON.stringify(organizationSchema)}
-      </script>
-      <script type="application/ld+json">
-        {JSON.stringify(websiteSchema)}
-      </script>
-      {breadcrumbSchema && (
-        <script type="application/ld+json">
-          {JSON.stringify(breadcrumbSchema)}
-        </script>
-      )}
+      <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
+      <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
+      {breadcrumbSchema && <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>}
     </Helmet>
   )
 }
