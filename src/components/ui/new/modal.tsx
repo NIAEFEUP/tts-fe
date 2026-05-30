@@ -1,9 +1,9 @@
-import { createContext, useContext, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { createContext, use, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react"
 
-import { Slot } from "./slot"
-import { useElementTransition } from "../../../hooks/useElementTransition"
-import { composeRefs } from "../../../lib/compose-refs"
-import { cn } from "../../../lib/utils"
+import { Slot } from "@/components/ui/new/slot"
+import { useElementTransition } from "@/hooks/useElementTransition"
+import { composeRefs } from "@/lib/compose-refs"
+import { cn } from "@/lib/utils"
 
 // Hook to manage native <dialog> element behavior
 const useDialogElement = (open: boolean, setOpen: (isOpen: boolean) => void) => {
@@ -15,28 +15,10 @@ const useDialogElement = (open: boolean, setOpen: (isOpen: boolean) => void) => 
     const origin = ref.current
     if (!origin) return
 
-    // Prevent body scroll by preventing wheel and touchmove events
-    const preventScroll = (e: Event) => {
-      e.preventDefault()
-    }
-
-    if (open) {
-      document.addEventListener("wheel", preventScroll, { passive: false })
-      document.addEventListener("touchmove", preventScroll, { passive: false })
-    } else {
-      document.removeEventListener("wheel", preventScroll)
-      document.removeEventListener("touchmove", preventScroll)
-    }
-
     const openEvent = new CustomEvent(open ? "ui:modal-open" : "ui:modal-close", {
       detail: { origin: ref.current },
     })
     window.dispatchEvent(openEvent)
-
-    return () => {
-      document.removeEventListener("wheel", preventScroll)
-      document.removeEventListener("touchmove", preventScroll)
-    }
   }, [open])
 
   useLayoutEffect(() => {
@@ -132,7 +114,7 @@ const ModalContext = createContext<{
 } | null>(null)
 
 const useModalContext = () => {
-  const context = useContext(ModalContext)
+  const context = use(ModalContext)
 
   if (!context) {
     throw new Error("Modal component must be used within a Modal")
@@ -174,7 +156,7 @@ const Modal = ({ open: propsOpen, onOpenChange, children }: ModalProps) => {
     [descriptionId, labelId, open, setOpen],
   )
 
-  return <ModalContext.Provider value={ctx}>{children}</ModalContext.Provider>
+  return <ModalContext value={ctx}>{children}</ModalContext>
 }
 
 interface ModalContentProps extends React.ComponentPropsWithRef<"dialog"> {
@@ -190,31 +172,23 @@ const ModalContent = ({ className, children, catchFocus = true, ...props }: Moda
   if (!isMounted) return
 
   return (
-    <>
-      {/* Backdrop — rendered as a sibling so Radix portals (z-50) stack above it correctly */}
-      <div
-        className={cn("fixed inset-0 z-[49] bg-black/20 backdrop-blur-sm", "transition-all duration-300 motion-reduce:transition-none", "not-data-[status=open]:opacity-0 not-data-[status=open]:duration-150")}
-        data-status={status}
-        onClick={() => setOpen(false)}
-      />
-      <dialog
-        ref={composeRefs(dialogRef, transitionRef)}
-        data-status={status}
-        aria-labelledby={labelId}
-        aria-describedby={descriptionId}
-        className={cn("fixed inset-0 z-50 m-auto border-0 bg-transparent p-0", className)}
-        {...props}
-      >
-        {catchFocus && (
-          // By default, the HTML <dialog> element focuses the first focusable child when opened.
-          // If that element is scrolled out of view, the dialog may jump to it, causing a jarring and confusing scroll.
-          // Additionally, browsers like Safari may show focus-visible styles on that element, which can look odd.
-          // The following element catches initial focus to prevent these issues.
-          <div className="sr-only" autoFocus tabIndex={-1} data-modal-focus-catcher="" />
-        )}
-        {children}
-      </dialog>
-    </>
+    <dialog
+      ref={composeRefs(dialogRef, transitionRef)}
+      data-status={status}
+      aria-labelledby={labelId}
+      aria-describedby={descriptionId}
+      className={cn("m-auto", className)}
+      {...props}
+    >
+      {catchFocus && (
+        // By default, the HTML <dialog> element focuses the first focusable child when opened.
+        // If that element is scrolled out of view, the dialog may jump to it, causing a jarring and confusing scroll.
+        // Additionally, browsers like Safari may show focus-visible styles on that element, which can look odd.
+        // The following element catches initial focus to prevent these issues.
+        <div className="sr-only" autoFocus tabIndex={-1} data-modal-focus-catcher="" />
+      )}
+      {children}
+    </dialog>
   )
 }
 
