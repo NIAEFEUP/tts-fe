@@ -1,45 +1,45 @@
-import { ChevronLeft, ChevronRight, Ellipsis } from 'lucide-react'
-import { useMemo } from 'react'
+import { ChevronLeft, ChevronRight, Ellipsis } from "lucide-react"
+import { useMemo } from "react"
 
-import { Slot, Slottable } from './slot'
-import { cn, cva } from '../../../lib/utils'
+import { Slot, Slottable } from "@/components/ui/new/slot"
+import { cn, cva } from "@/lib/utils"
 
 const paginationLinkStyle = cva({
   base: [
-    'inline-flex h-(--pagination-height) w-(--pagination-height) shrink-0 items-center justify-center',
-    'rounded-lg font-medium text-foreground-secondary text-sm',
-    'transition enabled:cursor-pointer disabled:opacity-40',
-    'hover:bg-foreground/5 hover:text-foreground',
-    'focus-visible:ring-(length:--ring-width) outline-none ring-ring',
-    'data-selected:bg-accent data-selected:text-accent-foreground data-selected:hover:bg-accent/90',
+    "inline-flex h-(--pagination-height) min-w-(--pagination-height) shrink-0 items-center justify-center px-2",
+    "rounded-lg font-medium text-foreground-secondary text-sm",
+    "transition enabled:cursor-pointer disabled:opacity-40",
+    "hover:bg-foreground/5 hover:text-foreground",
+    "focus-visible:ring-(length:--ring-width) outline-none ring-ring",
+    "data-selected:bg-accent data-selected:text-accent-foreground data-selected:hover:bg-accent/90",
   ],
   variants: {
     size: {
-      sm: '[--pagination-height:--spacing(8)]',
-      md: '[--pagination-height:--spacing(10)]',
+      sm: "[--pagination-height:--spacing(8)]",
+      md: "[--pagination-height:--spacing(10)]",
     },
   },
   defaultVariants: {
-    size: 'sm',
+    size: "sm",
   },
 })
 
-const Pagination = ({ ref, className, ...props }: React.ComponentPropsWithRef<'nav'>) => {
-  return <nav ref={ref} aria-label="pagination" className={cn('flex w-full justify-center', className)} {...props} />
+const Pagination = ({ ref, className, ...props }: React.ComponentPropsWithRef<"nav">) => {
+  return <nav ref={ref} aria-label="pagination" className={cn("flex w-full justify-center", className)} {...props} />
 }
 
-const PaginationList = ({ ref, className, ...props }: React.ComponentPropsWithRef<'ul'>) => {
-  return <ul ref={ref} className={cn('flex flex-row items-center gap-1', className)} {...props} />
+const PaginationList = ({ ref, className, ...props }: React.ComponentPropsWithRef<"ul">) => {
+  return <ul ref={ref} className={cn("flex flex-row items-center gap-1", className)} {...props} />
 }
 
-const PaginationItem = ({ ref, ...props }: React.ComponentPropsWithRef<'li'>) => {
+const PaginationItem = ({ ref, ...props }: React.ComponentPropsWithRef<"li">) => {
   return <li ref={ref} {...props} />
 }
 
-interface PaginationLinkProps extends React.ComponentPropsWithRef<'button'> {
+interface PaginationLinkProps extends React.ComponentPropsWithRef<"button"> {
   asChild?: boolean
   isActive?: boolean
-  size?: 'sm' | 'md'
+  size?: "sm" | "md"
 }
 
 const PaginationLink = ({
@@ -47,17 +47,17 @@ const PaginationLink = ({
   className,
   asChild,
   isActive,
-  size = 'sm',
-  type = 'button',
+  size = "sm",
+  type = "button",
   ...props
 }: PaginationLinkProps) => {
-  const Comp = asChild ? Slot : 'button'
+  const Comp = asChild ? Slot : "button"
 
   return (
     <Comp
       ref={ref}
       type={asChild ? undefined : type}
-      aria-current={isActive ? 'page' : undefined}
+      aria-current={isActive ? "page" : undefined}
       data-selected={isActive || undefined}
       className={cn(paginationLinkStyle({ size }), className)}
       {...props}
@@ -65,7 +65,7 @@ const PaginationLink = ({
   )
 }
 
-type PaginationStepProps = Omit<PaginationLinkProps, 'children'> & {
+type PaginationStepProps = Omit<PaginationLinkProps, "children"> & {
   children?: React.ReactElement
 }
 
@@ -99,14 +99,14 @@ const PaginationNext = ({ asChild, children, ...props }: PaginationStepProps) =>
   )
 }
 
-const PaginationEllipsis = ({ className, ...props }: React.ComponentPropsWithRef<'span'>) => {
+const PaginationEllipsis = ({ className, ...props }: React.ComponentPropsWithRef<"span">) => {
   return (
     <span
       aria-hidden="true"
-      className={cn('flex h-9 w-9 items-center justify-center text-foreground-secondary', className)}
+      className={cn("flex h-9 w-9 items-center justify-center text-foreground-secondary", className)}
       {...props}
     >
-      <Ellipsis className="size-4" />
+      <Ellipsis size={16} />
       <span className="sr-only">More pages</span>
     </span>
   )
@@ -135,8 +135,8 @@ interface UsePaginationOptions {
 }
 
 export type PaginationItemDescriptor =
-  | { type: 'page'; value: number; selected: boolean; key: string }
-  | { type: 'ellipsis'; key: 'start-ellipsis' | 'end-ellipsis' }
+  | { type: "page"; value: number; selected: boolean; key: string }
+  | { type: "ellipsis"; key: "start-ellipsis" | "end-ellipsis" }
 
 const range = (start: number, end: number): number[] => {
   const length = Math.max(0, end - start + 1)
@@ -171,7 +171,7 @@ export const usePagination = ({
 
     for (const value of startPages) {
       items.push({
-        type: 'page',
+        type: "page",
         value,
         selected: value === page,
         key: `page-${value}`,
@@ -179,10 +179,10 @@ export const usePagination = ({
     }
 
     if (siblingsStart > boundaryCount + 2) {
-      items.push({ type: 'ellipsis', key: 'start-ellipsis' })
+      items.push({ type: "ellipsis", key: "start-ellipsis" })
     } else if (boundaryCount + 1 < count - boundaryCount) {
       items.push({
-        type: 'page',
+        type: "page",
         value: boundaryCount + 1,
         selected: page === boundaryCount + 1,
         key: `page-${boundaryCount + 1}`,
@@ -191,7 +191,7 @@ export const usePagination = ({
 
     for (const value of range(siblingsStart, siblingsEnd)) {
       items.push({
-        type: 'page',
+        type: "page",
         value,
         selected: value === page,
         key: `page-${value}`,
@@ -199,10 +199,10 @@ export const usePagination = ({
     }
 
     if (siblingsEnd < count - boundaryCount - 1) {
-      items.push({ type: 'ellipsis', key: 'end-ellipsis' })
+      items.push({ type: "ellipsis", key: "end-ellipsis" })
     } else if (count - boundaryCount > boundaryCount) {
       items.push({
-        type: 'page',
+        type: "page",
         value: count - boundaryCount,
         selected: page === count - boundaryCount,
         key: `page-${count - boundaryCount}`,
@@ -211,7 +211,7 @@ export const usePagination = ({
 
     for (const value of endPages) {
       items.push({
-        type: 'page',
+        type: "page",
         value,
         selected: value === page,
         key: `page-${value}`,

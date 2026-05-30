@@ -1,6 +1,6 @@
-import { useContext } from 'react'
-import { Pagination, usePagination } from '../../components/ui/new/pagination'
-import AdminPaginationContext from '../../contexts/admin/AdminPaginationContext'
+import { useContext } from "react"
+import { Pagination, usePagination } from "../../components/ui/new/pagination"
+import AdminPaginationContext from "../../contexts/admin/AdminPaginationContext"
 
 export const AdminPagination = () => {
   const { currPage, setCurrPage, totalPages } = useContext(AdminPaginationContext)
@@ -26,7 +26,7 @@ export const AdminPagination = () => {
         </Pagination.Item>
 
         {items.map((item) =>
-          item.type === 'page' ? (
+          item.type === "page" ? (
             <Pagination.Item key={item.key}>
               <Pagination.Link isActive={item.selected} onClick={() => goToPage(item.value)}>
                 {item.value}
