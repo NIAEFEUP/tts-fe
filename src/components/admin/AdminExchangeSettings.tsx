@@ -1,6 +1,6 @@
 'use client'
 
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../ui/new/tabs'
+import { Tabs } from '../ui/new/tabs'
 import { AdminExchangeCourseSettings } from './AdminExchangeCourseSettings'
 import { AdminExchangeCourseUnitSettings } from './AdminExchangeCourseUnitSettings'
 
@@ -12,19 +12,19 @@ export const AdminExchangeSettings = () => {
       </div>
 
       <Tabs>
-        <TabsItems className="w-1/2">
-          <TabsItem className="flex-1">Definições de Curso</TabsItem>
-          <TabsItem className="flex-1">Definições de Cadeira</TabsItem>
-        </TabsItems>
+        <Tabs.Items className="w-1/2">
+          <Tabs.Item className="flex-1">Definições de Curso</Tabs.Item>
+          <Tabs.Item className="flex-1">Definições de Cadeira</Tabs.Item>
+        </Tabs.Items>
 
-        <TabsPanels>
-          <TabsPanel>
+        <Tabs.Panels>
+          <Tabs.Panel>
             <AdminExchangeCourseSettings />
-          </TabsPanel>
-          <TabsPanel>
+          </Tabs.Panel>
+          <Tabs.Panel>
             <AdminExchangeCourseUnitSettings />
-          </TabsPanel>
-        </TabsPanels>
+          </Tabs.Panel>
+        </Tabs.Panels>
       </Tabs>
     </div>
   )

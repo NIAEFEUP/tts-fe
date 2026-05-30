@@ -6,7 +6,7 @@ import MajorContext from '../contexts/MajorContext'
 import { useSidebarContext } from '../components/layout/SidebarPosition'
 import { SidebarProvider } from '../components/layout/SidebarPosition'
 import PlannerSchedule from '../components/planner/schedule/PlannerSchedule'
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../components/ui/new/tabs'
+import { Tabs } from '../components/ui/new/tabs'
 import Alert, { AlertType } from '../components/planner/Alert'
 import { AlertDescription } from '../components/ui/alert'
 import SessionContext from '../contexts/SessionContext'
@@ -48,22 +48,22 @@ const Content = () => {
     <div className="h-full w-full">
       <div className="flex w-full  px-4 py-4 lg:hidden justify-items-start">
         <Tabs className="w-full">
-          <TabsItems className="w-full">
-            <TabsItem className="flex-1">Horário</TabsItem>
-            <TabsItem className="flex-1">Turmas</TabsItem>
-          </TabsItems>
-          <TabsPanels>
-            <TabsPanel>
+          <Tabs.Items className="w-full">
+            <Tabs.Item className="flex-1">Horário</Tabs.Item>
+            <Tabs.Item className="flex-1">Turmas</Tabs.Item>
+          </Tabs.Items>
+          <Tabs.Panels>
+            <Tabs.Panel>
               <div className="rounded-sm bg-lightest px-3 py-3 dark:bg-dark ">
                 <div className="h-full w-full ">
                   <PlannerSchedule />
                 </div>
               </div>
-            </TabsPanel>
-            <TabsPanel>
+            </Tabs.Panel>
+            <Tabs.Panel>
               <Sidebar />
-            </TabsPanel>
-          </TabsPanels>
+            </Tabs.Panel>
+          </Tabs.Panels>
         </Tabs>
       </div>
       <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">

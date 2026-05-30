@@ -4,7 +4,7 @@ import CoursePickerContext from '../../../../../contexts/coursePicker/CoursePick
 import MultipleOptionsContext from '../../../../../contexts/MultipleOptionsContext'
 import { groupCoursesByYear, removeCourseOption, addCourseOption, replaceCourseOptions } from '../../../../../utils'
 import { NoMajorSelectedSVG } from '../../../../svgs'
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../../../../ui/new/tabs'
+import { Tabs } from '../../../../ui/new/tabs'
 import { CourseInfo } from '../../../../../@types'
 import { Checkbox } from '../../../../ui/new/checkbox'
 import { Label } from '../../../../ui/label'
@@ -72,19 +72,19 @@ const CourseYearTabs = () => {
 
   return coursesByYear.length > 0 ? (
     <Tabs className="w-full">
-      <TabsItems className="w-full">
+      <Tabs.Items className="w-full">
         {coursesByYear.map((_, idx) => (
-          <TabsItem className="select-none" key={idx}>
+          <Tabs.Item className="select-none" key={idx}>
             {`${idx + 1}º Ano`}
-          </TabsItem>
+          </Tabs.Item>
         ))}
-      </TabsItems>
-      <TabsPanels>
+      </Tabs.Items>
+      <Tabs.Panels>
         {coursesByYear.map((yearCourses, idx) => {
           const yearStatus = getYearStatus(idx)
 
           return (
-            <TabsPanel key={idx}>
+            <Tabs.Panel key={idx}>
               <ScrollArea className="h-[200px]">
                 <div className="flex flex-col gap-2 p-4">
                   {/* Select All checkbox for this year */}
@@ -128,10 +128,10 @@ const CourseYearTabs = () => {
                     ))}
                 </div>
               </ScrollArea>
-            </TabsPanel>
+            </Tabs.Panel>
           )
         })}
-      </TabsPanels>
+      </Tabs.Panels>
     </Tabs>
   ) : (
     <div className="flex items-center justify-center">

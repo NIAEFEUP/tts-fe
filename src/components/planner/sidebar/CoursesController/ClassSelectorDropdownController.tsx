@@ -6,7 +6,7 @@ import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils'
 import { Desert } from '../../../svgs'
 import { Menu } from '../../../ui/new/menu'
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../../../ui/new/tabs'
+import { Tabs } from '../../../ui/new/tabs'
 import ClassItem from './ClassItem'
 import ProfessorItem from './ProfessorItem'
 
@@ -179,12 +179,12 @@ const ClassSelectorDropdownController = ({
           <p className="w-full select-none p-2 text-left">A carregar as aulas...</p>
         ) : (
           <Tabs className="w-full">
-            <TabsItems className="w-full">
-              <TabsItem className="flex-1">Turmas</TabsItem>
-              <TabsItem className="flex-1">Professores</TabsItem>
-            </TabsItems>
-            <TabsPanels>
-              <TabsPanel>
+            <Tabs.Items className="w-full">
+              <Tabs.Item className="flex-1">Turmas</Tabs.Item>
+              <Tabs.Item className="flex-1">Professores</Tabs.Item>
+            </Tabs.Items>
+            <Tabs.Panels>
+              <Tabs.Panel>
                 {/* Removed max-h-96 and overflow-y-auto to fix the double scrollbar issue */}
                 <div className="pt-2 w-full">
                   {course.classes?.length === 0 ? (
@@ -215,8 +215,8 @@ const ClassSelectorDropdownController = ({
                     </>
                   )}
                 </div>
-              </TabsPanel>
-              <TabsPanel>
+              </Tabs.Panel>
+              <Tabs.Panel>
                 <div className="pt-2 w-full">
                   {teacherFilters.length === 0 ? (
                     <NoTeachersFound mobile={false} />
@@ -249,8 +249,8 @@ const ClassSelectorDropdownController = ({
                     </>
                   )}
                 </div>
-              </TabsPanel>
-            </TabsPanels>
+              </Tabs.Panel>
+            </Tabs.Panels>
           </Tabs>
         )}
       </div>

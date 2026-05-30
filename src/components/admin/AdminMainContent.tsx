@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../ui/new/tabs'
+import { Tabs } from '../ui/new/tabs'
 import { MultipleStudentExchanges } from './requests/MultipleStudentExchanges'
 import { RequestFilters } from './requests/RequestFilters'
 import { SingleStudentExchanges } from './requests/SingleStudentExchanges'
@@ -52,27 +52,27 @@ export const AdminMainContent = () => {
 
           {/* Kept your new Tabs component structure */}
           <Tabs onChange={() => setCurrPage(1)}>
-            <TabsItems className="w-full">
-              <TabsItem className="flex-1">Trocas entre estudantes</TabsItem>
-              <TabsItem className="flex-1">Trocas urgentes</TabsItem>
-              <TabsItem className="flex-1">Inscrições</TabsItem>
-              <TabsItem className="flex-1">Trocas individuais</TabsItem>
-            </TabsItems>
+            <Tabs.Items className="w-full">
+              <Tabs.Item className="flex-1">Trocas entre estudantes</Tabs.Item>
+              <Tabs.Item className="flex-1">Trocas urgentes</Tabs.Item>
+              <Tabs.Item className="flex-1">Inscrições</Tabs.Item>
+              <Tabs.Item className="flex-1">Trocas individuais</Tabs.Item>
+            </Tabs.Items>
 
-            <TabsPanels>
-              <TabsPanel>
+            <Tabs.Panels>
+              <Tabs.Panel>
                 <MultipleStudentExchanges />
-              </TabsPanel>
-              <TabsPanel>
+              </Tabs.Panel>
+              <Tabs.Panel>
                 <SingleStudentExchanges />
-              </TabsPanel>
-              <TabsPanel>
+              </Tabs.Panel>
+              <Tabs.Panel>
                 <StudentEnrollments />
-              </TabsPanel>
-              <TabsPanel>
+              </Tabs.Panel>
+              <Tabs.Panel>
                 <AdminMarketplaceExchanges />
-              </TabsPanel>
-            </TabsPanels>
+              </Tabs.Panel>
+            </Tabs.Panels>
 
             <div className="mt-8">
               <AdminPagination />

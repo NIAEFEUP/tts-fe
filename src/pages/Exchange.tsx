@@ -12,7 +12,7 @@ import { ViewRequests } from '../components/exchange/requests/view/ViewRequests'
 import { FaceFrownIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline'
 import { Schedule } from '../components/planner'
 import { Enrollments } from '../components/exchange/enrollments/Enrollments'
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../components/ui/new/tabs'
+import { Tabs } from '../components/ui/new/tabs'
 import { AlertCircle } from 'lucide-react'
 
 import { Alert, AlertDescription } from '../components/ui/alert'
@@ -152,12 +152,12 @@ const ExchangePage = () => {
 
         <div className="lg:min-h-adjusted order-2 col-span-12 flex flex-col rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4 h-[85vh] overflow-y-auto no-scrollbar">
           <Tabs defaultIndex={0} className="flex flex-col h-full">
-            <TabsItems className="w-full mb-2 shrink-0">
-              <TabsItem className="flex-1">Pedidos</TabsItem>
-              <TabsItem className="flex-1">Inscrições</TabsItem>
-            </TabsItems>
-            <TabsPanels className="grow">
-              <TabsPanel>
+            <Tabs.Items className="w-full mb-2 shrink-0">
+              <Tabs.Item className="flex-1">Pedidos</Tabs.Item>
+              <Tabs.Item className="flex-1">Inscrições</Tabs.Item>
+            </Tabs.Items>
+            <Tabs.Panels className="grow">
+              <Tabs.Panel>
                 {!isSessionLoading && user?.eligible_exchange ? (
                   <ExchangeSidebarStatusView
                     sidebarStatus={sidebarStatus}
@@ -175,11 +175,11 @@ const ExchangePage = () => {
                     )}
                   </>
                 )}
-              </TabsPanel>
-              <TabsPanel>
+              </Tabs.Panel>
+              <Tabs.Panel>
                 <Enrollments setExchangeSidebarStatus={setSidebarStatus} />
-              </TabsPanel>
-            </TabsPanels>
+              </Tabs.Panel>
+            </Tabs.Panels>
           </Tabs>
         </div>
       </div>

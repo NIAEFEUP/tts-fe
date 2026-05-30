@@ -6,7 +6,7 @@ import useMarketplaceRequests from '../../../../hooks/useMarketplaceRequests'
 import { Desert } from '../../../svgs'
 import { Button } from '../../../ui/new/button'
 import { Skeleton } from '../../../ui/skeleton'
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../../../ui/new/tabs'
+import { Tabs } from '../../../ui/new/tabs'
 import { CommonRequestCard } from './cards/CommonRequestCard'
 import { MineRequestCard } from './cards/MineRequestCard'
 import { ReceivedRequestCard } from './cards/ReceivedRequestCard'
@@ -131,15 +131,15 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
       </div>
 
       <Tabs defaultIndex={0} onChange={setCurrentRequestTypeFilter} className="w-full flex flex-col">
-        <TabsItems className="flex flex-row justify-between w-full">
-          <TabsItem className="flex-1">Todos</TabsItem>
-          <TabsItem className="flex-1">Enviados</TabsItem>
-          <TabsItem className="flex-1">Recebidos</TabsItem>
-        </TabsItems>
+        <Tabs.Items className="flex flex-row justify-between w-full">
+          <Tabs.Item className="flex-1">Todos</Tabs.Item>
+          <Tabs.Item className="flex-1">Enviados</Tabs.Item>
+          <Tabs.Item className="flex-1">Recebidos</Tabs.Item>
+        </Tabs.Items>
 
-        <TabsPanels className="grow w-full">
+        <Tabs.Panels className="grow w-full">
           {/* Todos */}
-          <TabsPanel className="mt-4 w-full">
+          <Tabs.Panel className="mt-4 w-full">
             <ViewRequestsFilters
               filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
               classesFilterHook={[classesFilter, setClassesFilter]}
@@ -174,10 +174,10 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
                 </>
               )}
             </div>
-          </TabsPanel>
+          </Tabs.Panel>
 
           {/* Enviados */}
-          <TabsPanel className="mt-4 w-full">
+          <Tabs.Panel className="mt-4 w-full">
             <ViewRequestsFilters
               filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
               classesFilterHook={[classesFilter, setClassesFilter]}
@@ -208,10 +208,10 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
                 </EmptyRequestGuard>
               )}
             </div>
-          </TabsPanel>
+          </Tabs.Panel>
 
           {/* Recebidos */}
-          <TabsPanel className="mt-4 w-full">
+          <Tabs.Panel className="mt-4 w-full">
             <ViewRequestsFilters
               filterCourseUnitsHook={[filterCourseUnitNames, setFilterCourseUnitNames]}
               classesFilterHook={[classesFilter, setClassesFilter]}
@@ -242,8 +242,8 @@ export const ViewRequests = ({ setExchangeSidebarStatus }: Props) => {
                 </EmptyRequestGuard>
               )}
             </div>
-          </TabsPanel>
-        </TabsPanels>
+          </Tabs.Panel>
+        </Tabs.Panels>
       </Tabs>
     </div>
   )

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import useAdminClasses from '../../hooks/admin/useAdminClasses'
 import { BarLoader } from 'react-spinners'
-import { Tabs, TabsItem, TabsItems } from '../ui/new/tabs'
+import { Tabs } from '../ui/new/tabs'
 import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
@@ -137,13 +137,13 @@ export const AdminExchangeClasses = () => {
                 if (course) setSelectedCourseId(course.id)
               }}
             >
-              <TabsItems className="w-full">
+              <Tabs.Items className="w-full">
                 {courses.map((course) => (
-                  <TabsItem key={course.id} className="flex-1" title={course.acronym}>
+                  <Tabs.Item key={course.id} className="flex-1" title={course.acronym}>
                     {course.acronym}
-                  </TabsItem>
+                  </Tabs.Item>
                 ))}
-              </TabsItems>
+              </Tabs.Items>
             </Tabs>
 
             <div className="w-full">

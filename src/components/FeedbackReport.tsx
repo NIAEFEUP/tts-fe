@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from './ui/use-toast'
 import { useState } from 'react'
-import { Tabs, TabsItem, TabsItems } from './ui/new/tabs'
+import { Tabs } from './ui/new/tabs'
 import { Flag } from 'lucide-react'
 import { Menu } from './ui/new/menu'
 
@@ -70,10 +70,10 @@ export const FeedbackReport = () => {
           selectedIndex={reportType === ReportType.Suggestion ? 0 : 1}
           onChange={(index) => setReportType(index === 0 ? ReportType.Suggestion : ReportType.Bug)}
         >
-          <TabsItems className="w-full pb-0">
-            <TabsItem className="flex-1">Sugestão</TabsItem>
-            <TabsItem className="flex-1">Bug</TabsItem>
-          </TabsItems>
+          <Tabs.Items className="w-full pb-0">
+            <Tabs.Item className="flex-1">Sugestão</Tabs.Item>
+            <Tabs.Item className="flex-1">Bug</Tabs.Item>
+          </Tabs.Items>
         </Tabs>
 
         <Form {...form}>

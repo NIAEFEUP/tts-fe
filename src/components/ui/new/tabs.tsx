@@ -1,35 +1,44 @@
-'use client'
+import { MotionConfig, motion } from 'motion/react'
+import { Children, createContext, use, useCallback, useId, useLayoutEffect, useMemo, useState } from 'react'
 
-import { motion } from 'motion/react'
-import { Children, createContext, useCallback, useContext, useId, useLayoutEffect, useMemo, useState } from 'react'
+import { Slot } from '@/components/ui/new/slot'
+import { cn } from '@/lib/utils'
 
-import { Slot } from './slot'
-import { cn } from '../../../lib/utils'
+type TabsVariant = 'pill' | 'underline'
 
 interface TabsContextValue {
   id: string
   tabs: string[]
+  selectedIndex: number
   selectedTab: string | undefined
   setSelectedTab: (id: string) => void
   next: () => void
   previous: () => void
   orientation: 'horizontal' | 'vertical'
+  variant: TabsVariant
   registerTab: (id: string) => () => void
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null)
 
 const useTabsContext = () => {
-  const context = useContext(TabsContext)
+  const context = use(TabsContext)
   if (!context) throw new Error('TabsContext must be used within a Tabs component')
   return context
 }
+
+// Module-level counter combined with useId() to give each Tabs instance a
+// globally-unique layout scope. useId() alone collides across React trees (e.g.
+// across Astro view transitions), causing motion's layoutId to animate the
+// indicator between unrelated Tabs on different pages.
+let tabsInstanceCounter = 0
 
 interface TabsProps extends Omit<React.ComponentPropsWithRef<'div'>, 'onChange'> {
   defaultIndex?: number
   selectedIndex?: number
   onChange?: (index: number) => void
   orientation?: TabsContextValue['orientation']
+  variant?: TabsVariant
   children: React.ReactNode
 }
 
@@ -38,10 +47,12 @@ const Tabs = ({
   selectedIndex: selectedIndexProp,
   onChange: onChangeProp,
   orientation = 'horizontal',
+  variant = 'pill',
   children,
   ...props
 }: TabsProps) => {
-  const id = useId()
+  const reactId = useId()
+  const [id] = useState(() => `${reactId}-${++tabsInstanceCounter}`)
   const [internalSelectedIndex, setInternalSelectedIndex] = useState(defaultIndex ?? 0)
   const [tabs, setTabs] = useState<string[]>([])
 
@@ -91,20 +102,24 @@ const Tabs = ({
     () => ({
       id,
       tabs,
+      selectedIndex,
       selectedTab,
       setSelectedTab,
       next,
       previous,
       orientation,
+      variant,
       registerTab,
     }),
-    [id, tabs, selectedTab, setSelectedTab, next, previous, orientation, registerTab],
+    [id, tabs, selectedIndex, selectedTab, setSelectedTab, next, previous, orientation, variant, registerTab],
   )
 
   return (
-    <TabsContext.Provider value={ctx}>
-      <div {...props}>{children}</div>
-    </TabsContext.Provider>
+    <TabsContext value={ctx}>
+      <MotionConfig reducedMotion="user">
+        <div {...props}>{children}</div>
+      </MotionConfig>
+    </TabsContext>
   )
 }
 
@@ -112,21 +127,32 @@ interface TabsItemsProps extends Omit<React.ComponentPropsWithRef<'div'>, 'role'
   children: React.ReactNode
 }
 
+const ItemIndexContext = createContext<number>(0)
+
 const TabsItems = ({ children, className, ...props }: TabsItemsProps) => {
-  const { orientation } = useTabsContext()
+  const { orientation, variant } = useTabsContext()
 
   return (
     <div
       role="tablist"
       aria-orientation={orientation}
       className={cn(
-        'flex gap-1.5',
-        orientation === 'horizontal' ? 'items-center pb-4' : 'flex-col items-start pr-4',
+        'flex',
+        variant === 'pill' && 'gap-1.5',
+        orientation === 'horizontal'
+          ? variant === 'pill'
+            ? 'items-center pb-4'
+            : 'mb-4 items-center border-border border-b'
+          : variant === 'pill'
+            ? 'flex-col items-start pr-4'
+            : 'mr-4 flex-col items-start border-border border-r',
         className,
       )}
       {...props}
     >
-      {children}
+      {Children.map(children, (child, index) => (
+        <ItemIndexContext value={index}>{child}</ItemIndexContext>
+      ))}
     </div>
   )
 }
@@ -140,7 +166,18 @@ const getItemId = (id: string | undefined) => (id ? `tab${id}` : undefined)
 
 const TabsItem = ({ children, asChild, onClick, onKeyDown, className, ...props }: TabsItemProps) => {
   const id = useId()
-  const { id: tabsId, selectedTab, setSelectedTab, registerTab, orientation, next, previous } = useTabsContext()
+  const index = use(ItemIndexContext)
+  const {
+    id: tabsId,
+    selectedTab,
+    selectedIndex,
+    setSelectedTab,
+    registerTab,
+    orientation,
+    variant,
+    next,
+    previous,
+  } = useTabsContext()
 
   const Comp = asChild ? Slot : 'button'
 
@@ -148,7 +185,8 @@ const TabsItem = ({ children, asChild, onClick, onKeyDown, className, ...props }
     registerTab(id)
   }, [id, registerTab])
 
-  const isSelected = selectedTab === id
+  // Match by id once registered; fall back to index for SSR / initial render.
+  const isSelected = selectedTab !== undefined ? selectedTab === id : index === selectedIndex
 
   const handleKeyboardNavigation = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -182,8 +220,10 @@ const TabsItem = ({ children, asChild, onClick, onKeyDown, className, ...props }
       id={getItemId(id)}
       type="button"
       className={cn(
-        'ring-ring text-foreground/50 hover:text-foreground data-selected:text-white relative flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-4 py-2 transition outline-none focus-visible:ring-4',
-        '[&>*:not([data-tab-indicator])]:z-1',
+        'focus-visible:ring-(length:--ring-width) relative flex cursor-pointer items-center justify-center gap-1.5 px-4 py-2 text-foreground/50 outline-none ring-ring transition hover:text-foreground data-selected:text-white ',
+        variant === 'pill' && 'rounded-xl',
+        variant === 'underline' && (orientation === 'horizontal' ? '-mb-px' : '-mr-px'),
+        '[&>*:not([data-tab-indicator])]:z-10',
         className,
       )}
       role="tab"
@@ -213,7 +253,14 @@ const TabsItem = ({ children, asChild, onClick, onKeyDown, className, ...props }
           data-tab-indicator="true"
           layoutId={tabsId}
           aria-hidden="true"
-          className="bg-primary absolute inset-0 z-0 rounded-xl"
+          className={cn(
+            'absolute z-0',
+            variant === 'pill' && 'bg-primary inset-0 rounded-xl',
+            variant === 'underline' &&
+              (orientation === 'horizontal'
+                ? 'right-0 bottom-0 left-0 h-0.5 bg-accent'
+                : 'top-0 right-0 bottom-0 w-0.5 bg-accent'),
+          )}
           transition={{ type: 'spring', duration: 0.3, bounce: 0.2 }}
         />
       )}
@@ -229,9 +276,11 @@ const TabsPanels = ({ children, className, ...props }: TabsPanelsProps) => {
   const { tabs } = useTabsContext()
 
   return (
-    <div className={cn('ring-ring transition has-focus-visible:ring-4', className)} {...props}>
+    <div className={cn('has-focus-visible:ring-(length:--ring-width) ring-ring transition', className)} {...props}>
       {Children.map(children, (child, index) => (
-        <PanelIdContext.Provider value={tabs[index]}>{child}</PanelIdContext.Provider>
+        <PanelIndexContext value={index}>
+          <PanelIdContext value={tabs[index]}>{child}</PanelIdContext>
+        </PanelIndexContext>
       ))}
     </div>
   )
@@ -243,15 +292,19 @@ interface TabsPanelProps extends Omit<React.ComponentPropsWithRef<'div'>, 'id'> 
 }
 
 const PanelIdContext = createContext<string | undefined>(undefined)
+const PanelIndexContext = createContext<number>(0)
 
 const getPanelId = (id: string | undefined) => (id ? `tab-panel${id}` : undefined)
 
 const TabsPanel = ({ children, asChild, className, ...props }: TabsPanelProps) => {
-  const id = useContext(PanelIdContext)
-  const { selectedTab } = useTabsContext()
+  const id = use(PanelIdContext)
+  const index = use(PanelIndexContext)
+  const { selectedTab, selectedIndex } = useTabsContext()
   const Comp = asChild ? Slot : 'div'
 
-  const isSelected = selectedTab === id
+  // Match by id once tabs have registered themselves; fall back to index for the
+  // initial render before useLayoutEffect runs (SSR + first client render).
+  const isSelected = id !== undefined ? selectedTab === id : index === selectedIndex
 
   return (
     <Comp
@@ -269,4 +322,11 @@ const TabsPanel = ({ children, asChild, className, ...props }: TabsPanelProps) =
   )
 }
 
-export { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels }
+const CompoundTabs = Object.assign(Tabs, {
+  Items: TabsItems,
+  Item: TabsItem,
+  Panels: TabsPanels,
+  Panel: TabsPanel,
+})
+
+export { CompoundTabs as Tabs }
