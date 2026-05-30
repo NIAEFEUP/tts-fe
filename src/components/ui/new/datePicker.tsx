@@ -1,60 +1,58 @@
-'use client'
+import { Calendar as CalendarIcon, ChevronsUpDown } from "lucide-react"
+import type { VariantProps } from "cva"
 
-import { Calendar as CalendarIcon, ChevronUp } from 'lucide-react'
-import { VariantProps } from 'cva'
+import { Calendar } from "@/components/ui/new/calendar"
+import { inputStyle } from "@/components/ui/new/input"
+import { Menu, useMenuPopoverContext } from "@/components/ui/new/menu"
+import { cn } from "@/lib/utils"
 
-import { Calendar } from './calendar'
-import { Dropdown, DropdownItems, DropdownTrigger, useDropdownContext } from './dropdown'
-import { inputStyle } from './input'
-import { cn } from '../../../utils'
-
-const DatePicker = ({ children, ...props }: React.ComponentProps<typeof Dropdown>) => {
-  return <Dropdown {...props}>{children}</Dropdown>
+const DatePicker = ({ children, ...props }: React.ComponentProps<typeof Menu>) => {
+  return <Menu {...props}>{children}</Menu>
 }
 
-interface DatePickerTriggerProps extends React.ComponentProps<typeof DropdownTrigger> {
+interface DatePickerTriggerProps extends React.ComponentProps<typeof Menu.Trigger> {
   className?: string
   children: React.ReactNode
-  variant?: VariantProps<typeof inputStyle>['variant']
+  variant?: VariantProps<typeof inputStyle>["variant"]
   placeholder?: string
 }
 
 const DatePickerTrigger = ({ children, className, variant, placeholder, ...props }: DatePickerTriggerProps) => {
   return (
-    <DropdownTrigger asChild {...props}>
+    <Menu.Trigger asChild {...props}>
       <button
         type="button"
         className={cn(
           inputStyle({ variant }),
-          'flex items-center gap-1.5 enabled:cursor-pointer',
-          'relative w-full pr-10 pl-4',
+          "flex items-center gap-1.5 enabled:cursor-pointer",
+          "relative w-full pr-10 pl-4",
           className,
         )}
       >
-        <CalendarIcon size="18" className="text-foreground-secondary shrink-0" />
+        <CalendarIcon className="shrink-0 text-foreground-secondary" />
         {children ?? <span className="text-foreground-secondary">{placeholder}</span>}
-        <ChevronUp className="text-foreground/80 absolute top-1/2 right-3 -translate-y-1/2 text-base" />
+        <ChevronsUpDown className="absolute top-1/2 right-3 -translate-y-1/2 text-base text-foreground/80" />
       </button>
-    </DropdownTrigger>
+    </Menu.Trigger>
   )
 }
 
 interface DatePickerContentCommonProps extends Omit<
   React.ComponentPropsWithRef<typeof Calendar>,
-  'mode' | 'value' | 'onDateChange'
+  "mode" | "value" | "onDateChange"
 > {
   className?: string
   children?: React.ReactNode
 }
 
 interface DatePickerContentSingleProps extends DatePickerContentCommonProps {
-  mode?: 'single'
+  mode?: "single"
   value: Date | null
   onDateChange: (date: Date) => void
 }
 
 interface DatePickerContentRangeProps extends DatePickerContentCommonProps {
-  mode: 'range'
+  mode: "range"
   value: [Date, Date] | null
   onDateChange: (dates: [Date, Date]) => void
 }
@@ -62,24 +60,29 @@ interface DatePickerContentRangeProps extends DatePickerContentCommonProps {
 type DatePickerContentProps = DatePickerContentSingleProps | DatePickerContentRangeProps
 
 const DatePickerPanel = ({ className, children, mode, value, onDateChange, ...props }: DatePickerContentProps) => {
-  const { setOpen } = useDropdownContext()
+  const { setOpen } = useMenuPopoverContext()
 
   return (
-    <DropdownItems className={cn(className)}>
+    <Menu.Items className={cn(className)}>
       <Calendar
         {...props}
         mode={mode}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: expected
         value={value as any}
         onDateChange={(date: Date | [Date, Date]) => {
           setOpen(false)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: expected
           onDateChange(date as any)
         }}
       />
       {children}
-    </DropdownItems>
+    </Menu.Items>
   )
 }
 
-export { DatePicker, DatePickerPanel, DatePickerTrigger }
+const CompoundDatePicker = Object.assign(DatePicker, {
+  Trigger: DatePickerTrigger,
+  Panel: DatePickerPanel,
+})
+
+export { CompoundDatePicker as DatePicker }
