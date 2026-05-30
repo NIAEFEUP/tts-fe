@@ -1,14 +1,14 @@
-import { ArrowRight, Trash, ChevronDown } from 'lucide-react'
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
-import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from '../../../../../@types'
-import { ScrollArea } from '../../../../ui/scroll-area'
-import ScheduleContext from '../../../../../contexts/ScheduleContext'
-import useRequestCardCourseMetadata from '../../../../../hooks/useRequestCardCourseMetadata'
-import { Button } from '../../../../ui/new/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../../../../ui/card'
-import { Dropdown, DropdownItem, DropdownItems, DropdownTrigger } from '../../../../ui/new/dropdown'
-import { Popover, PopoverContent, PopoverTrigger } from '../../../../ui/new/popover'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../../../../ui/command'
+import { ArrowRight, Trash, ChevronDown } from "lucide-react"
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
+import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from "../../../../../@types"
+import { ScrollArea } from "../../../../ui/scroll-area"
+import ScheduleContext from "../../../../../contexts/ScheduleContext"
+import useRequestCardCourseMetadata from "../../../../../hooks/useRequestCardCourseMetadata"
+import { Button } from "../../../../ui/new/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../ui/card"
+import { Menu } from "../../../../ui/new/menu"
+import { Popover } from "../../../../ui/new/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../../../../ui/command"
 
 type Props = {
   courseInfo: CourseInfo
@@ -70,7 +70,7 @@ export const CreateRequestCard = ({
 
   const findIssuerOriginClassName = (): string | null => {
     const scheduleItem = originalExchangeSchedule
-      .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== 'T')
+      .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== "T")
       .find((item: ClassDescriptor) => item.courseInfo.id === courseInfo.id)
 
     return scheduleItem?.classInfo.name || null
@@ -147,20 +147,20 @@ export const CreateRequestCard = ({
               {hasStudentToExchange && selectedDestinationStudent && selectedDestinationStudent.classInfo ? (
                 <p>{selectedDestinationStudent.classInfo.name}</p>
               ) : (
-                <Dropdown>
-                  <DropdownTrigger asChild className="w-full">
+                <Menu>
+                  <Menu.Trigger asChild className="w-full">
                     <Button variant="outline" size="md" className="w-full justify-between">
-                      {selectedDestinationClass?.name ?? 'Escolher turma...'}
+                      {selectedDestinationClass?.name ?? "Escolher turma..."}
                       <ArrowRight size="18" />
                     </Button>
-                  </DropdownTrigger>
-                  <DropdownItems className="w-full w-(--radix-popper-anchor-width) p-1">
+                  </Menu.Trigger>
+                  <Menu.Items className="w-full w-(--radix-popper-anchor-width) p-1">
                     <ScrollArea className="max-h-72 overflow-y-auto no-scrollbar">
                       {requestMetadata?.classes
                         ?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
                         .map((currentClass) => (
-                          <DropdownItem
-                            key={'dropdown-class-' + currentClass.name}
+                          <Menu.Item
+                            key={"dropdown-class-" + currentClass.name}
                             className="w-full"
                             onMouseEnter={() => togglePreview(currentClass, currentClass.slots)}
                             onMouseLeave={() => {
@@ -174,20 +174,20 @@ export const CreateRequestCard = ({
                             }}
                           >
                             {currentClass.name}
-                          </DropdownItem>
+                          </Menu.Item>
                         ))}
                     </ScrollArea>
-                  </DropdownItems>
-                </Dropdown>
+                  </Menu.Items>
+                </Menu>
               )}
             </div>
           </div>
         )}
 
         <div className="flex flex-col gap-y-4">
-          <div className={`${hasStudentToExchange ? '' : 'hidden'}`}>
+          <div className={`${hasStudentToExchange ? "" : "hidden"}`}>
             <Popover open={studentDropdownOpen} onOpenChange={setStudentDropdownOpen}>
-              <PopoverTrigger asChild>
+              <Popover.Trigger asChild>
                 <Button
                   variant="outline"
                   size="md"
@@ -202,8 +202,8 @@ export const CreateRequestCard = ({
                   )}
                   <ChevronDown size="18" />
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-full w-(--radix-popper-anchor-width) p-0">
+              </Popover.Trigger>
+              <Popover.Content className="w-full w-(--radix-popper-anchor-width) p-0">
                 <Command>
                   <CommandInput placeholder="Pesquisar por estudante" className="w-full" />
 
@@ -214,7 +214,7 @@ export const CreateRequestCard = ({
                     <CommandGroup>
                       {requestMetadata?.students?.map((student) => (
                         <CommandItem
-                          key={'dropdown-student-' + student.name}
+                          key={"dropdown-student-" + student.name}
                           className="w-full"
                           onSelect={() => {
                             if (requests.get(courseInfo.id)) {
@@ -238,7 +238,7 @@ export const CreateRequestCard = ({
                     </CommandGroup>
                   </ScrollArea>
                 </Command>
-              </PopoverContent>
+              </Popover.Content>
             </Popover>
           </div>
         </div>

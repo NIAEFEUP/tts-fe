@@ -1,4 +1,4 @@
-import { DatePicker, DatePickerPanel, DatePickerTrigger } from './new/datePicker'
+import { DatePicker } from './new/datePicker'
 import { Input } from './new/input'
 import { cn } from '../../utils'
 import { format } from 'date-fns'
@@ -550,7 +550,7 @@ const DateTimePicker = React.forwardRef<Partial<DateTimePickerRef>, DateTimePick
 
     return (
       <DatePicker>
-        <DatePickerTrigger
+        <DatePicker.Trigger
           disabled={disabled}
           className={cn('w-full', !displayDate && 'text-foreground-secondary', className)}
           placeholder={placeholder}
@@ -562,8 +562,8 @@ const DateTimePicker = React.forwardRef<Partial<DateTimePickerRef>, DateTimePick
               })}
             </span>
           ) : null}
-        </DatePickerTrigger>
-        <DatePickerPanel
+        </DatePicker.Trigger>
+        <DatePicker.Panel
           value={displayDate ?? null}
           onDateChange={(newDate) => {
             newDate.setHours(month?.getHours() ?? 0, month?.getMinutes() ?? 0, month?.getSeconds() ?? 0)
@@ -589,7 +589,7 @@ const DateTimePicker = React.forwardRef<Partial<DateTimePickerRef>, DateTimePick
               />
             </div>
           )}
-        </DatePickerPanel>
+        </DatePicker.Panel>
       </DatePicker>
     )
   },

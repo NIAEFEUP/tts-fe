@@ -1,5 +1,5 @@
 import { ProfessorInfo } from '../../../../@types'
-import { DropdownItem } from '../../../ui/new/dropdown'
+import { Menu } from '../../../ui/new/menu'
 import { Check } from 'lucide-react'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 const ProfessorItem = ({ professorInformation, filtered, onSelect }: Props) => {
   return (
-    <DropdownItem onSelect={(e) => onSelect(e)} className="group gap-2">
+    <Menu.Item onSelect={(e) => onSelect(e)} className="group gap-2">
       {filtered && <Check className="h-4 w-4" />}
       <span className="text-sm tracking-tighter">{professorInformation.name}</span>
       <span className="text-xs text-gray-500">{professorInformation.acronym}</span>
@@ -19,7 +19,7 @@ const ProfessorItem = ({ professorInformation, filtered, onSelect }: Props) => {
 
       {/* <span className="group-hover:hidden">{professorInformation.acronym}</span>
       <span className="hidden truncate group-hover:block">{professorInformation.name}</span> */}
-    </DropdownItem>
+    </Menu.Item>
   )
 }
 

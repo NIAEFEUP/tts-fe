@@ -1,11 +1,11 @@
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { Dispatch, SetStateAction } from 'react'
-import { ClassInfo, CourseInfo } from '../../../../@types'
-import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
-import { Badge } from '../../../ui/new/badge'
-import { Button } from '../../../ui/new/button'
-import { Checkbox } from '../../../ui/new/checkbox'
-import { Dropdown, DropdownItem, DropdownItems, DropdownTrigger } from '../../../ui/new/dropdown'
+import { ChevronDownIcon } from "@heroicons/react/24/outline"
+import { Dispatch, SetStateAction } from "react"
+import { ClassInfo, CourseInfo } from "../../../../@types"
+import useCourseUnitClasses from "../../../../hooks/useCourseUnitClasses"
+import { Badge } from "../../../ui/new/badge"
+import { Button } from "../../../ui/new/button"
+import { Checkbox } from "../../../ui/new/checkbox"
+import { Menu } from "../../../ui/new/menu"
 
 type Props = {
   courseUnit: CourseInfo
@@ -47,16 +47,16 @@ export const ViewRequestBadgeFilter = ({ courseUnit, filterCourseUnitsHook, clas
       >
         {courseUnit.acronym}
       </Badge>
-      <Dropdown>
-        <DropdownTrigger asChild>
+      <Menu>
+        <Menu.Trigger asChild>
           <Button variant="ghost" size="xs" square className="h-5 w-5">
             <ChevronDownIcon className="h-5 w-5" />
           </Button>
-        </DropdownTrigger>
-        <DropdownItems className="flex flex-col gap-y-1 p-2 max-h-72 overflow-y-auto no-scrollbar">
+        </Menu.Trigger>
+        <Menu.Items className="flex flex-col gap-y-1 p-2 max-h-72 overflow-y-auto no-scrollbar">
           <p className="px-2 py-1 text-sm font-medium">Turma de destino</p>
           {classes?.map((currentClass: ClassInfo) => (
-            <DropdownItem
+            <Menu.Item
               asChild
               key={`from-${currentClass.id}`}
               onSelect={(e) => e.preventDefault()} // Keep dropdown open when clicking
@@ -72,10 +72,10 @@ export const ViewRequestBadgeFilter = ({ courseUnit, filterCourseUnitsHook, clas
                 />
                 <span className="text-sm">{currentClass.name}</span>
               </label>
-            </DropdownItem>
+            </Menu.Item>
           ))}
-        </DropdownItems>
-      </Dropdown>
+        </Menu.Items>
+      </Menu>
     </div>
   )
 }

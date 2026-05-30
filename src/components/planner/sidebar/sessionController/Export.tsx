@@ -1,29 +1,29 @@
-import { Button } from '../../../ui/new/button'
-import { Dropdown, DropdownItems, DropdownItem, DropdownTrigger } from '../../../ui/new/dropdown'
-import CsvExport from './CsvExport'
-import NitSigExport from './NitSigExport'
-import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
+import { Button } from "../../../ui/new/button"
+import { Menu } from "../../../ui/new/menu"
+import CsvExport from "./CsvExport"
+import NitSigExport from "./NitSigExport"
+import { ArrowDownTrayIcon } from "@heroicons/react/24/solid"
 
 /**
  * Sidebar with all the main schedule interactions
  */
 const Export = () => {
   return (
-    <Dropdown>
-      <DropdownTrigger asChild>
+    <Menu>
+      <Menu.Trigger asChild>
         <Button variant="primary" square className="bg-primary hover:bg-primary/90">
           <ArrowDownTrayIcon className="h-5 w-5" />
         </Button>
-      </DropdownTrigger>
-      <DropdownItems className="p-1">
-        <DropdownItem asChild>
+      </Menu.Trigger>
+      <Menu.Items className="p-1">
+        <Menu.Item asChild>
           <CsvExport />
-        </DropdownItem>
-        <DropdownItem asChild>
+        </Menu.Item>
+        <Menu.Item asChild>
           <NitSigExport />
-        </DropdownItem>
-      </DropdownItems>
-    </Dropdown>
+        </Menu.Item>
+      </Menu.Items>
+    </Menu>
   )
 }
 

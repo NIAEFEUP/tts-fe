@@ -1,18 +1,11 @@
-import { useState, useContext } from 'react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons//react/24/solid'
-import { Major } from '../../../../../@types'
-import MajorContext from '../../../../../contexts/MajorContext'
-import { cn } from '../../../../../utils'
-import { buttonStyle } from '../../../../ui/new/button'
-import {
-  Dropdown,
-  DropdownEmpty,
-  DropdownItem,
-  DropdownItems,
-  DropdownSearchInput,
-  DropdownTrigger,
-} from '../../../../ui/new/dropdown'
-import { AnalyticsTracker } from '../../../../../utils/AnalyticsTracker'
+import { useState, useContext } from "react"
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons//react/24/solid"
+import { Major } from "../../../../../@types"
+import MajorContext from "../../../../../contexts/MajorContext"
+import { cn } from "../../../../../utils"
+import { buttonStyle } from "../../../../ui/new/button"
+import { Menu } from "../../../../ui/new/menu"
+import { AnalyticsTracker } from "../../../../../utils/AnalyticsTracker"
 
 interface Props {
   selectedMajor: Major | null
@@ -26,23 +19,23 @@ interface Props {
  */
 const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
   const { majors } = useContext(MajorContext)
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   const match = (string: string, query: string) =>
-    string.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, '')) ||
+    string.toLowerCase().replace(/\s+/g, "").includes(query.toLowerCase().replace(/\s+/g, "")) ||
     string
       .toLowerCase()
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
-      .replace(/\s+/g, '')
-      .replace('.', '')
-      .replace(':', '')
-      .includes(query.toLowerCase().replace(/\s+/g, ''))
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/\s+/g, "")
+      .replace(".", "")
+      .replace(":", "")
+      .includes(query.toLowerCase().replace(/\s+/g, ""))
 
   const filteredMajors = majors
     ? majors.filter((major) => {
         if (!search) return true
-        const searchWords = search.toLowerCase().replace(/\s+/g, ' ').trim().split(' ')
+        const searchWords = search.toLowerCase().replace(/\s+/g, " ").trim().split(" ")
         return searchWords.every(
           (word) => match(major.name, word) || match(major.acronym, word) || match(major.faculty_id, word),
         )
@@ -50,37 +43,37 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
     : []
 
   return (
-    <Dropdown
+    <Menu
       onOpenChange={(isOpen) => {
-        if (!isOpen) setTimeout(() => setSearch(''), 200)
+        if (!isOpen) setTimeout(() => setSearch(""), 200)
       }}
     >
-      <DropdownTrigger
+      <Menu.Trigger
         role="combobox"
         className={buttonStyle({
-          variant: 'outline',
-          className: 'w-full justify-between dark:bg-darker dark:text-slate-50',
+          variant: "outline",
+          className: "w-full justify-between dark:bg-darker dark:text-slate-50",
         })}
       >
-        <p className="truncate">{selectedMajor ? selectedMajor.name : 'Seleciona um curso...'}</p>
+        <p className="truncate">{selectedMajor ? selectedMajor.name : "Seleciona um curso..."}</p>
         <ChevronUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      </DropdownTrigger>
-      <DropdownItems
+      </Menu.Trigger>
+      <Menu.Items
         className="flex flex-col overflow-hidden"
-        style={{ width: 'var(--width)' }}
+        style={{ width: "var(--width)" }}
         onWheel={(e) => e.stopPropagation()}
       >
-        <DropdownSearchInput
+        <Menu.SearchInput
           autoFocus
           placeholder="Procurar curso..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <div className="overflow-y-auto overscroll-contain">
-          {selectedMajor && <DropdownItem onSelect={() => setSelectedMajor(null)}>Remover Seleção</DropdownItem>}
-          {filteredMajors.length === 0 && <DropdownEmpty>Nenhum curso corresponde à tua pesquisa.</DropdownEmpty>}
+          {selectedMajor && <Menu.Item onSelect={() => setSelectedMajor(null)}>Remover Seleção</Menu.Item>}
+          {filteredMajors.length === 0 && <Menu.Empty>Nenhum curso corresponde à tua pesquisa.</Menu.Empty>}
           {filteredMajors.map((major) => (
-            <DropdownItem
+            <Menu.Item
               key={major.id}
               onSelect={() => {
                 setSelectedMajor(major.id === selectedMajor?.id ? null : major)
@@ -89,13 +82,13 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
             >
               <span className="truncate">{`${major.name} (${major.acronym}) - ${major.faculty_id.toUpperCase()}`}</span>
               <CheckIcon
-                className={cn('ml-auto h-4 w-4 shrink-0', selectedMajor?.id === major.id ? 'opacity-100' : 'opacity-0')}
+                className={cn("ml-auto h-4 w-4 shrink-0", selectedMajor?.id === major.id ? "opacity-100" : "opacity-0")}
               />
-            </DropdownItem>
+            </Menu.Item>
           ))}
         </div>
-      </DropdownItems>
-    </Dropdown>
+      </Menu.Items>
+    </Menu>
   )
 }
 

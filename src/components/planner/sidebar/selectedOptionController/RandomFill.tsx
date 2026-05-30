@@ -3,7 +3,7 @@ import { ClassInfo } from '../../../../@types'
 import { useContext, useEffect, useState } from 'react'
 import { Button } from '../../../ui/new/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
-import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/new/popover'
+import { Popover } from '../../../ui/new/popover'
 import { Checkbox } from '../../../ui/new/checkbox'
 import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
@@ -276,7 +276,7 @@ const RandomFill = (props: Props) => {
       </Tooltip>
 
       <Popover placement="bottom-end">
-        <PopoverTrigger asChild>
+        <Popover.Trigger asChild>
           <Button
             square
             size="sm"
@@ -284,8 +284,8 @@ const RandomFill = (props: Props) => {
           >
             <ChevronDown size="14" />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-52 p-1">
+        </Popover.Trigger>
+        <Popover.Content className="w-52 p-1">
           <p className="px-1 py-1 text-sm font-medium">Preenchimento aleatório</p>
           <Separator />
           {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
@@ -309,7 +309,7 @@ const RandomFill = (props: Props) => {
               <p className="mt-2 text-sm text-center">Não foi encontrada nenhuma turma</p>
             </div>
           )}
-        </PopoverContent>
+        </Popover.Content>
       </Popover>
     </div>
   )

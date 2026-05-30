@@ -3,7 +3,7 @@ import { Lock, Unlock, ChevronsUpDown } from "lucide-react"
 import { CourseInfo } from "../../../../@types"
 import { getClassDisplayText } from "../../../../utils"
 import { Button } from "../../../ui/new/button"
-import { Dropdown, DropdownItems, DropdownTrigger } from "../../../ui/new/dropdown"
+import { Menu } from "../../../ui/new/menu"
 import ClassSelectorDropdownController from "./ClassSelectorDropdownController"
 import ClassSelectorContext from "../../../../contexts/classSelector/ClassSelectorContext"
 import useCourseUnitClasses from "../../../../hooks/useCourseUnitClasses"
@@ -43,7 +43,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
       </p>
       <div className="flex items-center gap-2">
         {/* Dropdown Menu */}
-        <Dropdown
+        <Menu
           open={isDropdownOpen}
           onOpenChange={(open: boolean) => {
             setIsDropdownOpen(open)
@@ -55,15 +55,15 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
           }}
         >
           <div className="w-full">
-            <DropdownTrigger asChild>
+            <Menu.Trigger asChild>
               <Button ref={classSelectorTriggerRef} disabled={courseOption?.locked} variant="outline">
                 <span className={`${selectedClassId === null ? "opacity-50" : ""}`}>
                   {getClassDisplayText(course, selectedClassId)}
                 </span>
                 {!courseOption?.locked && <ChevronsUpDown size="14" className="text-blackish dark:text-lightish" />}
               </Button>
-            </DropdownTrigger>
-            <DropdownItems
+            </Menu.Trigger>
+            <Menu.Items
               className="z-60 pointer-events-auto bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
               ref={classSelectorContentRef}
             >
@@ -77,9 +77,9 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
                 triggerRef={classSelectorTriggerRef}
                 classesLoading={classesLoading}
               />
-            </DropdownItems>
+            </Menu.Items>
           </div>
-        </Dropdown>
+        </Menu>
 
         {/* Lock Button */}
         {lockFunctionality && (

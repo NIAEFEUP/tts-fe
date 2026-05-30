@@ -1,14 +1,14 @@
-import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
-import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from '../../../../@types'
-import StorageAPI from '../../../../api/storage'
-import CourseContext from '../../../../contexts/CourseContext'
-import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils'
-import { Desert } from '../../../svgs'
-import { DropdownItem } from '../../../ui/new/dropdown'
-import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from '../../../ui/new/tabs'
-import ClassItem from './ClassItem'
-import ProfessorItem from './ProfessorItem'
+import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react"
+import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from "../../../../@types"
+import StorageAPI from "../../../../api/storage"
+import CourseContext from "../../../../contexts/CourseContext"
+import MultipleOptionsContext from "../../../../contexts/MultipleOptionsContext"
+import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from "../../../../utils"
+import { Desert } from "../../../svgs"
+import { Menu } from "../../../ui/new/menu"
+import { Tabs, TabsItem, TabsItems, TabsPanel, TabsPanels } from "../../../ui/new/tabs"
+import ClassItem from "./ClassItem"
+import ProfessorItem from "./ProfessorItem"
 
 type Props = {
   course: CourseInfo
@@ -192,9 +192,9 @@ const ClassSelectorDropdownController = ({
                   ) : (
                     <>
                       {selectedClassId && (
-                        <DropdownItem onSelect={() => deleteOption()}>
+                        <Menu.Item onSelect={() => deleteOption()}>
                           <span className="text-sm tracking-tighter text-left block w-full">Remover Seleção</span>
-                        </DropdownItem>
+                        </Menu.Item>
                       )}
                       {course.classes &&
                         getOptions().map((classInfo) => (
@@ -222,7 +222,7 @@ const ClassSelectorDropdownController = ({
                     <NoTeachersFound mobile={false} />
                   ) : (
                     <>
-                      <DropdownItem
+                      <Menu.Item
                         className="mb-2"
                         onClick={(e) => {
                           e.preventDefault()
@@ -230,9 +230,9 @@ const ClassSelectorDropdownController = ({
                         }}
                       >
                         <span className="block truncate text-left w-full dark:text-white">
-                          {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
+                          {filteredTeachers?.length > 0 ? "Apagar todos" : "Selecionar Todos"}
                         </span>
-                      </DropdownItem>
+                      </Menu.Item>
                       {teacherFilters.map((option) => {
                         return (
                           <ProfessorItem

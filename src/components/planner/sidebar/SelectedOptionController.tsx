@@ -1,16 +1,16 @@
 //TODO(thePeras): Check this package, its extremely heavy (231.2k, gzipped: 50.8k)
-import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
-import { useState, useContext, useRef, useEffect } from 'react'
-import CopyOption from './selectedOptionController/CopyOption'
-import PasteOption from './selectedOptionController/PasteOption'
-import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
-import { CourseOption } from '../../../@types'
-import { ThemeContext } from '../../../contexts/ThemeContext'
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/new/popover'
-import RandomFill from './selectedOptionController/RandomFill'
-import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
-import { Input } from '../../ui/new/input'
-import { Button } from '../../ui/new/button'
+import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from "emoji-picker-react"
+import { useState, useContext, useRef, useEffect } from "react"
+import CopyOption from "./selectedOptionController/CopyOption"
+import PasteOption from "./selectedOptionController/PasteOption"
+import MultipleOptionsContext from "../../../contexts/MultipleOptionsContext"
+import { CourseOption } from "../../../@types"
+import { ThemeContext } from "../../../contexts/ThemeContext"
+import { Popover } from "../../ui/new/popover"
+import RandomFill from "./selectedOptionController/RandomFill"
+import { AnalyticsTracker, Feature } from "../../../utils/AnalyticsTracker"
+import { Input } from "../../ui/new/input"
+import { Button } from "../../ui/new/button"
 
 type Props = {
   currentOption: CourseOption[]
@@ -41,7 +41,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
     input.current.scrollLeft = 0
   }
 
-  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? '')
+  const [optionName, setOptionName] = useState(multipleOptions[selectedOption].name ?? "")
 
   useEffect(() => {
     setOptionName(multipleOptions[selectedOption].name)
@@ -75,12 +75,12 @@ const SelectedOptionController = ({ currentOption }: Props) => {
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between gap-2">
       <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
         <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen} placement="bottom">
-          <PopoverTrigger asChild>
+          <Popover.Trigger asChild>
             <Button square size="md" className="p-2 bg-lightish hover:bg-lightish/90 dark:bg-darkish">
               <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
+          </Popover.Trigger>
+          <Popover.Content className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
             <EmojiPicker
               width="100%"
               searchDisabled={true}
@@ -93,7 +93,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
                 setEmojiPickerOpen(false)
               }}
             />
-          </PopoverContent>
+          </Popover.Content>
         </Popover>
 
         <Input
@@ -105,7 +105,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
           onChange={renameOptionName}
           onBlur={renameOptionName}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               e.preventDefault()
               renameOptionName(e)
               e.currentTarget.blur() // currentTarget is the element the event handler was attached to

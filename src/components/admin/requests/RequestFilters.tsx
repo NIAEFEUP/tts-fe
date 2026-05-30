@@ -6,7 +6,7 @@ import RequestFiltersContext, {
   adminRequestStateToBadgeVariant,
 } from "../../../contexts/admin/RequestFiltersContext"
 import useAdminExchangeCourses from "../../../hooks/admin/useAdminExchangeCourses"
-import { Popover, PopoverContent, PopoverTrigger } from "../../ui/new/popover"
+import { Popover } from "../../ui/new/popover"
 import { Command, CommandGroup, CommandItem } from "../../ui/command"
 import { Check, ChevronDown } from "lucide-react"
 import { Badge } from "../../ui/new/badge"
@@ -34,13 +34,13 @@ export const RequestFilters = () => {
   return (
     <div className="flex flex-row flex-wrap gap-2">
       <Popover open={courseOpen} onOpenChange={setCourseOpen} placement="bottom-start">
-        <PopoverTrigger asChild>
+        <Popover.Trigger asChild>
           <Button variant="outline" className="justify-between w-32">
             {activeCourse ? courses?.find((c) => c.id === activeCourse)?.acronym : "Curso"}
             <ChevronDown size="18" />{" "}
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-40 p-0">
+        </Popover.Trigger>
+        <Popover.Content className="w-40 p-0">
           <Command>
             <CommandGroup>
               {(!courses || courses.length === 0) && <CommandItem disabled>Nenhum</CommandItem>}
@@ -60,17 +60,17 @@ export const RequestFilters = () => {
               ))}
             </CommandGroup>
           </Command>
-        </PopoverContent>
+        </Popover.Content>
       </Popover>
 
       <Popover open={yearOpen} onOpenChange={setYearOpen} placement="bottom-start">
-        <PopoverTrigger asChild>
+        <Popover.Trigger asChild>
           <Button variant="outline" className="justify-between w-32">
             {activeCurricularYear ? `${activeCurricularYear}º Ano` : "Ano"}
             <ChevronDown size="18" />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-32 p-0">
+        </Popover.Trigger>
+        <Popover.Content className="w-32 p-0">
           <Command>
             <CommandGroup>
               {[1, 2, 3, 4, 5].map((year) => (
@@ -89,11 +89,11 @@ export const RequestFilters = () => {
               ))}
             </CommandGroup>
           </Command>
-        </PopoverContent>
+        </Popover.Content>
       </Popover>
 
       <Popover placement="bottom-start">
-        <PopoverTrigger asChild>
+        <Popover.Trigger asChild>
           <Button variant="outline" className="justify-between w-32">
             <span className="flex items-center">
               Estado
@@ -105,8 +105,8 @@ export const RequestFilters = () => {
             </span>
             <ChevronDown size="18" />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-56 p-0">
+        </Popover.Trigger>
+        <Popover.Content className="w-56 p-0">
           <Command>
             <CommandGroup>
               {activeStatesPossibleValues.map((state) => (
@@ -131,7 +131,7 @@ export const RequestFilters = () => {
               ))}
             </CommandGroup>
           </Command>
-        </PopoverContent>
+        </Popover.Content>
       </Popover>
 
       <Button

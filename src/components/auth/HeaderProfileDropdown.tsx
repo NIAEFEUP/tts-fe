@@ -6,7 +6,7 @@ import { ClipLoader } from "react-spinners"
 import SessionContext from "../../contexts/SessionContext"
 import authService from "../../api/services/authService"
 import studentInfoService from "../../api/services/studentInfo"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/new/popover"
+import { Popover } from "../ui/new/popover"
 import ScheduleContext from "../../contexts/ScheduleContext"
 import { Dialog, DialogActions, DialogClose, DialogContent, DialogDescription, DialogTitle } from "../ui/new/dialog"
 import { Divider } from "../ui/new/divider"
@@ -26,15 +26,15 @@ export const HeaderProfileDropdown = () => {
 
   return (
     <Popover placement="bottom-end">
-      <PopoverTrigger asChild>
+      <Popover.Trigger asChild>
         <div className="cursor-pointer w-fit">
           <Avatar className="border shadow-xs">
             <Avatar.Image src={studentInfoService.getStudentPictureUrl(user?.username)} />
             <Avatar.Fallback>{user?.name?.charAt(0) ?? ""}</Avatar.Fallback>
           </Avatar>
         </div>
-      </PopoverTrigger>
-      <PopoverContent className="w-44 p-4">
+      </Popover.Trigger>
+      <Popover.Content className="w-44 p-4">
         <div className="flex flex-col">
           <article className="flex flex-col">
             <p className="text-md font-bold">{user?.name}</p>
@@ -50,7 +50,7 @@ export const HeaderProfileDropdown = () => {
             </Button>
           )}
         </div>
-      </PopoverContent>
+      </Popover.Content>
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent className="max-w-88 p-5">
           <DialogTitle>Sair</DialogTitle>

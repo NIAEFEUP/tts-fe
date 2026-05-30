@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { ClassInfo } from '../../../../@types/index'
-import { DropdownItem } from '../../../ui/new/dropdown'
+import { Menu } from '../../../ui/new/menu'
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import { classesConflictSeverity } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
@@ -51,7 +51,7 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
   }
 
   return (
-    <DropdownItem
+    <Menu.Item
       onSelect={() => selectOption()}
       onMouseEnter={() => onMouseEnter()}
       onMouseLeave={() => onMouseLeave()}
@@ -74,7 +74,7 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
         className={`h-5 w-5 ${conflictSeverity() > 0 ? 'block' : 'hidden'} ${conflictSeverity() == 2 ? 'text-red-600' : 'text-amber-500'}`}
         aria-hidden="true"
       />
-    </DropdownItem>
+    </Menu.Item>
   )
 }
 

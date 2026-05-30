@@ -10,7 +10,7 @@ import { useToast } from "./ui/use-toast"
 import { useState } from "react"
 import { Tabs, TabsItem, TabsItems } from "./ui/new/tabs"
 import { Flag } from "lucide-react"
-import { Dropdown, DropdownItems, DropdownTrigger } from "./ui/new/dropdown"
+import { Menu } from "./ui/new/menu"
 
 enum ReportType {
   Suggestion = "Sugestão",
@@ -57,15 +57,15 @@ export const FeedbackReport = () => {
   }
 
   return (
-    <Dropdown open={open} onOpenChange={setOpen}>
-      <DropdownTrigger asChild>
+    <Menu open={open} onOpenChange={setOpen}>
+      <Menu.Trigger asChild>
         <Button variant="outline">
           <Flag size="16" />
           <p className="hidden sm:block ">Feedback</p>
         </Button>
-      </DropdownTrigger>
+      </Menu.Trigger>
 
-      <DropdownItems className="p-4 w-[320px] flex flex-col gap-y-4">
+      <Menu.Items className="p-4 w-[320px] flex flex-col gap-y-4">
         <Tabs
           selectedIndex={reportType === ReportType.Suggestion ? 0 : 1}
           onChange={(index) => setReportType(index === 0 ? ReportType.Suggestion : ReportType.Bug)}
@@ -115,7 +115,7 @@ export const FeedbackReport = () => {
             </Button>
           </form>
         </Form>
-      </DropdownItems>
-    </Dropdown>
+      </Menu.Items>
+    </Menu>
   )
 }

@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { Popover, PopoverContent, PopoverTrigger } from '../../../ui/new/popover'
-import { Button } from '../../../ui/new/button'
-import { Command, CommandGroup, CommandItem } from '../../../ui/command'
-import { Check, ChevronDown } from 'lucide-react'
+import { useState } from "react"
+import { Popover } from "../../../ui/new/popover"
+import { Button } from "../../../ui/new/button"
+import { Command, CommandGroup, CommandItem } from "../../../ui/command"
+import { Check, ChevronDown } from "lucide-react"
 
 interface PageSizeSelectorProps {
   value: number
@@ -16,13 +16,13 @@ export const PageSizeSelector = ({ value, onChange }: PageSizeSelectorProps) => 
 
   return (
     <Popover open={open} onOpenChange={setOpen} placement="bottom-start">
-      <PopoverTrigger asChild>
+      <Popover.Trigger asChild>
         <Button variant="outline" className="justify-between w-32">
           {value}
           <ChevronDown size="18" />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-32 p-0">
+      </Popover.Trigger>
+      <Popover.Content className="w-32 p-0">
         <Command>
           <CommandGroup>
             {PAGE_SIZE_OPTIONS.map((size) => (
@@ -41,7 +41,7 @@ export const PageSizeSelector = ({ value, onChange }: PageSizeSelectorProps) => 
             ))}
           </CommandGroup>
         </Command>
-      </PopoverContent>
+      </Popover.Content>
     </Popover>
   )
 }
