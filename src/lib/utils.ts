@@ -1,5 +1,5 @@
-import { defineConfig } from "cva";
-import { twMerge } from "tailwind-merge";
+import { defineConfig } from "cva"
+import { twMerge } from "tailwind-merge"
 
 export const {
   cva,
@@ -9,4 +9,4 @@ export const {
   hooks: {
     onComplete: (className) => twMerge(className),
   },
-});
+})
