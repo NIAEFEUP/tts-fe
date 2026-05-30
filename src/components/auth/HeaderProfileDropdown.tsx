@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/new/avatar"
+import { Avatar } from "../ui/new/avatar"
 import { Button } from "../ui/new/button"
 import { LogOut } from "lucide-react"
 import { useContext, useState } from "react"
@@ -29,8 +29,8 @@ export const HeaderProfileDropdown = () => {
       <PopoverTrigger asChild>
         <div className="cursor-pointer w-fit">
           <Avatar className="border shadow-xs">
-            <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
-            <AvatarFallback>{user?.name?.charAt(0) ?? ""}</AvatarFallback>
+            <Avatar.Image src={studentInfoService.getStudentPictureUrl(user?.username)} />
+            <Avatar.Fallback>{user?.name?.charAt(0) ?? ""}</Avatar.Fallback>
           </Avatar>
         </div>
       </PopoverTrigger>
