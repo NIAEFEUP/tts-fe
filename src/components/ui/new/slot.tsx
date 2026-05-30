@@ -1,7 +1,6 @@
-import { Children, cloneElement, isValidElement, forwardRef } from 'react'
-import { useMergeRefs } from '@floating-ui/react'
+import { Children, cloneElement, isValidElement } from 'react'
 
-import { cn } from '../../../lib/utils'
+import { cn } from '@/lib/utils'
 
 const isValidSlottableElement = (
   value: unknown,
@@ -9,51 +8,28 @@ const isValidSlottableElement = (
   children?: React.ReactNode
   className?: string
   style?: React.CSSProperties
-  ref?: React.Ref<any>
 }> => {
   return isValidElement(value) && !!value.props && typeof value.props === 'object' && 'key' in value
 }
 
-type AnyProps = Record<string, any>
+export const Slot = ({ children, ref, ...props }: React.ComponentPropsWithRef<React.ElementType>) => {
+  const element = Children.only(children)
 
-function mergeProps(slotProps: AnyProps, childProps: AnyProps) {
-  const result: AnyProps = { ...slotProps }
-
-  for (const key in childProps) {
-    const slotPropValue = slotProps[key]
-    const childPropValue = childProps[key]
-
-    const isHandler = typeof slotPropValue === 'function' && typeof childPropValue === 'function'
-    if (isHandler) {
-      result[key] = (...args: any[]) => {
-        childPropValue?.(...args)
-        slotPropValue?.(...args)
-      }
-    } else if (childPropValue !== undefined) {
-      result[key] = childProps[key]
-    }
+  if (isValidSlottableElement(element)) {
+    return cloneElement(element, {
+      ...props,
+      ...element.props,
+      ref,
+      style: {
+        ...props.style,
+        ...element.props.style,
+      },
+      className: cn(element.props.className, props.className),
+    })
   }
 
-  return result
+  throw new Error('Slot needs a valid react element child')
 }
-
-export const Slot = forwardRef<HTMLElement, React.ComponentPropsWithRef<React.ElementType>>(
-  ({ children, ...props }, forwardedRef) => {
-    const element = Children.only(children)
-
-    if (isValidSlottableElement(element)) {
-      const childRef = (element as any).ref
-      const mergedRef = useMergeRefs([childRef, forwardedRef])
-
-      return cloneElement(element, {
-        ...mergeProps(props, element.props),
-        ref: mergedRef,
-      })
-    }
-
-    throw new Error('Slot needs a valid react element child')
-  },
-)
 
 Slot.displayName = 'Slot'
 
