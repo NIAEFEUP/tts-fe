@@ -5,7 +5,6 @@ import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils'
 import { Desert } from '../../../svgs'
-import { Menu } from '../../../ui/new/menu'
 import { Tabs } from '../../../ui/new/tabs'
 import ClassItem from './ClassItem'
 import ProfessorItem from './ProfessorItem'
@@ -19,6 +18,7 @@ type Props = {
   contentRef: any
   triggerRef: any
   classesLoading: boolean
+  closeDropdown: () => void
 }
 
 const buildTeacherFilters = (teachers, filteredTeachers) => {
@@ -59,6 +59,7 @@ const ClassSelectorDropdownController = ({
   contentRef,
   triggerRef,
   classesLoading,
+  closeDropdown,
 }: Props) => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses } = useContext(CourseContext)
@@ -185,16 +186,23 @@ const ClassSelectorDropdownController = ({
             </Tabs.Items>
             <Tabs.Panels>
               <Tabs.Panel>
-                {/* Removed max-h-96 and overflow-y-auto to fix the double scrollbar issue */}
-                <div className="pt-2 w-full">
+                {/* Removed max-h-96 and overflow-y-auto to fix the double scrollbar issue - Added back for Popover migration */}
+                <div className="pt-2 w-full max-h-[50vh] overflow-y-auto">
                   {course.classes?.length === 0 ? (
                     <NoOptionsFound mobile={false} />
                   ) : (
                     <>
                       {selectedClassId && (
-                        <Menu.Item onSelect={() => deleteOption()}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            deleteOption()
+                            closeDropdown()
+                          }}
+                          className="w-[calc(100%-16px)] mx-2 mt-2 px-3 py-1.5 rounded-lg text-left hover:bg-background-secondary transition-colors"
+                        >
                           <span className="text-sm tracking-tighter text-left block w-full">Remover Seleção</span>
-                        </Menu.Item>
+                        </button>
                       )}
                       {course.classes &&
                         getOptions().map((classInfo) => (
@@ -205,6 +213,7 @@ const ClassSelectorDropdownController = ({
                             onSelect={() => {
                               setSelectedClassId(classInfo.id)
                               setPreview(null)
+                              closeDropdown()
                             }}
                             onMouseEnter={() => {
                               if (isDropdownOpen) showPreview(classInfo)
@@ -217,22 +226,23 @@ const ClassSelectorDropdownController = ({
                 </div>
               </Tabs.Panel>
               <Tabs.Panel>
-                <div className="pt-2 w-full">
+                <div className="pt-2 w-full max-h-[50vh] overflow-y-auto">
                   {teacherFilters.length === 0 ? (
                     <NoTeachersFound mobile={false} />
                   ) : (
                     <>
-                      <Menu.Item
-                        className="mb-2"
+                      <button
+                        type="button"
+                        className="mb-2 w-[calc(100%-16px)] mx-2 mt-2 px-3 py-1.5 rounded-lg text-left hover:bg-background-secondary transition-colors"
                         onClick={(e) => {
                           e.preventDefault()
                           toggleAllTeachers(teachers)
                         }}
                       >
-                        <span className="block truncate text-left w-full dark:text-white">
+                        <span className="block truncate text-left w-full text-foreground/80">
                           {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
                         </span>
-                      </Menu.Item>
+                      </button>
                       {teacherFilters.map((option) => {
                         return (
                           <ProfessorItem

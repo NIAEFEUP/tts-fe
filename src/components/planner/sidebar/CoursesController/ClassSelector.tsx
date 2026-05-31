@@ -1,9 +1,9 @@
 import { useRef, useState, useContext, useEffect } from 'react'
-import { Lock, Unlock, ChevronsUpDown } from 'lucide-react'
+import { Lock, LockOpen, ChevronsUpDown } from 'lucide-react'
 import { CourseInfo } from '../../../../@types'
 import { getClassDisplayText } from '../../../../utils'
 import { Button } from '../../../ui/new/button'
-import { Menu } from '../../../ui/new/menu'
+import { Popover } from '../../../ui/new/popover'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
 import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
 import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
@@ -42,8 +42,7 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
         <span className="truncate tracking-tighter">{course.name}&nbsp;</span>
       </p>
       <div className="flex items-center gap-2">
-        {/* Dropdown Menu */}
-        <Menu
+        <Popover
           open={isDropdownOpen}
           onOpenChange={(open: boolean) => {
             setIsDropdownOpen(open)
@@ -55,16 +54,24 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
           }}
         >
           <div className="w-full">
-            <Menu.Trigger asChild>
-              <Button ref={classSelectorTriggerRef} disabled={courseOption?.locked} variant="outline">
-                <span className={`${selectedClassId === null ? 'opacity-50' : ''}`}>
+            <Popover.Trigger asChild>
+              <Button
+                ref={classSelectorTriggerRef}
+                disabled={courseOption?.locked}
+                variant="outline"
+                className="w-full justify-between"
+              >
+                <span className={`min-w-0 truncate ${selectedClassId === null ? 'opacity-50' : ''}`}>
                   {getClassDisplayText(course, selectedClassId)}
                 </span>
-                {!courseOption?.locked && <ChevronsUpDown size="14" className="text-blackish dark:text-lightish" />}
+                {!courseOption?.locked && (
+                  <ChevronsUpDown size="14" className="shrink-0 text-blackish dark:text-lightish" />
+                )}
               </Button>
-            </Menu.Trigger>
-            <Menu.Items
-              className="z-60 pointer-events-auto bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
+            </Popover.Trigger>
+            <Popover.Content
+              className="z-60 p-0 overflow-hidden"
+              style={{ width: 'var(--width)' }}
               ref={classSelectorContentRef}
             >
               <ClassSelectorDropdownController
@@ -76,10 +83,11 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
                 contentRef={classSelectorContentRef}
                 triggerRef={classSelectorTriggerRef}
                 classesLoading={classesLoading}
+                closeDropdown={() => setIsDropdownOpen(false)}
               />
-            </Menu.Items>
+            </Popover.Content>
           </div>
-        </Menu>
+        </Popover>
 
         {/* Lock Button */}
         {lockFunctionality && (
@@ -91,9 +99,9 @@ const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
             disabled={display === null}
           >
             {courseOption?.locked ? (
-              <Unlock size="18" className="text-darkish dark:text-lightish" />
+              <LockOpen size={16} className="text-darkish dark:text-lightish" />
             ) : (
-              <Lock size="18" className="text-darkish dark:text-lightish" />
+              <Lock size={16} className="text-darkish dark:text-lightish" />
             )}
           </Button>
         )}

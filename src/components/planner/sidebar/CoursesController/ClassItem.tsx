@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { ClassInfo } from '../../../../@types/index'
-import { Menu } from '../../../ui/new/menu'
+
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import { classesConflictSeverity } from '../../../../utils'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
@@ -51,7 +51,13 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
   }
 
   return (
-    <Menu.Item onSelect={() => selectOption()} onMouseEnter={() => onMouseEnter()} onMouseLeave={() => onMouseLeave()}>
+    <button 
+      type="button"
+      onClick={() => selectOption()} 
+      onMouseEnter={() => onMouseEnter?.()} 
+      onMouseLeave={() => onMouseLeave?.()}
+      className="flex w-[calc(100%-16px)] mx-2 my-1 cursor-pointer select-none items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium outline-none text-foreground/80 hover:bg-background-secondary transition-colors"
+    >
       <div className="grow text-left">
         <span className="text-sm tracking-tighter font-semibold">{classInfo.name}</span>
         <div>
@@ -70,7 +76,7 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
         className={`h-5 w-5 ${conflictSeverity() > 0 ? 'block' : 'hidden'} ${conflictSeverity() == 2 ? 'text-red-600' : 'text-amber-500'}`}
         aria-hidden="true"
       />
-    </Menu.Item>
+    </button>
   )
 }
 

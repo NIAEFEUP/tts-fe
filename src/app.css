@@ -1,13 +1,14 @@
 @import 'tailwindcss';
 
 /* ============================================================================
-   TAILWIND PLUGINS & EXTENSIONS
+   TAILWIND PLUGINS
    ============================================================================ */
-
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/forms';
 
-/* Custom dark mode variant using data-theme attribute */
+/* ============================================================================
+   DARK MODE VARIANT (Foundations + .dark support)
+   ============================================================================ */
 @variant dark {
   &:where([data-theme='dark'], [data-theme='dark'] *, .dark, .dark *) {
     @slot;
@@ -15,79 +16,85 @@
 }
 
 /* ============================================================================
-   CUSTOM UTILITIES
+   THEME (Foundations Base + User's Exact Legacy Palette & Typography)
    ============================================================================ */
-
-/* Container utility with responsive max-width behavior */
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  @media (width >= var(--breakpoint-sm)) {
-    max-width: none;
-  }
-  @media (width >= 1400px) {
-    max-width: 1400px;
-  }
-}
-
-/* Color mixing utilities for dynamic color blending */
-/* prettier-ignore */
-@utility mix-with-* {
-  --color-mix-with: --value(--color-*, [*]);
-}
-
-/* prettier-ignore */
-@utility border-mix-* {
-  border-color: color-mix(
-    in oklab,
-    --value(--color-*, [*]),
-    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
-  );
-}
-
-/* prettier-ignore */
-@utility bg-mix-* {
-  background-color: color-mix(
-    in oklab,
-    --value(--color-*, [*]),
-    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
-  );
-}
-
-/* ============================================================================
-   DESIGN TOKENS & THEME VARIABLES
-   ============================================================================ */
-
 @theme {
-  /* --- Typography --- */
+  /* Typography */
   --text-2xs: 0.625rem;
-  --text-xxs: 0.6rem;
 
-  /* --- Core Colors (Light/Dark Mode Support) --- */
-  --color-background: light-dark(oklch(100% 0 0), oklch(12% 0 0));
-  --color-background-secondary: light-dark(oklch(96% 0 0), oklch(22% 0 0));
+  --font-flow: Flow;
+  --font-prose:
+    Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-headings:
+    Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-mono:
+    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
-  --color-foreground: light-dark(oklch(0% 0 0), oklch(95% 0 0));
-  --color-foreground-secondary: light-dark(oklch(65% 0 0), oklch(53% 0 0));
+  /* Colors - User's exact background hexes via light-dark for native switching */
+  --color-background: light-dark(#f2f4f7, #1a1c23);
+  --color-background-secondary: light-dark(#ebedf0, #333640);
+  --color-foreground: light-dark(#1f2937, #ffffff);
+  --color-foreground-secondary: light-dark(#4b5563, #9ca3af);
 
+  --color-border: light-dark(#e5e7eb, #252832);
+
+  /* Foundations Accent behavior (vital for components) */
   --color-accent: var(--color-foreground);
   --color-accent-foreground: var(--color-background);
-
-  --color-border: light-dark(oklch(94% 0 0), oklch(26% 0 0));
 
   --color-ring: light-dark(
     color-mix(in oklab, var(--color-accent) 30%, transparent),
     color-mix(in oklab, var(--color-accent) 30%, transparent)
   );
 
-  /* --- Semantic Colors --- */
+  /* Semantic Colors (Foundations) */
   --color-error: oklch(63.7% 0.237 25.331);
   --color-warning: oklch(79.5% 0.184 86.047);
   --color-success: oklch(69.6% 0.17 162.48);
   --color-info: oklch(62.3% 0.214 259.815);
 
-  /* --- Border Radius System --- */
-  /* Base dial that scales all radius values; --radius-bump compensates for squircles */
+  /* User's Primary Brand Color */
+  --color-primary: #b33636;
+  --color-secondary: #0c4a6e;
+  --color-tertiary: #357672;
+  --color-feup: #7d221e;
+
+  /* User's Legacy Color Palette (used in legacy UI elements) */
+  --color-navy: #18222e;
+  --color-lightNavy: #212a36;
+  --color-darkish: #333640;
+  --color-dark: #252832;
+  --color-darker: #1e2028;
+  --color-darkest: #1a1c23;
+  --color-lightish: #ebedf0;
+  --color-light: #f2f4f7;
+  --color-lighter: #f7f7f7;
+  --color-lightest: #fbfbfb;
+
+  /* User's Class/Schedule Colors */
+  --color-schedule-lunch: #be123c;
+  --color-schedule-t: #91897f;
+  --color-schedule-tp: #115e59;
+  --color-schedule-pl: #003d7a;
+  --color-schedule-ot: #5c8fc2;
+  --color-schedule-s: #7d3179;
+  --color-schedule-p: #b66046;
+  --color-schedule-tc: #733c3c;
+  --color-schedule-o: #69656a;
+
+  /* User's Sidebar Colors (using light-dark) */
+  --color-sidebar-background: light-dark(hsl(0 0% 98%), hsl(240 5.9% 10%));
+  --color-sidebar-foreground: light-dark(hsl(240 5.3% 26.1%), hsl(240 4.8% 95.9%));
+  --color-sidebar-primary: light-dark(hsl(240 5.9% 10%), hsl(224.3 76.3% 48%));
+  --color-sidebar-primary-foreground: light-dark(hsl(0 0% 98%), hsl(0 0% 100%));
+  --color-sidebar-accent: light-dark(hsl(240 4.8% 95.9%), hsl(240 3.7% 15.9%));
+  --color-sidebar-accent-foreground: light-dark(hsl(240 5.9% 10%), hsl(240 4.8% 95.9%));
+  --color-sidebar-border: light-dark(hsl(220 13% 91%), hsl(240 3.7% 15.9%));
+  --color-sidebar-ring: light-dark(hsl(217.2 91.2% 59.8%), hsl(217.2 91.2% 59.8%));
+
+  /* Border radius (Foundations) */
   --radius: 0.125rem;
   --radius-bump: 1;
   --radius-xs: calc(var(--radius) * 1 * var(--radius-bump));
@@ -99,14 +106,16 @@
   --radius-3xl: calc(var(--radius) * 12 * var(--radius-bump));
   --radius-4xl: calc(var(--radius) * 16 * var(--radius-bump));
 
-  /* Panel-item inset, scales with radius (flush at --radius: 0) */
+  /* Panel-item inset (Foundations) */
   --inset: calc(var(--radius) * 1.5 * var(--radius-bump));
 
-  /* --- Interactive States --- */
+  /* Focus ring */
   --ring-width: 4px;
+
+  /* Corner shape */
   --corner-shape: squircle;
 
-  /* --- Shadow System --- */
+  /* Shadows (Foundations) */
   --shadow-*: initial;
   --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.03);
   --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.02), 0 2px 4px oklch(0 0 0 / 0.02);
@@ -114,11 +123,10 @@
   --shadow-lg: 0 2px 4px oklch(0 0 0 / 0.02), 0 4px 8px oklch(0 0 0 / 0.02), 0 8px 16px oklch(0 0 0 / 0.02);
   --shadow-inner-xl: inset 0px 0px 4px 4px rgb(0 0 0 / 0.1);
 
-  /* --- Animation Easings --- */
+  /* Easings & Animations (Foundations) */
   --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
   --ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
 
-  /* --- Loading Spinners --- */
   --animate-spinner-dot: spinner-dot 1.4s ease-in-out infinite both;
   --animate-spinner-bar: spinner-bar 1.2s ease-in-out infinite both;
 
@@ -143,370 +151,171 @@
       transform: scaleY(1);
     }
   }
-
-  /* --- Legacy Color Palette --- */
-  /* Navigation & backgrounds */
-  --color-inherit: inherit;
-  --color-current: currentColor;
-  --color-navy: #18222e;
-  --color-lightNavy: #212a36;
-  --color-darkish: #333640;
-  --color-dark: #252832;
-  --color-darker: #1e2028;
-  --color-darkest: #1a1c23;
-  --color-lightish: #ebedf0;
-  --color-light: #f2f4f7;
-  --color-lighter: #f7f7f7;
-  --color-lightest: #fbfbfb;
-
-  /* Brand colors */
-  --color-primary: #b33636;
-  --color-secondary: #0c4a6e;
-  --color-tertiary: #357672;
-  --color-feup: #7d221e;
-
-  /* Class/Schedule type colors */
-  --color-schedule-lunch: #be123c;
-  --color-schedule-t: #91897f; /* Theoretical */
-  --color-schedule-tp: #115e59; /* Theoretical-Practical */
-  --color-schedule-pl: #003d7a; /* Practical-Lab */
-  --color-schedule-ot: #5c8fc2; /* Tutorial */
-  --color-schedule-s: #7d3179; /* Seminar */
-  --color-schedule-p: #b66046; /* Practical */
-  --color-schedule-tc: #733c3c; /* Theoretical-Clinical */
-  --color-schedule-o: #69656a; /* Other */
-
-  /* Sidebar colors (mapped from HSL variables) */
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
-
-  /* --- Spacing Utilities --- */
-  --spacing-1\/6: 16.6666666667%;
-  --spacing-5\/6: 83.3333333333%;
-
-  /* --- Layout & Sizing --- */
-  --flex-end: 0 1 auto;
-  --min-height-half-screen: 50vh;
-  --container-8xl: 88rem;
-  --container-9xl: 96rem;
-  --grid-template-rows-7: repeat(7, minmax(0, 1fr));
-  --grid-template-rows-8: repeat(8, minmax(0, 1fr));
-
-  /* --- Typography Families --- */
-  --font-flow: Flow;
-  --font-prose:
-    Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  --font-headings:
-    Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  --font-mono:
-    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-
-  /* --- Custom Animations --- */
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-fade: fade 1000ms ease-in-out infinite;
-  --animate-wiggle: wiggle 700ms ease-in-out;
-  --animate-shine: shine 1s;
-  --animate-wiggle-infinity: wiggle 700ms infinite ease-in-out;
-
-  /* Background utilities for animations */
-  --background-size-size-200: 200% 200%;
-  --background-position-pos-0: 0% 0%;
-  --background-position-pos-100: 100% 100%;
-
-  /* Keyframe animations */
-  @keyframes wiggle {
-    0% {
-      transform: rotate(-0.5deg);
-    }
-    25% {
-      transform: rotate(0.5deg);
-    }
-    50% {
-      transform: rotate(-0.5deg);
-    }
-    75% {
-      transform: rotate(0.5deg);
-    }
-    100% {
-      transform: rotate(0);
-    }
-  }
-
-  @keyframes fade {
-    0% {
-      opacity: 100%;
-    }
-    25% {
-      opacity: 50%;
-    }
-    50% {
-      opacity: 10%;
-    }
-    75% {
-      opacity: 50%;
-    }
-    100% {
-      opacity: 100%;
-    }
-  }
-
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
-  }
-
-  @keyframes shine {
-    100% {
-      left: 125%;
-    }
-  }
 }
 
 /* ============================================================================
-   BASE LAYER STYLES
+   BASE LAYER
    ============================================================================ */
-
 @layer base {
-  /* Dark theme styling */
-  [data-theme='dark'] {
+  [data-theme='dark'],
+  .dark {
     color-scheme: dark;
   }
-
-  /* Global body styles */
-  body {
-    font-family: var(--font-prose);
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    scrollbar-gutter: stable;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Universal border color default */
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-
-  /* Sidebar color scheme - light mode defaults */
-  :root {
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  /* Sidebar color scheme - dark mode overrides */
-  .dark {
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
 }
 
 /* ============================================================================
-   UTILITY LAYER - GLOBAL & COMPONENT STYLES
+   UTILITIES (Foundations mix-with & User utilities)
    ============================================================================ */
+@utility mix-with-* {
+  --color-mix-with: --value(--color-*, [*]);
+}
 
-@layer utilities {
-  /* --- Global HTML/Body Utilities --- */
-  html {
-    @apply scroll-smooth overflow-y-scroll;
-  }
+@utility border-mix-* {
+  border-color: color-mix(
+    in oklab,
+    --value(--color-*, [*]),
+    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
+  );
+}
 
-  body {
-    @apply text-gray-800 bg-light font-prose dark:bg-darkest dark:text-white;
-  }
+@utility bg-mix-* {
+  background-color: color-mix(
+    in oklab,
+    --value(--color-*, [*]),
+    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
+  );
+}
 
-  /* --- Scrollbar Styling (Webkit) --- */
-  ::-webkit-scrollbar {
-    @apply mx-2 w-3 rounded-full md:w-3.5;
-  }
+/* --- Global HTML/Body Utilities (Merged from both) --- */
+html {
+  @apply scroll-smooth overflow-y-scroll;
+}
 
-  ::-webkit-scrollbar-thumb {
-    @apply border-2 border-solid rounded-full border-black/0 bg-black/40 bg-clip-padding md:border-4;
-  }
+body {
+  @apply bg-background text-foreground font-prose;
+  scrollbar-gutter: stable;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  ::-webkit-scrollbar-track {
-    @apply bg-inherit;
-  }
+body:has(dialog[open]) {
+  overflow: hidden;
+}
 
-  /* --- Typography --- */
-  h1,
-  h2 {
-    @apply font-headings;
-  }
+/* --- Scrollbar Styling --- */
+::-webkit-scrollbar {
+  @apply mx-2 w-3 rounded-full md:w-3.5;
+}
+::-webkit-scrollbar-thumb {
+  @apply border-2 border-solid rounded-full border-black/0 bg-black/40 bg-clip-padding md:border-4;
+}
+::-webkit-scrollbar-track {
+  @apply bg-inherit;
+}
 
-  /* --- Form Elements --- */
-  input:disabled + label {
-    display: none;
-  }
+/* --- Typography --- */
+h1,
+h2 {
+  @apply font-headings;
+}
 
-  button {
-    user-select: text;
-    -ms-user-select: text;
-    -moz-user-select: text;
-    -webkit-user-select: text;
-  }
+/* --- Form Elements --- */
+input:disabled + label {
+  display: none;
+}
+button {
+  user-select: text;
+  -ms-user-select: text;
+  -moz-user-select: text;
+  -webkit-user-select: text;
+}
 
-  /* --- Checkbox Variants --- */
-  .checkbox {
-    @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-primary hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent;
-  }
+/* --- Checkbox Variants --- */
+.checkbox {
+  @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-primary hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent;
+}
+.checkboxes {
+  @apply flex flex-wrap items-center justify-center gap-y-2 gap-x-4 md:flex-row md:items-start lg:gap-y-6 lg:gap-x-14;
+  margin-top: 1.5rem !important;
+}
+.checkbox-small {
+  @apply h-3 w-3 cursor-pointer rounded border-2 border-transparent bg-lightish p-0 text-primary transition hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
+}
 
-  .checkboxes {
-    @apply flex flex-wrap items-center justify-center gap-y-2 gap-x-4 md:flex-row md:items-start lg:gap-y-6 lg:gap-x-14;
-    margin-top: 1.5rem !important;
-  }
-
-  .checkbox-small {
-    @apply h-3 w-3 cursor-pointer rounded-sm border-2 border-transparent bg-lightish p-0 text-primary transition 
-    hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
-    dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
-    dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
-  }
-
-  /* --- Layout Utilities --- */
-  .min-h-adjusted {
-    min-height: calc(100vh - 3.5rem - 2rem); /* pageHeight - headerHeight - footerHeight */
-  }
-
-  @media (min-width: 1024px) {
-    .lg\:min-h-adjusted {
-      min-height: calc(100vh - 3.5rem - 2rem);
-    }
-  }
-
-  /* --- Component-Specific Styles --- */
-
-  /* Emoji Picker styling */
-  #option-header .EmojiPickerReact {
-    --epr-bg-color: rgb(242, 244, 247);
-    --epr-category-label-bg-color: rgb(242, 244, 247);
-  }
-
-  #option-header .EmojiPickerReact.epr-dark-theme {
-    --epr-bg-color: rgb(26, 28, 35);
-    --epr-category-label-bg-color: rgb(26, 28, 35);
-  }
-
-  /* Hide scrollbar in option name dropdown */
-  #option-name::-webkit-scrollbar {
-    display: none;
-  }
-
-  #option-name {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  /* --- Stamp/Card Components --- */
-  .stamp {
-    @apply w-10 h-5 inline-block p-10 mt-5 bg-white relative text-center filter drop-shadow-md;
-    background: radial-gradient(transparent 0px, transparent 4px, white 4px, white);
-    background-size: 20px 20px;
-    background-position: -10px -10px;
-  }
-
-  .stamp::after {
-    @apply absolute left-5 top-5 right-5 bottom-5 z-[-1];
-    content: '';
-  }
-
-  .stamp::before {
-    @apply absolute bottom-0 left-0 font-bold text-white opacity-75 text-4xl leading-normal p-5;
-    content: 'CSS3';
-  }
-
-  /* Flip card animation */
-  .stamp-card-inner {
-    transition: transform 0.5s;
-    transform-style: preserve-3d;
-  }
-
-  .stamp-card:hover .stamp-card-inner {
-    transform: rotateY(180deg);
-  }
-
-  .stamp-card-front,
-  .stamp-card-back {
-    -webkit-backface-visibility: hidden;
-  }
-
-  .stamp-card-back {
-    transform: rotateY(180deg);
-  }
-
-  /* --- Button Variants --- */
-  .success-button {
-    @apply bg-green-200 text-green-600 border border-green-600 hover:bg-white;
-  }
-
-  /* --- Calendar/Date Picker --- */
-  .rdp-caption {
-    @apply flex flex-row gap-x-2;
-  }
-
-  /* --- Scrollbar Utilities --- */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+/* --- Layout Utilities --- */
+.min-h-adjusted {
+  min-height: calc(100vh - 3.5rem - 2rem);
+}
+@media (min-width: 1024px) {
+  .lg\:min-h-adjusted {
+    min-height: calc(100vh - 3.5rem - 2rem);
   }
 }
 
-/* ============================================================================
-   GLOBAL STYLES - CORNER SHAPE & SQUIRCLES
-   ============================================================================ */
+/* --- Component-Specific Styles --- */
+#option-header .EmojiPickerReact {
+  --epr-bg-color: rgb(242, 244, 247);
+  --epr-category-label-bg-color: rgb(242, 244, 247);
+}
+#option-header .EmojiPickerReact.epr-dark-theme {
+  --epr-bg-color: rgb(26, 28, 35);
+  --epr-category-label-bg-color: rgb(26, 28, 35);
+}
+#option-name::-webkit-scrollbar {
+  display: none;
+}
+#option-name {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
-/* Apply squircle corner shape globally for modern browsers */
+/* --- Stamp/Card Components --- */
+.stamp {
+  @apply w-10 h-5 inline-block p-10 mt-5 bg-white relative text-center filter drop-shadow-md;
+  background: radial-gradient(transparent 0px, transparent 4px, white 4px, white);
+  background-size: 20px 20px;
+  background-position: -10px -10px;
+}
+.stamp::after {
+  @apply absolute left-5 top-5 right-5 bottom-5 z-[-1];
+  content: '';
+}
+.stamp::before {
+  @apply absolute bottom-0 left-0 font-bold text-white opacity-75 text-4xl leading-normal p-5;
+  content: 'CSS3';
+}
+.stamp-card-inner {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+.stamp-card:hover .stamp-card-inner {
+  transform: rotateY(180deg);
+}
+.stamp-card-front,
+.stamp-card-back {
+  -webkit-backface-visibility: hidden;
+}
+.stamp-card-back {
+  transform: rotateY(180deg);
+}
+
+/* --- Button Variants --- */
+.success-button {
+  @apply bg-green-200 text-green-600 border border-green-600 hover:bg-white;
+}
+.rdp-caption {
+  @apply flex flex-row gap-x-2;
+}
+
+/* ============================================================================
+   GLOBAL STYLES - CORNER SHAPE & SQUIRCLES (Foundations)
+   ============================================================================ */
 * {
   corner-shape: var(--corner-shape);
 }
-
-/* Preserve perfect circles for rounded-full utility */
 .rounded-full {
   corner-shape: round;
 }
-
-/* Increase radius bump in browsers that support squircles for better perceived roundness */
 @supports (corner-shape: squircle) {
   :root {
     --radius-bump: 1.6;
