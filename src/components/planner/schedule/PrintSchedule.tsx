@@ -3,7 +3,7 @@ import { ThemeContext } from '../../../contexts/ThemeContext'
 import { Button } from '../../ui/new/button'
 import { Camera } from 'lucide-react'
 import { toPng } from 'html-to-image'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../../ui/new/tooltip'
+import { Tooltip } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 
 type Props = {
@@ -66,13 +66,13 @@ const PrintSchedule = ({ component, optionName }: Props) => {
   )
 
   return (
-    <Tooltip delayIn={300}>
-      <TooltipTrigger asChild onClick={() => takeScreenshot(enabled)}>
+    <Tooltip>
+      <Tooltip.Trigger asChild onClick={() => takeScreenshot(enabled)}>
         <Button square className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white">
           <Camera size="18" />
         </Button>
-      </TooltipTrigger>
-      <TooltipContent>Descarregar imagem do horário</TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content>Descarregar imagem do horário</Tooltip.Content>
     </Tooltip>
   )
 }

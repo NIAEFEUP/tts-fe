@@ -2,7 +2,7 @@ import { Clipboard } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/new/tooltip'
+import { Tooltip } from '../../../ui/new/tooltip'
 import { ImportedCourses, CourseOption, CourseInfo } from '../../../../@types'
 import api from '../../../../api/backend'
 import CourseContext from '../../../../contexts/CourseContext'
@@ -16,7 +16,6 @@ import { Menu } from '../../../ui/new/menu'
 const PasteOption = () => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
-
 
   const [isClipboardSupported, setIsClipboardSupported] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -125,8 +124,8 @@ const PasteOption = () => {
   return (
     <>
       {isClipboardSupported ? (
-        <Tooltip delayIn={300}>
-          <TooltipTrigger asChild>
+        <Tooltip>
+          <Tooltip.Trigger asChild>
             <Button
               square
               size="sm"
@@ -138,20 +137,20 @@ const PasteOption = () => {
             >
               <Clipboard size="18" />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>Colar horário</TooltipContent>
+          </Tooltip.Trigger>
+          <Tooltip.Content>Colar horário</Tooltip.Content>
         </Tooltip>
       ) : (
         <Menu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-          <Tooltip delayIn={300}>
-            <TooltipTrigger asChild>
+          <Tooltip>
+            <Tooltip.Trigger asChild>
               <Menu.Trigger asChild>
                 <Button onClick={() => setIsDropdownOpen(true)} square className="bg-primary">
                   <Clipboard size="18" />
                 </Button>
               </Menu.Trigger>
-            </TooltipTrigger>
-            <TooltipContent>Colar horário</TooltipContent>
+            </Tooltip.Trigger>
+            <Tooltip.Content>Colar horário</Tooltip.Content>
           </Tooltip>
 
           <Menu.Items className="p-2 w-64 md:w-80">

@@ -26,8 +26,6 @@ export const FeedbackReport = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [reportType, setReportType] = useState<ReportType>(ReportType.Suggestion)
 
-
-
   const form = useForm<z.infer<typeof bugSchema>>({
     resolver: zodResolver(bugSchema),
     defaultValues: {

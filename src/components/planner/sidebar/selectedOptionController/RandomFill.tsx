@@ -2,7 +2,7 @@ import { ChevronDown, Dices } from 'lucide-react'
 import { ClassInfo } from '../../../../@types'
 import { useContext, useEffect, useState } from 'react'
 import { Button } from '../../../ui/new/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
+import { Tooltip } from '../../../ui/new/tooltip'
 import { Popover } from '../../../ui/new/popover'
 import { Checkbox } from '../../../ui/new/checkbox'
 import { Separator } from '../../../ui/separator'
@@ -266,12 +266,12 @@ const RandomFill = (props: Props) => {
   return (
     <div className="flex">
       <Tooltip placement="bottom">
-        <TooltipTrigger asChild onClick={applyRandomSchedule}>
+        <Tooltip.Trigger asChild onClick={applyRandomSchedule}>
           <Button square size="sm" className="bg-secondary hover:bg-secondary/90 rounded-r-none">
             <Dices size="18" />
           </Button>
-        </TooltipTrigger>
-        <TooltipContent>Preenchimento aleatório</TooltipContent>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Preenchimento aleatório</Tooltip.Content>
       </Tooltip>
 
       <Popover placement="bottom-end">

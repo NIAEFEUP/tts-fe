@@ -2,7 +2,7 @@ import { Option } from '../../../@types/index'
 import { ReactSortable } from 'react-sortablejs'
 import { useContext } from 'react'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/new/tooltip'
+import { Tooltip } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import { Button } from '../../ui/new/button'
 
@@ -50,8 +50,8 @@ const OptionButton = ({ option }: Props) => {
   const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
 
   return (
-    <Tooltip delayIn={300}>
-      <TooltipTrigger
+    <Tooltip>
+      <Tooltip.Trigger
         asChild
         onClick={() => {
           setSelectedOption(multipleOptions.findIndex((currentOption) => currentOption.id === option.id))
@@ -64,8 +64,8 @@ const OptionButton = ({ option }: Props) => {
         >
           <img src={option.icon} alt={option.name} />{' '}
         </Button>
-      </TooltipTrigger>
-      <TooltipContent className="w-32 truncate">{option.name}</TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content className="truncate">{option.name}</Tooltip.Content>
     </Tooltip>
   )
 }

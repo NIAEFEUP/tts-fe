@@ -1,12 +1,11 @@
-'use client'
-
 import type { Placement, UseFloatingOptions, UseInteractionsReturn } from '@floating-ui/react'
 import {
   arrow,
   autoUpdate,
-  flip,
   FloatingArrow,
   FloatingDelayGroup,
+  FloatingPortal,
+  flip,
   hide,
   offset as offsetMiddleware,
   safePolygon,
@@ -20,13 +19,15 @@ import {
   useRole,
   useTransitionStatus,
 } from '@floating-ui/react'
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { createContext, use, useCallback, useMemo, useRef, useState } from 'react'
 
-import { Slot } from './slot'
-import { useTopLayer } from '../../../hooks/useTopLayer'
-import { cn } from '../../../lib/utils'
+import { Slot } from '@/components/ui/new/slot'
+import { useTopLayer } from '@/hooks/useTopLayer'
+import { cn } from '@/lib/utils'
 
-// Let's keep an eye on popover="hint", it might be able to handle the tooltip logic natively
+// `popover="hint"` is the right type for tooltips: hints stack above any
+// `popover="manual"` already open (so a Tooltip inside a Popover floats above
+// the Popover), and don't dismiss other popovers when shown.
 // https://developer.mozilla.org/en-US/docs/Web/API/Popover_API/Using#using_hint_popover_state
 
 const DEFAULT_DELAY_IN = 600
@@ -99,7 +100,7 @@ const useTooltipFloating = ({
       persistOnClick,
       ...floating,
     }),
-    [open, setOpen, arrowRef, delayIn, delayOut, disabled, persistOnClick, floating],
+    [open, setOpen, delayIn, delayOut, disabled, persistOnClick, floating],
   )
 }
 
@@ -110,7 +111,7 @@ interface TooltipContextType extends ReturnType<typeof useTooltipFloating>, UseI
 const TooltipContext = createContext<TooltipContextType | null>(null)
 
 const useTooltipContext = () => {
-  const context = useContext(TooltipContext)
+  const context = use(TooltipContext)
 
   if (context == null) {
     throw new Error('Tooltip components must be wrapped in <Tooltip />')
@@ -172,7 +173,7 @@ const Tooltip = ({ children, ...props }: TooltipProps) => {
     [floating, interactions],
   )
 
-  return <TooltipContext.Provider value={tooltipContextValue}>{children}</TooltipContext.Provider>
+  return <TooltipContext value={tooltipContextValue}>{children}</TooltipContext>
 }
 
 interface TooltipTriggerProps extends React.ComponentPropsWithRef<'button'> {
@@ -219,42 +220,49 @@ const TooltipContent = ({ ref: refProp, className, children, ...props }: React.C
 
   const { isMounted, status } = useTransitionStatus(context, { duration: 0 })
 
-  const topLayerRef = useTopLayer<HTMLDivElement>(isMounted)
+  const topLayerRef = useTopLayer<HTMLDivElement>(isMounted, 'hint')
   const ref = useMergeRefs([refs.setFloating, refProp, topLayerRef])
 
   if (!isMounted) return null
 
   return (
-    <div
-      ref={ref}
-      className={cn(
-        'bg-foreground text-background ease-out-quint z-50 max-w-80 overflow-visible rounded-lg px-3 py-1.5 text-xs break-words whitespace-normal drop-shadow-md transition duration-300',
-        'data-[state=closed]:data-[side=bottom]:-translate-y-2 data-[state=closed]:data-[side=left]:translate-x-2 data-[state=closed]:data-[side=right]:-translate-x-2 data-[state=closed]:data-[side=top]:translate-y-2',
-        'data-[state=closed]:scale-95 data-[state=closed]:opacity-0',
-        'data-[state=open]:translate-x-0 data-[state=open]:translate-y-0 data-[state=open]:scale-100',
-        context.middlewareData.hide?.referenceHidden && 'hidden',
-        className,
-      )}
-      data-state={status === 'open' ? 'open' : 'closed'}
-      data-side={context.placement.split('-')[0]}
-      style={{
-        position: context.strategy,
-        top: context.y ?? 0,
-        left: context.x ?? 0,
-        ...props.style,
-      }}
-      {...getFloatingProps(props)}
-    >
-      <FloatingArrow
-        ref={arrowRef}
-        context={context}
-        className="fill-foreground"
-        tipRadius={1}
-        height={ARROW_HEIGHT}
-        width={ARROW_WIDTH}
-      />
-      {children}
-    </div>
+    // Portal to <body> so the tooltip isn't a DOM sibling of its trigger —
+    // otherwise it breaks `:first-child`/`:last-child` selectors used by
+    // ButtonGroup/ToggleGroup to merge borders and corners between adjacent
+    // items. `useTopLayer` is orthogonal: portal moves the DOM position,
+    // top-layer/`popover="manual"` controls visual stacking.
+    <FloatingPortal>
+      <div
+        ref={ref}
+        className={cn(
+          'wrap-break-word z-50 max-w-80 overflow-visible whitespace-normal rounded-lg bg-foreground px-3 py-1.5 text-background text-xs drop-shadow-md transition duration-300 ease-out',
+          'data-[state=closed]:data-[side=left]:translate-x-2 data-[state=closed]:data-[side=right]:-translate-x-2 data-[state=closed]:data-[side=bottom]:-translate-y-2 data-[state=closed]:data-[side=top]:translate-y-2',
+          'data-[state=closed]:scale-95 data-[state=closed]:opacity-0',
+          'data-[state=open]:translate-x-0 data-[state=open]:translate-y-0 data-[state=open]:scale-100',
+          context.middlewareData.hide?.referenceHidden && 'hidden',
+          className,
+        )}
+        data-state={status === 'open' ? 'open' : 'closed'}
+        data-side={context.placement.split('-')[0]}
+        style={{
+          position: context.strategy,
+          top: context.y ?? 0,
+          left: context.x ?? 0,
+          ...props.style,
+        }}
+        {...getFloatingProps(props)}
+      >
+        <FloatingArrow
+          ref={arrowRef}
+          context={context}
+          className="fill-foreground"
+          tipRadius={1}
+          height={ARROW_HEIGHT}
+          width={ARROW_WIDTH}
+        />
+        {children}
+      </div>
+    </FloatingPortal>
   )
 }
 
@@ -300,4 +308,10 @@ const TooltipGroup = ({
   )
 }
 
-export { Tooltip, TooltipContent, TooltipGroup, TooltipTrigger, useTooltipContext }
+const CompoundTooltip = Object.assign(Tooltip, {
+  Trigger: TooltipTrigger,
+  Content: TooltipContent,
+  Group: TooltipGroup,
+})
+
+export { CompoundTooltip as Tooltip, useTooltipContext }

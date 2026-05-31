@@ -6,7 +6,7 @@ import { Button } from '../../../ui/new/button'
 import CourseContext from '../../../../contexts/CourseContext'
 import useVerifyCourseUnitHashes from '../../../../hooks/useVerifyCourseUnitHashes'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/new/tooltip'
+import { Tooltip } from '../../../ui/new/tooltip'
 import { toast } from '../../../ui/new/toaster'
 
 const Refresh = () => {
@@ -14,7 +14,6 @@ const Refresh = () => {
   const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses)
   const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext)
   const [isLoading, setIsLoading] = useState(false)
-
 
   const updateCourses = async () => {
     setIsLoading(true)
@@ -81,8 +80,8 @@ const Refresh = () => {
   }
 
   return (
-    <Tooltip delayIn={300}>
-      <TooltipTrigger asChild>
+    <Tooltip>
+      <Tooltip.Trigger asChild>
         <div className="relative group pointer-events-auto">
           <Button
             variant="ghost"
@@ -96,8 +95,8 @@ const Refresh = () => {
             <ArrowPathIcon className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
         </div>
-      </TooltipTrigger>
-      <TooltipContent>Existem informações desatualizadas, clica aqui para atualizares.</TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content>Existem informações desatualizadas, clica aqui para atualizares.</Tooltip.Content>
     </Tooltip>
   )
 }

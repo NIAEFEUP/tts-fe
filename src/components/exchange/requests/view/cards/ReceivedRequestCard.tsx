@@ -31,8 +31,6 @@ export const ReceivedRequestCard = ({ request }: Props) => {
   } = useContext(ExchangeRequestCommonContext)
   const [hovered, setHovered] = useState<boolean>(false)
 
-
-
   const { user } = useContext(SessionContext)
 
   const { trigger: acceptDirectExchange, isMutating: isAcceptingDirectExchange } = useAcceptDirectExchange(request?.id)

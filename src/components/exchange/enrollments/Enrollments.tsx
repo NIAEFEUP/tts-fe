@@ -39,8 +39,6 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
 
   const { enrolledCourseUnits: alreadyEnrolledCourseUnits, loading: loadingEnrolled } = useStudentCourseUnits()
 
-
-
   useEffect(() => {
     BackendAPI.getMajors().then((majors: Major[]) => {
       setMajors(majors.filter((major) => major.acronym === 'L.EIC' || major.acronym === 'M.EIC'))

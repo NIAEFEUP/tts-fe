@@ -1,7 +1,7 @@
 import { CalendarDays } from 'lucide-react'
 import { ClassDescriptor } from '../../../@types'
 import { Button } from '../../ui/new/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/new/tooltip'
+import { Tooltip } from '../../ui/new/tooltip'
 
 type Props = { classes: ClassDescriptor[] }
 
@@ -61,13 +61,13 @@ const DownloadSchedule = ({ classes }: Props) => {
   }
 
   return (
-    <Tooltip delayIn={300}>
-      <TooltipTrigger asChild onClick={downloadIcs}>
+    <Tooltip>
+      <Tooltip.Trigger asChild onClick={downloadIcs}>
         <Button square className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white">
           <CalendarDays size="18" />
         </Button>
-      </TooltipTrigger>
-      <TooltipContent>Descarregar Horário</TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content>Descarregar Horário</Tooltip.Content>
     </Tooltip>
   )
 }

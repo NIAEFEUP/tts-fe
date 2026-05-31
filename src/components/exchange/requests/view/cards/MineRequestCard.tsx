@@ -25,7 +25,6 @@ export const MineRequestCard = ({ request, mutate }: Props) => {
 
   const [hovered, setHovered] = useState<boolean>(false)
 
-
   const handleSave = async (id: number, message: string) => {
     setSaving(true)
     try {

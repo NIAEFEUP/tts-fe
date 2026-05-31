@@ -22,7 +22,6 @@ type Props = {
 }
 
 const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => {
-
   const [copied, setCopied] = useState(false)
   const [lastValidUser, setLastValidUser] = useState(
     session.participants.find((p) => p.client_id === sessionsSocket.clientId)?.name ?? '',

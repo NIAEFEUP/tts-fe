@@ -2,7 +2,7 @@ import { ArchiveBoxIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react
 import { DirectExchangeRequest, MarketplaceRequest } from '../../../../../@types'
 import { Button } from '../../../../ui/new/button'
 import { CardDescription, CardHeader, CardTitle } from '../../../../ui/card'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../../../ui/new/tooltip'
+import { Tooltip } from '../../../../ui/new/tooltip'
 import RequestCardClassBadge from './RequestCardClassBadge'
 import { useContext, useEffect } from 'react'
 import { StudentRequestCardStatus } from '../../../../../utils/requests'
@@ -71,7 +71,7 @@ export const CommonCardHeader = ({
             <div className="flex flex-row items-center">
               {hideAbility && (
                 <Tooltip>
-                  <TooltipTrigger asChild>
+                  <Tooltip.Trigger asChild>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -82,10 +82,10 @@ export const CommonCardHeader = ({
                     >
                       <ArchiveBoxIcon className="h-5 w-5" />
                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
+                  </Tooltip.Trigger>
+                  <Tooltip.Content>
                     <p>Esconder</p>
-                  </TooltipContent>
+                  </Tooltip.Content>
                 </Tooltip>
               )}
 

@@ -31,7 +31,6 @@ export const RequestCard = () => {
 
   const { conflictSeverity } = useContext(ConflictsContext)
 
-
   const { trigger: requestExchangeProposal, isMutating: isProcessingExchangeProposal } = useMarketplaceAcceptExchange(
     request,
     selectedOptions,

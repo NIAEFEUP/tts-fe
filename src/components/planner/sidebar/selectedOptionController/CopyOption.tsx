@@ -3,7 +3,7 @@ import { Button } from '../../../ui/new/button'
 import { Check, Files } from 'lucide-react'
 import { toast } from '../../../ui/new/toaster'
 import { Buffer } from 'buffer'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
+import { Tooltip } from '../../../ui/new/tooltip'
 import { CourseOption } from '../../../../@types'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
@@ -16,7 +16,6 @@ type Props = {
  * Copy currently selected option to clipboard
  */
 const CopyOption = ({ currentOption }: Props) => {
-
   const [icon, setIcon] = useState(false)
 
   /**
@@ -55,13 +54,13 @@ const CopyOption = ({ currentOption }: Props) => {
   }
 
   return (
-    <Tooltip delayIn={300}>
-      <TooltipTrigger asChild>
+    <Tooltip>
+      <Tooltip.Trigger asChild>
         <Button size="sm" square className="bg-primary hover:bg-primary/90" onClick={() => copyOption()}>
           {icon ? <Check size="18" /> : <Files size="18" />}
         </Button>
-      </TooltipTrigger>
-      <TooltipContent>Copiar horário</TooltipContent>
+      </Tooltip.Trigger>
+      <Tooltip.Content>Copiar horário</Tooltip.Content>
     </Tooltip>
   )
 }
