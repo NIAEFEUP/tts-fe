@@ -9,14 +9,14 @@ import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { convertCourseInfoToCourseOption } from '../../../../utils'
 import { Button } from '../../../ui/new/button'
-import { useToast } from '../../../ui/use-toast'
+import { toast } from '../../../ui/new/toaster'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 import { Menu } from '../../../ui/new/menu'
 
 const PasteOption = () => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
-  const { toast } = useToast()
+
 
   const [isClipboardSupported, setIsClipboardSupported] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)

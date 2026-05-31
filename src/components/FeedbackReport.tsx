@@ -6,7 +6,7 @@ import { Input } from './ui/new/input'
 import { Textarea } from './ui/new/textArea'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useToast } from './ui/use-toast'
+import { toast } from './ui/new/toaster'
 import { useState } from 'react'
 import { Tabs } from './ui/new/tabs'
 import { Flag } from 'lucide-react'
@@ -26,7 +26,7 @@ export const FeedbackReport = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [reportType, setReportType] = useState<ReportType>(ReportType.Suggestion)
 
-  const { toast } = useToast()
+
 
   const form = useForm<z.infer<typeof bugSchema>>({
     resolver: zodResolver(bugSchema),

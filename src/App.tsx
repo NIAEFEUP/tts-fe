@@ -1,4 +1,4 @@
-import { NewToaster } from './components/ui/new/toaster'
+import { Toaster } from './components/ui/new/toaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
@@ -167,7 +167,7 @@ const App = () => {
             <Route path="admin/settings" key="page-admin-settings" element={<AdminPage page="settings" />} />
             <Route path="admin/statistics" key="page-admin-statistics" element={<AdminPage page="statistics" />} />
           </SentryRoutes>
-          <NewToaster />
+          <Toaster />
         </>
       </CombinedProvider>
     </BrowserRouter>

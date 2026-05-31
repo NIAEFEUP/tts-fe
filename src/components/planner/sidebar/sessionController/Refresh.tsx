@@ -7,14 +7,14 @@ import CourseContext from '../../../../contexts/CourseContext'
 import useVerifyCourseUnitHashes from '../../../../hooks/useVerifyCourseUnitHashes'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/new/tooltip'
-import { useToast } from '../../../ui/use-toast'
+import { toast } from '../../../ui/new/toaster'
 
 const Refresh = () => {
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
   const { mismatchedMap } = useVerifyCourseUnitHashes(pickedCourses)
   const { multipleOptions, setMultipleOptions } = useContext(MultipleOptionsContext)
   const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
+
 
   const updateCourses = async () => {
     setIsLoading(true)

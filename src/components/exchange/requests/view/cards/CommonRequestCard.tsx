@@ -3,7 +3,7 @@ import { ClassDescriptor, DirectExchangeRequest, MarketplaceRequest } from '../.
 import ExchangeRequestCommonContext from '../../../../../contexts/ExchangeRequestCommonContext'
 import ScheduleContext from '../../../../../contexts/ScheduleContext'
 import useSchedule from '../../../../../hooks/useSchedule'
-import { toast } from '../../../../ui/use-toast'
+import { toast } from '../../../../ui/new/toaster'
 import { StudentRequestCardStatus } from '../../../../../utils/requests'
 
 type Props = {
@@ -40,7 +40,6 @@ export const CommonRequestCard = ({
     toast({
       title: 'Pedido escondido',
       description: 'O pedido foi escondido da lista de pedidos.',
-      position: 'top-right',
     })
   }
 

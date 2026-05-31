@@ -10,7 +10,7 @@ import { ListRequestChanges } from './ListRequestChanges'
 import useAcceptDirectExchange from '../../../../../hooks/exchange/useAcceptDirectExchange'
 import { MoonLoader } from 'react-spinners'
 import { exchangeErrorToText } from '../../../../../utils/error'
-import { useToast } from '../../../../ui/use-toast'
+import { toast } from '../../../../ui/new/toaster'
 import { StudentRequestCardStatus } from '../../../../../utils/requests'
 
 type Props = {
@@ -31,7 +31,7 @@ export const ReceivedRequestCard = ({ request }: Props) => {
   } = useContext(ExchangeRequestCommonContext)
   const [hovered, setHovered] = useState<boolean>(false)
 
-  const { toast } = useToast()
+
 
   const { user } = useContext(SessionContext)
 
@@ -106,7 +106,6 @@ export const ReceivedRequestCard = ({ request }: Props) => {
                           toast({
                             title: 'Troca aceita com sucesso!',
                             description: 'A troca foi aceita com sucesso.',
-                            variant: 'default',
                           })
 
                           setRequestStatus(StudentRequestCardStatus.PENDING)
@@ -118,7 +117,7 @@ export const ReceivedRequestCard = ({ request }: Props) => {
                           toast({
                             title: 'Erro ao aceitar troca.',
                             description: exchangeErrorToText[json['error']],
-                            variant: 'destructive',
+                            variant: 'negative',
                           })
                           setRequestStatus(StudentRequestCardStatus.CANCELED)
                         }

@@ -9,7 +9,7 @@ import { Button } from '../../../../ui/new/button'
 import useCancelMarketplaceExchange from '../../../../../hooks/exchange/useCancelMarketplaceExchange'
 import { MoonLoader } from 'react-spinners'
 import { StudentRequestCardStatus } from '../../../../../utils/requests'
-import { useToast } from '../../../../ui/use-toast'
+import { toast } from '../../../../ui/new/toaster'
 import { SWRInfiniteKeyedMutator } from 'swr/infinite'
 
 import api from '../../../../../api/backend'
@@ -24,7 +24,7 @@ export const MineRequestCard = ({ request, mutate }: Props) => {
     useContext(ExchangeRequestCommonContext)
 
   const [hovered, setHovered] = useState<boolean>(false)
-  const { toast } = useToast()
+
 
   const handleSave = async (id: number, message: string) => {
     setSaving(true)
@@ -46,7 +46,7 @@ export const MineRequestCard = ({ request, mutate }: Props) => {
         toast({
           title: 'Erro a atualizar',
           description: text,
-          variant: 'destructive',
+          variant: 'negative',
         })
         return
       }
@@ -78,7 +78,7 @@ export const MineRequestCard = ({ request, mutate }: Props) => {
       console.error(e)
       toast({
         title: 'Erro inesperado',
-        variant: 'destructive',
+        variant: 'negative',
       })
     } finally {
       setSaving(false)

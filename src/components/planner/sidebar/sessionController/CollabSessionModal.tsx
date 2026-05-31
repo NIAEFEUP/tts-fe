@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { StopIcon } from '@heroicons/react/24/solid'
 import { Button } from '../../../ui/new/button'
-import { useToast } from '../../../ui/use-toast'
+import { toast } from '../../../ui/new/toaster'
 import { CollabSession } from '../../../../@types'
 import { sessionsSocket } from '../../../../api/socket'
 
@@ -22,7 +22,7 @@ type Props = {
 }
 
 const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => {
-  const { toast } = useToast()
+
   const [copied, setCopied] = useState(false)
   const [lastValidUser, setLastValidUser] = useState(
     session.participants.find((p) => p.client_id === sessionsSocket.clientId)?.name ?? '',

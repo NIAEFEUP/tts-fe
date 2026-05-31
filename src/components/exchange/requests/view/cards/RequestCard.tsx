@@ -7,7 +7,7 @@ import { ListRequestChanges, OptionOrder } from './ListRequestChanges'
 import ExchangeRequestCommonContext from '../../../../../contexts/ExchangeRequestCommonContext'
 import { CommonCardHeader } from './CommonCardHeader'
 import ConflictsContext from '../../../../../contexts/ConflictsContext'
-import { useToast } from '../../../../ui/use-toast'
+import { toast } from '../../../../ui/new/toaster'
 import { exchangeErrorToText } from '../../../../../utils/error'
 import useMarketplaceAcceptExchange from '../../../../../hooks/useMarketplaceAcceptExchange'
 import { MoonLoader } from 'react-spinners'
@@ -30,7 +30,7 @@ export const RequestCard = () => {
   const [hovered, setHovered] = useState<boolean>(false)
 
   const { conflictSeverity } = useContext(ConflictsContext)
-  const { toast } = useToast()
+
 
   const { trigger: requestExchangeProposal, isMutating: isProcessingExchangeProposal } = useMarketplaceAcceptExchange(
     request,
@@ -64,7 +64,6 @@ export const RequestCard = () => {
       if (response && response.ok) {
         toast({
           title: 'Troca proposta com sucesso!',
-          variant: 'default',
           description:
             'A proposta de troca foi realizada com sucesso. Podes confirmar a troca no email institucional ou na aba "recebidos" da página dos pedidos.',
         })
@@ -72,14 +71,14 @@ export const RequestCard = () => {
         toast({
           title: 'Erro ao propor troca.',
           description: exchangeErrorToText[(await response.json())['error']],
-          variant: 'destructive',
+          variant: 'negative',
         })
       }
     } catch (error) {
       toast({
         title: 'Erro ao propor a troca.',
         description: `Houve um erro desconhecido: ${error.message}`,
-        variant: 'destructive',
+        variant: 'negative',
       })
     }
   }

@@ -8,7 +8,7 @@ import CourseContext from '../../../contexts/CourseContext'
 import { Button } from '../../ui/new/button'
 import courseUnitEnrollmentService from '../../../api/services/courseUnitEnrollmentService'
 import { ExchangeSidebarStatus } from '../../../pages/Exchange'
-import { useToast } from '../../ui/use-toast'
+import { toast } from '../../ui/new/toaster'
 import useStudentCourseUnits from '../../../hooks/useStudentCourseUnits'
 import { AlreadyEnrolledCourseUnitCard } from './AlreadyEnrolledCourseUnitCard'
 import { EnrollingCourseUnitCard } from './EnrollingCourseUnitCard'
@@ -39,7 +39,7 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
 
   const { enrolledCourseUnits: alreadyEnrolledCourseUnits, loading: loadingEnrolled } = useStudentCourseUnits()
 
-  const { toast } = useToast()
+
 
   useEffect(() => {
     BackendAPI.getMajors().then((majors: Major[]) => {

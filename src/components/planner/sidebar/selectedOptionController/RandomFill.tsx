@@ -9,7 +9,7 @@ import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
-import { toast } from '../../../ui/use-toast'
+import { toast } from '../../../ui/new/toaster'
 import { Desert } from '../../../svgs'
 
 type Props = {
@@ -184,7 +184,6 @@ const RandomFill = (props: Props) => {
       toast({
         title: 'Não foi possível gerar turmas!',
         description: 'Não encontramos uma combinação com as turmas das disciplinas selecionadas sem conflitos',
-        position: 'top-right',
       })
     }
 

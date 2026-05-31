@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '../../../ui/new/button'
 import { Check, Files } from 'lucide-react'
-import { useToast } from '../../../ui/use-toast'
+import { toast } from '../../../ui/new/toaster'
 import { Buffer } from 'buffer'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../ui/new/tooltip'
 import { CourseOption } from '../../../../@types'
@@ -16,7 +16,7 @@ type Props = {
  * Copy currently selected option to clipboard
  */
 const CopyOption = ({ currentOption }: Props) => {
-  const { toast } = useToast()
+
   const [icon, setIcon] = useState(false)
 
   /**

@@ -2,7 +2,7 @@ import { Ban, Check } from 'lucide-react'
 import { Button } from '../../ui/new/button'
 import { useNavigate } from 'react-router-dom'
 import exchangeRequestService from '../../../api/services/exchangeRequestService'
-import { toast } from '../../../components/ui/use-toast'
+import { toast } from '../../ui/new/toaster'
 
 type Props = {
   verified: boolean
