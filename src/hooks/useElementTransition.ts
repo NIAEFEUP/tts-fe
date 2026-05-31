@@ -1,9 +1,7 @@
-'use client'
-
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 
-import { nextFrame } from '../lib/dom/nextFrame'
+import { nextFrame } from '@/lib/dom/nextFrame'
 
 type Status = 'unmounted' | 'initial' | 'open' | 'closed'
 
