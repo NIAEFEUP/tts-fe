@@ -1,11 +1,9 @@
-'use client'
-
-import { VariantProps } from 'cva'
+import type { VariantProps } from 'cva'
 import { useEffect, useRef, useState } from 'react'
 
-import { inputStyle } from './input'
-import { composeRefs } from '../../../lib/compose-refs'
-import { cn } from '../../../lib/utils'
+import { inputStyle } from '@/components/ui/new/input'
+import { composeRefs } from '@/lib/compose-refs'
+import { cn } from '@/lib/utils'
 
 interface TextareaProps extends React.ComponentPropsWithRef<'textarea'> {
   invalid?: boolean
@@ -44,9 +42,13 @@ const TextareaResize = ({ ref, ...props }: TextareaProps) => {
       internalRef.current.style.height = 'auto'
       internalRef.current.style.height = `${internalRef.current.scrollHeight}px`
     }
-  }, [value])
+  }, [])
 
   return <Textarea ref={composeRefs(ref, internalRef)} {...props} value={value} onChange={handleChange} />
 }
 
-export { Textarea, TextareaResize }
+const CompoundTextarea = Object.assign(Textarea, {
+  Resize: TextareaResize,
+})
+
+export { CompoundTextarea as Textarea }
