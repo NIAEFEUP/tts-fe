@@ -8,9 +8,9 @@ import AdminPaginationContext from "../../../contexts/admin/AdminPaginationConte
 export const MultipleStudentExchanges = () => {
     const filterContext = useContext(RequestFiltersContext);
 
-    const { currPage, setTotalPages } = useContext(AdminPaginationContext);
-    const { exchanges, totalPages, loading } = useMultipleStudentExchanges(filterContext, currPage);
-    
+    const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext);
+    const { exchanges, totalPages, loading } = useMultipleStudentExchanges(filterContext, currPage, itemsPerPage);
+
     useEffect(() => {
         setTotalPages(totalPages)
     }, [exchanges]);
@@ -23,7 +23,6 @@ export const MultipleStudentExchanges = () => {
                 {!loading && (!exchanges || exchanges.length === 0) && (
                     <h2>Nenhum pedido encontrado de momento</h2>
                 )}
-
                 {exchanges?.map((exchange) => (
                     <MultipleStudentExchangeCard 
                         exchange={exchange}

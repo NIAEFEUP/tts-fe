@@ -32,7 +32,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <social.icon className="hover:-trangray-y-1 h-8 w-8 rounded text-white transition hover:opacity-80" />
+                <social.icon className="hover:-translate-y-1 h-8 w-8 rounded-sm text-white transition hover:opacity-80" />
               </a>
             </li>
           ))}
@@ -47,8 +47,8 @@ const Footer = () => {
         {/* Direitos */}
         <div className="order-3 flex flex-col items-center justify-center">
           <p className="text-base font-medium text-white dark:text-gray-300 sm:text-center">
-            © {new Date().getFullYear()+' '}
-            <a href="https://niaefeup.pt" className="hover:underline">
+            © {new Date().getFullYear() + ' '}
+            <a href="https://niaefeup.pt" className="hover:underline" target="_blank" rel="noopener noreferrer">
               NIAEFEUP
             </a>
             ™. All Rights Reserved.

@@ -35,7 +35,7 @@ const RandomFill = ({ className }: Props) => {
   const getClassesCombinations = () => {
     return pickedCourses.map((course) => {
       if (!course.classes) return []
-      return course.classes.map((cls) => {
+      return course.classes?.map((cls) => {
         return {
           course_info: course,
           class_info: cls,
@@ -94,7 +94,7 @@ const RandomFill = ({ className }: Props) => {
   const getSchedulesGenerator = () => {
     const allSchedules = courseOptions.map((course) => {
       if (course.locked && course.picked_class_id) {
-        return [pickedCourses.find((picked) => picked.id === course.course_id)?.classes.find(
+        return [pickedCourses.find((picked) => picked.id === course.course_id)?.classes?.find(
           (cls) => cls.id === course.picked_class_id
         )]
       }
@@ -197,7 +197,7 @@ const RandomFill = ({ className }: Props) => {
           if (!classInfo) continue
 
           const courseUnit = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id);
-          const matchedClassInfo = courseUnit.classes.find((courseUnitClass) => courseUnitClass.id === classInfo.id);
+          const matchedClassInfo = courseUnit.classes?.find((courseUnitClass) => courseUnitClass.id === classInfo.id);
           if (matchedClassInfo) {
             return {
               ...course,
@@ -264,19 +264,19 @@ const RandomFill = ({ className }: Props) => {
           <Button
             onClick={applyRandomSchedule}
             variant="icon"
-            className={`${className} h-min w-min flex-grow bg-secondary`}
+            className={`${className} h-min w-min grow bg-secondary`}
           >
             <BoltIcon className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" asChild>
-          <ScrollArea className="max-h-72 rounded px-3 w-full overflow-y-auto">
+          <ScrollArea className="max-h-72 rounded-sm px-3 w-full overflow-y-auto">
             <div className="p-1">Preenchimento aleatório</div>
             <Separator />
             {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
               <div
                 key={key}
-                className="mt-1 flex items-center space-x-2 rounded p-1 hover:cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-700"
+                className="mt-1 flex items-center space-x-2 rounded-sm p-1 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <Checkbox id={key} checked={uniqueClasses.includes(key)} onClick={toggleRandomClasses} />
                 <label

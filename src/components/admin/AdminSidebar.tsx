@@ -8,7 +8,7 @@ import { CornerDownLeftIcon, PieChartIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton } from "../ui/sidebar";
-import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { ArrowRightStartOnRectangleIcon, RectangleGroupIcon, PaperAirplaneIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 export const AdminSidebar = () => {
@@ -41,13 +41,6 @@ export const AdminSidebar = () => {
                             <span>Pedidos</span>
                         </Link>
                     </SidebarMenuButton>
-                    <SidebarMenuButton asChild>
-                        <Link to="/admin/vacancies" className="flex items-center gap-2">
-                            <UsersIcon className="w-6 h-6" />
-                            <span>Vagas</span>
-                        </Link>
-                    </SidebarMenuButton>
-                    
                     <SidebarMenuButton asChild>
                         <Link to="/admin/settings" className="flex items-center gap-2">
                             <AdjustmentsHorizontalIcon className="w-6 h-6" />
@@ -83,12 +76,12 @@ export const AdminSidebar = () => {
                 </SidebarMenuButton>
             </SidebarFooter>
             <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-                <AlertDialogContent className="w-full max-w-[22rem] p-5">
+                <AlertDialogContent className="w-full max-w-88 p-5">
                 <AlertDialogHeader>
                     <AlertDialogTitle>Sair</AlertDialogTitle>
                     <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter className="mt-2 flex !justify-center gap-4">
+                <AlertDialogFooter className="mt-2 flex justify-center! gap-4">
                     <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
                     Cancelar
                     </Button>

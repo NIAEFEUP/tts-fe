@@ -6,6 +6,7 @@ import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
 import { SidebarProvider } from "../components/ui/sidebar";
 import SessionContext from "../contexts/SessionContext";
+import api from "../api/backend";
 
 type Props = {
   page: string;
@@ -19,9 +20,13 @@ const AdminPage = ({ page }: Props) => {
 
   useEffect(() => {
     if (!isSessionLoading && !isAuthorized) {
-      navigate("/planner");
+      if (!signedIn) {
+        window.location.href = api.OIDC_LOGIN_URL;
+      } else {
+        navigate("/exchange");
+      }
     }
-  }, [isSessionLoading, isAuthorized, navigate]);
+  }, [isSessionLoading, isAuthorized, signedIn, navigate]);
 
   if (isSessionLoading) {
     return <div>Loading...</div>;
