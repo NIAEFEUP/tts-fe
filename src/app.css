@@ -1,67 +1,31 @@
 @import 'tailwindcss';
 
-/* ============================================================================
-   TAILWIND PLUGINS
-   ============================================================================ */
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/forms';
 
-/* ============================================================================
-   DARK MODE VARIANT (Foundations + .dark support)
-   ============================================================================ */
-@variant dark {
-  &:where([data-theme='dark'], [data-theme='dark'] *, .dark, .dark *) {
-    @slot;
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
   }
 }
 
-/* ============================================================================
-   THEME (Foundations Base + User's Exact Legacy Palette & Typography)
-   ============================================================================ */
 @theme {
-  /* Typography */
-  --text-2xs: 0.625rem;
+  --color-inherit: inherit;
+  --color-current: currentColor;
 
-  --font-flow: Flow;
-  --font-prose:
-    Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  --font-headings:
-    Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  --font-mono:
-    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-
-  /* Colors - User's exact background hexes via light-dark for native switching */
-  --color-background: light-dark(#f2f4f7, #1a1c23);
-  --color-background-secondary: light-dark(#ebedf0, #333640);
-  --color-foreground: light-dark(#1f2937, #ffffff);
-  --color-foreground-secondary: light-dark(#4b5563, #9ca3af);
-
-  --color-border: light-dark(#e5e7eb, #252832);
-
-  /* Foundations Accent behavior (vital for components) */
-  --color-accent: var(--color-foreground);
-  --color-accent-foreground: var(--color-background);
-
-  --color-ring: light-dark(
-    color-mix(in oklab, var(--color-accent) 30%, transparent),
-    color-mix(in oklab, var(--color-accent) 30%, transparent)
-  );
-
-  /* Semantic Colors (Foundations) */
-  --color-error: oklch(63.7% 0.237 25.331);
-  --color-warning: oklch(79.5% 0.184 86.047);
-  --color-success: oklch(69.6% 0.17 162.48);
-  --color-info: oklch(62.3% 0.214 259.815);
-
-  /* User's Primary Brand Color */
-  --color-primary: #b33636;
-  --color-secondary: #0c4a6e;
-  --color-tertiary: #357672;
-  --color-feup: #7d221e;
-
-  /* User's Legacy Color Palette (used in legacy UI elements) */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-background-secondary: var(--color-background-secondary);
+  --color-border: var(--color-border);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
   --color-navy: #18222e;
   --color-lightNavy: #212a36;
   --color-darkish: #333640;
@@ -72,8 +36,10 @@
   --color-light: #f2f4f7;
   --color-lighter: #f7f7f7;
   --color-lightest: #fbfbfb;
+  --color-primary: #b33636;
+  --color-secondary: #0c4a6e;
+  --color-tertiary: #357672;
 
-  /* User's Class/Schedule Colors */
   --color-schedule-lunch: #be123c;
   --color-schedule-t: #91897f;
   --color-schedule-tp: #115e59;
@@ -84,240 +50,233 @@
   --color-schedule-tc: #733c3c;
   --color-schedule-o: #69656a;
 
-  /* User's Sidebar Colors (using light-dark) */
-  --color-sidebar-background: light-dark(hsl(0 0% 98%), hsl(240 5.9% 10%));
-  --color-sidebar-foreground: light-dark(hsl(240 5.3% 26.1%), hsl(240 4.8% 95.9%));
-  --color-sidebar-primary: light-dark(hsl(240 5.9% 10%), hsl(224.3 76.3% 48%));
-  --color-sidebar-primary-foreground: light-dark(hsl(0 0% 98%), hsl(0 0% 100%));
-  --color-sidebar-accent: light-dark(hsl(240 4.8% 95.9%), hsl(240 3.7% 15.9%));
-  --color-sidebar-accent-foreground: light-dark(hsl(240 5.9% 10%), hsl(240 4.8% 95.9%));
-  --color-sidebar-border: light-dark(hsl(220 13% 91%), hsl(240 3.7% 15.9%));
-  --color-sidebar-ring: light-dark(hsl(217.2 91.2% 59.8%), hsl(217.2 91.2% 59.8%));
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
 
-  /* Border radius (Foundations) */
-  --radius: 0.125rem;
-  --radius-bump: 1;
-  --radius-xs: calc(var(--radius) * 1 * var(--radius-bump));
-  --radius-sm: calc(var(--radius) * 2 * var(--radius-bump));
-  --radius-md: calc(var(--radius) * 3 * var(--radius-bump));
-  --radius-lg: calc(var(--radius) * 4 * var(--radius-bump));
-  --radius-xl: calc(var(--radius) * 6 * var(--radius-bump));
-  --radius-2xl: calc(var(--radius) * 8 * var(--radius-bump));
-  --radius-3xl: calc(var(--radius) * 12 * var(--radius-bump));
-  --radius-4xl: calc(var(--radius) * 16 * var(--radius-bump));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
 
-  /* Panel-item inset (Foundations) */
-  --inset: calc(var(--radius) * 1.5 * var(--radius-bump));
+  --flex-end: 0 1 auto;
 
-  /* Focus ring */
-  --ring-width: 4px;
+  --text-xxs: 0.6rem;
 
-  /* Corner shape */
-  --corner-shape: squircle;
+  --font-prose:
+    Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-headings:
+    Montserrat, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-mono:
+    Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
-  /* Shadows (Foundations) */
-  --shadow-*: initial;
-  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.03);
-  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.02), 0 2px 4px oklch(0 0 0 / 0.02);
-  --shadow-md: 0 2px 3px oklch(0 0 0 / 0.02), 0 3px 6px oklch(0 0 0 / 0.02);
-  --shadow-lg: 0 2px 4px oklch(0 0 0 / 0.02), 0 4px 8px oklch(0 0 0 / 0.02), 0 8px 16px oklch(0 0 0 / 0.02);
   --shadow-inner-xl: inset 0px 0px 4px 4px rgb(0 0 0 / 0.1);
 
-  /* Easings & Animations (Foundations) */
-  --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
-  --ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --animate-wiggle: wiggle 700ms ease-in-out;
+  --animate-shine: shine 1s;
 
-  --animate-spinner-dot: spinner-dot 1.4s ease-in-out infinite both;
-  --animate-spinner-bar: spinner-bar 1.2s ease-in-out infinite both;
-
-  @keyframes spinner-dot {
-    0%,
-    80%,
-    100% {
-      opacity: 0.25;
+  @keyframes wiggle {
+    0% {
+      transform: rotate(-0.5deg);
     }
-    40% {
-      opacity: 1;
+    25% {
+      transform: rotate(0.5deg);
+    }
+    50% {
+      transform: rotate(-0.5deg);
+    }
+    75% {
+      transform: rotate(0.5deg);
+    }
+    100% {
+      transform: rotate(0);
     }
   }
-
-  @keyframes spinner-bar {
-    0%,
-    40%,
+  @keyframes shine {
     100% {
-      transform: scaleY(0.4);
-    }
-    20% {
-      transform: scaleY(1);
+      left: 125%;
     }
   }
 }
 
-/* ============================================================================
-   BASE LAYER
-   ============================================================================ */
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
 @layer base {
-  [data-theme='dark'],
-  .dark {
-    color-scheme: dark;
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
 }
 
-/* ============================================================================
-   UTILITIES (Foundations mix-with & User utilities)
-   ============================================================================ */
-@utility mix-with-* {
-  --color-mix-with: --value(--color-*, [*]);
-}
+@layer utilities {
+  html {
+    @apply scroll-smooth overflow-y-scroll;
+  }
 
-@utility border-mix-* {
-  border-color: color-mix(
-    in oklab,
-    --value(--color-*, [*]),
-    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
-  );
-}
+  body {
+    @apply bg-background text-foreground font-prose;
+  }
 
-@utility bg-mix-* {
-  background-color: color-mix(
-    in oklab,
-    --value(--color-*, [*]),
-    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
-  );
-}
+  ::-webkit-scrollbar {
+    @apply mx-2 w-3 rounded-full md:w-3.5;
+  }
 
-/* --- Global HTML/Body Utilities (Merged from both) --- */
-html {
-  @apply scroll-smooth overflow-y-scroll;
-}
+  ::-webkit-scrollbar-thumb {
+    @apply border-2 border-solid rounded-full border-black/0 bg-black/40 bg-clip-padding md:border-4;
+  }
 
-body {
-  @apply bg-background text-foreground font-prose;
-  scrollbar-gutter: stable;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  ::-webkit-scrollbar-track {
+    @apply bg-inherit;
+  }
 
-body:has(dialog[open]) {
-  overflow: hidden;
-}
+  h1,
+  h2 {
+    @apply font-headings;
+  }
 
-/* --- Scrollbar Styling --- */
-::-webkit-scrollbar {
-  @apply mx-2 w-3 rounded-full md:w-3.5;
-}
-::-webkit-scrollbar-thumb {
-  @apply border-2 border-solid rounded-full border-black/0 bg-black/40 bg-clip-padding md:border-4;
-}
-::-webkit-scrollbar-track {
-  @apply bg-inherit;
-}
+  input:disabled + label {
+    display: none;
+  }
 
-/* --- Typography --- */
-h1,
-h2 {
-  @apply font-headings;
-}
+  button {
+    user-select: text;
+    -ms-user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+  }
 
-/* --- Form Elements --- */
-input:disabled + label {
-  display: none;
-}
-button {
-  user-select: text;
-  -ms-user-select: text;
-  -moz-user-select: text;
-  -webkit-user-select: text;
-}
+  .checkbox {
+    @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-primary hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent;
+  }
+  .checkboxes {
+    @apply flex flex-wrap items-center justify-center gap-y-2 gap-x-4 md:flex-row md:items-start lg:gap-y-6 lg:gap-x-14;
+    margin-top: 1.5rem !important;
+  }
+  .checkbox-small {
+    @apply h-3 w-3 cursor-pointer rounded-sm border-2 border-transparent bg-lightish p-0 text-primary transition 
+  hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50
+  dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish 
+  dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
+  }
 
-/* --- Checkbox Variants --- */
-.checkbox {
-  @apply p-2 transition border-2 border-transparent rounded-md cursor-pointer bg-lightish text-primary hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-transparent;
-}
-.checkboxes {
-  @apply flex flex-wrap items-center justify-center gap-y-2 gap-x-4 md:flex-row md:items-start lg:gap-y-6 lg:gap-x-14;
-  margin-top: 1.5rem !important;
-}
-.checkbox-small {
-  @apply h-3 w-3 cursor-pointer rounded border-2 border-transparent bg-lightish p-0 text-primary transition hover:bg-primary/75 hover:text-primary/75 focus:ring-transparent dark:bg-darkish dark:checked:bg-primary/50 dark:indeterminate:bg-primary/50 dark:hover:bg-primary/80 dark:hover:text-primary/80 dark:focus:text-darkish dark:focus:ring-0 xl:h-3.5 xl:w-3.5;
-}
+  .min-h-adjusted {
+    min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
+  }
 
-/* --- Layout Utilities --- */
-.min-h-adjusted {
-  min-height: calc(100vh - 3.5rem - 2rem);
-}
-@media (min-width: 1024px) {
-  .lg\:min-h-adjusted {
-    min-height: calc(100vh - 3.5rem - 2rem);
+  @media (min-width: 1024px) {
+    .lg\:min-h-adjusted {
+      min-height: calc(100vh - 3.5rem - 2rem); /* minHeight = pageHeight - headerHeight - footerHeight */
+    }
+  }
+
+  #option-header .EmojiPickerReact {
+    --epr-bg-color: rgb(242, 244, 247);
+    --epr-category-label-bg-color: rgb(242, 244, 247);
+  }
+
+  .stamp {
+    @apply w-10 h-5 inline-block p-10 mt-5 bg-white relative text-center filter drop-shadow-md;
+    background: radial-gradient(transparent 0px, transparent 4px, white 4px, white);
+    background-size: 20px 20px;
+    background-position: -10px -10px;
+  }
+
+  .stamp::after {
+    @apply absolute left-5 top-5 right-5 bottom-5 z-[-1];
+    content: '';
+  }
+
+  .stamp::before {
+    @apply absolute bottom-0 left-0 font-bold text-white opacity-75 text-4xl leading-normal p-5;
+    content: 'CSS3';
+  }
+
+  .stamp-card-inner {
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+
+  .stamp-card:hover .stamp-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .stamp-card-front,
+  .stamp-card-back {
+    -webkit-backface-visibility: hidden;
+  }
+
+  .stamp-card-back {
+    transform: rotateY(180deg);
+  }
+
+  #option-header .EmojiPickerReact.epr-dark-theme {
+    --epr-bg-color: rgb(26, 28, 35);
+    --epr-category-label-bg-color: rgb(26, 28, 35);
+  }
+
+  /* For Webkit-based browsers (Chrome, Safari and Opera) */
+  #option-name::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* For IE, Edge and Firefox */
+  #option-name {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .success-button {
+    @apply bg-green-200 text-green-600 border border-green-600 hover:bg-white;
+  }
+
+  .rdp-caption {
+    @apply flex flex-row gap-x-2;
   }
 }
 
-/* --- Component-Specific Styles --- */
-#option-header .EmojiPickerReact {
-  --epr-bg-color: rgb(242, 244, 247);
-  --epr-category-label-bg-color: rgb(242, 244, 247);
-}
-#option-header .EmojiPickerReact.epr-dark-theme {
-  --epr-bg-color: rgb(26, 28, 35);
-  --epr-category-label-bg-color: rgb(26, 28, 35);
-}
-#option-name::-webkit-scrollbar {
-  display: none;
-}
-#option-name {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* --- Stamp/Card Components --- */
-.stamp {
-  @apply w-10 h-5 inline-block p-10 mt-5 bg-white relative text-center filter drop-shadow-md;
-  background: radial-gradient(transparent 0px, transparent 4px, white 4px, white);
-  background-size: 20px 20px;
-  background-position: -10px -10px;
-}
-.stamp::after {
-  @apply absolute left-5 top-5 right-5 bottom-5 z-[-1];
-  content: '';
-}
-.stamp::before {
-  @apply absolute bottom-0 left-0 font-bold text-white opacity-75 text-4xl leading-normal p-5;
-  content: 'CSS3';
-}
-.stamp-card-inner {
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
-}
-.stamp-card:hover .stamp-card-inner {
-  transform: rotateY(180deg);
-}
-.stamp-card-front,
-.stamp-card-back {
-  -webkit-backface-visibility: hidden;
-}
-.stamp-card-back {
-  transform: rotateY(180deg);
-}
-
-/* --- Button Variants --- */
-.success-button {
-  @apply bg-green-200 text-green-600 border border-green-600 hover:bg-white;
-}
-.rdp-caption {
-  @apply flex flex-row gap-x-2;
-}
-
-/* ============================================================================
-   GLOBAL STYLES - CORNER SHAPE & SQUIRCLES (Foundations)
-   ============================================================================ */
-* {
-  corner-shape: var(--corner-shape);
-}
-.rounded-full {
-  corner-shape: round;
-}
-@supports (corner-shape: squircle) {
+@layer base {
   :root {
-    --radius-bump: 1.6;
+    --color-background: 216 2% 97%;
+    --color-foreground: 215 44% 22%;
+    --color-background-secondary: 210 2% 94%;
+    --color-border: 214 3% 92%;
+    --color-accent: 0 70% 70%;
+    --color-accent-foreground: 0 0% 100%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --color-background: 227 26% 14%;
+    --color-foreground: 0 0% 100%;
+    --color-background-secondary: 227 20% 25%;
+    --color-border: 227 26% 20%;
+    --color-accent: 0 70% 70%;
+    --color-accent-foreground: 0 0% 100%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
