@@ -52,7 +52,6 @@ export const ChooseIncludedCourseUnits = ({
 
       <Button
         size="md"
-        className="w-full success-button hover:bg-white flex flex-row gap-x-2 mt-2"
         onClick={() => {
           setSelectingCourseUnits(false)
           setExchangeSchedule(originalExchangeSchedule)

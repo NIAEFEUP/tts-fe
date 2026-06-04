@@ -93,7 +93,6 @@ export const ReceivedRequestCard = ({ request }: Props) => {
                     <Button
                       type="submit"
                       size="md"
-                      className="success-button hover:bg-white"
                       onClick={async (e) => {
                         e.preventDefault()
 
