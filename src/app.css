@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
-@plugin '@tailwindcss/forms';
 
 @variant dark {
   &:where([data-theme='dark'], [data-theme='dark'] *) {
