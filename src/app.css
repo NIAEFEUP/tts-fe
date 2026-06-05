@@ -3,29 +3,110 @@
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/forms';
 
-@custom-variant dark (&:is(.dark *));
-
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
-  @media (width >= 1400px) {
-    max-width: 1400px;
+@variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
   }
 }
 
 @theme {
+  /* Typography */
+  --text-2xs: 0.625rem;
+
+  /* COLORS WILL GO HERE */
+
+  /* Colors */
+  --color-background: light-dark(oklch(100% 0 0), oklch(12% 0 0));
+  --color-background-secondary: light-dark(oklch(96% 0 0), oklch(22% 0 0));
+
+  --color-foreground: light-dark(oklch(0% 0 0), oklch(95% 0 0));
+  --color-foreground-secondary: light-dark(oklch(65% 0 0), oklch(53% 0 0));
+
+  --color-accent: var(--color-foreground);
+  /* Foreground at the end means it is used on top of the accent color */
+  --color-accent-foreground: var(--color-background);
+
+  --color-border: light-dark(oklch(94% 0 0), oklch(26% 0 0));
+
+  --color-ring: light-dark(
+    color-mix(in oklab, var(--color-accent) 30%, transparent),
+    color-mix(in oklab, var(--color-accent) 30%, transparent)
+  );
+
+  --color-error: oklch(63.7% 0.237 25.331);
+  --color-warning: oklch(79.5% 0.184 86.047);
+  --color-success: oklch(69.6% 0.17 162.48);
+  --color-info: oklch(62.3% 0.214 259.815);
+
+  /* Border radius — --radius is the dial; --radius-bump compensates squircles in supporting browsers (see @supports below) */
+  --radius: 0.125rem;
+  --radius-bump: 1;
+  --radius-xs: calc(var(--radius) * 1 * var(--radius-bump));
+  --radius-sm: calc(var(--radius) * 2 * var(--radius-bump));
+  --radius-md: calc(var(--radius) * 3 * var(--radius-bump));
+  --radius-lg: calc(var(--radius) * 4 * var(--radius-bump));
+  --radius-xl: calc(var(--radius) * 6 * var(--radius-bump));
+  --radius-2xl: calc(var(--radius) * 8 * var(--radius-bump));
+  --radius-3xl: calc(var(--radius) * 12 * var(--radius-bump));
+  --radius-4xl: calc(var(--radius) * 16 * var(--radius-bump));
+
+  /* Panel-item inset, derived from radius (collapses to flush items at --radius: 0) */
+  --inset: calc(var(--radius) * 1.5 * var(--radius-bump));
+
+  /* Focus ring */
+  --ring-width: 4px;
+
+  /* Corner shape (round | squircle) */
+  --corner-shape: squircle;
+
+  /* Shadows */
+  --shadow-*: initial;
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.03);
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.02), 0 2px 4px oklch(0 0 0 / 0.02);
+  --shadow-md: 0 2px 3px oklch(0 0 0 / 0.02), 0 3px 6px oklch(0 0 0 / 0.02);
+  --shadow-lg: 0 2px 4px oklch(0 0 0 / 0.02), 0 4px 8px oklch(0 0 0 / 0.02), 0 8px 16px oklch(0 0 0 / 0.02);
+
+  /* easings */
+  --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* Spinner variants */
+  --animate-spinner-dot: spinner-dot 1.4s ease-in-out infinite both;
+  --animate-spinner-bar: spinner-bar 1.2s ease-in-out infinite both;
+
+  @keyframes spinner-dot {
+    0%,
+    80%,
+    100% {
+      opacity: 0.25;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes spinner-bar {
+    0%,
+    40%,
+    100% {
+      transform: scaleY(0.4);
+    }
+    20% {
+      transform: scaleY(1);
+    }
+  }
+
+  --sidebar-background: light-dark(hsl(0 0% 98%), hsl(240 5.9% 10%));
+  --sidebar-foreground: light-dark(hsl(240 5.3% 26.1%), hsl(240 4.8% 95.9%));
+  --sidebar-primary: light-dark(hsl(240 5.9% 10%), hsl(224.3 76.3% 48%));
+  --sidebar-primary-foreground: light-dark(hsl(0 0% 98%), hsl(0 0% 100%));
+  --sidebar-accent: light-dark(hsl(240 4.8% 95.9%), hsl(240 3.7% 15.9%));
+  --sidebar-accent-foreground: light-dark(hsl(240 5.9% 10%), hsl(240 4.8% 95.9%));
+  --sidebar-border: light-dark(hsl(220 13% 91%), hsl(240 3.7% 15.9%));
+  --sidebar-ring: light-dark(hsl(217.2 91.2% 59.8%), hsl(217.2 91.2% 59.8%));
+
   --color-inherit: inherit;
   --color-current: currentColor;
-
-  --color-background: var(--color-background);
-  --color-foreground: var(--color-foreground);
-  --color-background-secondary: var(--color-background-secondary);
-  --color-border: var(--color-border);
-  --color-accent: var(--color-accent);
-  --color-accent-foreground: var(--color-accent-foreground);
   --color-navy: #18222e;
   --color-lightNavy: #212a36;
   --color-darkish: #333640;
@@ -50,17 +131,17 @@
   --color-schedule-tc: #733c3c;
   --color-schedule-o: #69656a;
 
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-foreground: var(--sidebar-foreground);
 
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
   --flex-end: 0 1 auto;
-
-  --text-xxs: 0.6rem;
 
   --font-prose:
     Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -103,10 +184,6 @@
 @layer utilities {
   html {
     @apply scroll-smooth overflow-y-scroll;
-  }
-
-  body {
-    @apply bg-background text-foreground font-prose;
   }
 
   ::-webkit-scrollbar {
@@ -183,39 +260,55 @@
   }
 }
 
-@layer base {
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@utility mix-with-* {
+  --color-mix-with: --value(--color-*, [*]);
+}
+
+@utility border-mix-* {
+  border-color: color-mix(
+    in oklab,
+    --value(--color-*, [*]),
+    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
+  );
+}
+
+@utility bg-mix-* {
+  background-color: color-mix(
+    in oklab,
+    --value(--color-*, [*]),
+    var(--color-mix-with, var(--color-foreground)) calc(--modifier(integer) * 1%)
+  );
+}
+
+/* Squircles where supported, with a carve-out for full circles and a radius bump to match perceived roundness */
+* {
+  corner-shape: var(--corner-shape);
+}
+.rounded-full {
+  corner-shape: round;
+}
+@supports (corner-shape: squircle) {
   :root {
-    --color-background: 216 2% 97%;
-    --color-foreground: 215 44% 22%;
-    --color-background-secondary: 210 2% 94%;
-    --color-border: 214 3% 92%;
-    --color-accent: 0 70% 70%;
-    --color-accent-foreground: 0 0% 100%;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --radius-bump: 1.6;
   }
-  .dark {
-    --color-background: 227 26% 14%;
-    --color-foreground: 0 0% 100%;
-    --color-background-secondary: 227 20% 25%;
-    --color-border: 227 26% 20%;
-    --color-accent: 0 70% 70%;
-    --color-accent-foreground: 0 0% 100%;
+}
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+body {
+  scrollbar-gutter: stable;
+
+  font-family: var(--font-ui);
+
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
 }

@@ -5,11 +5,11 @@ const useDarkMode = () => {
   const [enabled, setEnabled] = useLocalStorage('dark-theme', false)
 
   useEffect(() => {
-    const className = 'dark'
-    const bodyClass = window.document.body.classList
-
-    // eslint-disable-next-line
-    enabled ? bodyClass.add(className) : bodyClass.remove(className)
+    if (enabled) {
+      window.document.body.setAttribute('data-theme', 'dark')
+    } else {
+      window.document.body.removeAttribute('data-theme')
+    }
   }, [enabled])
 
   return [enabled, setEnabled]
