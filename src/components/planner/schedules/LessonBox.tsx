@@ -172,7 +172,7 @@ const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConfl
 
             {lgLesson && (
               <div
-                className={`flex h-full w-full flex-col items-center justify-between p-1 text-xxs leading-none tracking-tighter text-white
+                className={`flex h-full w-full flex-col items-center justify-between p-1 text-2xs leading-none tracking-tighter text-white
               ${conflictTitle ? 'group-hover:blur-md' : ''} lg:p-1.5 xl:text-xs 2xl:p-2 2xl:text-xs`}
               >
                 {/* Top */}
@@ -210,7 +210,7 @@ const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConfl
                 className={`flex h-full w-full flex-col items-center justify-between px-1 py-0.5 text-[0.55rem] tracking-tighter ${
                   conflictTitle ? 'group-hover:blur-md' : ''
                 }
-              xl:text-xxs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
+              xl:text-2xs 2xl:px-1 2xl:py-0.5 2xl:text-[0.68rem]`}
               >
                 <div className="flex w-full items-center justify-between gap-1">
                   <span title="Duração">
@@ -233,7 +233,7 @@ const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConfl
             {smLesson && (
               <div
                 className={`flex h-full w-full items-center justify-between gap-1 px-1 py-0.5 text-[0.55rem] tracking-tighter
-                ${conflictTitle ? 'group-hover:blur-md' : ''} xl:text-xxs 2xl:px-1 2xl:py-1 2xl:text-xxs`}
+                ${conflictTitle ? 'group-hover:blur-md' : ''} xl:text-2xs 2xl:px-1 2xl:py-1 2xl:text-2xs`}
               >
                 <span title="Duração">{timeSpan}</span>
                 <span title="Sala">{slotInfo.location}</span>
