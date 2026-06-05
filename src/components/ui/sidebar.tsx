@@ -6,7 +6,6 @@ import { PanelLeft } from 'lucide-react'
 import { useIsMobile } from './use-mobile'
 import { cn } from '../../utils'
 import { Button } from './button'
-import { Input } from './new/input'
 import { Separator } from './separator'
 import { Sheet, SheetContent } from './sheet'
 import { Skeleton } from './skeleton'
@@ -283,22 +282,6 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main
 })
 SidebarInset.displayName = 'SidebarInset'
 
-const SidebarInput = React.forwardRef<React.ElementRef<typeof Input>, React.ComponentProps<typeof Input>>(
-  ({ className, ...props }, ref) => {
-    return (
-      <Input
-        ref={ref}
-        data-sidebar="input"
-        className={cn(
-          'h-8 w-full bg-white shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring dark:bg-slate-950',
-          className,
-        )}
-        {...props}
-      />
-    )
-  },
-)
-SidebarInput.displayName = 'SidebarInput'
 
 const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(({ className, ...props }, ref) => {
   return <div ref={ref} data-sidebar="header" className={cn('flex flex-col gap-2 p-2', className)} {...props} />
@@ -617,7 +600,6 @@ export {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInput,
   SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
