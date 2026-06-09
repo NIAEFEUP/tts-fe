@@ -5,7 +5,7 @@ const logout = async (token, forceScheduleRevalidation, setLoggingOut) => {
     method: 'POST',
     credentials: 'include',
     headers: {
-      'X-CSRFToken': api.getCSRFToken(),
+      'X-CSRFToken': api.getCSRFToken() || '',
     },
   })
     .then(() => {
@@ -13,7 +13,12 @@ const logout = async (token, forceScheduleRevalidation, setLoggingOut) => {
       setLoggingOut(false)
     })
     .catch((e) => {
-      console.error(e)
+      console.error('Logout fetch error (likely CORS from OIDC redirect):', e)
+      // Even if the OIDC redirect fails due to CORS (which happens in dev),
+      // the Django backend has already cleared the session.
+      // So we must still update the frontend state!
+      forceScheduleRevalidation()
+      setLoggingOut(false)
     })
 }
 
