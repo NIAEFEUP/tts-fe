@@ -1,15 +1,13 @@
-import { User } from "lucide-react";
-import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
-import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from "../../../../@types";
-import StorageAPI from "../../../../api/storage";
-import CourseContext from "../../../../contexts/CourseContext";
-import MultipleOptionsContext from "../../../../contexts/MultipleOptionsContext";
-import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from "../../../../utils";
-import { Desert } from "../../../svgs";
-import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "../../../ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/tabs";
-import ClassItem from "./ClassItem";
-import ProfessorItem from "./ProfessorItem";
+import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
+import { ClassInfo, CourseInfo, CourseOption, ProfessorInfo } from '../../../../@types'
+import StorageAPI from '../../../../api/storage'
+import CourseContext from '../../../../contexts/CourseContext'
+import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
+import { teacherIdsFromCourseInfo, uniqueTeachersFromCourseInfo } from '../../../../utils'
+import { Desert } from '../../../svgs'
+import { Tabs } from '../../../ui/new/tabs'
+import ClassItem from './ClassItem'
+import ProfessorItem from './ProfessorItem'
 
 type Props = {
   course: CourseInfo
@@ -20,31 +18,36 @@ type Props = {
   contentRef: any
   triggerRef: any
   classesLoading: boolean
+  closeDropdown: () => void
 }
 
 const buildTeacherFilters = (teachers, filteredTeachers) => {
-  if (!filteredTeachers) return [];
+  if (!filteredTeachers) return []
 
   return teachers.map((teacher) => {
     return {
       ...teacher,
-      isFiltered: filteredTeachers.includes(teacher.id)
+      isFiltered: filteredTeachers.includes(teacher.id),
     }
   })
 }
 
 const NoTeachersFound = ({ mobile }: { mobile: boolean }) => {
-  return <div className="mx-2">
-    {mobile ? <></> : <Desert className="w-full h-24" />}
-    <p className="text-sm text-center my-4">Não há professores associados a nenhuma turma desta disciplina.</p>
-  </div>
+  return (
+    <div className="mx-2 w-full">
+      {mobile ? <></> : <Desert className="w-full h-24" />}
+      <p className="text-sm text-left my-4 w-full">Não há professores associados a nenhuma turma desta disciplina.</p>
+    </div>
+  )
 }
 
 const NoOptionsFound = ({ mobile }: { mobile: boolean }) => {
-  return <div>
-    {mobile ? <></> : <Desert className="w-full h-24" />}
-    <p className="text-sm text-center my-4">Esta disciplina não tem nenhuma turma.</p>
-  </div>
+  return (
+    <div className="w-full">
+      {mobile ? <></> : <Desert className="w-full h-24" />}
+      <p className="text-sm text-left my-4 w-full">Esta disciplina não tem nenhuma turma.</p>
+    </div>
+  )
 }
 
 const ClassSelectorDropdownController = ({
@@ -55,42 +58,43 @@ const ClassSelectorDropdownController = ({
   removePreview,
   contentRef,
   triggerRef,
-  classesLoading
+  classesLoading,
+  closeDropdown,
 }: Props) => {
-  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext);
-  const { pickedCourses } = useContext(CourseContext);
-  const [selectedClassId, setSelectedClassId] = selectedClassIdHook;
-
+  const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
+  const { pickedCourses } = useContext(CourseContext)
+  const [selectedClassId, setSelectedClassId] = selectedClassIdHook
 
   const [filteredTeachers, setFilteredTeachers] = useState<Array<number>>(() => {
     return StorageAPI.getCourseFilteredTeachersStorage(selectedOption, course.id) ?? teacherIdsFromCourseInfo(course)
-  });
+  })
 
   useEffect(() => {
-    const newMultipleOptions = [...multipleOptions];
-    const courseOption = newMultipleOptions[selectedOption]?.course_options?.find((option) => option.course_id === course.id);
+    const newMultipleOptions = [...multipleOptions]
+    const courseOption = newMultipleOptions[selectedOption]?.course_options?.find(
+      (option) => option.course_id === course.id,
+    )
     if (courseOption) {
-      courseOption.filteredTeachers = filteredTeachers;
-      setMultipleOptions(newMultipleOptions);
+      courseOption.filteredTeachers = filteredTeachers
+      setMultipleOptions(newMultipleOptions)
     }
-  }, [filteredTeachers]);
-
+  }, [filteredTeachers])
 
   /**
-      * This is used to retrieve the teachers from a course and to populate the filter of the teachers
-      * which is the dropdown menu that appears by clicking on "Professores" on the class selector dropdown
-     */
+   * This is used to retrieve the teachers from a course and to populate the filter of the teachers
+   * which is the dropdown menu that appears by clicking on "Professores" on the class selector dropdown
+   */
   const teachers = useMemo(() => {
     if (!course.classes) return []
 
-    return uniqueTeachersFromCourseInfo(course);
+    return uniqueTeachersFromCourseInfo(course)
   }, [course.classes])
 
   // This is used as an object with the teacher properties in order for us to being able
   // to show teacher information on the filter dropdown menu
   const [teacherFilters, setTeacherFilters] = useState(() => {
-    return buildTeacherFilters(teachers, filteredTeachers);
-  });
+    return buildTeacherFilters(teachers, filteredTeachers)
+  })
 
   //(thePeras): Classes options should be a new state
   /**
@@ -99,21 +103,24 @@ const ClassSelectorDropdownController = ({
    */
   const getOptions = (): Array<ClassInfo> => {
     return course.classes?.filter((c) => {
-      return c.slots.some((slot) => slot.professors.length === 0
-        || slot.professors.filter((prof) => filteredTeachers?.includes(prof.id)).length > 0)
+      return c.slots.some(
+        (slot) =>
+          slot.professors.length === 0 ||
+          slot.professors.filter((prof) => filteredTeachers?.includes(prof.id)).length > 0,
+      )
     })
   }
 
   useEffect(() => {
     if (filteredTeachers.length === 0) {
-      setFilteredTeachers(teacherIdsFromCourseInfo(course));
+      setFilteredTeachers(teacherIdsFromCourseInfo(course))
     }
   }, [pickedCourses])
 
   useEffect(() => {
     setTeacherFilters(() => {
-      return buildTeacherFilters(teachers, filteredTeachers);
-    });
+      return buildTeacherFilters(teachers, filteredTeachers)
+    })
   }, [filteredTeachers])
 
   useEffect(() => {
@@ -123,12 +130,13 @@ const ClassSelectorDropdownController = ({
   }, [])
 
   const deleteOption = () => {
-    const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find((option) => option.picked_class_id === selectedClassId);
-    multipleOptionsEntry.picked_class_id = null;
-    setSelectedClassId(null);
-    setMultipleOptions([...multipleOptions]);
+    const multipleOptionsEntry = multipleOptions[selectedOption].course_options.find(
+      (option) => option.picked_class_id === selectedClassId,
+    )
+    multipleOptionsEntry.picked_class_id = null
+    setSelectedClassId(null)
+    setMultipleOptions([...multipleOptions])
   }
-
 
   function toggleTeacher(id: number) {
     if (filteredTeachers.includes(id)) {
@@ -149,111 +157,53 @@ const ClassSelectorDropdownController = ({
   // Puts inside the preview the actual selected class so we can then restore it later after the user stops
   // previewing
   const showPreview = (classInfo: ClassInfo) => {
-    const newMultipleOptions = [...multipleOptions];
-    const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map((c: CourseOption) => {
-      if (c.course_id === course.id) {
-        setPreview(classInfo.id)
-        c.picked_class_id = classInfo.id
-      }
+    const newMultipleOptions = [...multipleOptions]
+    const newCourseOptions: CourseOption[] = newMultipleOptions[selectedOption].course_options.map(
+      (c: CourseOption) => {
+        if (c.course_id === course.id) {
+          setPreview(classInfo.id)
+          c.picked_class_id = classInfo.id
+        }
 
-      return c;
-    });
+        return c
+      },
+    )
 
-    newMultipleOptions[selectedOption].course_options = newCourseOptions;
+    newMultipleOptions[selectedOption].course_options = newCourseOptions
     setMultipleOptions(newMultipleOptions)
   }
 
-  return <>
-    <div>
-      {classesLoading ? (
-        <p className="w-100 select-none p-2 text-center">A carregar as aulas...</p>
-      ) : (
-        <>
-          {/* Desktop */}
-          <div className="hidden lg:block">
-            <DropdownMenuGroup>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Professores</span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent className="w-80 bg-lightish text-darkish dark:bg-darkish dark:text-lightish">
-                    {teacherFilters.length === 0
-                      ? <NoTeachersFound mobile={false} />
-                      : <>
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.preventDefault()
-                            toggleAllTeachers(teachers)
+  return (
+    <>
+      <div className="p-2 w-full">
+        {classesLoading ? (
+          <p className="w-full select-none p-2 text-left">A carregar as aulas...</p>
+        ) : (
+          <Tabs className="w-full">
+            <Tabs.Items className="w-full">
+              <Tabs.Item className="flex-1">Turmas</Tabs.Item>
+              <Tabs.Item className="flex-1">Professores</Tabs.Item>
+            </Tabs.Items>
+            <Tabs.Panels>
+              <Tabs.Panel>
+                {/* Removed max-h-96 and overflow-y-auto to fix the double scrollbar issue - Added back for Popover migration */}
+                <div className="pt-2 w-full max-h-[50vh] overflow-y-auto">
+                  {course.classes?.length === 0 ? (
+                    <NoOptionsFound mobile={false} />
+                  ) : (
+                    <>
+                      {selectedClassId && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            deleteOption()
+                            closeDropdown()
                           }}
+                          className="w-[calc(100%-16px)] mx-2 mt-2 px-3 py-1.5 rounded-lg text-left hover:bg-background-secondary transition-colors"
                         >
-                          <span className="block truncate dark:text-white">
-                            {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
-                          </span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        {teacherFilters.map((option) => {
-                          return (
-                            <ProfessorItem
-                              key={`${course.acronym}-teacher-${option.acronym}`}
-                              professorInformation={option}
-                              filtered={option.isFiltered}
-                              onSelect={(e) => {
-                                e.preventDefault()
-                                toggleTeacher(option.id)
-                              }}
-                            />
-                          )
-                        })}
-                      </>}
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup className="max-h-96 overflow-y-auto">
-              {!course.classes || course.classes.length === 0
-                ? <NoOptionsFound mobile={false} />
-                : <>
-                  {selectedClassId && (
-                    <DropdownMenuItem onSelect={() => deleteOption()}>
-                      <span className="text-sm tracking-tighter">Remover Seleção</span>
-                    </DropdownMenuItem>
-                  )}
-                  {course.classes &&
-                    getOptions().map((classInfo) => (
-                      <ClassItem
-                        key={`schedule-${classInfo.name}`}
-                        course_id={course.id}
-                        classInfo={classInfo}
-                        onSelect={() => {
-                          setSelectedClassId(classInfo.id)
-                          setPreview(null)
-                        }}
-                        onMouseEnter={() => { if (isDropdownOpen) showPreview(classInfo) }}
-                        onMouseLeave={() => removePreview()}
-                      />
-                    ))}
-                </>}
-            </DropdownMenuGroup>
-          </div>
-
-          {/*Mobile*/}
-          <div className="block lg:hidden">
-            <Tabs defaultValue="turmas" className="w-full">
-              <TabsList className="w-full">
-                <TabsTrigger value="turmas">Turmas</TabsTrigger>
-                <TabsTrigger value="professores">Professores</TabsTrigger>
-              </TabsList>
-              <TabsContent value="turmas">
-                <DropdownMenuGroup className="max-h-96 overflow-y-auto">
-                  {course.classes?.length === 0
-                    ? <NoOptionsFound mobile={true} />
-                    : <>
-                      <DropdownMenuItem onSelect={() => deleteOption()}>
-                        <span className="text-sm tracking-tighter">Remover Seleção</span>
-                      </DropdownMenuItem>
+                          <span className="text-sm tracking-tighter text-left block w-full">Remover Seleção</span>
+                        </button>
+                      )}
                       {course.classes &&
                         getOptions().map((classInfo) => (
                           <ClassItem
@@ -263,30 +213,36 @@ const ClassSelectorDropdownController = ({
                             onSelect={() => {
                               setSelectedClassId(classInfo.id)
                               setPreview(null)
+                              closeDropdown()
                             }}
-                            onMouseEnter={() => { if (isDropdownOpen) showPreview(classInfo) }}
+                            onMouseEnter={() => {
+                              if (isDropdownOpen) showPreview(classInfo)
+                            }}
                             onMouseLeave={() => removePreview()}
                           />
                         ))}
-                    </>}
-                </DropdownMenuGroup>
-              </TabsContent>
-              <TabsContent value="professores">
-                <DropdownMenuGroup>
-                  {teacherFilters.length === 0 ?
-                    <NoTeachersFound mobile={true} /> : <>
-                      <DropdownMenuItem
-                        className="mb-2"
+                    </>
+                  )}
+                </div>
+              </Tabs.Panel>
+              <Tabs.Panel>
+                <div className="pt-2 w-full max-h-[50vh] overflow-y-auto">
+                  {teacherFilters.length === 0 ? (
+                    <NoTeachersFound mobile={false} />
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className="mb-2 w-[calc(100%-16px)] mx-2 mt-2 px-3 py-1.5 rounded-lg text-left hover:bg-background-secondary transition-colors"
                         onClick={(e) => {
                           e.preventDefault()
                           toggleAllTeachers(teachers)
                         }}
                       >
-                        <span className="block truncate dark:text-white">
+                        <span className="block truncate text-left w-full text-foreground/80">
                           {filteredTeachers?.length > 0 ? 'Apagar todos' : 'Selecionar Todos'}
                         </span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
+                      </button>
                       {teacherFilters.map((option) => {
                         return (
                           <ProfessorItem
@@ -300,15 +256,16 @@ const ClassSelectorDropdownController = ({
                           />
                         )
                       })}
-                    </>}
-                </DropdownMenuGroup>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </>
-      )}
-    </div>
-  </>
+                    </>
+                  )}
+                </div>
+              </Tabs.Panel>
+            </Tabs.Panels>
+          </Tabs>
+        )}
+      </div>
+    </>
+  )
 }
 
-export default ClassSelectorDropdownController;
+export default ClassSelectorDropdownController

@@ -1,29 +1,28 @@
-import { useMemo } from "react";
-import api from "../../api/backend";
-import useSWR from "swr";
+import { useMemo } from 'react'
+import api from '../../api/backend'
+import useSWR from 'swr'
 
 export default (nmec: string) => {
   const getSchedule = async () => {
     try {
       const res = await fetch(`${api.BACKEND_URL}/student/${nmec}/schedule`, {
-        credentials: "include"
-      });
+        credentials: 'include',
+      })
 
       if (res.ok) {
-        return await res.json();
+        return await res.json()
       }
 
-      return [];
+      return []
     } catch (e) {
-      console.error(e);
-      return [];
+      console.error(e)
+      return []
     }
-
   }
 
-  const { data, error, mutate, isValidating } = useSWR("schedule-" + nmec, getSchedule, {});
-  const schedule = useMemo(() => data ? data.schedule : null, [data]);
-  const sigarraSynced = data ? data.noChanges : null;
+  const { data, error, mutate, isValidating } = useSWR('schedule-' + nmec, getSchedule, {})
+  const schedule = useMemo(() => (data ? data.schedule : null), [data])
+  const sigarraSynced = data ? data.noChanges : null
 
   return {
     schedule,
@@ -32,6 +31,5 @@ export default (nmec: string) => {
     loading: !data,
     isValidating,
     mutate,
-  };
-};
-
+  }
+}

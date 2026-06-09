@@ -4,6 +4,7 @@ import Footer from './Footer'
 import classNames from 'classnames'
 import { FeedbackReport } from '../FeedbackReport'
 import SEO, { BreadcrumbItem } from '../SEO'
+import { JSX } from 'react'
 
 type Props = {
   children: JSX.Element
@@ -29,7 +30,7 @@ const Layout = ({ children, location, liquid, title, description, canonical, bre
     >
       <SEO title={fullTitle} description={description} canonical={canonical} breadcrumbs={breadcrumbs} />
 
-      <div className="hidden md:flex fixed bottom-0 left-0 mb-6 ml-5 rounded-full shadow-lg bg-white border z-40">
+      <div className="hidden md:flex fixed bottom-0 left-0 mb-6 ml-5 z-1000 bg-background rounded-xl">
         <FeedbackReport />
       </div>
 

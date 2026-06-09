@@ -1,28 +1,30 @@
-import { Dispatch, SetStateAction, useContext } from "react"
-import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, UrgentRequest } from "../../../../@types"
-import { AdminRequestType } from "../../../../utils/exchange"
-import exchangeRequestService from "../../../../api/services/exchangeRequestService"
-import { mailtoStringBuilder } from "../../../../utils/mail"
-import { Button } from "../../../ui/button"
-import { CardFooter } from "../../../ui/card"
-import { Separator } from "../../../ui/separator"
-import { AdminSendEmail } from "../AdminSendEmail"
-import { TreatExchangeButton } from "./TreatExchangeButton"
-import SessionContext from "../../../../contexts/SessionContext"
+import { Dispatch, SetStateAction, useContext } from 'react'
+import { CourseUnitEnrollment, DirectExchangeRequest, MarketplaceRequest, UrgentRequest } from '../../../../@types'
+import { AdminRequestType } from '../../../../utils/exchange'
+import exchangeRequestService from '../../../../api/services/exchangeRequestService'
+import { mailtoStringBuilder } from '../../../../utils/mail'
+import { Button } from '../../../ui/new/button'
+import { CardFooter } from '../../../ui/card'
+import { Separator } from '../../../ui/separator'
+import { AdminSendEmail } from '../AdminSendEmail'
+import { TreatExchangeButton } from './TreatExchangeButton'
+import SessionContext from '../../../../contexts/SessionContext'
 
 type CourseInfo = {
-  id: number,
+  id: number
   acronym: string
 }
 
 type Props = {
-  nmecs: Array<string>,
-  exchangeMessage: string,
-  requestType: AdminRequestType,
-  requestId: number,
-  showTreatButton?: boolean,
-  setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest>>
-  courseId: Array<number>,
+  nmecs: Array<string>
+  exchangeMessage: string
+  requestType: AdminRequestType
+  requestId: number
+  showTreatButton?: boolean
+  setExchange?: Dispatch<
+    SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest>
+  >
+  courseId: Array<number>
   courseInfo?: Array<CourseInfo>
 }
 
@@ -34,25 +36,27 @@ const rejectRequest = async (
   senderName: string,
 ) => {
   try {
-    await exchangeRequestService.adminRejectExchangeRequest(requestType, id);
+    await exchangeRequestService.adminRejectExchangeRequest(requestType, id)
 
-    const a = document.createElement('a');
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    const [greeting, ...rest] = exchangeMessage.split('%0D%0A%0D%0A');
-    const bodyRest = rest.join('%0D%0A%0D%0A');
+    const a = document.createElement('a')
+    a.target = '_blank'
+    a.rel = 'noopener noreferrer'
+
+    // Using the main branch's new string splitting logic
+    const [greeting, ...rest] = exchangeMessage.split('%0D%0A%0D%0A')
+    const bodyRest = rest.join('%0D%0A%0D%0A')
 
     if (requestType === AdminRequestType.DIRECT_EXCHANGE) {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de troca de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de troca de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`
     } else if (requestType === AdminRequestType.ENROLLMENT) {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alocação de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alocação de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alocação de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alocação de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`
     } else {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alteração de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alteração de turmas não pode ser efetuado por .%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`
     }
 
-    a.click();
+    a.click()
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
 }
 
@@ -61,37 +65,40 @@ const acceptRequest = async (
   exchangeMessage: string,
   requestType: AdminRequestType,
   id: number,
-  senderName: string
+  senderName: string,
 ) => {
   try {
-    await exchangeRequestService.adminAcceptExchangeRequest(requestType, id);
-    const [greeting, ...rest] = exchangeMessage.split('%0D%0A%0D%0A');
-    const bodyRest = rest.join('%0D%0A%0D%0A');
-    const a = document.createElement('a');
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
+    await exchangeRequestService.adminAcceptExchangeRequest(requestType, id)
+
+    // Using the main branch's new string splitting logic
+    const [greeting, ...rest] = exchangeMessage.split('%0D%0A%0D%0A')
+    const bodyRest = rest.join('%0D%0A%0D%0A')
+
+    const a = document.createElement('a')
+    a.target = '_blank'
+    a.rel = 'noopener noreferrer'
+
     if (requestType === AdminRequestType.DIRECT_EXCHANGE) {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de troca de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Troca de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de troca de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`
     } else if (requestType === AdminRequestType.ENROLLMENT) {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alocação de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alocação de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alocação de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alocação de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`
     } else {
-      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alteração de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`;
+      a.href = `${mailtoStringBuilder(nmecs)}?subject=Pedido de Alteração de Turmas&cc=inscricoes.turmas.leic@fe.up.pt&body=${greeting}%0D%0A%0D%0AO pedido de alteração de turmas foi efetuado.%0D%0A%0D%0A%3E ${bodyRest}%0D%0A%0D%0ACmpts,%0D%0A${senderName}%0D%0A(pela comissão de inscrição em turmas)`
     }
 
-    a.click();
+    a.click()
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
 }
 
 const markRequestAsAwaitingInformation = async (requestType: AdminRequestType, id: number) => {
   try {
-    await exchangeRequestService.adminMarkRequestAsAwaitingInformation(requestType, id);
+    await exchangeRequestService.adminMarkRequestAsAwaitingInformation(requestType, id)
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
 }
-
 
 export const AdminRequestCardFooter = ({
   nmecs,
@@ -101,72 +108,73 @@ export const AdminRequestCardFooter = ({
   showTreatButton = true,
   setExchange,
   courseId,
-  courseInfo
+  courseInfo,
 }: Props) => {
   const awaitInfo = async () => {
-    await markRequestAsAwaitingInformation(requestType, requestId);
-    setExchange(prev => {
-      const newPrev = { ...prev };
-      newPrev.admin_state = "awaiting-information";
-      return newPrev;
+    await markRequestAsAwaitingInformation(requestType, requestId)
+    setExchange?.((prev) => {
+      const newPrev = { ...prev }
+      newPrev.admin_state = 'awaiting-information'
+      return newPrev as any
     })
   }
 
-  const { user } = useContext(SessionContext);
+  const { user } = useContext(SessionContext)
 
-  return <>
-    <Separator className="my-4" />
-    <CardFooter className="justify-end gap-4">
-      <Button
-        variant="destructive"
-        onClick={async () => {
-          await rejectRequest(nmecs, exchangeMessage, requestType, requestId, user.name);
-          setExchange(prev => {
-            const newPrev = { ...prev };
-            newPrev.admin_state = "rejected";
-            return newPrev;
-          })
-        }}
-      >
-        Rejeitar
-      </Button>
+  return (
+    <>
+      <Separator className="my-4" />
+      <CardFooter className="justify-end gap-4">
+        <Button
+          variant="destructive"
+          onClick={async () => {
+            await rejectRequest(nmecs, exchangeMessage, requestType, requestId, user.name)
+            setExchange?.((prev) => {
+              const newPrev = { ...prev }
+              newPrev.admin_state = 'rejected'
+              return newPrev as any
+            })
+          }}
+        >
+          Rejeitar
+        </Button>
 
-      <Button
-        onClick={async () => {
-          await acceptRequest(nmecs, exchangeMessage, requestType, requestId, user.name);
-          setExchange(prev => {
-            const newPrev = { ...prev };
-            newPrev.admin_state = "accepted";
-            return newPrev;
-          })
-        }}
-        className="success-button"
-      >
-        Marcar como aceite
-      </Button>
+        <Button
+          variant="primary"
+          onClick={async () => {
+            await acceptRequest(nmecs, exchangeMessage, requestType, requestId, user.name)
+            setExchange?.((prev) => {
+              const newPrev = { ...prev }
+              newPrev.admin_state = 'accepted'
+              return newPrev as any
+            })
+          }}
+        >
+          Marcar como aceite
+        </Button>
 
-      {showTreatButton &&
-        nmecs.map(nmec => (
-          <TreatExchangeButton
-            key={"treat-exchange-button-" + nmec}
-            nmec={nmec}
-            courseId={courseId}
-            courseInfo={courseInfo}
-          />
-        ))
-      }
+        {showTreatButton &&
+          nmecs.map((nmec) => (
+            <TreatExchangeButton
+              key={'treat-exchange-button-' + nmec}
+              nmec={nmec}
+              courseId={courseId}
+              courseInfo={courseInfo}
+            />
+          ))}
 
-      <AdminSendEmail
-        nmec={nmecs}
-        requestType={requestType}
-        subject={
-          requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE
-            ? "Pedido de troca de turma"
-            : "Pedido de Inscrição em Unidades Curriculares"
-        }
-        message={exchangeMessage}
-        onClick={awaitInfo}
-      />
-    </CardFooter>
-  </>
+        <AdminSendEmail
+          nmec={nmecs}
+          requestType={requestType} // <-- Passed in from main branch requirements
+          subject={
+            requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE
+              ? 'Pedido de troca de turma'
+              : 'Pedido de Inscrição em Unidades Curriculares'
+          }
+          message={exchangeMessage}
+          onClick={awaitInfo}
+        />
+      </CardFooter>
+    </>
+  )
 }

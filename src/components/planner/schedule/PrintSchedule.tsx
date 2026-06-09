@@ -1,11 +1,10 @@
 import { useCallback, useContext } from 'react'
 import { ThemeContext } from '../../../contexts/ThemeContext'
-import { Button } from '../../ui/button'
-import { CameraIcon } from '@heroicons/react/24/outline'
+import { Button } from '../../ui/new/button'
+import { Camera } from 'lucide-react'
 import { toPng } from 'html-to-image'
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../ui/tooltip'
+import { Tooltip } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
-
 
 type Props = {
   component: any
@@ -37,7 +36,7 @@ const PrintSchedule = ({ component, optionName }: Props) => {
 
       // Remove bottom bar
       const bottomBars = clone.querySelectorAll('div.flex.justify-end')
-      bottomBars.forEach(bar => bar.remove())
+      bottomBars.forEach((bar) => bar.remove())
       const lastChild = clone.lastElementChild
       if (lastChild && lastChild.classList.contains('flex') && lastChild.classList.contains('justify-end')) {
         lastChild.remove()
@@ -46,44 +45,35 @@ const PrintSchedule = ({ component, optionName }: Props) => {
       container.appendChild(clone)
       document.body.appendChild(container)
 
-      container.style.display = 'inline-block' 
-      toPng(container, { cacheBust: true, pixelRatio: 2})
-          .then((dataUrl) => {
-            const link = document.createElement('a')
-            link.href = dataUrl
-            link.download = optionName ? `${optionName}.png` : 'horario.png'
-            link.click()
-          })
-          .catch((err) => {
+      container.style.display = 'inline-block'
+      toPng(container, { cacheBust: true, pixelRatio: 2 })
+        .then((dataUrl) => {
+          const link = document.createElement('a')
+          link.href = dataUrl
+          link.download = optionName ? `${optionName}.png` : 'horario.png'
+          link.click()
+        })
+        .catch((err) => {
           console.error(err)
         })
         .finally(() => {
           container.remove() // remove do DOM
         })
 
-
       AnalyticsTracker.trackFeature(Feature.SCREENSHOT)
     },
-    [component, enabled, optionName]
+    [component, enabled, optionName],
   )
 
-
-
   return (
-    <TooltipProvider delayDuration={300}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="icon"
-            className="bg-lightish text-black dark:bg-darkish dark:text-white"
-            onClick={() => takeScreenshot(enabled)}
-          >
-            <CameraIcon className="h-5 w-5" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Descarregar imagem do horário</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <Tooltip.Trigger asChild onClick={() => takeScreenshot(enabled)}>
+        <Button square className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white">
+          <Camera size="18" />
+        </Button>
+      </Tooltip.Trigger>
+      <Tooltip.Content>Descarregar imagem do horário</Tooltip.Content>
+    </Tooltip>
   )
 }
 

@@ -5,65 +5,66 @@ import SelectedOptionController from './sidebar/SelectedOptionController'
 import CoursesController from './sidebar/CoursesController'
 import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 import { useSidebarContext } from '../layout/SidebarPosition'
-import { ArrowsRightLeftIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { Button } from '../ui/button'
+import { ArrowLeftRight, Trash } from 'lucide-react'
+import { Button } from '../ui/new/button'
 
 /**
  * Sidebar with all the main schedule interactions
  */
 const Sidebar = () => {
-  const { multipleOptions, selectedOption, setMultipleOptions } = useContext(MultipleOptionsContext);
-  const { toggleSidebarPosition } = useSidebarContext();
-  
+  const { multipleOptions, selectedOption, setMultipleOptions } = useContext(MultipleOptionsContext)
+  const { toggleSidebarPosition } = useSidebarContext()
+
   const noClassesPicked = !multipleOptions[selectedOption]?.course_options.some(
-    (option) => option.picked_class_id !== null
-  );
+    (option) => option.picked_class_id !== null,
+  )
 
   const eraseClasses = () => {
-    const currentOption = multipleOptions[selectedOption];
-  
-    const updatedCourseOptions = currentOption.course_options.map(courseOption => ({
+    const currentOption = multipleOptions[selectedOption]
+
+    const updatedCourseOptions = currentOption.course_options.map((courseOption) => ({
       ...courseOption,
       picked_class_id: null,
       locked: false,
-    }));
-  
-    const updatedMultipleOptions = [...multipleOptions];
+    }))
+
+    const updatedMultipleOptions = [...multipleOptions]
     updatedMultipleOptions[selectedOption] = {
       ...currentOption,
       course_options: updatedCourseOptions,
-    };
-  
-    setMultipleOptions(updatedMultipleOptions);
-  };
+    }
 
+    setMultipleOptions(updatedMultipleOptions)
+  }
 
   return (
-    <div className="order-2 col-span-12 flex flex-col justify-between rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4
-                h-[85vh] overflow-y-auto">
-        <div className="space-y-1">
-          <SessionController />
-          <OptionsController />
-          <SelectedOptionController
-            currentOption={multipleOptions[selectedOption].course_options}
-          />
-          <CoursesController />
+    <div
+      className="order-2 col-span-12 flex flex-col justify-between rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4
+                h-[85vh] overflow-y-auto"
+    >
+      <div className="space-y-1">
+        <SessionController />
+        <OptionsController />
+        <SelectedOptionController currentOption={multipleOptions[selectedOption].course_options} />
+        <CoursesController />
       </div>
       <footer className=" gap-x-1 border-white-300 text-center flex items-end justify-end">
         <Button
           onClick={eraseClasses}
-          variant="icon"
-          className={`bg-lightish text-darkish gap-1.5 ${noClassesPicked ? 'opacity-50 pointer-events-none' : ''}`}
+          className={`bg-lightish hover:bg-lightish/90 text-darkish gap-1.5`}
+          disabled={noClassesPicked}
         >
-          <TrashIcon className="h-5 w-5" />
+          <Trash size="18" />
           <span>Limpar</span>
         </Button>
-        <button title='Mudar o lado da Sidebar'
+        <Button
+          title="Mudar o lado da Sidebar"
           onClick={toggleSidebarPosition}
-          className="hidden md:flex items-center justify-center gap-2 w-[48px] h-[40px] bg-primary hover:opacity-80 dark:text-white rounded-md p-1 text-gray text-sm"
+          square
+          className="bg-primary hover:opacity-80 dark:text-white "
         >
-          <ArrowsRightLeftIcon className="h-5 w-5 text-white dark:text-white" />
-        </button>
+          <ArrowLeftRight className="text-white dark:text-white" size="18" />
+        </Button>
       </footer>
     </div>
   )

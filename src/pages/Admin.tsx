@@ -1,52 +1,51 @@
-import { useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AdminMainContent } from "../components/admin/AdminMainContent";
-import { AdminStatisticsView } from "../components/admin/AdminStatisticsView";
-import { AdminSidebar } from "../components/admin/AdminSidebar";
-import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
-import { SidebarProvider } from "../components/ui/sidebar";
-import SessionContext from "../contexts/SessionContext";
-import api from "../api/backend";
+import { useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AdminMainContent } from '../components/admin/AdminMainContent'
+import { AdminStatisticsView } from '../components/admin/AdminStatisticsView'
+import { AdminSidebar } from '../components/admin/AdminSidebar'
+import { AdminExchangeSettings } from '../components/admin/AdminExchangeSettings'
+import { SidebarProvider } from '../components/ui/sidebar'
+import SessionContext from '../contexts/SessionContext'
+import api from '../api/backend'
 
 type Props = {
-  page: string;
-};
+  page: string
+}
 
 const AdminPage = ({ page }: Props) => {
-  const navigate = useNavigate();
-  const { signedIn, user, isSessionLoading } = useContext(SessionContext);
+  const navigate = useNavigate()
+  const { signedIn, user, isSessionLoading } = useContext(SessionContext)
 
-  const isAuthorized = signedIn && user?.is_admin;
+  const isAuthorized = signedIn && user?.is_admin
 
   useEffect(() => {
     if (!isSessionLoading && !isAuthorized) {
       if (!signedIn) {
-        window.location.href = api.OIDC_LOGIN_URL;
+        window.location.href = api.OIDC_LOGIN_URL
       } else {
-        navigate("/exchange");
+        navigate('/exchange')
       }
     }
-  }, [isSessionLoading, isAuthorized, signedIn, navigate]);
+  }, [isSessionLoading, isAuthorized, signedIn, navigate])
 
   if (isSessionLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (!isAuthorized) {
-    return null;
+    return null
   }
 
   return (
-    <SidebarProvider> 
+    <SidebarProvider>
       <AdminSidebar />
       <main className="m-8 w-full">
-        {page === "pedidos" && <AdminMainContent />}
-        {page === "settings" && <AdminExchangeSettings />}
-        {page === "statistics" && <AdminStatisticsView />}
+        {page === 'pedidos' && <AdminMainContent />}
+        {page === 'settings' && <AdminExchangeSettings />}
+        {page === 'statistics' && <AdminStatisticsView />}
       </main>
     </SidebarProvider>
-  );
-};
+  )
+}
 
-
-export default AdminPage;
+export default AdminPage

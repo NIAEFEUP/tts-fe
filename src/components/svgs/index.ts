@@ -9,7 +9,7 @@ import ConsultIcon from './fancy/Consult'
 import SelectIcon from './fancy/Select'
 import NitSigIconSVG from './NitSigIcon'
 import NoCourseSelectedSVG from './NoCourseSelected'
-import NoMajorSelectedSVG from './NoMajorSelected' 
+import NoMajorSelectedSVG from './NoMajorSelected'
 import Desert from './Desert'
 
 export {
@@ -25,5 +25,5 @@ export {
   NitSigIconSVG,
   NoCourseSelectedSVG,
   NoMajorSelectedSVG,
-  Desert
+  Desert,
 }

@@ -1,22 +1,21 @@
-import { ClipboardDocumentIcon } from '@heroicons/react/24/outline'
+import { Clipboard } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
 import { Buffer } from 'buffer'
 import fillOptions from './fillOptions'
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from '../../../ui/dropdown-menu'
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../../ui/tooltip'
+import { Tooltip } from '../../../ui/new/tooltip'
 import { ImportedCourses, CourseOption, CourseInfo } from '../../../../@types'
 import api from '../../../../api/backend'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { convertCourseInfoToCourseOption } from '../../../../utils'
-import { Button } from '../../../ui/button'
-import { useToast } from '../../../ui/use-toast'
+import { Button } from '../../../ui/new/button'
+import { toast } from '../../../ui/new/toaster'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
+import { Menu } from '../../../ui/new/menu'
 
 const PasteOption = () => {
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const { pickedCourses, setPickedCourses } = useContext(CourseContext)
-  const { toast } = useToast()
 
   const [isClipboardSupported, setIsClipboardSupported] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -74,7 +73,7 @@ const PasteOption = () => {
         await Promise.all(
           uncheckedCoursesIds.map(async (course_unit_id) => {
             return await api.getCourseUnit(Number(course_unit_id))
-          })
+          }),
         )
       ).flat()
 
@@ -84,7 +83,7 @@ const PasteOption = () => {
       const newMultipleOptions = [...multipleOptions]
       newMultipleOptions.forEach((option) => {
         option.course_options = option.course_options.concat(
-          courses.map((course) => convertCourseInfoToCourseOption(course))
+          courses.map((course) => convertCourseInfoToCourseOption(course)),
         )
       })
 
@@ -99,7 +98,7 @@ const PasteOption = () => {
       duration: 1500,
     })
 
-    AnalyticsTracker.trackFeature(Feature.PASTE);
+    AnalyticsTracker.trackFeature(Feature.PASTE)
   }
 
   /**
@@ -119,63 +118,59 @@ const PasteOption = () => {
       if (isNaN(Number(course[0])) || isNaN(Number(course[1]))) return false
     })
 
-    return true;
+    return true
   }
 
   return (
     <>
       {isClipboardSupported ? (
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="icon"
-                onClick={async () => {
-                  const value = await navigator.clipboard.readText()
-                  importSchedule(value)
-                }}
-                className="h-min w-min grow bg-primary sm:py-0 xl:p-1"
-              >
-                <ClipboardDocumentIcon className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Colar horário</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+          <Tooltip.Trigger asChild>
+            <Button
+              square
+              size="sm"
+              onClick={async () => {
+                const value = await navigator.clipboard.readText()
+                importSchedule(value)
+              }}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Clipboard size="18" />
+            </Button>
+          </Tooltip.Trigger>
+          <Tooltip.Content>Colar horário</Tooltip.Content>
+        </Tooltip>
       ) : (
-        <DropdownMenu open={isDropdownOpen}>
-          <TooltipProvider delayDuration={300}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    onClick={() => setIsDropdownOpen(true)}
-                    variant="icon"
-                    className="h-min w-min grow bg-primary sm:py-0 xl:p-1"
-                  >
-                    <ClipboardDocumentIcon className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Colar horário</TooltipContent>
-              <DropdownMenuContent>
-                <input
-                  autoFocus
-                  type="text"
-                  placeholder="Colar aqui opção"
-                  className="w-full rounded-sm border border-slate-200 p-2 text-slate-950 focus:outline-hidden focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
-                  onPaste={(e) => importSchedule(e.clipboardData.getData('text/plain'))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      importSchedule(e.currentTarget.value)
-                    }
-                  }}
-                  onBlur={() => setIsDropdownOpen(false)}
-                />
-              </DropdownMenuContent>
-            </Tooltip>
-          </TooltipProvider>
-        </DropdownMenu>
+        <Menu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+          <Tooltip>
+            <Tooltip.Trigger asChild>
+              <Menu.Trigger asChild>
+                <Button onClick={() => setIsDropdownOpen(true)} square className="bg-primary">
+                  <Clipboard size="18" />
+                </Button>
+              </Menu.Trigger>
+            </Tooltip.Trigger>
+            <Tooltip.Content>Colar horário</Tooltip.Content>
+          </Tooltip>
+
+          <Menu.Items className="p-2 w-64 md:w-80">
+            <input
+              autoFocus
+              type="text"
+              placeholder="Colar aqui opção"
+              className="w-full rounded-sm border border-slate-200 p-2 text-slate-950 focus:outline-hidden focus:ring-2 focus:ring-primary dark:border-slate-800 dark:text-slate-50"
+              onPaste={(e) => {
+                e.preventDefault()
+                importSchedule(e.clipboardData.getData('text/plain'))
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  importSchedule(e.currentTarget.value)
+                }
+              }}
+            />
+          </Menu.Items>
+        </Menu>
       )}
     </>
   )
