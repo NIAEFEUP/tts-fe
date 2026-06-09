@@ -25,22 +25,24 @@ const SigarraAuthButton = ({ expanded = false }: Props) => {
       onSubmit={async (e) => {
         e.preventDefault()
 
-        await fetch(`${api.BACKEND_URL}/sigarra_login/`, {
+        const res = await fetch(`${api.BACKEND_URL}/sigarra_login/`, {
           method: 'POST',
           credentials: 'include',
           headers: {
-            'X-CSRFToken': api.getCSRFToken(),
+            'X-CSRFToken': api.getCSRFToken() || '',
           },
         })
 
-        window.location.reload()
+        if (res.ok) {
+          window.location.reload()
+        } else {
+          console.error(`Login failed with status: ${res.status}`)
+        }
       }}
     >
-      <Button variant={`${expanded ? 'primary' : 'ghost'}`}>
-        <a className="flex flex-row gap-1">
-          <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
-          {expanded && 'Entrar'}
-        </a>
+      <Button variant={`${expanded ? 'primary' : 'ghost'}`} type="submit">
+        <ArrowLeftEndOnRectangleIcon className="w-5 h-5" />
+        {expanded && 'Entrar'}
       </Button>
     </form>
   )
