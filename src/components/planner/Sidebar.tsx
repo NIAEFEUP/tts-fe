@@ -39,7 +39,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className="order-2 col-span-12 flex flex-col justify-between rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4
+      className="order-2 col-span-12 flex min-h-min flex-col justify-between rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 lg:min-h-adjusted 2xl:px-4 2xl:py-4
                 h-[85vh] overflow-y-auto"
     >
       <div className="space-y-1">
