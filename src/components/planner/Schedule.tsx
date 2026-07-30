@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { ScheduleGrid } from './schedules'
 import ToggleScheduleGrid from './schedule/ToggleScheduleGrid'
-import PrintSchedule from './schedule/PrintSchedule'
 import ScheduleTypes from './ScheduleType'
 import { ClassDescriptor, SlotInfo } from '../../@types'
 import { useShowGrid } from '../../hooks'
@@ -12,10 +11,8 @@ import SlotBoxes from './schedules/SlotBoxes'
 import ScheduleContext from '../../contexts/ScheduleContext'
 import { SyncLoader } from 'react-spinners'
 import { ThemeContext } from '../../contexts/ThemeContext'
-import MultipleOptionsContext from '../../contexts/MultipleOptionsContext'
 
 import ConflictsContext from '../../contexts/ConflictsContext'
-import DownloadSchedule from './schedule/DownloadSchedule'
 
 const dayValues = Array.from({ length: 6 }, (_, i) => i)
 const hourValues = Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i)
@@ -73,12 +70,8 @@ const Schedule = ({ classes, slots, refresh }: Props) => {
 
   const { loadingSchedule } = useContext(ScheduleContext)
   const { enabled } = useContext(ThemeContext)
-  const { multipleOptions, selectedOption } = useContext(MultipleOptionsContext)
 
   const { setConflictSeverity: contextSetConflictSeverity, setHasSomeConflict } = useContext(ConflictsContext)
-
-  // Get the current option name
-  const currentOptionName = multipleOptions?.[selectedOption]?.name
 
   const [conflictsSeverities, setConflictsSeverities] = useState<Array<number>>([])
 
@@ -148,8 +141,6 @@ const Schedule = ({ classes, slots, refresh }: Props) => {
             <div className="flex flex-row gap-x-2">
               {refresh}
               <ToggleScheduleGrid showGridHook={[showGrid, setShowGrid]} />
-              <PrintSchedule component={scheduleRef} optionName={currentOptionName} />
-              <DownloadSchedule classes={classes} />
             </div>
           </div>
         </div>
