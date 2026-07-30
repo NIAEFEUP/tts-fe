@@ -1,7 +1,6 @@
 import { Button } from '../../../ui/new/button'
 import { Menu } from '../../../ui/new/menu'
 import CsvExport from './CsvExport'
-import NitSigExport from './NitSigExport'
 import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
 
 /**
@@ -18,9 +17,6 @@ const Export = () => {
       <Menu.Items className="p-1">
         <Menu.Item asChild>
           <CsvExport />
-        </Menu.Item>
-        <Menu.Item asChild>
-          <NitSigExport />
         </Menu.Item>
       </Menu.Items>
     </Menu>
