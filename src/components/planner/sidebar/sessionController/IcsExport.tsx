@@ -1,12 +1,19 @@
 import { CalendarDays } from 'lucide-react'
-import { ClassDescriptor } from '../../../@types'
-import { Button } from '../../ui/new/button'
-import { Tooltip } from '../../ui/new/tooltip'
+import usePickedClasses from '../../../../hooks/usePickedClasses'
+import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
 
-type Props = { classes: ClassDescriptor[] }
-
-const DownloadSchedule = ({ classes }: Props) => {
+const IcsExport = () => {
+  const classes = usePickedClasses()
   const downloadIcs = () => {
+    // YYYYMMDDTHHMMSS
+    const pad = (n: number) => (n < 10 ? '0' + n : String(n))
+    const formatDate = (date: Date) =>
+      `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`
+
+    // DTSTAMP/UID are required by RFC 5545 — without them most calendar
+    // apps (Outlook, Windows Calendar) silently refuse to import the file.
+    const dtStamp = `${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`
+
     let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//TTS//TTS Schedule//EN\n'
 
     const now = new Date()
@@ -33,13 +40,11 @@ const DownloadSchedule = ({ classes }: Props) => {
         const endDate = new Date(nextDate)
         endDate.setHours(endHour, endMinute, 0, 0)
 
-        // YYYYMMDDTHHMMSS
-        const formatDate = (date: Date) => {
-          const pad = (n: number) => (n < 10 ? '0' + n : n)
-          return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`
-        }
+        const uid = `${courseInfo.acronym}-${slot.lesson_type}-${slot.day}-${slot.start_time}@tts.niaefeup.pt`
 
         icsContent += 'BEGIN:VEVENT\n'
+        icsContent += `UID:${uid}\n`
+        icsContent += `DTSTAMP:${dtStamp}\n`
         icsContent += `SUMMARY:${courseInfo.acronym} - ${slot.lesson_type}\n`
         icsContent += `LOCATION:${slot.location}\n`
         icsContent += `DTSTART:${formatDate(startDate)}\n`
@@ -50,7 +55,8 @@ const DownloadSchedule = ({ classes }: Props) => {
     })
     icsContent += 'END:VCALENDAR'
 
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+    // RFC 5545 requires CRLF line endings; some parsers reject bare LF.
+    const blob = new Blob([icsContent.replace(/\n/g, '\r\n')], { type: 'text/calendar;charset=utf-8' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -58,18 +64,19 @@ const DownloadSchedule = ({ classes }: Props) => {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+
+    AnalyticsTracker.trackFeature(Feature.EXPORT_TO_ICS)
   }
 
   return (
-    <Tooltip>
-      <Tooltip.Trigger asChild onClick={downloadIcs}>
-        <Button square className="bg-lightish hover:bg-lightish/90 text-black dark:bg-darkish dark:text-white">
-          <CalendarDays size="18" />
-        </Button>
-      </Tooltip.Trigger>
-      <Tooltip.Content>Descarregar Horário</Tooltip.Content>
-    </Tooltip>
+    <button
+      onClick={downloadIcs}
+      className="group flex w-full items-center gap-2 dark:text-white rounded-md p-1 text-gray text-sm disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <CalendarDays className="h-5 w-5 text-secondary black:hover:brightness-200" />
+      <span className="pl-1">Exportar Horário (ICS)</span>
+    </button>
   )
 }
 
-export default DownloadSchedule
+export default IcsExport

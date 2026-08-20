@@ -22,6 +22,7 @@ export enum Feature {
   GRID = 'Grid View Toggle',
 
   EXPORT_TO_CSV = 'Export to CSV',
+  EXPORT_TO_ICS = 'Export to ICS',
 
   LOCK_TOGGLE = 'Class Lock Toggled',
 }
