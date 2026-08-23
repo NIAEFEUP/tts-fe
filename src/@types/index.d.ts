@@ -163,6 +163,7 @@ export type DirectExchangeParticipant = {
   course_unit_id: string,
   accepted: boolean
   date: string
+  is_enrolled_in_expected_class: boolean
 }
 
 export type UrgentRequest = {
