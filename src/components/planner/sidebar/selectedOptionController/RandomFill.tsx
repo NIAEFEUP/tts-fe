@@ -98,11 +98,17 @@ const RandomFill = ({ className }: Props) => {
           (cls) => cls.id === course.picked_class_id
         )]
       }
+      
+      const courseFilteredTeachers = course.filteredTeachers
 
       const availableClasses = classesCombinations.filter((class_info) => {
-        return uniqueClasses.includes(class_info.class_info.name)
+        if (!uniqueClasses.includes(class_info.class_info.name)) return false
+        if (!courseFilteredTeachers || courseFilteredTeachers.length === 0) return true
+        return class_info.class_info.slots.some((slot) =>
+          slot.professors.length === 0 ||
+          slot.professors.some((prof) => courseFilteredTeachers.includes(prof.id))
+        )
       })
-
       return availableClasses
         .filter((class_info) => class_info.course_info.id === course.course_id)
         .map((class_info) => class_info.class_info)
@@ -238,6 +244,13 @@ const RandomFill = ({ className }: Props) => {
     // Updating locked courses
     const newLockedCourses = selected?.filter((course) => course.locked)
       .map((course) => course.course_id)
+      
+    const newFilteredTeachers = selected?.map((course) =>
+      (course.filteredTeachers ?? []).join(',')).join('|')
+
+    const prevFilteredTeachers = courseOptions?.map((course) =>
+      (course.filteredTeachers ?? []).join(',')).join('|')
+
     // Only update if locked courses changed
     if (newLockedCourses?.join() !== lockedCourses?.join()) {
       setLockedCourses(newLockedCourses)
