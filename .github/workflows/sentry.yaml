@@ -14,15 +14,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build project
         run: npm run build
@@ -38,7 +39,7 @@ jobs:
           fi
 
           echo "Version to be released: $VERSION"
-          echo "::set-output name=release_version::$VERSION"
+          echo "release_version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create and Finalize Sentry Release
         uses: getsentry/action-release@v1
@@ -46,7 +47,7 @@ jobs:
           environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
           version: ${{ steps.get_version.outputs.release_version }}
           ignore_missing: true
-          sourcemaps: ./build
+          sourcemaps: ./dist
           finalize: true
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
