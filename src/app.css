@@ -8,7 +8,7 @@
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
-  @media (width >= var(--breakpoint-sm)) {
+  @media (width >= --theme(--breakpoint-sm)) {
     max-width: none;
   }
   @media (width >= 1400px) {
@@ -347,6 +347,12 @@
   --color-blueGray-900: #0f172a;
   --color-blueGray-950: #020617;
 
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-background-secondary: var(--color-background-secondary);
+  --color-border: var(--color-border);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
   --color-navy: #18222e;
   --color-lightNavy: #212a36;
   --color-darkish: #333640;
@@ -501,7 +507,7 @@
   }
 
   body {
-    @apply text-gray-800 bg-light font-prose dark:bg-darkest dark:text-white;
+    @apply bg-background text-foreground font-prose;
   }
 
   ::-webkit-scrollbar {
@@ -623,6 +629,14 @@
 
 @layer base {
   :root {
+
+    --color-background: 216 2% 97%;
+    --color-foreground: 215 44% 22%;
+    --color-background-secondary: 210 2% 94%;
+    --color-border: 214 3% 92%;
+    --color-accent: 0 70% 70%;
+    --color-accent-foreground: 0 0% 100%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -633,6 +647,14 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
+
+    --color-background: 227 26% 14%;
+    --color-foreground: 0 0% 100%;
+    --color-background-secondary: 227 20% 25%;
+    --color-border: 227 26% 20%;
+    --color-accent: 0 70% 70%;
+    --color-accent-foreground: 0 0% 100%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
