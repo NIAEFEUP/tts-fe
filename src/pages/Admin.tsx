@@ -4,9 +4,11 @@ import { AdminMainContent } from "../components/admin/AdminMainContent";
 import { AdminStatisticsView } from "../components/admin/AdminStatisticsView";
 import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminExchangeSettings } from "../components/admin/AdminExchangeSettings";
+import AdminExchangeManageAdmins from "../components/admin/AdminExchangeManageAdmins";
 import { SidebarProvider } from "../components/ui/sidebar";
 import SessionContext from "../contexts/SessionContext";
 import api from "../api/backend";
+import { Toaster } from "../components/ui/toaster";
 
 type Props = {
   page: string;
@@ -43,7 +45,9 @@ const AdminPage = ({ page }: Props) => {
         {page === "pedidos" && <AdminMainContent />}
         {page === "settings" && <AdminExchangeSettings />}
         {page === "statistics" && <AdminStatisticsView />}
+        {page === "admins" && <AdminExchangeManageAdmins />}
       </main>
+      <Toaster />
     </SidebarProvider>
   );
 };
