@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { ThemeContext } from '../../../../contexts/ThemeContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
-import { Button } from '../../../ui/new/button'
 import { Popover } from '../../../ui/new/popover'
 import { cn } from '../../../../lib/utils'
 
@@ -14,7 +13,7 @@ type Props = {
 const EmojiSelector = ({ className }: Props) => {
   const { enabled } = useContext(ThemeContext)
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
-  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const changeOptionIcon = (newIcon: EmojiClickData) => {
     setMultipleOptions((prevMultipleOptions) => {
@@ -25,13 +24,16 @@ const EmojiSelector = ({ className }: Props) => {
     })
     AnalyticsTracker.trackFeature(Feature.OPTION_EMOJI)
     AnalyticsTracker.emoji(newIcon.emoji)
+    setOpen(false)
   }
 
   return (
-    <Popover placement="bottom">
+    <Popover open={open} onOpenChange={setOpen} placement="bottom">
       <Popover.Trigger
-        className="aspect-square h-10 w-10 rounded-md p-2 bg-lightish hover:bg-lightish/90
-      dark:bg-darkish"
+        className={cn(
+          'aspect-square h-10 w-10 rounded-md p-2 bg-lightish hover:bg-lightish/90 dark:bg-darkish',
+          className,
+        )}
       >
         <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
       </Popover.Trigger>
