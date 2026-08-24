@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useContext } from 'react'
-import { CopyOption, EmojiSelector, PasteOption, RandomFill } from './selectedOptionController'
+import { CopyOption, EmojiSelector, PasteOption, RandomFill } from './selectedOptionController/index'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
