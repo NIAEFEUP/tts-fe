@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@blobatar/react": "^2.5.0",
     "@floating-ui/react": "^0.27.19",
     "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.1.1",
@@ -37,6 +38,7 @@
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^4.3.1",
+    "blobatar": "^2.5.0",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.3.1",
@@ -44,7 +46,6 @@
     "cmdk": "^1.1.1",
     "cva": "^1.0.0-beta.4",
     "date-fns": "^3.6.0",
-    "emoji-picker-react": "^4.6.4",
     "esbuild": "^0.25.0",
     "html-to-image": "^1.11.11",
     "js-cookie": "^3.0.5",

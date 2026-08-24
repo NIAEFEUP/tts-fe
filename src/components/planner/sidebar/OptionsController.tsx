@@ -5,6 +5,8 @@ import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { Tooltip } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import { Button } from '../../ui/new/button'
+import { Blobatar } from "@blobatar/react";
+import "blobatar/motion.css";
 
 /**
  * Sortable list of schedule options
@@ -62,7 +64,11 @@ const OptionButton = ({ option }: Props) => {
           size="md"
           className={`p-2 hover:bg-primary/75 ${multipleOptions[selectedOption].id === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
         >
-          <img src={option.icon} alt={option.name} />{' '}
+          <Blobatar
+            name={option.name}
+            traits={{ "body.r": 0.999 }}
+            animate="always"
+          />
         </Button>
       </Tooltip.Trigger>
       <Tooltip.Content className="truncate">{option.name}</Tooltip.Content>

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useContext } from 'react'
-import { CopyOption, EmojiSelector, PasteOption, RandomFill } from './selectedOptionController/index'
+import { CopyOption, PasteOption, RandomFill } from './selectedOptionController/index'
+import { Blobatar } from "@blobatar/react";
+import "blobatar/motion.css";
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
@@ -54,7 +56,13 @@ const SelectedOptionController = ({ currentOption }: Props) => {
   return (
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between gap-2">
       <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
-        <EmojiSelector />
+        <div className="flex aspect-square h-10 w-10 items-center justify-center rounded-md bg-lightish dark:bg-darkish">
+          <Blobatar
+            name={multipleOptions[selectedOption]?.name ?? ''}
+            traits={{ "body.r": 0.999 }}
+            animate="always"
+          />
+        </div>
 
         <Input
           key={selectedOption}
