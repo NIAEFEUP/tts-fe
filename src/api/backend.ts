@@ -23,7 +23,7 @@ const apiRequest = async (route: string) => {
   const slash = route[0] === '/' ? '' : '/'
   const url = BACKEND_URL + slash + route
 
-  const data = await fetch(url)
+  const data = await fetch(url, { credentials: "include" })
     .then((response) => response.json())
     .catch((error) => console.error(error))
 
@@ -116,10 +116,10 @@ const getCourseUnitHashes = async (ids: number[]) => {
   if (ids.length === 0) return {}
 
   try {
-    const queryString = ids.join(',')
-    const response = await fetch(`${BACKEND_URL}/course_unit/hash?ids=${queryString}`)
-    if (!response.ok) throw new Error('Network response was not ok')
-    return await response.json()
+    const queryString = ids.join(',');
+    const response = await fetch(`${BACKEND_URL}/course_unit/hash?ids=${queryString}`, { credentials: "include" });
+    if (!response.ok) throw new Error('Network response was not ok');
+    return await response.json();
   } catch (error) {
     console.error('Error fetching course unit hashes:', error)
     throw error
