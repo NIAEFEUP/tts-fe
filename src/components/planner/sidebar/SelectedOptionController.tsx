@@ -1,16 +1,9 @@
-//TODO(thePeras): Check this package, its extremely heavy (231.2k, gzipped: 50.8k)
-import EmojiPicker, { Theme, EmojiStyle, SuggestionMode } from 'emoji-picker-react'
-import { useState, useContext, useRef, useEffect } from 'react'
-import CopyOption from './selectedOptionController/CopyOption'
-import PasteOption from './selectedOptionController/PasteOption'
+import { useState, useRef, useEffect, useContext } from 'react'
+import { CopyOption, EmojiSelector, PasteOption, RandomFill } from './selectedOptionController'
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
-import { ThemeContext } from '../../../contexts/ThemeContext'
-import { Popover } from '../../ui/new/popover'
-import RandomFill from './selectedOptionController/RandomFill'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import { Input } from '../../ui/new/input'
-import { Button } from '../../ui/new/button'
 
 type Props = {
   currentOption: CourseOption[]
@@ -20,9 +13,7 @@ type Props = {
  * Interactions with the currently selected option
  */
 const SelectedOptionController = ({ currentOption }: Props) => {
-  const { enabled } = useContext(ThemeContext)
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
-  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
 
   const input = useRef(null)
 
@@ -60,41 +51,10 @@ const SelectedOptionController = ({ currentOption }: Props) => {
     AnalyticsTracker.trackFeature(Feature.OPTION_RENAME)
   }
 
-  const changeOptionIcon = (newIcon) => {
-    setMultipleOptions((prevMultipleOptions) => {
-      const updatedMultipleOptions = prevMultipleOptions.map((item) =>
-        item.id === multipleOptions[selectedOption].id ? { ...item, icon: newIcon.imageUrl } : item,
-      )
-      return updatedMultipleOptions
-    })
-    AnalyticsTracker.trackFeature(Feature.OPTION_EMOJI)
-    AnalyticsTracker.emoji(newIcon.emoji)
-  }
-
   return (
     <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row xl:content-between gap-2">
       <div className="order-2 flex grow gap-2 sm:order-1 lg:order-2 xl:order-1">
-        <Popover open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen} placement="bottom">
-          <Popover.Trigger asChild>
-            <Button square size="md" className="p-2 bg-lightish hover:bg-lightish/90 dark:bg-darkish">
-              <img src={multipleOptions[selectedOption]?.icon} alt={multipleOptions[selectedOption].name} />
-            </Button>
-          </Popover.Trigger>
-          <Popover.Content className="mx-5 w-96 rounded-full bg-lightish p-0 dark:bg-darkish">
-            <EmojiPicker
-              width="100%"
-              searchDisabled={true}
-              previewConfig={{ showPreview: false }}
-              theme={enabled ? Theme.DARK : Theme.LIGHT}
-              suggestedEmojisMode={SuggestionMode.RECENT}
-              emojiStyle={EmojiStyle.APPLE}
-              onEmojiClick={(emojiData) => {
-                changeOptionIcon(emojiData)
-                setEmojiPickerOpen(false)
-              }}
-            />
-          </Popover.Content>
-        </Popover>
+        <EmojiSelector />
 
         <Input
           key={selectedOption}
