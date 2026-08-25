@@ -61,7 +61,7 @@ const submitExchangeRequest = async (requests: Map<number, CreateRequestData>, u
 }
 
 const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceRequest[]> => {
-  return fetch(url).then(async (res) => {
+  return fetch(url, { credentials: "include" }).then(async (res) => {
     const json = await res.json();
     return json;
   }).catch((e) => {
@@ -71,7 +71,7 @@ const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceReque
 }
 
 const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
-  return fetch(`${api.BACKEND_URL}/course_unit/${courseUnitId}/exchange/metadata`).then(async (res) => {
+  return fetch(`${api.BACKEND_URL}/course_unit/${courseUnitId}/exchange/metadata`, { credentials: "include" }).then(async (res) => {
     if (!res.ok) return [];
     return await res.json();
   }).catch((e) => {
@@ -114,6 +114,7 @@ const verifyExchangeRequest = async (token: string): Promise<boolean> => {
   token = atob(token);
   return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "X-CSRFToken": api.getCSRFToken(),
     }
@@ -233,6 +234,7 @@ const deleteCourseUnitExchangePeriod = async (selectedCourseUnit: number, period
 const revalidateExchangeRequest = async (exchangeRequestId: number) => {
   return fetch(`${api.BACKEND_URL}/exchange/${exchangeRequestId}/revalidate/`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "X-CSRFToken": api.getCSRFToken(),
     }
