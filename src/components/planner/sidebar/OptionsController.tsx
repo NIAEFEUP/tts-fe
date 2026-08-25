@@ -62,11 +62,10 @@ const OptionButton = ({ option }: Props) => {
         <Button
           square
           size="md"
-          className={`p-2 hover:bg-primary/75 ${multipleOptions[selectedOption].id === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
+          className={`p-0 pr-1.5 pt-1.5 hover:bg-primary/75 ${multipleOptions[selectedOption].id === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
         >
           <Blobatar
             name={option.name}
-            traits={{ "body.r": 0.999 }}
             animate="always"
           />
         </Button>
