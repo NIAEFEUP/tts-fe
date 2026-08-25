@@ -17,6 +17,7 @@ export const ExchangeCoursePicker = ({
 }: Props) => {
   const [checkboxedCourses, setCheckboxedCourses] = useState([]);
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
+  const [electiveCourses, setElectiveCourses] = useState<CourseInfo[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [selectedMajor, setSelectedMajor] = useLocalStorage<Major>("enrollMajor", null);
 
@@ -38,6 +39,8 @@ export const ExchangeCoursePicker = ({
       setUcsModalOpen: setModalOpen,
       coursesInfo: coursesInfo,
       setCoursesInfo: setCoursesInfo,
+      electiveCourses: electiveCourses,
+      setElectiveCourses: setElectiveCourses,
       selectedMajor: selectedMajor,
       setSelectedMajor: setSelectedMajor,
     }}>

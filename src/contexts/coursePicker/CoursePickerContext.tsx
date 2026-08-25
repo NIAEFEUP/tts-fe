@@ -6,6 +6,8 @@ interface CoursePickerContextContent {
   setCoursesStorage: Dispatch<SetStateAction<CourseInfo[]>>
   coursesInfo: CourseInfo[] // This array holds the CourseInfo objects returned from the backend after fetching from it in the CoursePicker
   setCoursesInfo: Dispatch<SetStateAction<CourseInfo[]>>
+  electiveCourses: CourseInfo[]
+  setElectiveCourses: Dispatch<SetStateAction<CourseInfo[]>>
   checkboxedCourses: CourseInfo[]
   setCheckboxedCourses: Dispatch<SetStateAction<CourseInfo[]>>
   choosingNewCourse: boolean
@@ -27,6 +29,8 @@ const CoursePickerContext: Context<CoursePickerContextContent> = createContext({
   setUcsModalOpen: () => { },
   coursesInfo: [],
   setCoursesInfo: () => { },
+  electiveCourses: [],
+  setElectiveCourses: () => { },
   selectedMajor: null,
   setSelectedMajor: () => { }
 })

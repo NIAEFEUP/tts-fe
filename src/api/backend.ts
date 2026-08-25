@@ -50,6 +50,10 @@ const getCoursesByMajorId = async (id: number) => {
   return await apiRequest(`/course_units/${id}/${CURRENT_YEAR}/${SEMESTER}/`)
 }
 
+const getCoursesByMajorIdAndSemester = async (id: number, semester: number) => {
+  return await apiRequest(`/course_units/${id}/${CURRENT_YEAR}/${semester}/`)
+}
+
 /**
  * Retrieves all schedule options for a given course unit
  * @param course course of which to retrieve schedule
@@ -92,8 +96,25 @@ const getCoursesClasses = async (courses: CourseInfo[]): Promise<CourseInfo[]> =
 const getCourseUnit = async (id: number) => {
   if (id === null) return []
   const class_info = (await apiRequest(`course_unit/${id}/`));
-  class_info['classes'] = await getCourseClass(class_info);
+  if (class_info) {
+    try {
+      class_info['classes'] = await getCourseClass(class_info);
+    } catch {
+      console.warn("Could not fetch classes for course unit", id);
+      class_info['classes'] = [];
+    }
+  }
   return class_info;
+}
+
+/**
+ * Retrieves basic course unit info without classes (lighter weight)
+ * @param id course unit id
+ * @returns CourseInfo
+ */
+const getCourseUnitInfo = async (id: number) => {
+  if (id === null) return []
+  return await apiRequest(`course_unit/${id}/`);
 }
 
 /**
@@ -123,6 +144,26 @@ const getCourseUnitHashes = async (ids: number[]) => {
   }
 };
 
+/**
+ * Retrieves the groups of a course
+ * @param courseId ID of the course
+ * @returns List of groups
+ */
+const getCourseGroups = async (courseId: number) => {
+  if (!courseId) return Promise.resolve([]);
+  return await apiRequest(`/course/${courseId}/groups`);
+}
+
+/**
+ * Retrieves the course units of a group
+ * @param groupId ID of the group
+ * @returns List of course units
+ */
+const getCourseGroupUnits = async (groupId: number) => {
+  if (!groupId) return Promise.resolve([]);
+  return await apiRequest(`/course_group/${groupId}/course_units`);
+}
+
 const getCSRFToken = () => {
   return Cookies.get('csrftoken');
 }
@@ -135,9 +176,13 @@ const api = {
   getMajors,
   getCourses,
   getCoursesByMajorId,
+  getCoursesByMajorIdAndSemester,
   getCourseClass,
   getCoursesClasses,
   getCourseUnit,
+  getCourseUnitInfo,
+  getCourseGroups,
+  getCourseGroupUnits,
   getInfo,
   getCourseUnitHashes,
   getCSRFToken,
