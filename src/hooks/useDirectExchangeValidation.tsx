@@ -10,8 +10,8 @@ type ValidationResponse = {
 export default function useValidateExchange(id: number) {
   const validateRequest = async (url: string): Promise<ValidationResponse> => {
     try {
-      const res = await fetch(url)
-      if (!res.ok) return { valid: false }
+      const res = await fetch(url, { credentials: "include" });
+      if (!res.ok) return { valid: false };
 
       return await res.json()
     } catch (error) {
