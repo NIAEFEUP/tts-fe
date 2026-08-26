@@ -67,6 +67,9 @@ const OptionButton = ({ option }: Props) => {
         >
           <Blobatar
             name={option.name}
+            traits={{
+                shape: [0.11, 0.35, 0.54, 0.65, 0.825, 0.888, 0.933, 0.965, 0.99],
+              }}
             animate="always"
           />
           <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-4 h-4 rounded-lg  bg-secondary text-[10px] font-bold text-white dark:text-gray-900 leading-none z-10 shadow-md">
