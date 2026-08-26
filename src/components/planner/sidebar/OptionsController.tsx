@@ -17,7 +17,7 @@ const OptionsController = () => {
 
   return (
     <ReactSortable
-      className="m-y-2 flex flex-row justify-center gap-2 py-2 px-1 text-center w-full lg:justify-start !overflow-visible"
+      className="m-y-2 flex flex-row justify-center gap-2 py-2 px-1 text-center w-full overflow-x-auto lg:justify-start !overflow-y-visible"
       list={multipleOptions}
       setList={(newMultipleOptions) => {
         const prevId = multipleOptions[selectedOption].id
@@ -63,7 +63,7 @@ const OptionButton = ({ option }: Props) => {
         <Button
           square
           size="md"
-          className={`relative p-1 hover:bg-primary/75 ${multipleOptions[selectedOption].id === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
+          className={`relative p-1 shrink-0 hover:bg-black/10 ${multipleOptions[selectedOption].id === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
         >
           <Blobatar
             name={option.name}
