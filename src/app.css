@@ -181,6 +181,8 @@
 @layer utilities {
   html {
     @apply scroll-smooth;
+
+    scrollbar-gutter: stable;
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklab, var(--color-foreground) 30%, transparent) transparent;
   }
@@ -306,7 +308,6 @@
 
 body {
   @apply overflow-y-scroll;
-  scrollbar-gutter: stable;
 
   font-family: var(--font-ui);
 
