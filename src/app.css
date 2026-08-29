@@ -12,8 +12,6 @@
   /* Typography */
   --text-2xs: 0.625rem;
 
-  /* COLORS WILL GO HERE */
-
   /* Colors */
   --color-background: light-dark(oklch(100% 0 0), oklch(12% 0 0));
   --color-background-secondary: light-dark(oklch(96% 0 0), oklch(22% 0 0));
@@ -183,6 +181,8 @@
 @layer utilities {
   html {
     @apply scroll-smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0 0 0 / 0.4) transparent;
   }
 
   ::-webkit-scrollbar {
