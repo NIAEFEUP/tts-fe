@@ -182,7 +182,7 @@
 
 @layer utilities {
   html {
-    @apply scroll-smooth overflow-y-scroll;
+    @apply scroll-smooth;
   }
 
   ::-webkit-scrollbar {
@@ -297,6 +297,7 @@
 }
 
 body {
+  @apply overflow-y-scroll;
   scrollbar-gutter: stable;
 
   font-family: var(--font-ui);
