@@ -182,19 +182,27 @@
   html {
     @apply scroll-smooth;
     scrollbar-width: thin;
-    scrollbar-color: rgb(0 0 0 / 0.4) transparent;
+    scrollbar-color: color-mix(in oklab, var(--color-foreground) 30%, transparent) transparent;
   }
 
   ::-webkit-scrollbar {
-    @apply mx-2 w-3 rounded-full md:w-3.5;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply border-2 border-solid rounded-full border-black/0 bg-black/40 bg-clip-padding md:border-4;
+    @apply w-2.5 h-2.5;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-inherit;
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full;
+    background-color: color-mix(in oklab, var(--color-foreground) 30%, transparent);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklab, var(--color-foreground) 50%, transparent);
   }
 
   .min-h-adjusted {
