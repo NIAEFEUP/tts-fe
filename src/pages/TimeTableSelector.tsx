@@ -16,7 +16,9 @@ import Alert, { AlertType }  from '../components/planner/Alert'
 import { AlertDescription } from '../components/ui/alert'
 import SessionContext from '../contexts/SessionContext'
 import StorageAPI from '../api/storage'
-import { X } from "lucide-react" 
+import { X } from "lucide-react"
+import { LoginButton } from '../components/auth/LoginButton'
+import { ShieldExclamationIcon } from '@heroicons/react/24/outline'
 const TimeTableSelectorPage = () => {
   const { setMajors } = useContext(MajorContext);
 
@@ -37,7 +39,7 @@ const TimeTableSelectorPage = () => {
 
 const Content = () => {
   const { sidebarPosition } = useSidebarContext();
-  const { user } = useContext(SessionContext);
+  const { signedIn, user } = useContext(SessionContext);
   const [showExchangeAlert, setShowExchangeAlert] = useState<boolean>(true)
 
   useEffect(() => {
@@ -49,6 +51,24 @@ const Content = () => {
     StorageAPI.setShowExchangeAlertStorage()
   }
 
+  if (!signedIn) return (
+    <div className="grid w-cfull grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+      <div className="lg:min-h-adjusted order-1 col-span-12 min-h-min rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 2xl:px-5 2xl:py-5">
+        <div className="h-full w-full">
+          <PlannerSchedule />
+        </div>
+      </div>
+
+      <div className="lg:min-h-adjusted order-2 col-span-12 flex min-h-min flex-col justify-between rounded-sm bg-lightest px-3 py-3 dark:bg-dark lg:col-span-3 2xl:px-4 2xl:py-4">
+        <div className="flex flex-col items-center justify-center gap-4 h-full">
+          <ShieldExclamationIcon className="w-12 h-12" />
+          <p className="text-center">Tens de iniciar sessão para poderes usar o Horário</p>
+          <LoginButton expanded={true} />
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <div className='h-full w-full'>
       <div className="flex w-full  px-4 py-4 lg:hidden justify-items-start">
@@ -58,7 +78,7 @@ const Content = () => {
           <TabsTrigger value="sidebar">Turmas</TabsTrigger>
         </TabsList>
         <TabsContent value="planner">
-          <div className="rounded bg-lightest px-3 py-3 dark:bg-dark ">
+          <div className="rounded-sm bg-lightest px-3 py-3 dark:bg-dark ">
             <div className="h-full w-full ">
               <PlannerSchedule />
             </div>

@@ -7,7 +7,7 @@ import { buildUrlWithFilterParams } from "../../utils/admin/filters";
 /**
  * Gets the exchanges that a student made not involving any other student.
 */
-export default (filtersContext: RequestFiltersContextContent, pageIndex: number) => {
+export default (filtersContext: RequestFiltersContextContent, pageIndex: number, pageSize: number) => {
   const getEnrollments = async (url: string) => {
     try {
         const res = await fetch(url, {
@@ -23,7 +23,7 @@ export default (filtersContext: RequestFiltersContextContent, pageIndex: number)
   };
 
   const { data, error, mutate } = useSWR(
-    buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/?page=${pageIndex}`, filtersContext),
+    buildUrlWithFilterParams(`${api.BACKEND_URL}/course_unit/enrollment/?page=${pageIndex}&page_size=${pageSize}`, filtersContext),
     getEnrollments
   );
 

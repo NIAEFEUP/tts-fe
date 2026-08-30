@@ -66,7 +66,7 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
           defaultValue={currentUserName}
           onChange={handleUserChange}
           onBlur={handleUserBlur}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-xs"
         />
       </div>
 
@@ -76,7 +76,7 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
           <input
             type="text"
             value={session.link}
-            className="flex-1 block w-full rounded-md bg-red-50 border-gray-300 shadow-sm sm:text-sm"
+            className="flex-1 block w-full rounded-md bg-red-50 border-gray-300 shadow-xs sm:text-sm"
             readOnly
           />
           <Button
@@ -120,7 +120,7 @@ const CollabSessionModal = ({ session, onExitSession, onUpdateUser }: Props) => 
       <div className="mt-6 text-center">
         <Button
           type="button"
-          className="px-4 py-2 bg-white border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          className="px-4 py-2 bg-white border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-red-500"
           onClick={onExitSession}
         >
           <StopIcon className="h-5 w-5 mr-2" />
