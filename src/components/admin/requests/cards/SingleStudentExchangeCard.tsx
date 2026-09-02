@@ -6,6 +6,7 @@ import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon} from "lucide-react";
 import { Person } from "./Person";
 import { ExchangeStatus } from "./ExchangeStatus";
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule";
+import { TreatExchangeButton } from "./TreatExchangeButton";
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter";
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule";
 import { RequestDate } from "./RequestDate";
@@ -24,6 +25,12 @@ export const SingleStudentExchangeCard = ({
   const [exchangeState, setExchangeState] = useState(exchange);
 
   const { schedule } = useStudentsSchedule(exchange.issuer_nmec);
+
+  const courseId = exchange.options.map(option => option.course_info.course);
+  const courseInfo = exchange.options.map(option => ({
+    id: option.course_info.course,
+    acronym: option.course_info.acronym
+  }));
 
   return (
     <>
@@ -90,7 +97,7 @@ export const SingleStudentExchangeCard = ({
                     ))}
                   </div>
                 </div>
-                <div>
+                <div className="flex gap-2">
                   <AdminPreviewSchedule
                     originalSchedule={schedule}
                     classesToAdd={
@@ -103,6 +110,11 @@ export const SingleStudentExchangeCard = ({
                       })
                     }
 
+                  />
+                  <TreatExchangeButton
+                    nmec={exchange.issuer_nmec}
+                    courseId={courseId}
+                    courseInfo={courseInfo}
                   />
               </div>
             </div>
@@ -129,11 +141,6 @@ export const SingleStudentExchangeCard = ({
             requestType={AdminRequestType.URGENT_EXCHANGE}
             requestId={exchange.id}
             setExchange={setExchangeState}
-            courseId={exchange.options.map(option => option.course_info.course)}
-            courseInfo={exchange.options.map(option => ({
-              id: option.course_info.course,
-              acronym: option.course_info.acronym
-            }))}
           />
         }
       </Card>
