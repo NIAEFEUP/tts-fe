@@ -6,24 +6,14 @@ import { mailtoStringBuilder } from "../../../../utils/mail"
 import { Button } from "../../../ui/button"
 import { CardFooter } from "../../../ui/card"
 import { Separator } from "../../../ui/separator"
-import { AdminSendEmail } from "../AdminSendEmail"
-import { TreatExchangeButton } from "./TreatExchangeButton"
 import SessionContext from "../../../../contexts/SessionContext"
-
-type CourseInfo = {
-  id: number,
-  acronym: string
-}
 
 type Props = {
   nmecs: Array<string>,
   exchangeMessage: string,
   requestType: AdminRequestType,
   requestId: number,
-  showTreatButton?: boolean,
   setExchange?: Dispatch<SetStateAction<DirectExchangeRequest | UrgentRequest | CourseUnitEnrollment | MarketplaceRequest>>
-  courseId: Array<number>,
-  courseInfo?: Array<CourseInfo>
 }
 
 const rejectRequest = async (
@@ -98,11 +88,10 @@ export const AdminRequestCardFooter = ({
   exchangeMessage,
   requestType,
   requestId,
-  showTreatButton = true,
   setExchange,
-  courseId,
-  courseInfo
 }: Props) => {
+  const { user } = useContext(SessionContext);
+
   const awaitInfo = async () => {
     await markRequestAsAwaitingInformation(requestType, requestId);
     setExchange(prev => {
@@ -111,8 +100,6 @@ export const AdminRequestCardFooter = ({
       return newPrev;
     })
   }
-
-  const { user } = useContext(SessionContext);
 
   return <>
     <Separator className="my-4" />
@@ -145,28 +132,12 @@ export const AdminRequestCardFooter = ({
         Marcar como aceite
       </Button>
 
-      {showTreatButton &&
-        nmecs.map(nmec => (
-          <TreatExchangeButton
-            key={"treat-exchange-button-" + nmec}
-            nmec={nmec}
-            courseId={courseId}
-            courseInfo={courseInfo}
-          />
-        ))
-      }
-
-      <AdminSendEmail
-        nmec={nmecs}
-        requestType={requestType}
-        subject={
-          requestType === AdminRequestType.DIRECT_EXCHANGE || requestType === AdminRequestType.URGENT_EXCHANGE
-            ? "Pedido de troca de turma"
-            : "Pedido de Inscrição em Unidades Curriculares"
-        }
-        message={exchangeMessage}
+      <Button
+        variant="outline"
         onClick={awaitInfo}
-      />
+      >
+        Aguardar info
+      </Button>
     </CardFooter>
   </>
 }

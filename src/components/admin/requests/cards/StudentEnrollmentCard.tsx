@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../ui/card"
 import { Person } from "./Person"
 import { useState } from "react"
 import { AdminPreviewSchedule } from "../AdminPreviewSchedule"
+import { TreatExchangeButton } from "./TreatExchangeButton"
 import { AdminRequestCardFooter } from "./AdminRequestCardFooter"
 import useStudentsSchedule from "../../../../hooks/admin/useStudentsSchedule"
 import { RequestDate } from "./RequestDate"
@@ -26,6 +27,12 @@ export const StudentEnrollmentCard = ({
     const [enrollmentState, setEnrollmentState] = useState(enrollment);
 
     const { schedule } = useStudentsSchedule(enrollment.user_nmec);
+
+    const courseId = enrollment.options.map(option => option.course_unit.course);
+    const courseInfo = enrollment.options.map(option => ({
+        id: option.course_unit.course,
+        acronym: option.course.acronym
+    }));
 
     return (
         <Card>
@@ -99,7 +106,7 @@ export const StudentEnrollmentCard = ({
                                         </div>
                                     ))}
                             </div>
-                            <div>
+                            <div className="flex gap-2">
                                 <AdminPreviewSchedule
                                     originalSchedule={schedule}
                                     classesToAdd={
@@ -111,6 +118,11 @@ export const StudentEnrollmentCard = ({
                                             }
                                         })
                                     }
+                                />
+                                <TreatExchangeButton
+                                    nmec={enrollment.user_nmec}
+                                    courseId={courseId}
+                                    courseInfo={courseInfo}
                                 />
                             </div>
                         </div>
@@ -135,11 +147,6 @@ export const StudentEnrollmentCard = ({
                         requestType={AdminRequestType.ENROLLMENT}
                         requestId={enrollment.id}
                         setExchange={setEnrollmentState}
-                        courseId={enrollment.options.map(option => option.course_unit.course)}
-                        courseInfo={enrollment.options.map(option => ({
-                            id: option.course_unit.course,
-                            acronym: option.course.acronym
-                        }))}
                     />
                 }
             
