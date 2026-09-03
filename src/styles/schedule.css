@@ -122,11 +122,11 @@
 
 /* Classes */
 .schedule-class {
-  @apply absolute z-10 w-1/6 text-white transition-none border-0 hover:ring-0;
+  @apply absolute z-10 w-1/6 rounded-lg text-white transition-none border-0 hover:ring-0;
 }
 
 .schedule-class-responsive {
-  @apply z-10 w-min min-w-[4.5rem] border-0 transition hover:ring-0;
+  @apply z-10 w-min min-w-[4.5rem] rounded-lg border-0 transition hover:ring-0;
 }
 
 .schedule-class-t {

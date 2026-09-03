@@ -141,10 +141,15 @@ const getLessonBoxStyles = (slotInfo: SlotInfo, maxHour: number, minHour: number
   const top = (slotInfo.start_time - minHour) * 2
   const length = slotInfo.duration * 2
 
+  const xInset = 1
+  const yInset = 1
+  const dayWidth = 100 / 6
+
   return {
-    top: `${(top * 100) / step}%`,
-    left: `${(slotInfo.day * 100) / 6}%`,
-    height: `${length * (100 / step)}%`,
+    top: `calc(${(top * 100) / step}% + ${yInset}px)`,
+    left: `calc(${(slotInfo.day * 100) / 6}% + ${xInset}px)`,
+    width: `calc(${dayWidth}% - ${xInset * 2}px)`,
+    height: `calc(${length * (100 / step)}% - ${yInset * 2}px)`,
   }
 }
 
