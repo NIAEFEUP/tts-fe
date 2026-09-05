@@ -160,3 +160,11 @@ In case you want to preview the production build you can run
 ```bash
 npm run preview
 ```
+
+# License
+
+Copyright &copy; 2026 NIAEFEUP
+
+This project is open-source software licensed under the **GNU Affero General Public License v3.0** (AGPLv3). 
+
+See the [LICENSE](./LICENSE) file for the full license text.
