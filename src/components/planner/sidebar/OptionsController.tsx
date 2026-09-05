@@ -65,6 +65,7 @@ const OptionButton = ({ option }: Props) => {
         <Button
           square
           size="md"
+          aria-label={option.name}
           className={`relative p-1 shrink-0 ${isSelected ? 'bg-primary/75 hover:bg-primary/90 dark:bg-primary/50 dark:hover:bg-primary/60' : 'bg-lightish hover:bg-black/10 dark:bg-darkish dark:hover:bg-black/20'}`}
         >
           <Blobatar
