@@ -1,82 +1,76 @@
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { DropdownMenuSeparator } from "../ui/dropdown-menu"
-import { Button } from "../ui/button";
-import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/solid";
-import { useContext, useState } from "react";
-import { ClipLoader } from "react-spinners";
-import SessionContext from "../../contexts/SessionContext";
-import authService from "../../api/services/authService";
-import studentInfoService from "../../api/services/studentInfo";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
-import ScheduleContext from "../../contexts/ScheduleContext";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
+import { Avatar } from '../ui/new/avatar'
+import { Button } from '../ui/new/button'
+import { LogOut } from 'lucide-react'
+import { useContext, useState } from 'react'
+import { ClipLoader } from 'react-spinners'
+import SessionContext from '../../contexts/SessionContext'
+import authService from '../../api/services/authService'
+import studentInfoService from '../../api/services/studentInfo'
+import { Popover } from '../ui/new/popover'
+import ScheduleContext from '../../contexts/ScheduleContext'
+import { Dialog } from '../ui/new/dialog'
+import { Divider } from '../ui/new/divider'
 
 export const HeaderProfileDropdown = () => {
-  const [loggingOut, setLoggingOut] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
-  const { user, forceScheduleRevalidation } = useContext(SessionContext);
-  const { setExchangeSchedule } = useContext(ScheduleContext);
+  const { user, forceScheduleRevalidation } = useContext(SessionContext)
+  const { setExchangeSchedule } = useContext(ScheduleContext)
 
   const logout = async () => {
-    setLoggingOut(true);
-    setExchangeSchedule([]);
-    await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut);
+    setLoggingOut(true)
+    setExchangeSchedule([])
+    await authService.logout(user.token, forceScheduleRevalidation, setLoggingOut)
   }
 
   return (
-  <HoverCard>
-    <HoverCardTrigger className="w-fit">
-      <Avatar className="border shadow-xs">
-        <AvatarImage src={studentInfoService.getStudentPictureUrl(user?.username)} />
-        <AvatarFallback>{user?.name?.charAt(0) ?? ""}</AvatarFallback>
-      </Avatar>
-    </HoverCardTrigger>
-    <HoverCardContent className="w-44 p-4 mx-4">
-      <div className="flex flex-col">
-        <article className="flex flex-col">
-          <p className="text-md font-bold">{user?.name}</p>
-          <p className="text-sm">{user?.username}</p>
-        </article>
-        <DropdownMenuSeparator className="my-2" />
-        {loggingOut ?
-          <ClipLoader
-            className="w-2 h-2 mx-auto"
-            loading={true}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
-          :
-          <Button
-            variant="secondary"
-            className="w-full flex flex-row justify-center gap-2"
-            onClick={() => setConfirmOpen(true)}
-          >
-            <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
-            {!loggingOut && <span>Sair</span>}
-          </Button>
-        }
-      </div>
-    </HoverCardContent>
-    <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent className="w-full max-w-88 p-5">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Sair</AlertDialogTitle>
-            <AlertDialogDescription>Tem a certeza que deseja sair?</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="mt-2 flex justify-center! gap-4">
-            <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
-              Cancelar
+    <Popover placement="bottom-end">
+      <Popover.Trigger asChild>
+        <div className="cursor-pointer w-fit">
+          <Avatar className="border shadow-xs">
+            <Avatar.Image src={studentInfoService.getStudentPictureUrl(user?.username)} />
+            <Avatar.Fallback>{user?.name?.charAt(0) ?? ''}</Avatar.Fallback>
+          </Avatar>
+        </div>
+      </Popover.Trigger>
+      <Popover.Content className="w-44 p-4">
+        <div className="flex flex-col">
+          <article className="flex flex-col">
+            <p className="text-md font-bold">{user?.name}</p>
+            <p className="text-sm">{user?.username}</p>
+          </article>
+          <Divider className="my-2" />
+          {loggingOut ? (
+            <ClipLoader className="w-2 h-2 mx-auto" loading={true} aria-label="Loading Spinner" data-testid="loader" />
+          ) : (
+            <Button variant="destructive" className="w-full" onClick={() => setConfirmOpen(true)}>
+              <LogOut size="16" />
+              <span>Sair</span>
             </Button>
+          )}
+        </div>
+      </Popover.Content>
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <Dialog.Content className="max-w-88 p-5">
+          <Dialog.Title>Sair</Dialog.Title>
+          <Dialog.Description>Tem a certeza que deseja sair?</Dialog.Description>
+          <Dialog.Actions className="justify-center">
+            <Dialog.Close asChild>
+              <Button variant="outline">Cancelar</Button>
+            </Dialog.Close>
             <Button
-              variant="destructive" onClick={() => { setConfirmOpen(false); logout();}}>
+              variant="destructive"
+              onClick={() => {
+                setConfirmOpen(false)
+                logout()
+              }}
+            >
               Confirmar
             </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-  </HoverCard>
+          </Dialog.Actions>
+        </Dialog.Content>
+      </Dialog>
+    </Popover>
   )
 }
-
-

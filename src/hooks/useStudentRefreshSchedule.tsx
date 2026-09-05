@@ -1,29 +1,28 @@
-import useSWR from "swr";
-import studentScheduleRequestService from "../api/services/studentScheduleRequestService";
+import useSWR from 'swr'
+import studentScheduleRequestService from '../api/services/studentScheduleRequestService'
 
 export default () => {
   const getEligibileCourseUnits = async () => {
     try {
-      const res = await studentScheduleRequestService.refreshSchedule();
+      const res = await studentScheduleRequestService.refreshSchedule()
 
       if (res.ok) {
-        return await res.json();
+        return await res.json()
       }
 
-      return [];
+      return []
     } catch (e) {
-      console.error(e);
-      return [];
+      console.error(e)
+      return []
     }
   }
 
-  const { data, error, mutate, isValidating } = useSWR("refresh-student-schedule", getEligibileCourseUnits, {});
+  const { data, error, mutate, isValidating } = useSWR('refresh-student-schedule', getEligibileCourseUnits, {})
 
   return {
     refreshedSchedule: data,
     error,
     forceRefreshStudentSchedule: mutate,
-    isRefreshingStudentSchedule: isValidating
-  };
-};
-
+    isRefreshingStudentSchedule: isValidating,
+  }
+}

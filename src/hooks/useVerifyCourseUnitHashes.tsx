@@ -1,6 +1,6 @@
-import useSWR from 'swr';
-import api from '../api/backend';
-import { CourseInfo } from '../@types';
+import useSWR from 'swr'
+import api from '../api/backend'
+import { CourseInfo } from '../@types'
 
 /**
  * Fetcher function to get course unit hashes and verify them.
@@ -9,29 +9,29 @@ import { CourseInfo } from '../@types';
  */
 const fetchAndVerifyCourseUnitHashes = async (courseUnits: CourseInfo[]) => {
   if (!courseUnits || courseUnits.length === 0) {
-    return new Map<number, string>();
+    return new Map<number, string>()
   }
 
-  const ids = courseUnits.map(course => course.id);
+  const ids = courseUnits.map((course) => course.id)
   try {
-    const response = await api.getCourseUnitHashes(ids);
-    const currentHashes: Record<number, string> = response;
+    const response = await api.getCourseUnitHashes(ids)
+    const currentHashes: Record<number, string> = response
 
-    const mismatchedMap = new Map<number, string>();
+    const mismatchedMap = new Map<number, string>()
 
-    courseUnits.forEach(course => {
-      const backendHash = currentHashes[course.id];
+    courseUnits.forEach((course) => {
+      const backendHash = currentHashes[course.id]
       if (backendHash !== course.hash) {
-        mismatchedMap.set(course.id, backendHash);
+        mismatchedMap.set(course.id, backendHash)
       }
-    });
+    })
 
-    return mismatchedMap;
+    return mismatchedMap
   } catch (error) {
-    console.error('Failed to fetch or verify course unit hashes:', error);
-    throw error;
+    console.error('Failed to fetch or verify course unit hashes:', error)
+    throw error
   }
-};
+}
 
 /**
  * Hook to fetch and verify course unit hashes using SWR for periodic revalidation.
@@ -39,19 +39,15 @@ const fetchAndVerifyCourseUnitHashes = async (courseUnits: CourseInfo[]) => {
  * @returns Object containing the map of IDs with mismatched hashes and correct hashes, any error, and a function to manually trigger revalidation
  */
 const useVerifyCourseUnitHashes = (courseUnits: CourseInfo[]) => {
-  const { data, error, mutate } = useSWR(
-    courseUnits.length > 0 ? courseUnits : null,
-    fetchAndVerifyCourseUnitHashes,
-    {
-      dedupingInterval: 3600000
-    }
-  );
+  const { data, error, mutate } = useSWR(courseUnits.length > 0 ? courseUnits : null, fetchAndVerifyCourseUnitHashes, {
+    dedupingInterval: 3600000,
+  })
 
   return {
     mismatchedMap: data ?? new Map<number, string>(),
     error,
     mutate,
-  };
-};
+  }
+}
 
-export default useVerifyCourseUnitHashes;
+export default useVerifyCourseUnitHashes

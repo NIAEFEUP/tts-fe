@@ -1,17 +1,17 @@
-import api from "../backend";
+import api from '../backend'
 
 const refreshSchedule = async () => {
-    return fetch(`${api.BACKEND_URL}/student/schedule`, {
-        credentials: "include",
-        method: "PUT",
-        headers: {
-          "X-CSRFToken": api.getCSRFToken(),
-        }
-      });
+  return fetch(`${api.BACKEND_URL}/student/schedule`, {
+    credentials: 'include',
+    method: 'PUT',
+    headers: {
+      'X-CSRFToken': api.getCSRFToken(),
+    },
+  })
 }
 
 const studentScheduleRequestService = {
-    refreshSchedule
+  refreshSchedule,
 }
 
-export default studentScheduleRequestService;
+export default studentScheduleRequestService

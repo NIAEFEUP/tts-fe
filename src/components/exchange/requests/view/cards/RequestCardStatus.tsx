@@ -1,44 +1,49 @@
-import { CheckIcon, Hourglass, X } from "lucide-react"
-import { StudentRequestCardStatus } from "../../../../../utils/requests"
+import { CheckIcon, Hourglass, X } from 'lucide-react'
+import { StudentRequestCardStatus } from '../../../../../utils/requests'
+import { Badge } from '../../../../ui/new/badge'
 
 type Props = {
-    status: StudentRequestCardStatus
+  status: StudentRequestCardStatus
 }
 
 const AcceptedRequestCardStatus = () => {
-    return (
-        <div className="flex items-center gap-2 bg-green-400 rounded-full px-2 py-1">
-            <CheckIcon className="h-5 w-5 text-white" />
-        </div>
-    );
+  return (
+    <Badge variant="success" size="sm">
+      <Badge.Icon>
+        <CheckIcon className="h-4 w-4" />
+      </Badge.Icon>
+    </Badge>
+  )
 }
 
 const PendingRequestCardStatus = () => {
-    return (
-        <div className="flex items-center gap-2 bg-yellow-100 text-yellow-600 rounded-full px-3 py-1">
-            <Hourglass className="h-4 w-4 text-yellow-600" />
-        </div>
-    );
+  return (
+    <Badge variant="warning" size="sm">
+      <Badge.Icon>
+        <Hourglass className="h-4 w-4" />
+      </Badge.Icon>
+    </Badge>
+  )
 }
 
 const CancelledRequestCardStatus = () => {
-    return (
-        <div className="flex items-center gap-2 bg-red-400 rounded-full px-3 py-1">
-            <X className="h-4 w-4 text-white" />
-        </div>
-    );
+  return (
+    <Badge variant="error" size="sm">
+      <Badge.Icon>
+        <X className="h-4 w-4" />
+      </Badge.Icon>
+    </Badge>
+  )
 }
 
-export const RequestCardStatus = ({
-    status
-}: Props) => {
-    if (status === StudentRequestCardStatus.ACCEPTED) {
-        return <AcceptedRequestCardStatus />
-    }
+export const RequestCardStatus = ({ status }: Props) => {
+  if (status === StudentRequestCardStatus.ACCEPTED) {
+    return <AcceptedRequestCardStatus />
+  }
 
-    if (status === StudentRequestCardStatus.PENDING) {
-        return <PendingRequestCardStatus />
-    }
+  if (status === StudentRequestCardStatus.PENDING) {
+    return <PendingRequestCardStatus />
+  }
 
-    return <CancelledRequestCardStatus />
+  return <CancelledRequestCardStatus />
 }
