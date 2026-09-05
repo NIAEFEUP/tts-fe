@@ -52,6 +52,8 @@ const OptionButton = ({ option }: Props) => {
   const { multipleOptions, selectedOption, setSelectedOption } = useContext(MultipleOptionsContext)
   const index = multipleOptions.findIndex((currentOption) => currentOption.id === option.id)
 
+  const isSelected = multipleOptions[selectedOption].id === option.id
+
   return (
     <Tooltip>
       <Tooltip.Trigger
@@ -63,7 +65,7 @@ const OptionButton = ({ option }: Props) => {
         <Button
           square
           size="md"
-          className={`relative p-1 shrink-0 hover:bg-black/10 ${multipleOptions[selectedOption].id === option.id ? 'bg-primary/75 dark:bg-primary/50' : 'bg-lightish dark:bg-darkish'}`}
+          className={`relative p-1 shrink-0 ${isSelected ? 'bg-primary/75 hover:bg-primary/90 dark:bg-primary/50 dark:hover:bg-primary/60' : 'bg-lightish hover:bg-black/10 dark:bg-darkish dark:hover:bg-black/20'}`}
         >
           <Blobatar
             name={option.name}
