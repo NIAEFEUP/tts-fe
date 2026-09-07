@@ -4,10 +4,4 @@ import BackStampNIAEFEUPImage from './ni-stamp-back.png'
 import ScheduleLightImage from './schedule-light.png'
 import ScheduleDarkImage from './schedule-dark.png'
 
-export {
-  LogoNIAEFEUPImage,
-  StampNIAEFEUPImage,
-  BackStampNIAEFEUPImage,
-  ScheduleLightImage,
-  ScheduleDarkImage,
-}
+export { LogoNIAEFEUPImage, StampNIAEFEUPImage, BackStampNIAEFEUPImage, ScheduleLightImage, ScheduleDarkImage }
