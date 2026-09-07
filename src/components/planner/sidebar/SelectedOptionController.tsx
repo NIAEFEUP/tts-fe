@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useContext } from 'react'
 import { CopyOption, PasteOption, RandomFill } from './selectedOptionController/index'
-import { Blobatar } from "@blobatar/react";
 import "blobatar/motion.css";
 import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { CourseOption } from '../../../@types'
