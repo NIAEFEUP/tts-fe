@@ -1,16 +1,18 @@
-import { Major, CourseInfo } from "../@types"
-import { dev_config, getSemester, config } from "../utils"
+import { Major, CourseInfo } from '../@types'
+import { dev_config, getSemester, config } from '../utils'
 import Cookies from 'js-cookie'
 
 const prod_val = import.meta.env.VITE_APP_PROD
 const BE_CONFIG = Number(prod_val) ? config : dev_config
-const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL || `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
+const BACKEND_URL =
+  import.meta.env.VITE_APP_BACKEND_URL ||
+  `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
 const OIDC_LOGIN_URL = `${BACKEND_URL}/oidc-auth/authenticate/`
 const OIDC_LOGOUT_URL = `${BACKEND_URL}/oidc-auth/logout/`
 const SEMESTER = import.meta.env.VITE_APP_SEMESTER || getSemester()
 
 // If we are in september 2024 we use 2024, if we are january 2025 we use 2024 because the first year of the academic year (2024/2025)
-const CURRENT_YEAR = ((new Date()).getMonth() + 1) < 8 ? (new Date()).getFullYear() - 1 : (new Date()).getFullYear()
+const CURRENT_YEAR = new Date().getMonth() + 1 < 8 ? new Date().getFullYear() - 1 : new Date().getFullYear()
 
 /**
  * Make a request to the backend server.
@@ -43,7 +45,7 @@ const getMajors = async () => {
  */
 const getCourses = async (major: Major) => {
   if (major === null) return []
-  return getCoursesByMajorId(major.id);
+  return getCoursesByMajorId(major.id)
 }
 
 const getCoursesByMajorId = async (id: number) => {
@@ -61,27 +63,29 @@ const getCourseClass = async (course: CourseInfo) => {
 }
 
 const createCourseClass = async (course: CourseInfo) => {
-  if (course.classes) return course;
+  if (course.classes) return course
 
-  course.classes = await getCourseClass(course);
+  course.classes = await getCourseClass(course)
   course.classes = course.classes?.map((c) => {
     return {
       ...c,
-      filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap(p => p.id))
+      filteredTeachers: c.slots.flatMap((s) => s.professors.flatMap((p) => p.id)),
     }
   })
-  return course;
+  return course
 }
 
 const getCoursesClasses = async (courses: CourseInfo[]): Promise<CourseInfo[]> => {
-  const newCourses = [...courses];
+  const newCourses = [...courses]
 
-  return Promise.all(newCourses.map(course => createCourseClass(course))).then(() => {
-    return newCourses;
-  }).catch((e) => {
-    console.error(e);
-    return []
-  })
+  return Promise.all(newCourses.map((course) => createCourseClass(course)))
+    .then(() => {
+      return newCourses
+    })
+    .catch((e) => {
+      console.error(e)
+      return []
+    })
 }
 
 /**
@@ -91,9 +95,9 @@ const getCoursesClasses = async (courses: CourseInfo[]): Promise<CourseInfo[]> =
  */
 const getCourseUnit = async (id: number) => {
   if (id === null) return []
-  const class_info = (await apiRequest(`course_unit/${id}/`));
-  class_info['classes'] = await getCourseClass(class_info);
-  return class_info;
+  const class_info = await apiRequest(`course_unit/${id}/`)
+  class_info['classes'] = await getCourseClass(class_info)
+  return class_info
 }
 
 /**
@@ -103,14 +107,13 @@ const getInfo = async () => {
   return await apiRequest('/info/')
 }
 
-
 /**
  * Retrieves hashes for a list of course unit IDs.
  * @param ids Array of course unit IDs
  * @returns Object mapping course unit IDs to their hashes
  */
 const getCourseUnitHashes = async (ids: number[]) => {
-  if (ids.length === 0) return {};
+  if (ids.length === 0) return {}
 
   try {
     const queryString = ids.join(',');
@@ -118,17 +121,17 @@ const getCourseUnitHashes = async (ids: number[]) => {
     if (!response.ok) throw new Error('Network response was not ok');
     return await response.json();
   } catch (error) {
-    console.error('Error fetching course unit hashes:', error);
-    throw error;
+    console.error('Error fetching course unit hashes:', error)
+    throw error
   }
-};
+}
 
 const getCSRFToken = () => {
-  return Cookies.get('csrftoken');
+  return Cookies.get('csrftoken')
 }
 
 const csrfTokenName = (): string => {
-  return "X-CSRFToken";
+  return 'X-CSRFToken'
 }
 
 const api = {
@@ -144,7 +147,7 @@ const api = {
   csrfTokenName,
   BACKEND_URL,
   OIDC_LOGIN_URL,
-  OIDC_LOGOUT_URL
+  OIDC_LOGOUT_URL,
 }
 
 export default api

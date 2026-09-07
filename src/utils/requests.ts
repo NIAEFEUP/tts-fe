@@ -1,5 +1,5 @@
 export enum StudentRequestCardStatus {
-    PENDING,
-    ACCEPTED,
-    CANCELED
+  PENDING,
+  ACCEPTED,
+  CANCELED,
 }

@@ -7,4 +7,13 @@ import AdminPage from './Admin'
 import PrivacyPolicyPage from './PrivacyPolicy'
 import ExchangeVerifyPage from './ExchangeVerifyPage'
 
-export { AboutPage, TimeTableSelectorPage, NotFoundPage, FaqsPage, ExchangePage, PrivacyPolicyPage, AdminPage, ExchangeVerifyPage }
+export {
+  AboutPage,
+  TimeTableSelectorPage,
+  NotFoundPage,
+  FaqsPage,
+  ExchangePage,
+  PrivacyPolicyPage,
+  AdminPage,
+  ExchangeVerifyPage,
+}

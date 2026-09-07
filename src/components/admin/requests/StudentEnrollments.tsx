@@ -1,34 +1,30 @@
-import { BarLoader } from "react-spinners";
-import useStudentEnrollments from "../../../hooks/admin/useStudentEnrollments";
-import { StudentEnrollmentCard } from "./cards/StudentEnrollmentCard";
-import RequestFiltersContext from "../../../contexts/admin/RequestFiltersContext";
-import { useContext, useEffect } from "react";
-import AdminPaginationContext from "../../../contexts/admin/AdminPaginationContext";
+import { BarLoader } from 'react-spinners'
+import useStudentEnrollments from '../../../hooks/admin/useStudentEnrollments'
+import { StudentEnrollmentCard } from './cards/StudentEnrollmentCard'
+import RequestFiltersContext from '../../../contexts/admin/RequestFiltersContext'
+import { useContext, useEffect } from 'react'
+import AdminPaginationContext from '../../../contexts/admin/AdminPaginationContext'
 
 export const StudentEnrollments = () => {
-    const filterContext = useContext(RequestFiltersContext);
+  const filterContext = useContext(RequestFiltersContext)
 
-    const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext);
-    const { enrollments, loading, totalPages } = useStudentEnrollments(filterContext, currPage, itemsPerPage);
+  const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext)
+  const { enrollments, loading, totalPages } = useStudentEnrollments(filterContext, currPage, itemsPerPage)
 
-    useEffect(() => {
-        setTotalPages(totalPages)
-    }, [enrollments]);
+  useEffect(() => {
+    setTotalPages(totalPages)
+  }, [enrollments])
 
-    return (
-        <>
-            {loading && <BarLoader className="w-full" />}
+  return (
+    <>
+      {loading && <BarLoader className="w-full" />}
 
-            {!loading && (!enrollments || enrollments.length === 0) && (
-                    <h2>Nenhuma inscrição encontrada de momento</h2>
-            )}
+      {!loading && (!enrollments || enrollments.length === 0) && <h2>Nenhuma inscrição encontrada de momento</h2>}
 
-            {!loading && enrollments?.map((enrollment) => (
-                <StudentEnrollmentCard 
-                    key={`student-enrollment-${enrollment.id}`}
-                    enrollment={enrollment} 
-                />
-            ))}
-        </>
-    )
+      {!loading &&
+        enrollments?.map((enrollment) => (
+          <StudentEnrollmentCard key={`student-enrollment-${enrollment.id}`} enrollment={enrollment} />
+        ))}
+    </>
+  )
 }

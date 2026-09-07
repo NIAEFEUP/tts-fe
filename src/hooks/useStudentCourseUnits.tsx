@@ -1,28 +1,27 @@
-import { useMemo } from "react";
-import api from "../api/backend";
-import useSWR from "swr";
+import { useMemo } from 'react'
+import api from '../api/backend'
+import useSWR from 'swr'
 
 export default () => {
   const getEligibileCourseUnits = async () => {
     try {
       const res = await fetch(`${api.BACKEND_URL}/student/course_units/eligible`, {
-        credentials: "include"
-      });
+        credentials: 'include',
+      })
 
       if (res.ok) {
-        return await res.json();
+        return await res.json()
       }
 
-      return [];
+      return []
     } catch (e) {
-      console.error(e);
-      return [];
+      console.error(e)
+      return []
     }
-
   }
 
-  const { data, error, mutate, isValidating } = useSWR("eligibleCourseUnits", getEligibileCourseUnits, {});
-  const enrolledCourseUnits = useMemo(() => data ? data : null, [data]);
+  const { data, error, mutate, isValidating } = useSWR('eligibleCourseUnits', getEligibileCourseUnits, {})
+  const enrolledCourseUnits = useMemo(() => (data ? data : null), [data])
 
   return {
     enrolledCourseUnits,
@@ -30,5 +29,5 @@ export default () => {
     loading: !data,
     isValidating,
     forceCourseUnitsRevalidation: mutate,
-  };
-};
+  }
+}

@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   deploy:
-    name: "Wait for Netlify Preview"
+    name: 'Wait for Netlify Preview'
     runs-on: ubuntu-latest
     steps:
       - name: Wait for the Netlify Preview
@@ -19,7 +19,7 @@ jobs:
         continue-on-error: true
         with:
           site_name: 'tts-fe-preview'
-          max_timeout: 300 
+          max_timeout: 300
           verbose: true
         env:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}

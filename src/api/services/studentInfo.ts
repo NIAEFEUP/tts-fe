@@ -1,13 +1,13 @@
-import api from "../backend"
+import api from '../backend'
 
 const getStudentPictureUrl = (username: string) => {
-    if (!import.meta.env.PROD) return ""
+  if (!import.meta.env.PROD) return ''
 
-    return `${api.BACKEND_URL}/student/${username}/photo`;
+  return `${api.BACKEND_URL}/student/${username}/photo`
 }
 
 const studentInfoService = {
-    getStudentPictureUrl
+  getStudentPictureUrl,
 }
 
-export default studentInfoService;
+export default studentInfoService

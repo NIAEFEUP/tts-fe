@@ -69,6 +69,7 @@ Then, to build the application run:
 ./build.sh dev
 
 ```
+
 Or directly with `Docker` (although `build.sh` also uses docker)
 
 ```bash
@@ -138,8 +139,8 @@ To stop the container:
 ```bash
 docker-compose down
 ```
-## Baremetal with `npm`
 
+## Baremetal with `npm`
 
 ```bash
 npm install

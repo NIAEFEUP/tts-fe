@@ -1,32 +1,36 @@
-import { useMemo } from "react";
-import api from "../../api/backend";
-import { RequestFiltersContextContent } from "../../contexts/admin/RequestFiltersContext";
-import { buildUrlWithFilterParams } from "../../utils/admin/filters";
-import useSWR from "swr";
+import { useMemo } from 'react'
+import api from '../../api/backend'
+import { RequestFiltersContextContent } from '../../contexts/admin/RequestFiltersContext'
+import { buildUrlWithFilterParams } from '../../utils/admin/filters'
+import useSWR from 'swr'
 
 /**
  * Gets the exchanges that involve multiple students.
-*/
+ */
 export default (filterContext: RequestFiltersContextContent, pageIndex: number, pageSize: number) => {
   const getExchanges = async (url: string) => {
     try {
-        const res = await fetch(url, {
-            credentials: "include"
-        });
+      const res = await fetch(url, {
+        credentials: 'include',
+      })
 
-        if(res.ok) {
-            return await res.json();
-        }
+      if (res.ok) {
+        return await res.json()
+      }
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const { data, error, mutate } = useSWR(
-    buildUrlWithFilterParams(`${api.BACKEND_URL}/exchange/direct/?page=${pageIndex}&page_size=${pageSize}`, filterContext), getExchanges
-  );
-  const exchanges = useMemo(() => data ? [].concat(...data["exchanges"]) : null, [data]);
-  const totalPages = useMemo(() => data ? data["total_pages"] : null, [data]);
+    buildUrlWithFilterParams(
+      `${api.BACKEND_URL}/exchange/direct/?page=${pageIndex}&page_size=${pageSize}`,
+      filterContext,
+    ),
+    getExchanges,
+  )
+  const exchanges = useMemo(() => (data ? [].concat(...data['exchanges']) : null), [data])
+  const totalPages = useMemo(() => (data ? data['total_pages'] : null), [data])
 
   return {
     exchanges,
@@ -34,7 +38,5 @@ export default (filterContext: RequestFiltersContextContent, pageIndex: number, 
     error,
     loading: !data,
     mutate,
-  };
-};
-
-
+  }
+}

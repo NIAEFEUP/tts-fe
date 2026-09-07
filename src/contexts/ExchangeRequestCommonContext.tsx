@@ -26,24 +26,23 @@ interface ExchangeRequestCommonContext {
 
 const ExchangeRequestCommonContext: Context<ExchangeRequestCommonContext> = createContext({
   request: null,
-  setRequest: () => { },
+  setRequest: () => {},
   hiddenRequests: new Set(),
-  setHiddenRequests: () => { },
+  setHiddenRequests: () => {},
   chosenRequest: null,
-  setChosenRequest: () => { },
+  setChosenRequest: () => {},
   exchangeSchedule: [],
   selectAll: true,
-  setSelectAll: () => { },
+  setSelectAll: () => {},
   selectedOptions: new Map(),
-  setSelectedOptions: () => { },
+  setSelectedOptions: () => {},
   open: false,
-  setOpen: () => { },
-  togglePreview: () => { },
-  hide: () => { },
-  handleSelectAll: () => { },
+  setOpen: () => {},
+  togglePreview: () => {},
+  hide: () => {},
+  handleSelectAll: () => {},
   requestStatus: undefined,
-  setRequestStatus: () => { }
-});
+  setRequestStatus: () => {},
+})
 
-export default ExchangeRequestCommonContext;
-
+export default ExchangeRequestCommonContext

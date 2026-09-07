@@ -6,13 +6,8 @@ import MajorContext from '../contexts/MajorContext'
 import { useSidebarContext } from '../components/layout/SidebarPosition'
 import { SidebarProvider } from '../components/layout/SidebarPosition'
 import PlannerSchedule from '../components/planner/schedule/PlannerSchedule'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../components/ui/tabs"
-import Alert, { AlertType }  from '../components/planner/Alert'
+import { Tabs } from '../components/ui/new/tabs'
+import Alert, { AlertType } from '../components/planner/Alert'
 import { AlertDescription } from '../components/ui/alert'
 import SessionContext from '../contexts/SessionContext'
 import StorageAPI from '../api/storage'
@@ -20,7 +15,7 @@ import { X } from "lucide-react"
 import { LoginButton } from '../components/auth/LoginButton'
 import { ShieldExclamationIcon } from '@heroicons/react/24/outline'
 const TimeTableSelectorPage = () => {
-  const { setMajors } = useContext(MajorContext);
+  const { setMajors } = useContext(MajorContext)
 
   // fetch majors when component is ready
   useEffect(() => {
@@ -34,8 +29,8 @@ const TimeTableSelectorPage = () => {
     <SidebarProvider>
       <Content />
     </SidebarProvider>
-  );
-};
+  )
+}
 
 const Content = () => {
   const { sidebarPosition } = useSidebarContext();
@@ -70,70 +65,66 @@ const Content = () => {
   )
 
   return (
-    <div className='h-full w-full'>
+    <div className="h-full w-full">
       <div className="flex w-full  px-4 py-4 lg:hidden justify-items-start">
-       <Tabs defaultValue="planner" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 ">
-          <TabsTrigger value="planner">Horário</TabsTrigger>
-          <TabsTrigger value="sidebar">Turmas</TabsTrigger>
-        </TabsList>
-        <TabsContent value="planner">
-          <div className="rounded-sm bg-lightest px-3 py-3 dark:bg-dark ">
-            <div className="h-full w-full ">
+        <Tabs className="w-full">
+          <Tabs.Items className="w-full">
+            <Tabs.Item className="flex-1">Horário</Tabs.Item>
+            <Tabs.Item className="flex-1">Turmas</Tabs.Item>
+          </Tabs.Items>
+          <Tabs.Panels>
+            <Tabs.Panel>
+              <div className="rounded-sm bg-lightest px-3 py-3 dark:bg-dark ">
+                <div className="h-full w-full ">
+                  <PlannerSchedule />
+                </div>
+              </div>
+            </Tabs.Panel>
+            <Tabs.Panel>
+              <Sidebar />
+            </Tabs.Panel>
+          </Tabs.Panels>
+        </Tabs>
+      </div>
+      <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+        {user?.eligible_exchange && showExchangeAlert && (
+          <div className="col-span-12 mb-2">
+            <Alert type={AlertType.info} className="relative p-4">
+              <AlertDescription className="pr-8">
+                Esta secção funciona apenas como Planner de horários. As inscrições e trocas reais são realizadas na
+                página de Inscrições e Trocas de Turmas.
+              </AlertDescription>
+              <button
+                onClick={handleCloseAlert}
+                className="absolute top-1.5 right-3 text-current opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/10 p-1 rounded-full transition-all"
+              >
+                <X size={18} />
+              </button>
+            </Alert>
+          </div>
+        )}
+        {sidebarPosition === 'left' ? (
+          <>
+            <div className="col-span-12 min-h-min lg:col-span-3 lg:min-h-adjusted">
+              <Sidebar />
+            </div>
+            <div className="col-span-12 min-h-min rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 lg:min-h-adjusted 2xl:px-5 2xl:py-5">
               <PlannerSchedule />
             </div>
-          </div>
-        </TabsContent>
-        <TabsContent value="sidebar"> 
-          <Sidebar />
-            
-            </TabsContent>
-        </Tabs>
-      {/* Tabs */}
-      {/* Schedule Preview */}
-      
+          </>
+        ) : (
+          <>
+            <div className="col-span-12 min-h-min rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 lg:min-h-adjusted 2xl:px-5 2xl:py-5">
+              <PlannerSchedule />
+            </div>
+            <div className="col-span-12 min-h-min lg:col-span-3 lg:min-h-adjusted">
+              <Sidebar />
+            </div>
+          </>
+        )}
+      </div>
     </div>
-    <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
-      {user?.eligible_exchange && showExchangeAlert && (
-        <div className="col-span-12 mb-2">
-          <Alert type={AlertType.info} className="relative p-4">
-            <AlertDescription className="pr-8"> 
-              Esta secção funciona apenas como Planner de horários. As inscrições e trocas reais são realizadas na página de Inscrições e Trocas de Turmas.
-            </AlertDescription>
-            <button
-              onClick={handleCloseAlert}
-              className="absolute top-1.5 right-3 text-current opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/10 p-1 rounded-full transition-all"
-            >
-              <X size={18} />
-            </button>
-          </Alert>
-        </div>
-      )}
-      {sidebarPosition === 'left' ? (
-        <>
-          <div className='col-span-12 lg:col-span-3 min-h'>
-            <Sidebar />
-          </div>
-          <div className='col-span-12 lg:col-span-9 min-h rounded-md bg-lightest px-3 py-3 dark:bg-dark 2xl:px-5 2xl:py-5'>
-            <PlannerSchedule />
-          </div>
-        </>
-      ) : (
-        <>
-          <div className='col-span-12 lg:col-span-9 min-h rounded-md bg-lightest px-3 py-3 dark:bg-dark 2xl:px-5 2xl:py-5'>
-            <PlannerSchedule />
-          </div>
-          <div className='col-span-12 lg:col-span-3 min-h'>
-            <Sidebar />
-          </div>
-        </>
-      )}
-    </div>
-
-    </div>
-    
   )
 }
 
-
-export default TimeTableSelectorPage;
+export default TimeTableSelectorPage

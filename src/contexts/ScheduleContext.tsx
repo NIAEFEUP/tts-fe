@@ -14,9 +14,8 @@ const ScheduleContext: Context<ScheduleContent> = createContext({
   originalExchangeSchedule: [],
   exchangeSchedule: [],
   loadingSchedule: false,
-  setExchangeSchedule: () => { },
-  enrolledCourseUnits: []
-});
+  setExchangeSchedule: () => {},
+  enrolledCourseUnits: [],
+})
 
-export default ScheduleContext;
-
+export default ScheduleContext

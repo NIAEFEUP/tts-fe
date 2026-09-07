@@ -59,26 +59,26 @@ Every PR **must** be linked to:
 
 ### Active Milestones & Their Branches
 
-| Milestone | GitHub Milestone | Branch to target |
-|-----------|-----------------|-----------------|
-| UI/UX mobile improvements | [#5](https://github.com/NIAEFEUP/tts-fe/milestone/5) | `refactor/ui` |
-| Feup Exchange | [#6](https://github.com/NIAEFEUP/tts-fe/milestone/6) | `enhancement/exchange` |
-| Collaborative Sessions | [#7](https://github.com/NIAEFEUP/tts-fe/milestone/7) | `feature/collaborative-sessions` |
-| Random Features | [#8](https://github.com/NIAEFEUP/tts-fe/milestone/8) | `develop` |
+| Milestone                 | GitHub Milestone                                     | Branch to target                 |
+| ------------------------- | ---------------------------------------------------- | -------------------------------- |
+| UI/UX mobile improvements | [#5](https://github.com/NIAEFEUP/tts-fe/milestone/5) | `refactor/ui`                    |
+| Feup Exchange             | [#6](https://github.com/NIAEFEUP/tts-fe/milestone/6) | `enhancement/exchange`           |
+| Collaborative Sessions    | [#7](https://github.com/NIAEFEUP/tts-fe/milestone/7) | `feature/collaborative-sessions` |
+| Random Features           | [#8](https://github.com/NIAEFEUP/tts-fe/milestone/8) | `develop`                        |
 
 > **Random Features** don't fit a dedicated milestone branch, so those PRs target `develop` directly.
 
 ### Issue Labels
 
-| Label | Meaning |
-|-------|---------|
-| `bug` | Something is broken |
-| `enhancement` | New feature or improvement |
-| `good first issue` | Great for newcomers |
-| `help wanted` | Extra attention needed |
-| `blocked` | Waiting on another task |
-| `low / medium / high priority` | Urgency |
-| `low / medium / high effort` | Implementation complexity |
+| Label                          | Meaning                    |
+| ------------------------------ | -------------------------- |
+| `bug`                          | Something is broken        |
+| `enhancement`                  | New feature or improvement |
+| `good first issue`             | Great for newcomers        |
+| `help wanted`                  | Extra attention needed     |
+| `blocked`                      | Waiting on another task    |
+| `low / medium / high priority` | Urgency                    |
+| `low / medium / high effort`   | Implementation complexity  |
 
 ---
 
@@ -90,19 +90,19 @@ Branch **from the milestone branch** (see table above). Use this naming conventi
 <type>/<short-description>
 ```
 
-
-| Type | When to use |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `refactor` | Code restructure without behaviour change |
-| `style` | CSS / visual-only changes |
+| Type          | When to use                                               |
+| ------------- | --------------------------------------------------------- |
+| `feat`        | New feature                                               |
+| `fix`         | Bug fix                                                   |
+| `refactor`    | Code restructure without behaviour change                 |
+| `style`       | CSS / visual-only changes                                 |
 | `enhancement` | Broad updates (combining features, refactors, and polish) |
-| `chore` | Tooling, deps, config |
-| `docs` | Documentation only |
-| `test` | Tests only |
+| `chore`       | Tooling, deps, config                                     |
+| `docs`        | Documentation only                                        |
+| `test`        | Tests only                                                |
 
 **Examples:**
+
 ```bash
 # Working on a fix for the Exchange milestone
 git checkout feature/exchange
@@ -124,6 +124,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Examples:**
+
 ```
 feat(exchange): add request modal component
 fix(admin): redirect unauthenticated users to OIDC login
@@ -143,7 +144,7 @@ chore(deps): bump vite to 5.4.0
 3. In the sidebar:
    - Link the issue under **Development** (GitHub will show "Closes #..." automatically if you use the keyword in the description)
    - Assign the correct **Milestone**
-   - Add at least one **Reviewer** 
+   - Add at least one **Reviewer**
 4. Keep PRs focused — one feature or fix per PR.
 5. If the PR is not ready for review, open it as a **Draft**.
 
@@ -163,6 +164,7 @@ CI will fail on lint errors — fix them before requesting review.
 ## Wiki & Docs
 
 If your change:
+
 - Adds a new page or route → update [File Structure](https://github.com/NIAEFEUP/tts-fe/wiki/File-Structure)
 - Changes a context or global state → update [State variables structure](https://github.com/NIAEFEUP/tts-fe/wiki/State-variables-structure)
 - Changes the authentication flow → update [Federated authentication](https://github.com/NIAEFEUP/tts-fe/wiki/Federated-authentication-in-development-environment)

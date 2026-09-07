@@ -1,42 +1,39 @@
-import { createContext, useContext, useState } from "react";
-import PropTypes from "prop-types";
+import { createContext, useContext, useState } from 'react'
 
 type SidebarContextType = {
-    sidebarPosition: 'left' | 'right';
-    toggleSidebarPosition: () => void;
-};
+  sidebarPosition: 'left' | 'right'
+  toggleSidebarPosition: () => void
+}
 
-const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
+const SidebarContext = createContext<SidebarContextType | undefined>(undefined)
 
-export const SidebarProvider = ({ children }: { children: JSX.Element }) => {
-    const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>(() => {
-    const storedPosition = window.localStorage.getItem("sidebar-position");
-    return storedPosition === "left" || storedPosition === "right" ? storedPosition : "right";
-    });
+interface SidebarProviderProps {
+  children: React.ReactNode
+}
 
-    const toggleSidebarPosition = () => {
-        setSidebarPosition((prev) => {
-            const newPosition = prev === "right" ? "left" : "right";
-            window.localStorage.setItem("sidebar-position", newPosition);
-            return newPosition;
-        });
-    };
+export const SidebarProvider = ({ children }: SidebarProviderProps) => {
+  const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>(() => {
+    const storedPosition = window.localStorage.getItem('sidebar-position')
+    return storedPosition === 'left' || storedPosition === 'right' ? storedPosition : 'right'
+  })
 
-    return (
-        <SidebarContext.Provider value={{ sidebarPosition, toggleSidebarPosition }}>
-            {children}
-        </SidebarContext.Provider>
-    );
-};
+  const toggleSidebarPosition = () => {
+    setSidebarPosition((prev) => {
+      const newPosition = prev === 'right' ? 'left' : 'right'
+      window.localStorage.setItem('sidebar-position', newPosition)
+      return newPosition
+    })
+  }
 
-SidebarProvider.propTypes = {
-    children: PropTypes.node.isRequired,
+  return (
+    <SidebarContext.Provider value={{ sidebarPosition, toggleSidebarPosition }}>{children}</SidebarContext.Provider>
+  )
 }
 
 export const useSidebarContext = () => {
-    const context = useContext(SidebarContext);
-    if (!context) {
-        throw new Error('useSidebarContext must be used within a SidebarProvider')
-    }
-    return context
+  const context = useContext(SidebarContext)
+  if (!context) {
+    throw new Error('useSidebarContext must be used within a SidebarProvider')
+  }
+  return context
 }
