@@ -13,7 +13,7 @@
   },
   "api": {
     "port": 8100,
-    "protocol" : "http",
+    "protocol": "http",
     "pathPrefix": "",
     "host": "localhost"
   }

@@ -1,16 +1,15 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
+import globals from 'globals'
+import pluginJs from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import pluginReact from 'eslint-plugin-react'
 
 export default [
   {
-    files: ["src/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    files: ['src/*.{js,mjs,cjs,ts,jsx,tsx}'],
   },
   {
-    languageOptions:
-    {
-      globals: { ...globals.browser, ...globals.node }
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
     },
   },
   {
@@ -21,7 +20,7 @@ export default [
     },
   },
   {
-    ignores: ["src/components/ui/*", "src/components/svgs/*", "build/"],
+    ignores: ['src/components/ui/*', 'src/components/svgs/*', 'build/'],
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
@@ -34,7 +33,7 @@ export default [
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-require-imports': 'off',
-      'no-console': ['error', { allow: ["error", "warn", "debug"] }]
-    }
+      'no-console': ['error', { allow: ['error', 'warn', 'debug'] }],
+    },
   },
-];
+]

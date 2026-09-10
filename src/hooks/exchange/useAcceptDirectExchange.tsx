@@ -1,22 +1,17 @@
-import useSWRMutation from "swr/mutation";
-import exchangeRequestService from "../../api/services/exchangeRequestService";
+import useSWRMutation from 'swr/mutation'
+import exchangeRequestService from '../../api/services/exchangeRequestService'
 
 export default (id: number) => {
   const submit = async () => {
-    if (!id) return;
-    return await exchangeRequestService.acceptDirectExchangeRequest(id);
+    if (!id) return
+    return await exchangeRequestService.acceptDirectExchangeRequest(id)
   }
 
-  const { error, trigger, isMutating } = useSWRMutation(
-    `${id}`,
-    submit
-  );
+  const { error, trigger, isMutating } = useSWRMutation(`${id}`, submit)
 
   return {
     error,
     trigger,
-    isMutating
-  };
-};
-
-
+    isMutating,
+  }
+}

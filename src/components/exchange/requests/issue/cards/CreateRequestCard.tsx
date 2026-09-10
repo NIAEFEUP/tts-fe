@@ -1,14 +1,14 @@
-import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline"
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from "../../../../../@types"
+import { ArrowRight, Trash, ChevronDown } from 'lucide-react'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
+import { ClassDescriptor, CourseInfo, SlotInfo, ClassInfo, CreateRequestData, Student } from '../../../../../@types'
 import { ScrollArea } from '../../../../ui/scroll-area'
-import ScheduleContext from "../../../../../contexts/ScheduleContext"
-import useRequestCardCourseMetadata from "../../../../../hooks/useRequestCardCourseMetadata"
-import { Button } from "../../../../ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../ui/card"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../ui/dropdown-menu"
-import { Popover, PopoverContent, PopoverTrigger } from "../../../../ui/popover"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../../../../ui/command"
+import ScheduleContext from '../../../../../contexts/ScheduleContext'
+import useRequestCardCourseMetadata from '../../../../../hooks/useRequestCardCourseMetadata'
+import { Button } from '../../../../ui/new/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../../../../ui/card'
+import { Menu } from '../../../../ui/new/menu'
+import { Popover } from '../../../../ui/new/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../../../../ui/command'
 
 type Props = {
   courseInfo: CourseInfo
@@ -21,74 +21,79 @@ export const CreateRequestCard = ({
   courseInfo,
   hasStudentToExchange,
   setSelectedCourseUnits,
-  requestsHook
+  requestsHook,
 }: Props) => {
-  const { data: requestMetadata } = useRequestCardCourseMetadata(courseInfo);
-  const [requests, setRequests] = requestsHook;
-  const [issuerOriginClass, setIssuerOriginClass] = useState<ClassInfo | null>(null);
-  const [issuerOriginClassName, setIssuerOriginClassName] = useState<string | null>(null);
-  const [selectedDestinationClass, setSelectedDestinationClass] = useState<ClassInfo | null>(null);
-  const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<Student | null>(null);
-  const [studentDropdownOpen, setStudentDropdownOpen] = useState<boolean>(false);
-  const { exchangeSchedule, originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext);
-  const [beforePreviewClass, setBeforePreviewClass] = useState<Array<ClassDescriptor> | null>(null);
+  const { data: requestMetadata } = useRequestCardCourseMetadata(courseInfo)
+  const [requests, setRequests] = requestsHook
+  const [issuerOriginClass, setIssuerOriginClass] = useState<ClassInfo | null>(null)
+  const [issuerOriginClassName, setIssuerOriginClassName] = useState<string | null>(null)
+  const [selectedDestinationClass, setSelectedDestinationClass] = useState<ClassInfo | null>(null)
+  const [selectedDestinationStudent, setSelectedDestinationStudent] = useState<Student | null>(null)
+  const [studentDropdownOpen, setStudentDropdownOpen] = useState<boolean>(false)
+  const { exchangeSchedule, originalExchangeSchedule, setExchangeSchedule } = useContext(ScheduleContext)
+  const [beforePreviewClass, setBeforePreviewClass] = useState<Array<ClassDescriptor> | null>(null)
 
   useEffect(() => {
-    if (!selectedDestinationStudent) return;
+    if (!selectedDestinationStudent) return
 
     if (selectedDestinationStudent?.classInfo) {
       togglePreview(selectedDestinationStudent.classInfo, selectedDestinationStudent.classInfo.slots)
       setSelectedDestinationClass(selectedDestinationStudent.classInfo)
       addRequest(selectedDestinationStudent.classInfo.name)
     } else {
-      if(!beforePreviewClass) return;
+      if (!beforePreviewClass) return
 
-      const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => beforePreviewClass.filter((item) => item.courseInfo.id === scheduleItem.courseInfo.id).length === 0);
-      setExchangeSchedule(newExchangeSchedule.concat(beforePreviewClass));
+      const newExchangeSchedule = exchangeSchedule.filter(
+        (scheduleItem) =>
+          beforePreviewClass.filter((item) => item.courseInfo.id === scheduleItem.courseInfo.id).length === 0,
+      )
+      setExchangeSchedule(newExchangeSchedule.concat(beforePreviewClass))
 
-      setSelectedDestinationClass(null);
-      setBeforePreviewClass(null);
+      setSelectedDestinationClass(null)
+      setBeforePreviewClass(null)
     }
   }, [selectedDestinationStudent, hasStudentToExchange])
 
   useEffect(() => {
-    if (!originalExchangeSchedule || !courseInfo) return;
-    const originClassName = findIssuerOriginClassName();
+    if (!originalExchangeSchedule || !courseInfo) return
+    const originClassName = findIssuerOriginClassName()
 
-    setIssuerOriginClassName(originClassName);
-    setIssuerOriginClass(findClassInfoByName(originClassName));
+    setIssuerOriginClassName(originClassName)
+    setIssuerOriginClass(findClassInfoByName(originClassName))
 
-    const request = requests.get(courseInfo.id);
+    const request = requests.get(courseInfo.id)
     if (request) {
-      const destinationClass = findClassInfoByName(request.classNameRequesterGoesTo);
-      setSelectedDestinationClass(destinationClass);
+      const destinationClass = findClassInfoByName(request.classNameRequesterGoesTo)
+      setSelectedDestinationClass(destinationClass)
     }
-  }, [originalExchangeSchedule, courseInfo, requestMetadata]);
+  }, [originalExchangeSchedule, courseInfo, requestMetadata])
 
   const findIssuerOriginClassName = (): string | null => {
     const scheduleItem = originalExchangeSchedule
-      .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== "T")
-      .find((item: ClassDescriptor) => item.courseInfo.id === courseInfo.id);
+      .filter((item) => item.classInfo?.slots?.[0]?.lesson_type !== 'T')
+      .find((item: ClassDescriptor) => item.courseInfo.id === courseInfo.id)
 
-    return scheduleItem?.classInfo.name || null;
-  };
+    return scheduleItem?.classInfo.name || null
+  }
 
   const findClassInfoByName = (className: string | null): ClassInfo | null => {
-    return requestMetadata?.classes?.find((classInfo: ClassInfo) => classInfo.name === className) || null;
-  };
+    return requestMetadata?.classes?.find((classInfo: ClassInfo) => classInfo.name === className) || null
+  }
 
   const excludeClass = () => {
     if (requests.get(courseInfo.id)) {
-      const newRequests = new Map(requests);
+      const newRequests = new Map(requests)
       newRequests.delete(courseInfo.id)
-      setRequests(newRequests);
+      setRequests(newRequests)
     }
-  
-    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id !== courseInfo.id);
-    newExchangeSchedule.push(...originalExchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id === courseInfo.id));
-    setExchangeSchedule(newExchangeSchedule);
 
-    setSelectedCourseUnits((prev) => prev.filter((currentCourseInfo) => currentCourseInfo.id !== courseInfo.id));
+    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id !== courseInfo.id)
+    newExchangeSchedule.push(
+      ...originalExchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id === courseInfo.id),
+    )
+    setExchangeSchedule(newExchangeSchedule)
+
+    setSelectedCourseUnits((prev) => prev.filter((currentCourseInfo) => currentCourseInfo.id !== courseInfo.id))
   }
 
   const addRequest = (destinationClassName: string) => {
@@ -97,16 +102,16 @@ export const CreateRequestCard = ({
       courseUnitName: courseInfo.name,
       classNameRequesterGoesFrom: issuerOriginClassName,
       classNameRequesterGoesTo: destinationClassName,
-      other_student: selectedDestinationStudent
+      other_student: selectedDestinationStudent,
     }
 
-    requests.set(courseInfo.id, currentRequest);
-    setRequests(new Map(requests));
+    requests.set(courseInfo.id, currentRequest)
+    setRequests(new Map(requests))
   }
 
   const togglePreview = (destinationClass: ClassInfo, slots: SlotInfo[]) => {
-    setBeforePreviewClass(exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id === courseInfo.id));
-    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id !== courseInfo.id);
+    setBeforePreviewClass(exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id === courseInfo.id))
+    const newExchangeSchedule = exchangeSchedule.filter((scheduleItem) => scheduleItem.courseInfo.id !== courseInfo.id)
 
     for (const slot of slots) {
       newExchangeSchedule.push({
@@ -115,123 +120,129 @@ export const CreateRequestCard = ({
           id: destinationClass.id,
           name: destinationClass.name,
           slots: [slot],
-          filteredTeachers: []
-        }
+          filteredTeachers: [],
+        },
       })
     }
 
-    setExchangeSchedule(newExchangeSchedule);
+    setExchangeSchedule(newExchangeSchedule)
   }
 
-  return <Card key={courseInfo.name} className="shadow-md">
-    <CardHeader className="flex flex-row justify-between items-center gap-4">
-      <CardTitle className="text-md">{courseInfo.name}</CardTitle>
-      <div className="flex flex-row items-center gap-x-2">
-        <Button variant="destructive" className="p-4 h-7" onClick={() => excludeClass()}>
-          <TrashIcon className="w-5 h-5" />
-        </Button>
-      </div>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-y-4">
-      {(!hasStudentToExchange || (selectedDestinationStudent && hasStudentToExchange)) &&
+  return (
+    <Card key={courseInfo.name} className="shadow-md">
+      <CardHeader className="flex flex-row justify-between items-center gap-4">
+        <CardTitle className="text-md">{courseInfo.name}</CardTitle>
         <div className="flex flex-row items-center gap-x-2">
-          <p>{issuerOriginClassName}</p>
-          <ArrowRightIcon className="w-5 h-5" />
-          <div className="p-2 rounded-md w-full">
-            {(hasStudentToExchange && selectedDestinationStudent && selectedDestinationStudent.classInfo)
-              ? <p>{selectedDestinationStudent.classInfo.name}</p>
-              :
-              <DropdownMenu>
-                <DropdownMenuTrigger className="w-full">
-                  <Button variant="outline" className="w-full">
-                    {selectedDestinationClass?.name ?? "Escolher turma..."}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
-                  <ScrollArea className="max-h-72 rounded-sm overflow-y-auto">
-                    {requestMetadata?.classes?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
-                      .map((currentClass) => (
-                        <DropdownMenuItem
-                          key={"dropdown-class-" + currentClass.name}
+          <Button variant="destructive" size="md" square className="p-2 h-8 w-8" onClick={() => excludeClass()}>
+            <Trash size="18" />
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-y-4">
+        {(!hasStudentToExchange || (selectedDestinationStudent && hasStudentToExchange)) && (
+          <div className="flex flex-row items-center gap-x-2">
+            <p>{issuerOriginClassName}</p>
+            <ArrowRight size="18" />
+            <div className="p-2 rounded-md w-full">
+              {hasStudentToExchange && selectedDestinationStudent && selectedDestinationStudent.classInfo ? (
+                <p>{selectedDestinationStudent.classInfo.name}</p>
+              ) : (
+                <Menu>
+                  <Menu.Trigger asChild className="w-full">
+                    <Button variant="outline" size="md" className="w-full justify-between">
+                      {selectedDestinationClass?.name ?? 'Escolher turma...'}
+                      <ArrowRight size="18" />
+                    </Button>
+                  </Menu.Trigger>
+                  <Menu.Items className="w-full w-(--radix-popper-anchor-width) p-1">
+                    <ScrollArea className="max-h-72 overflow-y-auto no-scrollbar">
+                      {requestMetadata?.classes
+                        ?.filter((currentClass) => currentClass.name !== issuerOriginClassName)
+                        .map((currentClass) => (
+                          <Menu.Item
+                            key={'dropdown-class-' + currentClass.name}
+                            className="w-full"
+                            onMouseEnter={() => togglePreview(currentClass, currentClass.slots)}
+                            onMouseLeave={() => {
+                              const persistentClass = selectedDestinationClass || issuerOriginClass
+                              togglePreview(persistentClass, persistentClass?.slots)
+                            }}
+                            onSelect={() => {
+                              setSelectedDestinationClass(currentClass)
+                              togglePreview(currentClass, currentClass.slots)
+                              addRequest(currentClass.name)
+                            }}
+                          >
+                            {currentClass.name}
+                          </Menu.Item>
+                        ))}
+                    </ScrollArea>
+                  </Menu.Items>
+                </Menu>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-y-4">
+          <div className={`${hasStudentToExchange ? '' : 'hidden'}`}>
+            <Popover open={studentDropdownOpen} onOpenChange={setStudentDropdownOpen}>
+              <Popover.Trigger asChild>
+                <Button
+                  variant="outline"
+                  size="md"
+                  role="combobox"
+                  aria-expanded={studentDropdownOpen}
+                  className="w-full justify-between"
+                >
+                  {selectedDestinationStudent ? (
+                    <span>{selectedDestinationStudent.name}</span>
+                  ) : (
+                    <span>Escolher estudante</span>
+                  )}
+                  <ChevronDown size="18" />
+                </Button>
+              </Popover.Trigger>
+              <Popover.Content className="w-full w-(--radix-popper-anchor-width) p-0">
+                <Command>
+                  <CommandInput placeholder="Pesquisar por estudante" className="w-full" />
+
+                  <ScrollArea className="max-h-72 overflow-y-auto rounded-sm">
+                    <CommandList>
+                      <CommandEmpty>Sem pessoas encontradas</CommandEmpty>
+                    </CommandList>
+                    <CommandGroup>
+                      {requestMetadata?.students?.map((student) => (
+                        <CommandItem
+                          key={'dropdown-student-' + student.name}
                           className="w-full"
-                          onMouseEnter={() => togglePreview(currentClass, currentClass.slots)}
-                          onMouseLeave={() => {
-                            const persistentClass = selectedDestinationClass || issuerOriginClass;
-                            togglePreview(persistentClass, persistentClass?.slots);
-                          }}
                           onSelect={() => {
-                            setSelectedDestinationClass(currentClass);
-                            togglePreview(currentClass, currentClass.slots);
-                            addRequest(currentClass.name);
-                          }
-                          }>
-                          <p className="w-full">{currentClass.name}</p>
-                        </DropdownMenuItem>
+                            if (requests.get(courseInfo.id)) {
+                              requests.get(courseInfo.id).other_student = {
+                                name: student.name,
+                                mecNumber: Number(student.mecNumber),
+                                classInfo: student.classInfo,
+                              }
+                              if (student.classInfo)
+                                requests.get(courseInfo.id).classNameRequesterGoesTo = student.classInfo.name
+                              setRequests(new Map(requests))
+                            }
+
+                            setSelectedDestinationStudent(student)
+                            setStudentDropdownOpen(false)
+                          }}
+                        >
+                          <p className="w-full">{student.name}</p>
+                        </CommandItem>
                       ))}
+                    </CommandGroup>
                   </ScrollArea>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            }
+                </Command>
+              </Popover.Content>
+            </Popover>
           </div>
         </div>
-      }
-
-      <div className="flex flex-col gap-y-4">
-        <div className={`${hasStudentToExchange ? "" : "hidden"}`}>
-          <Popover open={studentDropdownOpen} onOpenChange={setStudentDropdownOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={studentDropdownOpen}
-                className="w-full justify-between"
-              >
-                {selectedDestinationStudent
-                  ? <p>{selectedDestinationStudent.name}</p>
-                  : <p>Escolher estudante</p>
-                }
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-full w-(--radix-popper-anchor-width)">
-              <Command>
-                <CommandInput
-                  placeholder="Pesquisar por estudante"
-                  className="w-full"
-                />
-
-                <ScrollArea className="max-h-72 overflow-y-auto rounded-sm">
-                  <CommandList>
-                    <CommandEmpty>Sem pessoas encontradas</CommandEmpty>
-                  </CommandList>
-                  <CommandGroup>
-                    {requestMetadata?.students?.map((student) => (
-                      <CommandItem
-                        key={"dropdown-student-" + student.name}
-                        className="w-full"
-                        onSelect={() => {
-                          if (requests.get(courseInfo.id)) {
-                            requests.get(courseInfo.id).other_student = {
-                              name: student.name,
-                              mecNumber: Number(student.mecNumber),
-                              classInfo: student.classInfo
-                            }
-                            if (student.classInfo) requests.get(courseInfo.id).classNameRequesterGoesTo = student.classInfo.name;
-                            setRequests(new Map(requests));
-                          }
-
-                          setSelectedDestinationStudent(student);
-                          setStudentDropdownOpen(false);
-                        }}>
-                        <p className="w-full">{student.name}</p>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </ScrollArea>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-    </CardContent>
-  </Card >
+      </CardContent>
+    </Card>
+  )
 }

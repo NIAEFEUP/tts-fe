@@ -11,36 +11,35 @@ type Props = {
   setEnrollCourses: Dispatch<SetStateAction<CourseInfo[]>>
 }
 
-export const ExchangeCoursePicker = ({
-  enrollCourses,
-  setEnrollCourses
-}: Props) => {
-  const [checkboxedCourses, setCheckboxedCourses] = useState([]);
-  const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([]);
+export const ExchangeCoursePicker = ({ enrollCourses, setEnrollCourses }: Props) => {
+  const [checkboxedCourses, setCheckboxedCourses] = useState([])
+  const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([])
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [selectedMajor, setSelectedMajor] = useLocalStorage<Major>("enrollMajor", null);
+  const [selectedMajor, setSelectedMajor] = useLocalStorage<Major>('enrollMajor', null)
 
   useEffect(() => {
     BackendAPI.getCoursesClasses(checkboxedCourses).then((courseWithClasses) => {
-      setEnrollCourses(courseWithClasses);
+      setEnrollCourses(courseWithClasses)
     })
   }, [checkboxedCourses])
 
   return (
-    <CoursePickerContext.Provider value={{
-      coursesStorage: enrollCourses,
-      setCoursesStorage: setEnrollCourses,
-      checkboxedCourses: checkboxedCourses,
-      setCheckboxedCourses: setCheckboxedCourses,
-      choosingNewCourse: false,
-      setChoosingNewCourse: () => { },
-      ucsModalOpen: modalOpen,
-      setUcsModalOpen: setModalOpen,
-      coursesInfo: coursesInfo,
-      setCoursesInfo: setCoursesInfo,
-      selectedMajor: selectedMajor,
-      setSelectedMajor: setSelectedMajor,
-    }}>
+    <CoursePickerContext.Provider
+      value={{
+        coursesStorage: enrollCourses,
+        setCoursesStorage: setEnrollCourses,
+        checkboxedCourses: checkboxedCourses,
+        setCheckboxedCourses: setCheckboxedCourses,
+        choosingNewCourse: false,
+        setChoosingNewCourse: () => {},
+        ucsModalOpen: modalOpen,
+        setUcsModalOpen: setModalOpen,
+        coursesInfo: coursesInfo,
+        setCoursesInfo: setCoursesInfo,
+        selectedMajor: selectedMajor,
+        setSelectedMajor: setSelectedMajor,
+      }}
+    >
       <CoursePicker />
     </CoursePickerContext.Provider>
   )

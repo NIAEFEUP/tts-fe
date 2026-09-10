@@ -161,8 +161,8 @@ const PlannerFaqs = () => {
             key={`planner-faq-${faqIdx}`}
             className={`rounded-2xl bg-white p-3 dark:bg-dark faq-disclosure-${faqIdx}`}
             onClick={() => {
-              const disclosure = document.querySelector(`.faq-disclosure-${faqIdx}`);
-              const isOpen = disclosure?.getAttribute('data-headlessui-state') !== 'open';
+              const disclosure = document.querySelector(`.faq-disclosure-${faqIdx}`)
+              const isOpen = disclosure?.getAttribute('data-headlessui-state') !== 'open'
               if (isOpen && faq.question.type === 'span') {
                 AnalyticsTracker.trackFaq(faq.question.props.children)
               }
@@ -175,7 +175,7 @@ const PlannerFaqs = () => {
                   <ChevronDownIcon
                     className={classNames(
                       'h-5 w-5 min-w-5 transition group-hover:text-white lg:h-6 lg:w-6 lg:min-w-6',
-                      open ? 'rotate-180 transform' : ''
+                      open ? 'rotate-180 transform' : '',
                     )}
                   />
                 </Disclosure.Button>

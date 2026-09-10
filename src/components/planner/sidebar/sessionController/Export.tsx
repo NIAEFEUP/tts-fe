@@ -1,29 +1,33 @@
-import { Button } from '../../../ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
+import { Button } from '../../../ui/new/button'
+import { Menu } from '../../../ui/new/menu'
+import PngExport from './PngExport'
+import IcsExport from './IcsExport'
 import CsvExport from './CsvExport'
-import NitSigExport from './NitSigExport'
-import { ArrowDownTrayIcon } from '@heroicons/react/24/solid'
+import { Download } from 'lucide-react'
 
 /**
  * Sidebar with all the main schedule interactions
  */
 const Export = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="icon" className="bg-primary">
-          <ArrowDownTrayIcon className="h-5 w-5" />
+    <Menu>
+      <Menu.Trigger asChild>
+        <Button variant="primary" square className="bg-primary hover:bg-primary/90">
+          <Download className="h-5 w-5" />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>
+      </Menu.Trigger>
+      <Menu.Items className="p-1">
+        <Menu.Item asChild>
+          <PngExport />
+        </Menu.Item>
+        <Menu.Item asChild>
+          <IcsExport />
+        </Menu.Item>
+        <Menu.Item asChild>
           <CsvExport />
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <NitSigExport />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </Menu.Item>
+      </Menu.Items>
+    </Menu>
   )
 }
 

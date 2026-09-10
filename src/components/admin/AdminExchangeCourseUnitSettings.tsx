@@ -1,146 +1,148 @@
-"use client";
+'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
+import { Button } from '../ui/new/button'
 import { useEffect, useState } from 'react'
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react'
 import useAdminExchangeCourseUnitPeriods from '../../hooks/admin/useAdminExchangeCourseUnitPeriods'
-import exchangeRequestService from "../../api/services/exchangeRequestService";
-import { AdminExchangePeriodDeleteConfirmation } from "./AdminExchangePeriodDeleteConfirmation";
-import { ExchangePeriodForm } from "./AdminExchangePeriodForm";
-import { ExchangePeriodTable, ExchangePeriod } from "./AdminExchangePeriodTable";
+import exchangeRequestService from '../../api/services/exchangeRequestService'
+import { AdminExchangePeriodDeleteConfirmation } from './AdminExchangePeriodDeleteConfirmation'
+import { ExchangePeriodForm } from './AdminExchangePeriodForm'
+import { ExchangePeriodTable, ExchangePeriod } from './AdminExchangePeriodTable'
+import { cn } from '../../lib/utils'
 
 export const AdminExchangeCourseUnitSettings = () => {
-  const { courseUnitPeriods, mutate } = useAdminExchangeCourseUnitPeriods();
-  const [selectedGroup, setSelectedGroup] = useState<number>(0);
-  const [selectedCourseUnit, setSelectedCourseUnit] = useState<number | null>(null);
+  const { courseUnitPeriods, mutate } = useAdminExchangeCourseUnitPeriods()
+  const [selectedGroup, setSelectedGroup] = useState<number>(0)
+  const [selectedCourseUnit, setSelectedCourseUnit] = useState<number | null>(null)
 
-  const [addingPeriod, setAddingPeriod] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [addingPeriod, setAddingPeriod] = useState<boolean>(false)
+  const [startDate, setStartDate] = useState<Date>()
+  const [endDate, setEndDate] = useState<Date>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const [editingPeriodId, setEditingPeriodId] = useState<number | null>(null);
-  const [editingStartDate, setEditingStartDate] = useState<Date | undefined>(undefined);
-  const [editingEndDate, setEditingEndDate] = useState<Date | undefined>(undefined);
+  const [editingPeriodId, setEditingPeriodId] = useState<number | null>(null)
+  const [editingStartDate, setEditingStartDate] = useState<Date | undefined>(undefined)
+  const [editingEndDate, setEditingEndDate] = useState<Date | undefined>(undefined)
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const [periodToDelete, setPeriodToDelete] = useState<number | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false)
+  const [periodToDelete, setPeriodToDelete] = useState<number | null>(null)
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const courseUnits = courseUnitPeriods?.courseUnits || [];
+  const courseUnits = courseUnitPeriods?.courseUnits || []
 
   useEffect(() => {
     if (courseUnits.length > 0 && !selectedCourseUnit) {
-      setSelectedCourseUnit(courseUnits[0].id);
+      setSelectedCourseUnit(courseUnits[0].id)
     }
-  }, [courseUnits]);
+  }, [courseUnits])
 
   useEffect(() => {
     if (!addingPeriod && editingPeriodId === null) {
-      setErrorMessage(null);
+      setErrorMessage(null)
     }
-  }, [addingPeriod, editingPeriodId]);
+  }, [addingPeriod, editingPeriodId])
 
   const handleAddPeriod = async (e) => {
-    e.preventDefault();
-    if (!startDate || !endDate || !selectedCourseUnit) return;
+    e.preventDefault()
+    if (!startDate || !endDate || !selectedCourseUnit) return
     try {
-      setIsLoading(true);
-      setErrorMessage(null);
-      const response = await exchangeRequestService.addCourseUnitExchangePeriod(
-        startDate, endDate, selectedCourseUnit
-      );
+      setIsLoading(true)
+      setErrorMessage(null)
+      const response = await exchangeRequestService.addCourseUnitExchangePeriod(startDate, endDate, selectedCourseUnit)
       if (!response.ok) {
-        const data = await response.json();
-        setErrorMessage(data.error || "Erro ao adicionar período.");
-        return;
+        const data = await response.json()
+        setErrorMessage(data.error || 'Erro ao adicionar período.')
+        return
       }
-      setAddingPeriod(false);
-      setStartDate(undefined);
-      setEndDate(undefined);
-      mutate();
+      setAddingPeriod(false)
+      setStartDate(undefined)
+      setEndDate(undefined)
+      mutate()
     } catch (error) {
-      console.error("Failed to add exchange period:", error);
-      setErrorMessage("Erro de rede ao adicionar o período.");
+      console.error('Failed to add exchange period:', error)
+      setErrorMessage('Erro de rede ao adicionar o período.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleEditPeriod = async (e) => {
-    e.preventDefault();
-    if (!editingStartDate || !editingEndDate || !selectedCourseUnit || editingPeriodId === null) return;
+    e.preventDefault()
+    if (!editingStartDate || !editingEndDate || !selectedCourseUnit || editingPeriodId === null) return
     try {
-      setIsLoading(true);
-      setErrorMessage(null);
+      setIsLoading(true)
+      setErrorMessage(null)
       const response = await exchangeRequestService.editCourseUnitExchangePeriod(
-        editingStartDate, editingEndDate, selectedCourseUnit, editingPeriodId
-      );
+        editingStartDate,
+        editingEndDate,
+        selectedCourseUnit,
+        editingPeriodId,
+      )
       if (!response.ok) {
-        const data = await response.json();
-        setErrorMessage(data.error || "Erro ao atualizar período.");
-        return;
+        const data = await response.json()
+        setErrorMessage(data.error || 'Erro ao atualizar período.')
+        return
       }
-      setEditingPeriodId(null);
-      setEditingStartDate(undefined);
-      setEditingEndDate(undefined);
-      mutate();
+      setEditingPeriodId(null)
+      setEditingStartDate(undefined)
+      setEditingEndDate(undefined)
+      mutate()
     } catch (error) {
-      console.error("Failed to update exchange period:", error);
-      setErrorMessage("Erro de rede ao atualizar o período.");
+      console.error('Failed to update exchange period:', error)
+      setErrorMessage('Erro de rede ao atualizar o período.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleDeletePeriod = async (periodId: number) => {
-    if (!selectedCourseUnit) return;
+    if (!selectedCourseUnit) return
     try {
-      setIsLoading(true);
-      await exchangeRequestService.deleteCourseUnitExchangePeriod(selectedCourseUnit, periodId);
-      mutate();
+      setIsLoading(true)
+      await exchangeRequestService.deleteCourseUnitExchangePeriod(selectedCourseUnit, periodId)
+      mutate()
     } catch (error) {
-      console.error("Failed to delete exchange period:", error);
+      console.error('Failed to delete exchange period:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const confirmDelete = async () => {
     if (periodToDelete !== null) {
-      await handleDeletePeriod(periodToDelete);
-      setPeriodToDelete(null);
+      await handleDeletePeriod(periodToDelete)
+      setPeriodToDelete(null)
     }
-    setDeleteDialogOpen(false);
-  };
+    setDeleteDialogOpen(false)
+  }
 
   const getCurrentPeriods = (): ExchangePeriod[] => {
-    if (!courseUnits || !selectedCourseUnit) return [];
-    const unit = courseUnits.find(u => u.id === selectedCourseUnit);
-    return unit?.exchangePeriods || [];
-  };
+    if (!courseUnits || !selectedCourseUnit) return []
+    const unit = courseUnits.find((u) => u.id === selectedCourseUnit)
+    return unit?.exchangePeriods || []
+  }
 
   const onEditChange = (periodId: number, newStartDate: Date, newEndDate: Date) => {
     if (editingPeriodId === null) {
-      setEditingPeriodId(periodId);
+      setEditingPeriodId(periodId)
     }
-    setEditingStartDate(newStartDate);
-    setEditingEndDate(newEndDate);
-  };
+    setEditingStartDate(newStartDate)
+    setEditingEndDate(newEndDate)
+  }
 
   const onCancelEdit = () => {
-    setEditingPeriodId(null);
-    setEditingStartDate(undefined);
-    setEditingEndDate(undefined);
-    setErrorMessage(null);
-  };
+    setEditingPeriodId(null)
+    setEditingStartDate(undefined)
+    setEditingEndDate(undefined)
+    setErrorMessage(null)
+  }
 
   const onDelete = (periodId: number) => {
-    setPeriodToDelete(periodId);
-    setDeleteDialogOpen(true);
-  };
+    setPeriodToDelete(periodId)
+    setDeleteDialogOpen(true)
+  }
 
   return (
     <div className="flex flex-col gap-y-8 p-4">
@@ -152,13 +154,18 @@ export const AdminExchangeCourseUnitSettings = () => {
           <CardHeader>
             <div className="flex flex-row justify-between items-center">
               <CardTitle className="text-xl">Períodos de troca ativos</CardTitle>
-              <Button onClick={() => { 
-                setAddingPeriod(prev => {
-                  if (prev) setErrorMessage(null);
-                  return !prev;
-                });
-                setEditingPeriodId(null);
-              }} size="icon">
+              <Button
+                onClick={() => {
+                  setAddingPeriod((prev) => {
+                    if (prev) setErrorMessage(null)
+                    return !prev
+                  })
+                  setEditingPeriodId(null)
+                }}
+                size="md"
+                square
+                className="hover:bg-accent/90"
+              >
                 <PlusIcon className="h-5 w-5" />
               </Button>
             </div>
@@ -200,11 +207,11 @@ export const AdminExchangeCourseUnitSettings = () => {
             {courseUnits.map((courseUnit, idx) => (
               <Button
                 key={courseUnit.id}
-                variant={selectedGroup === idx ? "default" : "ghost"}
-                className="justify-start"
+                variant={selectedGroup === idx ? 'primary' : 'ghost'}
+                className={cn('justify-start', selectedGroup === idx)}
                 onClick={() => {
-                  setSelectedGroup(idx);
-                  setSelectedCourseUnit(courseUnit.id);
+                  setSelectedGroup(idx)
+                  setSelectedCourseUnit(courseUnit.id)
                 }}
               >
                 {courseUnit.name}
@@ -219,5 +226,5 @@ export const AdminExchangeCourseUnitSettings = () => {
         onConfirm={confirmDelete}
       />
     </div>
-  );
-};
+  )
+}

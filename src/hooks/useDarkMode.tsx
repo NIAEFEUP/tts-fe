@@ -4,12 +4,11 @@ import useLocalStorage from './useLocalStorage'
 const useDarkMode = () => {
   const [enabled, setEnabled] = useLocalStorage('dark-theme', false)
 
+  // DARK MODE DISABLED: Always remove dark theme to force light mode.
+  // To re-enable dark mode, replace the line below with:
+  //   if (enabled) { window.document.body.setAttribute('data-theme', 'dark') } else { window.document.body.removeAttribute('data-theme') }
   useEffect(() => {
-    const className = 'dark'
-    const bodyClass = window.document.body.classList
-
-    // eslint-disable-next-line 
-    enabled ? bodyClass.add(className) : bodyClass.remove(className)
+    window.document.body.removeAttribute('data-theme')
   }, [enabled])
 
   return [enabled, setEnabled]

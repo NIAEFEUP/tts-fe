@@ -11,10 +11,9 @@ type Props = {
 }
 
 const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: Props) => {
-
   const updateSlotBoxConflict = (courseId: number, conflictData: number) => {
-    setSlotBoxConflict(courseId, conflictData);
-  };
+    setSlotBoxConflict(courseId, conflictData)
+  }
 
   return (
     <>
@@ -41,4 +40,4 @@ const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: P
   )
 }
 
-export default SlotBox;
+export default SlotBox

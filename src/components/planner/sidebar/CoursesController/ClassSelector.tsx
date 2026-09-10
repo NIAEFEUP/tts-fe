@@ -1,53 +1,37 @@
 import { useRef, useState, useContext, useEffect } from 'react'
-import { ChevronUpDownIcon, LockClosedIcon, LockOpenIcon } from '@heroicons//react/24/solid'
+import { Lock, LockOpen, ChevronsUpDown } from 'lucide-react'
 import { CourseInfo } from '../../../../@types'
 import { getClassDisplayText } from '../../../../utils'
-import { Button } from '../../../ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../../ui/dropdown-menu'
+import { Button } from '../../../ui/new/button'
+import { Popover } from '../../../ui/new/popover'
 import ClassSelectorDropdownController from './ClassSelectorDropdownController'
 import ClassSelectorContext from '../../../../contexts/classSelector/ClassSelectorContext'
 import useCourseUnitClasses from '../../../../hooks/useCourseUnitClasses'
 import CourseContext from '../../../../contexts/CourseContext'
 
 type Props = {
-  course: CourseInfo,
-  lockFunctionality?: boolean,
+  course: CourseInfo
+  lockFunctionality?: boolean
 }
 
-const ClassSelector = ({
-  course,
-  lockFunctionality = true,
-}: Props) => {
+const ClassSelector = ({ course, lockFunctionality = true }: Props) => {
   const classSelectorTriggerRef = useRef(null)
   const classSelectorContentRef = useRef(null)
 
-  const { pickedCourses, setPickedCourses } = useContext(CourseContext);
+  const { pickedCourses, setPickedCourses } = useContext(CourseContext)
 
-  const { classes, loading: classesLoading } = useCourseUnitClasses(course.id, pickedCourses);
+  const { classes, loading: classesLoading } = useCourseUnitClasses(course.id, pickedCourses)
 
   useEffect(() => {
     if (classes) {
-      setPickedCourses(prevCourses =>
-        prevCourses.map((c) =>
-          c.id === course.id
-            ? { ...c, classes: classes }
-            : c
-        )
-      );
+      setPickedCourses((prevCourses) => prevCourses.map((c) => (c.id === course.id ? { ...c, classes: classes } : c)))
     }
   }, [classes, setPickedCourses])
 
-  const {
-    selectedClassId,
-    setSelectedClassId,
-    display,
-    setPreview,
-    removePreview,
-    toggleLocker,
-    courseOption
-  } = useContext(ClassSelectorContext);
+  const { selectedClassId, setSelectedClassId, display, setPreview, removePreview, toggleLocker, courseOption } =
+    useContext(ClassSelectorContext)
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   return (
     <div className="text-sm" key={`course-option-${course.acronym}`}>
@@ -57,25 +41,37 @@ const ClassSelector = ({
         <span>&nbsp;&middot;&nbsp;</span>
         <span className="truncate tracking-tighter">{course.name}&nbsp;</span>
       </p>
-      <div className="flex items-center">
-        {/* Dropdown Menu */}
-        <DropdownMenu open={isDropdownOpen} onOpenChange={(open: boolean) => {
-          setIsDropdownOpen(open);
-          if (!open) removePreview();
-        }}>
+      <div className="flex items-center gap-2">
+        <Popover
+          open={isDropdownOpen}
+          onOpenChange={(open: boolean) => {
+            setIsDropdownOpen(open)
+            if (!open) {
+              window.setTimeout(() => {
+                removePreview()
+              }, 0)
+            }
+          }}
+        >
           <div className="w-full">
-            <DropdownMenuTrigger asChild disabled={courseOption?.locked} ref={classSelectorTriggerRef}>
+            <Popover.Trigger asChild>
               <Button
+                ref={classSelectorTriggerRef}
+                disabled={courseOption?.locked}
                 variant="outline"
-                size="sm"
-                className="w-full justify-between truncate bg-lightish text-xs font-normal tracking-tighter hover:bg-primary/75 hover:text-white dark:bg-darkish"
+                className="w-full justify-between"
               >
-                <span className={`${selectedClassId === null ? "opacity-50" : ""}`}>{getClassDisplayText(course, selectedClassId)}</span>
-                {!courseOption?.locked && <ChevronUpDownIcon className="text-blackish h-6 w-6 dark:text-lightish" />}
+                <span className={`min-w-0 truncate ${selectedClassId === null ? 'opacity-50' : ''}`}>
+                  {getClassDisplayText(course, selectedClassId)}
+                </span>
+                {!courseOption?.locked && (
+                  <ChevronsUpDown size="14" className="shrink-0 text-blackish dark:text-lightish" />
+                )}
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="bg-lightish text-darkish dark:bg-darkish dark:text-lightish"
+            </Popover.Trigger>
+            <Popover.Content
+              className="z-60 p-0 overflow-hidden"
+              style={{ width: 'var(--width)' }}
               ref={classSelectorContentRef}
             >
               <ClassSelectorDropdownController
@@ -87,26 +83,28 @@ const ClassSelector = ({
                 contentRef={classSelectorContentRef}
                 triggerRef={classSelectorTriggerRef}
                 classesLoading={classesLoading}
+                closeDropdown={() => setIsDropdownOpen(false)}
               />
-            </DropdownMenuContent>
+            </Popover.Content>
           </div>
-        </DropdownMenu>
+        </Popover>
 
         {/* Lock Button */}
-        {lockFunctionality &&
+        {lockFunctionality && (
           <Button
-            variant="icon"
+            square
+            variant="ghost"
             title={courseOption?.locked ? 'Desbloquear Horário' : 'Bloquear Horário'}
             onClick={toggleLocker}
             disabled={display === null}
           >
             {courseOption?.locked ? (
-              <LockClosedIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+              <LockOpen size={16} className="text-darkish dark:text-lightish" />
             ) : (
-              <LockOpenIcon className="h-6 w-6 text-darkish dark:text-lightish" />
+              <Lock size={16} className="text-darkish dark:text-lightish" />
             )}
           </Button>
-        }
+        )}
       </div>
     </div>
   )

@@ -1,86 +1,72 @@
-import { useState, useMemo, useEffect } from "react";
-import useAdminClasses from "../../hooks/admin/useAdminClasses";
-import { BarLoader } from "react-spinners";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import {
-  Table,
-  TableHeader,
-  TableHead,
-  TableRow,
-  TableBody,
-  TableCell,
-} from "../ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { useState, useMemo, useEffect } from 'react'
+import useAdminClasses from '../../hooks/admin/useAdminClasses'
+import { BarLoader } from 'react-spinners'
+import { Tabs } from '../ui/new/tabs'
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from '../ui/table'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 export const AdminExchangeClasses = () => {
-  const { classes, loading } = useAdminClasses();
-  const [selectedCourseId, setSelectedCourseId] = useState<string>("all");
-  const [selectedCourseUnitId, setSelectedCourseUnitId] =
-    useState<string>("all");
+  const { classes, loading } = useAdminClasses()
+  const [selectedCourseId, setSelectedCourseId] = useState<string>('all')
+  const [selectedCourseUnitId, setSelectedCourseUnitId] = useState<string>('all')
 
   const courses = useMemo(() => {
-    if (!classes) return [];
+    if (!classes) return []
 
-    const uniqueCourses = new Map();
+    const uniqueCourses = new Map()
 
-    uniqueCourses.set("all", { id: "all", acronym: "Todos" });
+    uniqueCourses.set('all', { id: 'all', acronym: 'Todos' })
 
     classes.forEach((cls: any) => {
-      const courseId = cls.course_id;
-      const courseAcronym = cls.course_acronym;
+      const courseId = cls.course_id
+      const courseAcronym = cls.course_acronym
 
       if (courseId && !uniqueCourses.has(courseId.toString())) {
         uniqueCourses.set(courseId.toString(), {
           id: courseId.toString(),
           acronym: courseAcronym,
-        });
+        })
       }
-    });
+    })
 
-    return Array.from(uniqueCourses.values());
-  }, [classes]);
+    return Array.from(uniqueCourses.values())
+  }, [classes])
 
   const courseUnits = useMemo(() => {
-    if (!classes) return [];
+    if (!classes) return []
 
-    const uniqueCourseUnits = new Map();
+    const uniqueCourseUnits = new Map()
 
-    uniqueCourseUnits.set("all", {
-      id: "all",
-      acronym: "Todas",
-      courseAcronym: "",
-      displayText: "Todas",
-    });
+    uniqueCourseUnits.set('all', {
+      id: 'all',
+      acronym: 'Todas',
+      courseAcronym: '',
+      displayText: 'Todas',
+    })
 
     const validClasses = classes.filter((c: any) => {
-      const v = c.vacancies;
-      return v !== null && v !== undefined;
-    });
+      const v = c.vacancies
+      return v !== null && v !== undefined
+    })
 
     const relevantClasses =
-      selectedCourseId === "all"
+      selectedCourseId === 'all'
         ? validClasses
         : validClasses.filter((cls: any) => {
-            const courseId = cls.course_id;
-            return courseId && courseId.toString() === selectedCourseId;
-          });
+            const courseId = cls.course_id
+            return courseId && courseId.toString() === selectedCourseId
+          })
 
     relevantClasses.forEach((cls: any) => {
-      const courseUnitId = cls.course_unit_id;
-      const courseUnitAcronym = cls.course_unit_acronym;
-      const courseAcronym = cls.course_acronym;
+      const courseUnitId = cls.course_unit_id
+      const courseUnitAcronym = cls.course_unit_acronym
+      const courseAcronym = cls.course_acronym
 
-      const v = cls.vacancies;
-      const hasVacancies = v !== null && v !== undefined;
+      const v = cls.vacancies
+      const hasVacancies = v !== null && v !== undefined
 
       if (courseUnitId && hasVacancies) {
-        const key = courseUnitId.toString();
+        const key = courseUnitId.toString()
         if (!uniqueCourseUnits.has(key)) {
           uniqueCourseUnits.set(key, {
             id: key,
@@ -90,50 +76,47 @@ export const AdminExchangeClasses = () => {
               courseUnitAcronym && courseAcronym
                 ? `${courseUnitAcronym} (${courseAcronym})`
                 : courseUnitAcronym || `CU${courseUnitId}`,
-          });
+          })
         }
       }
-    });
+    })
 
-    const unsortedCourseUnits = Array.from(uniqueCourseUnits.values());
+    const unsortedCourseUnits = Array.from(uniqueCourseUnits.values())
 
-    const allOption = unsortedCourseUnits.find((unit) => unit.id === "all");
+    const allOption = unsortedCourseUnits.find((unit) => unit.id === 'all')
     const sortedRest = unsortedCourseUnits
-      .filter((unit) => unit.id !== "all")
+      .filter((unit) => unit.id !== 'all')
       .sort((a, b) => {
-        const acronymA = a.acronym || "";
-        const acronymB = b.acronym || "";
-        return acronymA.localeCompare(acronymB, "pt");
-      });
+        const acronymA = a.acronym || ''
+        const acronymB = b.acronym || ''
+        return acronymA.localeCompare(acronymB, 'pt')
+      })
 
-    return allOption ? [allOption, ...sortedRest] : sortedRest;
-  }, [classes, selectedCourseId]);
+    return allOption ? [allOption, ...sortedRest] : sortedRest
+  }, [classes, selectedCourseId])
 
   useEffect(() => {
-    setSelectedCourseUnitId("all");
-  }, [selectedCourseId]);
+    setSelectedCourseUnitId('all')
+  }, [selectedCourseId])
 
   const filteredClasses = useMemo(() => {
-    if (!classes) return [];
+    if (!classes) return []
 
     // Filter displayed classes to only those with valid vacancies as well
     return classes.filter((cls: any) => {
-      const courseId = cls.course_id;
-      const courseUnitId = cls.course_unit_id;
-      const v = cls.vacancies;
-      const hasVacancies = v !== null && v !== undefined;
+      const courseId = cls.course_id
+      const courseUnitId = cls.course_unit_id
+      const v = cls.vacancies
+      const hasVacancies = v !== null && v !== undefined
 
-      const courseMatches =
-        selectedCourseId === "all" ||
-        (courseId && courseId.toString() === selectedCourseId);
+      const courseMatches = selectedCourseId === 'all' || (courseId && courseId.toString() === selectedCourseId)
 
       const courseUnitMatches =
-        selectedCourseUnitId === "all" ||
-        (courseUnitId && courseUnitId.toString() === selectedCourseUnitId);
+        selectedCourseUnitId === 'all' || (courseUnitId && courseUnitId.toString() === selectedCourseUnitId)
 
-      return courseMatches && courseUnitMatches && hasVacancies;
-    });
-  }, [classes, selectedCourseId, selectedCourseUnitId]);
+      return courseMatches && courseUnitMatches && hasVacancies
+    })
+  }, [classes, selectedCourseId, selectedCourseUnitId])
 
   return (
     <div className="flex flex-col gap-y-4 p-4">
@@ -142,40 +125,30 @@ export const AdminExchangeClasses = () => {
       </div>
       {loading && <BarLoader className="w-full" />}
       {!loading && classes && classes.length === 0 && (
-        <div className="text-center text-gray-500">
-          Nenhuma turma disponível.
-        </div>
+        <div className="text-center text-gray-500">Nenhuma turma disponível.</div>
       )}
       {!loading && classes && classes.length > 0 && (
         <>
           <div className="space-y-4 mb-6">
             <Tabs
-              value={selectedCourseId}
-              onValueChange={setSelectedCourseId}
-              className="w-full"
+              selectedIndex={courses.findIndex((c) => c.id === selectedCourseId)}
+              onChange={(index) => {
+                const course = courses[index]
+                if (course) setSelectedCourseId(course.id)
+              }}
             >
-              <TabsList className="w-full flex h-auto p-1">
+              <Tabs.Items className="w-full">
                 {courses.map((course) => (
-                  <TabsTrigger
-                    key={course.id}
-                    value={course.id}
-                    className="grow data-[state=active]:bg-primary data-[state=active]:text-white"
-                    title={course.acronym}
-                  >
+                  <Tabs.Item key={course.id} className="flex-1" title={course.acronym}>
                     {course.acronym}
-                  </TabsTrigger>
+                  </Tabs.Item>
                 ))}
-              </TabsList>
+              </Tabs.Items>
             </Tabs>
 
             <div className="w-full">
-              <div className="text-sm font-medium mb-1.5">
-                Filtrar por cadeira:
-              </div>
-              <Select
-                value={selectedCourseUnitId}
-                onValueChange={setSelectedCourseUnitId}
-              >
+              <div className="text-sm font-medium mb-1.5">Filtrar por cadeira:</div>
+              <Select value={selectedCourseUnitId} onValueChange={setSelectedCourseUnitId}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Selecione a cadeira" />
                 </SelectTrigger>
@@ -205,17 +178,14 @@ export const AdminExchangeClasses = () => {
                   filteredClasses.map((cls: any) => (
                     <TableRow key={cls.classId} className="hover:bg-muted/50">
                       <TableCell className="font-medium">{cls.name}</TableCell>
-                      <TableCell>{cls.course_acronym ?? "NA"}</TableCell>
-                      <TableCell>{cls.course_unit_acronym ?? "NA"}</TableCell>
-                      <TableCell>{cls.vacancies ?? "NA"}</TableCell>
+                      <TableCell>{cls.course_acronym ?? 'NA'}</TableCell>
+                      <TableCell>{cls.course_unit_acronym ?? 'NA'}</TableCell>
+                      <TableCell>{cls.vacancies ?? 'NA'}</TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="text-center py-4 text-muted-foreground"
-                    >
+                    <TableCell colSpan={4} className="text-center py-4 text-muted-foreground">
                       Nenhuma turma encontrada para este curso.
                     </TableCell>
                   </TableRow>
@@ -226,5 +196,5 @@ export const AdminExchangeClasses = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}

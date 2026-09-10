@@ -1,15 +1,15 @@
-import { BoltIcon } from '@heroicons/react/24/outline'
+import { ChevronDown, Dices } from 'lucide-react'
 import { ClassInfo } from '../../../../@types'
 import { useContext, useEffect, useState } from 'react'
-import { Button } from '../../../ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../ui/tooltip'
-import { ScrollArea } from '../../../ui/scroll-area'
-import { Checkbox } from '../../../ui/checkbox'
+import { Button } from '../../../ui/new/button'
+import { Tooltip } from '../../../ui/new/tooltip'
+import { Popover } from '../../../ui/new/popover'
+import { Checkbox } from '../../../ui/new/checkbox'
 import { Separator } from '../../../ui/separator'
 import CourseContext from '../../../../contexts/CourseContext'
 import MultipleOptionsContext from '../../../../contexts/MultipleOptionsContext'
 import { AnalyticsTracker, Feature } from '../../../../utils/AnalyticsTracker'
-import { toast } from '../../../ui/use-toast'
+import { toast } from '../../../ui/new/toaster'
 import { Desert } from '../../../svgs'
 
 type Props = {
@@ -17,38 +17,42 @@ type Props = {
 }
 
 type SlotMetadata = {
-  day: number,
-  start_time: number,
+  day: number
+  start_time: number
   duration: number
 }
 
-const RandomFill = ({ className }: Props) => {
+const RandomFill = (props: Props) => {
+  void props
   const { pickedCourses } = useContext(CourseContext)
   const { multipleOptions, setMultipleOptions, selectedOption } = useContext(MultipleOptionsContext)
   const courseOptions = multipleOptions[selectedOption].course_options
   const [permutations, setPermutations] = useState([])
   const [lockedCourses, setLockedCourses] = useState(
-    courseOptions.filter((course) => course.locked).map((course) => course.course_id)
+    courseOptions.filter((course) => course.locked).map((course) => course.course_id),
   )
 
   // Get all course_unit-class combinations
   const getClassesCombinations = () => {
-    return pickedCourses.map((course) => {
-      if (!course.classes) return []
-      return course.classes?.map((cls) => {
-        return {
-          course_info: course,
-          class_info: cls,
-        }
+    return pickedCourses
+      .map((course) => {
+        if (!course.classes) return []
+        // Optional chaining added here for safety
+        return course.classes?.map((cls) => {
+          return {
+            course_info: course,
+            class_info: cls,
+          }
+        })
       })
-    }).flat()
+      .flat()
   }
 
-  const [classesCombinations, setClassesCombinations] = useState([]);
+  const [classesCombinations, setClassesCombinations] = useState([])
   useEffect(() => {
     const combinations = getClassesCombinations()
-    setClassesCombinations(combinations);
-  }, [pickedCourses, selectedOption]);
+    setClassesCombinations(combinations)
+  }, [pickedCourses, selectedOption])
 
   const getUniqueClasses = () => {
     return Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name)))
@@ -60,11 +64,11 @@ const RandomFill = ({ className }: Props) => {
     setUniqueClasses(getUniqueClasses())
   }, [classesCombinations])
 
-  /* 
+  /*
   Usage:
-   
+
   ~~~~~~~~~~~~~~~~~~~~~~~~~
-    const generator = cartesianGenerator(...schedules); 
+    const generator = cartesianGenerator(...schedules);
     const combination = generator.next().value;
   */
   function* cartesianGenerator(...arrays) {
@@ -94,9 +98,11 @@ const RandomFill = ({ className }: Props) => {
   const getSchedulesGenerator = () => {
     const allSchedules = courseOptions.map((course) => {
       if (course.locked && course.picked_class_id) {
-        return [pickedCourses.find((picked) => picked.id === course.course_id)?.classes?.find(
-          (cls) => cls.id === course.picked_class_id
-        )]
+        return [
+          pickedCourses
+            .find((picked) => picked.id === course.course_id)
+            ?.classes?.find((cls) => cls.id === course.picked_class_id), // Safety chaining added
+        ]
       }
 
       const availableClasses = classesCombinations.filter((class_info) => {
@@ -127,7 +133,8 @@ const RandomFill = ({ className }: Props) => {
             duration: slot.duration,
           }
         })
-      }).flat()
+      })
+      .flat()
       .sort((a: SlotMetadata, b: SlotMetadata) => {
         if (a.day == b.day) return a.start_time - b.start_time
         return a.day - b.day
@@ -157,7 +164,7 @@ const RandomFill = ({ className }: Props) => {
 
   const applyRandomSchedule = () => {
     const newPermutations = [...permutations]
-    const STEP = 1000; //TODO(thePeras): Not a good number for a big number of pickedCourses
+    const STEP = 1000 //TODO(thePeras): Not a good number for a big number of pickedCourses
     for (let i = 0; i < STEP; i++) {
       const permutation = generator.next().value
       if (!permutation) break
@@ -169,7 +176,7 @@ const RandomFill = ({ className }: Props) => {
     const randomNumber = Math.floor(Math.random() * (newPermutations.length - 1))
     applySchedule(newPermutations[randomNumber])
 
-    AnalyticsTracker.trackFeature(Feature.RANDOM_FILL);
+    AnalyticsTracker.trackFeature(Feature.RANDOM_FILL)
   }
 
   const applySchedule = (classesCombinations: ClassInfo[]) => {
@@ -177,8 +184,7 @@ const RandomFill = ({ className }: Props) => {
       toast({
         title: 'Não foi possível gerar turmas!',
         description: 'Não encontramos uma combinação com as turmas das disciplinas selecionadas sem conflitos',
-        position: 'top-right',
-      });
+      })
     }
 
     setMultipleOptions((prevMultipleOptions) => {
@@ -196,8 +202,10 @@ const RandomFill = ({ className }: Props) => {
         for (const classInfo of classesCombinations) {
           if (!classInfo) continue
 
-          const courseUnit = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id);
-          const matchedClassInfo = courseUnit.classes?.find((courseUnitClass) => courseUnitClass.id === classInfo.id);
+          const courseUnit = pickedCourses.find((other_course) => other_course.course_unit_id === course.course_id)
+          // Double safety chaining added here (courseUnit could potentially be undefined too)
+          const matchedClassInfo = courseUnit?.classes?.find((courseUnitClass) => courseUnitClass.id === classInfo.id)
+
           if (matchedClassInfo) {
             return {
               ...course,
@@ -216,8 +224,7 @@ const RandomFill = ({ className }: Props) => {
     })
   }
 
-  const toggleRandomClasses = (event) => {
-    const className = event.target.id
+  const toggleRandomClass = (className: string) => {
     setUniqueClasses((prevRandomClasses) => {
       if (prevRandomClasses.includes(className)) {
         return prevRandomClasses.filter((name) => name !== className)
@@ -236,8 +243,7 @@ const RandomFill = ({ className }: Props) => {
 
     const selected = newMultipleOptions[selectedOption]?.course_options
     // Updating locked courses
-    const newLockedCourses = selected?.filter((course) => course.locked)
-      .map((course) => course.course_id)
+    const newLockedCourses = selected?.filter((course) => course.locked).map((course) => course.course_id)
     // Only update if locked courses changed
     if (newLockedCourses?.join() !== lockedCourses?.join()) {
       setLockedCourses(newLockedCourses)
@@ -258,45 +264,53 @@ const RandomFill = ({ className }: Props) => {
   }, [pickedCourses, uniqueClasses])
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            onClick={applyRandomSchedule}
-            variant="icon"
-            className={`${className} h-min w-min grow bg-secondary`}
-          >
-            <BoltIcon className="h-5 w-5" />
+    <div className="flex">
+      <Tooltip placement="bottom">
+        <Tooltip.Trigger asChild onClick={applyRandomSchedule}>
+          <Button square size="sm" className="bg-secondary hover:bg-secondary/90 rounded-r-none">
+            <Dices size="18" />
           </Button>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" asChild>
-          <ScrollArea className="max-h-72 rounded-sm px-3 w-full overflow-y-auto">
-            <div className="p-1">Preenchimento aleatório</div>
-            <Separator />
-            {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
-              <div
-                key={key}
-                className="mt-1 flex items-center space-x-2 rounded-sm p-1 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
-              >
-                <Checkbox id={key} checked={uniqueClasses.includes(key)} onClick={toggleRandomClasses} />
-                <label
-                  htmlFor={key}
-                  className="text-sm font-medium leading-none hover:cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {key}
-                </label>
-              </div>
-            ))}
-
-            {classesCombinations.length === 0 &&
-              <div className="flex flex-col mx-auto m-4 w-full">
-                <Desert className="w-full h-24" />
-                <p className="mt-2 text-sm text-center">Não foi encontrada nenhuma turma</p>
-              </div>}
-          </ScrollArea>
-        </TooltipContent>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Preenchimento aleatório</Tooltip.Content>
       </Tooltip>
-    </TooltipProvider>
+
+      <Popover placement="bottom-end">
+        <Popover.Trigger asChild>
+          <Button
+            square
+            size="sm"
+            className="bg-secondary hover:bg-secondary/90 rounded-l-none border-l border-foreground/10"
+          >
+            <ChevronDown size="14" />
+          </Button>
+        </Popover.Trigger>
+        <Popover.Content className="w-52 p-1">
+          <p className="px-1 py-1 text-sm font-medium">Preenchimento aleatório</p>
+          <Separator />
+          {Array.from(new Set(classesCombinations.map((class_info) => class_info.class_info.name))).map((key) => (
+            <div
+              key={key}
+              onClick={() => toggleRandomClass(key)}
+              className="mt-1 flex w-full items-center space-x-2 rounded-sm p-1.5 hover:cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 select-none"
+            >
+              <Checkbox
+                id={key}
+                checked={uniqueClasses.includes(key)}
+                className="pointer-events-none [--color-accent:var(--color-primary)] [--color-accent-foreground:#fff]"
+              />
+              <span className="text-sm font-medium leading-none flex-1">{key}</span>
+            </div>
+          ))}
+
+          {classesCombinations.length === 0 && (
+            <div className="flex flex-col mx-auto m-4 w-full">
+              <Desert className="w-full h-24" />
+              <p className="mt-2 text-sm text-center">Não foi encontrada nenhuma turma</p>
+            </div>
+          )}
+        </Popover.Content>
+      </Popover>
+    </div>
   )
 }
 
