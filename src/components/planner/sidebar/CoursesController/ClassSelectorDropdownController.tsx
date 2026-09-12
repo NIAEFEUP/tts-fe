@@ -98,15 +98,15 @@ const ClassSelectorDropdownController = ({
 
   //(thePeras): Classes options should be a new state
   /**
-   * Return the classes options filtered by the selected teachers
-   * Classes with at least one of its teachers selected will be returned
+   * Return the class options whose professor-bearing slots all have a selected professor.
+   * Slots without professor data are kept because they cannot be filtered by professor.
    */
   const getOptions = (): Array<ClassInfo> => {
     return course.classes?.filter((c) => {
-      return c.slots.some(
+      return c.slots.every(
         (slot) =>
           slot.professors.length === 0 ||
-          slot.professors.filter((prof) => filteredTeachers?.includes(prof.id)).length > 0,
+          slot.professors.some((prof) => filteredTeachers?.includes(prof.id)),
       )
     })
   }
