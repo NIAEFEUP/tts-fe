@@ -21,7 +21,8 @@ const InspectLessonBox = ({ courseInfo, classInfo, slotInfo, conflict }: Props) 
   return (
     <div
       className={classNames(
-        'schedule-class-responsive group',
+        // .schedule-class-responsive: z-10 w-min min-w-[4.5rem] rounded-lg border-0 transition hover:ring-0
+        'z-10 w-min min-w-[4.5rem] rounded-lg border-0 transition hover:ring-0 group',
         conflict ? '' : 'w-full',
         getClassTypeClassName(lessonType),
       )}

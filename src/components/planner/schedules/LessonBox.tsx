@@ -127,17 +127,22 @@ const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConfl
             backgroundColor: hasConflict && isHovered ? 'rgb(200,200,200)' : '',
           }}
           className={classNames(
-            'schedule-class group',
+            // .schedule-class: absolute z-10 w-1/6 rounded-lg text-white transition-none border-0 hover:ring-0
+            'absolute z-10 w-1/6 rounded-lg text-white transition-none border-0 hover:ring-0 group',
             getClassTypeClassName(lessonType),
             hasConflict && conflict.severe === 2
               ? isHovered
-                ? 'schedule-class-conflict-info'
-                : 'schedule-class-conflict'
+                // .schedule-class-conflict-info
+                ? 'z-30 border-2 border-red-600 opacity-75 ring-red-500 hover:z-30 hover:opacity-100'
+                // .schedule-class-conflict
+                : 'z-30 border-2 opacity-75 border-red-600 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1'
               : '',
             hasConflict && conflict.severe === 1
               ? isHovered
-                ? 'schedule-class-conflict-warn-info'
-                : 'schedule-class-conflict-warn'
+                // .schedule-class-conflict-warn-info
+                ? 'z-20 border-2 border-amber-500 opacity-75 ring-amber-500 hover:z-30 hover:opacity-100'
+                // .schedule-class-conflict-warn
+                : 'z-20 border-2 opacity-75 border-amber-500 ring-amber-500 hover:z-30 hover:opacity-100 hover:ring-1'
               : '',
             'overflow-hidden',
           )}

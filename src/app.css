@@ -321,3 +321,41 @@ body {
 body:has(dialog[open]) {
   overflow: hidden;
 }
+
+/* ─── Schedule grid ─────────────────────────────────────────────────────────
+   These rules can't be expressed as inline Tailwind utilities:
+   - height: calc(100% / 30) has no Tailwind equivalent
+   - :nth-child pseudo-selectors require a real stylesheet
+   - .schedule-class-conflict-highlight uses !important to override inline styles
+   The .schedule-area selector is also preserved because PngExport.tsx queries
+   it via document.querySelectorAll('.schedule-area') to find the visible node.
+   ─────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .schedule-cell {
+    height: calc(100% / 30);
+  }
+
+  .schedule-cell:nth-child(even) {
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .schedule-cell:nth-child(odd) {
+    border-bottom: 1px solid var(--color-gray-100);
+  }
+
+  .dark .schedule-cell:nth-child(even) {
+    border-bottom: 1px solid #f0f0ff33;
+  }
+
+  .dark .schedule-cell:nth-child(odd) {
+    border-bottom: 1px solid #f0f0ff11;
+  }
+
+  .schedule-class-conflict-highlight {
+    opacity: 100% !important;
+  }
+
+  .exchange-request-card {
+    @apply dark:border dark:border-white dark:bg-gray-800;
+  }
+}

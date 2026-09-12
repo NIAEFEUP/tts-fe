@@ -17,7 +17,8 @@ const ResponsiveLessonBox = ({ courseInfo, classInfo, slotInfo, conflict }: Prop
       className={classNames(
         'flex  group rounded-sm w-full',
         getClassTypeClassName(lessonType),
-        conflict ? 'schedule-class-conflict' : '',
+        // .schedule-class-conflict: z-30 border-2 opacity-75 border-red-600 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1
+        conflict ? 'z-30 border-2 opacity-75 border-red-600 ring-rose-700 hover:z-30 hover:opacity-100 hover:ring-1' : '',
       )}
     >
       <div

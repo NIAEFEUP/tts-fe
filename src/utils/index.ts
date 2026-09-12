@@ -182,30 +182,32 @@ const getLessonTypeLongName = (type: string) => {
 }
 
 const getClassTypeClassName = (type: string) => {
+  // Each string below is the inlined equivalent of the former .schedule-class-{type} rule:
+  // bg-{color}/80 hover:bg-{color} dark:bg-{color}/80 dark:hover:bg-{color}
   switch (type) {
     case 'T':
-      return 'schedule-class-t'
+      return 'bg-schedule-t/90 border-3 border-schedule-t dark:bg-schedule-t dark:hover:bg-schedule-t'
 
     case 'P':
-      return 'schedule-class-p'
+      return 'bg-schedule-p/90 border-3 border-schedule-p dark:bg-schedule-p dark:hover:bg-schedule-p'
 
     case 'TP':
-      return 'schedule-class-tp'
+      return 'bg-schedule-tp/90 border-3 border-schedule-tp dark:bg-schedule-tp dark:hover:bg-schedule-tp'
 
     case 'S':
-      return 'schedule-class-s'
+      return 'bg-schedule-s/90 border-3 border-schedule-s dark:bg-schedule-s dark:hover:bg-schedule-s'
 
     case 'PL':
-      return 'schedule-class-pl'
+      return 'bg-schedule-pl/90 border-3 border-schedule-pl dark:bg-schedule-pl dark:hover:bg-schedule-pl'
 
     case 'OT':
-      return 'schedule-class-ot'
+      return 'bg-schedule-ot/90 border-3 border-schedule-ot dark:bg-schedule-ot dark:hover:bg-schedule-ot'
 
     case 'TC':
-      return 'schedule-class-tc'
+      return 'bg-schedule-tc/90 border-3 border-schedule-tc dark:bg-schedule-tc dark:hover:bg-schedule-tc'
 
     default:
-      return 'schedule-class-o'
+      return 'bg-schedule-o/90 border-3 border-schedule-o dark:bg-schedule-o dark:hover:bg-schedule-o'
   }
 }
 

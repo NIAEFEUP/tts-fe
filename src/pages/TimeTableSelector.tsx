@@ -108,13 +108,13 @@ const Content = () => {
             <div className="col-span-12 min-h-min lg:col-span-3 lg:min-h-adjusted">
               <Sidebar />
             </div>
-            <div className="col-span-12 min-h-min rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 lg:min-h-adjusted 2xl:px-5 2xl:py-5">
+            <div className="col-span-12 min-h-min rounded-4xl bg-lightest p-6 dark:bg-dark lg:col-span-9 lg:min-h-adjusted 2xl:px-5 2xl:py-5">
               <PlannerSchedule />
             </div>
           </>
         ) : (
           <>
-            <div className="col-span-12 min-h-min rounded-md bg-lightest px-3 py-3 dark:bg-dark lg:col-span-9 lg:min-h-adjusted 2xl:px-5 2xl:py-5">
+            <div className="col-span-12 min-h-min rounded-4xl bg-lightest p-6 dark:bg-dark lg:col-span-9 lg:min-h-adjusted 2xl:px-5 2xl:py-5">
               <PlannerSchedule />
             </div>
             <div className="col-span-12 min-h-min lg:col-span-3 lg:min-h-adjusted">

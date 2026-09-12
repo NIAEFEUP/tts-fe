@@ -1,4 +1,3 @@
-import '../../styles/schedule.css'
 import classNames from 'classnames'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { ScheduleGrid } from './schedules'
@@ -87,32 +86,56 @@ const Schedule = ({ classes, slots, refresh }: Props) => {
   return (
     <>
       {/*Schedule desktop*/}
-      <div ref={scheduleRef} className="schedule-area gap-2">
+      {/* .schedule-area: flex-none hidden w-full h-full lg:flex lg:flex-col */}
+      <div ref={scheduleRef} className="schedule-area flex-none hidden w-full h-full lg:flex lg:flex-col gap-2">
         {/* Days Column Names */}
-        <div className="schedule-top">
-          <div className="schedule-top-empty">
-            <span className="dummy">00:00</span>
+        {/* .schedule-top: flex w-full mb-2 space-x-3 xl:mb-1 xl:space-x-4 */}
+        <div className="flex w-full mb-2 space-x-3 xl:mb-1 xl:space-x-4">
+          {/* .schedule-top-empty: flex flex-col justify-between space-y-0 */}
+          <div className="flex flex-col justify-between space-y-0">
+            <span className="invisible text-[0.65rem] font-medium leading-none xl:text-sm">00:00</span>
           </div>
-          <div className="schedule-top-days">
+          {/* .schedule-top-days: flex flex-row items-center justify-between grow */}
+          <div className="flex flex-row items-center justify-between grow">
             {dayValues.map((day: number, dayLabelIdx: number) => (
-              <span key={`day-label-${dayLabelIdx}`}>{convertWeekdayLong(day)}</span>
+              <span
+                key={`day-label-${dayLabelIdx}`}
+                className="h-auto w-1/6 text-center text-[0.65rem] font-medium leading-none xl:text-sm"
+              >
+                {convertWeekdayLong(day)}
+              </span>
             ))}
           </div>
         </div>
 
-        <div className="schedule-main">
-          {/* First Column with Hours */}
-          <div className="schedule-main-left">
+        {/* .schedule-main: flex w-full h-full space-x-3 xl:space-x-4 */}
+        <div className="flex w-full h-full space-x-3 xl:space-x-4">
+          {/* First Column with Hours — .schedule-main-left: flex flex-col justify-between h-full space-y-0 */}
+          <div className="flex flex-col justify-between h-full space-y-0">
             {hourValues.map((hour: number, hourLabelIdx: number) => (
-              <span key={`hour-label-${hourLabelIdx}`}>{convertHour(hour.toString())}</span>
+              <span
+                key={`hour-label-${hourLabelIdx}`}
+                className="h-auto text-[0.65rem] font-medium leading-none xl:text-sm"
+              >
+                {convertHour(hour.toString())}
+              </span>
             ))}
           </div>
 
-          {/* Slots */}
-          <div className="schedule-main-right">
-            <div className={classNames('schedule-grid-wrapper', showGrid ? 'show-grid-yes' : 'show-grid-no')}>
+          {/* Slots — .schedule-main-right: w-full pt-0 xl:pt-1 */}
+          <div className="w-full pt-0 xl:pt-1">
+            {/* .schedule-grid-wrapper: relative w-full h-full rounded */}
+            <div
+              className={classNames(
+                'relative w-full h-full rounded',
+                showGrid
+                  ? 'border-2 border-gray-200 shadow-sm dark:border-[#f0f0ff33]'
+                  : 'border-2 border-transparent shadow-inner-xl',
+              )}
+            >
               <ScheduleGrid showGrid={showGrid} />
-              <div className="schedule-classes">
+              {/* .schedule-classes: absolute top-0 w-full h-full */}
+              <div className="absolute top-0 w-full h-full">
                 {loadingSchedule ? (
                   <div className="flex flex-col justify-center items-center h-full w-full gap-8">
                     <p className="text-lg text-black dark:text-white">Carregando</p>
@@ -131,7 +154,7 @@ const Schedule = ({ classes, slots, refresh }: Props) => {
           </div>
         </div>
         {/* Bottom bar */}
-        <div className="flex justify-end gap-5 pl-16 schedule-bottom-bar">
+        <div className="flex justify-end gap-5 pl-16">
           <div className="flex gap-x-4">
             <ScheduleTypes
               types={slotTypes}
