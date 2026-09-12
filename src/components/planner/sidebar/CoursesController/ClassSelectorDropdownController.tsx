@@ -102,13 +102,15 @@ const ClassSelectorDropdownController = ({
    * Slots without professor data are kept because they cannot be filtered by professor.
    */
   const getOptions = (): Array<ClassInfo> => {
-    return course.classes?.filter((c) => {
-      return c.slots.every(
-        (slot) =>
-          slot.professors.length === 0 ||
-          slot.professors.some((prof) => filteredTeachers?.includes(prof.id)),
-      )
-    })
+    return (
+      course.classes?.filter((c) => {
+        return c.slots.every(
+          (slot) =>
+            slot.professors.length === 0 ||
+            slot.professors.some((prof) => filteredTeachers?.includes(prof.id)),
+        )
+      }) ?? []
+    )
   }
 
   useEffect(() => {
@@ -173,6 +175,8 @@ const ClassSelectorDropdownController = ({
     setMultipleOptions(newMultipleOptions)
   }
 
+  const options = getOptions()
+
   return (
     <>
       <div className="p-2 w-full">
@@ -190,6 +194,10 @@ const ClassSelectorDropdownController = ({
                 <div className="pt-2 w-full max-h-[50vh] overflow-y-auto">
                   {course.classes?.length === 0 ? (
                     <NoOptionsFound mobile={false} />
+                  ) : options.length === 0 ? (
+                    <p className="text-sm text-left my-4 w-full">
+                      Não há turmas para os professores selecionados.
+                    </p>
                   ) : (
                     <>
                       {selectedClassId && (
@@ -205,7 +213,7 @@ const ClassSelectorDropdownController = ({
                         </button>
                       )}
                       {course.classes &&
-                        getOptions().map((classInfo) => (
+                        options.map((classInfo) => (
                           <ClassItem
                             key={`schedule-${classInfo.name}`}
                             course_id={course.id}
