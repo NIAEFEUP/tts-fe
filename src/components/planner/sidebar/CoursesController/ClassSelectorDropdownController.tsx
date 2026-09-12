@@ -104,10 +104,9 @@ const ClassSelectorDropdownController = ({
   const getOptions = (): Array<ClassInfo> => {
     return (
       course.classes?.filter((c) => {
-        return c.slots.every(
-          (slot) =>
-            slot.professors.length === 0 ||
-            slot.professors.some((prof) => filteredTeachers?.includes(prof.id)),
+        return (
+          c.slots.length > 0 &&
+          c.slots.every((slot) => slot.professors.every((prof) => filteredTeachers.includes(prof.id)))
         )
       }) ?? []
     )
@@ -192,12 +191,8 @@ const ClassSelectorDropdownController = ({
               <Tabs.Panel>
                 {/* Removed max-h-96 and overflow-y-auto to fix the double scrollbar issue - Added back for Popover migration */}
                 <div className="pt-2 w-full max-h-[50vh] overflow-y-auto">
-                  {course.classes?.length === 0 ? (
+                  {!course.classes || course.classes.length === 0 ? (
                     <NoOptionsFound mobile={false} />
-                  ) : options.length === 0 ? (
-                    <p className="text-sm text-left my-4 w-full">
-                      Não há turmas para os professores selecionados.
-                    </p>
                   ) : (
                     <>
                       {selectedClassId && (
@@ -212,7 +207,9 @@ const ClassSelectorDropdownController = ({
                           <span className="text-sm tracking-tighter text-left block w-full">Remover Seleção</span>
                         </button>
                       )}
-                      {course.classes &&
+                      {options.length === 0 ? (
+                        <p className="text-sm text-left my-4 w-full">Não há turmas para os professores selecionados.</p>
+                      ) : (
                         options.map((classInfo) => (
                           <ClassItem
                             key={`schedule-${classInfo.name}`}
@@ -228,7 +225,8 @@ const ClassSelectorDropdownController = ({
                             }}
                             onMouseLeave={() => removePreview()}
                           />
-                        ))}
+                        ))
+                      )}
                     </>
                   )}
                 </div>
