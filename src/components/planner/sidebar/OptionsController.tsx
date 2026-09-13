@@ -17,7 +17,7 @@ const OptionsController = () => {
 
   return (
     <ReactSortable
-      className="m-y-2 flex flex-row justify-center gap-2 py-2 px-1 text-center w-full overflow-x-auto lg:justify-start !overflow-y-visible"
+      className="m-y-2 flex flex-row justify-start gap-2 py-2 px-1 text-center w-full overflow-x-auto !overflow-y-visible"
       list={multipleOptions}
       setList={(newMultipleOptions) => {
         const prevId = multipleOptions[selectedOption].id
