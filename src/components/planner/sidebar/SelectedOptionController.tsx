@@ -74,7 +74,7 @@ const SelectedOptionController = ({ currentOption }: Props) => {
           onMouseLeave={stopScroll}
         />
       </div>
-      <div className="order-1 flex items-center gap-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2 justify-between">
+      <div className="order-1 flex items-center gap-1 sm:order-2 sm:w-1/3 lg:order-1 lg:w-auto xl:order-2 justify-end">
         <CopyOption currentOption={currentOption} className="sm:py-0 xl:p-1" />
         <PasteOption />
         <RandomFill className="sm:py-0 xl:p-1" />
