@@ -51,10 +51,10 @@ const ClassItem = ({ course_id, classInfo, onSelect, onMouseEnter, onMouseLeave 
   }
 
   return (
-    <button 
+    <button
       type="button"
-      onClick={() => selectOption()} 
-      onMouseEnter={() => onMouseEnter?.()} 
+      onClick={() => selectOption()}
+      onMouseEnter={() => onMouseEnter?.()}
       onMouseLeave={() => onMouseLeave?.()}
       className="flex w-[calc(100%-16px)] mx-2 my-1 cursor-pointer select-none items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium outline-none text-foreground/80 hover:bg-background-secondary transition-colors"
     >
