@@ -17,6 +17,36 @@ enum ReportType {
   Bug = 'Bug',
 }
 
+// Must match the `tunnel` option in src/index.tsx and the nginx `location = /feedback` block.
+const SENTRY_TUNNEL = '/feedback'
+const SENTRY_PROBE_TIMEOUT_MS = 4000
+
+/**
+ * Probes the Sentry tunnel to detect whether submissions would be blocked
+ * (e.g. by an adblocker or a failing tunnel). The tunnel is same-origin, so a
+ * rejected request means the transport is unreachable.
+ */
+const isSubmissionBlocked = async (): Promise<boolean> => {
+  if (!import.meta.env.VITE_APP_SENTRY_DSN) return false
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), SENTRY_PROBE_TIMEOUT_MS)
+
+  try {
+    await fetch(SENTRY_TUNNEL, {
+      method: 'GET',
+      mode: 'no-cors',
+      cache: 'no-store',
+      signal: controller.signal,
+    })
+    return false
+  } catch {
+    return true
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 const bugSchema = z.object({
   email: z.string().optional(),
   description: z.string().trim().min(1, { message: 'É necessário descreveres' }),
@@ -34,7 +64,18 @@ export const FeedbackReport = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof bugSchema>) => {
+  const onSubmit = async (values: z.infer<typeof bugSchema>) => {
+    if (await isSubmissionBlocked()) {
+      toast({
+        variant: 'negative',
+        title: 'Não foi possível enviar o feedback',
+        description:
+          'Parece que tens um bloqueador de anúncios ativo. Desativa-o para este site e tenta novamente, ou envia-nos um email para ni@aefeup.pt.',
+        duration: 8000,
+      })
+      return
+    }
+
     const eventId = Sentry.captureMessage(reportType)
 
     const userFeedback = {
