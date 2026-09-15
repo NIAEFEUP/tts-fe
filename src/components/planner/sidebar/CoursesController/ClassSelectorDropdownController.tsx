@@ -98,17 +98,18 @@ const ClassSelectorDropdownController = ({
 
   //(thePeras): Classes options should be a new state
   /**
-   * Return the classes options filtered by the selected teachers
-   * Classes with at least one of its teachers selected will be returned
+   * Return the class options whose professor-bearing slots all have a selected professor.
+   * Slots without professor data are kept because they cannot be filtered by professor.
    */
   const getOptions = (): Array<ClassInfo> => {
-    return course.classes?.filter((c) => {
-      return c.slots.some(
-        (slot) =>
-          slot.professors.length === 0 ||
-          slot.professors.filter((prof) => filteredTeachers?.includes(prof.id)).length > 0,
-      )
-    })
+    return (
+      course.classes?.filter((c) => {
+        return (
+          c.slots.length > 0 &&
+          c.slots.every((slot) => slot.professors.every((prof) => filteredTeachers.includes(prof.id)))
+        )
+      }) ?? []
+    )
   }
 
   useEffect(() => {
@@ -173,6 +174,8 @@ const ClassSelectorDropdownController = ({
     setMultipleOptions(newMultipleOptions)
   }
 
+  const options = getOptions()
+
   return (
     <>
       <div className="p-2 w-full">
@@ -188,7 +191,7 @@ const ClassSelectorDropdownController = ({
               <Tabs.Panel>
                 {/* Removed max-h-96 and overflow-y-auto to fix the double scrollbar issue - Added back for Popover migration */}
                 <div className="pt-2 w-full max-h-[50vh] overflow-y-auto">
-                  {course.classes?.length === 0 ? (
+                  {!course.classes || course.classes.length === 0 ? (
                     <NoOptionsFound mobile={false} />
                   ) : (
                     <>
@@ -204,8 +207,10 @@ const ClassSelectorDropdownController = ({
                           <span className="text-sm tracking-tighter text-left block w-full">Remover Seleção</span>
                         </button>
                       )}
-                      {course.classes &&
-                        getOptions().map((classInfo) => (
+                      {options.length === 0 ? (
+                        <p className="text-sm text-left my-4 w-full">Não há turmas para os professores selecionados.</p>
+                      ) : (
+                        options.map((classInfo) => (
                           <ClassItem
                             key={`schedule-${classInfo.name}`}
                             course_id={course.id}
@@ -220,7 +225,8 @@ const ClassSelectorDropdownController = ({
                             }}
                             onMouseLeave={() => removePreview()}
                           />
-                        ))}
+                        ))
+                      )}
                     </>
                   )}
                 </div>

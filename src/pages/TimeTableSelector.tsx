@@ -14,6 +14,7 @@ import StorageAPI from '../api/storage'
 import { X } from 'lucide-react'
 import { LoginButton } from '../components/auth/LoginButton'
 import { ShieldExclamationIcon } from '@heroicons/react/24/outline'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 const TimeTableSelectorPage = () => {
   const { setMajors } = useContext(MajorContext)
 
@@ -36,6 +37,7 @@ const Content = () => {
   const { sidebarPosition } = useSidebarContext()
   const { signedIn, user } = useContext(SessionContext)
   const [showExchangeAlert, setShowExchangeAlert] = useState<boolean>(true)
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   useEffect(() => {
     setShowExchangeAlert(StorageAPI.getShowExchangeAlertStorage())
@@ -65,29 +67,36 @@ const Content = () => {
       </div>
     )
 
+  if (!isDesktop) {
+    return (
+      <div className="h-full w-full">
+        <div className="flex w-full px-4 py-4 justify-items-start">
+          <Tabs className="w-full">
+            <Tabs.Items className="w-full">
+              <Tabs.Item className="flex-1">Horário</Tabs.Item>
+              <Tabs.Item className="flex-1">Turmas</Tabs.Item>
+            </Tabs.Items>
+            <Tabs.Panels>
+              <Tabs.Panel>
+                <div className="rounded-sm bg-lightest px-3 py-3 dark:bg-dark">
+                  <div className="h-full w-full">
+                    <PlannerSchedule />
+                  </div>
+                </div>
+              </Tabs.Panel>
+              <Tabs.Panel>
+                <Sidebar />
+              </Tabs.Panel>
+            </Tabs.Panels>
+          </Tabs>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="h-full w-full">
-      <div className="flex w-full  px-4 py-4 lg:hidden justify-items-start">
-        <Tabs className="w-full">
-          <Tabs.Items className="w-full">
-            <Tabs.Item className="flex-1">Horário</Tabs.Item>
-            <Tabs.Item className="flex-1">Turmas</Tabs.Item>
-          </Tabs.Items>
-          <Tabs.Panels>
-            <Tabs.Panel>
-              <div className="rounded-sm bg-lightest px-3 py-3 dark:bg-dark ">
-                <div className="h-full w-full ">
-                  <PlannerSchedule />
-                </div>
-              </div>
-            </Tabs.Panel>
-            <Tabs.Panel>
-              <Sidebar />
-            </Tabs.Panel>
-          </Tabs.Panels>
-        </Tabs>
-      </div>
-      <div className="hidden lg:grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
+      <div className="grid w-full grid-cols-12 gap-x-4 gap-y-4 px-4 py-4">
         {user?.eligible_exchange && showExchangeAlert && (
           <div className="col-span-12 mb-2">
             <Alert type={AlertType.info} className="relative p-4">

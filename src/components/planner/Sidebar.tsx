@@ -61,7 +61,7 @@ const Sidebar = () => {
           title="Mudar o lado da Sidebar"
           onClick={toggleSidebarPosition}
           square
-          className="bg-primary hover:opacity-80 dark:text-white "
+          className="hidden lg:inline-flex bg-primary hover:opacity-80 dark:text-white"
         >
           <ArrowLeftRight className="text-white dark:text-white" size="18" />
         </Button>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Popover, Transition } from '@headlessui/react'
-import { DarkModeSwitch } from './DarkModeSwitch'
+// DARK MODE DISABLED: toggle hidden. To re-enable, uncomment this import line.
+// import { DarkModeSwitch } from './DarkModeSwitch'
 import { Menu, X, AtSign, Layers, CircleQuestionMark, ArrowLeftRight, Wrench } from 'lucide-react'
 import { LogoNIAEFEUPImage } from '../../images'
 import { getPath, config } from '../../utils'
@@ -100,7 +101,8 @@ const Header = ({ siteTitle, location }: Props) => {
                 </div>
 
                 <div className="hidden self-center md:inline-flex items-center gap-x-4">
-                  <DarkModeSwitch />
+                  {/* DARK MODE DISABLED: uncomment to re-enable the toggle */}
+                  {/* <DarkModeSwitch /> */}
                   {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
                 </div>
               </div>
@@ -132,7 +134,8 @@ const Hamburger = ({ open, signedIn }: HamburgerProps) => {
       </Link>
 
       <div className="flex items-center space-x-1">
-        <DarkModeSwitch />
+        {/* DARK MODE DISABLED: uncomment to re-enable the toggle */}
+        {/* <DarkModeSwitch /> */}
         <FeedbackReport />
         {signedIn ? <HeaderProfileDropdown /> : <LoginButton expanded={false} />}
 
