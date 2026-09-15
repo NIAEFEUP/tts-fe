@@ -24,6 +24,15 @@ export default defineConfig({
       host: 'tts-dev.niaefeup.pt',
     },
     port: 3100,
+    // Dev equivalent of the `location = /feedback` block in nginx.tts.conf,
+    // so Sentry envelopes (incl. feedback) reach the ingest host in development.
+    proxy: {
+      '/feedback': {
+        target: 'https://o553498.ingest.us.sentry.io',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/feedback$/, '/api/4507775325437952/envelope/'),
+      },
+    },
   },
   build: {
     outDir: 'build',
