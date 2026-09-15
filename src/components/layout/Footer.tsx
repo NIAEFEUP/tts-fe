@@ -45,13 +45,22 @@ const Footer = () => {
         </div>
 
         {/* Direitos */}
-        <div className="order-3 flex flex-col items-center justify-center">
+        <div className="order-3 flex flex-col items-center justify-center text-center">
           <p className="text-base font-medium text-white dark:text-gray-300 sm:text-center">
-            © {new Date().getFullYear() + ' '}
+            Copyright © {new Date().getFullYear() + ' '}
             <a href="https://niaefeup.pt" className="hover:underline" target="_blank" rel="noopener noreferrer">
               NIAEFEUP
             </a>
-            ™. All Rights Reserved.
+            . Licensed under{' '}
+            <a
+              href="https://github.com/niaefeup/tts-fe"
+              className="hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              AGPLv3
+            </a>
+            .
           </p>
         </div>
       </div>
