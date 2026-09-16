@@ -12,7 +12,10 @@ COPY .prettier* ./
 COPY *.config.js ./
 COPY *.config.ts ./
 
-RUN npm install
+RUN npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 120000 \
+    && npm config set fetch-retries 5 \
+    && npm install
 
 COPY public/ public/
 COPY src/ src/
