@@ -1,7 +1,7 @@
 ARG TTS_FE_VARS_METHOD=dotenv
 
 # build
-FROM node:21-alpine3.19 AS build
+FROM node:22-alpine3.20 AS build
 
 RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
