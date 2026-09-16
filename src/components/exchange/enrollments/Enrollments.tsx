@@ -34,6 +34,7 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
   const [enrollCourses, setEnrollCourses] = useState<CourseInfo[]>([])
   const [enrollmentChoices, setEnrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map())
   const [disenrollmentChoices, setDisenrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map())
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([])
   const { setMajors } = useContext(MajorContext)
 
@@ -112,14 +113,28 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
             )}
           </div>
 
-          {(enrollmentChoices.size > 0 || disenrollmentChoices.size > 0) && (
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault()
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault()
 
-                const res = await courseUnitEnrollmentService.submitEnrollmentRequest(
-                  new Map([...enrollmentChoices, ...disenrollmentChoices]),
-                )
+              const courses = new Map([...enrollmentChoices, ...disenrollmentChoices])
+
+              // Guards against submitting an enrollment request with no course units selected,
+              // which would create a ghost request with an empty options list.
+              if (courses.size === 0) {
+                toast({
+                  variant: 'negative',
+                  title: 'Nenhuma unidade curricular selecionada',
+                  description: 'Seleciona pelo menos uma unidade curricular antes de submeter o pedido.',
+                })
+                return
+              }
+
+              if (isSubmitting) return
+
+              setIsSubmitting(true)
+              try {
+                const res = await courseUnitEnrollmentService.submitEnrollmentRequest(courses)
 
                 if (res.ok) {
                   setExchangeSidebarStatus(ExchangeSidebarStatus.SHOWING_REQUESTS)
@@ -133,17 +148,26 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
                 } else {
                   const json = await res.json()
                   toast({
+                    variant: 'negative',
                     title: 'Erro',
                     description: json.error,
                   })
                 }
-              }}
+              } finally {
+                setIsSubmitting(false)
+              }
+            }}
+          >
+            <Button
+              type="submit"
+              size="md"
+              disabled={enrollmentChoices.size === 0 && disenrollmentChoices.size === 0}
+              isLoading={isSubmitting}
+              className="w-full bg-primary hover:bg-primary/90 text-white"
             >
-              <Button size="md" className="w-full bg-primary hover:bg-primary/90 text-white">
-                Submeter
-              </Button>
-            </form>
-          )}
+              Submeter
+            </Button>
+          </form>
         </div>
       </div>
     </CourseContext.Provider>
