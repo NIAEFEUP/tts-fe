@@ -14,6 +14,9 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 Sentry.init({
   environment: Number(import.meta.env.VITE_APP_PROD) ? 'production' : 'development',
   dsn: import.meta.env.VITE_APP_SENTRY_DSN,
+  // Route envelopes through our own origin so adblockers (which block the don't silently drop events.
+  // Keep this in sync with SENTRY_TUNNEL in components/FeedbackReport.tsx.
+  tunnel: '/feedback',
   integrations: [
     import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.browserTracingIntegration() : null,
     import.meta.env.VITE_APP_SENTRY_TRACING ? Sentry.replayIntegration() : null,

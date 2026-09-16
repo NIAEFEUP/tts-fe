@@ -1,7 +1,7 @@
 ARG TTS_FE_VARS_METHOD=dotenv
 
 # build
-FROM node:21-alpine3.19 AS build
+FROM node:22-alpine3.20 AS build
 
 RUN mkdir -p /usr/src/tts-fe
 WORKDIR /usr/src/tts-fe
@@ -12,7 +12,10 @@ COPY .prettier* ./
 COPY *.config.js ./
 COPY *.config.ts ./
 
-RUN npm install
+RUN npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 120000 \
+    && npm config set fetch-retries 5 \
+    && npm install
 
 COPY public/ public/
 COPY src/ src/
