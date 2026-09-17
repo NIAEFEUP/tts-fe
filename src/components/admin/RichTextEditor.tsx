@@ -2,12 +2,54 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
-import { Bold, Italic, Underline as UnderlineIcon, Strikethrough, List, ListOrdered, Link as LinkIcon, Heading2 } from 'lucide-react';
+import { Bold, Italic, Underline as UnderlineIcon, Strikethrough, List, ListOrdered, Link as LinkIcon, Heading2, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/new/button';
+import { useState } from 'react';
+import { Popover } from '../ui/new/popover';
+import { Command, CommandGroup, CommandItem } from '../ui/command';
 
 interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
+}
+
+const VariableSelector = ({ editor }: { editor: any }) => {
+  const [open, setOpen] = useState(false);
+
+  const options = [
+    { label: 'Student Name', value: '{{student_name}}' },
+    { label: 'Student Email', value: '{{student_email}}' },
+    { label: 'Admin Name (You)', value: '{{admin_name}}' },
+    { label: 'Admin Signature', value: '<br><br><p>Best regards,</p><p><strong>{{admin_name}}</strong></p><p>NIAEFEUP</p>' },
+  ];
+
+  return (
+    <Popover open={open} onOpenChange={setOpen} placement="bottom-start">
+      <Popover.Trigger asChild>
+        <Button variant="outline" size="sm" className="justify-between w-40 text-xs h-8">
+          Insert Variable...
+          <ChevronDown size={14} />
+        </Button>
+      </Popover.Trigger>
+      <Popover.Content className="w-48 p-0 z-50">
+        <Command>
+          <CommandGroup>
+            {options.map((option) => (
+              <CommandItem
+                key={option.label}
+                onSelect={() => {
+                  editor.chain().focus().insertContent(option.value).run();
+                  setOpen(false);
+                }}
+              >
+                {option.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </Popover.Content>
+    </Popover>
+  );
 }
 
 const MenuBar = ({ editor }: { editor: any }) => {
@@ -100,21 +142,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         <LinkIcon size={16} />
       </Button>
       <div className="flex-1" />
-      <select 
-        className="text-sm border rounded p-1 bg-white"
-        onChange={(e) => {
-          if (e.target.value) {
-            editor.chain().focus().insertContent(e.target.value).run();
-            e.target.value = '';
-          }
-        }}
-      >
-        <option value="">Insert Variable...</option>
-        <option value="{{student_name}}">Student Name</option>
-        <option value="{{student_email}}">Student Email</option>
-        <option value="{{admin_name}}">Admin Name (You)</option>
-        <option value="<br><br><p>Best regards,</p><p><strong>{{admin_name}}</strong></p><p>NIAEFEUP</p>">Admin Signature</option>
-      </select>
+      <VariableSelector editor={editor} />
     </div>
   );
 };

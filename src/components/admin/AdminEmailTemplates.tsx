@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../ui/new/button';
+import { Input } from '../ui/new/input';
 import { Plus, Mail } from 'lucide-react';
 import { TemplateWrapper } from '../emails/TemplateWrapper';
 import { RichTextEditor } from './RichTextEditor';
@@ -30,19 +31,17 @@ export const AdminEmailTemplates = () => {
           
           <div className="flex flex-col gap-2">
             <label className="font-semibold text-sm">Template Name</label>
-            <input 
-              className="border p-2 rounded-md" 
+            <Input 
               value={activeTemplate?.name || ''} 
-              onChange={(e) => setActiveTemplate(prev => prev ? { ...prev, name: e.target.value } : null)}
+              onChange={(e: any) => setActiveTemplate(prev => prev ? { ...prev, name: e.target.value } : null)}
             />
           </div>
           
           <div className="flex flex-col gap-2">
             <label className="font-semibold text-sm">Subject</label>
-            <input 
-              className="border p-2 rounded-md" 
+            <Input 
               value={activeTemplate?.subject || ''} 
-              onChange={(e) => setActiveTemplate(prev => prev ? { ...prev, subject: e.target.value } : null)}
+              onChange={(e: any) => setActiveTemplate(prev => prev ? { ...prev, subject: e.target.value } : null)}
             />
           </div>
 
