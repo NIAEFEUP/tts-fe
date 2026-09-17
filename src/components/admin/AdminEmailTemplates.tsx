@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '../ui/new/button';
 import { Input } from '../ui/new/input';
 import { Table } from '../ui/new/table';
+import { Card } from '../ui/new/card';
 import { Plus, Mail } from 'lucide-react';
 import { TemplateWrapper } from '../emails/TemplateWrapper';
 import { RichTextEditor } from './RichTextEditor';
@@ -29,19 +30,19 @@ export const AdminEmailTemplates = () => {
             <h2 className="text-2xl font-bold">{activeTemplate?.id ? 'Edit Template' : 'New Template'}</h2>
             <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
           </div>
-          
+
           <div className="flex flex-col gap-2">
             <label className="font-semibold text-sm">Template Name</label>
-            <Input 
-              value={activeTemplate?.name || ''} 
+            <Input
+              value={activeTemplate?.name || ''}
               onChange={(e: any) => setActiveTemplate(prev => prev ? { ...prev, name: e.target.value } : null)}
             />
           </div>
-          
+
           <div className="flex flex-col gap-2">
             <label className="font-semibold text-sm">Subject</label>
-            <Input 
-              value={activeTemplate?.subject || ''} 
+            <Input
+              value={activeTemplate?.subject || ''}
               onChange={(e: any) => setActiveTemplate(prev => prev ? { ...prev, subject: e.target.value } : null)}
             />
           </div>
@@ -50,26 +51,28 @@ export const AdminEmailTemplates = () => {
             <label className="font-semibold text-sm flex justify-between">
               Body (HTML/Rich Text)
             </label>
-            <RichTextEditor 
-              value={activeTemplate?.bodyHtml || ''} 
+            <RichTextEditor
+              value={activeTemplate?.bodyHtml || ''}
               onChange={(val) => setActiveTemplate(prev => prev ? { ...prev, bodyHtml: val } : null)}
             />
           </div>
-          
+
           <Button onClick={() => setIsEditing(false)} className="w-fit">Save Template</Button>
         </div>
 
         {/* Live Preview Side */}
-        <div className="flex-1 border rounded-lg p-4 bg-gray-50 overflow-auto flex flex-col gap-4">
-          <h3 className="font-bold text-gray-700">Live Preview</h3>
-          <div className="bg-white border rounded shadow-sm scale-[0.8] origin-top h-[800px] overflow-hidden">
-             <TemplateWrapper 
-                previewText={activeTemplate?.subject || 'Preview'} 
-                bodyHtml={activeTemplate?.bodyHtml} 
-                isPreview={true}
-             />
-          </div>
-        </div>
+        <Card className="flex-1 overflow-auto flex flex-col gap-0">
+          <Card.Title className="text-gray-700">Live Preview</Card.Title>
+          <Card.Content className="flex-1">
+            {/*<div className="bg-white border rounded shadow-sm scale-[0.8]  overflow-hidden">*/}
+               <TemplateWrapper
+                  previewText={activeTemplate?.subject || 'Preview'}
+                  bodyHtml={activeTemplate?.bodyHtml}
+                  isPreview={true}
+               />
+            {/*</div>*/}
+          </Card.Content>
+        </Card>
       </div>
     );
   }
