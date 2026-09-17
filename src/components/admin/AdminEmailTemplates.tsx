@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../ui/new/button';
 import { Input } from '../ui/new/input';
+import { Table } from '../ui/new/table';
 import { Plus, Mail } from 'lucide-react';
 import { TemplateWrapper } from '../emails/TemplateWrapper';
 import { RichTextEditor } from './RichTextEditor';
@@ -86,43 +87,45 @@ export const AdminEmailTemplates = () => {
         </Button>
       </div>
 
-      <div className="border rounded-lg bg-white overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-50 border-b">
-              <th className="p-4 font-semibold text-gray-600">Name</th>
-              <th className="p-4 font-semibold text-gray-600">Subject</th>
-              <th className="p-4 font-semibold text-gray-600">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+      <Table.Container>
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.Head>Name</Table.Head>
+              <Table.Head>Subject</Table.Head>
+              <Table.Head>Actions</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
             {templates.map(t => (
-              <tr key={t.id} className="border-b last:border-0 hover:bg-gray-50">
-                <td className="p-4 font-medium flex items-center gap-2">
-                  <Mail size={16} className="text-gray-400" />
-                  {t.name}
-                </td>
-                <td className="p-4 text-gray-600">{t.subject}</td>
-                <td className="p-4">
+              <Table.Row key={t.id}>
+                <Table.Cell className="font-medium">
+                  <div className="flex items-center gap-2">
+                    <Mail size={16} className="text-gray-400" />
+                    {t.name}
+                  </div>
+                </Table.Cell>
+                <Table.Cell>{t.subject}</Table.Cell>
+                <Table.Cell>
                   <Button variant="outline" size="sm" onClick={() => {
                     setActiveTemplate(t);
                     setIsEditing(true);
                   }}>
                     Edit
                   </Button>
-                </td>
-              </tr>
+                </Table.Cell>
+              </Table.Row>
             ))}
             {templates.length === 0 && (
-              <tr>
-                <td colSpan={3} className="p-8 text-center text-gray-500">
+              <Table.Row>
+                <Table.Cell colSpan={3} className="text-center text-gray-500 py-8">
                   No templates found. Create one to get started.
-                </td>
-              </tr>
+                </Table.Cell>
+              </Table.Row>
             )}
-          </tbody>
-        </table>
-      </div>
+          </Table.Body>
+        </Table>
+      </Table.Container>
     </div>
   );
 };
