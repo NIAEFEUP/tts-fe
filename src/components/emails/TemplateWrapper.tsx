@@ -28,7 +28,7 @@ export const TemplateWrapper = ({
 }: TemplateWrapperProps) => {
   const content = (
     <Tailwind>
-      <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[600px] bg-white shadow-sm">
+      <Container className={`mx-auto max-w-[600px] ${isPreview ? 'p-[20px]' : 'border border-solid border-[#eaeaea] rounded my-[40px] p-[20px] bg-white shadow-sm'}`}>
         
         {/* Header Section */}
         <Section className="mt-[32px]">
@@ -67,7 +67,7 @@ export const TemplateWrapper = ({
 
   if (isPreview) {
     return (
-      <div className="bg-gray-100 font-sans px-2 min-h-full py-4">
+      <div className="font-sans w-full">
         {content}
       </div>
     );

@@ -168,9 +168,13 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   });
 
   return (
-    <div className="border rounded-md flex flex-col bg-white">
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+    <div className="border rounded-md flex flex-col bg-white h-full min-h-0">
+      <div className="shrink-0">
+        <MenuBar editor={editor} />
+      </div>
+      <div className="overflow-y-auto flex-1 min-h-0">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 };

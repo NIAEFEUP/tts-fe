@@ -25,13 +25,16 @@ export const AdminEmailTemplates = () => {
     return (
       <div className="flex gap-8 h-full">
         {/* Editor Side */}
-        <div className="flex-1 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
+        <div className="flex-1 flex flex-col gap-4 max-h-[calc(100vh-4rem)] sticky top-8">
+          <div className="flex items-center justify-between shrink-0">
             <h2 className="text-2xl font-bold">{activeTemplate?.id ? 'Edit Template' : 'New Template'}</h2>
-            <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+              <Button onClick={() => setIsEditing(false)}>Save Template</Button>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 shrink-0">
             <label className="font-semibold text-sm">Template Name</label>
             <Input
               value={activeTemplate?.name || ''}
@@ -39,7 +42,7 @@ export const AdminEmailTemplates = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 shrink-0">
             <label className="font-semibold text-sm">Subject</label>
             <Input
               value={activeTemplate?.subject || ''}
@@ -47,8 +50,8 @@ export const AdminEmailTemplates = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-2 flex-1">
-            <label className="font-semibold text-sm flex justify-between">
+          <div className="flex flex-col gap-2 flex-1 min-h-0">
+            <label className="font-semibold text-sm flex justify-between shrink-0">
               Body (HTML/Rich Text)
             </label>
             <RichTextEditor
@@ -56,23 +59,21 @@ export const AdminEmailTemplates = () => {
               onChange={(val) => setActiveTemplate(prev => prev ? { ...prev, bodyHtml: val } : null)}
             />
           </div>
-
-          <Button onClick={() => setIsEditing(false)} className="w-fit">Save Template</Button>
         </div>
 
         {/* Live Preview Side */}
-        <Card className="flex-1 overflow-auto flex flex-col gap-0">
-          <Card.Title className="text-gray-700">Live Preview</Card.Title>
-          <Card.Content className="flex-1">
-            {/*<div className="bg-white border rounded shadow-sm scale-[0.8]  overflow-hidden">*/}
-               <TemplateWrapper
-                  previewText={activeTemplate?.subject || 'Preview'}
-                  bodyHtml={activeTemplate?.bodyHtml}
-                  isPreview={true}
-               />
-            {/*</div>*/}
-          </Card.Content>
-        </Card>
+        <div className="flex-1 flex flex-col gap-4 sticky top-8 max-h-[calc(100vh-4rem)]">
+          <div className="flex items-center h-10">
+            <h3 className="text-xl font-bold">Live Preview</h3>
+          </div>
+          <Card className="flex-1 overflow-auto">
+             <TemplateWrapper
+                previewText={activeTemplate?.subject || 'Preview'}
+                bodyHtml={activeTemplate?.bodyHtml}
+                isPreview={true}
+             />
+          </Card>
+        </div>
       </div>
     );
   }
