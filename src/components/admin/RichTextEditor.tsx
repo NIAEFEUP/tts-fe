@@ -7,6 +7,7 @@ import { Button } from '../ui/new/button';
 import { useState } from 'react';
 import { Popover } from '../ui/new/popover';
 import { Command, CommandGroup, CommandItem } from '../ui/command';
+import { Card } from '../ui/new/card';
 
 interface RichTextEditorProps {
   value: string;
@@ -26,7 +27,7 @@ const VariableSelector = ({ editor }: { editor: any }) => {
   return (
     <Popover open={open} onOpenChange={setOpen} placement="bottom-start">
       <Popover.Trigger asChild>
-        <Button variant="outline" size="sm" className="justify-between w-40 text-xs h-8">
+        <Button variant="outline" size="sm" className="justify-between w-40 text-xs h-8 shrink-0">
           Insert Variable...
           <ChevronDown size={14} />
         </Button>
@@ -74,7 +75,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
   }
 
   return (
-    <div className="border-b p-2 flex flex-wrap gap-1 bg-gray-50 rounded-t-md items-center">
+    <div className="border-b border-border p-2 flex gap-1 bg-gray-50/50 rounded-t-[calc(1.5rem-1px)] items-center overflow-x-auto whitespace-nowrap">
       <Button
         variant="ghost"
         size="sm"
@@ -107,7 +108,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       >
         <Strikethrough size={16} />
       </Button>
-      <div className="w-[1px] bg-gray-300 mx-1 h-8" />
+      <div className="w-[1px] bg-gray-300 mx-1 h-8 shrink-0" />
       <Button
         variant="ghost"
         size="sm"
@@ -132,7 +133,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       >
         <ListOrdered size={16} />
       </Button>
-      <div className="w-[1px] bg-gray-300 mx-1 h-8" />
+      <div className="w-[1px] bg-gray-300 mx-1 h-8 shrink-0" />
       <Button
         variant="ghost"
         size="sm"
@@ -141,7 +142,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       >
         <LinkIcon size={16} />
       </Button>
-      <div className="flex-1" />
+      <div className="w-[1px] bg-gray-300 mx-1 h-8 shrink-0" />
       <VariableSelector editor={editor} />
     </div>
   );
@@ -168,13 +169,13 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   });
 
   return (
-    <div className="border rounded-md flex flex-col bg-white h-full min-h-0">
+    <Card className="flex flex-col h-full min-h-0 p-0 overflow-hidden shadow-none rounded-3xl">
       <div className="shrink-0">
         <MenuBar editor={editor} />
       </div>
-      <div className="overflow-y-auto flex-1 min-h-0">
+      <Card.Content className="overflow-y-auto flex-1 min-h-0 p-0">
         <EditorContent editor={editor} />
-      </div>
-    </div>
+      </Card.Content>
+    </Card>
   );
 };
