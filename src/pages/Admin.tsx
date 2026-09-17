@@ -4,6 +4,7 @@ import { AdminMainContent } from '../components/admin/AdminMainContent'
 import { AdminStatisticsView } from '../components/admin/AdminStatisticsView'
 import { AdminSidebar } from '../components/admin/AdminSidebar'
 import { AdminExchangeSettings } from '../components/admin/AdminExchangeSettings'
+import { AdminEmailTemplates } from '../components/admin/AdminEmailTemplates'
 import { SidebarProvider } from '../components/ui/sidebar'
 import SessionContext from '../contexts/SessionContext'
 import api from '../api/backend'
@@ -43,6 +44,7 @@ const AdminPage = ({ page }: Props) => {
         {page === 'pedidos' && <AdminMainContent />}
         {page === 'settings' && <AdminExchangeSettings />}
         {page === 'statistics' && <AdminStatisticsView />}
+        {page === 'email-templates' && <AdminEmailTemplates />}
       </main>
     </SidebarProvider>
   )

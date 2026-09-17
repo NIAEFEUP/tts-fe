@@ -166,6 +166,7 @@ const App = () => {
             <Route path="admin/vacancies" key="page-admin-vacancies" element={<AdminPage page="vacancies" />} />
             <Route path="admin/settings" key="page-admin-settings" element={<AdminPage page="settings" />} />
             <Route path="admin/statistics" key="page-admin-statistics" element={<AdminPage page="statistics" />} />
+            <Route path="admin/email-templates" key="page-admin-email-templates" element={<AdminPage page="email-templates" />} />
           </SentryRoutes>
           <Toaster />
         </>

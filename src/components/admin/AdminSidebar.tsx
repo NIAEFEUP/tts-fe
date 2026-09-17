@@ -4,7 +4,7 @@ import { useContext, useState } from 'react'
 import SessionContext from '../../contexts/SessionContext'
 import ScheduleContext from '../../contexts/ScheduleContext'
 import authService from '../../api/services/authService'
-import { CornerDownLeftIcon, LogOut, PieChartIcon, Group, SendHorizontal, SlidersHorizontal } from 'lucide-react'
+import { CornerDownLeftIcon, LogOut, PieChartIcon, Group, SendHorizontal, SlidersHorizontal, Mail } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/new/button'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu } from '../ui/sidebar'
@@ -31,6 +31,7 @@ export const AdminSidebar = () => {
     { to: '/admin', label: 'Pedidos', icon: SendHorizontal },
     { to: '/admin/settings', label: 'Definições', icon: SlidersHorizontal },
     { to: '/admin/statistics', label: 'Estatísticas', icon: PieChartIcon },
+    { to: '/admin/email-templates', label: 'Email Templates', icon: Mail },
   ]
 
   const isActive = (path: string) => location.pathname === path
