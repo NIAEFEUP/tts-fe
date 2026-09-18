@@ -10,9 +10,9 @@ type Props = {
 
 const ProfessorItem = ({ professorInformation, filtered, onSelect }: Props) => {
   return (
-    <button 
+    <button
       type="button"
-      onClick={(e) => onSelect?.(e)} 
+      onClick={(e) => onSelect?.(e)}
       className="group flex w-[calc(100%-16px)] mx-2 my-1 cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-1.5 font-medium outline-none text-foreground/80 hover:bg-background-secondary transition-colors"
     >
       {filtered && <Check className="h-4 w-4" />}
