@@ -164,7 +164,6 @@ const Schedule = ({ classes, slots, refresh }: Props) => {
                     slots={daySlots}
                     classes={classes}
                     hiddenLessonsTypes={hiddenLessonsTypes}
-                    setConflictsSeverities={setConflictsSeverities}
                   />
                 </div>
               </div>

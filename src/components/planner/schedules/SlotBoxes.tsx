@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction, Dispatch } from 'react'
+import { useState, useEffect, useCallback, SetStateAction, Dispatch } from 'react'
 import { ClassDescriptor, SlotInfo } from '../../../@types'
 import SlotBox from './SlotBox'
 
@@ -6,7 +6,7 @@ type Props = {
   slots: Array<SlotInfo>
   classes: Array<ClassDescriptor>
   hiddenLessonsTypes: Array<string>
-  setConflictsSeverities: Dispatch<SetStateAction<Array<number>>>
+  setConflictsSeverities?: Dispatch<SetStateAction<Array<number>>>
 }
 
 const SlotBoxes = ({ slots, classes, hiddenLessonsTypes, setConflictsSeverities }: Props) => {
@@ -14,17 +14,37 @@ const SlotBoxes = ({ slots, classes, hiddenLessonsTypes, setConflictsSeverities 
 
   const [conflictMap, setConflictMap] = useState(new Map<number, number>())
 
-  const updateConflictMap = (courseId: number, conflictData: number) => {
+  const updateConflictMap = useCallback((slotId: number, conflictData: number) => {
     setConflictMap((prevConflictMap) => {
+      if (prevConflictMap.get(slotId) === conflictData) {
+        return prevConflictMap
+      }
       const newConflictMap = new Map(prevConflictMap)
-      newConflictMap.set(courseId, conflictData)
+      newConflictMap.set(slotId, conflictData)
       return newConflictMap
     })
-  }
+  }, [])
+
+  // Clean up slots that are no longer in the schedule
+  useEffect(() => {
+    const validSlotIds = new Set(slots.map((s) => s.id))
+    setConflictMap((prevConflictMap) => {
+      let changed = false
+      const cleaned = new Map<number, number>()
+      for (const [id, sev] of prevConflictMap.entries()) {
+        if (validSlotIds.has(id)) {
+          cleaned.set(id, sev)
+        } else {
+          changed = true
+        }
+      }
+      return changed ? cleaned : prevConflictMap
+    })
+  }, [slots])
 
   useEffect(() => {
-    setConflictsSeverities((prev) => [...prev, ...Array.from(conflictMap.values())])
-  }, [conflictMap])
+    setConflictsSeverities?.(Array.from(conflictMap.values()))
+  }, [conflictMap, setConflictsSeverities])
 
   return (
     <>

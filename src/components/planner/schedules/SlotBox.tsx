@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { CourseInfo, ClassInfo, ClassDescriptor, SlotInfo } from '../../../@types'
 import LessonBox from './LessonBox'
 import ResponsiveLessonBox from './ResponsiveLessonBox'
@@ -7,13 +8,14 @@ type Props = {
   classInfo: ClassInfo
   slot: SlotInfo
   classes: ClassDescriptor[]
-  setSlotBoxConflict: (courseId: number, conflictData: number) => void
+  setSlotBoxConflict: (slotId: number, conflictData: number) => void
 }
 
 const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: Props) => {
-  const updateSlotBoxConflict = (courseId: number, conflictData: number) => {
-    setSlotBoxConflict(courseId, conflictData)
-  }
+  const otherClasses = useMemo(
+    () => classes.filter((classDescriptor) => classDescriptor.classInfo.id !== classInfo.id),
+    [classes, classInfo.id],
+  )
 
   return (
     <>
@@ -23,8 +25,8 @@ const SlotBox = ({ courseInfo, classInfo, classes, slot, setSlotBoxConflict }: P
           courseInfo={courseInfo}
           classInfo={classInfo}
           slotInfo={slot}
-          classes={classes.filter((classDescriptor) => classDescriptor.classInfo.id !== classInfo.id)}
-          setLessonBoxConflict={updateSlotBoxConflict}
+          classes={otherClasses}
+          setLessonBoxConflict={setSlotBoxConflict}
         />
       </div>
 
