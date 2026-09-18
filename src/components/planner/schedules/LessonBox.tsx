@@ -21,7 +21,7 @@ type Props = {
   classInfo: ClassInfo
   slotInfo: SlotInfo
   classes: ClassDescriptor[]
-  setLessonBoxConflict: (courseId: number, conflictData: number) => void
+  setLessonBoxConflict: (slotId: number, conflictData: number) => void
 }
 
 const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConflict }: Props) => {
@@ -67,8 +67,8 @@ const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConfl
         // slots
         const slot = classDescriptor.classInfo.slots[j]
         if (schedulesConflict(slotInfo, slot)) {
-          // The highest severity of the all the conflicts is the overall severity
-          newConflictInfo.severe = conflictsSeverity(slotInfo, slot, tClassConflicts) //|| newConflictInfo.severe;
+          // The highest severity of all the conflicts is the overall severity
+          newConflictInfo.severe = Math.max(newConflictInfo.severe, conflictsSeverity(slotInfo, slot, tClassConflicts))
           const newClassDescriptor = {
             classInfo: classDescriptor.classInfo,
             courseInfo: classDescriptor.courseInfo,
@@ -80,21 +80,21 @@ const LessonBox = ({ courseInfo, classInfo, slotInfo, classes, setLessonBoxConfl
     }
 
     const hasNewClasses = !newConflictInfo.conflictingClasses.every((conflictingClass) =>
-      originalExchangeSchedule.some((originalClass) => originalClass.classInfo.id === conflictingClass.classInfo.id),
+      originalExchangeSchedule?.some(
+        (originalClass) =>
+          originalClass.classInfo.id === conflictingClass.classInfo.id ||
+          (originalClass.courseInfo.id === conflictingClass.courseInfo.id &&
+            originalClass.classInfo.name === conflictingClass.classInfo.name),
+      ),
     )
 
-    if (!hasNewClasses && newConflictInfo.severe === 0) {
+    if (!hasNewClasses) {
       newConflictInfo.severe = 0
     }
 
     setConflict(newConflictInfo)
-  }, [classInfo, classes, hasConflict])
-
-  useEffect(() => {
-    if (conflict?.severe !== undefined) {
-      setLessonBoxConflict(courseInfo.id, conflict?.severe)
-    }
-  }, [classInfo])
+    setLessonBoxConflict(slotInfo.id, newConflictInfo.severe)
+  }, [classInfo, classes, slotInfo, tClassConflicts, originalExchangeSchedule, setLessonBoxConflict])
 
   const showConflicts = () => {
     setConflictsShown(true)
