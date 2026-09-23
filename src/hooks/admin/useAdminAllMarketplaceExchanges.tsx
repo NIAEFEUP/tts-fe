@@ -7,8 +7,14 @@ import { buildUrlWithFilterParams } from '../../utils/admin/filters'
 /**
  * Gets the exchanges that a student made not involving any other student.
  */
-export default (filterContext: RequestFiltersContextContent, pageIndex: number, pageSize: number) => {
+export default (
+  filterContext: RequestFiltersContextContent,
+  pageIndex: number,
+  pageSize: number,
+) => {
   const getExchanges = async (url: string) => {
+    console.log('FETCH:', url)
+
     try {
       const res = await fetch(url, {
         credentials: 'include',
@@ -22,16 +28,31 @@ export default (filterContext: RequestFiltersContextContent, pageIndex: number, 
     }
   }
 
+  const url = buildUrlWithFilterParams(
+    `${api.BACKEND_URL}/exchange/admin/marketplace?page=${pageIndex}&page_size=${pageSize}`,
+    filterContext,
+  )
+
+  console.log('SWITCH:', {
+    pageIndex,
+    pageSize,
+    url,
+  })
+
   const { data, error, mutate } = useSWR(
-    buildUrlWithFilterParams(
-      `${api.BACKEND_URL}/exchange/admin/marketplace?page=${pageIndex}&page_size=${pageSize}`,
-      filterContext,
-    ),
+    url,
     getExchanges,
   )
 
-  const exchanges = useMemo(() => (data ? [].concat(...data['exchanges']) : null), [data])
-  const totalPages = useMemo(() => (data ? data['total_pages'] : null), [data])
+  const exchanges = useMemo(
+    () => (data ? [].concat(...data['exchanges']) : null),
+    [data],
+  )
+
+  const totalPages = useMemo(
+    () => (data ? data['total_pages'] : null),
+    [data],
+  )
 
   return {
     exchanges,
@@ -41,3 +62,4 @@ export default (filterContext: RequestFiltersContextContent, pageIndex: number, 
     mutate,
   }
 }
+
