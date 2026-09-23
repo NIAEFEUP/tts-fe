@@ -160,11 +160,7 @@ const Schedule = ({ classes, slots, refresh }: Props) => {
 
               <div className="flex w-full items-start gap-2 pl-3">
                 <div className="flex w-full flex-col gap-2">
-                  <SlotBoxes
-                    slots={daySlots}
-                    classes={classes}
-                    hiddenLessonsTypes={hiddenLessonsTypes}
-                  />
+                  <SlotBoxes slots={daySlots} classes={classes} hiddenLessonsTypes={hiddenLessonsTypes} />
                 </div>
               </div>
             </div>

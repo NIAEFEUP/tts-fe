@@ -8,21 +8,9 @@ import { AdminMarketplaceExchangesCard } from '../AdminMarketplaceExchangesCard'
 export const AdminMarketplaceExchanges = () => {
   const filterContext = useContext(RequestFiltersContext)
 
-  const {
-    currPage,
-    setTotalPages,
-    itemsPerPage,
-  } = useContext(AdminPaginationContext)
+  const { currPage, setTotalPages, itemsPerPage } = useContext(AdminPaginationContext)
 
-  const {
-    exchanges,
-    totalPages,
-    loading,
-  } = useAdminAllMarketplaceExchanges(
-    filterContext,
-    currPage,
-    itemsPerPage,
-  )
+  const { exchanges, totalPages, loading } = useAdminAllMarketplaceExchanges(filterContext, currPage, itemsPerPage)
 
   useEffect(() => {
     if (totalPages !== null) {
@@ -34,15 +22,10 @@ export const AdminMarketplaceExchanges = () => {
     <>
       {loading && <BarLoader className="w-full" />}
 
-      {!loading && (!exchanges || exchanges.length === 0) && (
-        <h2>Nenhum pedido encontrado de momento</h2>
-      )}
+      {!loading && (!exchanges || exchanges.length === 0) && <h2>Nenhum pedido encontrado de momento</h2>}
 
       {exchanges?.map((exchange) => (
-        <AdminMarketplaceExchangesCard
-          key={`admin-marketplace-${exchange.id}`}
-          exchange={exchange}
-        />
+        <AdminMarketplaceExchangesCard key={`admin-marketplace-${exchange.id}`} exchange={exchange} />
       ))}
     </>
   )

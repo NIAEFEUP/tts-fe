@@ -7,11 +7,7 @@ import { buildUrlWithFilterParams } from '../../utils/admin/filters'
 /**
  * Gets the exchanges that a student made not involving any other student.
  */
-export default (
-  filterContext: RequestFiltersContextContent,
-  pageIndex: number,
-  pageSize: number,
-) => {
+export default (filterContext: RequestFiltersContextContent, pageIndex: number, pageSize: number) => {
   const getExchanges = async (url: string) => {
     console.log('FETCH:', url)
 
@@ -39,20 +35,11 @@ export default (
     url,
   })
 
-  const { data, error, mutate } = useSWR(
-    url,
-    getExchanges,
-  )
+  const { data, error, mutate } = useSWR(url, getExchanges)
 
-  const exchanges = useMemo(
-    () => (data ? [].concat(...data['exchanges']) : null),
-    [data],
-  )
+  const exchanges = useMemo(() => (data ? [].concat(...data['exchanges']) : null), [data])
 
-  const totalPages = useMemo(
-    () => (data ? data['total_pages'] : null),
-    [data],
-  )
+  const totalPages = useMemo(() => (data ? data['total_pages'] : null), [data])
 
   return {
     exchanges,
@@ -62,4 +49,3 @@ export default (
     mutate,
   }
 }
-
