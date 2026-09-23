@@ -135,7 +135,7 @@ export const RequestFilters = () => {
       </Popover>
 
       <Button
-        variant="ghost"
+        variant="destructive"
         onClick={() => {
           setActiveCourse(undefined)
           setActiveCurricularYear(undefined)
