@@ -1,0 +1,46 @@
+services:
+  nginx:
+    image: nginx:1-alpine
+    container_name: tts_nginx
+    ports:
+      - 443:443
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs/:/etc/nginx/certs/
+
+  django:
+    build: 
+      context: ./django
+      target: dev
+    container_name: tts_django
+    env_file:
+      - django/.env.dev
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./django/:/usr/src/django/
+    ports:
+      - 8100:8000
+      
+
+  fetcher:
+    build: ./fetcher
+    container_name: tts_fetcher
+    volumes:
+      - ./fetcher/:/fetcher/
+
+  redis_service:
+    image: redis:6.2-bullseye
+    container_name: tts_redis
+    ports:
+      - "6379:6379"
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: tts-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+networks:
+  default:
+    name: tts-docker-network

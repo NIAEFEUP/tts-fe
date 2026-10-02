@@ -1,0 +1,22 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Upload to NIployments registry
+      uses: NIAEFEUP/push-to-niployments@v2.2
+      with:
+        docker_dockerfile: Dockerfile
+        docker_context: ./django
+        docker_target: prod
+        NIPLOYMENTS_REGISTRY_URL: ${{ vars.NIPLOYMENTS_REGISTRY_URL }}
+        NIPLOYMENTS_REGISTRY_USERNAME: ${{ vars.NIPLOYMENTS_REGISTRY_USERNAME }}
+        NIPLOYMENTS_REGISTRY_PASSWORD: ${{ secrets.NIPLOYMENTS_REGISTRY_PASSWORD }}

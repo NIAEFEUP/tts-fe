@@ -1,0 +1,38 @@
+{
+  "name": "tts-be",
+  "private": true,
+  "packageManager": "bun@1.4.1",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file .env src/index.ts",
+    "start": "node dist/server.mjs",
+    "contract:emit": "prisma contract emit",
+    "db:init": "prisma db init",
+    "db:update": "prisma db update",
+    "db:verify": "prisma db verify",
+    "db:schema": "prisma db schema",
+    "db:sign": "prisma db sign",
+    "migrate": "prisma db migrate",
+    "migrate:show": "prisma db migrate --show",
+    "migration:plan": "prisma migration plan",
+    "migration:show": "prisma migration show",
+    "migration:status": "prisma migration status",
+    "migration:list": "prisma migration list",
+    "migration:ref:set": "prisma migration ref set",
+    "db:studio": "node -e \"require('dotenv').config(); require('child_process').execSync('npx --yes prisma@prev studio --url ' + process.env.DATABASE_URL, {stdio: 'inherit'})\""
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.4.2",
+    "@elysiajs/node": "^1.4.5",
+    "@prisma/orm-postgres": "8.0.0-rc.12",
+    "elysia": "^1.4.28",
+    "temporal-polyfill": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "dotenv": "^16.0.0",
+    "prisma": "8.0.0-rc.18",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

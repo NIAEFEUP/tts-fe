@@ -1,0 +1,37 @@
+# Logs
+logs
+*.log
+
+# sigarra internal data cannot be committed
+postgres/sql/01_dump_postgres.sql 
+
+# dotenv environment variables file
+.env
+
+# postgres data
+postgres/data/*
+postgres/sql/01_data.sql
+**__pycache__
+
+# django
+django/.env.dev
+django/tts_be/database.db
+django/tts_be/database.db-shm
+django/tts_be/database.db-wal
+
+nginx/certs/*.key
+
+# celery
+django/celerybeat-schedule
+
+# stats related graphs
+django/university/stats_graphs/*
+
+httpd/shibboleth/*.pem
+
+# Mock data for testing
+django/mock-data.json
+
+
+# macOS
+.DS_Store

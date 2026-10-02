@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmação de troca</title>
+</head>
+<body>
+    <p>Podes confirmar a tua troca a partir do seguinte link:</p>
+    <a href="{{ confirm_link }}">{{ confirm_link }}</a>
+    
+ 
+    <!-- If there are multiple exchanges, loop through them -->
+    <h3>Trocas efetuadas:</h3>
+    <ul>
+        {% for exchange in exchanges %}
+            <li>
+                <strong>Unidade Curricular:</strong> {{ exchange.course_unit}}<br>
+                <strong>De:</strong> {{ exchange.class_participant_goes_from }}<br>
+                <strong>Para:</strong> {{ exchange.class_participant_goes_to }}<br>
+            </li>
+        {% empty %}
+            <li>Não há outras trocas disponíveis.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,1496 @@
+openapi: 3.0.3
+info:
+  title: TTS API
+  description: |
+    API for TTS (Time Table Selector) — NIAEFEUP's schedule planner and class exchange platform for FEUP students.
+
+    ## Authentication
+    Most endpoints require an active session (cookie-based via OIDC login).
+    Admin-only endpoints additionally require the user to be registered as an `ExchangeAdmin`.
+  version: 1.0.0
+  contact:
+    name: NIAEFEUP
+    url: https://github.com/NIAEFEUP/tts-be
+
+servers:
+  - url: https://tts.niaefeup.pt
+    description: Production
+  - url: https://tts-staging.niaefeup.pt
+    description: Staging
+  - url: http://localhost:8000
+    description: Local development
+
+tags:
+  - name: auth
+    description: Authentication and session info
+  - name: faculty
+    description: Faculties and courses
+  - name: course-units
+    description: Course units and classes
+  - name: student
+    description: Student data and schedule
+  - name: exchange-direct
+    description: Direct (peer-to-peer) class exchanges
+  - name: exchange-marketplace
+    description: Marketplace class exchanges
+  - name: exchange-admin
+    description: Admin management of exchanges and periods
+  - name: enrollment
+    description: Course unit enrollment requests
+  - name: system
+    description: System utilities
+
+paths:
+
+  # ─── AUTH ────────────────────────────────────────────────────────────────────
+
+  /auth/info/:
+    get:
+      tags: [auth]
+      summary: Get authenticated user info
+      description: "Returns the currently logged-in user's info and exchange eligibility. Returns `signed: false` if not authenticated."
+      responses:
+        "200":
+          description: User info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signed:
+                    type: boolean
+                  username:
+                    type: string
+                    example: "up202012345"
+                  name:
+                    type: string
+                    example: "Maria Silva"
+                  eligible_exchange:
+                    type: boolean
+                  is_admin:
+                    type: boolean
+
+  /csrf/:
+    get:
+      tags: [auth]
+      summary: Get CSRF token
+      description: Sets the `csrftoken` cookie. Must be called before any POST/PUT/DELETE request.
+      responses:
+        "200":
+          description: CSRF cookie set
+
+  /sigarra_login/:
+    post:
+      tags: [auth]
+      summary: Login via SIGARRA credentials (legacy, only when FEDERATED_AUTH=0)
+      responses:
+        "200":
+          description: Login result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  created:
+                    type: boolean
+                  username:
+                    type: string
+
+  /info/:
+    get:
+      tags: [system]
+      summary: System info
+      responses:
+        "200":
+          description: Current server date
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    example: "2024-09-15 14:30:00"
+
+  # ─── FACULTY & COURSES ───────────────────────────────────────────────────────
+
+  /faculty/:
+    get:
+      tags: [faculty]
+      summary: List all faculties
+      responses:
+        "200":
+          description: Array of faculties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Faculty'
+
+  /course/{year}:
+    get:
+      tags: [faculty]
+      summary: List courses for a given year
+      parameters:
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2024
+      responses:
+        "200":
+          description: Array of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+
+  /course/{course_id}/groups:
+    get:
+      tags: [faculty]
+      summary: List course groups for a course
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Array of course groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseGroup'
+
+  /course_group/{course_group_id}/course_units:
+    get:
+      tags: [faculty]
+      summary: List course units in a course group
+      parameters:
+        - name: course_group_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Array of course units
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseUnit'
+
+  # ─── COURSE UNITS ────────────────────────────────────────────────────────────
+
+  /course_units/{course_id}/{year}/{semester}/:
+    get:
+      tags: [course-units]
+      summary: List course units for a course, year and semester
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: semester
+          in: path
+          required: true
+          schema:
+            type: integer
+            enum: [1, 2]
+      responses:
+        "200":
+          description: Array of course units with schedule slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseUnitWithSlots'
+
+  /course_unit/{course_unit_id}/:
+    get:
+      tags: [course-units]
+      summary: Get a single course unit by ID
+      parameters:
+        - name: course_unit_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Course unit object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseUnit'
+        "404":
+          description: Course unit not found
+
+  /course_unit/hash:
+    get:
+      tags: [course-units]
+      summary: Get hashes for multiple course units (used for cache invalidation)
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Comma-separated list of course unit IDs
+          example: "1,2,3"
+      responses:
+        "200":
+          description: Map of course_unit_id to hash
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                example:
+                  "1": "abc123"
+                  "2": "def456"
+
+  /class/{course_unit_id}/:
+    get:
+      tags: [course-units]
+      summary: Get all classes (slots) for a course unit
+      parameters:
+        - name: course_unit_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Array of class slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassSlot'
+
+  /professors/{schedule_id}/:
+    get:
+      tags: [course-units]
+      summary: Get professors for a class slot
+      parameters:
+        - name: schedule_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Array of professors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Professor'
+
+  /course_unit/{course_unit_id}/exchange/metadata:
+    get:
+      tags: [course-units]
+      summary: Get exchange card metadata for a course unit
+      description: Returns the available classes and enrolled students for building an exchange request card.
+      parameters:
+        - name: course_unit_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Exchange metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  classes:
+                    type: array
+                    items:
+                      type: string
+                    example: ["1MIEIC01", "1MIEIC02"]
+                  students:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        mecNumber:
+                          type: string
+                        name:
+                          type: string
+                        classInfo:
+                          type: object
+
+  # ─── STUDENT ─────────────────────────────────────────────────────────────────
+
+  /student/schedule:
+    get:
+      tags: [student]
+      summary: Get the authenticated student's current schedule
+      responses:
+        "200":
+          description: Student schedule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentScheduleResponse'
+        "403":
+          description: Not authenticated
+    put:
+      tags: [student]
+      summary: Refresh the authenticated student's schedule metadata from SIGARRA
+      responses:
+        "200":
+          description: Refreshed schedule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentScheduleResponse'
+
+  /student/{nmec}/schedule:
+    get:
+      tags: [student]
+      summary: Get a specific student's schedule (admin only)
+      parameters:
+        - name: nmec
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "202012345"
+      responses:
+        "200":
+          description: Student schedule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentScheduleResponse'
+        "403":
+          description: Not an admin
+
+  /student/{nmec}/photo:
+    get:
+      tags: [student]
+      summary: Get a student's photo
+      parameters:
+        - name: nmec
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: JPEG photo
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+
+  /student/{nmec}/{course_id}/metadata:
+    get:
+      tags: [student]
+      summary: Get a student's course metadata (admin only)
+      parameters:
+        - name: nmec
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Student course metadata
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        "403":
+          description: Not an admin
+
+  /student/course_units/eligible:
+    get:
+      tags: [student]
+      summary: Get course units the student is eligible to exchange
+      responses:
+        "200":
+          description: Eligible course units
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseUnit'
+
+  /student_data/{codigo}/:
+    get:
+      tags: [student]
+      summary: Get raw student data from SIGARRA
+      parameters:
+        - name: codigo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Student data from SIGARRA
+
+  /student/exchange/sent/:
+    get:
+      tags: [student]
+      summary: Get the student's sent exchange requests (paginated)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: courseUnitNameFilter
+          in: query
+          schema:
+            type: string
+          description: Comma-separated course unit names to filter by
+      responses:
+        "200":
+          description: Paginated sent exchanges
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExchangeList'
+
+  /student/exchange/received/:
+    get:
+      tags: [student]
+      summary: Get the student's received exchange requests (paginated)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Paginated received exchanges
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExchangeList'
+
+  # ─── DIRECT EXCHANGE ─────────────────────────────────────────────────────────
+
+  /exchange/direct/:
+    get:
+      tags: [exchange-direct]
+      summary: List all direct exchanges (admin only, paginated)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: activeCourse
+          in: query
+          schema:
+            type: integer
+          description: Filter by major ID
+        - name: activeCurricularYear
+          in: query
+          schema:
+            type: integer
+        - name: activeStates
+          in: query
+          schema:
+            type: string
+          description: Comma-separated states (e.g. `untreated,accepted`)
+      responses:
+        "200":
+          description: Paginated direct exchanges
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exchanges:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DirectExchange'
+                  total_pages:
+                    type: integer
+        "403":
+          description: Not an admin
+    post:
+      tags: [exchange-direct]
+      summary: Create a direct exchange request
+      description: |
+        Creates a peer-to-peer exchange request. Sends a confirmation email to each participant.
+        The exchange only takes effect after all participants confirm via email.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: ["exchangeChoices[]"]
+              properties:
+                exchangeChoices[]:
+                  type: array
+                  items:
+                    type: string
+                    description: JSON string
+                  example:
+                    - '{"courseUnitId": 1, "classNameRequesterGoesFrom": "1MIEIC01", "classNameRequesterGoesTo": "1MIEIC02", "participant": "202054321"}'
+      responses:
+        "200":
+          description: Exchange created, confirmation emails sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /exchange/direct/{id}:
+    put:
+      tags: [exchange-direct]
+      summary: Accept a direct exchange (participant confirmation)
+      description: |
+        Called by a participant to confirm their acceptance of the exchange.
+        When all participants have accepted, the schedules are rewritten automatically.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Acceptance recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        "400":
+          description: Error (e.g. exchange no longer valid)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /exchange/direct/validate/{id}:
+    get:
+      tags: [exchange-direct]
+      summary: Validate whether a direct exchange is still valid
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  error:
+                    type: string
+                  last_validated:
+                    type: string
+                    format: date-time
+
+  /exchange/verify/{token}:
+    post:
+      tags: [exchange-direct]
+      summary: Verify/accept a direct exchange via email token
+      description: |
+        Called when a participant clicks the confirmation link in their email.
+        Token is a base64-encoded JWT.
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Base64-encoded JWT from the confirmation email
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verified:
+                    type: boolean
+                  expired:
+                    type: boolean
+                  exchange_id:
+                    type: integer
+
+  /exchange/{exchange_id}/revalidate/:
+    post:
+      tags: [exchange-direct]
+      summary: Request a new confirmation email for an exchange (rate-limited to 1/hour)
+      parameters:
+        - name: exchange_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Email sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  # ─── MARKETPLACE EXCHANGE ────────────────────────────────────────────────────
+
+  /exchange/marketplace/:
+    get:
+      tags: [exchange-marketplace]
+      summary: List marketplace exchanges (paginated)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: courseUnitNameFilter
+          in: query
+          schema:
+            type: string
+          description: Comma-separated course unit names
+        - name: classesFilter
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated marketplace exchanges
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExchangeList'
+    post:
+      tags: [exchange-marketplace]
+      summary: Create a marketplace exchange or urgent exchange request
+      description: |
+        If `urgentMessage` is provided, creates an urgent exchange request instead of a marketplace listing.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: ["exchangeChoices[]"]
+              properties:
+                exchangeChoices[]:
+                  type: array
+                  items:
+                    type: string
+                    description: JSON string
+                  example:
+                    - '{"courseUnitId": 1, "classNameRequesterGoesFrom": "1MIEIC01", "classNameRequesterGoesTo": "1MIEIC02"}'
+                urgentMessage:
+                  type: string
+                  description: If present, creates an urgent request with this justification message
+      responses:
+        "200":
+          description: Exchange created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /exchange/related/:
+    post:
+      tags: [exchange-marketplace]
+      summary: Find marketplace exchanges that match given exchange choices
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                exchangeChoices[]:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Matching exchanges
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exchanges:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MarketplaceExchange'
+
+  # ─── EXCHANGE COMMON ─────────────────────────────────────────────────────────
+
+  /exchange/{request_type}/{id}/cancel/:
+    put:
+      tags: [exchange-direct, exchange-marketplace]
+      summary: Cancel an exchange request
+      parameters:
+        - name: request_type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [direct, marketplace]
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Cancelled
+
+  /exchange/urgent/:
+    get:
+      tags: [exchange-admin]
+      summary: List urgent exchange requests (admin only, paginated)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: activeCourse
+          in: query
+          schema:
+            type: integer
+        - name: activeCurricularYear
+          in: query
+          schema:
+            type: integer
+        - name: activeStates
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated urgent exchanges
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exchanges:
+                    type: array
+                    items:
+                      type: object
+                  total_pages:
+                    type: integer
+        "403":
+          description: Not an admin
+    put:
+      tags: [exchange-admin]
+      summary: Update an urgent exchange message (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [urgent_request_id, message]
+              properties:
+                urgent_request_id:
+                  type: integer
+                message:
+                  type: string
+      responses:
+        "200":
+          description: Updated urgent exchange
+
+  /exchange/export/csv:
+    get:
+      tags: [exchange-admin]
+      summary: Export all accepted direct exchanges to CSV (admin only)
+      responses:
+        "200":
+          description: CSV file
+          content:
+            text/csv:
+              schema:
+                type: string
+              example: |
+                student,course_unit,old_class,new_class
+                202012345,Algoritmos e Estruturas de Dados,1MIEIC01,1MIEIC02
+        "403":
+          description: Not an admin
+
+  # ─── ADMIN REQUEST MANAGEMENT ────────────────────────────────────────────────
+
+  /exchange/admin/request/{request_type}/{id}/accept/:
+    put:
+      tags: [exchange-admin]
+      summary: Accept an exchange request (admin only)
+      parameters:
+        - name: request_type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [direct_exchange, urgent_exchange, enrollment]
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Accepted
+        "403":
+          description: Not an admin
+
+  /exchange/admin/request/{request_type}/{id}/reject/:
+    put:
+      tags: [exchange-admin]
+      summary: Reject an exchange request (admin only)
+      parameters:
+        - name: request_type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [direct_exchange, urgent_exchange, enrollment]
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Rejected
+        "403":
+          description: Not an admin
+
+  /exchange/admin/request/{request_type}/{id}/awaiting-information/:
+    put:
+      tags: [exchange-admin]
+      summary: Mark an exchange request as awaiting information (admin only)
+      parameters:
+        - name: request_type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [direct_exchange, urgent_exchange, enrollment]
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Status updated
+        "403":
+          description: Not an admin
+
+  # ─── ADMIN COURSES & COURSE UNITS ────────────────────────────────────────────
+
+  /admin/courses/:
+    get:
+      tags: [exchange-admin]
+      summary: List all courses
+      responses:
+        "200":
+          description: Array of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+
+  /exchange/admin/courses/:
+    get:
+      tags: [exchange-admin]
+      summary: List courses managed by the authenticated admin
+      responses:
+        "200":
+          description: Array of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        "403":
+          description: Not an admin
+
+  /exchange/admin/course_units/:
+    get:
+      tags: [exchange-admin]
+      summary: List course units managed by the authenticated admin
+      responses:
+        "200":
+          description: Array of course units
+        "403":
+          description: Not an admin
+
+  /exchange/admin/classes/:
+    get:
+      tags: [exchange-admin]
+      summary: List all classes for the admin's courses (admin only)
+      responses:
+        "200":
+          description: Array of class objects with course info
+        "403":
+          description: Not an admin
+
+  /exchange/admin/statistics/:
+    get:
+      tags: [exchange-admin]
+      summary: Get exchange statistics (admin only)
+      responses:
+        "200":
+          description: Statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_exchanges:
+                    type: integer
+                  accepted_exchanges:
+                    type: integer
+                  rejected_exchanges:
+                    type: integer
+                  pending_exchanges:
+                    type: integer
+        "403":
+          description: Not an admin
+
+  /exchange/admin/marketplace:
+    get:
+      tags: [exchange-admin]
+      summary: Get all marketplace exchanges for admin review (admin only, paginated)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Paginated marketplace exchanges
+        "403":
+          description: Not an admin
+
+  # ─── EXCHANGE PERIODS ────────────────────────────────────────────────────────
+
+  /exchange/admin/course_unit/periods/:
+    get:
+      tags: [exchange-admin]
+      summary: List exchange periods for all course units (admin only)
+      responses:
+        "200":
+          description: Course units with their exchange periods
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courseUnits:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        acronym:
+                          type: string
+                        exchangePeriods:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/ExchangePeriod'
+
+  /exchange/admin/courses/periods/:
+    get:
+      tags: [exchange-admin]
+      summary: List exchange periods for all courses (admin only)
+      responses:
+        "200":
+          description: Courses with their exchange periods
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        courseId:
+                          type: integer
+                        courseName:
+                          type: string
+                        courseAcronym:
+                          type: string
+                        exchangePeriods:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/ExchangePeriod'
+
+  /exchange/admin/course_unit/{course_unit_id}/period/:
+    post:
+      tags: [exchange-admin]
+      summary: Create an exchange period for a course unit (admin only)
+      parameters:
+        - name: course_unit_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangePeriodInput'
+      responses:
+        "200":
+          description: Period created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /exchange/admin/course_unit/{course_unit_id}/period/{period_id}/:
+    put:
+      tags: [exchange-admin]
+      summary: Update an exchange period for a course unit (admin only)
+      parameters:
+        - name: course_unit_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: period_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangePeriodInput'
+      responses:
+        "200":
+          description: Period updated
+    delete:
+      tags: [exchange-admin]
+      summary: Delete an exchange period for a course unit (admin only)
+      parameters:
+        - name: course_unit_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: period_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Period deleted
+
+  /exchange/admin/course/{course_id}/period/:
+    post:
+      tags: [exchange-admin]
+      summary: Create an exchange period for all course units in a course (admin only)
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangePeriodInput'
+      responses:
+        "200":
+          description: Periods created
+
+  /exchange/admin/course/{course_id}/period/{period_id}/:
+    put:
+      tags: [exchange-admin]
+      summary: Update a course-level exchange period (admin only)
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: period_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangePeriodInput'
+      responses:
+        "200":
+          description: Period updated
+    delete:
+      tags: [exchange-admin]
+      summary: Delete a course-level exchange period (admin only)
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: period_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Period deleted
+
+  # ─── ENROLLMENT ──────────────────────────────────────────────────────────────
+
+  /course_unit/enrollment/:
+    get:
+      tags: [enrollment]
+      summary: List all enrollment requests (admin only, paginated)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: activeCourse
+          in: query
+          schema:
+            type: integer
+        - name: activeCurricularYear
+          in: query
+          schema:
+            type: integer
+        - name: activeStates
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated enrollment requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  enrollments:
+                    type: array
+                    items:
+                      type: object
+                  total_pages:
+                    type: integer
+        "403":
+          description: Not an admin
+    post:
+      tags: [enrollment]
+      summary: Request course unit enrollment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                enrollCourses[]:
+                  type: array
+                  items:
+                    type: string
+                    description: |
+                      JSON string with `{ course_unit_id: int, enrolling: boolean }`
+                  example:
+                    - '{"course_unit_id": 42, "enrolling": true}'
+      responses:
+        "200":
+          description: Enrollment request created
+        "400":
+          description: Validation error
+
+# ─── COMPONENTS ────────────────────────────────────────────────────────────────
+
+components:
+  schemas:
+    Faculty:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        acronym:
+          type: string
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        acronym:
+          type: string
+
+    CourseGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    CourseUnit:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        acronym:
+          type: string
+        url:
+          type: string
+          format: uri
+
+    CourseUnitWithSlots:
+      allOf:
+        - $ref: '#/components/schemas/CourseUnit'
+        - type: object
+          properties:
+            slots:
+              type: array
+              items:
+                $ref: '#/components/schemas/ClassSlot'
+
+    ClassSlot:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          description: Class name (e.g. "1MIEIC01")
+        day:
+          type: integer
+          description: Day of week (0=Monday, 4=Friday)
+        start_time:
+          type: number
+          description: Start time in decimal hours (e.g. 8.5 = 08:30)
+        duration:
+          type: number
+          description: Duration in hours
+        location:
+          type: string
+        type:
+          type: string
+          enum: [T, TP, PL, OT, S]
+          description: "T=Teorica, TP=Teorico-Pratica, PL=Pratica-Laboratorial, OT=Orientação Tutorial, S=Seminario"
+
+    Professor:
+      type: object
+      properties:
+        id:
+          type: integer
+        acronym:
+          type: string
+        name:
+          type: string
+
+    StudentScheduleResponse:
+      type: object
+      properties:
+        schedule:
+          type: array
+          items:
+            type: object
+        noChanges:
+          type: boolean
+
+    DirectExchange:
+      type: object
+      properties:
+        id:
+          type: integer
+        issuer_name:
+          type: string
+        issuer_nmec:
+          type: string
+        date:
+          type: string
+          format: date-time
+        accepted:
+          type: boolean
+        canceled:
+          type: boolean
+        admin_state:
+          type: string
+          enum: [untreated, accepted, rejected, awaiting_information]
+        options:
+          type: array
+          items:
+            type: object
+
+    MarketplaceExchange:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        issuer_name:
+          type: string
+        issuer_nmec:
+          type: string
+        options:
+          type: array
+          items:
+            type: object
+        classes:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+          format: date-time
+        accepted:
+          type: boolean
+
+    PaginatedExchangeList:
+      type: object
+      properties:
+        page:
+          type: object
+          properties:
+            current:
+              type: integer
+            has_next:
+              type: boolean
+            has_previous:
+              type: boolean
+        data:
+          type: array
+          items:
+            type: object
+
+    ExchangePeriod:
+      type: object
+      properties:
+        id:
+          type: integer
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+
+    ExchangePeriodInput:
+      type: object
+      required: [startDate, endDate]
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          example: "2024-09-01T00:00:00.000Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2024-09-30T23:59:59.000Z"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "classes-overlap"

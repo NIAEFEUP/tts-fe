@@ -1,0 +1,10 @@
+// use prisma-8
+
+// Define your models here.
+// After adding models, run:
+//   bun run contract:emit   → generates contract.json + contract.d.ts
+//   bun run db:init         → applies schema to the DB for the first time
+//
+// For subsequent schema changes:
+//   bun run migration:plan --name <slug>   → plan a migration
+//   bun run migrate                        → apply pending migrations
