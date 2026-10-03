@@ -1,0 +1,38 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SIGARRA",
+    "description": "SIGARRA, the academic information system of the University of Porto.",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://sigarra.up.pt"
+    }
+  ],
+  "paths": {
+    "/feup/pt/": {
+      "get": {
+        "operationId": "feup-home",
+        "summary": "FEUP home",
+        "description": "Entry point of the FEUP faculty in Portuguese. Redirects to the faculty's initial web page.",
+        "x-fern-sdk-group-name": "feup",
+        "x-fern-sdk-method-name": "home",
+        "responses": {
+          "302": {
+            "description": "Redirect to the faculty's initial web page.",
+            "headers": {
+              "Location": {
+                "description": "Faculty's initial web page.",
+                "schema": {
+                  "type": "string",
+                  "enum": ["/feup/pt/web_page.inicial"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
