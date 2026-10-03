@@ -4,8 +4,11 @@
   "packageManager": "bun@1.4.1",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/index.ts",
-    "start": "node dist/server.mjs",
+    "dev": "tsx watch --env-file .env src/main.ts",
+    "start": "tsx --env-file .env src/main.ts",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
+    "typecheck": "tsc --noEmit",
     "contract:emit": "prisma contract emit",
     "db:init": "prisma db init",
     "db:update": "prisma db update",

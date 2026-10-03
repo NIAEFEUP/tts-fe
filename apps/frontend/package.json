@@ -77,17 +77,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "preview": "vite preview",
-    "check": "npx prettier --check .",
-    "format": "npx prettier --write ."
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
+    "preview": "vite preview"
   },
   "browserslist": {
     "production": [
@@ -102,18 +94,10 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^9.10.0",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/postcss": "^4.3.0",
-    "eslint": "^8.23.0",
-    "eslint-plugin-react": "^7.36.1",
-    "globals": "^15.9.0",
     "postcss": "^8.5.14",
-    "prettier": "^3.8.1",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.1",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.5.0",
-    "vite-plugin-eslint": "^1.8.1"
+    "typescript": "^6.0.3"
   }
 }

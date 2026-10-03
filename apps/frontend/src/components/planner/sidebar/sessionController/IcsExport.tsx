@@ -56,7 +56,9 @@ const IcsExport = () => {
     icsContent += 'END:VCALENDAR'
 
     // RFC 5545 requires CRLF line endings; some parsers reject bare LF.
-    const blob = new Blob([icsContent.replace(/\n/g, '\r\n')], { type: 'text/calendar;charset=utf-8' })
+    const blob = new Blob([icsContent.replace(/\n/g, '\r\n')], {
+      type: 'text/calendar;charset=utf-8',
+    })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url

@@ -1,0 +1,76 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "ignorePatterns": ["prisma-composer.config.ts"],
+  "overrides": [
+    {
+      "files": ["src/domain/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/application/**", "@/infrastructure/**", "@/interface/**"],
+                "message": "Domain layer can only import from core/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/application/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/infrastructure/**", "@/interface/**"],
+                "message": "Application layer can only import from domain/ and core/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/infrastructure/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/application/**",
+                  "@/interface/**",
+                  "@/domain/entities/**",
+                  "@/domain/value-objects/**"
+                ],
+                "message": "Infrastructure layer can only import from domain/ports/ and core/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/interface/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/infrastructure/**"],
+                "message": "Interface layer must not import infrastructure/ directly (use dependency injection)."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

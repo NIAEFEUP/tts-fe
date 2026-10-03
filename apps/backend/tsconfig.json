@@ -13,8 +13,14 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
     "rootDir": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "types": [
       "node"
     ]
-  }
+  },
+  "exclude": [
+    "prisma-composer.config.ts"
+  ]
 }

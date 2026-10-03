@@ -43,9 +43,15 @@ const CopyOption = ({ currentOption }: Props) => {
     setIcon(true)
 
     if (scheduleHash === '') {
-      toast({ title: 'Horário não copiado', description: 'Não tens nenhuma aula selecionada para copiar.' })
+      toast({
+        title: 'Horário não copiado',
+        description: 'Não tens nenhuma aula selecionada para copiar.',
+      })
     } else {
-      toast({ title: 'Horário copiado', description: 'Podes colar o horário noutra opção ou enviar a um amigo.' })
+      toast({
+        title: 'Horário copiado',
+        description: 'Podes colar o horário noutra opção ou enviar a um amigo.',
+      })
     }
     setTimeout(() => {
       setIcon(false)

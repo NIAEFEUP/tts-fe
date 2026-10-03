@@ -3,3 +3,5 @@ dist/
 .env
 /.alchemy
 /.prisma-composer
+src/infrastructure/database/contract.json
+src/infrastructure/database/contract.d.ts
