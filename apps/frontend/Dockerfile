@@ -11,6 +11,7 @@ COPY *.json ./
 COPY .prettier* ./
 COPY *.config.js ./
 COPY *.config.ts ./
+COPY .env.schema ./
 
 RUN npm config set fetch-retry-mintimeout 20000 \
     && npm config set fetch-retry-maxtimeout 120000 \
@@ -32,13 +33,13 @@ CMD ["npm", "run", "dev"]
 FROM build AS prod-build-with-dotenv
 
 ARG TTS_FE_DOTENV_FILE=.env.production
-COPY ${TTS_DOTENV_FILE} .env.production
+COPY ${TTS_FE_DOTENV_FILE} .env
 
 # prod-build-with-var
 FROM build AS prod-build-with-content-var
 
 ARG TTS_FE_VARS_CONTENT
-RUN echo "${TTS_FE_VARS_CONTENT}" | base64 -d > .env.production
+RUN echo "${TTS_FE_VARS_CONTENT}" | base64 -d > .env
 
 # prod-build
 FROM prod-build-with-${TTS_FE_VARS_METHOD} AS prod-build
