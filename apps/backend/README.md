@@ -272,3 +272,20 @@ bun run db:sign
 | `migration:status`  | `bun run migration:status`                   | Show pending / applied migration state               |
 | `migration:list`    | `bun run migration:list`                     | List all on-disk migrations as a graph               |
 | `migration:ref:set` | `bun run migration:ref:set -- <name> <hash>` | Set a migration ref pointer                          |
+| `lint`              | `bun run lint`                               | Run Oxlint on the backend                            |
+| `lint:fix`          | `bun run lint:fix`                           | Run Oxlint and auto-fix issues                       |
+
+---
+
+## Linting and formatting
+
+The monorepo uses [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) for linting and [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) for formatting. A Husky pre-commit hook runs both automatically on every commit.
+
+If you want to be safe before committing, run:
+
+```bash
+bun run lint        # check for lint errors
+bun run format      # auto-format everything
+```
+
+Then commit. The pre-commit hook will run the same checks and should pass.
