@@ -1,10 +1,211 @@
 // use prisma-8
 
-// Define your models here.
-// After adding models, run:
-//   bun run contract:emit   → generates contract.json + contract.d.ts
-//   bun run db:init         → applies schema to the DB for the first time
-//
-// For subsequent schema changes:
-//   bun run migration:plan --name <slug>   → plan a migration
-//   bun run migrate                        → apply pending migrations
+// ---------------------------------------------------------------------------
+// 1. IDENTITY & ROLES
+// ---------------------------------------------------------------------------
+
+model User {
+  id        String   @id // SIGARRA NMEC (e.g. "up202301234")
+  email     String   @unique
+  name      String
+  
+  // Is this user an admin? 
+  isAdmin   Boolean  @default(false)
+  
+  // Relations
+  enrollments      Enrollment[]
+  createdExchanges ExchangeRequest[] @relation("ExchangeCreator")
+  targetedIn       ExchangeRequest[] @relation("ExchangeTarget")
+  supportTickets   SupportTicket[]
+
+  // Join tables for many-to-many admin access
+  adminCourses     AdminCourse[]
+  adminUnits       AdminCourseUnit[]
+  
+  createdAt DateTime @default(now())
+}
+
+// Explicit join tables for M2M admin relations (Prisma 8 requires explicit joins)
+model AdminCourse {
+  userId   String
+  courseId Int
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([userId, courseId])
+}
+
+model AdminCourseUnit {
+  userId       String
+  courseUnitId Int
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id], onDelete: Cascade)
+
+  @@id([userId, courseUnitId])
+}
+
+// ---------------------------------------------------------------------------
+// 2. UNIVERSITY DOMAIN (Imported from Sigarra)
+// ---------------------------------------------------------------------------
+
+model Faculty {
+  acronym String   @id // e.g. "FEUP"
+  name    String?
+  courses Course[]
+}
+
+model Course {
+  id             Int          @id // Sigarra Course ID
+  facultyId      String
+  faculty        Faculty      @relation(fields: [facultyId], references: [acronym])
+  
+  acronym        String       // e.g. "L.EIC"
+  name           String
+  
+  units          CourseUnit[]
+  admins         AdminCourse[]
+  exchangePeriods ExchangePeriod[]
+}
+
+model CourseUnit {
+  id             Int      @id // Sigarra ID
+  courseId       Int
+  course         Course   @relation(fields: [courseId], references: [id])
+  
+  acronym        String   // e.g. "BD"
+  name           String
+  semester       Int
+  year           Int
+  
+  classes        Class[]
+  admins         AdminCourseUnit[]
+  exchangePeriods ExchangePeriod[]
+}
+
+model Class {
+  id           Int        @id @default(autoincrement())
+  courseUnitId Int
+  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id])
+  
+  name         String     // e.g. "1LEIC01"
+  type         String     // e.g. "TP", "T", "PL"
+  vacancies    Int?
+  
+  slots        ScheduleSlot[]
+  enrollments  Enrollment[]
+  
+  @@unique([name, courseUnitId])
+}
+
+model ScheduleSlot {
+  id         Int     @id @default(autoincrement())
+  classId    Int
+  class      Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  
+  dayOfWeek  Int     // 0 = Sunday, 1 = Monday, etc.
+  startTime  Decimal
+  duration   Decimal
+  location   String?
+}
+
+// ---------------------------------------------------------------------------
+// 3. STUDENT ENROLLMENTS
+// ---------------------------------------------------------------------------
+
+model Enrollment {
+  id           String     @id @default(uuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  classId      Int
+  class        Class      @relation(fields: [classId], references: [id])
+  
+  @@unique([userId, classId])
+}
+
+// ---------------------------------------------------------------------------
+// 4. PLATFORM CONFIGURATION
+// ---------------------------------------------------------------------------
+
+model ExchangePeriod {
+  id           Int         @id @default(autoincrement())
+  startDate    DateTime
+  endDate      DateTime
+  
+  // Can be global to a Course or specific to a CourseUnit
+  courseId     Int?
+  course       Course?     @relation(fields: [courseId], references: [id])
+  
+  courseUnitId Int?
+  courseUnit   CourseUnit? @relation(fields: [courseUnitId], references: [id])
+}
+
+// ---------------------------------------------------------------------------
+// 5. EXCHANGES & REQUESTS
+// ---------------------------------------------------------------------------
+
+enum ExchangeType {
+  DIRECT
+  MARKETPLACE
+}
+
+enum ExchangeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum AdminValidationState {
+  UNTREATED
+  APPROVED
+  DENIED
+}
+
+model ExchangeRequest {
+  id               String               @id @default(uuid())
+  creatorId        String
+  creator          User                 @relation("ExchangeCreator", fields: [creatorId], references: [id])
+  
+  targetUserId     String?
+  targetUser       User?                @relation("ExchangeTarget", fields: [targetUserId], references: [id])
+  
+  type             ExchangeType
+  status           ExchangeStatus       @default(PENDING)
+  
+  adminState       AdminValidationState @default(UNTREATED)
+  
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @default(now())
+
+  items            ExchangeItem[]
+  
+  @@index([status, type])
+}
+
+model ExchangeItem {
+  id                String          @id @default(uuid())
+  exchangeRequestId String
+  request           ExchangeRequest @relation(fields: [exchangeRequestId], references: [id], onDelete: Cascade)
+  
+  courseUnitId      Int
+  fromClassId       Int
+  toClassId         Int
+  
+  @@index([toClassId, fromClassId])
+}
+
+model SupportTicket {
+  id           String               @id @default(uuid())
+  userId       String
+  user         User                 @relation(fields: [userId], references: [id])
+  
+  type         String               // e.g. "URGENT_SWAP", "NEW_ENROLLMENT"
+  message      String
+  adminState   AdminValidationState @default(UNTREATED)
+  
+  targetClassId Int?
+  
+  createdAt    DateTime             @default(now())
+}
