@@ -10,10 +10,22 @@ type Social = {
 
 const socials: Social[] = [
   { label: 'Github', url: 'https://github.com/NIAEFEUP', icon: GithubIcon },
-  { label: 'Facebook', url: 'https://facebook.com/NIAEFEUP', icon: FacebookIcon },
+  {
+    label: 'Facebook',
+    url: 'https://facebook.com/NIAEFEUP',
+    icon: FacebookIcon,
+  },
   { label: 'Twitter', url: 'https://twitter.com/niaefeup', icon: TwitterIcon },
-  { label: 'Instagram', url: 'https://www.instagram.com/niaefeup', icon: InstagramIcon },
-  { label: 'Linkedin', url: 'https://pt.linkedin.com/company/nifeup', icon: LinkedinIcon },
+  {
+    label: 'Instagram',
+    url: 'https://www.instagram.com/niaefeup',
+    icon: InstagramIcon,
+  },
+  {
+    label: 'Linkedin',
+    url: 'https://pt.linkedin.com/company/nifeup',
+    icon: LinkedinIcon,
+  },
   { label: 'Website', url: 'https://ni.fe.up.pt/', icon: GlobeAltIcon },
   { label: 'Email us', url: 'mailto:ni@aefeup.pt', icon: InboxArrowDownIcon },
 ]

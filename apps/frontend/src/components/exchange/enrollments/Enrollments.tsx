@@ -51,7 +51,9 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
 
     const newEnrollmentChoices = new Map()
     enrollCourses.forEach((course) => {
-      newEnrollmentChoices.set(course.id, { type: CourseUnitEnrollmentType.ENROLLING })
+      newEnrollmentChoices.set(course.id, {
+        type: CourseUnitEnrollmentType.ENROLLING,
+      })
     })
     setEnrollmentChoices(newEnrollmentChoices)
   }, [enrollCourses])

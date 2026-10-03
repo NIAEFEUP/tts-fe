@@ -19,5 +19,8 @@
     "types": [
       "node"
     ]
-  }
+  },
+  "exclude": [
+    "prisma-composer.config.ts"
+  ]
 }

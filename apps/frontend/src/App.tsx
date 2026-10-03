@@ -99,8 +99,14 @@ const pages = [
 const redirects = [
   { from: '/', to: getPath(configToUse.paths.planner) },
   { from: configToUse.pathPrefix, to: getPath(configToUse.paths.planner) },
-  { from: configToUse.pathPrefix.slice(0, -1), to: getPath(configToUse.paths.planner) },
-  { from: getPath(configToUse.paths.home), to: getPath(configToUse.paths.about) },
+  {
+    from: configToUse.pathPrefix.slice(0, -1),
+    to: getPath(configToUse.paths.planner),
+  },
+  {
+    from: getPath(configToUse.paths.home),
+    to: getPath(configToUse.paths.about),
+  },
 ]
 
 const App = () => {

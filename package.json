@@ -3,5 +3,17 @@
   "private": true,
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
+    "format": "oxfmt apps/backend/src apps/frontend/src",
+    "format:check": "oxfmt --check apps/backend/src apps/frontend/src"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0"
+  }
 }

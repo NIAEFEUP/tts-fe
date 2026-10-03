@@ -1,0 +1,2 @@
+bunx oxfmt --check apps/backend/src apps/frontend/src
+bunx oxlint .

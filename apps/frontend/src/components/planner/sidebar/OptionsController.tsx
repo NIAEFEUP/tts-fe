@@ -5,12 +5,12 @@ import MultipleOptionsContext from '../../../contexts/MultipleOptionsContext'
 import { Tooltip } from '../../ui/new/tooltip'
 import { AnalyticsTracker, Feature } from '../../../utils/AnalyticsTracker'
 import { Button } from '../../ui/new/button'
-import { Blobatar } from "@blobatar/react";
-import "blobatar/motion.css";
+import { Blobatar } from '@blobatar/react'
+import 'blobatar/motion.css'
 
 // Safari does not fully support the CSS @property rule required for blobatar animations.
 // Fall back to static rendering (no animate prop) on Safari.
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 /**
  * Sortable list of schedule options
@@ -75,9 +75,9 @@ const OptionButton = ({ option }: Props) => {
           <Blobatar
             name={option.name}
             traits={{
-                shape: [0.11, 0.35, 0.54, 0.65, 0.825, 0.888, 0.933, 0.965, 0.99],
-              }}
-            animate={isSafari ? undefined : "always"}
+              shape: [0.11, 0.35, 0.54, 0.65, 0.825, 0.888, 0.933, 0.965, 0.99],
+            }}
+            animate={isSafari ? undefined : 'always'}
           />
           <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-4 h-4 rounded-lg  bg-secondary text-[10px] font-bold text-white dark:text-gray-900 leading-none z-10 shadow-md">
             {index + 1}
