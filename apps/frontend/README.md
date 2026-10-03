@@ -47,6 +47,15 @@ Before running this you should have previously ran `npm install`.
 
 This allows us to preview what the production build will look like but `Vite` does not recommend at all using this in the production image at all.
 
+# Environment variables
+
+The variables the frontend accepts (with their types, defaults and which ones are public) are declared in [`.env.schema`](./.env.schema), which is committed. This replaces the old `.env.example`.
+
+- To override a value locally, create a git-ignored `.env` (or `.env.local`) next to the schema with only the variables you want to change, e.g. `VITE_APP_BACKEND_URL=http://localhost:3000`.
+- Only `VITE_`-prefixed variables are exposed to the browser; everything else (e.g. `SENTRY_AUTH_TOKEN`) is treated as sensitive.
+- `vite` (dev and build) loads the schema through `@varlock/vite-integration` and fails if a variable is missing or invalid.
+- Run `bunx varlock load` at any time to validate your environment and see the resolved (sensitive values masked) configuration.
+
 # Running the project
 
 In local development, after you run the project you can access it at `localhost:3100/tts`. If you just go to `localhost:3100/` you will be greeted by a blank screen.
@@ -57,11 +66,7 @@ This is the recommended approach since it uniformizes the way the application be
 
 ### Development
 
-Firstly, you have to create an `.env` file in order for the app to receive environment variables.
-
-```bash
-cp .env.example .env
-```
+Environment variables are described by [`.env.schema`](./.env.schema) and validated by [varlock](https://varlock.dev) (see [Environment variables](#environment-variables)). If you need to change any value, create a git-ignored `.env` file with just the overrides. It is optional for development.
 
 Then, to build the application run:
 
@@ -102,13 +107,13 @@ In order to run the production build, we need to use the `tts-frontend-prod` con
 
 In the production build we are serving a static page with minified html, css and javascript files, greatly reducing the load of the page.
 
-Firstly, you have to create an `.env` file in order for the app to receive environment variables.
+Environment variables are described by [`.env.schema`](./.env.schema) and validated by [varlock](https://varlock.dev) (see [Environment variables](#environment-variables)). The production build copies `.env` into the image, so create it (with just the values you want to override; it may be empty) before building:
 
 ```bash
-cp .env.example .env
+touch .env
 ```
 
-Internally, when the production build runs with vite, it creates an `.env.production` file from the `.env` file to be used by the `vite build` command. This was done to ease the development process, since running `./dev.sh` complained that the `.env.production` was not found.
+The build fails if the resulting configuration is invalid.
 
 To build the application run:
 
