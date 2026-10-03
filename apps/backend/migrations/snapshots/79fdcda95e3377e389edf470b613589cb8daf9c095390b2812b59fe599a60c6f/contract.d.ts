@@ -34,9 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'66f8b2e93b6eda4bffb7d1fd9f8d41604bb6a754ed3c4de69716579be803b8de'>;
+  StorageHashBase<'79fdcda95e3377e389edf470b613589cb8daf9c095390b2812b59fe599a60c6f'>;
 export type ExecutionHash =
-  ExecutionHashBase<'0e24d4e6d128c2b9e35886d87d51f92eaf6796c2013392baa6a477e8823530ef'>;
+  ExecutionHashBase<'0907491c7709ff8f09ac34401ccb35424b2ce920419086a8c16ece38cf87eab9'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -284,6 +284,18 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
     };
+    readonly EnrollmentRequest: {
+      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly userId: CodecTypes['pg/text@1']['output'];
+    };
+    readonly EnrollmentRequestOption: {
+      readonly courseUnitId: CodecTypes['pg/int4@1']['output'];
+      readonly enrolling: CodecTypes['pg/bool@1']['output'];
+      readonly enrollmentRequestId: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+    };
     readonly ExchangeItem: {
       readonly courseUnitId: CodecTypes['pg/int4@1']['output'];
       readonly exchangeRequestId: CodecTypes['pg/text@1']['output'];
@@ -303,9 +315,10 @@ export type FieldOutputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly creatorId: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
+      readonly message: CodecTypes['pg/text@1']['output'] | null;
       readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED';
       readonly targetUserId: CodecTypes['pg/text@1']['output'] | null;
-      readonly type: 'DIRECT' | 'MARKETPLACE';
+      readonly type: 'DIRECT' | 'MARKETPLACE' | 'URGENT';
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly Faculty: {
@@ -319,15 +332,6 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'] | null;
       readonly startTime: CodecTypes['pg/numeric@1']['output'];
-    };
-    readonly SupportTicket: {
-      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly id: CodecTypes['pg/text@1']['output'];
-      readonly message: CodecTypes['pg/text@1']['output'];
-      readonly targetClassId: CodecTypes['pg/int4@1']['output'] | null;
-      readonly type: CodecTypes['pg/text@1']['output'];
-      readonly userId: CodecTypes['pg/text@1']['output'];
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -374,6 +378,18 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
     };
+    readonly EnrollmentRequest: {
+      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly userId: CodecTypes['pg/text@1']['input'];
+    };
+    readonly EnrollmentRequestOption: {
+      readonly courseUnitId: CodecTypes['pg/int4@1']['input'];
+      readonly enrolling: CodecTypes['pg/bool@1']['input'];
+      readonly enrollmentRequestId: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+    };
     readonly ExchangeItem: {
       readonly courseUnitId: CodecTypes['pg/int4@1']['input'];
       readonly exchangeRequestId: CodecTypes['pg/text@1']['input'];
@@ -393,9 +409,10 @@ export type FieldInputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly creatorId: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
+      readonly message: CodecTypes['pg/text@1']['input'] | null;
       readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED';
       readonly targetUserId: CodecTypes['pg/text@1']['input'] | null;
-      readonly type: 'DIRECT' | 'MARKETPLACE';
+      readonly type: 'DIRECT' | 'MARKETPLACE' | 'URGENT';
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly Faculty: {
@@ -409,15 +426,6 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'] | null;
       readonly startTime: CodecTypes['pg/numeric@1']['input'];
-    };
-    readonly SupportTicket: {
-      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly id: CodecTypes['pg/text@1']['input'];
-      readonly message: CodecTypes['pg/text@1']['input'];
-      readonly targetClassId: CodecTypes['pg/int4@1']['input'] | null;
-      readonly type: CodecTypes['pg/text@1']['input'];
-      readonly userId: CodecTypes['pg/text@1']['input'];
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
@@ -464,6 +472,18 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
     };
+    readonly EnrollmentRequest: {
+      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly userId: CodecTypes['pg/text@1']['output'];
+    };
+    readonly EnrollmentRequestOption: {
+      readonly courseUnitId: CodecTypes['pg/int4@1']['output'];
+      readonly enrolling: CodecTypes['pg/bool@1']['output'];
+      readonly enrollmentRequestId: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+    };
     readonly ExchangeItem: {
       readonly courseUnitId: CodecTypes['pg/int4@1']['output'];
       readonly exchangeRequestId: CodecTypes['pg/text@1']['output'];
@@ -483,9 +503,10 @@ export type StorageColumnTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly creatorId: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
+      readonly message: CodecTypes['pg/text@1']['output'] | null;
       readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED';
       readonly targetUserId: CodecTypes['pg/text@1']['output'] | null;
-      readonly type: 'DIRECT' | 'MARKETPLACE';
+      readonly type: 'DIRECT' | 'MARKETPLACE' | 'URGENT';
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly Faculty: {
@@ -499,15 +520,6 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'] | null;
       readonly startTime: CodecTypes['pg/numeric@1']['output'];
-    };
-    readonly SupportTicket: {
-      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly id: CodecTypes['pg/text@1']['output'];
-      readonly message: CodecTypes['pg/text@1']['output'];
-      readonly targetClassId: CodecTypes['pg/int4@1']['output'] | null;
-      readonly type: CodecTypes['pg/text@1']['output'];
-      readonly userId: CodecTypes['pg/text@1']['output'];
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -554,6 +566,18 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
     };
+    readonly EnrollmentRequest: {
+      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly userId: CodecTypes['pg/text@1']['input'];
+    };
+    readonly EnrollmentRequestOption: {
+      readonly courseUnitId: CodecTypes['pg/int4@1']['input'];
+      readonly enrolling: CodecTypes['pg/bool@1']['input'];
+      readonly enrollmentRequestId: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+    };
     readonly ExchangeItem: {
       readonly courseUnitId: CodecTypes['pg/int4@1']['input'];
       readonly exchangeRequestId: CodecTypes['pg/text@1']['input'];
@@ -573,9 +597,10 @@ export type StorageColumnInputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly creatorId: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
+      readonly message: CodecTypes['pg/text@1']['input'] | null;
       readonly status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED';
       readonly targetUserId: CodecTypes['pg/text@1']['input'] | null;
-      readonly type: 'DIRECT' | 'MARKETPLACE';
+      readonly type: 'DIRECT' | 'MARKETPLACE' | 'URGENT';
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly Faculty: {
@@ -589,15 +614,6 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'] | null;
       readonly startTime: CodecTypes['pg/numeric@1']['input'];
-    };
-    readonly SupportTicket: {
-      readonly adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly id: CodecTypes['pg/text@1']['input'];
-      readonly message: CodecTypes['pg/text@1']['input'];
-      readonly targetClassId: CodecTypes['pg/int4@1']['input'] | null;
-      readonly type: CodecTypes['pg/text@1']['input'];
-      readonly userId: CodecTypes['pg/text@1']['input'];
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
@@ -667,6 +683,24 @@ export namespace Models {
     user: public_User;
     readonly [RelationKeys]?: 'class' | 'user';
   };
+  export type public_EnrollmentRequest = {
+    adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
+    createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    id: CodecTypes['pg/text@1']['output'];
+    userId: CodecTypes['pg/text@1']['output'];
+    options: public_EnrollmentRequestOption[];
+    user: public_User;
+    readonly [RelationKeys]?: 'options' | 'user';
+  };
+  export type public_EnrollmentRequestOption = {
+    courseUnitId: CodecTypes['pg/int4@1']['output'];
+    enrolling: CodecTypes['pg/bool@1']['output'];
+    enrollmentRequestId: CodecTypes['pg/text@1']['output'];
+    id: CodecTypes['pg/text@1']['output'];
+    courseUnit: public_CourseUnit;
+    request: public_EnrollmentRequest;
+    readonly [RelationKeys]?: 'courseUnit' | 'request';
+  };
   export type public_ExchangeItem = {
     courseUnitId: CodecTypes['pg/int4@1']['output'];
     exchangeRequestId: CodecTypes['pg/text@1']['output'];
@@ -691,9 +725,10 @@ export namespace Models {
     createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     creatorId: CodecTypes['pg/text@1']['output'];
     id: CodecTypes['pg/text@1']['output'];
+    message: CodecTypes['pg/text@1']['output'] | null;
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED';
     targetUserId: CodecTypes['pg/text@1']['output'] | null;
-    type: 'DIRECT' | 'MARKETPLACE';
+    type: 'DIRECT' | 'MARKETPLACE' | 'URGENT';
     updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     creator: public_User;
     items: public_ExchangeItem[];
@@ -716,17 +751,6 @@ export namespace Models {
     class: public_Class;
     readonly [RelationKeys]?: 'class';
   };
-  export type public_SupportTicket = {
-    adminState: 'UNTREATED' | 'APPROVED' | 'DENIED';
-    createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-    id: CodecTypes['pg/text@1']['output'];
-    message: CodecTypes['pg/text@1']['output'];
-    targetClassId: CodecTypes['pg/int4@1']['output'] | null;
-    type: CodecTypes['pg/text@1']['output'];
-    userId: CodecTypes['pg/text@1']['output'];
-    user: public_User;
-    readonly [RelationKeys]?: 'user';
-  };
   export type public_User = {
     createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     email: CodecTypes['pg/text@1']['output'];
@@ -736,15 +760,15 @@ export namespace Models {
     adminCourses: public_AdminCourse[];
     adminUnits: public_AdminCourseUnit[];
     createdExchanges: public_ExchangeRequest[];
+    enrollmentRequests: public_EnrollmentRequest[];
     enrollments: public_Enrollment[];
-    supportTickets: public_SupportTicket[];
     targetedIn: public_ExchangeRequest[];
     readonly [RelationKeys]?:
       | 'adminCourses'
       | 'adminUnits'
       | 'createdExchanges'
+      | 'enrollmentRequests'
       | 'enrollments'
-      | 'supportTickets'
       | 'targetedIn';
   };
 }
@@ -757,12 +781,13 @@ export declare const models: {
     Course: Models.public_Course;
     CourseUnit: Models.public_CourseUnit;
     Enrollment: Models.public_Enrollment;
+    EnrollmentRequest: Models.public_EnrollmentRequest;
+    EnrollmentRequestOption: Models.public_EnrollmentRequestOption;
     ExchangeItem: Models.public_ExchangeItem;
     ExchangePeriod: Models.public_ExchangePeriod;
     ExchangeRequest: Models.public_ExchangeRequest;
     Faculty: Models.public_Faculty;
     ScheduleSlot: Models.public_ScheduleSlot;
-    SupportTicket: Models.public_SupportTicket;
     User: Models.public_User;
   };
 };
@@ -1121,6 +1146,129 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly EnrollmentRequest: {
+              columns: {
+                readonly adminState: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'UNTREATED'>;
+                  };
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly userId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'EnrollmentRequest_userId_idx_a489d58a';
+                  readonly prefix: 'EnrollmentRequest_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'EnrollmentRequest';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'User';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly EnrollmentRequestOption: {
+              columns: {
+                readonly courseUnitId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly enrolling: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly enrollmentRequestId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'EnrollmentRequestOption_courseUnitId_idx_fae358e6';
+                  readonly prefix: 'EnrollmentRequestOption_courseUnitId_idx';
+                  readonly columns: readonly ['courseUnitId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4';
+                  readonly prefix: 'EnrollmentRequestOption_enrollmentRequestId_idx';
+                  readonly columns: readonly ['enrollmentRequestId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'EnrollmentRequestOption';
+                    readonly columns: readonly ['enrollmentRequestId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'EnrollmentRequest';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'EnrollmentRequestOption';
+                    readonly columns: readonly ['courseUnitId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CourseUnit';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly ExchangeItem: {
               columns: {
                 readonly courseUnitId: {
@@ -1282,6 +1430,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly message: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
                 readonly status: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -1437,74 +1590,6 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly SupportTicket: {
-              columns: {
-                readonly adminState: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'UNTREATED'>;
-                  };
-                };
-                readonly createdAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                };
-                readonly id: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly message: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly targetClassId: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: true;
-                };
-                readonly type: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly userId: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [];
-              indexes: readonly [
-                {
-                  readonly name: 'SupportTicket_userId_idx_a489d58a';
-                  readonly prefix: 'SupportTicket_userId_idx';
-                  readonly columns: readonly ['userId'];
-                  readonly unique: false;
-                },
-              ];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'SupportTicket';
-                    readonly columns: readonly ['userId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'User';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-              ];
-            };
             readonly User: {
               columns: {
                 readonly createdAt: {
@@ -1561,7 +1646,7 @@ type ContractBase = Omit<
             };
             readonly ExchangeType: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['DIRECT', 'MARKETPLACE'];
+              readonly values: readonly ['DIRECT', 'MARKETPLACE', 'URGENT'];
             };
           };
         };
@@ -1592,6 +1677,14 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Enrollment';
     };
+    readonly EnrollmentRequest: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'EnrollmentRequest';
+    };
+    readonly EnrollmentRequestOption: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'EnrollmentRequestOption';
+    };
     readonly ExchangeItem: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'ExchangeItem';
@@ -1608,10 +1701,6 @@ type ContractBase = Omit<
     readonly ScheduleSlot: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'ScheduleSlot';
-    };
-    readonly SupportTicket: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'SupportTicket';
     };
     readonly User: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
   };
@@ -1988,6 +2077,117 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly EnrollmentRequest: {
+            readonly fields: {
+              readonly adminState: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly options: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'EnrollmentRequestOption';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['enrollmentRequestId'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'EnrollmentRequest';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly adminState: { readonly column: 'adminState' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly id: { readonly column: 'id' };
+                readonly userId: { readonly column: 'userId' };
+              };
+            };
+          };
+          readonly EnrollmentRequestOption: {
+            readonly fields: {
+              readonly courseUnitId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly enrolling: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly enrollmentRequestId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly courseUnit: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CourseUnit';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['courseUnitId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly request: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'EnrollmentRequest';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['enrollmentRequestId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'EnrollmentRequestOption';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly courseUnitId: { readonly column: 'courseUnitId' };
+                readonly enrolling: { readonly column: 'enrolling' };
+                readonly enrollmentRequestId: { readonly column: 'enrollmentRequestId' };
+                readonly id: { readonly column: 'id' };
+              };
+            };
+          };
           readonly ExchangeItem: {
             readonly fields: {
               readonly courseUnitId: {
@@ -2125,6 +2325,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly message: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly status: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2184,6 +2388,7 @@ type ContractBase = Omit<
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly creatorId: { readonly column: 'creatorId' };
                 readonly id: { readonly column: 'id' };
+                readonly message: { readonly column: 'message' };
                 readonly status: { readonly column: 'status' };
                 readonly targetUserId: { readonly column: 'targetUserId' };
                 readonly type: { readonly column: 'type' };
@@ -2278,65 +2483,6 @@ type ContractBase = Omit<
               };
             };
           };
-          readonly SupportTicket: {
-            readonly fields: {
-              readonly adminState: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly createdAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
-                };
-              };
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly message: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly targetClassId: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly type: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly userId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-            };
-            readonly relations: {
-              readonly user: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-                readonly cardinality: 'N:1';
-                readonly nullable: false;
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'SupportTicket';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly adminState: { readonly column: 'adminState' };
-                readonly createdAt: { readonly column: 'createdAt' };
-                readonly id: { readonly column: 'id' };
-                readonly message: { readonly column: 'message' };
-                readonly targetClassId: { readonly column: 'targetClassId' };
-                readonly type: { readonly column: 'type' };
-                readonly userId: { readonly column: 'userId' };
-              };
-            };
-          };
           readonly User: {
             readonly fields: {
               readonly createdAt: {
@@ -2397,10 +2543,10 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['creatorId'];
                 };
               };
-              readonly enrollments: {
+              readonly enrollmentRequests: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Enrollment';
+                  readonly model: 'EnrollmentRequest';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -2408,10 +2554,10 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['userId'];
                 };
               };
-              readonly supportTickets: {
+              readonly enrollments: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'SupportTicket';
+                  readonly model: 'Enrollment';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -2468,6 +2614,7 @@ type ContractBase = Omit<
             readonly members: readonly [
               { readonly name: 'DIRECT'; readonly value: 'DIRECT' },
               { readonly name: 'MARKETPLACE'; readonly value: 'MARKETPLACE' },
+              { readonly name: 'URGENT'; readonly value: 'URGENT' },
             ];
           };
         };
@@ -2512,6 +2659,22 @@ type ContractBase = Omit<
           readonly ref: {
             readonly column: 'id';
             readonly namespace: 'public';
+            readonly table: 'EnrollmentRequest';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly column: 'id';
+            readonly namespace: 'public';
+            readonly table: 'EnrollmentRequestOption';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly column: 'id';
+            readonly namespace: 'public';
             readonly table: 'ExchangeItem';
           };
         },
@@ -2521,14 +2684,6 @@ type ContractBase = Omit<
             readonly column: 'id';
             readonly namespace: 'public';
             readonly table: 'ExchangeRequest';
-          };
-        },
-        {
-          readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
-          readonly ref: {
-            readonly column: 'id';
-            readonly namespace: 'public';
-            readonly table: 'SupportTicket';
           };
         },
       ];

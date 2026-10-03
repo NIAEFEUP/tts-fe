@@ -251,6 +251,84 @@
     ]
   },
   {
+    "id": "table.EnrollmentRequest",
+    "label": "Create table \"EnrollmentRequest\"",
+    "summary": "Creates table \"EnrollmentRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "EnrollmentRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"EnrollmentRequest\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"EnrollmentRequest\"",
+        "sql": "CREATE TABLE \"public\".\"EnrollmentRequest\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"EnrollmentRequest_adminState_check_bf2f7403\" CHECK (\"adminState\" IN ('UNTREATED', 'APPROVED', 'DENIED'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"EnrollmentRequest\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.EnrollmentRequestOption",
+    "label": "Create table \"EnrollmentRequestOption\"",
+    "summary": "Creates table \"EnrollmentRequestOption\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "EnrollmentRequestOption"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"EnrollmentRequestOption\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequestOption\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"EnrollmentRequestOption\"",
+        "sql": "CREATE TABLE \"public\".\"EnrollmentRequestOption\" (\n  \"courseUnitId\" int4 NOT NULL,\n  \"enrolling\" bool DEFAULT true NOT NULL,\n  \"enrollmentRequestId\" text NOT NULL,\n  \"id\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"EnrollmentRequestOption\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequestOption\""
+        ]
+      }
+    ]
+  },
+  {
     "id": "table.ExchangeItem",
     "label": "Create table \"ExchangeItem\"",
     "summary": "Creates table \"ExchangeItem\"",
@@ -353,7 +431,7 @@
     "execute": [
       {
         "description": "create table \"ExchangeRequest\"",
-        "sql": "CREATE TABLE \"public\".\"ExchangeRequest\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"creatorId\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"targetUserId\" text,\n  \"type\" text NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"ExchangeRequest_adminState_check_bf2f7403\" CHECK (\"adminState\" IN ('UNTREATED', 'APPROVED', 'DENIED')),\n  CONSTRAINT \"ExchangeRequest_status_check_fcf883e8\" CHECK (\"status\" IN ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED', 'COMPLETED')),\n  CONSTRAINT \"ExchangeRequest_type_check_aacd8be0\" CHECK (\"type\" IN ('DIRECT', 'MARKETPLACE'))\n)",
+        "sql": "CREATE TABLE \"public\".\"ExchangeRequest\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"creatorId\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"message\" text,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"targetUserId\" text,\n  \"type\" text NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"ExchangeRequest_adminState_check_bf2f7403\" CHECK (\"adminState\" IN ('UNTREATED', 'APPROVED', 'DENIED')),\n  CONSTRAINT \"ExchangeRequest_status_check_fcf883e8\" CHECK (\"status\" IN ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED', 'COMPLETED')),\n  CONSTRAINT \"ExchangeRequest_type_check_a5efca2d\" CHECK (\"type\" IN ('DIRECT', 'MARKETPLACE', 'URGENT'))\n)",
         "params": []
       }
     ],
@@ -441,45 +519,6 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"ScheduleSlot\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "table.SupportTicket",
-    "label": "Create table \"SupportTicket\"",
-    "summary": "Creates table \"SupportTicket\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "table",
-        "name": "SupportTicket"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure table \"SupportTicket\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"SupportTicket\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "create table \"SupportTicket\"",
-        "sql": "CREATE TABLE \"public\".\"SupportTicket\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"message\" text NOT NULL,\n  \"targetClassId\" int4,\n  \"type\" text NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"SupportTicket_adminState_check_bf2f7403\" CHECK (\"adminState\" IN ('UNTREATED', 'APPROVED', 'DENIED'))\n)",
-        "params": []
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify table \"SupportTicket\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"SupportTicket\""
         ]
       }
     ]
@@ -1001,6 +1040,123 @@
     ]
   },
   {
+    "id": "index.EnrollmentRequest.EnrollmentRequest_userId_idx_a489d58a",
+    "label": "Create index \"EnrollmentRequest_userId_idx_a489d58a\" on \"EnrollmentRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "EnrollmentRequest_userId_idx_a489d58a",
+        "table": "EnrollmentRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"EnrollmentRequest_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequest_userId_idx_a489d58a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"EnrollmentRequest_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"EnrollmentRequest_userId_idx_a489d58a\" ON \"public\".\"EnrollmentRequest\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"EnrollmentRequest_userId_idx_a489d58a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequest_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.EnrollmentRequestOption.EnrollmentRequestOption_courseUnitId_idx_fae358e6",
+    "label": "Create index \"EnrollmentRequestOption_courseUnitId_idx_fae358e6\" on \"EnrollmentRequestOption\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "EnrollmentRequestOption_courseUnitId_idx_fae358e6",
+        "table": "EnrollmentRequestOption"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"EnrollmentRequestOption_courseUnitId_idx_fae358e6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequestOption_courseUnitId_idx_fae358e6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"EnrollmentRequestOption_courseUnitId_idx_fae358e6\"",
+        "sql": "CREATE INDEX \"EnrollmentRequestOption_courseUnitId_idx_fae358e6\" ON \"public\".\"EnrollmentRequestOption\" (\"courseUnitId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"EnrollmentRequestOption_courseUnitId_idx_fae358e6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequestOption_courseUnitId_idx_fae358e6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.EnrollmentRequestOption.EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4",
+    "label": "Create index \"EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4\" on \"EnrollmentRequestOption\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4",
+        "table": "EnrollmentRequestOption"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4\"",
+        "sql": "CREATE INDEX \"EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4\" ON \"public\".\"EnrollmentRequestOption\" (\"enrollmentRequestId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4\""
+        ]
+      }
+    ]
+  },
+  {
     "id": "index.ExchangeItem.ExchangeItem_exchangeRequestId_idx_d1e39232",
     "label": "Create index \"ExchangeItem_exchangeRequestId_idx_d1e39232\" on \"ExchangeItem\"",
     "operationClass": "additive",
@@ -1308,45 +1464,6 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"ScheduleSlot_classId_idx_0089e5e7\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "index.SupportTicket.SupportTicket_userId_idx_a489d58a",
-    "label": "Create index \"SupportTicket_userId_idx_a489d58a\" on \"SupportTicket\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "index",
-        "name": "SupportTicket_userId_idx_a489d58a",
-        "table": "SupportTicket"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure index \"SupportTicket_userId_idx_a489d58a\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"SupportTicket_userId_idx_a489d58a\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "create index \"SupportTicket_userId_idx_a489d58a\"",
-        "sql": "CREATE INDEX \"SupportTicket_userId_idx_a489d58a\" ON \"public\".\"SupportTicket\" (\"userId\")",
-        "params": []
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify index \"SupportTicket_userId_idx_a489d58a\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"SupportTicket_userId_idx_a489d58a\""
         ]
       }
     ]
@@ -1730,6 +1847,132 @@
     ]
   },
   {
+    "id": "foreignKey.EnrollmentRequest.EnrollmentRequest_userId_fkey",
+    "label": "Add foreign key \"EnrollmentRequest_userId_fkey\" on \"EnrollmentRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "EnrollmentRequest_userId_fkey",
+        "table": "EnrollmentRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"EnrollmentRequest_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "EnrollmentRequest_userId_fkey",
+          "public",
+          "\"public\".\"EnrollmentRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"EnrollmentRequest_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"EnrollmentRequest\"\nADD CONSTRAINT \"EnrollmentRequest_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"User\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"EnrollmentRequest_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "EnrollmentRequest_userId_fkey",
+          "public",
+          "\"public\".\"EnrollmentRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.EnrollmentRequestOption.EnrollmentRequestOption_enrollmentRequestId_fkey",
+    "label": "Add foreign key \"EnrollmentRequestOption_enrollmentRequestId_fkey\" on \"EnrollmentRequestOption\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "EnrollmentRequestOption_enrollmentRequestId_fkey",
+        "table": "EnrollmentRequestOption"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"EnrollmentRequestOption_enrollmentRequestId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "EnrollmentRequestOption_enrollmentRequestId_fkey",
+          "public",
+          "\"public\".\"EnrollmentRequestOption\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"EnrollmentRequestOption_enrollmentRequestId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"EnrollmentRequestOption\"\nADD CONSTRAINT \"EnrollmentRequestOption_enrollmentRequestId_fkey\"\nFOREIGN KEY (\"enrollmentRequestId\")\nREFERENCES \"public\".\"EnrollmentRequest\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"EnrollmentRequestOption_enrollmentRequestId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "EnrollmentRequestOption_enrollmentRequestId_fkey",
+          "public",
+          "\"public\".\"EnrollmentRequestOption\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.EnrollmentRequestOption.EnrollmentRequestOption_courseUnitId_fkey",
+    "label": "Add foreign key \"EnrollmentRequestOption_courseUnitId_fkey\" on \"EnrollmentRequestOption\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "EnrollmentRequestOption_courseUnitId_fkey",
+        "table": "EnrollmentRequestOption"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"EnrollmentRequestOption_courseUnitId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "EnrollmentRequestOption_courseUnitId_fkey",
+          "public",
+          "\"public\".\"EnrollmentRequestOption\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"EnrollmentRequestOption_courseUnitId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"EnrollmentRequestOption\"\nADD CONSTRAINT \"EnrollmentRequestOption_courseUnitId_fkey\"\nFOREIGN KEY (\"courseUnitId\")\nREFERENCES \"public\".\"CourseUnit\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"EnrollmentRequestOption_courseUnitId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "EnrollmentRequestOption_courseUnitId_fkey",
+          "public",
+          "\"public\".\"EnrollmentRequestOption\""
+        ]
+      }
+    ]
+  },
+  {
     "id": "foreignKey.ExchangeItem.ExchangeItem_exchangeRequestId_fkey",
     "label": "Add foreign key \"ExchangeItem_exchangeRequestId_fkey\" on \"ExchangeItem\"",
     "operationClass": "additive",
@@ -1977,48 +2220,6 @@
           "ScheduleSlot_classId_fkey",
           "public",
           "\"public\".\"ScheduleSlot\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "foreignKey.SupportTicket.SupportTicket_userId_fkey",
-    "label": "Add foreign key \"SupportTicket_userId_fkey\" on \"SupportTicket\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "foreignKey",
-        "name": "SupportTicket_userId_fkey",
-        "table": "SupportTicket"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure FK \"SupportTicket_userId_fkey\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "SupportTicket_userId_fkey",
-          "public",
-          "\"public\".\"SupportTicket\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add FK \"SupportTicket_userId_fkey\"",
-        "sql": "ALTER TABLE \"public\".\"SupportTicket\"\nADD CONSTRAINT \"SupportTicket_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"User\" (\"id\")"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify FK \"SupportTicket_userId_fkey\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "SupportTicket_userId_fkey",
-          "public",
-          "\"public\".\"SupportTicket\""
         ]
       }
     ]

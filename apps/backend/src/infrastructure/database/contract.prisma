@@ -16,7 +16,7 @@ model User {
   enrollments      Enrollment[]
   createdExchanges ExchangeRequest[] @relation("ExchangeCreator")
   targetedIn       ExchangeRequest[] @relation("ExchangeTarget")
-  supportTickets   SupportTicket[]
+  enrollmentRequests EnrollmentRequest[]
 
   // Join tables for many-to-many admin access
   adminCourses     AdminCourse[]
@@ -147,6 +147,7 @@ model ExchangePeriod {
 enum ExchangeType {
   DIRECT
   MARKETPLACE
+  URGENT
 }
 
 enum ExchangeStatus {
@@ -174,6 +175,8 @@ model ExchangeRequest {
   type             ExchangeType
   status           ExchangeStatus       @default(PENDING)
   
+  message          String?              // Justification for URGENT requests
+  
   adminState       AdminValidationState @default(UNTREATED)
   
   createdAt        DateTime             @default(now())
@@ -196,16 +199,25 @@ model ExchangeItem {
   @@index([toClassId, fromClassId])
 }
 
-model SupportTicket {
+model EnrollmentRequest {
   id           String               @id @default(uuid())
   userId       String
   user         User                 @relation(fields: [userId], references: [id])
   
-  type         String               // e.g. "URGENT_SWAP", "NEW_ENROLLMENT"
-  message      String
   adminState   AdminValidationState @default(UNTREATED)
   
-  targetClassId Int?
-  
   createdAt    DateTime             @default(now())
+  
+  options      EnrollmentRequestOption[]
+}
+
+model EnrollmentRequestOption {
+  id                  String            @id @default(uuid())
+  enrollmentRequestId String
+  request             EnrollmentRequest @relation(fields: [enrollmentRequestId], references: [id], onDelete: Cascade)
+  
+  courseUnitId        Int
+  courseUnit          CourseUnit        @relation(fields: [courseUnitId], references: [id])
+  
+  enrolling           Boolean           @default(true)
 }

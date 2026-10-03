@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/66f8b2e93b6eda4bffb7d1fd9f8d41604bb6a754ed3c4de69716579be803b8de/contract';
-import endContract from '../../snapshots/66f8b2e93b6eda4bffb7d1fd9f8d41604bb6a754ed3c4de69716579be803b8de/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/79fdcda95e3377e389edf470b613589cb8daf9c095390b2812b59fe599a60c6f/contract';
+import endContract from '../../snapshots/79fdcda95e3377e389edf470b613589cb8daf9c095390b2812b59fe599a60c6f/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -83,6 +83,46 @@ export default class M extends Migration<never, End> {
       }),
       this.createTable({
         schema: 'public',
+        table: 'EnrollmentRequest',
+        columns: [
+          col('adminState', 'text', {
+            notNull: true,
+            default: lit('UNTREATED'),
+            codecRef: { codecId: 'pg/text@1' },
+          }),
+          col('createdAt', 'timestamptz', {
+            notNull: true,
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
+          col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+        ],
+        constraints: [
+          primaryKey(['id']),
+          checkExpression(
+            'EnrollmentRequest_adminState_check_bf2f7403',
+            "\"adminState\" IN ('UNTREATED', 'APPROVED', 'DENIED')",
+          ),
+        ],
+      }),
+      this.createTable({
+        schema: 'public',
+        table: 'EnrollmentRequestOption',
+        columns: [
+          col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('enrolling', 'bool', {
+            notNull: true,
+            default: lit(true),
+            codecRef: { codecId: 'pg/bool@1' },
+          }),
+          col('enrollmentRequestId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+        ],
+        constraints: [primaryKey(['id'])],
+      }),
+      this.createTable({
+        schema: 'public',
         table: 'ExchangeItem',
         columns: [
           col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
@@ -127,6 +167,7 @@ export default class M extends Migration<never, End> {
           }),
           col('creatorId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('message', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('status', 'text', {
             notNull: true,
             default: lit('PENDING'),
@@ -151,8 +192,8 @@ export default class M extends Migration<never, End> {
             "\"status\" IN ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED', 'COMPLETED')",
           ),
           checkExpression(
-            'ExchangeRequest_type_check_aacd8be0',
-            "\"type\" IN ('DIRECT', 'MARKETPLACE')",
+            'ExchangeRequest_type_check_a5efca2d',
+            "\"type\" IN ('DIRECT', 'MARKETPLACE', 'URGENT')",
           ),
         ],
       }),
@@ -177,34 +218,6 @@ export default class M extends Migration<never, End> {
           col('startTime', 'numeric', { notNull: true, codecRef: { codecId: 'pg/numeric@1' } }),
         ],
         constraints: [primaryKey(['id'])],
-      }),
-      this.createTable({
-        schema: 'public',
-        table: 'SupportTicket',
-        columns: [
-          col('adminState', 'text', {
-            notNull: true,
-            default: lit('UNTREATED'),
-            codecRef: { codecId: 'pg/text@1' },
-          }),
-          col('createdAt', 'timestamptz', {
-            notNull: true,
-            default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
-          }),
-          col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('message', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('targetClassId', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
-          col('type', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-        ],
-        constraints: [
-          primaryKey(['id']),
-          checkExpression(
-            'SupportTicket_adminState_check_bf2f7403',
-            "\"adminState\" IN ('UNTREATED', 'APPROVED', 'DENIED')",
-          ),
-        ],
       }),
       this.createTable({
         schema: 'public',
@@ -300,6 +313,24 @@ export default class M extends Migration<never, End> {
       }),
       this.createIndex({
         schema: 'public',
+        table: 'EnrollmentRequest',
+        index: 'EnrollmentRequest_userId_idx_a489d58a',
+        columns: ['userId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'EnrollmentRequestOption',
+        index: 'EnrollmentRequestOption_courseUnitId_idx_fae358e6',
+        columns: ['courseUnitId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'EnrollmentRequestOption',
+        index: 'EnrollmentRequestOption_enrollmentRequestId_idx_6fc8c6a4',
+        columns: ['enrollmentRequestId'],
+      }),
+      this.createIndex({
+        schema: 'public',
         table: 'ExchangeItem',
         index: 'ExchangeItem_exchangeRequestId_idx_d1e39232',
         columns: ['exchangeRequestId'],
@@ -345,12 +376,6 @@ export default class M extends Migration<never, End> {
         table: 'ScheduleSlot',
         index: 'ScheduleSlot_classId_idx_0089e5e7',
         columns: ['classId'],
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'SupportTicket',
-        index: 'SupportTicket_userId_idx_a489d58a',
-        columns: ['userId'],
       }),
       this.addForeignKey({
         schema: 'public',
@@ -440,6 +465,34 @@ export default class M extends Migration<never, End> {
       }),
       this.addForeignKey({
         schema: 'public',
+        table: 'EnrollmentRequest',
+        foreignKey: {
+          name: 'EnrollmentRequest_userId_fkey',
+          columns: ['userId'],
+          references: { schema: 'public', table: 'User', columns: ['id'] },
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'EnrollmentRequestOption',
+        foreignKey: {
+          name: 'EnrollmentRequestOption_enrollmentRequestId_fkey',
+          columns: ['enrollmentRequestId'],
+          references: { schema: 'public', table: 'EnrollmentRequest', columns: ['id'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'EnrollmentRequestOption',
+        foreignKey: {
+          name: 'EnrollmentRequestOption_courseUnitId_fkey',
+          columns: ['courseUnitId'],
+          references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
         table: 'ExchangeItem',
         foreignKey: {
           name: 'ExchangeItem_exchangeRequestId_fkey',
@@ -492,15 +545,6 @@ export default class M extends Migration<never, End> {
           columns: ['classId'],
           references: { schema: 'public', table: 'Class', columns: ['id'] },
           onDelete: 'cascade',
-        },
-      }),
-      this.addForeignKey({
-        schema: 'public',
-        table: 'SupportTicket',
-        foreignKey: {
-          name: 'SupportTicket_userId_fkey',
-          columns: ['userId'],
-          references: { schema: 'public', table: 'User', columns: ['id'] },
         },
       }),
     ];
