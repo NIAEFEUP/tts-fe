@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript"],
+  "ignorePatterns": ["packages/sigarra/src/generated"],
   "categories": {
     "correctness": "error"
   },
