@@ -13,6 +13,9 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
     "rootDir": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "types": [
       "node"
     ]

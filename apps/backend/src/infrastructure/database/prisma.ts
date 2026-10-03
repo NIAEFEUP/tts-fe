@@ -1,7 +1,7 @@
 // Wire this file up after running `bun run contract:emit` at least once
 // (that generates contract.json and contract.d.ts from contract.prisma).
 //
-// Usage: import { db } from "./prisma/db" from anywhere in src/.
+// Usage: import { db } from "@/infrastructure/database/prisma" from anywhere in src/.
 
 import postgres from "@prisma/orm-postgres/runtime";
 import "temporal-polyfill/global"; // required by Prisma 8 for DateTime fields
