@@ -4,6 +4,7 @@
 api:
   specs:
     - openapi: ../openapi.json
+      overrides: ./openapi-overrides.yml
 default-group: typescript-sdk
 groups:
   typescript-sdk:
