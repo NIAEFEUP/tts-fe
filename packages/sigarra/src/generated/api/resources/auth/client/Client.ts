@@ -187,7 +187,7 @@ export class AuthClient {
      *
      * On success, sets `SI_SESSION` and `SI_SECURITY` (no expiry date; the session lasts about 2 hours) and redirects with a `<meta http-equiv="refresh">` to `p_address` (`web_page.Inicial` by default). On failure, the reason is in `p.aviso-invalidado` (e.g. "O conjunto utilizador/senha não é válido.", "A sua conta encontra-se bloqueada.", or an expired password). If the request already carries a valid session, the page is titled "Problema encontrado", `p.erro-nota` says "Já se encontra autenticado com o utilizador <name>.", and no new session is created.
      *
-     * Used by [uni](https://github.com/NIAEFEUP/uni) and TTS.
+     * Used by [uni](https://github.com/NIAEFEUP/uni).
      *
      * @param {Sigarra.LoginPageAuthRequest} request
      * @param {AuthClient.RequestOptions} requestOptions - Request-specific configuration.

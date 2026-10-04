@@ -818,8 +818,6 @@ export class CourseUnitClient {
     /**
      * Weekly timetable of a course unit occurrence. Returns the weekly timetable of the week that contains `pv_semana_ini`; `pv_semana_fim` does not widen the range.
      *
-     * Used by TTS.
-     *
      * @param {Sigarra.GetScheduleCourseUnitRequest} request
      * @param {CourseUnitClient.RequestOptions} requestOptions - Request-specific configuration.
      *
