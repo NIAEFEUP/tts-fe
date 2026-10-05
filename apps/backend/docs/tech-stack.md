@@ -19,7 +19,7 @@
 | Linting         | ESLint + typescript-eslint | 9.x      |
 | Testing         | Bun test                   | built-in |
 | CI/CD           | GitHub Actions             | —        |
-| Deployment      | Railway or Fly.io          | —        |
+| Deployment      | Docker Compose + nginx      | —        |
 | Monitoring      | Sentry                     | —        |
 | API docs        | Scalar                     | —        |
 
@@ -35,7 +35,7 @@
 
 **Tradeoff:** Some Node.js packages don't work. Avoid legacy SDKs (like Mailjet's). Use modern, `fetch`-based libraries.
 
-> **Note:** The dev server currently runs via `tsx watch` (not native Bun) because some dependencies require Node.js. This is fine — `tsx` gives identical DX. When all deps are Bun-compatible, switch `dev` to `bun --watch run src/index.ts`.
+> **Note:** The dev server runs via `tsx watch` (as configured in `package.json`). This works fine when running `bun run dev` in the monorepo. We may switch to native Bun (`bun --watch run src/index.ts`) in the future if all dependencies become fully Bun-compatible.
 
 ---
 
@@ -259,11 +259,10 @@ SIGARRA_USERINFO_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-c
 
 | Provider | Free tier | Notes |
 |----------|-----------|-------|
-| **Railway** | $5 credit/month | Easiest setup, integrates with deployment |
 | **Supabase** | 500MB | Generous free tier, real-time features |
 | **Neon** | 0.5GB | Serverless, scales to zero |
 | **Prisma Postgres** | Free tier | Managed by Prisma, zero-config with Prisma 8 |
-| **Self-hosted** | — | Don't do this as a student team |
+| **Self-hosted (Docker)** | — | Works with any Docker-compatible host |
 
 > **Current dev setup:** The repo is already wired to a hosted Prisma Postgres instance (`db.prisma.io`) via `DATABASE_URL` in `.env`. This can stay for dev or be swapped for any PostgreSQL provider — Prisma 8 works with any standard PostgreSQL >= 15.
 
@@ -406,9 +405,9 @@ jobs:
 
 ---
 
-## 12. Deployment: Docker Compose + nginx
+## 12. Deployment: Docker + nginx
 
-Same approach as the current backend. Docker Compose orchestrates all services, nginx handles TLS termination and reverse proxying.
+We deploy using Docker Compose, with nginx handling TLS termination and reverse proxying. The exact service configuration will evolve as needed — keep it minimal and avoid over-specifying implementation details at this stage.
 
 **Services:**
 
@@ -689,7 +688,7 @@ NODE_ENV=development
 | Redis | Not needed yet. Add if you need distributed caching or rate limiting. |
 | Message queue | Not needed yet. Fire-and-forget emails are fine for now. |
 | tRPC | REST is simpler. Can migrate later if needed. |
-| Docker (for app) | Railway/Fly.io handle this. Only use Docker for local PostgreSQL. |
+| Over-engineered infra | We use Docker Compose + nginx for deployment. Keep deployment configuration pragmatic and minimal. |
 | Feature flags | Not needed for a fresh launch. Add if you need gradual rollout. |
 
 ---
@@ -706,7 +705,7 @@ NODE_ENV=development
 | Auth | SIGARRA OIDC | Reuse existing university auth |
 | Database | PostgreSQL | Production-grade, JSONB, reliable |
 | Testing | Bun test | Built-in, fast, familiar API |
-| Deployment | Railway | Easiest setup, GitHub integration |
+| Deployment | Docker Compose + nginx | Containerized deployment with nginx for TLS termination |
 | Monitoring | Sentry | Free for open source, easy setup |
 | API docs | Scalar | Auto-generated, beautiful |
 

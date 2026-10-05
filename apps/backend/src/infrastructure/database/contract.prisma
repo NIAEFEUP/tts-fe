@@ -1,31 +1,219 @@
 // use prisma-8
 
-// ---------------------------------------------------------------------------
-// 1. IDENTITY & ROLES
-// ---------------------------------------------------------------------------
+// TTS Backend — database contract
+//
+// Design rule: one row per real-world thing, no duplicated strings, no flags
+// that can disagree with each other. Every legacy polymorphic branch
+// (getExchangeType, is_course_expiration, accepted+canceled booleans) is
+// replaced by a single enum column.
+//
+// VERIFY BEFORE MIGRATING: legacy declares CourseUnit PK as `id` but also
+// unique_together (id, course, year, semester) — Sigarra may reuse one
+// occurrence id across academic years. Run:
+//   SELECT id, COUNT(DISTINCT year) FROM course_unit GROUP BY id HAVING COUNT(*) > 1;
+// If that returns rows, switch CourseUnit to a composite key (see note there).
+
+// ===========================================================================
+// 1. IDENTITY
+// ===========================================================================
 
 model User {
-  id        String   @id // SIGARRA NMEC (e.g. "up202301234")
-  email     String   @unique
-  name      String
-  
-  // Is this user an admin? 
-  isAdmin   Boolean  @default(false)
-  
-  // Relations
-  enrollments      Enrollment[]
-  createdExchanges ExchangeRequest[] @relation("ExchangeCreator")
-  targetedIn       ExchangeRequest[] @relation("ExchangeTarget")
-  enrollmentRequests EnrollmentRequest[]
+  id    String @id // NMEC, e.g. "202301234"
+  email String @unique
+  name  String
 
-  // Join tables for many-to-many admin access
-  adminCourses     AdminCourse[]
-  adminUnits       AdminCourseUnit[]
-  
+  // Global admin = may open the admin panel at all.
+  // Scoped access (what they may actually act on) lives in AdminCourse/AdminCourseUnit.
+  isAdmin Boolean @default(false)
+
   createdAt DateTime @default(now())
+
+  enrollments        Enrollment[]
+  exchangesCreated   ExchangeRequest[]   @relation("ExchangeCreator")
+  exchangesTargeted  ExchangeRequest[]   @relation("ExchangeTarget")
+  exchangeItems      ExchangeItem[]
+  enrollmentRequests EnrollmentRequest[]
+  sessions           Session[]
+  adminCourses       AdminCourse[]
+  adminCourseUnits   AdminCourseUnit[]
+  courseMetadata     StudentCourseMetadata[]
 }
 
-// Explicit join tables for M2M admin relations (Prisma 8 requires explicit joins)
+// Opaque random token in an httpOnly cookie. Chosen over JWT so sessions are
+// revocable and CSRF protection already exists on the frontend.
+model Session {
+  token     String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ===========================================================================
+// 2. UNIVERSITY CATALOG — mirrored from Sigarra by a sync job
+// ===========================================================================
+
+model Faculty {
+  acronym String   @id // "FEUP"
+  name    String?
+  courses Course[]
+}
+
+model Course {
+  id         Int      @id // Sigarra course id (already per academic year)
+  facultyId  String
+  faculty    Faculty  @relation(fields: [facultyId], references: [acronym])
+  acronym    String // "L.EIC"
+  name       String
+  courseType String // "L" | "M" | "P"
+  year       Int // academic year, e.g. 2025
+  url        String
+  planUrl    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+
+  units       CourseUnit[]
+  admins      AdminCourse[]
+}
+
+// Legacy CourseMetadata (ects, keyed by course+unit+year) and both course-group
+// tables are gone: `ects` lives on CourseUnit, and no route consumed groups.
+model CourseUnit {
+  id       Int    @id // Sigarra occurrence id
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  acronym  String // "BD"
+  name     String
+  semester Int // 1 | 2
+  year     Int // curricular year, 1-5
+  ects     Float
+  url      String
+  // Backs GET /course_unit/hash?ids=... — lets the planner detect timetable
+  // changes without re-fetching every course unit.
+  hash String @default("")
+
+  createdAt DateTime @default(now())
+
+  classes        Class[]
+  exchangeItems  ExchangeItem[]
+  periods        ExchangePeriod[]
+  enrollments    EnrollmentRequestOption[]
+  admins         AdminCourseUnit[]
+
+  @@unique([id, courseId, year, semester]) // defensive: matches legacy natural key
+  @@index([courseId])
+  @@index([courseId, semester, year])
+}
+
+model Class {
+  id           Int @id @default(autoincrement()) // Sigarra has no class id
+  courseUnitId Int
+  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id], onDelete: Cascade)
+
+  name      String // "1LEIC01"
+  vacancies Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+
+  slots       ScheduleSlot[]
+  enrollments Enrollment[]
+
+  @@unique([name, courseUnitId])
+  @@index([courseUnitId])
+}
+
+model Professor {
+  id      Int     @id // Sigarra professor code
+  acronym String?
+  name    String
+
+  slots SlotProfessor[]
+}
+
+model ScheduleSlot {
+  id      Int   @id
+  classId Int
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  lessonType String // "T" | "TP" | "P" | "PL" | "OT" | "O" | "E"
+  // 0 = Sunday. The sigarra `dia` -> 0-based conversion belongs in the
+  // Sigarra adapter, never in a query.
+  dayOfWeek Int
+  // Minutes since midnight. Legacy used decimal(3,1) hours, which made
+  // exchange_overlap() compare floats; integers remove that entirely.
+  startMinute Int
+  durationMin Int
+  location    String?
+
+  professors SlotProfessor[]
+
+  @@index([classId])
+}
+
+// Prisma 8 has no implicit m2m.
+model SlotProfessor {
+  slotId      Int
+  professorId Int
+  slot        ScheduleSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  professor   Professor    @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@id([slotId, professorId])
+  @@index([professorId])
+}
+
+// ===========================================================================
+// 3. STUDENT STATE
+// ===========================================================================
+
+// Local mirror of the student's current class assignments. This is what makes
+// exchange validation possible without a Sigarra round-trip per check.
+// A student legitimately holds several rows for one course unit (T + TP).
+model Enrollment {
+  id      String @id @default(uuid())
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classId Int
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+
+  @@unique([userId, classId])
+  @@index([classId])
+  @@index([userId, classId])
+}
+
+// ===========================================================================
+// 4. PLATFORM CONFIGURATION
+// ===========================================================================
+
+// Deliberately course-unit-scoped only.
+//
+// Opening a whole course is a server-side fan-out: resolve the course's units,
+// overlap-check them all, then createMany inside one transaction. Reading
+// "is this course open" aggregates with DISTINCT over its units.
+//
+// The legacy `is_course_expiration` flag is gone: it made the same physical row
+// visible through one endpoint and invisible through the other, depending on
+// the flag it was created with.
+model ExchangePeriod {
+  id           Int        @id @default(autoincrement())
+  courseUnitId Int
+  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id], onDelete: Cascade)
+  startsAt     DateTime
+  endsAt       DateTime
+  createdAt    DateTime   @default(now())
+
+  @@unique([courseUnitId, startsAt, endsAt])
+  @@index([courseUnitId, startsAt, endsAt])
+}
+
 model AdminCourse {
   userId   String
   courseId Int
@@ -33,6 +221,7 @@ model AdminCourse {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([userId, courseId])
+  @@index([courseId])
 }
 
 model AdminCourseUnit {
@@ -42,182 +231,176 @@ model AdminCourseUnit {
   courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id], onDelete: Cascade)
 
   @@id([userId, courseUnitId])
+  @@index([courseUnitId])
 }
 
-// ---------------------------------------------------------------------------
-// 2. UNIVERSITY DOMAIN (Imported from Sigarra)
-// ---------------------------------------------------------------------------
-
-model Faculty {
-  acronym String   @id // e.g. "FEUP"
-  name    String?
-  courses Course[]
-}
-
-model Course {
-  id             Int          @id // Sigarra Course ID
-  facultyId      String
-  faculty        Faculty      @relation(fields: [facultyId], references: [acronym])
-  
-  acronym        String       // e.g. "L.EIC"
-  name           String
-  
-  units          CourseUnit[]
-  admins         AdminCourse[]
-  exchangePeriods ExchangePeriod[]
-}
-
-model CourseUnit {
-  id             Int      @id // Sigarra ID
-  courseId       Int
-  course         Course   @relation(fields: [courseId], references: [id])
-  
-  acronym        String   // e.g. "BD"
-  name           String
-  semester       Int
-  year           Int
-  
-  classes        Class[]
-  admins         AdminCourseUnit[]
-  exchangePeriods ExchangePeriod[]
-}
-
-model Class {
-  id           Int        @id @default(autoincrement())
-  courseUnitId Int
-  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id])
-  
-  name         String     // e.g. "1LEIC01"
-  type         String     // e.g. "TP", "T", "PL"
-  vacancies    Int?
-  
-  slots        ScheduleSlot[]
-  enrollments  Enrollment[]
-  
-  @@unique([name, courseUnitId])
-}
-
-model ScheduleSlot {
-  id         Int     @id @default(autoincrement())
-  classId    Int
-  class      Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
-  
-  dayOfWeek  Int     // 0 = Sunday, 1 = Monday, etc.
-  startTime  Decimal
-  duration   Decimal
-  location   String?
-}
-
-// ---------------------------------------------------------------------------
-// 3. STUDENT ENROLLMENTS
-// ---------------------------------------------------------------------------
-
-model Enrollment {
-  id           String     @id @default(uuid())
-  userId       String
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  classId      Int
-  class        Class      @relation(fields: [classId], references: [id])
-  
-  @@unique([userId, classId])
-}
-
-// ---------------------------------------------------------------------------
-// 4. PLATFORM CONFIGURATION
-// ---------------------------------------------------------------------------
-
-model ExchangePeriod {
-  id           Int         @id @default(autoincrement())
-  startDate    DateTime
-  endDate      DateTime
-  
-  // Can be global to a Course or specific to a CourseUnit
-  courseId     Int?
-  course       Course?     @relation(fields: [courseId], references: [id])
-  
-  courseUnitId Int?
-  courseUnit   CourseUnit? @relation(fields: [courseUnitId], references: [id])
-}
-
-// ---------------------------------------------------------------------------
-// 5. EXCHANGES & REQUESTS
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// 5. EXCHANGES
+// ===========================================================================
 
 enum ExchangeType {
-  DIRECT
-  MARKETPLACE
-  URGENT
+  DIRECT // two named students swap
+  MARKETPLACE // open offer anyone can claim
+  URGENT // one student asks, admin approves
 }
 
+// Student-side lifecycle. Admin decisions live in adminState — legacy kept
+// `accepted`/`canceled` booleans and an `admin_state` string side by side,
+// which allowed nonsense states like rejected-but-not-cancelled.
+//
+// PENDING -> ACCEPTED  all participants accepted, or the offer was claimed,
+//                    or (URGENT) the admin approved
+// PENDING -> CANCELLED creator withdrew, or a conflicting exchange killed it
 enum ExchangeStatus {
   PENDING
   ACCEPTED
-  REJECTED
   CANCELLED
-  COMPLETED
 }
 
+// The four real legacy values, previously free text:
+// "untreated" | "treated" | "rejected" | "awaiting-information"
 enum AdminValidationState {
   UNTREATED
-  APPROVED
-  DENIED
+  TREATED
+  REJECTED
+  AWAITING_INFORMATION
 }
 
+// Replaces DirectExchange + MarketplaceExchange + ExchangeUrgentRequests.
+// `type` replaces the legacy getExchangeType() type sniffing.
 model ExchangeRequest {
-  id               String               @id @default(uuid())
-  creatorId        String
-  creator          User                 @relation("ExchangeCreator", fields: [creatorId], references: [id])
-  
-  targetUserId     String?
-  targetUser       User?                @relation("ExchangeTarget", fields: [targetUserId], references: [id])
-  
-  type             ExchangeType
-  status           ExchangeStatus       @default(PENDING)
-  
-  message          String?              // Justification for URGENT requests
-  
-  adminState       AdminValidationState @default(UNTREATED)
-  
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @default(now())
+  id        String   @id @default(uuid())
+  creatorId String
+  creator   User     @relation("ExchangeCreator", fields: [creatorId], references: [id])
+  // Set when the offer is claimed by a specific student (MARKETPLACE), or when
+  // an admin assigns an URGENT request. Null while open.
+  targetUserId String?
+  targetUser   User?    @relation("ExchangeTarget", fields: [targetUserId], references: [id])
 
-  items            ExchangeItem[]
-  
-  @@index([status, type])
+  type   ExchangeType
+  status ExchangeStatus @default(PENDING)
+
+  // Justification for URGENT requests (max 2048 in legacy).
+  message String?
+
+  adminState AdminValidationState @default(UNTREATED)
+
+  // Backs GET /exchange/verify/{token} (email confirmation links) and the
+  // duplicate-request check on creation.
+  hash String?
+
+  // Drives GET /exchange/direct/validate/{id} -> { valid, lastValidated }.
+  lastValidated DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+
+  items ExchangeItem[]
+
+  @@index([type, status])
+  @@index([adminState, createdAt])
+  @@index([hash])
+  @@index([creatorId, status])
+  @@index([targetUserId])
 }
 
+// Replaces DirectExchangeParticipants + MarketplaceExchangeClass +
+// ExchangeUrgentRequestOptions. Two of these collapse into one table because
+// the only real difference was the name of the class-name column.
+//
+// The critical field is userId: legacy stored TWO rows per swap — one per
+// student — because each side has its own from/to and its own accept flag.
+// A single row without userId cannot express a 2-way exchange at all.
 model ExchangeItem {
-  id                String          @id @default(uuid())
-  exchangeRequestId String
-  request           ExchangeRequest @relation(fields: [exchangeRequestId], references: [id], onDelete: Cascade)
-  
-  courseUnitId      Int
-  fromClassId       Int
-  toClassId         Int
-  
-  @@index([toClassId, fromClassId])
+  id        String @id @default(uuid())
+  requestId String
+  request   ExchangeRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  // Whose move this is. Legacy duplicated participant_name/course_unit_acronym
+  // as strings here; both are now joins.
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseUnitId Int
+  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id])
+  fromClassId  Int
+  toClassId    Int
+
+  // Per-participant accept. A direct exchange is accepted when every row is
+  // accepted — derived, not stored, which is what legacy's
+  // DirectExchangePendingMotive() reverse-engineered at read time.
+  accepted Boolean @default(false)
+
+
+  @@unique([requestId, userId, courseUnitId])
+  @@index([courseUnitId])
+  @@index([fromClassId, toClassId])
+  @@index([userId, accepted])
 }
 
+// ===========================================================================
+// 6. ENROLLMENT REQUESTS
+// ===========================================================================
+
+// Replaces CourseUnitEnrollments.
 model EnrollmentRequest {
-  id           String               @id @default(uuid())
-  userId       String
-  user         User                 @relation(fields: [userId], references: [id])
-  
-  adminState   AdminValidationState @default(UNTREATED)
-  
-  createdAt    DateTime             @default(now())
-  
-  options      EnrollmentRequestOption[]
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  status    ExchangeStatus @default(PENDING)
+  adminState AdminValidationState @default(UNTREATED)
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+
+  options EnrollmentRequestOption[]
 }
 
+// Replaces CourseUnitEnrollmentOptions. `enrolling: false` means "drop this
+// course unit" rather than "add it".
+//
+// No classUserGoesTo column: the POST body only ever sent
+// { course_unit_id, enrolling }, and the serializer never returned a class
+// either. The frontend type declares the field but nothing ever populated it.
 model EnrollmentRequestOption {
-  id                  String            @id @default(uuid())
-  enrollmentRequestId String
-  request             EnrollmentRequest @relation(fields: [enrollmentRequestId], references: [id], onDelete: Cascade)
-  
-  courseUnitId        Int
-  courseUnit          CourseUnit        @relation(fields: [courseUnitId], references: [id])
-  
-  enrolling           Boolean           @default(true)
+  id        String @id @default(uuid())
+  requestId String
+  request   EnrollmentRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  courseUnitId Int
+  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id])
+  // The owning course is reached via courseUnit.course. Legacy denormalized
+  // course_unit_name / course_unit_acronym onto every option row; the frontend
+  // wants option.course too, and a join answers both.
+
+  enrolling Boolean @default(true)
+
+  @@unique([requestId, courseUnitId])
+  @@index([courseUnitId])
+}
+
+// ===========================================================================
+// 7. SUPPORT
+// ===========================================================================
+
+// fest_id per (student, course), scraped from the Sigarra profile.
+// Backs GET /student/{nmec}/{course_id}/metadata. Pure cache — safe to drop
+// and re-populate.
+model StudentCourseMetadata {
+  nmec     String
+  courseId Int
+  festId   Int
+  user     User   @relation(fields: [nmec], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([nmec, courseId])
+}
+
+// Replaces the legacy single-row Info table (DateTime PK) that served
+// GET /info/. One row per sync run.
+model ScrapeRun {
+  id        Int      @id @default(autoincrement())
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  ok        Boolean?
+  detail    String?
 }
