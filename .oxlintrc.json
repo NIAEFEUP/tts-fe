@@ -1,6 +1,11 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript"],
+  "ignorePatterns": [
+    ".claude/skills/**",
+    ".agents/skills/**",
+    ".pi/skills/**"
+  ],
   "categories": {
     "correctness": "error"
   },
