@@ -10,7 +10,8 @@ services:
     ports:
       - 3100:3100
     env_file:
-      - .env
+      - path: .env
+        required: false
 
   tts-frontend-prod:
     container_name: tts_frontend_prod
