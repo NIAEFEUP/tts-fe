@@ -16,7 +16,7 @@
 | Auth            | SIGARRA OIDC (reused)      | —        |
 | Database        | PostgreSQL                 | 16       |
 | Package manager | Bun                        | built-in |
-| Linting         | ESLint + typescript-eslint | 9.x      |
+| Linting         | oxlint                     | 1.x      |
 | Testing         | Bun test                   | built-in |
 | CI/CD           | GitHub Actions             | —        |
 | Deployment      | Docker Compose + nginx      | —        |
@@ -71,16 +71,17 @@ Prisma 8 is *contract-first*. You write a `contract.prisma` file describing your
 **Setup (already done in this repo):**
 
 ```
-src/prisma/
+src/infrastructure/database/
 ├── contract.prisma   ← your schema, edit this
 ├── contract.json     ← generated, do not edit
 ├── contract.d.ts     ← generated, do not edit
-└── db.ts             ← singleton client, import from here
+├── prisma.ts         ← singleton client, import from here
+└── repositories/     ← map Prisma rows to domain entities here
 ```
 
 **First time:**
 ```bash
-# 1. Write models in src/prisma/contract.prisma
+# 1. Write models in src/infrastructure/database/contract.prisma
 # 2. Generate runtime artefacts
 bun run contract:emit
 
@@ -95,7 +96,7 @@ bun run migration:plan -- --name <slug>          # plan the migration
 bun run migrate                                  # apply it
 ```
 
-**The singleton client (`src/prisma/db.ts`):**
+**The singleton client (`src/infrastructure/database/prisma.ts`):**
 ```typescript
 import postgres from "@prisma/orm-postgres/runtime";
 import type { Contract } from "./contract.d.ts";
@@ -108,19 +109,23 @@ export const db = process.env.DATABASE_URL
 
 **Usage:**
 ```typescript
-import { db } from "./prisma/db";
+import { db } from "@/infrastructure/database/prisma";
 
-// ORM lane — fully typed, model-shaped
+// ORM lane — fully typed, model-shaped (models are PascalCase)
 const users = await db.orm.public.User.select("id", "email").all();
 const user  = await db.orm.public.User.create({ email: "alice@example.com" });
 
-// SQL builder lane — typed raw SQL
-const rows = await db.sql.public.user.select("id").where(f => f.email.eq("alice@example.com")).all();
+// SQL builder lane — typed SQL plans (keyed by TABLE name; ours are PascalCase)
+const plan = db.sql.public.User
+  .select("id", "email")
+  .where((f, fns) => fns.eq(f.email, "alice@example.com"))
+  .build();
+const rows = await db.runtime().query(plan);
 ```
 
 **Rules:**
-- One `db` singleton exported from `src/prisma/db.ts`
-- Never import `contract.json` or `contract.d.ts` directly outside `db.ts`
+- One `db` singleton exported from `src/infrastructure/database/prisma.ts`
+- Never import `contract.json` or `contract.d.ts` directly outside `prisma.ts`
 - Map `db` query results to domain entities in repositories — don't let Prisma types leak into `domain/`
 
 > **Note — Prisma Studio in v8:** Prisma 8 doesn't ship its own Studio, but you can launch the Prisma 7 Studio pointed directly at your database via `bun run db:studio`. It spins up `prisma@prev studio --url $DATABASE_URL` under the hood and gives you the same visual inspector.
@@ -616,17 +621,20 @@ NODE_ENV=development
 
 ## 17. Package.json
 
+The current manifest (kept in sync — the sections above list what gets added when each feature lands: `zod`, `resend`, `@sentry/bun`, `@elysiajs/swagger`):
+
 ```json
 {
   "name": "tts-be",
-  "version": "1.0.0",
-  "type": "module",
+  "private": true,
   "packageManager": "bun@1.4.1",
+  "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/index.ts",
-    "build": "bun build src/index.ts --outdir dist",
+    "dev": "tsx watch --env-file .env src/main.ts",
+    "build": "bun build src/main.ts --outfile dist/server.mjs --target=node",
     "start": "node dist/server.mjs",
-    "lint": "eslint .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "test:watch": "bun test --watch",
@@ -637,7 +645,7 @@ NODE_ENV=development
     "db:verify": "prisma db verify",
     "db:schema": "prisma db schema",
     "db:sign": "prisma db sign",
-    "db:studio": "node -e \"require('dotenv').config(); require('child_process').execSync('npx --yes prisma@prev studio --url ' + process.env.DATABASE_URL, {stdio: 'inherit'})\"",
+    "db:studio": "node -e \"require('dotenv').config(); const r = require('child_process').spawnSync('bun', ['x','--yes','prisma@prev','studio','--port','5555','--url',process.env.DATABASE_URL], {stdio:'inherit', cwd:'..'}); process.exit(r.status ?? 1)\"",
     "migrate": "prisma db migrate",
     "migrate:show": "prisma db migrate --show",
     "migration:plan": "prisma migration plan",
@@ -647,24 +655,19 @@ NODE_ENV=development
     "migration:ref:set": "prisma migration ref set"
   },
   "dependencies": {
-    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/cors": "^1.4.2",
     "@elysiajs/node": "^1.4.5",
-    "@elysiajs/swagger": "^1.2.0",
     "@prisma/orm-postgres": "8.0.0-rc.12",
-    "@sentry/bun": "^8.0.0",
     "elysia": "^1.4.28",
-    "resend": "^4.0.0",
-    "temporal-polyfill": "^1.0.4",
-    "zod": "^3.23.0"
+    "temporal-polyfill": "^1.0.4"
   },
   "devDependencies": {
-    "@types/bun": "latest",
     "@types/node": "^25.6.2",
-    "eslint": "^9.0.0",
+    "dotenv": "^16.0.0",
+    "oxlint": "^1.86.0",
     "prisma": "8.0.0-rc.18",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.0.0"
+    "typescript": "^5.9.3"
   }
 }
 ```
