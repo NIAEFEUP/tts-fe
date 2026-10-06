@@ -25,7 +25,7 @@
     "migration:status": "varlock run -- prisma migration status",
     "migration:list": "prisma migration list",
     "migration:ref:set": "prisma migration ref set",
-    "db:studio": "varlock run -- node -e \"require('child_process').execSync('npx --yes prisma@prev studio --url ' + process.env.DATABASE_URL, {stdio: 'inherit'})\""
+    "db:studio": "varlock run -- node -e \"const os=require('os'),fs=require('fs'),path=require('path'),{execSync}=require('child_process');const d=fs.mkdtempSync(path.join(os.tmpdir(),'prisma-studio-'));try{execSync('bun x --yes prisma@7.10.0 studio --url '+process.env.DATABASE_URL,{stdio:'inherit',cwd:d})}finally{fs.rmSync(d,{recursive:true,force:true})}\""
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.2",
