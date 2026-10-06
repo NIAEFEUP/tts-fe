@@ -24,7 +24,12 @@ const navigation = [
     icon: <ArrowLeftRight className="h-5 w-5" />,
     wip: false,
   },
-  { title: 'Sobre', location: getPath(config.paths.about), icon: <AtSign className="h-5 w-5" />, wip: false },
+  {
+    title: 'Sobre',
+    location: getPath(config.paths.about),
+    icon: <AtSign className="h-5 w-5" />,
+    wip: false,
+  },
   {
     title: 'FAQs',
     location: getPath(config.paths.faqs),

@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "env": {
+    "browser": true
+  },
+  "plugins": ["react"],
+  "ignorePatterns": [
+    "build/**",
+    "dist/**",
+    "src/components/ui/**",
+    "src/components/svgs/**"
+  ],
+  "rules": {
+    "no-console": ["error", { "allow": ["error", "warn", "debug"] }],
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/immutability": "off",
+    "react/set-state-in-effect": "off",
+    "react/set-state-in-render": "off",
+    "react/purity": "off",
+    "react/refs": "off",
+    "react/error-boundaries": "off",
+    "react/globals": "off",
+    "react/incompatible-library": "off",
+    "react/preserve-manual-memoization": "off",
+    "react/static-components": "off",
+    "react/use-memo": "off",
+    "react/unsupported-syntax": "off",
+    "react/no-deriving-state-in-effects": "off"
+  }
+}

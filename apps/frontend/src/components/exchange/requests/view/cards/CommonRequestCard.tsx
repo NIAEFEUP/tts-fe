@@ -97,7 +97,11 @@ export const CommonRequestCard = ({
           matchingClass.slots.forEach((slot) => {
             newExchangeSchedule.push({
               courseInfo: option.course_info,
-              classInfo: { id: matchingClass.id, name: matchingClass.name, slots: [slot] },
+              classInfo: {
+                id: matchingClass.id,
+                name: matchingClass.name,
+                slots: [slot],
+              },
             })
           })
         }

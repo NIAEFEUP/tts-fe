@@ -111,7 +111,13 @@ const ExchangePage = () => {
 
   return (
     <ScheduleContext.Provider
-      value={{ originalExchangeSchedule, exchangeSchedule, loadingSchedule, setExchangeSchedule, enrolledCourseUnits }}
+      value={{
+        originalExchangeSchedule,
+        exchangeSchedule,
+        loadingSchedule,
+        setExchangeSchedule,
+        enrolledCourseUnits,
+      }}
     >
       <div className="block lg:hidden mx-4">
         <RefreshScheduleButton
