@@ -32,7 +32,7 @@ CMD ["npm", "run", "dev"]
 # prod-build-with-dotenv
 FROM build AS prod-build-with-dotenv
 
-ARG TTS_FE_DOTENV_FILE=.env.production
+ARG TTS_FE_DOTENV_FILE=.env
 COPY ${TTS_FE_DOTENV_FILE} .env
 
 # prod-build-with-var
