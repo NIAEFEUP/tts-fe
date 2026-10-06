@@ -271,7 +271,9 @@ SIGARRA_USERINFO_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-c
 - Or use any of the hosted providers above for dev
 
 ```yaml
-# docker-compose.yaml
+# docker-compose.yaml (repo root) — host port 5434 avoids clashing with a
+# locally installed PostgreSQL on 5432; bound to loopback so dev credentials
+# are not exposed on the network.
 services:
   db:
     image: postgres:16
@@ -280,7 +282,7 @@ services:
       POSTGRES_PASSWORD: tts
       POSTGRES_DB: tts
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 volumes:
@@ -388,10 +390,11 @@ jobs:
 ```json
 {
   "scripts": {
-    "dev": "tsx watch --env-file .env src/index.ts",
-    "build": "bun build src/index.ts --outdir dist",
+    "dev": "tsx watch --env-file .env src/main.ts",
+    "build": "bun build src/main.ts --outfile dist/server.mjs --target=node",
     "start": "node dist/server.mjs",
-    "lint": "eslint .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "contract:emit": "prisma contract emit",
@@ -588,7 +591,7 @@ See [TTS Backend Redo - Proposed Structure.md](./TTS%20Backend%20Redo%20-%20Prop
 # .env.example
 
 # Database
-DATABASE_URL=postgresql://tts:tts@localhost:5432/tts
+DATABASE_URL=postgresql://tts:tts@localhost:5434/tts
 
 # Auth (SIGARRA OIDC)
 SIGARRA_CLIENT_ID=your-client-id

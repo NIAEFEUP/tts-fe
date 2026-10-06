@@ -4,8 +4,12 @@
   "packageManager": "bun@1.4.1",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/index.ts",
+    "dev": "tsx watch --env-file .env src/main.ts",
+    "build": "bun build src/main.ts --outfile dist/server.mjs --target=node",
     "start": "node dist/server.mjs",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
+    "typecheck": "tsc --noEmit",
     "contract:emit": "prisma contract emit",
     "db:init": "prisma db init",
     "db:update": "prisma db update",
@@ -19,7 +23,7 @@
     "migration:status": "prisma migration status",
     "migration:list": "prisma migration list",
     "migration:ref:set": "prisma migration ref set",
-    "db:studio": "node -e \"require('dotenv').config(); require('child_process').execSync('cd .. && bun x --yes prisma@prev studio --port 5555 --url ' + process.env.DATABASE_URL, {stdio: 'inherit'})\""
+    "db:studio": "node -e \"require('dotenv').config(); const r = require('child_process').spawnSync('bun', ['x','--yes','prisma@prev','studio','--port','5555','--url',process.env.DATABASE_URL], {stdio:'inherit', cwd:'..'}); process.exit(r.status ?? 1)\""
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.2",
@@ -31,6 +35,7 @@
   "devDependencies": {
     "@types/node": "^25.6.2",
     "dotenv": "^16.0.0",
+    "oxlint": "^1.86.0",
     "prisma": "8.0.0-rc.18",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

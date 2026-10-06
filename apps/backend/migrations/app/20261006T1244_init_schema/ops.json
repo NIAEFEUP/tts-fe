@@ -119,7 +119,7 @@
     "execute": [
       {
         "description": "create table \"Class\"",
-        "sql": "CREATE TABLE \"public\".\"Class\" (\n  \"courseUnitId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz,\n  \"vacancies\" int4,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"Class\" (\n  \"courseUnitId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"vacancies\" int4,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -158,7 +158,7 @@
     "execute": [
       {
         "description": "create table \"Course\"",
-        "sql": "CREATE TABLE \"public\".\"Course\" (\n  \"acronym\" text NOT NULL,\n  \"courseType\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"facultyId\" text NOT NULL,\n  \"id\" int4 NOT NULL,\n  \"name\" text NOT NULL,\n  \"planUrl\" text NOT NULL,\n  \"updatedAt\" timestamptz,\n  \"url\" text NOT NULL,\n  \"year\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"Course\" (\n  \"acronym\" text NOT NULL,\n  \"courseType\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"facultyId\" text NOT NULL,\n  \"id\" int4 NOT NULL,\n  \"name\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"url\" text NOT NULL,\n  \"year\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -236,7 +236,7 @@
     "execute": [
       {
         "description": "create table \"Enrollment\"",
-        "sql": "CREATE TABLE \"public\".\"Enrollment\" (\n  \"classId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"updatedAt\" timestamptz,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"Enrollment\" (\n  \"classId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"userId\", \"classId\")\n)",
         "params": []
       }
     ],
@@ -275,7 +275,7 @@
     "execute": [
       {
         "description": "create table \"EnrollmentRequest\"",
-        "sql": "CREATE TABLE \"public\".\"EnrollmentRequest\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"updatedAt\" timestamptz,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"EnrollmentRequest_adminState_check_49a4ff70\" CHECK (\"adminState\" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')),\n  CONSTRAINT \"EnrollmentRequest_status_check_a8137f16\" CHECK (\"status\" IN ('PENDING', 'ACCEPTED', 'CANCELLED'))\n)",
+        "sql": "CREATE TABLE \"public\".\"EnrollmentRequest\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"EnrollmentRequest_adminState_check_49a4ff70\" CHECK (\"adminState\" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')),\n  CONSTRAINT \"EnrollmentRequest_status_check_a8137f16\" CHECK (\"status\" IN ('PENDING', 'ACCEPTED', 'CANCELLED'))\n)",
         "params": []
       }
     ],
@@ -314,7 +314,7 @@
     "execute": [
       {
         "description": "create table \"EnrollmentRequestOption\"",
-        "sql": "CREATE TABLE \"public\".\"EnrollmentRequestOption\" (\n  \"courseUnitId\" int4 NOT NULL,\n  \"enrolling\" bool DEFAULT true NOT NULL,\n  \"id\" text NOT NULL,\n  \"requestId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"EnrollmentRequestOption\" (\n  \"courseUnitId\" int4 NOT NULL,\n  \"enrolling\" bool DEFAULT true NOT NULL,\n  \"requestId\" text NOT NULL,\n  PRIMARY KEY (\"requestId\", \"courseUnitId\")\n)",
         "params": []
       }
     ],
@@ -353,7 +353,7 @@
     "execute": [
       {
         "description": "create table \"ExchangeItem\"",
-        "sql": "CREATE TABLE \"public\".\"ExchangeItem\" (\n  \"accepted\" bool DEFAULT false NOT NULL,\n  \"courseUnitId\" int4 NOT NULL,\n  \"fromClassId\" int4 NOT NULL,\n  \"id\" text NOT NULL,\n  \"requestId\" text NOT NULL,\n  \"toClassId\" int4 NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"ExchangeItem\" (\n  \"accepted\" bool DEFAULT false NOT NULL,\n  \"courseUnitId\" int4 NOT NULL,\n  \"fromClassId\" int4 NOT NULL,\n  \"requestId\" text NOT NULL,\n  \"toClassId\" int4 NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"requestId\", \"userId\", \"courseUnitId\")\n)",
         "params": []
       }
     ],
@@ -392,7 +392,7 @@
     "execute": [
       {
         "description": "create table \"ExchangePeriod\"",
-        "sql": "CREATE TABLE \"public\".\"ExchangePeriod\" (\n  \"courseUnitId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"endsAt\" timestamptz NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"startsAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"ExchangePeriod\" (\n  \"courseUnitId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"endsAt\" timestamptz NOT NULL,\n  \"startsAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"courseUnitId\", \"startsAt\", \"endsAt\")\n)",
         "params": []
       }
     ],
@@ -431,7 +431,7 @@
     "execute": [
       {
         "description": "create table \"ExchangeRequest\"",
-        "sql": "CREATE TABLE \"public\".\"ExchangeRequest\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"creatorId\" text NOT NULL,\n  \"hash\" text,\n  \"id\" text NOT NULL,\n  \"lastValidated\" timestamptz,\n  \"message\" text,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"targetUserId\" text,\n  \"type\" text NOT NULL,\n  \"updatedAt\" timestamptz,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"ExchangeRequest_adminState_check_49a4ff70\" CHECK (\"adminState\" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')),\n  CONSTRAINT \"ExchangeRequest_status_check_a8137f16\" CHECK (\"status\" IN ('PENDING', 'ACCEPTED', 'CANCELLED')),\n  CONSTRAINT \"ExchangeRequest_type_check_a5efca2d\" CHECK (\"type\" IN ('DIRECT', 'MARKETPLACE', 'URGENT'))\n)",
+        "sql": "CREATE TABLE \"public\".\"ExchangeRequest\" (\n  \"adminState\" text DEFAULT 'UNTREATED' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"creatorId\" text NOT NULL,\n  \"hash\" text,\n  \"id\" text NOT NULL,\n  \"lastValidated\" timestamptz,\n  \"message\" text,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"targetUserId\" text,\n  \"type\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"ExchangeRequest_adminState_check_49a4ff70\" CHECK (\"adminState\" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')),\n  CONSTRAINT \"ExchangeRequest_status_check_a8137f16\" CHECK (\"status\" IN ('PENDING', 'ACCEPTED', 'CANCELLED')),\n  CONSTRAINT \"ExchangeRequest_type_check_a5efca2d\" CHECK (\"type\" IN ('DIRECT', 'MARKETPLACE', 'URGENT'))\n)",
         "params": []
       }
     ],
@@ -509,7 +509,7 @@
     "execute": [
       {
         "description": "create table \"Professor\"",
-        "sql": "CREATE TABLE \"public\".\"Professor\" (\n  \"acronym\" text,\n  \"id\" int4 NOT NULL,\n  \"name\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"Professor\" (\n  \"acronym\" text,\n  \"id\" int4 NOT NULL,\n  \"name\" text,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -548,7 +548,7 @@
     "execute": [
       {
         "description": "create table \"ScheduleSlot\"",
-        "sql": "CREATE TABLE \"public\".\"ScheduleSlot\" (\n  \"classId\" int4 NOT NULL,\n  \"dayOfWeek\" int4 NOT NULL,\n  \"durationMin\" int4 NOT NULL,\n  \"id\" int4 NOT NULL,\n  \"lessonType\" text NOT NULL,\n  \"location\" text,\n  \"startMinute\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"ScheduleSlot\" (\n  \"dayOfWeek\" int4 NOT NULL,\n  \"durationMin\" int4 NOT NULL,\n  \"id\" int4 NOT NULL,\n  \"lessonType\" text NOT NULL,\n  \"location\" text,\n  \"startMinute\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -558,45 +558,6 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"ScheduleSlot\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "table.ScrapeRun",
-    "label": "Create table \"ScrapeRun\"",
-    "summary": "Creates table \"ScrapeRun\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "table",
-        "name": "ScrapeRun"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure table \"ScrapeRun\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"ScrapeRun\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "create table \"ScrapeRun\"",
-        "sql": "CREATE TABLE \"public\".\"ScrapeRun\" (\n  \"detail\" text,\n  \"endedAt\" timestamptz,\n  \"id\" SERIAL NOT NULL,\n  \"ok\" bool,\n  \"startedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
-        "params": []
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify table \"ScrapeRun\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"ScrapeRun\""
         ]
       }
     ]
@@ -626,7 +587,7 @@
     "execute": [
       {
         "description": "create table \"Session\"",
-        "sql": "CREATE TABLE \"public\".\"Session\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"expiresAt\" timestamptz NOT NULL,\n  \"token\" text NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"token\")\n)",
+        "sql": "CREATE TABLE \"public\".\"Session\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"expiresAt\" timestamptz NOT NULL,\n  \"tokenHash\" text NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"tokenHash\")\n)",
         "params": []
       }
     ],
@@ -636,6 +597,45 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"Session\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.SlotClass",
+    "label": "Create table \"SlotClass\"",
+    "summary": "Creates table \"SlotClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "SlotClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"SlotClass\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SlotClass\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"SlotClass\"",
+        "sql": "CREATE TABLE \"public\".\"SlotClass\" (\n  \"classId\" int4 NOT NULL,\n  \"slotId\" int4 NOT NULL,\n  PRIMARY KEY (\"slotId\", \"classId\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"SlotClass\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SlotClass\""
         ]
       }
     ]
@@ -743,7 +743,7 @@
     "execute": [
       {
         "description": "create table \"User\"",
-        "sql": "CREATE TABLE \"public\".\"User\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"isAdmin\" bool DEFAULT false NOT NULL,\n  \"name\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"User\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text,\n  \"id\" text NOT NULL,\n  \"isAdmin\" bool DEFAULT false NOT NULL,\n  \"name\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -800,211 +800,43 @@
     ]
   },
   {
-    "id": "unique.CourseUnit.CourseUnit_id_courseId_year_semester_key",
-    "label": "Add unique constraint on \"CourseUnit\" (id, courseId, year, semester)",
+    "id": "unique.Class.Class_id_courseUnitId_key",
+    "label": "Add unique constraint on \"Class\" (id, courseUnitId)",
     "operationClass": "additive",
     "target": {
       "id": "postgres",
       "details": {
         "schema": "public",
         "objectType": "unique",
-        "name": "CourseUnit_id_courseId_year_semester_key",
-        "table": "CourseUnit"
+        "name": "Class_id_courseUnitId_key",
+        "table": "Class"
       }
     },
     "precheck": [
       {
-        "description": "ensure constraint \"CourseUnit_id_courseId_year_semester_key\" does not exist",
+        "description": "ensure constraint \"Class_id_courseUnitId_key\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
         "params": [
-          "CourseUnit_id_courseId_year_semester_key",
+          "Class_id_courseUnitId_key",
           "public",
-          "\"public\".\"CourseUnit\""
+          "\"public\".\"Class\""
         ]
       }
     ],
     "execute": [
       {
-        "description": "add unique constraint \"CourseUnit_id_courseId_year_semester_key\"",
-        "sql": "ALTER TABLE \"public\".\"CourseUnit\" ADD CONSTRAINT \"CourseUnit_id_courseId_year_semester_key\" UNIQUE (\"id\", \"courseId\", \"year\", \"semester\")"
+        "description": "add unique constraint \"Class_id_courseUnitId_key\"",
+        "sql": "ALTER TABLE \"public\".\"Class\" ADD CONSTRAINT \"Class_id_courseUnitId_key\" UNIQUE (\"id\", \"courseUnitId\")"
       }
     ],
     "postcheck": [
       {
-        "description": "verify constraint \"CourseUnit_id_courseId_year_semester_key\" exists",
+        "description": "verify constraint \"Class_id_courseUnitId_key\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
         "params": [
-          "CourseUnit_id_courseId_year_semester_key",
+          "Class_id_courseUnitId_key",
           "public",
-          "\"public\".\"CourseUnit\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "unique.Enrollment.Enrollment_userId_classId_key",
-    "label": "Add unique constraint on \"Enrollment\" (userId, classId)",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "unique",
-        "name": "Enrollment_userId_classId_key",
-        "table": "Enrollment"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure constraint \"Enrollment_userId_classId_key\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "Enrollment_userId_classId_key",
-          "public",
-          "\"public\".\"Enrollment\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add unique constraint \"Enrollment_userId_classId_key\"",
-        "sql": "ALTER TABLE \"public\".\"Enrollment\" ADD CONSTRAINT \"Enrollment_userId_classId_key\" UNIQUE (\"userId\", \"classId\")"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify constraint \"Enrollment_userId_classId_key\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "Enrollment_userId_classId_key",
-          "public",
-          "\"public\".\"Enrollment\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "unique.EnrollmentRequestOption.EnrollmentRequestOption_requestId_courseUnitId_key",
-    "label": "Add unique constraint on \"EnrollmentRequestOption\" (requestId, courseUnitId)",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "unique",
-        "name": "EnrollmentRequestOption_requestId_courseUnitId_key",
-        "table": "EnrollmentRequestOption"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure constraint \"EnrollmentRequestOption_requestId_courseUnitId_key\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "EnrollmentRequestOption_requestId_courseUnitId_key",
-          "public",
-          "\"public\".\"EnrollmentRequestOption\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add unique constraint \"EnrollmentRequestOption_requestId_courseUnitId_key\"",
-        "sql": "ALTER TABLE \"public\".\"EnrollmentRequestOption\" ADD CONSTRAINT \"EnrollmentRequestOption_requestId_courseUnitId_key\" UNIQUE (\"requestId\", \"courseUnitId\")"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify constraint \"EnrollmentRequestOption_requestId_courseUnitId_key\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "EnrollmentRequestOption_requestId_courseUnitId_key",
-          "public",
-          "\"public\".\"EnrollmentRequestOption\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "unique.ExchangeItem.ExchangeItem_requestId_userId_courseUnitId_key",
-    "label": "Add unique constraint on \"ExchangeItem\" (requestId, userId, courseUnitId)",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "unique",
-        "name": "ExchangeItem_requestId_userId_courseUnitId_key",
-        "table": "ExchangeItem"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure constraint \"ExchangeItem_requestId_userId_courseUnitId_key\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "ExchangeItem_requestId_userId_courseUnitId_key",
-          "public",
-          "\"public\".\"ExchangeItem\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add unique constraint \"ExchangeItem_requestId_userId_courseUnitId_key\"",
-        "sql": "ALTER TABLE \"public\".\"ExchangeItem\" ADD CONSTRAINT \"ExchangeItem_requestId_userId_courseUnitId_key\" UNIQUE (\"requestId\", \"userId\", \"courseUnitId\")"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify constraint \"ExchangeItem_requestId_userId_courseUnitId_key\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "ExchangeItem_requestId_userId_courseUnitId_key",
-          "public",
-          "\"public\".\"ExchangeItem\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "unique.ExchangePeriod.ExchangePeriod_courseUnitId_startsAt_endsAt_key",
-    "label": "Add unique constraint on \"ExchangePeriod\" (courseUnitId, startsAt, endsAt)",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "unique",
-        "name": "ExchangePeriod_courseUnitId_startsAt_endsAt_key",
-        "table": "ExchangePeriod"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure constraint \"ExchangePeriod_courseUnitId_startsAt_endsAt_key\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "ExchangePeriod_courseUnitId_startsAt_endsAt_key",
-          "public",
-          "\"public\".\"ExchangePeriod\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add unique constraint \"ExchangePeriod_courseUnitId_startsAt_endsAt_key\"",
-        "sql": "ALTER TABLE \"public\".\"ExchangePeriod\" ADD CONSTRAINT \"ExchangePeriod_courseUnitId_startsAt_endsAt_key\" UNIQUE (\"courseUnitId\", \"startsAt\", \"endsAt\")"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify constraint \"ExchangePeriod_courseUnitId_startsAt_endsAt_key\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "ExchangePeriod_courseUnitId_startsAt_endsAt_key",
-          "public",
-          "\"public\".\"ExchangePeriod\""
+          "\"public\".\"Class\""
         ]
       }
     ]
@@ -1403,45 +1235,6 @@
     ]
   },
   {
-    "id": "index.Enrollment.Enrollment_userId_classId_idx_72a2a635",
-    "label": "Create index \"Enrollment_userId_classId_idx_72a2a635\" on \"Enrollment\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "index",
-        "name": "Enrollment_userId_classId_idx_72a2a635",
-        "table": "Enrollment"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure index \"Enrollment_userId_classId_idx_72a2a635\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"Enrollment_userId_classId_idx_72a2a635\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "create index \"Enrollment_userId_classId_idx_72a2a635\"",
-        "sql": "CREATE INDEX \"Enrollment_userId_classId_idx_72a2a635\" ON \"public\".\"Enrollment\" (\"userId\", \"classId\")",
-        "params": []
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify index \"Enrollment_userId_classId_idx_72a2a635\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"Enrollment_userId_classId_idx_72a2a635\""
-        ]
-      }
-    ]
-  },
-  {
     "id": "index.Enrollment.Enrollment_userId_idx_a489d58a",
     "label": "Create index \"Enrollment_userId_idx_a489d58a\" on \"Enrollment\"",
     "operationClass": "additive",
@@ -1637,40 +1430,40 @@
     ]
   },
   {
-    "id": "index.ExchangeItem.ExchangeItem_fromClassId_toClassId_idx_20562407",
-    "label": "Create index \"ExchangeItem_fromClassId_toClassId_idx_20562407\" on \"ExchangeItem\"",
+    "id": "index.ExchangeItem.ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4",
+    "label": "Create index \"ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4\" on \"ExchangeItem\"",
     "operationClass": "additive",
     "target": {
       "id": "postgres",
       "details": {
         "schema": "public",
         "objectType": "index",
-        "name": "ExchangeItem_fromClassId_toClassId_idx_20562407",
+        "name": "ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4",
         "table": "ExchangeItem"
       }
     },
     "precheck": [
       {
-        "description": "ensure index \"ExchangeItem_fromClassId_toClassId_idx_20562407\" does not exist",
+        "description": "ensure index \"ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
         "params": [
-          "\"public\".\"ExchangeItem_fromClassId_toClassId_idx_20562407\""
+          "\"public\".\"ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4\""
         ]
       }
     ],
     "execute": [
       {
-        "description": "create index \"ExchangeItem_fromClassId_toClassId_idx_20562407\"",
-        "sql": "CREATE INDEX \"ExchangeItem_fromClassId_toClassId_idx_20562407\" ON \"public\".\"ExchangeItem\" (\"fromClassId\", \"toClassId\")",
+        "description": "create index \"ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4\"",
+        "sql": "CREATE INDEX \"ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4\" ON \"public\".\"ExchangeItem\" (\"fromClassId\", \"courseUnitId\")",
         "params": []
       }
     ],
     "postcheck": [
       {
-        "description": "verify index \"ExchangeItem_fromClassId_toClassId_idx_20562407\" exists",
+        "description": "verify index \"ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
-          "\"public\".\"ExchangeItem_fromClassId_toClassId_idx_20562407\""
+          "\"public\".\"ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4\""
         ]
       }
     ]
@@ -1710,6 +1503,45 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"ExchangeItem_requestId_idx_fd667f92\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ExchangeItem.ExchangeItem_toClassId_courseUnitId_idx_a6614d86",
+    "label": "Create index \"ExchangeItem_toClassId_courseUnitId_idx_a6614d86\" on \"ExchangeItem\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ExchangeItem_toClassId_courseUnitId_idx_a6614d86",
+        "table": "ExchangeItem"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ExchangeItem_toClassId_courseUnitId_idx_a6614d86\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ExchangeItem_toClassId_courseUnitId_idx_a6614d86\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ExchangeItem_toClassId_courseUnitId_idx_a6614d86\"",
+        "sql": "CREATE INDEX \"ExchangeItem_toClassId_courseUnitId_idx_a6614d86\" ON \"public\".\"ExchangeItem\" (\"toClassId\", \"courseUnitId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ExchangeItem_toClassId_courseUnitId_idx_a6614d86\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ExchangeItem_toClassId_courseUnitId_idx_a6614d86\""
         ]
       }
     ]
@@ -1827,45 +1659,6 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"ExchangePeriod_courseUnitId_idx_fae358e6\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "index.ExchangePeriod.ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9",
-    "label": "Create index \"ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9\" on \"ExchangePeriod\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "index",
-        "name": "ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9",
-        "table": "ExchangePeriod"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure index \"ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "create index \"ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9\"",
-        "sql": "CREATE INDEX \"ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9\" ON \"public\".\"ExchangePeriod\" (\"courseUnitId\", \"startsAt\", \"endsAt\")",
-        "params": []
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify index \"ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9\""
         ]
       }
     ]
@@ -2105,45 +1898,6 @@
     ]
   },
   {
-    "id": "index.ScheduleSlot.ScheduleSlot_classId_idx_0089e5e7",
-    "label": "Create index \"ScheduleSlot_classId_idx_0089e5e7\" on \"ScheduleSlot\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "index",
-        "name": "ScheduleSlot_classId_idx_0089e5e7",
-        "table": "ScheduleSlot"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure index \"ScheduleSlot_classId_idx_0089e5e7\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"ScheduleSlot_classId_idx_0089e5e7\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "create index \"ScheduleSlot_classId_idx_0089e5e7\"",
-        "sql": "CREATE INDEX \"ScheduleSlot_classId_idx_0089e5e7\" ON \"public\".\"ScheduleSlot\" (\"classId\")",
-        "params": []
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify index \"ScheduleSlot_classId_idx_0089e5e7\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"ScheduleSlot_classId_idx_0089e5e7\""
-        ]
-      }
-    ]
-  },
-  {
     "id": "index.Session.Session_expiresAt_idx_6b6b8c10",
     "label": "Create index \"Session_expiresAt_idx_6b6b8c10\" on \"Session\"",
     "operationClass": "additive",
@@ -2217,6 +1971,84 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"Session_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.SlotClass.SlotClass_classId_idx_0089e5e7",
+    "label": "Create index \"SlotClass_classId_idx_0089e5e7\" on \"SlotClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "SlotClass_classId_idx_0089e5e7",
+        "table": "SlotClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"SlotClass_classId_idx_0089e5e7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SlotClass_classId_idx_0089e5e7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"SlotClass_classId_idx_0089e5e7\"",
+        "sql": "CREATE INDEX \"SlotClass_classId_idx_0089e5e7\" ON \"public\".\"SlotClass\" (\"classId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"SlotClass_classId_idx_0089e5e7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SlotClass_classId_idx_0089e5e7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.SlotClass.SlotClass_slotId_idx_4d7c6bc9",
+    "label": "Create index \"SlotClass_slotId_idx_4d7c6bc9\" on \"SlotClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "SlotClass_slotId_idx_4d7c6bc9",
+        "table": "SlotClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"SlotClass_slotId_idx_4d7c6bc9\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SlotClass_slotId_idx_4d7c6bc9\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"SlotClass_slotId_idx_4d7c6bc9\"",
+        "sql": "CREATE INDEX \"SlotClass_slotId_idx_4d7c6bc9\" ON \"public\".\"SlotClass\" (\"slotId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"SlotClass_slotId_idx_4d7c6bc9\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"SlotClass_slotId_idx_4d7c6bc9\""
         ]
       }
     ]
@@ -2950,7 +2782,7 @@
     "execute": [
       {
         "description": "add FK \"ExchangeItem_userId_fkey\"",
-        "sql": "ALTER TABLE \"public\".\"ExchangeItem\"\nADD CONSTRAINT \"ExchangeItem_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"User\" (\"id\")\nON DELETE CASCADE"
+        "sql": "ALTER TABLE \"public\".\"ExchangeItem\"\nADD CONSTRAINT \"ExchangeItem_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"User\" (\"id\")\nON DELETE RESTRICT"
       }
     ],
     "postcheck": [
@@ -3001,6 +2833,90 @@
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
         "params": [
           "ExchangeItem_courseUnitId_fkey",
+          "public",
+          "\"public\".\"ExchangeItem\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ExchangeItem.ExchangeItem_fromClassId_courseUnitId_fkey",
+    "label": "Add foreign key \"ExchangeItem_fromClassId_courseUnitId_fkey\" on \"ExchangeItem\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ExchangeItem_fromClassId_courseUnitId_fkey",
+        "table": "ExchangeItem"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ExchangeItem_fromClassId_courseUnitId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ExchangeItem_fromClassId_courseUnitId_fkey",
+          "public",
+          "\"public\".\"ExchangeItem\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ExchangeItem_fromClassId_courseUnitId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ExchangeItem\"\nADD CONSTRAINT \"ExchangeItem_fromClassId_courseUnitId_fkey\"\nFOREIGN KEY (\"fromClassId\", \"courseUnitId\")\nREFERENCES \"public\".\"Class\" (\"id\", \"courseUnitId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ExchangeItem_fromClassId_courseUnitId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ExchangeItem_fromClassId_courseUnitId_fkey",
+          "public",
+          "\"public\".\"ExchangeItem\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ExchangeItem.ExchangeItem_toClassId_courseUnitId_fkey",
+    "label": "Add foreign key \"ExchangeItem_toClassId_courseUnitId_fkey\" on \"ExchangeItem\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ExchangeItem_toClassId_courseUnitId_fkey",
+        "table": "ExchangeItem"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ExchangeItem_toClassId_courseUnitId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ExchangeItem_toClassId_courseUnitId_fkey",
+          "public",
+          "\"public\".\"ExchangeItem\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ExchangeItem_toClassId_courseUnitId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ExchangeItem\"\nADD CONSTRAINT \"ExchangeItem_toClassId_courseUnitId_fkey\"\nFOREIGN KEY (\"toClassId\", \"courseUnitId\")\nREFERENCES \"public\".\"Class\" (\"id\", \"courseUnitId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ExchangeItem_toClassId_courseUnitId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ExchangeItem_toClassId_courseUnitId_fkey",
           "public",
           "\"public\".\"ExchangeItem\""
         ]
@@ -3134,48 +3050,6 @@
     ]
   },
   {
-    "id": "foreignKey.ScheduleSlot.ScheduleSlot_classId_fkey",
-    "label": "Add foreign key \"ScheduleSlot_classId_fkey\" on \"ScheduleSlot\"",
-    "operationClass": "additive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "foreignKey",
-        "name": "ScheduleSlot_classId_fkey",
-        "table": "ScheduleSlot"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure FK \"ScheduleSlot_classId_fkey\" does not exist",
-        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "ScheduleSlot_classId_fkey",
-          "public",
-          "\"public\".\"ScheduleSlot\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "add FK \"ScheduleSlot_classId_fkey\"",
-        "sql": "ALTER TABLE \"public\".\"ScheduleSlot\"\nADD CONSTRAINT \"ScheduleSlot_classId_fkey\"\nFOREIGN KEY (\"classId\")\nREFERENCES \"public\".\"Class\" (\"id\")\nON DELETE CASCADE"
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify FK \"ScheduleSlot_classId_fkey\" exists",
-        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "ScheduleSlot_classId_fkey",
-          "public",
-          "\"public\".\"ScheduleSlot\""
-        ]
-      }
-    ]
-  },
-  {
     "id": "foreignKey.Session.Session_userId_fkey",
     "label": "Add foreign key \"Session_userId_fkey\" on \"Session\"",
     "operationClass": "additive",
@@ -3213,6 +3087,90 @@
           "Session_userId_fkey",
           "public",
           "\"public\".\"Session\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.SlotClass.SlotClass_slotId_fkey",
+    "label": "Add foreign key \"SlotClass_slotId_fkey\" on \"SlotClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "SlotClass_slotId_fkey",
+        "table": "SlotClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"SlotClass_slotId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "SlotClass_slotId_fkey",
+          "public",
+          "\"public\".\"SlotClass\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"SlotClass_slotId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"SlotClass\"\nADD CONSTRAINT \"SlotClass_slotId_fkey\"\nFOREIGN KEY (\"slotId\")\nREFERENCES \"public\".\"ScheduleSlot\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"SlotClass_slotId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "SlotClass_slotId_fkey",
+          "public",
+          "\"public\".\"SlotClass\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.SlotClass.SlotClass_classId_fkey",
+    "label": "Add foreign key \"SlotClass_classId_fkey\" on \"SlotClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "SlotClass_classId_fkey",
+        "table": "SlotClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"SlotClass_classId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "SlotClass_classId_fkey",
+          "public",
+          "\"public\".\"SlotClass\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"SlotClass_classId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"SlotClass\"\nADD CONSTRAINT \"SlotClass_classId_fkey\"\nFOREIGN KEY (\"classId\")\nREFERENCES \"public\".\"Class\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"SlotClass_classId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "SlotClass_classId_fkey",
+          "public",
+          "\"public\".\"SlotClass\""
         ]
       }
     ]

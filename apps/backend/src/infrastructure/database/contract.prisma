@@ -12,6 +12,11 @@
 // occurrence id across academic years. Run:
 //   SELECT id, COUNT(DISTINCT year) FROM course_unit GROUP BY id HAVING COUNT(*) > 1;
 // If that returns rows, switch CourseUnit to a composite key (see note there).
+//
+// Same check for Course (legacy unique_together was (id, faculty, year)):
+//   SELECT id, COUNT(DISTINCT year) FROM course GROUP BY id HAVING COUNT(*) > 1;
+// If that returns rows, `id` is not stable across academic years and Course
+// needs a composite key too.
 
 // ===========================================================================
 // 1. IDENTITY
@@ -19,7 +24,11 @@
 
 model User {
   id    String @id // NMEC, e.g. "202301234"
-  email String @unique
+  // Nullable + unique: OIDC always provides it for real accounts, but a
+  // student referenced in a direct exchange may never have logged in. The
+  // exchange flow must still be able to create their shadow row (Postgres
+  // treats NULLs as distinct in unique indexes).
+  email String? @unique
   name  String
 
   // Global admin = may open the admin panel at all.
@@ -42,7 +51,10 @@ model User {
 // Opaque random token in an httpOnly cookie. Chosen over JWT so sessions are
 // revocable and CSRF protection already exists on the frontend.
 model Session {
-  token     String   @id
+  // sha256 of the cookie token. The raw token is never persisted: a DB leak
+  // (backup, replica, logs) must not yield usable session cookies. Lookup
+  // hashes the cookie value; tokens are high-entropy so a fast hash suffices.
+  tokenHash String   @id
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -70,11 +82,13 @@ model Course {
   name       String
   courseType String // "L" | "M" | "P"
   year       Int // academic year, e.g. 2025
+  // Sigarra course page URL. No current FE component reads it (the Major type
+  // declares it), kept for the rewrite — linking a course page from the
+  // picker is a likely use. plan_url is gone: zero consumers.
   url        String
-  planUrl    String
 
   createdAt DateTime @default(now())
-  updatedAt DateTime?
+  updatedAt temporal.updatedAt()
 
   units       CourseUnit[]
   admins      AdminCourse[]
@@ -105,7 +119,8 @@ model CourseUnit {
   enrollments    EnrollmentRequestOption[]
   admins         AdminCourseUnit[]
 
-  @@unique([id, courseId, year, semester]) // defensive: matches legacy natural key
+  // NOTE: if the header VERIFY query finds `id` reused across years, this
+  // model needs a composite key — the PK alone will collide on sync insert.
   @@index([courseId])
   @@index([courseId, semester, year])
 }
@@ -119,27 +134,38 @@ model Class {
   vacancies Int?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime?
+  updatedAt temporal.updatedAt()
 
-  slots       ScheduleSlot[]
-  enrollments Enrollment[]
+  slotClasses       SlotClass[]
+  enrollments       Enrollment[]
+  exchangeItemsFrom ExchangeItem[] @relation("ExchangeItemFromClass")
+  exchangeItemsTo   ExchangeItem[] @relation("ExchangeItemToClass")
 
   @@unique([name, courseUnitId])
+  // FK target for ExchangeItem.fromClass/toClass composite FKs: guarantees a
+  // referenced class belongs to the same course unit as the exchange item.
+  @@unique([id, courseUnitId])
   @@index([courseUnitId])
 }
 
 model Professor {
   id      Int     @id // Sigarra professor code
   acronym String?
-  name    String
+  // Nullable: Sigarra person entries can lack a name (legacy column was
+  // nullable too) — the sync adapter must not fail on them.
+  name    String?
 
   slots SlotProfessor[]
 }
 
+// One row per Sigarra lesson (its `id` is the Sigarra lesson id). A lesson can
+// serve MANY classes — a shared "T" lecture for 1LEIC01..10 is the norm at
+// FEUP, not an edge case (legacy marked these `is_composed`, and the sync
+// writes one slot plus one slot_class row per class). The class link
+// therefore lives in SlotClass, not here: folding it into a single classId
+// would make a shared lesson unrepresentable.
 model ScheduleSlot {
-  id      Int   @id
-  classId Int
-  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  id Int @id
 
   lessonType String // "T" | "TP" | "P" | "PL" | "OT" | "O" | "E"
   // 0 = Sunday. The sigarra `dia` -> 0-based conversion belongs in the
@@ -151,8 +177,20 @@ model ScheduleSlot {
   durationMin Int
   location    String?
 
-  professors SlotProfessor[]
+  slotClasses SlotClass[]
+  professors  SlotProfessor[]
+}
 
+// Explicit join: one lesson may appear in many class schedules and one class
+// has many lessons. Kept as its own table (legacy `slot_class`) because the
+// many-to-many is real.
+model SlotClass {
+  slotId  Int
+  slot    ScheduleSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  classId Int
+  class   Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([slotId, classId])
   @@index([classId])
 }
 
@@ -175,18 +213,17 @@ model SlotProfessor {
 // exchange validation possible without a Sigarra round-trip per check.
 // A student legitimately holds several rows for one course unit (T + TP).
 model Enrollment {
-  id      String @id @default(uuid())
   userId  String
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   classId Int
   class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime?
+  updatedAt temporal.updatedAt()
 
-  @@unique([userId, classId])
+  // Natural key — one enrollment per (user, class); no surrogate id.
+  @@id([userId, classId])
   @@index([classId])
-  @@index([userId, classId])
 }
 
 // ===========================================================================
@@ -203,15 +240,14 @@ model Enrollment {
 // visible through one endpoint and invisible through the other, depending on
 // the flag it was created with.
 model ExchangePeriod {
-  id           Int        @id @default(autoincrement())
   courseUnitId Int
   courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id], onDelete: Cascade)
   startsAt     DateTime
   endsAt       DateTime
   createdAt    DateTime   @default(now())
 
-  @@unique([courseUnitId, startsAt, endsAt])
-  @@index([courseUnitId, startsAt, endsAt])
+  // Natural key — a unit is open exactly once per window.
+  @@id([courseUnitId, startsAt, endsAt])
 }
 
 model AdminCourse {
@@ -293,7 +329,7 @@ model ExchangeRequest {
   lastValidated DateTime?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime?
+  updatedAt temporal.updatedAt()
 
   items ExchangeItem[]
 
@@ -312,29 +348,35 @@ model ExchangeRequest {
 // student — because each side has its own from/to and its own accept flag.
 // A single row without userId cannot express a 2-way exchange at all.
 model ExchangeItem {
-  id        String @id @default(uuid())
   requestId String
   request   ExchangeRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   // Whose move this is. Legacy duplicated participant_name/course_unit_acronym
   // as strings here; both are now joins.
+  // Restrict, not Cascade: silently removing one side's row would flip
+  // "accepted = every item accepted" to true with a side missing. User
+  // deletion must explicitly cancel affected requests instead.
   userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   courseUnitId Int
   courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id])
   fromClassId  Int
   toClassId    Int
+  // Composite FKs: (fromClassId, courseUnitId) and (toClassId, courseUnitId)
+  // both reference Class(id, courseUnitId), so a referenced class is
+  // guaranteed to belong to THIS item's course unit — not merely to exist.
+  fromClass Class @relation("ExchangeItemFromClass", fields: [fromClassId, courseUnitId], references: [id, courseUnitId])
+  toClass   Class @relation("ExchangeItemToClass", fields: [toClassId, courseUnitId], references: [id, courseUnitId])
 
   // Per-participant accept. A direct exchange is accepted when every row is
   // accepted — derived, not stored, which is what legacy's
   // DirectExchangePendingMotive() reverse-engineered at read time.
   accepted Boolean @default(false)
 
-
-  @@unique([requestId, userId, courseUnitId])
+  // Natural key — one row per participant's move per course unit per request.
+  @@id([requestId, userId, courseUnitId])
   @@index([courseUnitId])
-  @@index([fromClassId, toClassId])
   @@index([userId, accepted])
 }
 
@@ -347,10 +389,13 @@ model EnrollmentRequest {
   id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  // Deliberate reuse of ExchangeStatus: the lifecycle is the same three
+  // states (legacy had only `accepted` + admin_state; CANCELLED is reserved
+  // for a creator-withdraw flow the rewrite may add).
   status    ExchangeStatus @default(PENDING)
   adminState AdminValidationState @default(UNTREATED)
   createdAt DateTime @default(now())
-  updatedAt DateTime?
+  updatedAt temporal.updatedAt()
 
   options EnrollmentRequestOption[]
 }
@@ -362,7 +407,6 @@ model EnrollmentRequest {
 // { course_unit_id, enrolling }, and the serializer never returned a class
 // either. The frontend type declares the field but nothing ever populated it.
 model EnrollmentRequestOption {
-  id        String @id @default(uuid())
   requestId String
   request   EnrollmentRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
@@ -374,7 +418,8 @@ model EnrollmentRequestOption {
 
   enrolling Boolean @default(true)
 
-  @@unique([requestId, courseUnitId])
+  // Natural key — one option per course unit per request.
+  @@id([requestId, courseUnitId])
   @@index([courseUnitId])
 }
 
@@ -393,14 +438,4 @@ model StudentCourseMetadata {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([nmec, courseId])
-}
-
-// Replaces the legacy single-row Info table (DateTime PK) that served
-// GET /info/. One row per sync run.
-model ScrapeRun {
-  id        Int      @id @default(autoincrement())
-  startedAt DateTime @default(now())
-  endedAt   DateTime?
-  ok        Boolean?
-  detail    String?
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/4667e6d1b7392517298981185b1ac718c9fcd34eab04ffa94face8a22a22c4a7/contract';
-import endContract from '../../snapshots/4667e6d1b7392517298981185b1ac718c9fcd34eab04ffa94face8a22a22c4a7/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/d96303c54cfa8f425c2d9b4d1bbca03c2ec62f2b29fb2de679fa92aeb18e3900/contract';
+import endContract from '../../snapshots/d96303c54cfa8f425c2d9b4d1bbca03c2ec62f2b29fb2de679fa92aeb18e3900/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -47,7 +47,10 @@ export default class M extends Migration<never, End> {
           }),
           col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('updatedAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
+          col('updatedAt', 'timestamptz', {
+            notNull: true,
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
           col('vacancies', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
         ],
         constraints: [primaryKey(['id'])],
@@ -66,8 +69,10 @@ export default class M extends Migration<never, End> {
           col('facultyId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('planUrl', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('updatedAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
+          col('updatedAt', 'timestamptz', {
+            notNull: true,
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
           col('url', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('year', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
         ],
@@ -108,11 +113,13 @@ export default class M extends Migration<never, End> {
             default: fn('now()'),
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('updatedAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
+          col('updatedAt', 'timestamptz', {
+            notNull: true,
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
           col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['id'])],
+        constraints: [primaryKey(['userId', 'classId'])],
       }),
       this.createTable({
         schema: 'public',
@@ -134,7 +141,10 @@ export default class M extends Migration<never, End> {
             default: lit('PENDING'),
             codecRef: { codecId: 'pg/text@1' },
           }),
-          col('updatedAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
+          col('updatedAt', 'timestamptz', {
+            notNull: true,
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
           col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
         constraints: [
@@ -159,10 +169,9 @@ export default class M extends Migration<never, End> {
             default: lit(true),
             codecRef: { codecId: 'pg/bool@1' },
           }),
-          col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('requestId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['id'])],
+        constraints: [primaryKey(['requestId', 'courseUnitId'])],
       }),
       this.createTable({
         schema: 'public',
@@ -175,12 +184,11 @@ export default class M extends Migration<never, End> {
           }),
           col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('fromClassId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
-          col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('requestId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('toClassId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['id'])],
+        constraints: [primaryKey(['requestId', 'userId', 'courseUnitId'])],
       }),
       this.createTable({
         schema: 'public',
@@ -196,13 +204,12 @@ export default class M extends Migration<never, End> {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('startsAt', 'timestamptz', {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
         ],
-        constraints: [primaryKey(['id'])],
+        constraints: [primaryKey(['courseUnitId', 'startsAt', 'endsAt'])],
       }),
       this.createTable({
         schema: 'public',
@@ -232,7 +239,10 @@ export default class M extends Migration<never, End> {
           }),
           col('targetUserId', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('type', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('updatedAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
+          col('updatedAt', 'timestamptz', {
+            notNull: true,
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
         ],
         constraints: [
           primaryKey(['id']),
@@ -265,7 +275,7 @@ export default class M extends Migration<never, End> {
         columns: [
           col('acronym', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
-          col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('name', 'text', { codecRef: { codecId: 'pg/text@1' } }),
         ],
         constraints: [primaryKey(['id'])],
       }),
@@ -273,29 +283,12 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'ScheduleSlot',
         columns: [
-          col('classId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('dayOfWeek', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('durationMin', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('id', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('lessonType', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('location', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('startMinute', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
-        ],
-        constraints: [primaryKey(['id'])],
-      }),
-      this.createTable({
-        schema: 'public',
-        table: 'ScrapeRun',
-        columns: [
-          col('detail', 'text', { codecRef: { codecId: 'pg/text@1' } }),
-          col('endedAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
-          col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
-          col('ok', 'bool', { codecRef: { codecId: 'pg/bool@1' } }),
-          col('startedAt', 'timestamptz', {
-            notNull: true,
-            default: fn('now()'),
-            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
-          }),
         ],
         constraints: [primaryKey(['id'])],
       }),
@@ -312,10 +305,19 @@ export default class M extends Migration<never, End> {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('token', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('tokenHash', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['token'])],
+        constraints: [primaryKey(['tokenHash'])],
+      }),
+      this.createTable({
+        schema: 'public',
+        table: 'SlotClass',
+        columns: [
+          col('classId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('slotId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+        ],
+        constraints: [primaryKey(['slotId', 'classId'])],
       }),
       this.createTable({
         schema: 'public',
@@ -345,7 +347,7 @@ export default class M extends Migration<never, End> {
             default: fn('now()'),
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('email', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('email', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('isAdmin', 'bool', {
             notNull: true,
@@ -364,33 +366,9 @@ export default class M extends Migration<never, End> {
       }),
       this.addUnique({
         schema: 'public',
-        table: 'CourseUnit',
-        constraint: 'CourseUnit_id_courseId_year_semester_key',
-        columns: ['id', 'courseId', 'year', 'semester'],
-      }),
-      this.addUnique({
-        schema: 'public',
-        table: 'Enrollment',
-        constraint: 'Enrollment_userId_classId_key',
-        columns: ['userId', 'classId'],
-      }),
-      this.addUnique({
-        schema: 'public',
-        table: 'EnrollmentRequestOption',
-        constraint: 'EnrollmentRequestOption_requestId_courseUnitId_key',
-        columns: ['requestId', 'courseUnitId'],
-      }),
-      this.addUnique({
-        schema: 'public',
-        table: 'ExchangeItem',
-        constraint: 'ExchangeItem_requestId_userId_courseUnitId_key',
-        columns: ['requestId', 'userId', 'courseUnitId'],
-      }),
-      this.addUnique({
-        schema: 'public',
-        table: 'ExchangePeriod',
-        constraint: 'ExchangePeriod_courseUnitId_startsAt_endsAt_key',
-        columns: ['courseUnitId', 'startsAt', 'endsAt'],
+        table: 'Class',
+        constraint: 'Class_id_courseUnitId_key',
+        columns: ['id', 'courseUnitId'],
       }),
       this.addUnique({
         schema: 'public',
@@ -455,12 +433,6 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'Enrollment',
-        index: 'Enrollment_userId_classId_idx_72a2a635',
-        columns: ['userId', 'classId'],
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'Enrollment',
         index: 'Enrollment_userId_idx_a489d58a',
         columns: ['userId'],
       }),
@@ -491,14 +463,20 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'ExchangeItem',
-        index: 'ExchangeItem_fromClassId_toClassId_idx_20562407',
-        columns: ['fromClassId', 'toClassId'],
+        index: 'ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4',
+        columns: ['fromClassId', 'courseUnitId'],
       }),
       this.createIndex({
         schema: 'public',
         table: 'ExchangeItem',
         index: 'ExchangeItem_requestId_idx_fd667f92',
         columns: ['requestId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'ExchangeItem',
+        index: 'ExchangeItem_toClassId_courseUnitId_idx_a6614d86',
+        columns: ['toClassId', 'courseUnitId'],
       }),
       this.createIndex({
         schema: 'public',
@@ -517,12 +495,6 @@ export default class M extends Migration<never, End> {
         table: 'ExchangePeriod',
         index: 'ExchangePeriod_courseUnitId_idx_fae358e6',
         columns: ['courseUnitId'],
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'ExchangePeriod',
-        index: 'ExchangePeriod_courseUnitId_startsAt_endsAt_idx_852accf9',
-        columns: ['courseUnitId', 'startsAt', 'endsAt'],
       }),
       this.createIndex({
         schema: 'public',
@@ -562,12 +534,6 @@ export default class M extends Migration<never, End> {
       }),
       this.createIndex({
         schema: 'public',
-        table: 'ScheduleSlot',
-        index: 'ScheduleSlot_classId_idx_0089e5e7',
-        columns: ['classId'],
-      }),
-      this.createIndex({
-        schema: 'public',
         table: 'Session',
         index: 'Session_expiresAt_idx_6b6b8c10',
         columns: ['expiresAt'],
@@ -577,6 +543,18 @@ export default class M extends Migration<never, End> {
         table: 'Session',
         index: 'Session_userId_idx_a489d58a',
         columns: ['userId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'SlotClass',
+        index: 'SlotClass_classId_idx_0089e5e7',
+        columns: ['classId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'SlotClass',
+        index: 'SlotClass_slotId_idx_4d7c6bc9',
+        columns: ['slotId'],
       }),
       this.createIndex({
         schema: 'public',
@@ -736,7 +714,7 @@ export default class M extends Migration<never, End> {
           name: 'ExchangeItem_userId_fkey',
           columns: ['userId'],
           references: { schema: 'public', table: 'User', columns: ['id'] },
-          onDelete: 'cascade',
+          onDelete: 'restrict',
         },
       }),
       this.addForeignKey({
@@ -746,6 +724,24 @@ export default class M extends Migration<never, End> {
           name: 'ExchangeItem_courseUnitId_fkey',
           columns: ['courseUnitId'],
           references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'ExchangeItem',
+        foreignKey: {
+          name: 'ExchangeItem_fromClassId_courseUnitId_fkey',
+          columns: ['fromClassId', 'courseUnitId'],
+          references: { schema: 'public', table: 'Class', columns: ['id', 'courseUnitId'] },
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'ExchangeItem',
+        foreignKey: {
+          name: 'ExchangeItem_toClassId_courseUnitId_fkey',
+          columns: ['toClassId', 'courseUnitId'],
+          references: { schema: 'public', table: 'Class', columns: ['id', 'courseUnitId'] },
         },
       }),
       this.addForeignKey({
@@ -778,21 +774,31 @@ export default class M extends Migration<never, End> {
       }),
       this.addForeignKey({
         schema: 'public',
-        table: 'ScheduleSlot',
-        foreignKey: {
-          name: 'ScheduleSlot_classId_fkey',
-          columns: ['classId'],
-          references: { schema: 'public', table: 'Class', columns: ['id'] },
-          onDelete: 'cascade',
-        },
-      }),
-      this.addForeignKey({
-        schema: 'public',
         table: 'Session',
         foreignKey: {
           name: 'Session_userId_fkey',
           columns: ['userId'],
           references: { schema: 'public', table: 'User', columns: ['id'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'SlotClass',
+        foreignKey: {
+          name: 'SlotClass_slotId_fkey',
+          columns: ['slotId'],
+          references: { schema: 'public', table: 'ScheduleSlot', columns: ['id'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'SlotClass',
+        foreignKey: {
+          name: 'SlotClass_classId_fkey',
+          columns: ['classId'],
+          references: { schema: 'public', table: 'Class', columns: ['id'] },
           onDelete: 'cascade',
         },
       }),
