@@ -10,8 +10,8 @@ Backend for TTS, built with [Bun](https://bun.sh), [Elysia](https://elysiajs.com
 ## Setup
 
 ```bash
-cp .env.example .env   # fill in DATABASE_URL
 bun install
+echo 'DATABASE_URL=postgres://...' > .env   # git-ignored; see .env.schema for every variable
 ```
 
 ---
@@ -23,7 +23,9 @@ bun run dev
 ```
 
 Starts the Elysia server at `http://localhost:3000` with hot reload.
-The `DATABASE_URL` from `.env` is automatically loaded.
+Environment variables are declared in [`.env.schema`](./.env.schema) and validated by [varlock](https://varlock.dev) before the server starts (`bun run dev` and `bun run start` fail with a readable error if, for example, `DATABASE_URL` is missing). Values come from the process environment or a git-ignored `.env` / `.env.local`. Run `bunx varlock load` to check your configuration without starting the server.
+
+The `db:*`, `migrate*` and `migration:status` scripts run through varlock too, so they pick up the same values.
 
 ---
 

@@ -592,30 +592,23 @@ See [TTS Backend Redo - Proposed Structure.md](./TTS%20Backend%20Redo%20-%20Prop
 
 ## 16. Environment Variables
 
+Environment variables are declared and validated by [varlock](https://varlock.dev) in [`.env.schema`](../../.env.schema). The schema is the source of truth; local overrides go in a git-ignored `.env` (or `.env.local`) next to the schema.
+
+Current schema (excerpt):
+
 ```env
-# .env.example
-
-# Database
-DATABASE_URL=postgresql://tts:tts@localhost:5434/tts
-
-# Auth (SIGARRA OIDC)
-SIGARRA_CLIENT_ID=your-client-id
-SIGARRA_CLIENT_SECRET=your-client-secret
-SIGARRA_REDIRECT_URI=http://localhost:3000/api/auth/callback
-SIGARRA_AUTH_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-connect/auth
-SIGARRA_TOKEN_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-connect/token
-SIGARRA_USERINFO_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-connect/userinfo
-
-# Email (Resend)
-RESEND_API_KEY=re_...
-
-# Monitoring
-SENTRY_DSN=https://...
-
-# App
+# Port the Elysia server listens on
+# @public
+# @type=port
 PORT=3000
-NODE_ENV=development
+
+# PostgreSQL connection string (requires PostgreSQL >= 15)
+# @required @sensitive
+# @type=url(prependHttps=false)
+DATABASE_URL=
 ```
+
+Additional variables (e.g. SIGARRA OIDC, Resend, Sentry) will be added to the schema as those features are implemented.
 
 ---
 
