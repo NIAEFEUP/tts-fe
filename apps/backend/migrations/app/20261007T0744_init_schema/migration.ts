@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/d96303c54cfa8f425c2d9b4d1bbca03c2ec62f2b29fb2de679fa92aeb18e3900/contract';
-import endContract from '../../snapshots/d96303c54cfa8f425c2d9b4d1bbca03c2ec62f2b29fb2de679fa92aeb18e3900/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/f09b3a203ecdd38cc9a0b25a41802d6a320a5d01081e38438860eb8632b5cc34/contract';
+import endContract from '../../snapshots/f09b3a203ecdd38cc9a0b25a41802d6a320a5d01081e38438860eb8632b5cc34/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -28,18 +28,18 @@ export default class M extends Migration<never, End> {
       }),
       this.createTable({
         schema: 'public',
-        table: 'AdminCourseUnit',
+        table: 'AdminOccurrence',
         columns: [
-          col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('occurrenceId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('occurrenceYear', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['userId', 'courseUnitId'])],
+        constraints: [primaryKey(['userId', 'occurrenceId', 'occurrenceYear'])],
       }),
       this.createTable({
         schema: 'public',
         table: 'Class',
         columns: [
-          col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('createdAt', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
@@ -47,6 +47,8 @@ export default class M extends Migration<never, End> {
           }),
           col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('occurrenceId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('occurrenceYear', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('updatedAt', 'timestamptz', {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
@@ -66,7 +68,6 @@ export default class M extends Migration<never, End> {
             default: fn('now()'),
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('facultyId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('updatedAt', 'timestamptz', {
@@ -89,17 +90,9 @@ export default class M extends Migration<never, End> {
             default: fn('now()'),
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
-          col('ects', 'float8', { notNull: true, codecRef: { codecId: 'pg/float8@1' } }),
-          col('hash', 'text', {
-            notNull: true,
-            default: lit(''),
-            codecRef: { codecId: 'pg/text@1' },
-          }),
-          col('id', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('semester', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
-          col('url', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
-          col('year', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
         ],
         constraints: [primaryKey(['id'])],
       }),
@@ -163,15 +156,16 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'EnrollmentRequestOption',
         columns: [
-          col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('enrolling', 'bool', {
             notNull: true,
             default: lit(true),
             codecRef: { codecId: 'pg/bool@1' },
           }),
+          col('occurrenceId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('occurrenceYear', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('requestId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['requestId', 'courseUnitId'])],
+        constraints: [primaryKey(['requestId', 'occurrenceId', 'occurrenceYear'])],
       }),
       this.createTable({
         schema: 'public',
@@ -182,19 +176,19 @@ export default class M extends Migration<never, End> {
             default: lit(false),
             codecRef: { codecId: 'pg/bool@1' },
           }),
-          col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('fromClassId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('occurrenceId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('occurrenceYear', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('requestId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('toClassId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
-        constraints: [primaryKey(['requestId', 'userId', 'courseUnitId'])],
+        constraints: [primaryKey(['requestId', 'userId', 'occurrenceId', 'occurrenceYear'])],
       }),
       this.createTable({
         schema: 'public',
         table: 'ExchangePeriod',
         columns: [
-          col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('createdAt', 'timestamptz', {
             notNull: true,
             default: fn('now()'),
@@ -204,12 +198,14 @@ export default class M extends Migration<never, End> {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
+          col('occurrenceId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('occurrenceYear', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('startsAt', 'timestamptz', {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
         ],
-        constraints: [primaryKey(['courseUnitId', 'startsAt', 'endsAt'])],
+        constraints: [primaryKey(['occurrenceId', 'occurrenceYear', 'startsAt', 'endsAt'])],
       }),
       this.createTable({
         schema: 'public',
@@ -268,6 +264,33 @@ export default class M extends Migration<never, End> {
           col('name', 'text', { codecRef: { codecId: 'pg/text@1' } }),
         ],
         constraints: [primaryKey(['acronym'])],
+      }),
+      this.createTable({
+        schema: 'public',
+        table: 'FacultyCourse',
+        columns: [
+          col('courseId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('facultyId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+        ],
+        constraints: [primaryKey(['facultyId', 'courseId'])],
+      }),
+      this.createTable({
+        schema: 'public',
+        table: 'Occurrence',
+        columns: [
+          col('courseId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('courseUnitId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('ects', 'float8', { notNull: true, codecRef: { codecId: 'pg/float8@1' } }),
+          col('hash', 'text', {
+            notNull: true,
+            default: lit(''),
+            codecRef: { codecId: 'pg/text@1' },
+          }),
+          col('id', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('url', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('year', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+        ],
+        constraints: [primaryKey(['id', 'year'])],
       }),
       this.createTable({
         schema: 'public',
@@ -361,14 +384,20 @@ export default class M extends Migration<never, End> {
       this.addUnique({
         schema: 'public',
         table: 'Class',
-        constraint: 'Class_name_courseUnitId_key',
-        columns: ['name', 'courseUnitId'],
+        constraint: 'Class_name_occurrenceId_occurrenceYear_key',
+        columns: ['name', 'occurrenceId', 'occurrenceYear'],
       }),
       this.addUnique({
         schema: 'public',
         table: 'Class',
-        constraint: 'Class_id_courseUnitId_key',
-        columns: ['id', 'courseUnitId'],
+        constraint: 'Class_id_occurrenceId_occurrenceYear_key',
+        columns: ['id', 'occurrenceId', 'occurrenceYear'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'Occurrence',
+        constraint: 'Occurrence_courseUnitId_year_courseId_key',
+        columns: ['courseUnitId', 'year', 'courseId'],
       }),
       this.addUnique({
         schema: 'public',
@@ -390,39 +419,33 @@ export default class M extends Migration<never, End> {
       }),
       this.createIndex({
         schema: 'public',
-        table: 'AdminCourseUnit',
-        index: 'AdminCourseUnit_courseUnitId_idx_fae358e6',
-        columns: ['courseUnitId'],
+        table: 'AdminOccurrence',
+        index: 'AdminOccurrence_occurrenceId_occurrenceYear_idx_0f44eca6',
+        columns: ['occurrenceId', 'occurrenceYear'],
       }),
       this.createIndex({
         schema: 'public',
-        table: 'AdminCourseUnit',
-        index: 'AdminCourseUnit_userId_idx_a489d58a',
+        table: 'AdminOccurrence',
+        index: 'AdminOccurrence_userId_idx_a489d58a',
         columns: ['userId'],
       }),
       this.createIndex({
         schema: 'public',
         table: 'Class',
-        index: 'Class_courseUnitId_idx_fae358e6',
-        columns: ['courseUnitId'],
+        index: 'Class_occurrenceId_occurrenceYear_idx_0f44eca6',
+        columns: ['occurrenceId', 'occurrenceYear'],
       }),
       this.createIndex({
         schema: 'public',
         table: 'Course',
-        index: 'Course_facultyId_idx_ff3b8c32',
-        columns: ['facultyId'],
+        index: 'Course_year_idx_0af80557',
+        columns: ['year'],
       }),
       this.createIndex({
         schema: 'public',
         table: 'CourseUnit',
         index: 'CourseUnit_courseId_idx_12f72d2a',
         columns: ['courseId'],
-      }),
-      this.createIndex({
-        schema: 'public',
-        table: 'CourseUnit',
-        index: 'CourseUnit_courseId_semester_year_idx_03093962',
-        columns: ['courseId', 'semester', 'year'],
       }),
       this.createIndex({
         schema: 'public',
@@ -445,8 +468,8 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'EnrollmentRequestOption',
-        index: 'EnrollmentRequestOption_courseUnitId_idx_fae358e6',
-        columns: ['courseUnitId'],
+        index: 'EnrollmentRequestOption_occurrenceId_occurrenceYear_id_0f44eca6',
+        columns: ['occurrenceId', 'occurrenceYear'],
       }),
       this.createIndex({
         schema: 'public',
@@ -457,14 +480,14 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'ExchangeItem',
-        index: 'ExchangeItem_courseUnitId_idx_fae358e6',
-        columns: ['courseUnitId'],
+        index: 'ExchangeItem_fromClassId_occurrenceId_occurrenceYear_i_a94b3366',
+        columns: ['fromClassId', 'occurrenceId', 'occurrenceYear'],
       }),
       this.createIndex({
         schema: 'public',
         table: 'ExchangeItem',
-        index: 'ExchangeItem_fromClassId_courseUnitId_idx_85f18fb4',
-        columns: ['fromClassId', 'courseUnitId'],
+        index: 'ExchangeItem_occurrenceId_occurrenceYear_idx_0f44eca6',
+        columns: ['occurrenceId', 'occurrenceYear'],
       }),
       this.createIndex({
         schema: 'public',
@@ -475,8 +498,8 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'ExchangeItem',
-        index: 'ExchangeItem_toClassId_courseUnitId_idx_a6614d86',
-        columns: ['toClassId', 'courseUnitId'],
+        index: 'ExchangeItem_toClassId_occurrenceId_occurrenceYear_idx_47ff9320',
+        columns: ['toClassId', 'occurrenceId', 'occurrenceYear'],
       }),
       this.createIndex({
         schema: 'public',
@@ -493,8 +516,8 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'ExchangePeriod',
-        index: 'ExchangePeriod_courseUnitId_idx_fae358e6',
-        columns: ['courseUnitId'],
+        index: 'ExchangePeriod_occurrenceId_occurrenceYear_idx_0f44eca6',
+        columns: ['occurrenceId', 'occurrenceYear'],
       }),
       this.createIndex({
         schema: 'public',
@@ -531,6 +554,36 @@ export default class M extends Migration<never, End> {
         table: 'ExchangeRequest',
         index: 'ExchangeRequest_type_status_idx_f045f361',
         columns: ['type', 'status'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'FacultyCourse',
+        index: 'FacultyCourse_courseId_idx_12f72d2a',
+        columns: ['courseId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'FacultyCourse',
+        index: 'FacultyCourse_facultyId_idx_ff3b8c32',
+        columns: ['facultyId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'Occurrence',
+        index: 'Occurrence_courseId_idx_12f72d2a',
+        columns: ['courseId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'Occurrence',
+        index: 'Occurrence_courseId_year_idx_ae755fc5',
+        columns: ['courseId', 'year'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'Occurrence',
+        index: 'Occurrence_courseUnitId_idx_fae358e6',
+        columns: ['courseUnitId'],
       }),
       this.createIndex({
         schema: 'public',
@@ -602,9 +655,9 @@ export default class M extends Migration<never, End> {
       }),
       this.addForeignKey({
         schema: 'public',
-        table: 'AdminCourseUnit',
+        table: 'AdminOccurrence',
         foreignKey: {
-          name: 'AdminCourseUnit_userId_fkey',
+          name: 'AdminOccurrence_userId_fkey',
           columns: ['userId'],
           references: { schema: 'public', table: 'User', columns: ['id'] },
           onDelete: 'cascade',
@@ -612,11 +665,11 @@ export default class M extends Migration<never, End> {
       }),
       this.addForeignKey({
         schema: 'public',
-        table: 'AdminCourseUnit',
+        table: 'AdminOccurrence',
         foreignKey: {
-          name: 'AdminCourseUnit_courseUnitId_fkey',
-          columns: ['courseUnitId'],
-          references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
+          name: 'AdminOccurrence_occurrenceId_occurrenceYear_fkey',
+          columns: ['occurrenceId', 'occurrenceYear'],
+          references: { schema: 'public', table: 'Occurrence', columns: ['id', 'year'] },
           onDelete: 'cascade',
         },
       }),
@@ -624,19 +677,9 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'Class',
         foreignKey: {
-          name: 'Class_courseUnitId_fkey',
-          columns: ['courseUnitId'],
-          references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
-          onDelete: 'cascade',
-        },
-      }),
-      this.addForeignKey({
-        schema: 'public',
-        table: 'Course',
-        foreignKey: {
-          name: 'Course_facultyId_fkey',
-          columns: ['facultyId'],
-          references: { schema: 'public', table: 'Faculty', columns: ['acronym'] },
+          name: 'Class_occurrenceId_occurrenceYear_fkey',
+          columns: ['occurrenceId', 'occurrenceYear'],
+          references: { schema: 'public', table: 'Occurrence', columns: ['id', 'year'] },
         },
       }),
       this.addForeignKey({
@@ -692,9 +735,9 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'EnrollmentRequestOption',
         foreignKey: {
-          name: 'EnrollmentRequestOption_courseUnitId_fkey',
-          columns: ['courseUnitId'],
-          references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
+          name: 'EnrollmentRequestOption_occurrenceId_occurrenceYear_fkey',
+          columns: ['occurrenceId', 'occurrenceYear'],
+          references: { schema: 'public', table: 'Occurrence', columns: ['id', 'year'] },
         },
       }),
       this.addForeignKey({
@@ -721,36 +764,44 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'ExchangeItem',
         foreignKey: {
-          name: 'ExchangeItem_courseUnitId_fkey',
-          columns: ['courseUnitId'],
-          references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
+          name: 'ExchangeItem_occurrenceId_occurrenceYear_fkey',
+          columns: ['occurrenceId', 'occurrenceYear'],
+          references: { schema: 'public', table: 'Occurrence', columns: ['id', 'year'] },
         },
       }),
       this.addForeignKey({
         schema: 'public',
         table: 'ExchangeItem',
         foreignKey: {
-          name: 'ExchangeItem_fromClassId_courseUnitId_fkey',
-          columns: ['fromClassId', 'courseUnitId'],
-          references: { schema: 'public', table: 'Class', columns: ['id', 'courseUnitId'] },
+          name: 'ExchangeItem_fromClassId_occurrenceId_occurrenceYear_fkey',
+          columns: ['fromClassId', 'occurrenceId', 'occurrenceYear'],
+          references: {
+            schema: 'public',
+            table: 'Class',
+            columns: ['id', 'occurrenceId', 'occurrenceYear'],
+          },
         },
       }),
       this.addForeignKey({
         schema: 'public',
         table: 'ExchangeItem',
         foreignKey: {
-          name: 'ExchangeItem_toClassId_courseUnitId_fkey',
-          columns: ['toClassId', 'courseUnitId'],
-          references: { schema: 'public', table: 'Class', columns: ['id', 'courseUnitId'] },
+          name: 'ExchangeItem_toClassId_occurrenceId_occurrenceYear_fkey',
+          columns: ['toClassId', 'occurrenceId', 'occurrenceYear'],
+          references: {
+            schema: 'public',
+            table: 'Class',
+            columns: ['id', 'occurrenceId', 'occurrenceYear'],
+          },
         },
       }),
       this.addForeignKey({
         schema: 'public',
         table: 'ExchangePeriod',
         foreignKey: {
-          name: 'ExchangePeriod_courseUnitId_fkey',
-          columns: ['courseUnitId'],
-          references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
+          name: 'ExchangePeriod_occurrenceId_occurrenceYear_fkey',
+          columns: ['occurrenceId', 'occurrenceYear'],
+          references: { schema: 'public', table: 'Occurrence', columns: ['id', 'year'] },
           onDelete: 'cascade',
         },
       }),
@@ -770,6 +821,46 @@ export default class M extends Migration<never, End> {
           name: 'ExchangeRequest_targetUserId_fkey',
           columns: ['targetUserId'],
           references: { schema: 'public', table: 'User', columns: ['id'] },
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'FacultyCourse',
+        foreignKey: {
+          name: 'FacultyCourse_facultyId_fkey',
+          columns: ['facultyId'],
+          references: { schema: 'public', table: 'Faculty', columns: ['acronym'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'FacultyCourse',
+        foreignKey: {
+          name: 'FacultyCourse_courseId_fkey',
+          columns: ['courseId'],
+          references: { schema: 'public', table: 'Course', columns: ['id'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'Occurrence',
+        foreignKey: {
+          name: 'Occurrence_courseUnitId_fkey',
+          columns: ['courseUnitId'],
+          references: { schema: 'public', table: 'CourseUnit', columns: ['id'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'Occurrence',
+        foreignKey: {
+          name: 'Occurrence_courseId_fkey',
+          columns: ['courseId'],
+          references: { schema: 'public', table: 'Course', columns: ['id'] },
+          onDelete: 'cascade',
         },
       }),
       this.addForeignKey({

@@ -28,15 +28,15 @@ and it becomes `User.isAdmin`.
 
 | Legacy table | New model | Change |
 |---|---|---|
-| `faculty` | `Faculty` | `last_updated` dropped (see §4). |
-| `course` | `Course` | `faculty` FK → explicit `facultyId`; `plan_url` dropped (zero consumers — not even in the frontend types); `url` kept; `last_updated` dropped. |
-| `course_unit` | `CourseUnit` | `schedule_url` dropped (no frontend consumer). Gains `ects`, absorbed from `course_metadata`. |
-| `class` | `Class` | `course_unit` FK → `courseUnitId`. Unchanged otherwise. |
+| `faculty` | `Faculty` | `last_updated` dropped (see §4). The one-to-many `course` FK is gone — replaced by the explicit `FacultyCourse` m2m join (a course may be offered by several faculties). |
+| `course` | `Course` | `faculty` FK → explicit `facultyId` *removed*; see `FacultyCourse`. `plan_url` dropped (zero consumers — not even in the frontend types); `url` kept; `last_updated` dropped. |
+| `course_unit` | `CourseUnit` + `Occurrence` | Split into two tables: `CourseUnit` is the abstract, year-agnostic subject (PK is a synthetic serial — Sigarra exposes no stable id on the URLs the sync hits); `Occurrence` is the (courseUnit, course, academic year) tuple whose PK is the Sigarra `pv_ocorrencia_id` (composite `(id, year)` because Sigarra reuses the same occurrence id across years). `ects`, `schedule_url` and the per-occurrence `hash` and `url` move onto `Occurrence`. The natural key `(courseUnitId, year, courseId)` rejects duplicate inserts inside one sync run. |
+| `class` | `Class` | Composite FK `(occurrenceId, occurrenceYear) → Occurrence(id, year)`. `course_unit` is derivable via `class.occurrence.courseUnit`. |
 | `professor` | `Professor` | Renamed columns for consistency (`professor_acronym` → `acronym`). |
 | `slot` | `ScheduleSlot` | Column renames only (`day` → 0-based `dayOfWeek`, `decimal(3,1)` hours → integer minutes). `classId` is **not** folded in — see `SlotClass`. |
 | `slot_class` | `SlotClass` | **Kept as a real join table.** One lesson genuinely serves many classes: legacy `is_composed` marked slots shared by several classes (a "T" lecture shared by `1LEIC01`…`1LEIC10`), and the sync writes one slot plus one join row per class. Folding it into a single `classId` would make a shared lesson unrepresentable. |
 | `slot_professor` | `SlotProfessor` | Now a composite PK `(slotId, professorId)` — legacy's table was shaped as OneToOne on `slot_id`, which silently limited a slot to one professor. |
-| `course_metadata` | — | **Dropped.** Its only content was `ects`, which moved onto `CourseUnit`. |
+| `course_metadata` | — | **Dropped.** Its only content was `ects`, which moved onto `Occurrence`. |
 | `course_group` | — | **Dropped.** Legacy exposed two routes over it (`/course/<id>/groups`, `/course_group/<id>/course_units`), but the frontend never calls them and no other consumer is known. Confirm no external consumer before the legacy DB is retired. |
 | `course_unit_course_group` | — | **Dropped.** Only existed to join the two above. |
 
@@ -44,16 +44,16 @@ and it becomes `User.isAdmin`.
 
 | Legacy table | New model | Change |
 |---|---|---|
-| `user_course_units` | `Enrollment` | `user_nmec` → `userId`; `course_unit` is **not** stored — it is derived via `class.courseUnitId`, since a class belongs to exactly one course unit. |
+| `user_course_units` | `Enrollment` | `user_nmec` → `userId`; `course_unit` is **not** stored — it is derived via `class.occurrence.courseUnit`, since a class belongs to exactly one occurrence of exactly one course unit. |
 
 ### Platform configuration
 
 | Legacy table | New model | Change |
 |---|---|---|
-| `exchange_expirations` | `ExchangePeriod` | Now course-unit-scoped only. `is_course_expiration` **deleted**; `active_date`/`end_date` renamed `startsAt`/`endsAt`. |
+| `exchange_expirations` | `ExchangePeriod` | Now occurrence-scoped only (composite FK `(occurrenceId, occurrenceYear) → Occurrence(id, year)`). `is_course_expiration` **deleted**; `active_date`/`end_date` renamed `startsAt`/`endsAt`. |
 | `exchange_admin` | — | **Dropped** → `User.isAdmin`. |
 | `exchange_admin_courses` | `AdminCourse` | `exchange_admin` FK → `userId`. |
-| `exchange_admin_course_units` | `AdminCourseUnit` | `exchange_admin` FK → `userId`. |
+| `exchange_admin_course_units` | `AdminOccurrence` | `exchange_admin` FK → `userId`; the row is now scoped to an *occurrence*, not an abstract course unit (composite `(occurrenceId, occurrenceYear)`). |
 | `info` | — | **Dropped.** The scrape is now a manual populate step, so data-freshness signaling has no reader (the only frontend consumer, `/info/`, was dead code — commented-out cache-invalidation logic). |
 
 ### Exchanges — 6 tables → 2
@@ -131,8 +131,9 @@ rather than stored, which is what `DirectExchangePendingMotive()` reverse-engine
 from the row set on every read.
 
 Integrity of the class references is enforced at the DB level: `fromClassId` and
-`toClassId` are **composite foreign keys** `(classId, courseUnitId) → Class(id, courseUnitId)`,
-so a referenced class is guaranteed to belong to the same course unit as the item —
+`toClassId` are **composite foreign keys**
+`(fromClassId/toClassId, occurrenceId, occurrenceYear) → Class(id, occurrenceId, occurrenceYear)`,
+so a referenced class is guaranteed to belong to the same occurrence as the item —
 not merely to exist. `userId` uses `ON DELETE RESTRICT`: silently cascading away
 one side's row would flip the derived "all accepted" to true with a side missing;
 user deletion must explicitly cancel affected requests instead.
@@ -144,12 +145,12 @@ user deletion must explicitly cancel affected requests instead.
 | Column | Tables | Why |
 |---|---|---|
 | `last_updated` | `faculty`, `course`, `course_unit`, `class`, `slot` | Only ever written by the fetcher, never read by a route. No successor needed — the scrape is a manual populate step now. |
-| `plan_url` | `course` | No consumer — not even in the frontend types. `course.url` and `course_unit.url` stay: the Major type declares the former (no component reads it yet, but linking a course page is a likely rewrite use), and `InspectLessonBox` links out with the latter. |
+| `plan_url` | `course` | No consumer — not even in the frontend types. `course.url` and `occurrence.url` stay: the Major type declares the former (no component reads it yet, but linking a course page is a likely rewrite use), and `InspectLessonBox` links out with the latter. |
 | `is_course_expiration` | `exchange_expirations` | Let the same row be visible through one endpoint and invisible through another, depending on the flag it was created with. Removed along with course-scoped periods. |
 | `is_composed` | `slot` | Serialized into legacy class-schedule responses but never consumed by the frontend. Dropped as a column — the `SlotClass` join preserves the underlying fact (which classes share the slot), which is the only thing `is_composed` encoded. |
 | `schedule_url` | `course_unit` | No frontend consumer. |
 | `professor_id` | `slot` | Redundant with `slot_professor`. |
-| `course_unit_id` | `user_course_units` | Derivable via `class.courseUnitId`. |
+| `course_unit_id` | `user_course_units` | Derivable via `class.occurrence.courseUnit`. |
 | `course_unit`, `course_unit_name`, `course_unit_acronym` | option tables | Denormalized copies that could silently disagree with the catalog. |
 | `participant_name`, `issuer_name`, `user_name` | option / exchange / enrollment tables | Denormalized copies of `User.name`. |
 | `date` | option tables | Meaningless per-row; the parent row has `createdAt`. |
@@ -163,7 +164,7 @@ user deletion must explicitly cancel affected requests instead.
 | `slot.start_time` / `slot.duration` — `decimal(3,1)` hours | `startMinute` / `durationMin` — `int` minutes | `exchange_overlap()` compared `hora_inicio / 3600` floats. Integers remove float comparison from the validation hot path. |
 | `admin_state varchar(32)` | `AdminValidationState` enum | Four magic strings, one of them hyphenated (`awaiting-information`). |
 | `accepted` + `canceled` booleans | `ExchangeStatus` enum | See §2. |
-| `course_unit_id varchar(16)` on option tables | `courseUnitId int` | Matches the catalog PK. |
+| `course_unit_id varchar(16)` on option tables | `(occurrenceId, occurrenceYear) int` | Matches the `Occurrence` composite PK. |
 
 ---
 
@@ -181,9 +182,8 @@ user deletion must explicitly cancel affected requests instead.
 ## 7. Migration order
 
 1. `User` — NMEC is the natural key and every other table references it.
-2. `Faculty`, `Course`, `CourseUnit`, `Class`, `Professor`, `ScheduleSlot`, `SlotClass`, `SlotProfessor` — catalog, no dependencies on our side.
-3. `Enrollment`, `StudentCourseMetadata`.
-4. `AdminCourse`, `AdminCourseUnit`.
+2. `Faculty`, `FacultyCourse`, `Course`, `CourseUnit`, `Occurrence`, `Class`, `Professor`, `ScheduleSlot`, `SlotClass`, `SlotProfessor` — catalog, no dependencies on our side.
+4. `AdminCourse`, `AdminOccurrence`.
 5. `ExchangePeriod`.
 6. `EnrollmentRequest` + `EnrollmentRequestOption`.
 7. `ExchangeRequest` + `ExchangeItem` — **last, and hardest.**
@@ -192,21 +192,22 @@ user deletion must explicitly cancel affected requests instead.
 
 **Class names are strings on the option tables.** `class_participant_goes_from`
 holds a name like `1LEIC01`, which must be resolved to a `Class.id` via
-`(name, courseUnitId)`. Rows that fail to resolve have no valid target and need
-a decision — quarantine them rather than dropping silently.
+`(name, occurrenceId, occurrenceYear)`. Rows that fail to resolve have no valid
+target and need a decision — quarantine them rather than dropping silently.
 
 **Course-level periods collide.** `ExchangeCoursePeriodView` inserted one row
 per unit flagged `is_course_expiration = True`, while a unit-level insert creates
-the same `(courseUnitId, startsAt, endsAt)` tuple flagged `False`. The new
-`@@unique([courseUnitId, startsAt, endsAt])` will reject the second one, so the
-migration must deduplicate before inserting.
+the same `(occurrenceId, occurrenceYear, startsAt, endsAt)` tuple flagged
+`False`. The new `@@id([occurrenceId, occurrenceYear, startsAt, endsAt])` will
+reject the second one, so the migration must deduplicate before inserting.
 
 **Duplicate direct-exchange items collide with the new unique key.**
-`DirectExchangeView.post` does not reject repeated course-unit choices in the
+`DirectExchangeView.post` does not reject repeated occurrence choices in the
 request body, and legacy had no unique constraint on
 `(direct_exchange, participant_nmec, course_unit_id)` — so the legacy tables can
-contain duplicate requester rows. The new `@@unique([requestId, userId, courseUnitId])`
-will reject them mid-insert. Check the legacy rows for duplicate
+contain duplicate requester rows. The new
+`@@id([requestId, userId, occurrenceId, occurrenceYear])` will reject them
+mid-insert. Check the legacy rows for duplicate
 `(direct_exchange_id, participant_nmec, course_unit_id)` groups first; if any
 exist, preserve distinct class moves and acceptance states with a lossless
 mapping (e.g. an explicit legacy-id column), or quarantine them.
