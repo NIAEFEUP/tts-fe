@@ -4,7 +4,8 @@
   "ignorePatterns": [
     ".claude/skills/**",
     ".agents/skills/**",
-    ".pi/skills/**"
+    ".pi/skills/**",
+    "packages/sigarra/src/generated"
   ],
   "categories": {
     "correctness": "error"
