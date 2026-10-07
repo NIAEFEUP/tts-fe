@@ -1,10 +1,11 @@
 import Plausible from 'plausible-tracker'
+import { ENV } from 'varlock/env'
 import { Major } from '../@types'
 
 const plausible = Plausible({
   domain: import.meta.env.VITE_APP_PLAUSIBLE_DOMAIN,
   apiHost: import.meta.env.VITE_APP_PLAUSIBLE_HOST,
-  trackLocalhost: !Number(import.meta.env.VITE_APP_PROD),
+  trackLocalhost: !ENV.VITE_APP_PROD,
 })
 
 const { trackEvent } = plausible

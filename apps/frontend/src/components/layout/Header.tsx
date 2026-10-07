@@ -10,6 +10,7 @@ import SessionContext from '../../contexts/SessionContext'
 import { useContext } from 'react'
 import { LoginButton } from '../auth/LoginButton'
 import { HeaderProfileDropdown } from '../auth/HeaderProfileDropdown'
+import { ENV } from 'varlock/env'
 
 const navigation = [
   {
@@ -76,12 +77,7 @@ const Header = ({ siteTitle, location }: Props) => {
 
                 <div className="hidden space-x-8 self-center md:inline-flex">
                   {navigation
-                    .filter(
-                      (link) =>
-                        !link.wip ||
-                        (link.wip &&
-                          (import.meta.env.VITE_APP_PROD === '0' || import.meta.env.VITE_APP_STAGING === '1')),
-                    )
+                    .filter((link) => !link.wip || !ENV.VITE_APP_PROD || ENV.VITE_APP_STAGING)
                     .filter((link) => link.title !== 'Admin' || (signedIn && user?.is_admin))
                     .map((link, index) => (
                       <Link to={link.location} key={`nav-${index}`} className="relative py-1">
