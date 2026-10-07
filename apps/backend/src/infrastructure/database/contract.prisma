@@ -61,6 +61,7 @@ model User {
   adminCourses       AdminCourse[]
   adminOccurrences   AdminOccurrence[]
   courseMetadata     StudentCourseMetadata[]
+  plannerStates      PlannerState[]
 }
 
 // Opaque random token in an httpOnly cookie. Chosen over JWT so sessions are
@@ -509,4 +510,36 @@ model StudentCourseMetadata {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([nmec, courseId])
+}
+
+// ===========================================================================
+// 8. PLANNER STATE — UI choice, kept as a free-form blob
+// ===========================================================================
+
+// The student's cross-device planner: which course units they've picked,
+// and for each of the (up to 10) timetable drafts, which class they chose
+// per picked course unit. Everything per-device (theme, language, locked
+// toggles, hidden lesson types, the "active draft" pointer, draft icons
+// and names) stays in localStorage.
+//
+// The wire shape is owned by the frontend — the BE just stores what it's
+// given. `schemaVersion` is a tiny escape hatch so the FE can bump it on
+// a breaking shape change and migrate or reset on read.
+//
+// Last writer wins per row; cross-device conflict resolution is the
+// client's problem (compare `updatedAt` against the local last-write
+// timestamp before overwriting local state).
+//
+// Year-scoped: a row exists per (user, academic year). Old years are
+// kept so a student returning later can still see what they planned.
+model PlannerState {
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  year          Int // e.g. 2025 = academic year 2025/26
+
+  state         Json
+  schemaVersion Int      @default(1)
+  updatedAt     temporal.updatedAt()
+
+  @@id([userId, year])
 }
