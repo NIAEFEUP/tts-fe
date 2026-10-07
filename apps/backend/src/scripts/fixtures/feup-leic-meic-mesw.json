@@ -1,0 +1,1589 @@
+{
+  "source": "database.db",
+  "faculty": {
+    "acronym": "feup",
+    "name": "Faculdade de Engenharia"
+  },
+  "courses": [
+    {
+      "id": 10861,
+      "acronym": "MESW",
+      "name": "Mestrado em Engenharia de Software",
+      "courseType": "M",
+      "year": 2026,
+      "url": "https://sigarra.up.pt/feup/pt/cur_geral.cur_view?pv_ano_lectivo=2026&pv_curso_id=10861"
+    },
+    {
+      "id": 22841,
+      "acronym": "L.EIC",
+      "name": "Licenciatura em Engenharia Informática e Computação",
+      "courseType": "B",
+      "year": 2026,
+      "url": "https://sigarra.up.pt/feup/pt/cur_geral.cur_view?pv_ano_lectivo=2026&pv_curso_id=22841"
+    },
+    {
+      "id": 22862,
+      "acronym": "M.EIC",
+      "name": "Mestrado em Engenharia Informática e Computação",
+      "courseType": "M",
+      "year": 2026,
+      "url": "https://sigarra.up.pt/feup/pt/cur_geral.cur_view?pv_ano_lectivo=2026&pv_curso_id=22862"
+    }
+  ],
+  "courseUnits": [
+    {
+      "key": "unit-587177",
+      "courseId": 10861,
+      "acronym": "LES",
+      "name": "Laboratório de Engenharia de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-587178",
+      "courseId": 10861,
+      "acronym": "IPC",
+      "name": "Interação Pessoa Computador",
+      "semester": 1
+    },
+    {
+      "key": "unit-587179",
+      "courseId": 10861,
+      "acronym": "ER",
+      "name": "Engenharia de Requisitos",
+      "semester": 1
+    },
+    {
+      "key": "unit-587180",
+      "courseId": 10861,
+      "acronym": "TS",
+      "name": "Teste de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-587181",
+      "courseId": 10861,
+      "acronym": "ALA",
+      "name": "Agilidade em Larga Escala",
+      "semester": 1
+    },
+    {
+      "key": "unit-587182",
+      "courseId": 10861,
+      "acronym": "DOO",
+      "name": "Desenho Orientado por Objetos",
+      "semester": 1
+    },
+    {
+      "key": "unit-587183",
+      "courseId": 10861,
+      "acronym": "DCN",
+      "name": "DevOps e Computação na Nuvem",
+      "semester": 1
+    },
+    {
+      "key": "unit-587184",
+      "courseId": 10861,
+      "acronym": "GP",
+      "name": "Gestão de Produto",
+      "semester": 1
+    },
+    {
+      "key": "unit-587185",
+      "courseId": 10861,
+      "acronym": "TACS",
+      "name": "Técnicas Avançadas de Construção de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-587186",
+      "courseId": 10861,
+      "acronym": "PPES",
+      "name": "Princípios e Paradigmas de Engenharia de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-587187",
+      "courseId": 10861,
+      "acronym": "GPIE",
+      "name": "Gestão de Projetos, Inovação e Empreendedorismo",
+      "semester": 2
+    },
+    {
+      "key": "unit-587188",
+      "courseId": 10861,
+      "acronym": "CM",
+      "name": "Computação Móvel",
+      "semester": 2
+    },
+    {
+      "key": "unit-587189",
+      "courseId": 10861,
+      "acronym": "GQMPS",
+      "name": "Gestão de Qualidade e Melhoria de Processos de Software",
+      "semester": 2
+    },
+    {
+      "key": "unit-587190",
+      "courseId": 10861,
+      "acronym": "AS",
+      "name": "Arquitetura de Software",
+      "semester": 2
+    },
+    {
+      "key": "unit-587191",
+      "courseId": 10861,
+      "acronym": "IAES",
+      "name": "Inteligência Artificial em Engenharia de Software",
+      "semester": 2
+    },
+    {
+      "key": "unit-587192",
+      "courseId": 10861,
+      "acronym": "ESS",
+      "name": "Engenharia de Software Seguro",
+      "semester": 2
+    },
+    {
+      "key": "unit-587193",
+      "courseId": 10861,
+      "acronym": "ESSCIC",
+      "name": "Engenharia de Software para Sistemas Ciberfísicos e Internet das Coisas",
+      "semester": 2
+    },
+    {
+      "key": "unit-587194",
+      "courseId": 10861,
+      "acronym": "SC",
+      "name": "Software Confiável",
+      "semester": 2
+    },
+    {
+      "key": "unit-587195",
+      "courseId": 10861,
+      "acronym": "D",
+      "name": "Dissertação",
+      "semester": 1
+    },
+    {
+      "key": "unit-587196",
+      "courseId": 10861,
+      "acronym": "SES",
+      "name": "Seminários em Engenharia de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-586980",
+      "courseId": 22841,
+      "acronym": "ALGA",
+      "name": "Álgebra Linear e Geometria Analítica",
+      "semester": 1
+    },
+    {
+      "key": "unit-586981",
+      "courseId": 22841,
+      "acronym": "FP",
+      "name": "Fundamentos da Programação",
+      "semester": 1
+    },
+    {
+      "key": "unit-586982",
+      "courseId": 22841,
+      "acronym": "FSC",
+      "name": "Fundamentos de Sistemas Computacionais",
+      "semester": 1
+    },
+    {
+      "key": "unit-586983",
+      "courseId": 22841,
+      "acronym": "MD",
+      "name": "Matemática Discreta",
+      "semester": 1
+    },
+    {
+      "key": "unit-586984",
+      "courseId": 22841,
+      "acronym": "PUP",
+      "name": "Projeto UP",
+      "semester": 1
+    },
+    {
+      "key": "unit-586985",
+      "courseId": 22841,
+      "acronym": "AC",
+      "name": "Arquitetura de Computadores",
+      "semester": 2
+    },
+    {
+      "key": "unit-586986",
+      "courseId": 22841,
+      "acronym": "F I",
+      "name": "Física I",
+      "semester": 2
+    },
+    {
+      "key": "unit-586987",
+      "courseId": 22841,
+      "acronym": "P",
+      "name": "Programação",
+      "semester": 2
+    },
+    {
+      "key": "unit-586988",
+      "courseId": 22841,
+      "acronym": "TC",
+      "name": "Teoria da Computação",
+      "semester": 2
+    },
+    {
+      "key": "unit-586989",
+      "courseId": 22841,
+      "acronym": "AED",
+      "name": "Algoritmos e Estruturas de Dados",
+      "semester": 1
+    },
+    {
+      "key": "unit-586990",
+      "courseId": 22841,
+      "acronym": "BD",
+      "name": "Bases de Dados",
+      "semester": 1
+    },
+    {
+      "key": "unit-586991",
+      "courseId": 22841,
+      "acronym": "F II",
+      "name": "Física II",
+      "semester": 1
+    },
+    {
+      "key": "unit-586992",
+      "courseId": 22841,
+      "acronym": "LDTS",
+      "name": "Laboratório de Desenho e Teste de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-586993",
+      "courseId": 22841,
+      "acronym": "SO",
+      "name": "Sistemas Operativos",
+      "semester": 1
+    },
+    {
+      "key": "unit-586994",
+      "courseId": 22841,
+      "acronym": "DA",
+      "name": "Desenho de Algoritmos",
+      "semester": 2
+    },
+    {
+      "key": "unit-586995",
+      "courseId": 22841,
+      "acronym": "ES",
+      "name": "Engenharia de Software",
+      "semester": 2
+    },
+    {
+      "key": "unit-586996",
+      "courseId": 22841,
+      "acronym": "LC",
+      "name": "Laboratório de Computadores",
+      "semester": 2
+    },
+    {
+      "key": "unit-586997",
+      "courseId": 22841,
+      "acronym": "LTW",
+      "name": "Linguagens e Tecnologias Web",
+      "semester": 2
+    },
+    {
+      "key": "unit-586998",
+      "courseId": 22841,
+      "acronym": "ME",
+      "name": "Métodos Estatísticos",
+      "semester": 2
+    },
+    {
+      "key": "unit-586999",
+      "courseId": 22841,
+      "acronym": "FSI",
+      "name": "Fundamentos de Segurança Informática",
+      "semester": 1
+    },
+    {
+      "key": "unit-587000",
+      "courseId": 22841,
+      "acronym": "IPC",
+      "name": "Interação Pessoa Computador",
+      "semester": 1
+    },
+    {
+      "key": "unit-587001",
+      "courseId": 22841,
+      "acronym": "LBAW",
+      "name": "Laboratório de Bases de Dados e Aplicações Web",
+      "semester": 1
+    },
+    {
+      "key": "unit-587002",
+      "courseId": 22841,
+      "acronym": "PFL",
+      "name": "Programação Funcional e em Lógica",
+      "semester": 1
+    },
+    {
+      "key": "unit-587003",
+      "courseId": 22841,
+      "acronym": "RC",
+      "name": "Redes de Computadores",
+      "semester": 1
+    },
+    {
+      "key": "unit-587004",
+      "courseId": 22841,
+      "acronym": "C",
+      "name": "Compiladores",
+      "semester": 2
+    },
+    {
+      "key": "unit-587005",
+      "courseId": 22841,
+      "acronym": "CG",
+      "name": "Computação Gráfica",
+      "semester": 2
+    },
+    {
+      "key": "unit-587006",
+      "courseId": 22841,
+      "acronym": "CPD",
+      "name": "Computação Paralela e Distribuída",
+      "semester": 2
+    },
+    {
+      "key": "unit-587007",
+      "courseId": 22841,
+      "acronym": "IA",
+      "name": "Inteligência Artificial",
+      "semester": 2
+    },
+    {
+      "key": "unit-587008",
+      "courseId": 22841,
+      "acronym": "PI",
+      "name": "Projeto Integrador",
+      "semester": 2
+    },
+    {
+      "key": "unit-587960",
+      "courseId": 22841,
+      "acronym": "AM I",
+      "name": "Análise Matemática I",
+      "semester": 1
+    },
+    {
+      "key": "unit-587961",
+      "courseId": 22841,
+      "acronym": "AM II",
+      "name": "Análise Matemática II",
+      "semester": 2
+    },
+    {
+      "key": "unit-586780",
+      "courseId": 22862,
+      "acronym": "AC",
+      "name": "Aprendizagem Computacional",
+      "semester": 1
+    },
+    {
+      "key": "unit-586781",
+      "courseId": 22862,
+      "acronym": "DS",
+      "name": "Desenvolvimento de Software de Larga Escala",
+      "semester": 1
+    },
+    {
+      "key": "unit-586782",
+      "courseId": 22862,
+      "acronym": "PRI",
+      "name": "Processamento e Recuperação de Informação",
+      "semester": 1
+    },
+    {
+      "key": "unit-586783",
+      "courseId": 22862,
+      "acronym": "SDLE",
+      "name": "Sistemas Distribuídos de Larga Escala",
+      "semester": 1
+    },
+    {
+      "key": "unit-586784",
+      "courseId": 22862,
+      "acronym": "SGI",
+      "name": "Sistemas Gráficos Interativos",
+      "semester": 1
+    },
+    {
+      "key": "unit-586785",
+      "courseId": 22862,
+      "acronym": "LGP",
+      "name": "Laboratório de Gestão de Projetos",
+      "semester": 2
+    },
+    {
+      "key": "unit-586786",
+      "courseId": 22862,
+      "acronym": "ASMA",
+      "name": "Agentes e Sistemas Multi-Agente",
+      "semester": 2
+    },
+    {
+      "key": "unit-586787",
+      "courseId": 22862,
+      "acronym": "ASSO",
+      "name": "Arquitetura de Sistemas de Software",
+      "semester": 2
+    },
+    {
+      "key": "unit-586788",
+      "courseId": 22862,
+      "acronym": "D",
+      "name": "Dissertação",
+      "semester": 2
+    },
+    {
+      "key": "unit-586800",
+      "courseId": 22862,
+      "acronym": "CAC",
+      "name": "Complementos de Aprendizagem Computacional",
+      "semester": 2
+    },
+    {
+      "key": "unit-586801",
+      "courseId": 22862,
+      "acronym": "CPM",
+      "name": "Computação Móvel",
+      "semester": 2
+    },
+    {
+      "key": "unit-586802",
+      "courseId": 22862,
+      "acronym": "DDJD",
+      "name": "Desenho e Desenvolvimento de Jogos Digitais",
+      "semester": 2
+    },
+    {
+      "key": "unit-586803",
+      "courseId": 22862,
+      "acronym": "ER",
+      "name": "Engenharia de Requisitos",
+      "semester": 2
+    },
+    {
+      "key": "unit-586804",
+      "courseId": 22862,
+      "acronym": "EDAA",
+      "name": "Estruturas de Dados e Algoritmos Avançados",
+      "semester": 2
+    },
+    {
+      "key": "unit-586805",
+      "courseId": 22862,
+      "acronym": "GEE",
+      "name": "Gestão de Empresas e Empreendedorismo",
+      "semester": 2
+    },
+    {
+      "key": "unit-586806",
+      "courseId": 22862,
+      "acronym": "GRS",
+      "name": "Gestão de Redes e Sistemas",
+      "semester": 2
+    },
+    {
+      "key": "unit-586808",
+      "courseId": 22862,
+      "acronym": "GSSI",
+      "name": "Gestão de Sistemas de Informação",
+      "semester": 2
+    },
+    {
+      "key": "unit-586809",
+      "courseId": 22862,
+      "acronym": "MK",
+      "name": "Marketing",
+      "semester": 2
+    },
+    {
+      "key": "unit-586810",
+      "courseId": 22862,
+      "acronym": "O",
+      "name": "Otimização",
+      "semester": 2
+    },
+    {
+      "key": "unit-586811",
+      "courseId": 22862,
+      "acronym": "PLN",
+      "name": "Processamento de Linguagem Natural",
+      "semester": 2
+    },
+    {
+      "key": "unit-586812",
+      "courseId": 22862,
+      "acronym": "PLR",
+      "name": "Programação em Lógica com Restrições",
+      "semester": 2
+    },
+    {
+      "key": "unit-586813",
+      "courseId": 22862,
+      "acronym": "SR",
+      "name": "Segurança de Redes",
+      "semester": 2
+    },
+    {
+      "key": "unit-586814",
+      "courseId": 22862,
+      "acronym": "SSI",
+      "name": "Segurança em Sistemas Informáticos",
+      "semester": 2
+    },
+    {
+      "key": "unit-586815",
+      "courseId": 22862,
+      "acronym": "SAM",
+      "name": "Serviços e Aplicações Multimédia",
+      "semester": 2
+    },
+    {
+      "key": "unit-586816",
+      "courseId": 22862,
+      "acronym": "SETR",
+      "name": "Sistemas Embutidos e de Tempo Real",
+      "semester": 2
+    },
+    {
+      "key": "unit-586817",
+      "courseId": 22862,
+      "acronym": "TBD",
+      "name": "Tecnologias de Bases de Dados",
+      "semester": 2
+    },
+    {
+      "key": "unit-586818",
+      "courseId": 22862,
+      "acronym": "VC",
+      "name": "Visão por Computador",
+      "semester": 2
+    },
+    {
+      "key": "unit-586819",
+      "courseId": 22862,
+      "acronym": "BDNR",
+      "name": "Bases de Dados Não Relacionais",
+      "semester": 2
+    },
+    {
+      "key": "unit-586820",
+      "courseId": 22862,
+      "acronym": "API",
+      "name": "Análise de Projetos de Investimento",
+      "semester": 1
+    },
+    {
+      "key": "unit-586821",
+      "courseId": 22862,
+      "acronym": "AID",
+      "name": "Análise e Integração de Dados",
+      "semester": 1
+    },
+    {
+      "key": "unit-586822",
+      "courseId": 22862,
+      "acronym": "CHE",
+      "name": "Computação Heterogénea Eficiente",
+      "semester": 1
+    },
+    {
+      "key": "unit-586824",
+      "courseId": 22862,
+      "acronym": "ELS",
+      "name": "Engenharia de Linguagens de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-586825",
+      "courseId": 22862,
+      "acronym": "ESS",
+      "name": "Engenharia de Software Seguro",
+      "semester": 1
+    },
+    {
+      "key": "unit-586826",
+      "courseId": 22862,
+      "acronym": "MS",
+      "name": "Modelação e Simulação",
+      "semester": 1
+    },
+    {
+      "key": "unit-586827",
+      "courseId": 22862,
+      "acronym": "MNEC",
+      "name": "Modelos de Negócio para a Economia Digital",
+      "semester": 1
+    },
+    {
+      "key": "unit-586828",
+      "courseId": 22862,
+      "acronym": "RVA",
+      "name": "Realidade Virtual e Aumentada",
+      "semester": 1
+    },
+    {
+      "key": "unit-586829",
+      "courseId": 22862,
+      "acronym": "RI",
+      "name": "Robótica Inteligente",
+      "semester": 1
+    },
+    {
+      "key": "unit-586830",
+      "courseId": 22862,
+      "acronym": "S",
+      "name": "Seminários",
+      "semester": 1
+    },
+    {
+      "key": "unit-586831",
+      "courseId": 22862,
+      "acronym": "SCI",
+      "name": "Sistemas Ciberfísicos e Internet das Coisas",
+      "semester": 1
+    },
+    {
+      "key": "unit-586832",
+      "courseId": 22862,
+      "acronym": "TACS",
+      "name": "Técnicas Avançadas de Construção de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-586833",
+      "courseId": 22862,
+      "acronym": "TVVS",
+      "name": "Teste, Verificação e Validação de Software",
+      "semester": 1
+    },
+    {
+      "key": "unit-586834",
+      "courseId": 22862,
+      "acronym": "TAIM",
+      "name": "Tópicos Avançados de Interação e Multimédia",
+      "semester": 1
+    },
+    {
+      "key": "unit-586835",
+      "courseId": 22862,
+      "acronym": "WSDL",
+      "name": "Web Semântica e Dados Ligados",
+      "semester": 1
+    },
+    {
+      "key": "unit-586842",
+      "courseId": 22862,
+      "acronym": "PD",
+      "name": "Preparação da Dissertação",
+      "semester": 1
+    },
+    {
+      "key": "unit-590701",
+      "courseId": 22862,
+      "acronym": "CPA",
+      "name": "Computação Paralela Avançada",
+      "semester": 2
+    },
+    {
+      "key": "unit-590702",
+      "courseId": 22862,
+      "acronym": "MFS",
+      "name": "Métodos Formais para Sistemas Críticos",
+      "semester": 2
+    }
+  ],
+  "occurrences": [
+    {
+      "id": 587177,
+      "courseUnitKey": "unit-587177",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587177",
+      "hash": ""
+    },
+    {
+      "id": 587178,
+      "courseUnitKey": "unit-587178",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587178",
+      "hash": ""
+    },
+    {
+      "id": 587179,
+      "courseUnitKey": "unit-587179",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587179",
+      "hash": ""
+    },
+    {
+      "id": 587180,
+      "courseUnitKey": "unit-587180",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587180",
+      "hash": ""
+    },
+    {
+      "id": 587181,
+      "courseUnitKey": "unit-587181",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587181",
+      "hash": ""
+    },
+    {
+      "id": 587182,
+      "courseUnitKey": "unit-587182",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587182",
+      "hash": ""
+    },
+    {
+      "id": 587183,
+      "courseUnitKey": "unit-587183",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587183",
+      "hash": ""
+    },
+    {
+      "id": 587184,
+      "courseUnitKey": "unit-587184",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587184",
+      "hash": ""
+    },
+    {
+      "id": 587185,
+      "courseUnitKey": "unit-587185",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587185",
+      "hash": ""
+    },
+    {
+      "id": 587186,
+      "courseUnitKey": "unit-587186",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587186",
+      "hash": ""
+    },
+    {
+      "id": 587187,
+      "courseUnitKey": "unit-587187",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587187",
+      "hash": ""
+    },
+    {
+      "id": 587188,
+      "courseUnitKey": "unit-587188",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587188",
+      "hash": ""
+    },
+    {
+      "id": 587189,
+      "courseUnitKey": "unit-587189",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587189",
+      "hash": ""
+    },
+    {
+      "id": 587190,
+      "courseUnitKey": "unit-587190",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587190",
+      "hash": ""
+    },
+    {
+      "id": 587191,
+      "courseUnitKey": "unit-587191",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587191",
+      "hash": ""
+    },
+    {
+      "id": 587192,
+      "courseUnitKey": "unit-587192",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587192",
+      "hash": ""
+    },
+    {
+      "id": 587193,
+      "courseUnitKey": "unit-587193",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587193",
+      "hash": ""
+    },
+    {
+      "id": 587194,
+      "courseUnitKey": "unit-587194",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587194",
+      "hash": ""
+    },
+    {
+      "id": 587195,
+      "courseUnitKey": "unit-587195",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 48,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587195",
+      "hash": ""
+    },
+    {
+      "id": 587196,
+      "courseUnitKey": "unit-587196",
+      "courseId": 10861,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587196",
+      "hash": ""
+    },
+    {
+      "id": 586980,
+      "courseUnitKey": "unit-586980",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 4.5,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586980",
+      "hash": ""
+    },
+    {
+      "id": 586981,
+      "courseUnitKey": "unit-586981",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586981",
+      "hash": ""
+    },
+    {
+      "id": 586982,
+      "courseUnitKey": "unit-586982",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586982",
+      "hash": ""
+    },
+    {
+      "id": 586983,
+      "courseUnitKey": "unit-586983",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586983",
+      "hash": ""
+    },
+    {
+      "id": 586984,
+      "courseUnitKey": "unit-586984",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 1.5,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586984",
+      "hash": ""
+    },
+    {
+      "id": 586985,
+      "courseUnitKey": "unit-586985",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586985",
+      "hash": ""
+    },
+    {
+      "id": 586986,
+      "courseUnitKey": "unit-586986",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586986",
+      "hash": ""
+    },
+    {
+      "id": 586987,
+      "courseUnitKey": "unit-586987",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586987",
+      "hash": ""
+    },
+    {
+      "id": 586988,
+      "courseUnitKey": "unit-586988",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586988",
+      "hash": ""
+    },
+    {
+      "id": 586989,
+      "courseUnitKey": "unit-586989",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586989",
+      "hash": ""
+    },
+    {
+      "id": 586990,
+      "courseUnitKey": "unit-586990",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586990",
+      "hash": ""
+    },
+    {
+      "id": 586991,
+      "courseUnitKey": "unit-586991",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 4.5,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586991",
+      "hash": ""
+    },
+    {
+      "id": 586992,
+      "courseUnitKey": "unit-586992",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586992",
+      "hash": ""
+    },
+    {
+      "id": 586993,
+      "courseUnitKey": "unit-586993",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586993",
+      "hash": ""
+    },
+    {
+      "id": 586994,
+      "courseUnitKey": "unit-586994",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586994",
+      "hash": ""
+    },
+    {
+      "id": 586995,
+      "courseUnitKey": "unit-586995",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586995",
+      "hash": ""
+    },
+    {
+      "id": 586996,
+      "courseUnitKey": "unit-586996",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586996",
+      "hash": ""
+    },
+    {
+      "id": 586997,
+      "courseUnitKey": "unit-586997",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586997",
+      "hash": ""
+    },
+    {
+      "id": 586998,
+      "courseUnitKey": "unit-586998",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 4.5,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586998",
+      "hash": ""
+    },
+    {
+      "id": 586999,
+      "courseUnitKey": "unit-586999",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586999",
+      "hash": ""
+    },
+    {
+      "id": 587000,
+      "courseUnitKey": "unit-587000",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 4.5,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587000",
+      "hash": ""
+    },
+    {
+      "id": 587001,
+      "courseUnitKey": "unit-587001",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587001",
+      "hash": ""
+    },
+    {
+      "id": 587002,
+      "courseUnitKey": "unit-587002",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587002",
+      "hash": ""
+    },
+    {
+      "id": 587003,
+      "courseUnitKey": "unit-587003",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587003",
+      "hash": ""
+    },
+    {
+      "id": 587004,
+      "courseUnitKey": "unit-587004",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587004",
+      "hash": ""
+    },
+    {
+      "id": 587005,
+      "courseUnitKey": "unit-587005",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587005",
+      "hash": ""
+    },
+    {
+      "id": 587006,
+      "courseUnitKey": "unit-587006",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587006",
+      "hash": ""
+    },
+    {
+      "id": 587007,
+      "courseUnitKey": "unit-587007",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587007",
+      "hash": ""
+    },
+    {
+      "id": 587008,
+      "courseUnitKey": "unit-587008",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587008",
+      "hash": ""
+    },
+    {
+      "id": 587960,
+      "courseUnitKey": "unit-587960",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587960",
+      "hash": ""
+    },
+    {
+      "id": 587961,
+      "courseUnitKey": "unit-587961",
+      "courseId": 22841,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587961",
+      "hash": ""
+    },
+    {
+      "id": 586780,
+      "courseUnitKey": "unit-586780",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586780",
+      "hash": ""
+    },
+    {
+      "id": 586781,
+      "courseUnitKey": "unit-586781",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586781",
+      "hash": ""
+    },
+    {
+      "id": 586782,
+      "courseUnitKey": "unit-586782",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586782",
+      "hash": ""
+    },
+    {
+      "id": 586783,
+      "courseUnitKey": "unit-586783",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586783",
+      "hash": ""
+    },
+    {
+      "id": 586784,
+      "courseUnitKey": "unit-586784",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586784",
+      "hash": ""
+    },
+    {
+      "id": 586785,
+      "courseUnitKey": "unit-586785",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586785",
+      "hash": ""
+    },
+    {
+      "id": 586786,
+      "courseUnitKey": "unit-586786",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586786",
+      "hash": ""
+    },
+    {
+      "id": 586787,
+      "courseUnitKey": "unit-586787",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586787",
+      "hash": ""
+    },
+    {
+      "id": 586788,
+      "courseUnitKey": "unit-586788",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 30,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586788",
+      "hash": ""
+    },
+    {
+      "id": 586800,
+      "courseUnitKey": "unit-586800",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586800",
+      "hash": ""
+    },
+    {
+      "id": 586801,
+      "courseUnitKey": "unit-586801",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586801",
+      "hash": ""
+    },
+    {
+      "id": 586802,
+      "courseUnitKey": "unit-586802",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586802",
+      "hash": ""
+    },
+    {
+      "id": 586803,
+      "courseUnitKey": "unit-586803",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586803",
+      "hash": ""
+    },
+    {
+      "id": 586804,
+      "courseUnitKey": "unit-586804",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586804",
+      "hash": ""
+    },
+    {
+      "id": 586805,
+      "courseUnitKey": "unit-586805",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586805",
+      "hash": ""
+    },
+    {
+      "id": 586806,
+      "courseUnitKey": "unit-586806",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586806",
+      "hash": ""
+    },
+    {
+      "id": 586808,
+      "courseUnitKey": "unit-586808",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586808",
+      "hash": ""
+    },
+    {
+      "id": 586809,
+      "courseUnitKey": "unit-586809",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586809",
+      "hash": ""
+    },
+    {
+      "id": 586810,
+      "courseUnitKey": "unit-586810",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586810",
+      "hash": ""
+    },
+    {
+      "id": 586811,
+      "courseUnitKey": "unit-586811",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586811",
+      "hash": ""
+    },
+    {
+      "id": 586812,
+      "courseUnitKey": "unit-586812",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586812",
+      "hash": ""
+    },
+    {
+      "id": 586813,
+      "courseUnitKey": "unit-586813",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586813",
+      "hash": ""
+    },
+    {
+      "id": 586814,
+      "courseUnitKey": "unit-586814",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586814",
+      "hash": ""
+    },
+    {
+      "id": 586815,
+      "courseUnitKey": "unit-586815",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586815",
+      "hash": ""
+    },
+    {
+      "id": 586816,
+      "courseUnitKey": "unit-586816",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586816",
+      "hash": ""
+    },
+    {
+      "id": 586817,
+      "courseUnitKey": "unit-586817",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586817",
+      "hash": ""
+    },
+    {
+      "id": 586818,
+      "courseUnitKey": "unit-586818",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586818",
+      "hash": ""
+    },
+    {
+      "id": 586819,
+      "courseUnitKey": "unit-586819",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586819",
+      "hash": ""
+    },
+    {
+      "id": 586820,
+      "courseUnitKey": "unit-586820",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586820",
+      "hash": ""
+    },
+    {
+      "id": 586821,
+      "courseUnitKey": "unit-586821",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586821",
+      "hash": ""
+    },
+    {
+      "id": 586822,
+      "courseUnitKey": "unit-586822",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586822",
+      "hash": ""
+    },
+    {
+      "id": 586824,
+      "courseUnitKey": "unit-586824",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586824",
+      "hash": ""
+    },
+    {
+      "id": 586825,
+      "courseUnitKey": "unit-586825",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586825",
+      "hash": ""
+    },
+    {
+      "id": 586826,
+      "courseUnitKey": "unit-586826",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586826",
+      "hash": ""
+    },
+    {
+      "id": 586827,
+      "courseUnitKey": "unit-586827",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586827",
+      "hash": ""
+    },
+    {
+      "id": 586828,
+      "courseUnitKey": "unit-586828",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586828",
+      "hash": ""
+    },
+    {
+      "id": 586829,
+      "courseUnitKey": "unit-586829",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586829",
+      "hash": ""
+    },
+    {
+      "id": 586830,
+      "courseUnitKey": "unit-586830",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586830",
+      "hash": ""
+    },
+    {
+      "id": 586831,
+      "courseUnitKey": "unit-586831",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586831",
+      "hash": ""
+    },
+    {
+      "id": 586832,
+      "courseUnitKey": "unit-586832",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586832",
+      "hash": ""
+    },
+    {
+      "id": 586833,
+      "courseUnitKey": "unit-586833",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586833",
+      "hash": ""
+    },
+    {
+      "id": 586834,
+      "courseUnitKey": "unit-586834",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586834",
+      "hash": ""
+    },
+    {
+      "id": 586835,
+      "courseUnitKey": "unit-586835",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586835",
+      "hash": ""
+    },
+    {
+      "id": 586842,
+      "courseUnitKey": "unit-586842",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 4.5,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=586842",
+      "hash": ""
+    },
+    {
+      "id": 590701,
+      "courseUnitKey": "unit-590701",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=590701",
+      "hash": ""
+    },
+    {
+      "id": 590702,
+      "courseUnitKey": "unit-590702",
+      "courseId": 22862,
+      "year": 2026,
+      "ects": 6,
+      "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=590702",
+      "hash": ""
+    }
+  ]
+}

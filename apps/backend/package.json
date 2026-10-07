@@ -13,6 +13,8 @@
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage",
     "contract:emit": "prisma contract emit",
+    "catalog:extract": "bun scripts/extract-catalog.ts",
+    "db:seed": "varlock run -- tsx src/scripts/seed.ts",
     "db:init": "varlock run -- prisma db init",
     "db:update": "varlock run -- prisma db update",
     "db:verify": "varlock run -- prisma db verify",
