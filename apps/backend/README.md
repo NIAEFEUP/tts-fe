@@ -42,6 +42,31 @@ The DB schema and runtime client live in `src/infrastructure/database/`:
 
 ---
 
+## Seeding
+
+Two scripts seed the local database. Both **truncate every table first**, so
+they are safe to re-run and always produce the same deterministic ids
+(`CourseUnit` / `Class` starting at 1).
+
+| Script              | Populates                                                                                                                        |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `bun run db:seed`   | **Catalog only** — faculty, courses, course units and occurrences, from the committed fixture.                                    |
+| `bun run db:seed:demo` | **Catalog plus the mock exchange layer** — users, classes, enrollments, exchange windows, sample exchanges and enrollment requests. |
+
+> ⚠️ **The two are mutually exclusive.** Both run the same reset, so `db:seed`
+> wipes the demo data (leaving `ExchangeItem`, `ExchangeRequest`, `User`, etc.
+> empty) and `db:seed:demo` re-creates it. If you want exchanges, always finish
+> with `bun run db:seed:demo` — running `bun run db:seed` afterwards empties them.
+
+- The **catalog** is real scraper data, extracted into
+  [`src/scripts/fixtures/feup-leic-meic-mesw.json`](./src/scripts/fixtures/feup-leic-meic-mesw.json)
+  by `bun run catalog:extract` (which reads the repo-root `database.db`).
+- The **mock layer** is hand-authored and covers **L.EIC and M.EIC only** — MESW
+  is in the catalog but is not part of the exchange feature.
+- Both seeds refuse to run unless `DATABASE_URL` points at a loopback host.
+
+---
+
 ## Starting from scratch (first time)
 
 ### 1. Write your schema
@@ -261,6 +286,9 @@ bun run db:sign
 | ------------------- | -------------------------------------------- | ---------------------------------------------------- |
 | `dev`               | `bun run dev`                                | Start dev server with hot reload                     |
 | `contract:emit`     | `bun run contract:emit`                      | Regenerate `contract.json` + `contract.d.ts`         |
+| `catalog:extract`   | `bun run catalog:extract`                    | Regenerate the scraper fixture from `database.db`    |
+| `db:seed`           | `bun run db:seed`                            | Seed the catalog (truncates every table first)       |
+| `db:seed:demo`      | `bun run db:seed:demo`                       | Seed the catalog + mock exchanges (truncates first)  |
 | `db:init`           | `bun run db:init`                            | Apply schema to DB for the first time + write marker |
 | `db:update`         | `bun run db:update`                          | Quick dev-only schema sync (no migration history)    |
 | `db:verify`         | `bun run db:verify`                          | Check live DB matches the contract                   |
