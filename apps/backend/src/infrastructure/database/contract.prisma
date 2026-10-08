@@ -46,9 +46,12 @@ model User {
   email String? @unique
   name  String
 
-  // Global admin = may open the admin panel at all.
-  // Scoped access (what they may actually act on) lives in AdminCourse / AdminOccurrence.
-  isAdmin Boolean @default(false)
+  // Global access tier. Strict hierarchy: SUPERUSER > ADMIN > USER. Anyone
+  // with ADMIN or above may open the admin panel; SUPERUSER additionally
+  // holds destructive / setup actions (delete user, drop a course, etc.).
+  // Scoped access (what they may actually act on) lives in
+  // AdminCourse / AdminOccurrence.
+  role    UserRole @default(USER)
 
   createdAt DateTime @default(now())
 
@@ -367,6 +370,16 @@ enum AdminValidationState {
   TREATED
   REJECTED
   AWAITING_INFORMATION
+}
+
+// Global access tier on User. Strict hierarchy — members are listed in
+// ascending order, so SQL ORDER BY role DESC and Prisma queries that
+// compare against `role` work as a ranking. USER is the default; ADMIN
+// unlocks the admin panel; SUPERUSER adds destructive/setup actions.
+enum UserRole {
+  USER
+  ADMIN
+  SUPERUSER
 }
 
 // Replaces DirectExchange + MarketplaceExchange + ExchangeUrgentRequests.

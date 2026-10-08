@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'e956c2c8760e072447efb0eab414aefd33ca29c4433a281f95bd8dbfa260bf5f'>;
+  StorageHashBase<'be8374929d38e53f6a664e64afcfebc803f598e0f94c781557d782c9062ab3a0'>;
 export type ExecutionHash =
   ExecutionHashBase<'a93cc47e9fb55fdfbeaee1b903aa20da580802e0aa0921d8b0c03fd01a17ac75'>;
 export type ProfileHash =
@@ -394,8 +394,8 @@ export type FieldOutputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/text@1']['output'];
-      readonly isAdmin: CodecTypes['pg/bool@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
+      readonly role: 'USER' | 'ADMIN' | 'SUPERUSER';
     };
   };
 };
@@ -545,8 +545,8 @@ export type FieldInputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/text@1']['input'];
-      readonly isAdmin: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
+      readonly role: 'USER' | 'ADMIN' | 'SUPERUSER';
     };
   };
 };
@@ -696,8 +696,8 @@ export type StorageColumnTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/text@1']['output'];
-      readonly isAdmin: CodecTypes['pg/bool@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
+      readonly role: 'USER' | 'ADMIN' | 'SUPERUSER';
     };
   };
 };
@@ -847,8 +847,8 @@ export type StorageColumnInputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/text@1']['input'];
-      readonly isAdmin: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
+      readonly role: 'USER' | 'ADMIN' | 'SUPERUSER';
     };
   };
 };
@@ -1072,8 +1072,8 @@ export namespace Models {
     createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     email: CodecTypes['pg/text@1']['output'] | null;
     id: CodecTypes['pg/text@1']['output'];
-    isAdmin: CodecTypes['pg/bool@1']['output'];
     name: CodecTypes['pg/text@1']['output'];
+    role: 'USER' | 'ADMIN' | 'SUPERUSER';
     adminCourses: public_AdminCourse[];
     adminOccurrences: public_AdminOccurrence[];
     courseMetadata: public_StudentCourseMetadata[];
@@ -2522,19 +2522,19 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly isAdmin: {
-                  readonly nativeType: 'bool';
-                  readonly codecId: 'pg/bool@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
-                  };
-                };
                 readonly name: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                };
+                readonly role: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'USER'>;
+                  };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -2560,6 +2560,10 @@ type ContractBase = Omit<
             readonly ExchangeType: {
               readonly kind: 'valueSet';
               readonly values: readonly ['DIRECT', 'MARKETPLACE', 'URGENT'];
+            };
+            readonly UserRole: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['USER', 'ADMIN', 'SUPERUSER'];
             };
           };
         };
@@ -4019,11 +4023,11 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly isAdmin: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
-              };
               readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly role: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -4147,8 +4151,8 @@ type ContractBase = Omit<
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly email: { readonly column: 'email' };
                 readonly id: { readonly column: 'id' };
-                readonly isAdmin: { readonly column: 'isAdmin' };
                 readonly name: { readonly column: 'name' };
+                readonly role: { readonly column: 'role' };
               };
             };
           };
@@ -4177,6 +4181,14 @@ type ContractBase = Omit<
               { readonly name: 'DIRECT'; readonly value: 'DIRECT' },
               { readonly name: 'MARKETPLACE'; readonly value: 'MARKETPLACE' },
               { readonly name: 'URGENT'; readonly value: 'URGENT' },
+            ];
+          };
+          readonly UserRole: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'USER'; readonly value: 'USER' },
+              { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
+              { readonly name: 'SUPERUSER'; readonly value: 'SUPERUSER' },
             ];
           };
         };
