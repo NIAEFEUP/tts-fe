@@ -46,29 +46,23 @@ if (!LOOPBACK_HOSTS.has(hostname)) {
 // --- Seed -------------------------------------------------------------------
 
 const summary = await db.transaction(async (tx) => {
-  // 1. Reset, children before parents (reverse FK order). Kept whole so a
-  //    database previously seeded with demo data is left completely clean.
-  await tx.orm.public.StudentCourseMetadata.where({}).deleteAll()
-  await tx.orm.public.ExchangeItem.where({}).deleteAll()
-  await tx.orm.public.ExchangeRequest.where({}).deleteAll()
-  await tx.orm.public.EnrollmentRequestOption.where({}).deleteAll()
-  await tx.orm.public.EnrollmentRequest.where({}).deleteAll()
-  await tx.orm.public.AdminOccurrence.where({}).deleteAll()
-  await tx.orm.public.AdminCourse.where({}).deleteAll()
-  await tx.orm.public.ExchangePeriod.where({}).deleteAll()
-  await tx.orm.public.SlotProfessor.where({}).deleteAll()
-  await tx.orm.public.SlotClass.where({}).deleteAll()
-  await tx.orm.public.ScheduleSlot.where({}).deleteAll()
-  await tx.orm.public.Professor.where({}).deleteAll()
-  await tx.orm.public.Enrollment.where({}).deleteAll()
-  await tx.orm.public.Class.where({}).deleteAll()
-  await tx.orm.public.Occurrence.where({}).deleteAll()
-  await tx.orm.public.CourseUnit.where({}).deleteAll()
-  await tx.orm.public.FacultyCourse.where({}).deleteAll()
-  await tx.orm.public.Course.where({}).deleteAll()
-  await tx.orm.public.Faculty.where({}).deleteAll()
-  await tx.orm.public.Session.where({}).deleteAll()
-  await tx.orm.public.User.where({}).deleteAll()
+  // 1. Reset. One TRUNCATE clears every table in the contract and, with
+  //    RESTART IDENTITY, resets the autoincrement sequences so a re-seed
+  //    always yields the same ids (CourseUnit starting at 1) instead of
+  //    ever-growing ones. CASCADE covers the FK graph without ordering.
+  const truncate = db.raw.sql`
+    TRUNCATE TABLE
+      "AdminCourse", "AdminOccurrence", "Class", "Course", "CourseUnit",
+      "Enrollment", "EnrollmentRequest", "EnrollmentRequestOption",
+      "ExchangeItem", "ExchangePeriod", "ExchangeRequest", "Faculty",
+      "FacultyCourse", "Occurrence", "PlannerState", "Professor",
+      "ScheduleSlot", "Session", "SlotClass", "SlotProfessor",
+      "StudentCourseMetadata", "User"
+    RESTART IDENTITY CASCADE
+  `
+    .affectedCount()
+    .build()
+  await tx.execute(truncate)
 
   // 2. University catalog, straight from the scraper fixture.
   await tx.orm.public.Faculty.create({
