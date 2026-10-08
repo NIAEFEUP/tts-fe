@@ -77,7 +77,7 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "tsc -b && vite build",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
     "preview": "vite preview"

@@ -8,7 +8,7 @@
     "start": "varlock run -- tsx src/main.ts",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b && tsc -p tsconfig.migrations.json",
     "test": "bun test",
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage",
@@ -39,6 +39,7 @@
     "varlock": "^1.21.1"
   },
   "devDependencies": {
+    "@types/bun": "^1.4.2",
     "@types/node": "^25.6.2",
     "oxlint": "^1.86.0",
     "prisma": "8.0.0-rc.18",

@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "outDir": "out-tsc/scripts",
+    "rootDir": "scripts",
+    "tsBuildInfoFile": "out-tsc/scripts/tsconfig.scripts.tsbuildinfo",
+    "types": ["node", "bun"]
+  },
+  "include": ["scripts", "scripts/**/*.json"]
+}
