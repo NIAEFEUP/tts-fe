@@ -24,7 +24,7 @@ so nothing maps to it.
 | *(Django `django_session`)* | `Session` | Opaque random token in an httpOnly cookie. Replaces Django's session table. The PK stores **sha256(token)**, never the raw cookie value. |
 
 `ExchangeAdmin` had **no successor table** — it was a one-column username list,
-and it becomes `User.isAdmin`.
+and it becomes the global access tier on `User.role` (`UserRole`).
 
 ### University catalog
 
@@ -53,7 +53,7 @@ and it becomes `User.isAdmin`.
 | Legacy table | New model | Change |
 |---|---|---|
 | `exchange_expirations` | `ExchangePeriod` | Now occurrence-scoped only (composite FK `(occurrenceId, occurrenceYear) → Occurrence(id, year)`). `is_course_expiration` **deleted**; `active_date`/`end_date` renamed `startsAt`/`endsAt`. |
-| `exchange_admin` | — | **Dropped** → `User.isAdmin`. |
+| `exchange_admin` | — | **Dropped** → `User.role` (`UserRole`). |
 | `exchange_admin_courses` | `AdminCourse` | `exchange_admin` FK → `userId`. |
 | `exchange_admin_course_units` | `AdminOccurrence` | `exchange_admin` FK → `userId`; the row is now scoped to an *occurrence*, not an abstract course unit (composite `(occurrenceId, occurrenceYear)`). |
 | `info` | — | **Dropped.** The scrape is now a manual populate step, so data-freshness signaling has no reader (the only frontend consumer, `/info/`, was dead code — commented-out cache-invalidation logic). |
