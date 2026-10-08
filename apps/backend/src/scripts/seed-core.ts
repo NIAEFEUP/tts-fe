@@ -48,7 +48,9 @@ function assertLocalDatabase(): void {
 
 // --- Demo roster ------------------------------------------------------------
 
-const ADMIN_ID = 'admin'
+// The demo admin is whoever sets `ADMIN_UP` (an NMEC / "up" number) in their
+// environment; falls back to a generic `admin` account. See `.env.schema`.
+const ADMIN_ID = process.env.ADMIN_UP?.trim() || 'admin'
 
 // NMECs end in `999`: the frontend maps any username ending in 999 to a mock
 // avatar (see apps/frontend/src/api/services/studentInfo.ts).
@@ -181,8 +183,11 @@ type ExchangeItemInsert = {
 
 async function seedDemo(tx: Tx): Promise<DemoSummary> {
   // 1. Users: one admin plus the student roster.
+  if (STUDENTS.some((s) => s.nmec === ADMIN_ID)) {
+    throw new Error(`ADMIN_UP ("${ADMIN_ID}") collides with a seeded student NMEC.`)
+  }
   await tx.orm.public.User.createAll([
-    { id: ADMIN_ID, email: 'admin@fe.up.pt', name: 'Admin TTS', isAdmin: true },
+    { id: ADMIN_ID, email: `${ADMIN_ID}@fe.up.pt`, name: 'Admin TTS', isAdmin: true },
     ...STUDENTS.map((s) => ({
       id: s.nmec,
       email: `up${s.nmec}@fe.up.pt`,

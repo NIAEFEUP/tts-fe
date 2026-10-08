@@ -63,6 +63,9 @@ they are safe to re-run and always produce the same deterministic ids
   by `bun run catalog:extract` (which reads the repo-root `database.db`).
 - The **mock layer** is hand-authored and covers **L.EIC and M.EIC only** — MESW
   is in the catalog but is not part of the exchange feature.
+- The demo admin is **you**: set `ADMIN_UP` to your NMEC ("up" number) in `.env`
+  and `db:seed:demo` seeds that account with `isAdmin = true`. It is declared in
+  [`.env.schema`](./.env.schema) and defaults to a generic `admin` account.
 - Both seeds refuse to run unless `DATABASE_URL` points at a loopback host.
 
 ---
