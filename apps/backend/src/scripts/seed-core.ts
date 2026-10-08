@@ -49,8 +49,17 @@ function assertLocalDatabase(): void {
 // --- Demo roster ------------------------------------------------------------
 
 // The demo admin is whoever sets `ADMIN_UP` (an NMEC / "up" number) in their
-// environment; falls back to a generic `admin` account. See `.env.schema`.
+// environment; falls back to a generic `admin` account. Its role comes from
+// `ADMIN_ROLE` (USER | ADMIN | SUPERUSER, default ADMIN). See `.env.schema`.
 const ADMIN_ID = process.env.ADMIN_UP?.trim() || 'admin'
+
+const USER_ROLES = ['USER', 'ADMIN', 'SUPERUSER'] as const
+type UserRole = (typeof USER_ROLES)[number]
+
+const ADMIN_ROLE = (process.env.ADMIN_ROLE?.trim().toUpperCase() || 'ADMIN') as UserRole
+if (!USER_ROLES.includes(ADMIN_ROLE)) {
+  throw new Error(`ADMIN_ROLE must be one of ${USER_ROLES.join(', ')} (got "${process.env.ADMIN_ROLE}").`)
+}
 
 // NMECs end in `999`: the frontend maps any username ending in 999 to a mock
 // avatar (see apps/frontend/src/api/services/studentInfo.ts).
@@ -187,12 +196,11 @@ async function seedDemo(tx: Tx): Promise<DemoSummary> {
     throw new Error(`ADMIN_UP ("${ADMIN_ID}") collides with a seeded student NMEC.`)
   }
   await tx.orm.public.User.createAll([
-    { id: ADMIN_ID, email: `${ADMIN_ID}@fe.up.pt`, name: 'Admin TTS', isAdmin: true },
+    { id: ADMIN_ID, email: `${ADMIN_ID}@fe.up.pt`, name: 'Admin TTS', role: ADMIN_ROLE },
     ...STUDENTS.map((s) => ({
       id: s.nmec,
       email: `up${s.nmec}@fe.up.pt`,
       name: s.name,
-      isAdmin: false,
     })),
   ])
 

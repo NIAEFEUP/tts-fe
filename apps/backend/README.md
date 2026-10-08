@@ -64,8 +64,9 @@ they are safe to re-run and always produce the same deterministic ids
 - The **mock layer** is hand-authored and covers **L.EIC and M.EIC only** — MESW
   is in the catalog but is not part of the exchange feature.
 - The demo admin is **you**: set `ADMIN_UP` to your NMEC ("up" number) in `.env`
-  and `db:seed:demo` seeds that account with `isAdmin = true`. It is declared in
-  [`.env.schema`](./.env.schema) and defaults to a generic `admin` account.
+  and `db:seed:demo` seeds that account. Its role is set by `ADMIN_ROLE`
+  (`USER` | `ADMIN` | `SUPERUSER`, default `ADMIN`). Both are declared in
+  [`.env.schema`](./.env.schema).
 - Both seeds refuse to run unless `DATABASE_URL` points at a loopback host.
 
 ---
