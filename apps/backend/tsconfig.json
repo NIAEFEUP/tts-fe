@@ -21,6 +21,7 @@
     ]
   },
   "exclude": [
-    "prisma-composer.config.ts"
+    "prisma-composer.config.ts",
+    "scripts"
   ]
 }

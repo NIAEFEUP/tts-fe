@@ -29,3 +29,6 @@ yarn-error.log*
 devenv.local.nix
 devenv.local.yaml
 .direnv
+
+# scraper catalog dump (raw SQLite); the seeder reads the committed fixture instead
+database.db
