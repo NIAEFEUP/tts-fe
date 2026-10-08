@@ -61,6 +61,7 @@ model User {
   adminCourses       AdminCourse[]
   adminOccurrences   AdminOccurrence[]
   courseMetadata     StudentCourseMetadata[]
+  plannerStates      PlannerState[]
 }
 
 // Opaque random token in an httpOnly cookie. Chosen over JWT so sessions are
@@ -509,4 +510,37 @@ model StudentCourseMetadata {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@id([nmec, courseId])
+}
+
+// ===========================================================================
+// 8. PLANNER STATE — UI choice, kept as a free-form blob
+// ===========================================================================
+
+// The student's cross-device planner: which course units they've picked,
+// and for each of the (up to 10) timetable drafts, which class they chose
+// per picked course unit. Everything per-device (theme, language, locked
+// toggles, hidden lesson types, the "active draft" pointer, draft icons
+// and names) stays in localStorage.
+//
+// `state` is a hash of the planner object tree (e.g. sha256 hex of the
+// canonical JSON) produced by the FE. Storing the hash (a short opaque
+// string) instead of the JSON keeps writes cheap, makes "no change" writes
+// true no-ops, and gives the FE a single token to merge on. The FE is the
+// one that canonicalizes and hashes — the BE is dumb storage.
+//
+// Last writer wins per row; cross-device conflict resolution is the
+// client's problem (compare `updatedAt` against the local last-write
+// timestamp before overwriting local state).
+//
+// Year-scoped: a row exists per (user, academic year). Old years are
+// kept so a student returning later can still see what they planned.
+model PlannerState {
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  year          Int // e.g. 2025 = academic year 2025/26
+
+  state         String // hash of the planner state, owned by the FE
+  updatedAt     temporal.updatedAt()
+
+  @@id([userId, year])
 }

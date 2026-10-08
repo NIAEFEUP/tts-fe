@@ -34,9 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'f09b3a203ecdd38cc9a0b25a41802d6a320a5d01081e38438860eb8632b5cc34'>;
+  StorageHashBase<'e956c2c8760e072447efb0eab414aefd33ca29c4433a281f95bd8dbfa260bf5f'>;
 export type ExecutionHash =
-  ExecutionHashBase<'c66fe1b72931ece1bd316ea30a35348f25d2b435f710a43022de36b911c86804'>;
+  ExecutionHashBase<'a93cc47e9fb55fdfbeaee1b903aa20da580802e0aa0921d8b0c03fd01a17ac75'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -352,6 +352,12 @@ export type FieldOutputTypes = {
       readonly url: CodecTypes['pg/text@1']['output'];
       readonly year: CodecTypes['pg/int4@1']['output'];
     };
+    readonly PlannerState: {
+      readonly state: CodecTypes['pg/text@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly userId: CodecTypes['pg/text@1']['output'];
+      readonly year: CodecTypes['pg/int4@1']['output'];
+    };
     readonly Professor: {
       readonly acronym: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -495,6 +501,12 @@ export type FieldInputTypes = {
       readonly hash: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly url: CodecTypes['pg/text@1']['input'];
+      readonly year: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly PlannerState: {
+      readonly state: CodecTypes['pg/text@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly userId: CodecTypes['pg/text@1']['input'];
       readonly year: CodecTypes['pg/int4@1']['input'];
     };
     readonly Professor: {
@@ -642,6 +654,12 @@ export type StorageColumnTypes = {
       readonly url: CodecTypes['pg/text@1']['output'];
       readonly year: CodecTypes['pg/int4@1']['output'];
     };
+    readonly PlannerState: {
+      readonly state: CodecTypes['pg/text@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly userId: CodecTypes['pg/text@1']['output'];
+      readonly year: CodecTypes['pg/int4@1']['output'];
+    };
     readonly Professor: {
       readonly acronym: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -785,6 +803,12 @@ export type StorageColumnInputTypes = {
       readonly hash: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly url: CodecTypes['pg/text@1']['input'];
+      readonly year: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly PlannerState: {
+      readonly state: CodecTypes['pg/text@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly userId: CodecTypes['pg/text@1']['input'];
       readonly year: CodecTypes['pg/int4@1']['input'];
     };
     readonly Professor: {
@@ -988,6 +1012,14 @@ export namespace Models {
     readonly [RelationKeys]?:
       'admins' | 'classes' | 'course' | 'courseUnit' | 'enrollments' | 'items' | 'periods';
   };
+  export type public_PlannerState = {
+    state: CodecTypes['pg/text@1']['output'];
+    updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    userId: CodecTypes['pg/text@1']['output'];
+    year: CodecTypes['pg/int4@1']['output'];
+    user: public_User;
+    readonly [RelationKeys]?: 'user';
+  };
   export type public_Professor = {
     acronym: CodecTypes['pg/text@1']['output'] | null;
     id: CodecTypes['pg/int4@1']['output'];
@@ -1050,6 +1082,7 @@ export namespace Models {
     exchangeItems: public_ExchangeItem[];
     exchangesCreated: public_ExchangeRequest[];
     exchangesTargeted: public_ExchangeRequest[];
+    plannerStates: public_PlannerState[];
     sessions: public_Session[];
     readonly [RelationKeys]?:
       | 'adminCourses'
@@ -1060,6 +1093,7 @@ export namespace Models {
       | 'exchangeItems'
       | 'exchangesCreated'
       | 'exchangesTargeted'
+      | 'plannerStates'
       | 'sessions';
   };
 }
@@ -1080,6 +1114,7 @@ export declare const models: {
     Faculty: Models.public_Faculty;
     FacultyCourse: Models.public_FacultyCourse;
     Occurrence: Models.public_Occurrence;
+    PlannerState: Models.public_PlannerState;
     Professor: Models.public_Professor;
     ScheduleSlot: Models.public_ScheduleSlot;
     Session: Models.public_Session;
@@ -2132,6 +2167,54 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly PlannerState: {
+              columns: {
+                readonly state: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly updatedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                };
+                readonly userId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly year: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['userId', 'year'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'PlannerState_userId_idx_a489d58a';
+                  readonly prefix: 'PlannerState_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'PlannerState';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'User';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly Professor: {
               columns: {
                 readonly acronym: {
@@ -2535,6 +2618,10 @@ type ContractBase = Omit<
     readonly Occurrence: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Occurrence';
+    };
+    readonly PlannerState: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'PlannerState';
     };
     readonly Professor: { readonly namespace: 'public' & NamespaceId; readonly model: 'Professor' };
     readonly ScheduleSlot: {
@@ -3582,6 +3669,50 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly PlannerState: {
+            readonly fields: {
+              readonly state: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly year: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'PlannerState';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly state: { readonly column: 'state' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly userId: { readonly column: 'userId' };
+                readonly year: { readonly column: 'year' };
+              };
+            };
+          };
           readonly Professor: {
             readonly fields: {
               readonly acronym: {
@@ -3986,6 +4117,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['targetUserId'];
                 };
               };
+              readonly plannerStates: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'PlannerState';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
               readonly sessions: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -4125,6 +4267,15 @@ type ContractBase = Omit<
             readonly column: 'updatedAt';
             readonly namespace: 'public';
             readonly table: 'ExchangeRequest';
+          };
+        },
+        {
+          readonly onCreate: { readonly id: 'instantNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'instantNow'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly column: 'updatedAt';
+            readonly namespace: 'public';
+            readonly table: 'PlannerState';
           };
         },
       ];

@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/f09b3a203ecdd38cc9a0b25a41802d6a320a5d01081e38438860eb8632b5cc34/contract';
-import endContract from '../../snapshots/f09b3a203ecdd38cc9a0b25a41802d6a320a5d01081e38438860eb8632b5cc34/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/e956c2c8760e072447efb0eab414aefd33ca29c4433a281f95bd8dbfa260bf5f/contract';
+import endContract from '../../snapshots/e956c2c8760e072447efb0eab414aefd33ca29c4433a281f95bd8dbfa260bf5f/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -291,6 +291,20 @@ export default class M extends Migration<never, End> {
           col('year', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
         ],
         constraints: [primaryKey(['id', 'year'])],
+      }),
+      this.createTable({
+        schema: 'public',
+        table: 'PlannerState',
+        columns: [
+          col('state', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('updatedAt', 'timestamptz', {
+            notNull: true,
+            codecRef: { codecId: 'pg/timestamptz-temporal@1' },
+          }),
+          col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('year', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+        ],
+        constraints: [primaryKey(['userId', 'year'])],
       }),
       this.createTable({
         schema: 'public',
@@ -587,6 +601,12 @@ export default class M extends Migration<never, End> {
       }),
       this.createIndex({
         schema: 'public',
+        table: 'PlannerState',
+        index: 'PlannerState_userId_idx_a489d58a',
+        columns: ['userId'],
+      }),
+      this.createIndex({
+        schema: 'public',
         table: 'Session',
         index: 'Session_expiresAt_idx_6b6b8c10',
         columns: ['expiresAt'],
@@ -860,6 +880,16 @@ export default class M extends Migration<never, End> {
           name: 'Occurrence_courseId_fkey',
           columns: ['courseId'],
           references: { schema: 'public', table: 'Course', columns: ['id'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'PlannerState',
+        foreignKey: {
+          name: 'PlannerState_userId_fkey',
+          columns: ['userId'],
+          references: { schema: 'public', table: 'User', columns: ['id'] },
           onDelete: 'cascade',
         },
       }),
