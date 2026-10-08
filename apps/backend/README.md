@@ -65,8 +65,9 @@ they are safe to re-run and always produce the same deterministic ids
   is in the catalog but is not part of the exchange feature.
 - The demo admin is **you**: set `ADMIN_UP` to your NMEC ("up" number) in `.env`
   and `db:seed:demo` seeds that account. Its role is set by `ADMIN_ROLE`
-  (`USER` | `ADMIN` | `SUPERUSER`, default `ADMIN`). Both are declared in
-  [`.env.schema`](./.env.schema).
+  (`USER` | `ADMIN` | `SUPERUSER`, default `ADMIN`). With `ADMIN` or `SUPERUSER`
+  the account is seeded as admin for every course and occurrence; with `USER` it
+  gets no admin scope. Both vars are declared in [`.env.schema`](./.env.schema).
 - Both seeds refuse to run unless `DATABASE_URL` points at a loopback host.
 
 ---

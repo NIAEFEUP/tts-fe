@@ -178,6 +178,8 @@ type DemoSummary = {
   exchangeItems: number
   enrollmentRequests: number
   enrollmentRequestOptions: number
+  adminCourses: number
+  adminOccurrences: number
 }
 
 type ExchangeItemInsert = {
@@ -431,10 +433,22 @@ async function seedDemo(tx: Tx): Promise<DemoSummary> {
 
   await tx.orm.public.EnrollmentRequestOption.createAll(enrollmentRequestOptionRows)
 
-  // 8. The admin can see the exchange courses (L.EIC, M.EIC).
-  await tx.orm.public.AdminCourse.createAll(
-    fixture.courses.filter((c) => DEMO_COURSE_IDS.has(c.id)).map((c) => ({ userId: ADMIN_ID, courseId: c.id })),
-  )
+  // 8. Admin scope. An ADMIN/SUPERUSER is admin for everything — every course
+  //    and every occurrence. A plain USER gets no admin scope at all.
+  let adminCourses = 0
+  let adminOccurrences = 0
+  if (ADMIN_ROLE !== 'USER') {
+    await tx.orm.public.AdminCourse.createAll(fixture.courses.map((c) => ({ userId: ADMIN_ID, courseId: c.id })))
+    await tx.orm.public.AdminOccurrence.createAll(
+      fixture.occurrences.map((o) => ({
+        userId: ADMIN_ID,
+        occurrenceId: o.id,
+        occurrenceYear: o.year,
+      })),
+    )
+    adminCourses = fixture.courses.length
+    adminOccurrences = fixture.occurrences.length
+  }
 
   return {
     users: 1 + STUDENTS.length,
@@ -445,6 +459,8 @@ async function seedDemo(tx: Tx): Promise<DemoSummary> {
     exchangeItems: exchangeItemRows.length,
     enrollmentRequests: 4,
     enrollmentRequestOptions: enrollmentRequestOptionRows.length,
+    adminCourses,
+    adminOccurrences,
   }
 }
 
