@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'fda4300bbb1ed583347cf82a396e766437fe71ec568356f983431a24dacef546'>;
+  StorageHashBase<'e956c2c8760e072447efb0eab414aefd33ca29c4433a281f95bd8dbfa260bf5f'>;
 export type ExecutionHash =
   ExecutionHashBase<'a93cc47e9fb55fdfbeaee1b903aa20da580802e0aa0921d8b0c03fd01a17ac75'>;
 export type ProfileHash =
@@ -353,8 +353,7 @@ export type FieldOutputTypes = {
       readonly year: CodecTypes['pg/int4@1']['output'];
     };
     readonly PlannerState: {
-      readonly schemaVersion: CodecTypes['pg/int4@1']['output'];
-      readonly state: CodecTypes['pg/json@1']['output'];
+      readonly state: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
       readonly year: CodecTypes['pg/int4@1']['output'];
@@ -505,8 +504,7 @@ export type FieldInputTypes = {
       readonly year: CodecTypes['pg/int4@1']['input'];
     };
     readonly PlannerState: {
-      readonly schemaVersion: CodecTypes['pg/int4@1']['input'];
-      readonly state: CodecTypes['pg/json@1']['input'];
+      readonly state: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
       readonly year: CodecTypes['pg/int4@1']['input'];
@@ -657,8 +655,7 @@ export type StorageColumnTypes = {
       readonly year: CodecTypes['pg/int4@1']['output'];
     };
     readonly PlannerState: {
-      readonly schemaVersion: CodecTypes['pg/int4@1']['output'];
-      readonly state: CodecTypes['pg/json@1']['output'];
+      readonly state: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
       readonly year: CodecTypes['pg/int4@1']['output'];
@@ -809,8 +806,7 @@ export type StorageColumnInputTypes = {
       readonly year: CodecTypes['pg/int4@1']['input'];
     };
     readonly PlannerState: {
-      readonly schemaVersion: CodecTypes['pg/int4@1']['input'];
-      readonly state: CodecTypes['pg/json@1']['input'];
+      readonly state: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
       readonly year: CodecTypes['pg/int4@1']['input'];
@@ -1017,8 +1013,7 @@ export namespace Models {
       'admins' | 'classes' | 'course' | 'courseUnit' | 'enrollments' | 'items' | 'periods';
   };
   export type public_PlannerState = {
-    schemaVersion: CodecTypes['pg/int4@1']['output'];
-    state: CodecTypes['pg/json@1']['output'];
+    state: CodecTypes['pg/text@1']['output'];
     updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     userId: CodecTypes['pg/text@1']['output'];
     year: CodecTypes['pg/int4@1']['output'];
@@ -2174,18 +2169,9 @@ type ContractBase = Omit<
             };
             readonly PlannerState: {
               columns: {
-                readonly schemaVersion: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/int4@1', 1>;
-                  };
-                };
                 readonly state: {
-                  readonly nativeType: 'json';
-                  readonly codecId: 'pg/json@1';
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
                 readonly updatedAt: {
@@ -3685,13 +3671,9 @@ type ContractBase = Omit<
           };
           readonly PlannerState: {
             readonly fields: {
-              readonly schemaVersion: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
               readonly state: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/json@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly updatedAt: {
                 readonly nullable: false;
@@ -3724,7 +3706,6 @@ type ContractBase = Omit<
               readonly table: 'PlannerState';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly schemaVersion: { readonly column: 'schemaVersion' };
                 readonly state: { readonly column: 'state' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
                 readonly userId: { readonly column: 'userId' };

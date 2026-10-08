@@ -81,7 +81,7 @@ and it becomes `User.isAdmin`.
 
 | Legacy table | New model | Change |
 |---|---|---|
-| *(none)* | `PlannerState` | **New.** Stores the planner state (`pickedCourses` + `multipleOptions`) as a free-form JSON blob, one row per (user, academic year). The Django backend had no cross-device sync — this was always localStorage on the FE, which is why this model has no legacy source. The wire shape is owned by the FE; the BE just stores the blob. `schemaVersion` is an escape hatch for breaking shape changes; `updatedAt` (auto-bumped via `temporal.updatedAt()`) backs the FE's last-writer-wins merge. |
+| *(none)* | `PlannerState` | **New.** Stores the planner state as a `text` hash (the FE canonicalizes the planner object tree and hashes it), one row per (user, academic year). The Django backend had no cross-device sync — this was always localStorage on the FE, which is why this model has no legacy source. The BE is dumb storage: it stores whatever opaque string the FE sends. `updatedAt` (auto-bumped via `temporal.updatedAt()`) backs the FE's last-writer-wins merge; the hash itself lets the FE cheaply detect "no real change" writes. |
 
 ---
 

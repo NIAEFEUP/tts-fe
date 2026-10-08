@@ -522,9 +522,11 @@ model StudentCourseMetadata {
 // toggles, hidden lesson types, the "active draft" pointer, draft icons
 // and names) stays in localStorage.
 //
-// The wire shape is owned by the frontend — the BE just stores what it's
-// given. `schemaVersion` is a tiny escape hatch so the FE can bump it on
-// a breaking shape change and migrate or reset on read.
+// `state` is a hash of the planner object tree (e.g. sha256 hex of the
+// canonical JSON) produced by the FE. Storing the hash (a short opaque
+// string) instead of the JSON keeps writes cheap, makes "no change" writes
+// true no-ops, and gives the FE a single token to merge on. The FE is the
+// one that canonicalizes and hashes — the BE is dumb storage.
 //
 // Last writer wins per row; cross-device conflict resolution is the
 // client's problem (compare `updatedAt` against the local last-write
@@ -537,8 +539,7 @@ model PlannerState {
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   year          Int // e.g. 2025 = academic year 2025/26
 
-  state         Json
-  schemaVersion Int      @default(1)
+  state         String // hash of the planner state, owned by the FE
   updatedAt     temporal.updatedAt()
 
   @@id([userId, year])

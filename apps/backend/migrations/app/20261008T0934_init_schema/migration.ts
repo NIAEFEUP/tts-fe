@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/fda4300bbb1ed583347cf82a396e766437fe71ec568356f983431a24dacef546/contract';
-import endContract from '../../snapshots/fda4300bbb1ed583347cf82a396e766437fe71ec568356f983431a24dacef546/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/e956c2c8760e072447efb0eab414aefd33ca29c4433a281f95bd8dbfa260bf5f/contract';
+import endContract from '../../snapshots/e956c2c8760e072447efb0eab414aefd33ca29c4433a281f95bd8dbfa260bf5f/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -296,12 +296,7 @@ export default class M extends Migration<never, End> {
         schema: 'public',
         table: 'PlannerState',
         columns: [
-          col('schemaVersion', 'int4', {
-            notNull: true,
-            default: lit(1),
-            codecRef: { codecId: 'pg/int4@1' },
-          }),
-          col('state', 'json', { notNull: true, codecRef: { codecId: 'pg/json@1' } }),
+          col('state', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('updatedAt', 'timestamptz', {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },

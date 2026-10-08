@@ -587,7 +587,7 @@
     "execute": [
       {
         "description": "create table \"PlannerState\"",
-        "sql": "CREATE TABLE \"public\".\"PlannerState\" (\n  \"schemaVersion\" int4 DEFAULT 1 NOT NULL,\n  \"state\" json NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  \"year\" int4 NOT NULL,\n  PRIMARY KEY (\"userId\", \"year\")\n)",
+        "sql": "CREATE TABLE \"public\".\"PlannerState\" (\n  \"state\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  \"year\" int4 NOT NULL,\n  PRIMARY KEY (\"userId\", \"year\")\n)",
         "params": []
       }
     ],
