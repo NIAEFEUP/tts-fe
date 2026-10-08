@@ -16,10 +16,10 @@
 | Auth            | SIGARRA OIDC (reused)      | —        |
 | Database        | PostgreSQL                 | 16       |
 | Package manager | Bun                        | built-in |
-| Linting         | ESLint + typescript-eslint | 9.x      |
+| Linting         | oxlint                     | 1.x      |
 | Testing         | Bun test                   | built-in |
 | CI/CD           | GitHub Actions             | —        |
-| Deployment      | Railway or Fly.io          | —        |
+| Deployment      | Docker Compose + nginx      | —        |
 | Monitoring      | Sentry                     | —        |
 | API docs        | Scalar                     | —        |
 
@@ -35,7 +35,7 @@
 
 **Tradeoff:** Some Node.js packages don't work. Avoid legacy SDKs (like Mailjet's). Use modern, `fetch`-based libraries.
 
-> **Note:** The dev server currently runs via `tsx watch` (not native Bun) because some dependencies require Node.js. This is fine — `tsx` gives identical DX. When all deps are Bun-compatible, switch `dev` to `bun --watch run src/index.ts`.
+> **Note:** The dev server runs via `tsx watch` (as configured in `package.json`). This works fine when running `bun run dev` in the monorepo. We may switch to native Bun (`bun --watch run src/index.ts`) in the future if all dependencies become fully Bun-compatible.
 
 ---
 
@@ -71,16 +71,17 @@ Prisma 8 is *contract-first*. You write a `contract.prisma` file describing your
 **Setup (already done in this repo):**
 
 ```
-src/prisma/
+src/infrastructure/database/
 ├── contract.prisma   ← your schema, edit this
 ├── contract.json     ← generated, do not edit
 ├── contract.d.ts     ← generated, do not edit
-└── db.ts             ← singleton client, import from here
+├── prisma.ts         ← singleton client, import from here
+└── repositories/     ← map Prisma rows to domain entities here
 ```
 
 **First time:**
 ```bash
-# 1. Write models in src/prisma/contract.prisma
+# 1. Write models in src/infrastructure/database/contract.prisma
 # 2. Generate runtime artefacts
 bun run contract:emit
 
@@ -95,7 +96,7 @@ bun run migration:plan -- --name <slug>          # plan the migration
 bun run migrate                                  # apply it
 ```
 
-**The singleton client (`src/prisma/db.ts`):**
+**The singleton client (`src/infrastructure/database/prisma.ts`):**
 ```typescript
 import postgres from "@prisma/orm-postgres/runtime";
 import type { Contract } from "./contract.d.ts";
@@ -108,19 +109,23 @@ export const db = process.env.DATABASE_URL
 
 **Usage:**
 ```typescript
-import { db } from "./prisma/db";
+import { db } from "@/infrastructure/database/prisma";
 
-// ORM lane — fully typed, model-shaped
+// ORM lane — fully typed, model-shaped (models are PascalCase)
 const users = await db.orm.public.User.select("id", "email").all();
 const user  = await db.orm.public.User.create({ email: "alice@example.com" });
 
-// SQL builder lane — typed raw SQL
-const rows = await db.sql.public.user.select("id").where(f => f.email.eq("alice@example.com")).all();
+// SQL builder lane — typed SQL plans (keyed by TABLE name; ours are PascalCase)
+const plan = db.sql.public.User
+  .select("id", "email")
+  .where((f, fns) => fns.eq(f.email, "alice@example.com"))
+  .build();
+const rows = await db.runtime().query(plan);
 ```
 
 **Rules:**
-- One `db` singleton exported from `src/prisma/db.ts`
-- Never import `contract.json` or `contract.d.ts` directly outside `db.ts`
+- One `db` singleton exported from `src/infrastructure/database/prisma.ts`
+- Never import `contract.json` or `contract.d.ts` directly outside `prisma.ts`
 - Map `db` query results to domain entities in repositories — don't let Prisma types leak into `domain/`
 
 > **Note — Prisma Studio in v8:** Prisma 8 doesn't ship its own Studio, but you can launch the Prisma 7 Studio pointed directly at your database via `bun run db:studio`. It spins up `prisma@prev studio --url $DATABASE_URL` under the hood and gives you the same visual inspector.
@@ -259,11 +264,10 @@ SIGARRA_USERINFO_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-c
 
 | Provider | Free tier | Notes |
 |----------|-----------|-------|
-| **Railway** | $5 credit/month | Easiest setup, integrates with deployment |
 | **Supabase** | 500MB | Generous free tier, real-time features |
 | **Neon** | 0.5GB | Serverless, scales to zero |
 | **Prisma Postgres** | Free tier | Managed by Prisma, zero-config with Prisma 8 |
-| **Self-hosted** | — | Don't do this as a student team |
+| **Self-hosted (Docker)** | — | Works with any Docker-compatible host |
 
 > **Current dev setup:** The repo is already wired to a hosted Prisma Postgres instance (`db.prisma.io`) via `DATABASE_URL` in `.env`. This can stay for dev or be swapped for any PostgreSQL provider — Prisma 8 works with any standard PostgreSQL >= 15.
 
@@ -272,7 +276,9 @@ SIGARRA_USERINFO_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-c
 - Or use any of the hosted providers above for dev
 
 ```yaml
-# docker-compose.yaml
+# docker-compose.yaml (repo root) — host port 5434 avoids clashing with a
+# locally installed PostgreSQL on 5432; bound to loopback so dev credentials
+# are not exposed on the network.
 services:
   db:
     image: postgres:16
@@ -281,7 +287,7 @@ services:
       POSTGRES_PASSWORD: tts
       POSTGRES_DB: tts
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 volumes:
@@ -389,10 +395,11 @@ jobs:
 ```json
 {
   "scripts": {
-    "dev": "tsx watch --env-file .env src/index.ts",
-    "build": "bun build src/index.ts --outdir dist",
+    "dev": "tsx watch --env-file .env src/main.ts",
+    "build": "bun build src/main.ts --outfile dist/server.mjs --target=node",
     "start": "node dist/server.mjs",
-    "lint": "eslint .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "contract:emit": "prisma contract emit",
@@ -406,9 +413,9 @@ jobs:
 
 ---
 
-## 12. Deployment: Docker Compose + nginx
+## 12. Deployment: Docker + nginx
 
-Same approach as the current backend. Docker Compose orchestrates all services, nginx handles TLS termination and reverse proxying.
+We deploy using Docker Compose, with nginx handling TLS termination and reverse proxying. The exact service configuration will evolve as needed — keep it minimal and avoid over-specifying implementation details at this stage.
 
 **Services:**
 
@@ -607,17 +614,20 @@ Additional variables (e.g. SIGARRA OIDC, Resend, Sentry) will be added to the sc
 
 ## 17. Package.json
 
+The current manifest (kept in sync — the sections above list what gets added when each feature lands: `zod`, `resend`, `@sentry/bun`, `@elysiajs/swagger`):
+
 ```json
 {
   "name": "tts-be",
-  "version": "1.0.0",
-  "type": "module",
+  "private": true,
   "packageManager": "bun@1.4.1",
+  "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/index.ts",
-    "build": "bun build src/index.ts --outdir dist",
+    "dev": "tsx watch --env-file .env src/main.ts",
+    "build": "bun build src/main.ts --outfile dist/server.mjs --target=node",
     "start": "node dist/server.mjs",
-    "lint": "eslint .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "test:watch": "bun test --watch",
@@ -628,7 +638,7 @@ Additional variables (e.g. SIGARRA OIDC, Resend, Sentry) will be added to the sc
     "db:verify": "prisma db verify",
     "db:schema": "prisma db schema",
     "db:sign": "prisma db sign",
-    "db:studio": "node -e \"require('dotenv').config(); require('child_process').execSync('npx --yes prisma@prev studio --url ' + process.env.DATABASE_URL, {stdio: 'inherit'})\"",
+    "db:studio": "node -e \"require('dotenv').config(); const r = require('child_process').spawnSync('bun', ['x','--yes','prisma@prev','studio','--port','5555','--url',process.env.DATABASE_URL], {stdio:'inherit', cwd:'..'}); process.exit(r.status ?? 1)\"",
     "migrate": "prisma db migrate",
     "migrate:show": "prisma db migrate --show",
     "migration:plan": "prisma migration plan",
@@ -638,24 +648,19 @@ Additional variables (e.g. SIGARRA OIDC, Resend, Sentry) will be added to the sc
     "migration:ref:set": "prisma migration ref set"
   },
   "dependencies": {
-    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/cors": "^1.4.2",
     "@elysiajs/node": "^1.4.5",
-    "@elysiajs/swagger": "^1.2.0",
     "@prisma/orm-postgres": "8.0.0-rc.12",
-    "@sentry/bun": "^8.0.0",
     "elysia": "^1.4.28",
-    "resend": "^4.0.0",
-    "temporal-polyfill": "^1.0.4",
-    "zod": "^3.23.0"
+    "temporal-polyfill": "^1.0.4"
   },
   "devDependencies": {
-    "@types/bun": "latest",
     "@types/node": "^25.6.2",
-    "eslint": "^9.0.0",
+    "dotenv": "^16.0.0",
+    "oxlint": "^1.86.0",
     "prisma": "8.0.0-rc.18",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.0.0"
+    "typescript": "^5.9.3"
   }
 }
 ```
@@ -682,7 +687,7 @@ Additional variables (e.g. SIGARRA OIDC, Resend, Sentry) will be added to the sc
 | Redis | Not needed yet. Add if you need distributed caching or rate limiting. |
 | Message queue | Not needed yet. Fire-and-forget emails are fine for now. |
 | tRPC | REST is simpler. Can migrate later if needed. |
-| Docker (for app) | Railway/Fly.io handle this. Only use Docker for local PostgreSQL. |
+| Over-engineered infra | We use Docker Compose + nginx for deployment. Keep deployment configuration pragmatic and minimal. |
 | Feature flags | Not needed for a fresh launch. Add if you need gradual rollout. |
 
 ---
@@ -699,7 +704,7 @@ Additional variables (e.g. SIGARRA OIDC, Resend, Sentry) will be added to the sc
 | Auth | SIGARRA OIDC | Reuse existing university auth |
 | Database | PostgreSQL | Production-grade, JSONB, reliable |
 | Testing | Bun test | Built-in, fast, familiar API |
-| Deployment | Railway | Easiest setup, GitHub integration |
+| Deployment | Docker Compose + nginx | Containerized deployment with nginx for TLS termination |
 | Monitoring | Sentry | Free for open source, easy setup |
 | API docs | Scalar | Auto-generated, beautiful |
 

@@ -1,10 +1,559 @@
 // use prisma-8
 
-// Define your models here.
-// After adding models, run:
-//   bun run contract:emit   → generates contract.json + contract.d.ts
-//   bun run db:init         → applies schema to the DB for the first time
+// TTS Backend — database contract
 //
-// For subsequent schema changes:
-//   bun run migration:plan --name <slug>   → plan a migration
-//   bun run migrate                        → apply pending migrations
+// Design rule: one row per real-world thing, no duplicated strings, no flags
+// that can disagree with each other. Every legacy polymorphic branch
+// (getExchangeType, is_course_expiration, accepted+canceled booleans) is
+// replaced by a single enum column.
+//
+// ===========================================================================
+// Sigarra data model (mirrored by the sync job)
+// ===========================================================================
+//
+//   Course      → "the degree": LEIC, MIEIC, ...  one row per (sigarra id,
+//                  academic year). Sigarra's "course id" already changes across
+//                  years, so `Course.id` is the Sigarra course id alone.
+//
+//   CourseUnit  → "the subject": BD, COMP, ...   abstract, year-agnostic.
+//                  Sigarra exposes no stable id for this entity on the URLs
+//                  the sync hits — only the *occurrence* id (pv_ocorrencia_id)
+//                  is visible — so the PK is a synthetic serial. Multiple
+//                  courses (e.g. LEIC + MIEIC) can share one CourseUnit row.
+//
+//   Occurrence  → "this subject, this year, in this course":
+//                  BD at LEIC 2025/26, BD at MIEIC 2025/26, ...
+//                  PK is the Sigarra `pv_ocorrencia_id`. Sigarra reuses the
+//                  same occurrence id across academic years, so the PK is the
+//                  composite (id, year) and the natural key
+//                  (courseUnitId, year, courseId) rejects duplicate inserts
+//                  within a single sync run.
+//                  Classes / periods / admin / exchange items all hang off
+//                  Occurrence, not CourseUnit.
+//
+// ===========================================================================
+
+// ===========================================================================
+// 1. IDENTITY
+// ===========================================================================
+
+model User {
+  id    String @id // NMEC, e.g. "202301234"
+  // Nullable + unique: OIDC always provides it for real accounts, but a
+  // student referenced in a direct exchange may never have logged in. The
+  // exchange flow must still be able to create their shadow row (Postgres
+  // treats NULLs as distinct in unique indexes).
+  email String? @unique
+  name  String
+
+  // Global access tier. Strict hierarchy: SUPERUSER > ADMIN > USER. Anyone
+  // with ADMIN or above may open the admin panel; SUPERUSER additionally
+  // holds destructive / setup actions (delete user, drop a course, etc.).
+  // Scoped access (what they may actually act on) lives in
+  // AdminCourse / AdminOccurrence.
+  role    UserRole @default(USER)
+
+  createdAt DateTime @default(now())
+
+  enrollments        Enrollment[]
+  exchangesCreated   ExchangeRequest[]   @relation("ExchangeCreator")
+  exchangesTargeted  ExchangeRequest[]   @relation("ExchangeTarget")
+  exchangeItems      ExchangeItem[]
+  enrollmentRequests EnrollmentRequest[]
+  sessions           Session[]
+  adminCourses       AdminCourse[]
+  adminOccurrences   AdminOccurrence[]
+  courseMetadata     StudentCourseMetadata[]
+  plannerStates      PlannerState[]
+}
+
+// Opaque random token in an httpOnly cookie. Chosen over JWT so sessions are
+// revocable and CSRF protection already exists on the frontend.
+model Session {
+  // sha256 of the cookie token. The raw token is never persisted: a DB leak
+  // (backup, replica, logs) must not yield usable session cookies. Lookup
+  // hashes the cookie value; tokens are high-entropy so a fast hash suffices.
+  tokenHash String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ===========================================================================
+// 2. UNIVERSITY CATALOG — mirrored from Sigarra by a sync job
+// ===========================================================================
+
+model Faculty {
+  acronym String   @id // "FEUP"
+  name    String?
+
+  // Explicit join: a course can be offered by several faculties (e.g. MAP /
+  // PRODEB shared between faculties) and a faculty offers many courses.
+  // Prisma 8 has no implicit m2m.
+  courseLinks FacultyCourse[]
+}
+
+model Course {
+  id         Int      @id // Sigarra course id (already per academic year)
+  acronym    String // "L.EIC"
+  name       String
+  courseType String // "L" | "M" | "P"
+  year       Int // academic year, e.g. 2025
+  // Sigarra course page URL. No current FE component reads it (the Major type
+  // declares it), kept for the rewrite — linking a course page from the
+  // picker is a likely use. plan_url is gone: zero consumers.
+  url        String
+
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+
+  facultyLinks FacultyCourse[]
+  occurrences  Occurrence[]
+  admins       AdminCourse[]
+  units        CourseUnit[]
+
+  @@index([year])
+}
+
+// Explicit m2m between Faculty and Course. Prisma 8 has no implicit m2m.
+model FacultyCourse {
+  facultyId String
+  faculty   Faculty @relation(fields: [facultyId], references: [acronym], onDelete: Cascade)
+  courseId  Int
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([facultyId, courseId])
+  @@index([courseId])
+}
+
+// Abstract course unit (year-agnostic). The yearly, course-scoped facts
+// (classes, schedule, periods, admin scope) live on Occurrence.
+model CourseUnit {
+  // Synthetic: Sigarra exposes no stable course-unit id on the URLs the
+  // sync hits — only `pv_ocorrencia_id` (the occurrence id) is visible.
+  // A synthetic serial keeps the row stable across year rollovers, so an
+  // Occurrence in 2025/26 and the same logical unit in 2026/27 share a row.
+  id       Int    @id @default(autoincrement())
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  acronym  String // "BD"
+  name     String
+  semester Int // 1 | 2
+  // `year` and `ects` moved to Occurrence: `year` is per-occurrence and
+  // `ects` can vary across courses sharing a CourseUnit (BD for LEIC and BD
+  // for MIEIC carry different weights in the plans).
+  // `hash` and `url` moved to Occurrence too — the hash backs the planner's
+  // timetable-change detection, which is per-occurrence; the URL is the
+  // Sigarra ficha_uc_view, which is per-occurrence.
+
+  createdAt DateTime @default(now())
+
+  occurrences Occurrence[]
+
+  @@index([courseId])
+}
+
+// One row per (CourseUnit, Course, academic year) tuple in the Sigarra
+// catalog. `id` is Sigarra's `pv_ocorrencia_id`. The PK is the composite
+// (id, year) because Sigarra reuses the same occurrence id across academic
+// years; the unique (courseUnitId, year, courseId) rejects duplicate
+// inserts inside a single sync run.
+model Occurrence {
+  id          Int
+  courseUnitId Int
+  courseUnit   CourseUnit @relation(fields: [courseUnitId], references: [id], onDelete: Cascade)
+  courseId    Int
+  course      Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  year     Int // academic year, e.g. 2025
+  ects     Float
+  // Sigarra occurrence page URL (ucurr_geral.ficha_uc_view?pv_ocorrencia_id=…).
+  url      String
+  // Backs GET /occurrence/hash?ids=... — lets the planner detect timetable
+  // changes without re-fetching every occurrence.
+  hash String @default("")
+
+  classes      Class[]
+  admins      AdminOccurrence[]
+  periods     ExchangePeriod[]
+  enrollments EnrollmentRequestOption[]
+  items       ExchangeItem[]
+
+  @@id([id, year])
+  @@unique([courseUnitId, year, courseId])
+  @@index([courseId, year])
+}
+
+model Class {
+  id           Int @id @default(autoincrement()) // Sigarra has no class id
+  // FK is the composite (occurrenceId, occurrenceYear) — the Occurrence PK.
+  // This is what makes the ExchangeItem composite FKs
+  // (fromClassId/toClassId, occurrenceId, occurrenceYear) → Class(id, occurrenceId, occurrenceYear)
+  // meaningful: a referenced class is guaranteed to belong to the same
+  // occurrence as the exchange item.
+  occurrenceId    Int
+  occurrenceYear  Int
+  occurrence      Occurrence @relation(fields: [occurrenceId, occurrenceYear], references: [id, year])
+
+  name      String // "1LEIC01"
+  vacancies Int?
+
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+
+  slotClasses       SlotClass[]
+  enrollments       Enrollment[]
+  exchangeItemsFrom ExchangeItem[] @relation("ExchangeItemFromClass")
+  exchangeItemsTo   ExchangeItem[] @relation("ExchangeItemToClass")
+
+  @@unique([name, occurrenceId, occurrenceYear])
+  // FK target for ExchangeItem.fromClass/toClass composite FKs.
+  @@unique([id, occurrenceId, occurrenceYear])
+}
+
+model Professor {
+  id      Int     @id // Sigarra professor code
+  acronym String?
+  // Nullable: Sigarra person entries can lack a name (legacy column was
+  // nullable too) — the sync adapter must not fail on them.
+  name    String?
+
+  slots SlotProfessor[]
+}
+
+// One row per Sigarra lesson (its `id` is the Sigarra lesson id). A lesson can
+// serve MANY classes — a shared "T" lecture for 1LEIC01..10 is the norm at
+// FEUP, not an edge case (legacy marked these `is_composed`, and the sync
+// writes one slot plus one slot_class row per class). The class link
+// therefore lives in SlotClass, not here: folding it into a single classId
+// would make a shared lesson unrepresentable.
+model ScheduleSlot {
+  id Int @id
+
+  lessonType String // "T" | "TP" | "P" | "PL" | "OT" | "O" | "E"
+  // 0 = Sunday. The sigarra `dia` -> 0-based conversion belongs in the
+  // Sigarra adapter, never in a query.
+  dayOfWeek Int
+  // Minutes since midnight. Legacy used decimal(3,1) hours, which made
+  // exchange_overlap() compare floats; integers remove that entirely.
+  startMinute Int
+  durationMin Int
+  location    String?
+
+  slotClasses SlotClass[]
+  professors  SlotProfessor[]
+}
+
+// Explicit join: one lesson may appear in many class schedules and one class
+// has many lessons. Kept as its own table (legacy `slot_class`) because the
+// many-to-many is real.
+model SlotClass {
+  slotId  Int
+  slot    ScheduleSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  classId Int
+  class   Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([slotId, classId])
+  @@index([classId])
+}
+
+// Prisma 8 has no implicit m2m.
+model SlotProfessor {
+  slotId      Int
+  professorId Int
+  slot        ScheduleSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  professor   Professor    @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@id([slotId, professorId])
+  @@index([professorId])
+}
+
+// ===========================================================================
+// 3. STUDENT STATE
+// ===========================================================================
+
+// Local mirror of the student's current class assignments. This is what makes
+// exchange validation possible without a Sigarra round-trip per check.
+// A student legitimately holds several rows for one course unit (T + TP).
+model Enrollment {
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classId Int
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+
+  // Natural key — one enrollment per (user, class); no surrogate id.
+  @@id([userId, classId])
+  @@index([classId])
+}
+
+// ===========================================================================
+// 4. PLATFORM CONFIGURATION
+// ===========================================================================
+
+// Deliberately occurrence-scoped only.
+//
+// Opening a whole course is a server-side fan-out: resolve the course's
+// occurrences, overlap-check them all, then createMany inside one
+// transaction. Reading "is this course open" aggregates with DISTINCT over
+// its occurrences.
+//
+// The legacy `is_course_expiration` flag is gone: it made the same physical row
+// visible through one endpoint and invisible through the other, depending on
+// the flag it was created with.
+model ExchangePeriod {
+  occurrenceId    Int
+  occurrenceYear  Int
+  occurrence      Occurrence @relation(fields: [occurrenceId, occurrenceYear], references: [id, year], onDelete: Cascade)
+  startsAt     DateTime
+  endsAt       DateTime
+  createdAt    DateTime   @default(now())
+
+  // Natural key — an occurrence is open exactly once per window.
+  @@id([occurrenceId, occurrenceYear, startsAt, endsAt])
+}
+
+model AdminCourse {
+  userId   String
+  courseId Int
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([userId, courseId])
+  @@index([courseId])
+}
+
+model AdminOccurrence {
+  userId          String
+  occurrenceId    Int
+  occurrenceYear  Int
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  occurrence      Occurrence @relation(fields: [occurrenceId, occurrenceYear], references: [id, year], onDelete: Cascade)
+
+  @@id([userId, occurrenceId, occurrenceYear])
+}
+
+// ===========================================================================
+// 5. EXCHANGES
+// ===========================================================================
+
+enum ExchangeType {
+  DIRECT // two named students swap
+  MARKETPLACE // open offer anyone can claim
+  URGENT // one student asks, admin approves
+}
+
+// Student-side lifecycle. Admin decisions live in adminState — legacy kept
+// `accepted`/`canceled` booleans and an `admin_state` string side by side,
+// which allowed nonsense states like rejected-but-not-cancelled.
+//
+// PENDING -> ACCEPTED  all participants accepted, or the offer was claimed,
+//                    or (URGENT) the admin approved
+// PENDING -> CANCELLED creator withdrew, or a conflicting exchange killed it
+enum ExchangeStatus {
+  PENDING
+  ACCEPTED
+  CANCELLED
+}
+
+// The four real legacy values, previously free text:
+// "untreated" | "treated" | "rejected" | "awaiting-information"
+enum AdminValidationState {
+  UNTREATED
+  TREATED
+  REJECTED
+  AWAITING_INFORMATION
+}
+
+// Global access tier on User. Strict hierarchy — members are listed in
+// ascending order, so SQL ORDER BY role DESC and Prisma queries that
+// compare against `role` work as a ranking. USER is the default; ADMIN
+// unlocks the admin panel; SUPERUSER adds destructive/setup actions.
+enum UserRole {
+  USER
+  ADMIN
+  SUPERUSER
+}
+
+// Replaces DirectExchange + MarketplaceExchange + ExchangeUrgentRequests.
+// `type` replaces the legacy getExchangeType() type sniffing.
+model ExchangeRequest {
+  id        String   @id @default(uuid())
+  creatorId String
+  creator   User     @relation("ExchangeCreator", fields: [creatorId], references: [id])
+  // Set when the offer is claimed by a specific student (MARKETPLACE), or when
+  // an admin assigns an URGENT request. Null while open.
+  targetUserId String?
+  targetUser   User?    @relation("ExchangeTarget", fields: [targetUserId], references: [id])
+
+  type   ExchangeType
+  status ExchangeStatus @default(PENDING)
+
+  // Justification for URGENT requests (max 2048 in legacy).
+  message String?
+
+  adminState AdminValidationState @default(UNTREATED)
+
+  // Backs GET /exchange/verify/{token} (email confirmation links) and the
+  // duplicate-request check on creation.
+  hash String?
+
+  // Drives GET /exchange/direct/validate/{id} -> { valid, lastValidated }.
+  lastValidated DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+
+  items ExchangeItem[]
+
+  @@index([type, status])
+  @@index([adminState, createdAt])
+  @@index([hash])
+  @@index([creatorId, status])
+  @@index([targetUserId])
+}
+
+// Replaces DirectExchangeParticipants + MarketplaceExchangeClass +
+// ExchangeUrgentRequestOptions. Two of these collapse into one table because
+// the only real difference was the name of the class-name column.
+//
+// The critical field is userId: legacy stored TWO rows per swap — one per
+// student — because each side has its own from/to and its own accept flag.
+// A single row without userId cannot express a 2-way exchange at all.
+model ExchangeItem {
+  requestId String
+  request   ExchangeRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  // Whose move this is. Legacy duplicated participant_name/course_unit_acronym
+  // as strings here; both are now joins.
+  // Restrict, not Cascade: silently removing one side's row would flip
+  // "accepted = every item accepted" to true with a side missing. User
+  // deletion must explicitly cancel affected requests instead.
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  occurrenceId    Int
+  occurrenceYear  Int
+  occurrence      Occurrence @relation(fields: [occurrenceId, occurrenceYear], references: [id, year])
+  fromClassId     Int
+  toClassId       Int
+  // Composite FKs: (fromClassId, occurrenceId, occurrenceYear) and
+  // (toClassId, occurrenceId, occurrenceYear) both reference
+  // Class(id, occurrenceId, occurrenceYear), so a referenced class is
+  // guaranteed to belong to the same occurrence as the exchange item.
+  fromClass Class @relation("ExchangeItemFromClass", fields: [fromClassId, occurrenceId, occurrenceYear], references: [id, occurrenceId, occurrenceYear])
+  toClass   Class @relation("ExchangeItemToClass",   fields: [toClassId,   occurrenceId, occurrenceYear], references: [id, occurrenceId, occurrenceYear])
+
+  // Per-participant accept. A direct exchange is accepted when every row is
+  // accepted — derived, not stored, which is what legacy's
+  // DirectExchangePendingMotive() reverse-engineered at read time.
+  accepted Boolean @default(false)
+
+  // Natural key — one row per participant's move per occurrence per request.
+  @@id([requestId, userId, occurrenceId, occurrenceYear])
+  @@index([userId, accepted])
+  // Postgres back the (occurrenceId, occurrenceYear) and
+  // (fromClassId/toClassId, ...) composite FKs with an index lookup
+  // automatically; explicit indexes here would trip Postgres' 63-byte
+  // identifier cap with these column lists.
+}
+
+// ===========================================================================
+// 6. ENROLLMENT REQUESTS
+// ===========================================================================
+
+// Replaces CourseUnitEnrollments.
+model EnrollmentRequest {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  // Deliberate reuse of ExchangeStatus: the lifecycle is the same three
+  // states (legacy had only `accepted` + admin_state; CANCELLED is reserved
+  // for a creator-withdraw flow the rewrite may add).
+  status    ExchangeStatus @default(PENDING)
+  adminState AdminValidationState @default(UNTREATED)
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+
+  options EnrollmentRequestOption[]
+}
+
+// Replaces CourseUnitEnrollmentOptions. `enrolling: false` means "drop this
+// course unit" rather than "add it".
+//
+// No classUserGoesTo column: the POST body only ever sent
+// { course_unit_id, enrolling }, and the serializer never returned a class
+// either. The frontend type declares the field but nothing ever populated it.
+model EnrollmentRequestOption {
+  requestId String
+  request   EnrollmentRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  occurrenceId    Int
+  occurrenceYear  Int
+  occurrence      Occurrence @relation(fields: [occurrenceId, occurrenceYear], references: [id, year])
+  // The owning course is reached via occurrence.course. Legacy denormalized
+  // course_unit_name / course_unit_acronym onto every option row; the frontend
+  // wants option.course too, and a join answers both.
+
+  enrolling Boolean @default(true)
+
+  // Natural key — one option per occurrence per request.
+  @@id([requestId, occurrenceId, occurrenceYear])
+}
+
+// ===========================================================================
+// 7. SUPPORT
+// ===========================================================================
+
+// fest_id per (student, course), scraped from the Sigarra profile.
+// Backs GET /student/{nmec}/{course_id}/metadata. Pure cache — safe to drop
+// and re-populate.
+model StudentCourseMetadata {
+  nmec     String
+  courseId Int
+  festId   Int
+  user     User   @relation(fields: [nmec], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([nmec, courseId])
+}
+
+// ===========================================================================
+// 8. PLANNER STATE — UI choice, kept as a free-form blob
+// ===========================================================================
+
+// The student's cross-device planner: which course units they've picked,
+// and for each of the (up to 10) timetable drafts, which class they chose
+// per picked course unit. Everything per-device (theme, language, locked
+// toggles, hidden lesson types, the "active draft" pointer, draft icons
+// and names) stays in localStorage.
+//
+// `state` is a hash of the planner object tree (e.g. sha256 hex of the
+// canonical JSON) produced by the FE. Storing the hash (a short opaque
+// string) instead of the JSON keeps writes cheap, makes "no change" writes
+// true no-ops, and gives the FE a single token to merge on. The FE is the
+// one that canonicalizes and hashes — the BE is dumb storage.
+//
+// Last writer wins per row; cross-device conflict resolution is the
+// client's problem (compare `updatedAt` against the local last-write
+// timestamp before overwriting local state).
+//
+// Year-scoped: a row exists per (user, academic year). Old years are
+// kept so a student returning later can still see what they planned.
+model PlannerState {
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  year          Int // e.g. 2025 = academic year 2025/26
+
+  state         String // hash of the planner state, owned by the FE
+  updatedAt     temporal.updatedAt()
+
+  @@id([userId, year])
+}
