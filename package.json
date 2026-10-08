@@ -9,11 +9,13 @@
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
     "format": "oxfmt apps/backend/src apps/frontend/src",
-    "format:check": "oxfmt --check apps/backend/src apps/frontend/src"
+    "format:check": "oxfmt --check apps/backend/src apps/frontend/src",
+    "postinstall": "prisma skills sync || exit 0"
   },
   "devDependencies": {
     "husky": "^9.1.7",
     "oxfmt": "^0.71.0",
-    "oxlint": "^1.86.0"
+    "oxlint": "^1.86.0",
+    "prisma": "8.0.0-rc.21"
   }
 }
