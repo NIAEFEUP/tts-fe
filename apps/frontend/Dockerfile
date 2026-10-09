@@ -1,38 +1,47 @@
+# Build context must be the repository root (the Bun lockfile lives there):
+#   docker build -f apps/frontend/Dockerfile --target prod .
 ARG TTS_FE_VARS_METHOD=dotenv
 
 # build
-FROM node:22-alpine3.20 AS build
+FROM docker.io/oven/bun:1-alpine AS build
 
-RUN mkdir -p /usr/src/tts-fe
-WORKDIR /usr/src/tts-fe
+WORKDIR /usr/src/tts
 
-COPY .*rc ./
-COPY *.json ./
-COPY .prettier* ./
-COPY *.config.js ./
-COPY *.config.ts ./
-COPY .env.schema ./
+COPY package.json bun.lock tsconfig.base.json ./
+COPY apps/frontend/package.json apps/frontend/
+COPY apps/backend/package.json apps/backend/
 
-RUN npm config set fetch-retry-mintimeout 20000 \
-    && npm config set fetch-retry-maxtimeout 120000 \
-    && npm config set fetch-retries 5 \
-    && npm install
+RUN bun install --frozen-lockfile --ignore-scripts --filter tts-fe --filter tts-be
 
-COPY public/ public/
-COPY src/ src/
-COPY index.html ./
+# The frontend type-checks against the backend's emitted declarations (`tts-be`),
+# which need the generated Prisma contract.
+COPY apps/backend/bunfig.toml apps/backend/tsconfig*.json apps/backend/prisma.config.ts apps/backend/.env.schema apps/backend/
+COPY apps/backend/src/ apps/backend/src/
+COPY apps/backend/migrations/ apps/backend/migrations/
+
+RUN cd apps/backend && bun run contract:emit
+
+WORKDIR /usr/src/tts/apps/frontend
+
+COPY apps/frontend/bunfig.toml apps/frontend/tsconfig*.json apps/frontend/.env.schema ./
+COPY apps/frontend/*.config.js apps/frontend/*.config.ts ./
+COPY apps/frontend/public/ public/
+COPY apps/frontend/src/ src/
+COPY apps/frontend/tests/ tests/
+COPY apps/frontend/index.html ./
 
 # dev
 FROM build AS dev
 
+ENV PORT=3100
 EXPOSE $PORT
 
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "dev"]
 
 # prod-build-with-dotenv
 FROM build AS prod-build-with-dotenv
 
-ARG TTS_FE_DOTENV_FILE=.env
+ARG TTS_FE_DOTENV_FILE=apps/frontend/.env
 COPY ${TTS_FE_DOTENV_FILE} .env
 
 # prod-build-with-var
@@ -43,11 +52,10 @@ RUN echo "${TTS_FE_VARS_CONTENT}" | base64 -d > .env
 
 # prod-build
 FROM prod-build-with-${TTS_FE_VARS_METHOD} AS prod-build
-RUN npm run build
+RUN bun run build
 
 # prod
-FROM nginx:alpine AS prod
+FROM docker.io/nginx:alpine AS prod
 
-COPY --from=prod-build /usr/src/tts-fe/build /usr/share/nginx/html
-COPY nginx.tts.conf /etc/nginx/conf.d/default.conf
-
+COPY --from=prod-build /usr/src/tts/apps/frontend/build /usr/share/nginx/html
+COPY apps/frontend/nginx.tts.conf /etc/nginx/conf.d/default.conf
