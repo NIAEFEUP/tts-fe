@@ -1,1 +1,9 @@
-./reverse-proxy 
+.git
+.github
+.devenv
+.direnv
+**/node_modules
+**/dist
+**/out-tsc
+**/build
+apps/backend/legacy
