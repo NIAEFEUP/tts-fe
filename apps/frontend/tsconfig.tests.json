@@ -3,20 +3,18 @@
   "compilerOptions": {
     "target": "es2015",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "strict": false,
-    "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "jsx": "react-jsx",
-    "outDir": "dist",
-    "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "outDir": "out-tsc/tests",
+    "rootDir": "tests",
+    "tsBuildInfoFile": "out-tsc/tests/tsconfig.tests.tsbuildinfo",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client"]
+    "types": ["vite/client", "jest", "@testing-library/jest-dom"]
   },
-  "include": ["src", "src/**/*.json"],
-  "references": [{ "path": "../backend/tsconfig.lib.json" }]
+  "include": ["tests"],
+  "references": [{ "path": "./tsconfig.lib.json" }]
 }

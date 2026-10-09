@@ -32,7 +32,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sentry/react": "^8.33.1",
     "@sentry/vite-plugin": "^2.22.1",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^6.10.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.1",
