@@ -76,7 +76,7 @@
         "classnames": "^2.3.1",
         "clsx": "^2.1.0",
         "cmdk": "^1.1.1",
-        "cva": "^1.0.0-beta.4",
+        "cva": "1.0.0-beta.10",
         "date-fns": "^3.6.0",
         "esbuild": "^0.25.0",
         "html-to-image": "^1.11.11",
@@ -1122,7 +1122,7 @@
 
     "csstype": ["csstype@3.2.3", "", {}, "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="],
 
-    "cva": ["cva@1.0.0-beta.12", "", { "dependencies": { "clsx": "^2.1.1" }, "peerDependencies": { "typescript": ">= 6.0.0" }, "optionalPeers": ["typescript"] }, "sha512-Xn85p3Jyr4oVh5t69/9uOyKlEazrYdolpXXPB1bpr5apy1MS76lde5ET/WLRk3TZNldsXnj/e4Dpyh1NXFSgUg=="],
+    "cva": ["cva@1.0.0-beta.10", "", { "dependencies": { "clsx": "^2.1.1" }, "peerDependencies": { "typescript": ">= 6.0.0" }, "optionalPeers": ["typescript"] }, "sha512-A2kkl9zsfu1NRhHYOM2SwDhC89ZO97wb7qO2/+Amj/rbRbZDj+bM0yi1CV+YN2fAP/oPi4oip7jcIdb+cZtv0A=="],
 
     "data-uri-to-buffer": ["data-uri-to-buffer@4.0.1", "", {}, "sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A=="],
 

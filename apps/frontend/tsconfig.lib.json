@@ -18,5 +18,6 @@
     "types": ["vite/client"]
   },
   "include": ["src", "src/**/*.json"],
+  "exclude": ["src/test"],
   "references": [{ "path": "../backend/tsconfig.lib.json" }]
 }

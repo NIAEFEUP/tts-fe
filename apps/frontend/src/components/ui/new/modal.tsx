@@ -192,7 +192,7 @@ const ModalContent = ({ className, children, catchFocus = true, ...props }: Moda
   )
 }
 
-interface ModalTriggerProps extends React.ComponentPropsWithRef<'button'> {
+export interface ModalTriggerProps extends React.ComponentPropsWithRef<'button'> {
   asChild?: boolean
 }
 
@@ -216,7 +216,7 @@ const ModalTrigger = ({ asChild, children, ...props }: ModalTriggerProps) => {
   )
 }
 
-interface ModalCloseProps extends React.ComponentPropsWithRef<'button'> {
+export interface ModalCloseProps extends React.ComponentPropsWithRef<'button'> {
   asChild?: boolean
 }
 
