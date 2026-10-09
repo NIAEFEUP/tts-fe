@@ -17,6 +17,7 @@ jobs:
       - name: Upload to NIployments register
         uses: NIAEFEUP/push-to-niployments@v2.2
         with:
+          repository_name: tts-fe
           docker_dockerfile: Dockerfile
           docker_context: .
           docker_target: frontend-prod
