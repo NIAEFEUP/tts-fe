@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - monorepo
 
 jobs:
   build:
