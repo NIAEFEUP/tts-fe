@@ -100,6 +100,7 @@
     "@varlock/vite-integration": "^1.5.2",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.2.1",
+    "tts-be": "workspace:*",
     "typescript": "^6.0.3",
     "varlock": "^1.21.1"
   }
