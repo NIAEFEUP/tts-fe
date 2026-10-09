@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Upload to NIployments register
-        uses: NIAEFEUP/push-to-niployments@v2.2
+        uses: NIAEFEUP/push-to-niployments@v2.3
         with:
           repository_name: tts-fe
           docker_dockerfile: Dockerfile
@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Upload to NIployments register
-        uses: NIAEFEUP/push-to-niployments@v2.2
+        uses: NIAEFEUP/push-to-niployments@v2.3
         with:
           repository_name: tts-be
           docker_dockerfile: Dockerfile
