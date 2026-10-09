@@ -3,8 +3,8 @@ services:
     container_name: tts_frontend
     build:
       context: ../..
-      dockerfile: apps/frontend/Dockerfile
-      target: dev
+      dockerfile: Dockerfile
+      target: frontend-dev
     volumes:
       - ./src:/usr/src/tts/apps/frontend/src
       - ./public:/usr/src/tts/apps/frontend/public
@@ -18,8 +18,8 @@ services:
     container_name: tts_frontend_prod
     build:
       context: ../..
-      dockerfile: apps/frontend/Dockerfile
-      target: prod
+      dockerfile: Dockerfile
+      target: frontend-prod
       args:
         - TTS_FE_VARS_METHOD=dotenv
         - TTS_FE_DOTENV_FILE=apps/frontend/.env

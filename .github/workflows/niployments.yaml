@@ -16,9 +16,9 @@ jobs:
       - name: Upload to NIployments register
         uses: NIAEFEUP/push-to-niployments@v2.2
         with:
-          docker_dockerfile: apps/frontend/Dockerfile
+          docker_dockerfile: Dockerfile
           docker_context: .
-          docker_target: prod
+          docker_target: frontend-prod
           docker_build_args: |
             TTS_FE_VARS_METHOD=content-var
             TTS_FE_VARS_CONTENT=${{ secrets.TTS_FE_VARS_CONTENT }}
