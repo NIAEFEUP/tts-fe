@@ -47,7 +47,7 @@ const CollabModal = ({ isOpen, closeModal }: Props) => {
     })
 
     setInt(
-      setInterval(() => {
+      window.setInterval(() => {
         sessionsSocket.emit('ping', { id: uid })
         // eslint-disable-next-line no-console
         console.log('Sent ping', uid)
