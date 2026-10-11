@@ -26,7 +26,7 @@ cp apps/backend/.env.schema apps/backend/.env
 
 # 4. prepare + seed the backend database
 cd apps/backend
-bun run contract:emit     # generate the Prisma contract (required)
+bun run contract:emit     # generate the Prisma contract (required; the output is git-ignored)
 bun run db:init           # create the tables
 bun run db:seed:demo      # seed catalog + demo data; makes ADMIN_UP an admin
 ```
@@ -61,9 +61,33 @@ The frontend needs no `.env` for local dev. Validate with `bunx varlock load` fr
 ## Notes
 
 - After editing `apps/backend/src/infrastructure/database/contract.prisma`, re-run
-  `bun run contract:emit` in `apps/backend`.
+  `bun run contract:emit` in `apps/backend`. `contract.json` and `contract.d.ts` are
+  **generated artifacts and git-ignored**, so a fresh clone does not have them.
 - `bun run build` in the frontend type-checks against the backend and needs the contract above
   to exist.
+- CI (the `Code analysis` workflow) runs `bun install`, emits the contract, then
+  typechecks the backend and frontend and lints on every PR — so a missing or stale
+  generated client fails the build instead of silently misleading you.
+
+## Troubleshooting
+
+### `bun run typecheck` complains about missing models or unknown fields
+
+`contract.json` and `contract.d.ts` are git-ignored, so a fresh clone — or a pull that
+changed `contract.prisma` — leaves the generated Prisma client missing or stale. The
+compiler then reports misleading errors such as `Cannot find module './contract.d.ts'`,
+or `Property 'Occurrence' does not exist` / extraneous `occurrenceId` properties when the
+client exists but predates a schema change. This is **not** a code bug.
+
+Regenerate the client and retry:
+
+```bash
+cd apps/backend
+bun run contract:emit
+```
+
+`bun run typecheck` now runs `contract:emit` first, so unless you invoked `tsc` directly
+the client can't be stale. CI emits it too.
 
 ## Useful commands
 

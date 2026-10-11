@@ -8,34 +8,46 @@ on:
     types: [ready_for_review, synchronize, opened, reopened]
 
 jobs:
-  lint:
+  checks:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    name: Lint
-
-    strategy:
-      matrix:
-        node-version: [21.x]
+    name: Typecheck & lint
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.1
 
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: npm install
+        run: bun install --frozen-lockfile
 
-      - name: Build site
-        run: npm run build
+      # The Prisma contract (contract.json + contract.d.ts) is git-ignored and
+      # generated, so it must be emitted before anything that imports the client.
+      # `bun run typecheck` also does this, but making the step explicit keeps CI
+      # honest: the typecheck below always runs against the current contract.
+      - name: Emit Prisma contract
+        working-directory: apps/backend
+        run: bun run contract:emit
 
-      - name: Lint Code
-        run: npm run lint
+      - name: Typecheck backend
+        working-directory: apps/backend
+        run: bun run typecheck
+
+      - name: Typecheck frontend
+        working-directory: apps/frontend
+        run: bun run typecheck
+
+      - name: Lint
+        run: bun run lint
