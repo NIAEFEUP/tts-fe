@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "outDir": "out-tsc/tests",
+    "rootDir": "tests",
+    "tsBuildInfoFile": "out-tsc/tests/tsconfig.tests.tsbuildinfo",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node"]
+  },
+  "include": ["tests"],
+  "references": [{ "path": "./tsconfig.lib.json" }]
+}
