@@ -324,3 +324,30 @@ bun run format      # auto-format everything
 ```
 
 Then commit. The pre-commit hook will run the same checks and should pass.
+
+---
+
+## Raising errors
+
+Routes never set a status and return a body themselves. They **throw**, and
+`src/interface/middleware/error-handler.ts` turns the throw into a
+`{ error, code }` response:
+
+```ts
+import { httpError, HttpError } from '@/core/errors/errors'
+
+// the generic cases
+throw httpError.notFound(`Faculty ${acronym} was not found`)
+
+// a domain code (kebab-case) with its own status
+throw new HttpError('faculty-not-found', 'A faculty with acronym FEUP was not found', 404)
+```
+
+Use Elysia's `throw status(...)` only for things that are **not** failures of
+this contract — `status(204)` for an empty success, or a non-standard status
+with its own body. A bare `throw status(404)` still answers `404 not-found`, but
+it drops the route's message and gets no `code`, which is why failures go
+through `httpError` instead.
+
+The full rules (which codes exist, what happens on a 5xx, how the frontend types
+the body) live in [`docs/endpoints.md`](./docs/endpoints.md#errors-and-how-to-raise-them).
