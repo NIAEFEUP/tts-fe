@@ -2,11 +2,13 @@ import { node } from '@elysiajs/node'
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { pathToFileURL } from 'node:url'
+import { errorHandler } from '@/interface/middleware/error-handler'
 import { healthRoutes } from '@/interface/routes/health.routes'
 
 export function createApp() {
   return new Elysia({ adapter: 'Bun' in globalThis ? undefined : node() })
     .use(cors())
+    .use(errorHandler)
     .use(healthRoutes)
     .get('/', () => ({ message: 'Hello from tts-be!' }))
 }
