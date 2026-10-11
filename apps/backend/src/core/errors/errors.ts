@@ -65,3 +65,46 @@ export const httpError = {
   conflict: (message = 'Resource conflicts with its current state') => new HttpError(ErrorCode.conflict, message, 409),
   internal: (message = 'Something went wrong') => new HttpError(ErrorCode.internalError, message, 500),
 }
+
+/**
+ * The body for `throw status(...)` — Elysia's custom status response — when the
+ * route threw a status without a body of its own.
+ *
+ * Elysia reports those to the `onError` hook as a numeric code with no `Error`
+ * instance, so the route never gets to describe its own failure. Mapping the
+ * status here keeps `throw status(404)` indistinguishable from
+ * `throw httpError.notFound()`. Statuses we have no code for keep their own
+ * status but answer `internal-error`, since an unmapped 5xx is a bug and an
+ * unmapped 4xx is at least the caller's fault.
+ */
+export function genericErrorForStatus(status: number): ApiErrorBody {
+  let error: HttpError | undefined
+
+  switch (status) {
+    case 400:
+      error = httpError.badRequest()
+      break
+    case 401:
+      error = httpError.unauthorized()
+      break
+    case 403:
+      error = httpError.forbidden()
+      break
+    case 404:
+      error = httpError.notFound()
+      break
+    case 409:
+      error = httpError.conflict()
+      break
+    case 422:
+      error = new HttpError(ErrorCode.validationError, 'Request failed validation', 422)
+      break
+  }
+
+  if (!error) {
+    console.error(`Unhandled status ${status} with no error body`)
+    return { error: 'Request failed', code: ErrorCode.internalError }
+  }
+
+  return { error: error.message, code: error.code }
+}

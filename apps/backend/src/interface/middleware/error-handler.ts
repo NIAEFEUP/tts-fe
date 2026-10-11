@@ -1,7 +1,7 @@
-import { Elysia, t, ValidationError } from 'elysia'
+import { Elysia, t, ElysiaCustomStatusResponse, ValidationError } from 'elysia'
 
 import type { ApiErrorBody } from '@/core/errors/errors'
-import { ErrorCode, HttpError } from '@/core/errors/errors'
+import { ErrorCode, genericErrorForStatus, HttpError } from '@/core/errors/errors'
 
 /**
  * Response schema for `{ error, code }`. Declare it on routes that can fail so
@@ -28,6 +28,8 @@ const SERVER_FAULT_MESSAGE = 'Something went wrong'
  * - an `HttpError` with a 5xx status → its code and status, but a fixed
  *   message plus a log of the real cause, since such a message is usually
  *   driver/internal text that must not reach the client
+ * - a route answering with Elysia's `throw status(401)` → its status, with the
+ *   code derived from it (or the route's own `{ error, code }`, if it threw one)
  * - no matching route → 404 `not-found`
  * - a route failing its own `response` schema → logged, then a generic 500
  *   `internal-error`: a server bug, never the caller's 400
@@ -58,6 +60,26 @@ export const errorHandler = new Elysia({ name: 'errorHandler' })
       }
 
       return { error: error.message, code: error.code }
+    }
+
+    // A route that answers with Elysia's `throw status(401)` / `status(403)`
+    // reaches the hook as an `ElysiaCustomStatusResponse` with a numeric code
+    // and no `Error` instance. Nothing below matches a number, so without this
+    // branch every deliberate 401/403/404 would be reported as a 500.
+    if (error instanceof ElysiaCustomStatusResponse) {
+      const status = error.code
+      set.status = status
+
+      // A route may throw `status(403, { error, code })` with its own body — it
+      // already follows the contract, so keep it. Anything else was a status
+      // thrown bare, so the code is derived from the status.
+      const isApiErrorBody =
+        typeof error.response === 'object' &&
+        error.response !== null &&
+        'error' in error.response &&
+        'code' in error.response
+
+      return isApiErrorBody ? (error.response as ApiErrorBody) : genericErrorForStatus(status)
     }
 
     if (code === 'VALIDATION' || code === 'PARSE') {

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { t } from 'elysia'
+import { status, t } from 'elysia'
 
 import { createApp } from '@/main'
 import { ErrorCode, httpError, HttpError } from '@/core/errors/errors'
@@ -40,6 +40,15 @@ const app = createApp()
   })
   .get('/bad-response', () => ({ id: 'not-a-number' }) as unknown as { id: number }, {
     response: t.Object({ id: t.Number() }),
+  })
+  .get('/status-bare', () => {
+    throw status(401)
+  })
+  .get('/status-body', () => {
+    throw status(403, { error: 'not an admin of this course', code: 'forbidden' })
+  })
+  .get('/status-unmapped', () => {
+    throw status(429)
   })
 
 const get = async (path: string) => {
@@ -160,4 +169,25 @@ test('an unmatched route returns 404 not-found instead of a 500', async () => {
 
   assert.equal(status, 404)
   assert.deepEqual(body, { error: 'Route not found', code: ErrorCode.notFound })
+})
+
+test("Elysia's throw status(n) keeps its status and derives the code", async () => {
+  const bare = await get('/status-bare')
+
+  assert.equal(bare.status, 401)
+  assert.deepEqual(bare.body, { error: 'Authentication required', code: ErrorCode.unauthorized })
+})
+
+test("throw status(n, body) keeps the route's own error body", async () => {
+  const withBody = await get('/status-body')
+
+  assert.equal(withBody.status, 403)
+  assert.deepEqual(withBody.body, { error: 'not an admin of this course', code: 'forbidden' })
+})
+
+test('an unmapped status keeps its status but answers internal-error', async () => {
+  const { status: result, body } = await get('/status-unmapped')
+
+  assert.equal(result, 429)
+  assert.deepEqual(body, { error: 'Request failed', code: ErrorCode.internalError })
 })
