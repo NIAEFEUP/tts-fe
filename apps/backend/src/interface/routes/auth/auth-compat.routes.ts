@@ -1,4 +1,5 @@
 import { Elysia, t } from 'elysia'
+import { createDevLogin } from '@/application/use-cases/auth/dev-login'
 import { createGetCurrentUser } from '@/application/use-cases/auth/get-current-user'
 import { createLogout } from '@/application/use-cases/auth/logout'
 import type { AuthConfig } from '@/core/config/auth'
@@ -30,6 +31,13 @@ export type AuthCompatDeps = {
 export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: AuthCompatDeps) => {
   const getCurrentUser = createGetCurrentUser({ sessions })
   const logout = createLogout({ sessions })
+  const devLogin = createDevLogin({
+    users,
+    sessions,
+    authenticator: sigarraDirect,
+    credentials: config.devAccount,
+    sessionTtlMs: config.sessionTtlSeconds * 1000,
+  })
 
   return new Elysia()
     .use(createAuthMiddleware({ resolveSession: sessions.resolve }))
@@ -76,26 +84,30 @@ export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: Aut
           return status(404, { error: 'Not found', code: ErrorCode.notFound })
         }
 
-        const { username, password } = body
-        const valid = await sigarraDirect.verify(username, password)
-        if (!valid) {
+        const result = await devLogin({ username: body?.username, password: body?.password })
+
+        if (!result.ok) {
+          if (result.reason === 'not-configured') {
+            return status(503, {
+              error: 'Dev login is not configured (set SIGARRA_USERNAME / SIGARRA_PASSWORD)',
+              code: 'dev-login-not-configured',
+            })
+          }
           return status(401, { error: 'Invalid Sigarra credentials', code: 'invalid-credentials' })
         }
 
-        const user = await users.upsertFromClaims({
-          nmec: username,
-          name: 'Student',
-          email: `${username}@fe.up.pt`,
-        })
-        const token = await sessions.issue(user.id, config.sessionTtlSeconds * 1000)
-
-        cookie.session.value = token
+        cookie.session.value = result.token
         applyCookiePreferences(cookie.session, config, config.sessionTtlSeconds)
 
-        return { message: 'Login successful', user }
+        return { message: 'Login successful', user: result.user }
       },
       {
-        body: t.Object({ username: t.String(), password: t.String() }),
+        body: t.Optional(
+          t.Object({
+            username: t.Optional(t.String()),
+            password: t.Optional(t.String()),
+          }),
+        ),
       },
     )
 }

@@ -23,6 +23,7 @@ function config(overrides: Partial<AuthConfig> = {}): AuthConfig {
     allowedOrigins: ['http://localhost:3100'],
     secureCookies: false,
     devLoginEnabled: false,
+    devAccount: { username: '', password: '' },
     ...overrides,
   }
 }
@@ -37,7 +38,7 @@ function buildApp(overrides: Partial<AuthConfig> = {}) {
     resolve: async (token) => (token === 'tok-1' ? USER : null),
     revoke: async () => {},
   }
-  const sigarraDirect: DevAuthenticator = { verify: async () => true }
+  const sigarraDirect: DevAuthenticator = { authenticate: async () => ({ name: 'Ana Silva' }) }
 
   return authCompatRoutes({ users, sessions, sigarraDirect, config: config(overrides) })
 }

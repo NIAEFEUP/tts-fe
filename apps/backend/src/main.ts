@@ -38,7 +38,7 @@ export function createApp() {
       .use(cors({ origin: config.allowedOrigins, credentials: true }))
       .use(errorHandler)
       .use(healthRoutes)
-      .use(authRoutes({ provider, users, sessions, config }))
+      .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
       .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
       .get('/', () => ({ message: 'Hello from tts-be!' }))
   )

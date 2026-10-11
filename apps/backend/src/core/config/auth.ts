@@ -23,6 +23,8 @@ export type AuthConfig = {
   allowedOrigins: string[]
   secureCookies: boolean
   devLoginEnabled: boolean
+  /** Dev account used by `/api/v1/auth/dev-login` when no credentials are sent. */
+  devAccount: { username: string; password: string }
 }
 
 function readString(env: NodeJS.ProcessEnv, key: string, fallback: string): string {
@@ -53,6 +55,12 @@ export function loadAuthConfig(env: NodeJS.ProcessEnv = process.env): AuthConfig
     frontendUrl,
     allowedOrigins: allowedOrigins.length > 0 ? allowedOrigins : [frontendUrl],
     secureCookies: env.NODE_ENV === 'production' || env.COOKIE_SECURE === 'true',
-    devLoginEnabled: env.DEV_LOGIN_ENABLED === 'true',
+    // On by default for local dev, but never in production — even if a deploy
+    // forgets to set DEV_LOGIN_ENABLED=false, NODE_ENV=production disables it.
+    devLoginEnabled: env.DEV_LOGIN_ENABLED !== 'false' && env.NODE_ENV !== 'production',
+    devAccount: {
+      username: env.SIGARRA_USERNAME?.trim() ?? '',
+      password: env.SIGARRA_PASSWORD ?? '',
+    },
   }
 }

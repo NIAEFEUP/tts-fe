@@ -1,12 +1,15 @@
 import { Elysia, t } from 'elysia'
 import { createBeginLogin } from '@/application/use-cases/auth/begin-login'
 import { createCompleteLogin, InvalidOidcStateError } from '@/application/use-cases/auth/complete-login'
+import { createDevLogin } from '@/application/use-cases/auth/dev-login'
 import { createLogout } from '@/application/use-cases/auth/logout'
 import type { AuthConfig } from '@/core/config/auth'
+import type { DevAuthenticator } from '@/domain/ports/dev-authenticator'
 import type { IdentityProvider } from '@/domain/ports/identity-provider'
 import type { SessionRepository } from '@/domain/ports/session.repository'
 import type { UserRepository } from '@/domain/ports/user.repository'
 import { isAdmin } from '@/core/auth/user'
+import { ErrorCode } from '@/interface/errors/errors'
 import { createAuthMiddleware } from '@/interface/middleware/auth.middleware'
 import {
   applyCookiePreferences,
@@ -25,17 +28,19 @@ export type AuthRoutesDeps = {
   provider: IdentityProvider
   users: UserRepository
   sessions: SessionRepository
+  sigarraDirect: DevAuthenticator
   config: AuthConfig
 }
 
 /**
  * Canonical auth routes, mounted under `/api/v1/auth`:
- *   GET  /login     — redirect to Sigarra
- *   GET  /callback  — Sigarra redirects back; set the session cookie
- *   POST /logout    — clear the session
- *   GET  /me        — current user (or `{ signed: false }`)
+ *   GET  /login      — redirect to Sigarra (prod / federated)
+ *   GET  /callback   — Sigarra redirects back; set the session cookie
+ *   POST /dev-login  — dev-only Sigarra username/password login
+ *   POST /logout     — clear the session
+ *   GET  /me         — current user (or `{ signed: false }`)
  */
-export const authRoutes = ({ provider, users, sessions, config }: AuthRoutesDeps) => {
+export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }: AuthRoutesDeps) => {
   const beginLogin = createBeginLogin({ provider, frontendUrl: config.frontendUrl })
   const completeLogin = createCompleteLogin({
     provider,
@@ -43,6 +48,13 @@ export const authRoutes = ({ provider, users, sessions, config }: AuthRoutesDeps
     sessions,
     sessionTtlMs: config.sessionTtlSeconds * 1000,
     frontendUrl: config.frontendUrl,
+  })
+  const devLogin = createDevLogin({
+    users,
+    sessions,
+    authenticator: sigarraDirect,
+    credentials: config.devAccount,
+    sessionTtlMs: config.sessionTtlSeconds * 1000,
   })
   const logout = createLogout({ sessions })
 
@@ -133,8 +145,50 @@ export const authRoutes = ({ provider, users, sessions, config }: AuthRoutesDeps
         name: user.name,
         email: user.email,
         isAdmin: isAdmin(user),
+        role: user.role,
       }
     })
+    .post(
+      '/dev-login',
+      async ({ body, cookie, status }) => {
+        // Dev-only: absent in production (see AuthConfig.devLoginEnabled).
+        if (!config.devLoginEnabled) {
+          return status(404, { error: 'Not found', code: ErrorCode.notFound })
+        }
+
+        const result = await devLogin({ username: body?.username, password: body?.password })
+
+        if (!result.ok) {
+          if (result.reason === 'not-configured') {
+            return status(503, {
+              error: 'Dev login is not configured (set SIGARRA_USERNAME / SIGARRA_PASSWORD)',
+              code: 'dev-login-not-configured',
+            })
+          }
+          return status(401, { error: 'Invalid Sigarra credentials', code: 'invalid-credentials' })
+        }
+
+        cookie.session.value = result.token
+        applyCookiePreferences(cookie.session, config, config.sessionTtlSeconds)
+
+        return {
+          signed: true as const,
+          id: result.user.id,
+          name: result.user.name,
+          email: result.user.email,
+          isAdmin: isAdmin(result.user),
+          role: result.user.role,
+        }
+      },
+      {
+        body: t.Optional(
+          t.Object({
+            username: t.Optional(t.String()),
+            password: t.Optional(t.String()),
+          }),
+        ),
+      },
+    )
     .post('/logout', async ({ cookie }) => {
       await logout(cookie.session.value as string | undefined)
       cookie.session.remove()
