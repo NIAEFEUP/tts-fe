@@ -28,6 +28,7 @@ function testConfig(overrides: Partial<AuthConfig> = {}): AuthConfig {
     allowedOrigins: ['http://localhost:3100'],
     secureCookies: false,
     devLoginEnabled: false,
+    devAccount: { username: '', password: '' },
     ...overrides,
   }
 }
@@ -43,6 +44,8 @@ function buildApp(config = testConfig()) {
       email: USER.email,
     }),
   }
+
+  const sigarraDirect = { authenticate: async () => ({ name: 'Ana Silva' }) }
 
   const users: UserRepository = {
     upsertFromClaims: async () => USER,
@@ -61,7 +64,7 @@ function buildApp(config = testConfig()) {
     },
   }
 
-  return authRoutes({ provider, users, sessions, config })
+  return authRoutes({ provider, users, sessions, sigarraDirect, config })
 }
 
 function cookieValue(response: Response, name: string): string | null {
@@ -152,6 +155,7 @@ describe('auth routes', () => {
       name: USER.name,
       email: USER.email,
       isAdmin: true,
+      role: 'ADMIN',
     })
   })
 
@@ -166,5 +170,29 @@ describe('auth routes', () => {
 
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ signed: false })
+  })
+
+  it('logs in via dev-login using the configured account (no body)', async () => {
+    const app = buildApp(testConfig({ devLoginEnabled: true, devAccount: { username: 'up1', password: 'pw' } }))
+    const res = await app.handle(new Request('http://localhost/api/v1/auth/dev-login', { method: 'POST' }))
+
+    expect(res.status).toBe(200)
+    expect((await res.json()).signed).toBe(true)
+    expect(cookieValue(res, 'session')).toBeTruthy()
+  })
+
+  it('hides dev-login when disabled', async () => {
+    const app = buildApp(testConfig({ devLoginEnabled: false }))
+    const res = await app.handle(new Request('http://localhost/api/v1/auth/dev-login', { method: 'POST' }))
+
+    expect(res.status).toBe(404)
+  })
+
+  it('reports dev-login as unconfigured when no credentials exist', async () => {
+    const app = buildApp(testConfig({ devLoginEnabled: true, devAccount: { username: '', password: '' } }))
+    const res = await app.handle(new Request('http://localhost/api/v1/auth/dev-login', { method: 'POST' }))
+
+    expect(res.status).toBe(503)
+    expect((await res.json()).code).toBe('dev-login-not-configured')
   })
 })

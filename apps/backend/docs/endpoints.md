@@ -76,6 +76,12 @@ Sigarra federated authentication (OIDC-style redirect flow).
 | `GET` | `/auth/callback` | public | Sigarra redirects back here after login |
 | `POST` | `/auth/logout` | `?` | Clear local session cookie |
 | `GET` | `/auth/me` | `?` | Current user profile |
+| `POST` | `/auth/dev-login` | public | Dev-only username/password login (env-gated) |
+
+`POST /auth/dev-login` is enabled by `DEV_LOGIN_ENABLED` (default on, forced off
+when `NODE_ENV=production`). With no body it uses the configured
+`SIGARRA_USERNAME` / `SIGARRA_PASSWORD`; a `{ username, password }` body overrides
+them. It validates against Sigarra and sets the same session cookie as OIDC.
 
 ### Compatibility-only auth routes
 
