@@ -13,6 +13,7 @@ import {
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import Plausible from 'plausible-tracker'
+import { ENV } from 'varlock/env'
 const minHour = 8
 const maxHour = 23
 const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
@@ -399,7 +400,7 @@ const scrollToTop = () => {
 const plausible = Plausible({
   domain: import.meta.env.VITE_APP_PLAUSIBLE_DOMAIN,
   apiHost: import.meta.env.VITE_APP_PLAUSIBLE_HOST,
-  trackLocalhost: !Number(import.meta.env.VITE_APP_PROD),
+  trackLocalhost: !ENV.VITE_APP_PROD,
 })
 
 export {

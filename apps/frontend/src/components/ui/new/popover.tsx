@@ -159,7 +159,7 @@ const usePopoverFloating = ({
 
 // Context
 
-interface ContextType extends ReturnType<typeof usePopoverFloating>, UseInteractionsReturn {
+export interface ContextType extends ReturnType<typeof usePopoverFloating>, UseInteractionsReturn {
   modal: boolean
 }
 

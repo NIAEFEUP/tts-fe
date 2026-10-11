@@ -1,8 +1,7 @@
 import { ArrowLeftEndOnRectangleIcon } from '@heroicons/react/24/outline'
 import api from '../../api/backend'
 import { Button } from '../ui/new/button'
-
-const FEDERATED_AUTH = Number(import.meta.env.VITE_APP_FEDERATED_AUTH)
+import { ENV } from 'varlock/env'
 
 type Props = {
   expanded: boolean
@@ -51,7 +50,11 @@ const SigarraAuthButton = ({ expanded = false }: Props) => {
 export const LoginButton = ({ expanded = false }: Props) => {
   return (
     <>
-      {FEDERATED_AUTH === 1 ? <FederatedAuthButton expanded={expanded} /> : <SigarraAuthButton expanded={expanded} />}
+      {ENV.VITE_APP_FEDERATED_AUTH ? (
+        <FederatedAuthButton expanded={expanded} />
+      ) : (
+        <SigarraAuthButton expanded={expanded} />
+      )}
     </>
   )
 }

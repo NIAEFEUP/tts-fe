@@ -1,27 +1,8 @@
 {
-  "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "target": "ES2022",
-    "module": "preserve",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "verbatimModuleSyntax": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "rootDir": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "types": [
-      "node"
-    ]
-  },
-  "exclude": [
-    "prisma-composer.config.ts",
-    "scripts"
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    { "path": "./tsconfig.scripts.json" }
   ]
 }

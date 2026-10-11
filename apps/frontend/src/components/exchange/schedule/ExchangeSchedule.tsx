@@ -3,6 +3,7 @@ import { ClassDescriptor, SlotInfo } from '../../../@types'
 import ScheduleContext from '../../../contexts/ScheduleContext'
 import { Schedule } from '../../planner'
 import ConflictsContext from '../../../contexts/ConflictsContext'
+import { ENV } from 'varlock/env'
 
 type ExchangeScheduleProps = {
   refresh?: ReactNode
@@ -54,8 +55,7 @@ const ExchangeSchedule = ({ refresh }: ExchangeScheduleProps) => {
 
   // Configure T-class conflicts based on environment variable
   useEffect(() => {
-    const tClassConflicts = Number(import.meta.env.VITE_APP_T_CLASS_CONFLICTS) !== 0
-    setTClassConflicts(tClassConflicts)
+    setTClassConflicts(ENV.VITE_APP_T_CLASS_CONFLICTS)
   }, [])
 
   return <Schedule classes={classes} slots={slots} refresh={refresh} />

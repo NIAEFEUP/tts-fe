@@ -3,7 +3,7 @@
 {
   languages.javascript = {
     enable = true;
-    # Matches the node version used by apps/frontend/Dockerfile.
+    # Node version used for local tooling (the Docker images run on Bun).
     package = pkgs.nodejs_22;
     bun.enable = true;
     corepack.enable = true;

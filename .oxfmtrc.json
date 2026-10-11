@@ -2,5 +2,6 @@
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "printWidth": 120,
   "semi": false,
-  "singleQuote": true
+  "singleQuote": true,
+  "ignorePatterns": ["apps/frontend/src/env.d.ts"]
 }
