@@ -88,7 +88,7 @@ test('Elysia validation failures use the same shape', async () => {
 
   const invalid = await get('/validated')
   assert.equal(invalid.status, 400)
-  assert.deepEqual(invalid.body, { error: 'Request failed validation', code: 'bad-request' })
+  assert.deepEqual(invalid.body, { error: 'Request failed validation', code: ErrorCode.badRequest })
 })
 
 test('unexpected errors are logged server-side and never leaked', async () => {
@@ -104,7 +104,7 @@ test('unexpected errors are logged server-side and never leaked', async () => {
   }
 
   assert.equal(response.status, 500)
-  assert.deepEqual(response.body, { error: 'Something went wrong', code: 'internal-error' })
+  assert.deepEqual(response.body, { error: 'Something went wrong', code: ErrorCode.internalError })
 
   // The cause lands in the logs...
   assert.equal(logged.length, 1)
@@ -117,5 +117,5 @@ test('an unmatched route returns 404 not-found instead of a 500', async () => {
   const { status, body } = await get('/faculties')
 
   assert.equal(status, 404)
-  assert.deepEqual(body, { error: 'Route not found', code: 'not-found' })
+  assert.deepEqual(body, { error: 'Route not found', code: ErrorCode.notFound })
 })

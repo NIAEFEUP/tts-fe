@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 
 import type { ApiErrorBody } from '@/core/errors/errors'
-import { HttpError } from '@/core/errors/errors'
+import { ErrorCode, HttpError } from '@/core/errors/errors'
 
 /**
  * Response schema for `{ error, code }`. Declare it on routes that can fail so
@@ -42,16 +42,16 @@ export const errorHandler = new Elysia({ name: 'errorHandler' })
 
     if (code === 'VALIDATION' || code === 'PARSE') {
       set.status = 400
-      return { error: 'Request failed validation', code: 'bad-request' }
+      return { error: 'Request failed validation', code: ErrorCode.badRequest }
     }
 
     if (code === 'NOT_FOUND') {
       set.status = 404
-      return { error: 'Route not found', code: 'not-found' }
+      return { error: 'Route not found', code: ErrorCode.notFound }
     }
 
     console.error(`Unhandled error on ${code} ${path}:`, error)
     set.status = 500
-    return { error: 'Something went wrong', code: 'internal-error' }
+    return { error: 'Something went wrong', code: ErrorCode.internalError }
   })
   .as('global')
