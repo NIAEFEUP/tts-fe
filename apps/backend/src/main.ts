@@ -10,6 +10,7 @@ import { authCompatRoutes } from '@/interface/routes/auth/auth-compat.routes'
 import { db } from '@/infrastructure/database/prisma'
 import { createSessionRepository } from '@/infrastructure/database/repositories/session.repository'
 import { createUserRepository } from '@/infrastructure/database/repositories/user.repository'
+import { PrismaFacultyRepository } from '@/infrastructure/database/repositories/PrismaFacultyRepository'
 import { createSigarraOidcProvider } from '@/infrastructure/external/sigarra-oidc.provider'
 import { createSigarraDirectAuth } from '@/infrastructure/external/sigarra-direct-auth'
 
@@ -38,6 +39,7 @@ export function createApp() {
       .use(cors({ origin: config.allowedOrigins, credentials: true }))
       .use(errorHandler)
       .use(healthRoutes)
+      .decorate('facultyRepository', new PrismaFacultyRepository(db))
       .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
       .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
       .get('/', () => ({ message: 'Hello from tts-be!' }))
