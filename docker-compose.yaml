@@ -11,5 +11,12 @@ services:
       - "127.0.0.1:5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Lets `docker compose up -d --wait` block until Postgres actually
+      # accepts connections, so the DB is ready before db:init / seeding.
+      test: ["CMD-SHELL", "pg_isready -U tts -d tts"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
 volumes:
   pgdata:
