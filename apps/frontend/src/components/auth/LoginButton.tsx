@@ -24,18 +24,16 @@ const SigarraAuthButton = ({ expanded = false }: Props) => {
       onSubmit={async (e) => {
         e.preventDefault()
 
-        const res = await fetch(`${api.BACKEND_URL}/sigarra_login/`, {
+        const res = await fetch(api.DEV_LOGIN_URL, {
           method: 'POST',
           credentials: 'include',
-          headers: {
-            'X-CSRFToken': api.getCSRFToken() || '',
-          },
         })
 
         if (res.ok) {
           window.location.reload()
         } else {
-          console.error(`Login failed with status: ${res.status}`)
+          const body = await res.json().catch(() => null)
+          console.error(`Dev login failed (${res.status}):`, body?.code ?? res.statusText)
         }
       }}
     >
