@@ -38,6 +38,9 @@ const app = createApp()
   .get('/internal-factory', () => {
     throw httpError.internal('connect ECONNREFUSED 127.0.0.1:5432')
   })
+  .get('/bad-response', () => ({ id: 'not-a-number' }) as unknown as { id: number }, {
+    response: t.Object({ id: t.Number() }),
+  })
 
 const get = async (path: string) => {
   const response = await app.handle(new Request(`http://localhost${path}`))
@@ -102,7 +105,7 @@ test('the generic factories map to their documented statuses', async () => {
   assert.deepEqual(body, { error: 'page_size must be a positive integer', code: ErrorCode.badRequest })
 })
 
-test('Elysia validation failures use the same shape', async () => {
+test("input validation failures are the caller's fault: 400 bad-request", async () => {
   const valid = await get('/validated?year=2025')
   assert.equal(valid.status, 200)
   assert.deepEqual(valid.body, { year: '2025' })
@@ -110,6 +113,15 @@ test('Elysia validation failures use the same shape', async () => {
   const invalid = await get('/validated')
   assert.equal(invalid.status, 400)
   assert.deepEqual(invalid.body, { error: 'Request failed validation', code: ErrorCode.badRequest })
+})
+
+test('a route failing its own response schema is a logged 500, not a 400', async () => {
+  const { response, logged } = await captureConsole(() => get('/bad-response'))
+
+  assert.equal(response.status, 500)
+  assert.deepEqual(response.body, { error: 'Something went wrong', code: ErrorCode.internalError })
+  assert.equal(logged.length, 1)
+  assert.match(logged[0], /Response validation failed/)
 })
 
 test('unexpected errors are logged server-side and never leaked', async () => {

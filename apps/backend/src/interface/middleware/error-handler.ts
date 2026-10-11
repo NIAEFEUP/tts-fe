@@ -1,4 +1,4 @@
-import { Elysia, t } from 'elysia'
+import { Elysia, t, ValidationError } from 'elysia'
 
 import type { ApiErrorBody } from '@/core/errors/errors'
 import { ErrorCode, HttpError } from '@/core/errors/errors'
@@ -29,6 +29,8 @@ const SERVER_FAULT_MESSAGE = 'Something went wrong'
  *   message plus a log of the real cause, since such a message is usually
  *   driver/internal text that must not reach the client
  * - no matching route → 404 `not-found`
+ * - a route failing its own `response` schema → logged, then a generic 500
+ *   `internal-error`: a server bug, never the caller's 400
  * - Elysia body/query/param validation (and JSON parse) failures → 400
  *   `bad-request`; Elysia's default `{ type: 'validation', ... }` shape would
  *   otherwise break the contract
@@ -59,6 +61,16 @@ export const errorHandler = new Elysia({ name: 'errorHandler' })
     }
 
     if (code === 'VALIDATION' || code === 'PARSE') {
+      // Elysia lumps caller input failures and a route failing its own
+      // `response` schema under one `VALIDATION` code. The first is the
+      // caller's fault and a 400 they can act on; the second is our bug, so it
+      // is logged and answered with a 500 instead of a 400 nobody can fix.
+      if (error instanceof ValidationError && error.type === 'response') {
+        console.error(`Response validation failed on ${path}:`, error)
+        set.status = 500
+        return { error: SERVER_FAULT_MESSAGE, code: ErrorCode.internalError }
+      }
+
       set.status = 400
       return { error: 'Request failed validation', code: ErrorCode.badRequest }
     }
