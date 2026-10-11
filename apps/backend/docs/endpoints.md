@@ -38,8 +38,15 @@ Every failing response is `{ error, code }`: `error` is written for the caller, 
 - a non-standard status, or one with its own body: `status(403, { error, code })`
 - a bare `status(404)` does answer `404 not-found`, but it discards the route's message, so it is a poor way to report a missing faculty
 
+**Automatic — the handler decides, the route throws nothing**
+
+- a request that fails a route's `body`/`query`/`param`/`headers` schema, or a malformed JSON body → `422 validation-error`
+- a route failing its own `response` schema → logged, then `500 internal-error`
+- an unmatched route → `404 not-found`
+
 **Rules that stop the two idioms drifting apart**
 
+- `bad-request` (400) is for a route that read its input and decided it is wrong; `validation-error` (422) is for a request that never matched the declared schema. Reach for `httpError.badRequest` only in the first case — the second answers 422 whether or not the route noticed.
 - Codes are the contract, messages are not. Never change a code the frontend already reads — add a new one; `apps/frontend/src/utils/error.ts` maps codes to user-facing copy.
 - A 5xx is never described to the caller: it is logged server-side and answered with a fixed message, the code aside.
 - A failure the route cannot fix (its own `response` schema, an unmapped status) is treated as a server bug: logged, and answered as a 500 rather than a 4xx.

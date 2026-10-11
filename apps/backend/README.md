@@ -349,5 +349,10 @@ with its own body. A bare `throw status(404)` still answers `404 not-found`, but
 it drops the route's message and gets no `code`, which is why failures go
 through `httpError` instead.
 
+What a route never throws, the handler answers on its own: a request that
+fails a route's schema, or a malformed JSON body, is a `422 validation-error`;
+a route that returns something its own `response` schema rejects is a server
+bug, logged and answered as a `500`.
+
 The full rules (which codes exist, what happens on a 5xx, how the frontend types
 the body) live in [`docs/endpoints.md`](./docs/endpoints.md#errors-and-how-to-raise-them).

@@ -1,7 +1,7 @@
 import { Elysia, t, ElysiaCustomStatusResponse, ValidationError } from 'elysia'
 
 import type { ApiErrorBody } from '@/core/errors/errors'
-import { ErrorCode, genericErrorForStatus, HttpError } from '@/core/errors/errors'
+import { ErrorCode, VALIDATION_ERROR_MESSAGE, genericErrorForStatus, HttpError } from '@/core/errors/errors'
 
 /**
  * Response schema for `{ error, code }`. Declare it on routes that can fail so
@@ -33,9 +33,9 @@ const SERVER_FAULT_MESSAGE = 'Something went wrong'
  * - no matching route → 404 `not-found`
  * - a route failing its own `response` schema → logged, then a generic 500
  *   `internal-error`: a server bug, never the caller's 400
- * - Elysia body/query/param validation (and JSON parse) failures → 400
- *   `bad-request`; Elysia's default `{ type: 'validation', ... }` shape would
- *   otherwise break the contract
+ * - Elysia body/query/param validation (and JSON parse) failures → 422
+ *   `validation-error`; Elysia's default `{ type: 'validation', ... }` shape
+ *   would otherwise break the contract
  * - anything else (bugs, driver errors) → logged here, then a generic 500
  *   `internal-error`. The real cause is never returned to the client.
  *
@@ -85,16 +85,20 @@ export const errorHandler = new Elysia({ name: 'errorHandler' })
     if (code === 'VALIDATION' || code === 'PARSE') {
       // Elysia lumps caller input failures and a route failing its own
       // `response` schema under one `VALIDATION` code. The first is the
-      // caller's fault and a 400 they can act on; the second is our bug, so it
-      // is logged and answered with a 500 instead of a 400 nobody can fix.
+      // caller's fault and a 422 they can act on; the second is our bug, so it
+      // is logged and answered with a 500 instead of a 4xx nobody can fix.
       if (error instanceof ValidationError && error.type === 'response') {
         console.error(`Response validation failed on ${path}:`, error)
         set.status = 500
         return { error: SERVER_FAULT_MESSAGE, code: ErrorCode.internalError }
       }
 
-      set.status = 400
-      return { error: 'Request failed validation', code: ErrorCode.badRequest }
+      // 422, not 400: the request did not match the declared schema, which is
+      // a different failure from a route deciding `httpError.badRequest` that
+      // its input is semantically wrong. Same body `genericErrorForStatus`
+      // answers for a thrown `status(422)`, so the two cannot diverge.
+      set.status = 422
+      return { error: VALIDATION_ERROR_MESSAGE, code: ErrorCode.validationError }
     }
 
     if (code === 'NOT_FOUND') {

@@ -4,7 +4,7 @@ import { test } from 'node:test'
 import { status, t } from 'elysia'
 
 import { createApp } from '@/main'
-import { ErrorCode, httpError, HttpError } from '@/core/errors/errors'
+import { ErrorCode, httpError, HttpError, VALIDATION_ERROR_MESSAGE } from '@/core/errors/errors'
 
 // The reference integration-test pattern from I-1: drive the real app through
 // `createApp().handle(request)` — no listener, no fixtures, no database.
@@ -49,6 +49,9 @@ const app = createApp()
   })
   .get('/status-unmapped', () => {
     throw status(429)
+  })
+  .get('/status-validation', () => {
+    throw status(422)
   })
 
 const get = async (path: string) => {
@@ -114,14 +117,17 @@ test('the generic factories map to their documented statuses', async () => {
   assert.deepEqual(body, { error: 'page_size must be a positive integer', code: ErrorCode.badRequest })
 })
 
-test("input validation failures are the caller's fault: 400 bad-request", async () => {
+test("input validation failures are the caller's fault: 422 validation-error", async () => {
   const valid = await get('/validated?year=2025')
   assert.equal(valid.status, 200)
   assert.deepEqual(valid.body, { year: '2025' })
 
   const invalid = await get('/validated')
-  assert.equal(invalid.status, 400)
-  assert.deepEqual(invalid.body, { error: 'Request failed validation', code: ErrorCode.badRequest })
+  assert.equal(invalid.status, 422)
+  assert.deepEqual(invalid.body, {
+    error: VALIDATION_ERROR_MESSAGE,
+    code: ErrorCode.validationError,
+  })
 })
 
 test('a route failing its own response schema is a logged 500, not a 400', async () => {
@@ -183,6 +189,16 @@ test("throw status(n, body) keeps the route's own error body", async () => {
 
   assert.equal(withBody.status, 403)
   assert.deepEqual(withBody.body, { error: 'not an admin of this course', code: 'forbidden' })
+})
+
+test('a thrown status(422) answers the same body as Elysia validation', async () => {
+  const { status: result, body } = await get('/status-validation')
+
+  assert.equal(result, 422)
+  assert.deepEqual(body, {
+    error: VALIDATION_ERROR_MESSAGE,
+    code: ErrorCode.validationError,
+  })
 })
 
 test('an unmapped status keeps its status but answers internal-error', async () => {

@@ -67,15 +67,25 @@ export const httpError = {
 }
 
 /**
+ * Message for a request that failed schema validation — the caller's fault, so
+ * the body says what to fix rather than worse. Shared with
+ * `error-handler.ts`, where the same failure is answered from Elysia's
+ * `VALIDATION` code instead of a thrown status.
+ */
+export const VALIDATION_ERROR_MESSAGE = 'Request failed validation'
+
+/**
  * The body for `throw status(...)` — Elysia's custom status response — when the
  * route threw a status without a body of its own.
  *
  * Elysia reports those to the `onError` hook as a numeric code with no `Error`
  * instance, so the route never gets to describe its own failure. Mapping the
  * status here keeps `throw status(404)` indistinguishable from
- * `throw httpError.notFound()`. Statuses we have no code for keep their own
- * status but answer `internal-error`, since an unmapped 5xx is a bug and an
- * unmapped 4xx is at least the caller's fault.
+ * `throw httpError.notFound()`. 422 maps to the same `{ error, code }` as
+ * Elysia's own `VALIDATION` failures, so a route that throws `status(422)`
+ * cannot produce a different shape for the same failure. Statuses we have no
+ * code for keep their own status but answer `internal-error`, since an unmapped
+ * 5xx is a bug and an unmapped 4xx is at least the caller's fault.
  */
 export function genericErrorForStatus(status: number): ApiErrorBody {
   let error: HttpError | undefined
@@ -97,7 +107,7 @@ export function genericErrorForStatus(status: number): ApiErrorBody {
       error = httpError.conflict()
       break
     case 422:
-      error = new HttpError(ErrorCode.validationError, 'Request failed validation', 422)
+      error = new HttpError(ErrorCode.validationError, VALIDATION_ERROR_MESSAGE, 422)
       break
   }
 
