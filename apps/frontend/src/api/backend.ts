@@ -1,9 +1,9 @@
 import { Major, CourseInfo } from '../@types'
 import { dev_config, getSemester, config } from '../utils'
 import Cookies from 'js-cookie'
+import { ENV } from 'varlock/env'
 
-const prod_val = import.meta.env.VITE_APP_PROD
-const BE_CONFIG = Number(prod_val) ? config : dev_config
+const BE_CONFIG = ENV.VITE_APP_PROD ? config : dev_config
 const BACKEND_URL =
   import.meta.env.VITE_APP_BACKEND_URL ||
   `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`

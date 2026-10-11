@@ -17,8 +17,9 @@ import Exchange from './pages/Exchange'
 import { useEffect } from 'react'
 import api from './api/backend'
 import * as Sentry from '@sentry/react'
+import { ENV } from 'varlock/env'
 
-const configToUse = Number(import.meta.env.VITE_APP_PROD) ? config : dev_config
+const configToUse = ENV.VITE_APP_PROD ? config : dev_config
 
 // Configures the path for pages.
 const pages = [
