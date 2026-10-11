@@ -55,6 +55,17 @@ describe('auth compat routes', () => {
     )
   })
 
+  it('keeps the https scheme when behind a TLS proxy', async () => {
+    const app = buildApp()
+    const res = await app.handle(
+      new Request('http://tts-dev.niaefeup.pt/oidc-auth/authenticate/', {
+        headers: { 'x-forwarded-proto': 'https' },
+      }),
+    )
+
+    expect(res.headers.get('location')).toBe('https://tts-dev.niaefeup.pt/api/v1/auth/login')
+  })
+
   it('returns the legacy session shape at /auth/info/', async () => {
     const app = buildApp()
     const res = await app.handle(new Request('http://localhost/auth/info/', { headers: { cookie: 'session=tok-1' } }))
