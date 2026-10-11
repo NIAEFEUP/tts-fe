@@ -6,9 +6,10 @@
 //   { "error": "Faculty FEUP was not found", "code": "faculty-not-found" }
 //
 // `code` is stable and machine-readable so clients can branch on it (the
-// frontend maps codes to copy, see `exchangeErrorToText` in
-// `apps/frontend/src/utils/error.ts`), while `error` is the human-readable
-// message. Nothing internal (stack traces, SQL, upstream errors) ever leaks.
+// frontend maps codes to copy, e.g. via `exchangeErrorToText` in
+// `apps/frontend/src/utils/error.ts` — note it must read `.code`, not `.error`,
+// once migrated), while `error` is the human-readable message.
+// Nothing internal (stack traces, SQL, upstream errors) ever leaks.
 
 /** The wire shape of every error response. */
 export type ApiErrorBody = {
