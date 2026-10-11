@@ -68,7 +68,8 @@ Every failing response is `{ error, code }`: `error` is written for the caller, 
 
 ## 1. Auth
 
-Sigarra federated authentication (OIDC-style redirect flow).
+Sigarra federated authentication (OIDC-style redirect flow) in production, plus a
+dev-only username/password login (see `POST /auth/dev-login` below).
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
@@ -85,12 +86,11 @@ them. It validates against Sigarra and sets the same session cookie as OIDC.
 
 ### Compatibility-only auth routes
 
-These exist because the current frontend still references them. You can drop them
-once the frontend is migrated.
+Kept for older clients; the current frontend uses the canonical routes above, so
+these can be dropped once nothing references them.
 
-The shims are mounted at the **root**, not under `/api/v1`: the un-migrated
-frontend builds its URLs from `BACKEND_URL` with an empty path prefix, so
-`GET /oidc-auth/authenticate/` and `GET /auth/info/` must answer at the origin.
+They are mounted at the **root**, not under `/api/v1`, because clients built their
+URLs from `BACKEND_URL` with an empty path prefix.
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
@@ -114,11 +114,14 @@ frontend builds its URLs from `BACKEND_URL` with an empty path prefix, so
   "email": "up202301234@up.pt",
   "name": "Ana Silva",
   "signed": true,
-  "isAdmin": false
+  "isAdmin": false,
+  "role": "USER"
 }
 ```
 
-Replaces legacy `GET /auth/info/` and `GET /info/`.
+`role` is `USER` | `ADMIN` | `SUPERUSER` and is assigned by the seeder, not by
+logging in (see `db:seed:demo` / `ADMIN_ROLE`). Replaces legacy `GET /auth/info/`
+and `GET /info/`.
 
 ---
 

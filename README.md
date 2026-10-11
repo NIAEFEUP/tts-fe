@@ -49,14 +49,37 @@ That's the whole daily loop: `docker compose up -d` (if stopped) + the two `bun 
 
 Both apps load their config from a committed `.env.schema` (with working defaults), validated by
 [varlock](https://varlock.dev). The backend `apps/backend/.env` created in step 3 is your local
-copy — edit it directly. The only value you must change for local dev is your NMEC:
+copy — edit it directly. For local dev you'll want your NMEC and the Sigarra credentials the dev
+login uses:
 
 ```bash
 # apps/backend/.env
-ADMIN_UP=up202012345
+ADMIN_UP=up202012345          # your NMEC — becomes the seeded admin account
+ADMIN_ROLE=ADMIN              # USER | ADMIN | SUPERUSER
+SIGARRA_USERNAME=202012345    # Sigarra login used by the dev login
+SIGARRA_PASSWORD=…
 ```
 
 The frontend needs no `.env` for local dev. Validate with `bunx varlock load` from inside the app.
+
+## Authentication
+
+Two flows, selected by environment:
+
+- **Local dev — username/password.** `POST /api/v1/auth/dev-login` validates
+  `SIGARRA_USERNAME`/`SIGARRA_PASSWORD` against Sigarra and issues a cookie session. Enabled by
+  `DEV_LOGIN_ENABLED` (on by default, forced off when `NODE_ENV=production`). The frontend shows
+  this button when `VITE_APP_FEDERATED_AUTH=false` (the default).
+- **Production — Sigarra OIDC.** `GET /api/v1/auth/login` redirects to Sigarra; the callback
+  exchanges the code, upserts the user and sets the same httpOnly `session` cookie. Set
+  `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` / `OIDC_REDIRECT_URI` / `FRONTEND_URL` /
+  `ALLOWED_ORIGINS` on the backend (see `apps/backend/.env.schema`) and
+  `VITE_APP_FEDERATED_AUTH=true` on the frontend.
+
+Roles are assigned by **seeding**, never by logging in: `db:seed:demo` creates the `ADMIN_UP`
+account with `ADMIN_ROLE` and full admin scope. NMECs are stored as bare digits, so
+`ADMIN_UP=up202207150` and `202207150` are the same account. The full API surface is in
+[`apps/backend/docs/endpoints.md`](./apps/backend/docs/endpoints.md#1-auth).
 
 ## Notes
 
