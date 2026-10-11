@@ -1,146 +1,143 @@
 import { Elysia, t } from 'elysia'
+import { createBeginLogin } from '@/application/use-cases/auth/begin-login'
+import { createCompleteLogin, InvalidOidcStateError } from '@/application/use-cases/auth/complete-login'
+import { createLogout } from '@/application/use-cases/auth/logout'
+import type { AuthConfig } from '@/core/config/auth'
+import type { IdentityProvider } from '@/domain/ports/identity-provider'
+import type { SessionRepository } from '@/domain/ports/session.repository'
+import type { UserRepository } from '@/domain/ports/user.repository'
+import { isAdmin } from '@/core/auth/user'
+import { createAuthMiddleware } from '@/interface/middleware/auth.middleware'
+import {
+  applyCookiePreferences,
+  NONCE_COOKIE,
+  RETURN_TO_COOKIE,
+  STATE_COOKIE,
+  TRANSIENT_COOKIE_TTL_SECONDS,
+} from './auth.utils'
 
-// The database client and the connect helper are injected by the composition
-// root (`src/main.ts`). Describing the shape structurally here avoids importing
-// `@/infrastructure/**` from the interface layer, which the project's
-// clean-architecture lint rule forbids.
-type DbUser = {
-  id: string
-  name: string
-  email: string | null
-  role: string
+const OIDC_NOT_CONFIGURED = {
+  error: 'Sigarra OIDC is not configured on this server',
+  code: 'oidc-not-configured',
 }
 
-type InjectedDb = {
-  orm: {
-    public: {
-      User: {
-        where(query: { id: string }): { first(): Promise<DbUser | null> }
-        create(data: { id: string; name: string; email: string }): Promise<DbUser>
-      }
-    }
-  }
+export type AuthRoutesDeps = {
+  provider: IdentityProvider
+  users: UserRepository
+  sessions: SessionRepository
+  config: AuthConfig
 }
 
-export type AuthDependencies = {
-  db: InjectedDb
-  connectDatabase(): Promise<void>
-}
+/**
+ * Canonical auth routes, mounted under `/api/v1/auth`:
+ *   GET  /login     — redirect to Sigarra
+ *   GET  /callback  — Sigarra redirects back; set the session cookie
+ *   POST /logout    — clear the session
+ *   GET  /me        — current user (or `{ signed: false }`)
+ */
+export const authRoutes = ({ provider, users, sessions, config }: AuthRoutesDeps) => {
+  const beginLogin = createBeginLogin({ provider, frontendUrl: config.frontendUrl })
+  const completeLogin = createCompleteLogin({
+    provider,
+    users,
+    sessions,
+    sessionTtlMs: config.sessionTtlSeconds * 1000,
+    frontendUrl: config.frontendUrl,
+  })
+  const logout = createLogout({ sessions })
 
-// `authRoutes` is a factory so it can `.decorate()` its own dependencies onto
-// this plugin instance. That makes `db` and `connectDatabase` part of the route
-// context types, so the handlers read them straight from the context — no
-// `as unknown as` cast required.
-export const authRoutes = ({ db, connectDatabase }: AuthDependencies) =>
-  new Elysia({ prefix: '/auth' })
-    .decorate('db', db)
-    .decorate('connectDatabase', connectDatabase)
-    .post(
+  return new Elysia({ prefix: '/api/v1/auth' })
+    .use(createAuthMiddleware({ resolveSession: sessions.resolve }))
+    .get(
       '/login',
-      async ({ body, set, db, connectDatabase }) => {
-        const { username, password } = body
+      ({ query, cookie, redirect, status }) => {
+        if (!config.oidcConfigured) return status(503, OIDC_NOT_CONFIGURED)
 
-        try {
-          const params = new URLSearchParams()
-          params.append('p_user', username)
-          params.append('p_pass', password)
+        const { url, state, nonce, returnTo } = beginLogin(query.return_to)
 
-          const response = await fetch('https://sigarra.up.pt/feup/pt/vld_validacao.validacao', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'User-Agent':
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            },
-            body: params,
-            redirect: 'manual',
-          })
+        cookie[STATE_COOKIE].value = state
+        applyCookiePreferences(cookie[STATE_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
+        cookie[NONCE_COOKIE].value = nonce
+        applyCookiePreferences(cookie[NONCE_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
+        cookie[RETURN_TO_COOKIE].value = returnTo
+        applyCookiePreferences(cookie[RETURN_TO_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
 
-          const rawCookies = response.headers.get('set-cookie') || ''
-
-          // Sigarra login mechanism:
-          // Successful login yields HTTP 200 + <meta http-equiv="Refresh" ...> + SI_SECURITY and SI_SESSION cookies.
-          // Failed login yields HTTP 200 + HTML page + HTTP_SESSION cookie only (no SI_SECURITY).
-          if (!rawCookies.includes('SI_SECURITY')) {
-            set.status = 401
-            return { error: 'Invalid Sigarra credentials' }
-          }
-
-          // -------------------------------------------------------------
-          // Persist / update the user via the injected database client
-          // -------------------------------------------------------------
-          await connectDatabase()
-
-          const existingUser = await db.orm.public.User.where({ id: username }).first()
-          let dbUser = existingUser
-
-          if (!dbUser) {
-            dbUser = await db.orm.public.User.create({
-              id: username,
-              name: 'Student', // Can be enriched from Sigarra later
-              email: `${username}@fe.up.pt`,
-              // `role` defaults to UserRole.USER
-            })
-          }
-
-          return {
-            message: 'Login successful via Sigarra and saved to Database',
-            user: {
-              id: dbUser.id,
-              name: dbUser.name,
-              email: dbUser.email,
-              role: dbUser.role,
-            },
-            token: rawCookies,
-          }
-        } catch (error) {
-          console.error('Sigarra auth error: ', error)
-          set.status = 500
-          return { error: 'Failed to contact Sigarra servers or database' }
-        }
+        return redirect(url, 302)
       },
       {
-        body: t.Object({
-          username: t.String(),
-          password: t.String(),
-        }),
+        query: t.Object({ return_to: t.Optional(t.String()) }),
       },
     )
     .get(
-      '/me',
-      async ({ query, set, db, connectDatabase }) => {
-        // For testing purposes, pass ?userId=up... to inspect their DB record
-        const userId = query.userId
-        if (!userId) {
-          return {
-            signed: true,
-            username: 'up_live_session',
-            name: 'Authenticated UP.PT Student',
-            eligible_exchange: true,
-            role: 'USER',
+      '/callback',
+      async ({ query, cookie, redirect, status }) => {
+        if (!config.oidcConfigured) return status(503, OIDC_NOT_CONFIGURED)
+
+        const clearTransient = () => {
+          cookie[STATE_COOKIE].remove()
+          cookie[NONCE_COOKIE].remove()
+          cookie[RETURN_TO_COOKIE].remove()
+        }
+
+        if (query.error) {
+          clearTransient()
+          return status(401, {
+            error: query.error_description ?? query.error,
+            code: 'oidc-auth-error',
+          })
+        }
+
+        if (!query.code) {
+          return status(400, { error: 'Missing authorization code', code: 'oidc-missing-code' })
+        }
+
+        try {
+          const { token, redirectTo } = await completeLogin({
+            code: query.code,
+            state: query.state ?? '',
+            expectedState: cookie[STATE_COOKIE].value as string | undefined,
+            returnTo: cookie[RETURN_TO_COOKIE].value as string | undefined,
+          })
+
+          clearTransient()
+          cookie.session.value = token
+          applyCookiePreferences(cookie.session, config, config.sessionTtlSeconds)
+
+          return redirect(redirectTo, 302)
+        } catch (error) {
+          clearTransient()
+          if (error instanceof InvalidOidcStateError) {
+            return status(400, { error: 'Invalid OIDC state', code: 'oidc-state-mismatch' })
           }
-        }
-
-        await connectDatabase()
-        const user = await db.orm.public.User.where({ id: userId }).first()
-        if (!user) {
-          set.status = 404
-          return { error: 'User not found in DB' }
-        }
-
-        return {
-          signed: true,
-          username: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+          console.error('Sigarra OIDC callback failed:', error)
+          return status(502, {
+            error: 'Failed to complete Sigarra login',
+            code: 'oidc-callback-failed',
+          })
         }
       },
       {
-        query: t.Optional(
-          t.Object({
-            userId: t.Optional(t.String()),
-          }),
-        ),
+        query: t.Object({
+          code: t.Optional(t.String()),
+          state: t.Optional(t.String()),
+          error: t.Optional(t.String()),
+          error_description: t.Optional(t.String()),
+        }),
       },
     )
+    .get('/me', ({ user }) => {
+      if (!user) return { signed: false as const }
+      return {
+        signed: true as const,
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        isAdmin: isAdmin(user),
+      }
+    })
+    .post('/logout', async ({ cookie }) => {
+      await logout(cookie.session.value as string | undefined)
+      cookie.session.remove()
+      return { signed: false as const }
+    })
+}
