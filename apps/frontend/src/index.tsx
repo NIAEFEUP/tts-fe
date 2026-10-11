@@ -12,25 +12,29 @@ import { useLocation, useNavigationType, createRoutesFromChildren, matchRoutes }
 const strictMode = false
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
+// Only include integrations we actually enable. Passing `null` entries (e.g. when tracing is
+// disabled) crashes Sentry's `filterDuplicates`, which destructures `name` from each entry.
+const sentryIntegrations = ENV.VITE_APP_SENTRY_TRACING
+  ? [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration(),
+      Sentry.reactRouterV6BrowserTracingIntegration({
+        useEffect: React.useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes,
+      }),
+    ]
+  : []
+
 Sentry.init({
   environment: ENV.VITE_APP_PROD ? 'production' : 'development',
   dsn: import.meta.env.VITE_APP_SENTRY_DSN,
   // Route envelopes through our own origin so adblockers (which block the don't silently drop events.
   // Keep this in sync with SENTRY_TUNNEL in components/FeedbackReport.tsx.
   tunnel: '/feedback',
-  integrations: [
-    ENV.VITE_APP_SENTRY_TRACING ? Sentry.browserTracingIntegration() : null,
-    ENV.VITE_APP_SENTRY_TRACING ? Sentry.replayIntegration() : null,
-    ENV.VITE_APP_SENTRY_TRACING
-      ? Sentry.reactRouterV6BrowserTracingIntegration({
-          useEffect: React.useEffect,
-          useLocation,
-          useNavigationType,
-          createRoutesFromChildren,
-          matchRoutes,
-        })
-      : null,
-  ],
+  integrations: sentryIntegrations,
 
   // Performance monitoring
   tracesSampleRate: 1.0,
