@@ -156,7 +156,7 @@ test('httpError.internal collapses to internal-error and still logs', async () =
 })
 
 test('an unmatched route returns 404 not-found instead of a 500', async () => {
-  const { status, body } = await get('/faculties')
+  const { status, body } = await get('/definitely-not-a-route')
 
   assert.equal(status, 404)
   assert.deepEqual(body, { error: 'Route not found', code: ErrorCode.notFound })
