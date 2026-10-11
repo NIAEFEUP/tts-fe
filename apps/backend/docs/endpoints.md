@@ -79,13 +79,19 @@ Sigarra federated authentication (OIDC-style redirect flow).
 
 ### Compatibility-only auth routes
 
-These exist because the current frontend still references them. You can drop them once the frontend is migrated.
+These exist because the current frontend still references them. You can drop them
+once the frontend is migrated.
+
+The shims are mounted at the **root**, not under `/api/v1`: the un-migrated
+frontend builds its URLs from `BACKEND_URL` with an empty path prefix, so
+`GET /oidc-auth/authenticate/` and `GET /auth/info/` must answer at the origin.
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/oidc-auth/authenticate/` | public | Legacy login redirect (replace with `/auth/login`) |
-| `POST` | `/oidc-auth/logout/` | `?` | Legacy logout (replace with `/auth/logout`) |
-| `POST` | `/sigarra_login/` | public | Dev-only local login bypass |
+| `GET` | `/oidc-auth/authenticate/` | public | 302 → `/api/v1/auth/login` |
+| `POST` | `/oidc-auth/logout/` | `?` | Clears the session (ignores the legacy CSRF header) |
+| `GET` | `/auth/info/` | public | Legacy `{ signed, username, name, eligible_exchange, is_admin }` shape |
+| `POST` | `/sigarra_login/` | public | Dev-only local login bypass, gated by `DEV_LOGIN_ENABLED` |
 
 ### Flow
 
