@@ -1,3 +1,4 @@
+import { normalizeNmec } from '@/core/auth/nmec'
 import type { IdentityProvider, OidcUserClaims } from '@/domain/ports/identity-provider'
 
 export type SigarraOidcConfig = {
@@ -19,7 +20,7 @@ export class OidcExchangeError extends Error {
 }
 
 function mapClaims(claims: Record<string, unknown>): OidcUserClaims {
-  const nmec = typeof claims.nmec === 'string' ? claims.nmec.trim() : ''
+  const nmec = normalizeNmec(typeof claims.nmec === 'string' ? claims.nmec : '')
   if (!nmec) {
     throw new OidcExchangeError('Sigarra userinfo did not include an "nmec" claim')
   }
