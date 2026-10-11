@@ -2,6 +2,7 @@ import { node } from '@elysiajs/node'
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { pathToFileURL } from 'node:url'
+import { errorHandler } from '@/interface/middleware/error-handler'
 import { healthRoutes } from '@/interface/routes/health.routes'
 import { authRoutes } from '@/interface/routes/auth/auth.routes'
 import { db, connectDatabase } from '@/infrastructure/database/prisma'
@@ -12,6 +13,7 @@ export function createApp() {
       // Composition root: hand the interface layer its database dependencies so
       // it never has to import from `@/infrastructure/**` directly.
       .use(cors())
+      .use(errorHandler)
       .use(healthRoutes)
       .use(authRoutes({ db, connectDatabase }))
       .get('/', () => ({ message: 'Hello from tts-be!' }))
