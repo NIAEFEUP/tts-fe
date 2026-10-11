@@ -24,8 +24,8 @@ export type ApiErrorBody = {
  * here — this map only exists for the cases every endpoint can hit.
  *
  * Every code's status is set at the throw site (see the factories below), so
- * there is no guessing: a typo'd code fails as a 500 rather than silently
- * succeeding as some other status.
+ * the factories are the source of truth. The `code` string itself is not
+ * validated — a typo produces a wrong `code` on the wire, not a status change.
  */
 export const ErrorCode = {
   badRequest: 'bad-request',
