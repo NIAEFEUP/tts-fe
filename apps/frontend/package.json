@@ -7,6 +7,7 @@
     "@blobatar/react": "^2.5.0",
     "@elysiajs/eden": "^1.4.9",
     "@floating-ui/react": "^0.27.19",
+    "@floating-ui/react-dom": "^2.1.9",
     "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.1.1",
     "@hookform/resolvers": "5.4.0",
@@ -31,7 +32,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sentry/react": "^8.33.1",
     "@sentry/vite-plugin": "^2.22.1",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^6.10.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.1",
@@ -46,7 +47,7 @@
     "classnames": "^2.3.1",
     "clsx": "^2.1.0",
     "cmdk": "^1.1.1",
-    "cva": "^1.0.0-beta.4",
+    "cva": "1.0.0-beta.10",
     "date-fns": "^3.6.0",
     "esbuild": "^0.25.0",
     "html-to-image": "^1.11.11",
@@ -77,7 +78,7 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "tsc -b && vite build",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
     "preview": "vite preview"
@@ -100,6 +101,7 @@
     "@varlock/vite-integration": "^1.5.2",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.2.1",
+    "tts-be": "workspace:*",
     "typescript": "^6.0.3",
     "varlock": "^1.21.1"
   }
