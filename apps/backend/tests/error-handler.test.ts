@@ -32,6 +32,12 @@ const app = createApp()
   .get('/boom', () => {
     throw new Error('connect ECONNREFUSED 127.0.0.1:5432')
   })
+  .get('/driver-failure', () => {
+    throw new HttpError('db-timeout', 'connect ETIMEDOUT 127.0.0.1:5432', 503)
+  })
+  .get('/internal-factory', () => {
+    throw httpError.internal('connect ECONNREFUSED 127.0.0.1:5432')
+  })
 
 const get = async (path: string) => {
   const response = await app.handle(new Request(`http://localhost${path}`))
@@ -39,6 +45,21 @@ const get = async (path: string) => {
     status: response.status,
     contentType: response.headers.get('content-type') ?? '',
     body: (await response.json()) as unknown,
+  }
+}
+
+type HttpResult = Awaited<ReturnType<typeof get>>
+
+/** Runs `fn` with `console.error` captured, for the branches that log. */
+const captureConsole = async (fn: () => Promise<HttpResult>) => {
+  const logged: string[] = []
+  const consoleError = console.error
+  console.error = (...args: unknown[]) => logged.push(args.map(String).join(' '))
+
+  try {
+    return { response: await fn(), logged }
+  } finally {
+    console.error = consoleError
   }
 }
 
@@ -92,16 +113,7 @@ test('Elysia validation failures use the same shape', async () => {
 })
 
 test('unexpected errors are logged server-side and never leaked', async () => {
-  const logged: string[] = []
-  const consoleError = console.error
-  console.error = (...args: unknown[]) => logged.push(args.map(String).join(' '))
-
-  let response: { status: number; contentType: string; body: unknown }
-  try {
-    response = await get('/boom')
-  } finally {
-    console.error = consoleError
-  }
+  const { response, logged } = await captureConsole(() => get('/boom'))
 
   assert.equal(response.status, 500)
   assert.deepEqual(response.body, { error: 'Something went wrong', code: ErrorCode.internalError })
@@ -111,6 +123,24 @@ test('unexpected errors are logged server-side and never leaked', async () => {
   assert.match(logged[0], /ECONNREFUSED/)
   // ...and never in the response body.
   assert.equal(JSON.stringify(response.body).includes('ECONNREFUSED'), false)
+})
+
+test('a 5xx HttpError keeps its status and code but not its message', async () => {
+  const { response, logged } = await captureConsole(() => get('/driver-failure'))
+
+  assert.equal(response.status, 503)
+  assert.deepEqual(response.body, { error: 'Something went wrong', code: 'db-timeout' })
+  assert.equal(logged.length, 1)
+  assert.match(logged[0], /ETIMEDOUT/)
+})
+
+test('httpError.internal collapses to internal-error and still logs', async () => {
+  const { response, logged } = await captureConsole(() => get('/internal-factory'))
+
+  assert.equal(response.status, 500)
+  assert.deepEqual(response.body, { error: 'Something went wrong', code: ErrorCode.internalError })
+  assert.equal(logged.length, 1)
+  assert.match(logged[0], /ECONNREFUSED/)
 })
 
 test('an unmatched route returns 404 not-found instead of a 500', async () => {

@@ -16,9 +16,18 @@ export const apiError = t.Object({
 })
 
 /**
+ * Message for every 5xx, whatever the cause. A 5xx is a bug or a dependency
+ * failing, so the body must not describe itself — the cause goes to the logs.
+ */
+const SERVER_FAULT_MESSAGE = 'Something went wrong'
+
+/**
  * Turns every failure into `{ error, code }`:
  *
- * - an `HttpError` thrown by a handler → its own code, message and status
+ * - an `HttpError` thrown by a handler → its own code, status and message
+ * - an `HttpError` with a 5xx status → its code and status, but a fixed
+ *   message plus a log of the real cause, since such a message is usually
+ *   driver/internal text that must not reach the client
  * - no matching route → 404 `not-found`
  * - Elysia body/query/param validation (and JSON parse) failures → 400
  *   `bad-request`; Elysia's default `{ type: 'validation', ... }` shape would
@@ -37,6 +46,15 @@ export const errorHandler = new Elysia({ name: 'errorHandler' })
   .onError(({ code, error, set, path }): ApiErrorBody => {
     if (error instanceof HttpError) {
       set.status = error.status
+
+      // `httpError.internal(message)` — and any other 5xx — carries its cause
+      // in `message`, so the message is the unsafe part, not the code. Keep
+      // the code (a stable, developer-authored identifier) and drop the rest.
+      if (error.status >= 500) {
+        console.error(`Unhandled error on ${code} ${path}:`, error)
+        return { error: SERVER_FAULT_MESSAGE, code: error.code }
+      }
+
       return { error: error.message, code: error.code }
     }
 
@@ -52,6 +70,6 @@ export const errorHandler = new Elysia({ name: 'errorHandler' })
 
     console.error(`Unhandled error on ${code} ${path}:`, error)
     set.status = 500
-    return { error: 'Something went wrong', code: ErrorCode.internalError }
+    return { error: SERVER_FAULT_MESSAGE, code: ErrorCode.internalError }
   })
   .as('global')
