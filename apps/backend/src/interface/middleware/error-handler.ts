@@ -1,7 +1,7 @@
 import { Elysia, t, ElysiaCustomStatusResponse, ValidationError } from 'elysia'
 
-import type { ApiErrorBody } from '@/core/errors/errors'
-import { ErrorCode, VALIDATION_ERROR_MESSAGE, genericErrorForStatus, HttpError } from '@/core/errors/errors'
+import type { ApiErrorBody } from '@/interface/errors/errors'
+import { ErrorCode, VALIDATION_ERROR_MESSAGE, genericErrorForStatus, HttpError } from '@/interface/errors/errors'
 
 /**
  * Response schema for `{ error, code }`. Declare it on routes that can fail so

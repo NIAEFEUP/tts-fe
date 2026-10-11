@@ -10,6 +10,18 @@
 // `apps/frontend/src/utils/error.ts` — note it must read `.code`, not `.error`,
 // once migrated), while `error` is the human-readable message.
 // Nothing internal (stack traces, SQL, upstream errors) ever leaks.
+//
+// Why this lives in `interface/` and not `core/`: every export below is
+// transport. `ApiErrorBody` is the wire shape, `HttpError` carries an HTTP
+// status, `genericErrorForStatus` turns a status into a body. The directory is
+// the enforcement — a file under `domain/` or `application/` importing from
+// `interface/` is wrong on its face, whereas one importing `core/` is not.
+//
+// When the domain needs to fail it throws its own error from `domain/errors` —
+// a `FacultyNotFound` that carries an acronym, not a status wearing a domain
+// name — and the hook in `error-handler.ts` grows an `instanceof` branch for it
+// next to the `HttpError` one. That is additive: nothing here moves, and the
+// routes that already import it are unaffected.
 
 /** The wire shape of every error response. */
 export type ApiErrorBody = {

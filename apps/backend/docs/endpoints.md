@@ -26,6 +26,8 @@ This document maps the legacy Django routes (`apps/backend/legacy/django/univers
 
 Every failing response is `{ error, code }`: `error` is written for the caller, `code` is a stable, kebab-case identifier the client branches on. Routes do not build error responses by hand — they throw, and `src/interface/middleware/error-handler.ts` converts the throw into the response (status, content type and logging included).
 
+**Layering** — `HttpError`, `ErrorCode` and `genericErrorForStatus` live in `src/interface/errors/` because every one of them is transport: a wire shape, an HTTP status, or a status-to-body mapping. The directory is the enforcement, so a `domain/` or `application/` file importing from `interface/` is wrong on its face while one importing `core/` would not be. When the domain needs to fail it throws its own error from `domain/errors` — a `FacultyNotFound` that carries an acronym, not a status wearing a domain name — and the handler grows an `instanceof` branch for it next to the `HttpError` one. Nothing above moves when that happens, and the routes already importing `interface/errors` are unaffected.
+
 **Failures — `throw httpError.<x>(...)`**
 
 - `httpError.notFound`, `.badRequest`, `.unauthorized`, `.forbidden`, `.conflict`, `.internal`

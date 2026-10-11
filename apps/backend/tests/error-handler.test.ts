@@ -4,7 +4,7 @@ import { test } from 'node:test'
 import { status, t } from 'elysia'
 
 import { createApp } from '@/main'
-import { ErrorCode, httpError, HttpError, VALIDATION_ERROR_MESSAGE } from '@/core/errors/errors'
+import { ErrorCode, httpError, HttpError, VALIDATION_ERROR_MESSAGE } from '@/interface/errors/errors'
 
 // The reference integration-test pattern from I-1: drive the real app through
 // `createApp().handle(request)` — no listener, no fixtures, no database.

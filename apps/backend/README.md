@@ -334,7 +334,7 @@ Routes never set a status and return a body themselves. They **throw**, and
 `{ error, code }` response:
 
 ```ts
-import { httpError, HttpError } from '@/core/errors/errors'
+import { httpError, HttpError } from '@/interface/errors/errors'
 
 // the generic cases
 throw httpError.notFound(`Faculty ${acronym} was not found`)
