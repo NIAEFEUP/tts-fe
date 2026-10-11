@@ -11,11 +11,9 @@ export function createApp() {
     new Elysia({ adapter: 'Bun' in globalThis ? undefined : node() })
       // Composition root: hand the interface layer its database dependencies so
       // it never has to import from `@/infrastructure/**` directly.
-      .decorate('db', db)
-      .decorate('connectDatabase', connectDatabase)
       .use(cors())
       .use(healthRoutes)
-      .use(authRoutes)
+      .use(authRoutes({ db, connectDatabase }))
       .get('/', () => ({ message: 'Hello from tts-be!' }))
   )
 }
