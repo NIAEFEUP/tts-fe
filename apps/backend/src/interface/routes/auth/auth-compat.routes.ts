@@ -35,10 +35,13 @@ export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: Aut
     .use(createAuthMiddleware({ resolveSession: sessions.resolve }))
     .get(
       '/oidc-auth/authenticate/',
-      ({ query, redirect, request }) => {
-        // Undici (the Node adapter) rejects relative redirects, so resolve the
-        // target against the incoming request to an absolute URL.
+      ({ query, redirect, request, headers }) => {
+        // Undici (the Node adapter) rejects relative redirects, so build an
+        // absolute URL. Behind the dev TLS proxy the backend speaks plain HTTP,
+        // so honour X-Forwarded-Proto to keep the public scheme https.
         const target = new URL('/api/v1/auth/login', request.url)
+        const forwardedProto = headers['x-forwarded-proto']?.split(',')[0]?.trim()
+        if (forwardedProto) target.protocol = `${forwardedProto}:`
         if (query.return_to) target.searchParams.set('return_to', query.return_to)
         return redirect(target.toString(), 302)
       },
