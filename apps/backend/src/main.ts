@@ -4,13 +4,23 @@ import { cors } from '@elysiajs/cors'
 import { pathToFileURL } from 'node:url'
 import { errorHandler } from '@/interface/middleware/error-handler'
 import { healthRoutes } from '@/interface/routes/health.routes'
+import { PrismaFacultyRepository } from '@/infrastructure/database/repositories/PrismaFacultyRepository'
+import { db } from '@/infrastructure/database/prisma'
 
 export function createApp() {
-  return new Elysia({ adapter: 'Bun' in globalThis ? undefined : node() })
-    .use(cors())
-    .use(errorHandler)
-    .use(healthRoutes)
-    .get('/', () => ({ message: 'Hello from tts-be!' }))
+  return (
+    new Elysia({ adapter: 'Bun' in globalThis ? undefined : node() })
+      // Composition root: the interface layer gets its dependencies from the
+      // context and never imports `@/infrastructure/**` itself, which the
+      // clean-architecture lint rule in `.oxlintrc.json` forbids. Constructing
+      // the repository does not connect — the client is lazy — so `createApp()`
+      // stays usable in tests without a database.
+      .decorate('facultyRepository', new PrismaFacultyRepository(db))
+      .use(cors())
+      .use(errorHandler)
+      .use(healthRoutes)
+      .get('/', () => ({ message: 'Hello from tts-be!' }))
+  )
 }
 
 export type App = ReturnType<typeof createApp>
