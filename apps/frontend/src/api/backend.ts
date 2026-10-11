@@ -7,8 +7,9 @@ const BE_CONFIG = ENV.VITE_APP_PROD ? config : dev_config
 const BACKEND_URL =
   import.meta.env.VITE_APP_BACKEND_URL ||
   `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
-const OIDC_LOGIN_URL = `${BACKEND_URL}/oidc-auth/authenticate/`
-const OIDC_LOGOUT_URL = `${BACKEND_URL}/oidc-auth/logout/`
+const OIDC_LOGIN_URL = `${BACKEND_URL}/api/v1/auth/login`
+const OIDC_LOGOUT_URL = `${BACKEND_URL}/api/v1/auth/logout`
+const DEV_LOGIN_URL = `${BACKEND_URL}/api/v1/auth/dev-login`
 const SEMESTER = import.meta.env.VITE_APP_SEMESTER || getSemester()
 
 // If we are in september 2024 we use 2024, if we are january 2025 we use 2024 because the first year of the academic year (2024/2025)
@@ -148,6 +149,7 @@ const api = {
   BACKEND_URL,
   OIDC_LOGIN_URL,
   OIDC_LOGOUT_URL,
+  DEV_LOGIN_URL,
 }
 
 export default api
