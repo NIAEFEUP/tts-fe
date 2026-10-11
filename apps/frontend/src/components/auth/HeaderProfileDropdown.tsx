@@ -10,6 +10,19 @@ import { Popover } from '../ui/new/popover'
 import ScheduleContext from '../../contexts/ScheduleContext'
 import { Dialog } from '../ui/new/dialog'
 import { Divider } from '../ui/new/divider'
+import { Badge } from '../ui/new/badge'
+
+const ROLE_LABELS = {
+  USER: 'User',
+  ADMIN: 'Admin',
+  SUPERUSER: 'Superuser',
+} as const
+
+const ROLE_VARIANTS = {
+  USER: 'neutral',
+  ADMIN: 'success',
+  SUPERUSER: 'info',
+} as const
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false)
@@ -17,6 +30,8 @@ export const HeaderProfileDropdown = () => {
 
   const { user, forceScheduleRevalidation } = useContext(SessionContext)
   const { setExchangeSchedule } = useContext(ScheduleContext)
+
+  const role = (user?.role ?? 'USER') as keyof typeof ROLE_VARIANTS
 
   const logout = async () => {
     setLoggingOut(true)
@@ -27,7 +42,10 @@ export const HeaderProfileDropdown = () => {
   return (
     <Popover placement="bottom-end">
       <Popover.Trigger asChild>
-        <div className="cursor-pointer w-fit">
+        <div className="cursor-pointer w-fit flex items-center gap-2">
+          <Badge variant={ROLE_VARIANTS[role]} size="sm">
+            {ROLE_LABELS[role]}
+          </Badge>
           <Avatar className="border shadow-xs">
             <Avatar.Image src={studentInfoService.getStudentPictureUrl(user?.username)} />
             <Avatar.Fallback>{user?.name?.charAt(0) ?? ''}</Avatar.Fallback>
