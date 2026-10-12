@@ -14,14 +14,6 @@ const SIGARRA_PROFILE_ENDPOINT = 'https://sigarra.up.pt/feup/pt/mob_fest_geral.p
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 
-function readSetCookies(response: Response): string[] {
-  if (typeof response.headers.getSetCookie === 'function') {
-    return response.headers.getSetCookie()
-  }
-  const combined = response.headers.get('set-cookie')
-  return combined ? [combined] : []
-}
-
 /** `k=v; k2=v2` from a list of `Set-Cookie` headers. */
 function toCookieHeader(setCookies: string[]): string {
   return setCookies.map((cookie) => cookie.split(';')[0]).join('; ')
@@ -60,7 +52,7 @@ export function createSigarraDirectAuth(): DevAuthenticator {
         redirect: 'manual',
       })
 
-      const setCookies = readSetCookies(response)
+      const setCookies = response.headers.getSetCookie()
       const cookieHeader = toCookieHeader(setCookies)
       if (!cookieHeader.includes('SI_SECURITY')) return null
 
