@@ -1,12 +1,6 @@
 import type { UserRepository } from '@/domain/ports/user.repository'
-import type { AuthUser, UserRole } from '@/core/auth/user'
 import type { Database } from '@/infrastructure/database/prisma'
-
-type UserRow = { id: string; name: string; email: string | null; role: string }
-
-function toAuthUser(row: UserRow): AuthUser {
-  return { id: row.id, name: row.name, email: row.email, role: row.role as UserRole }
-}
+import { toAuthUser } from './auth-user.mapper'
 
 export function createUserRepository({ db }: { db: Database }): UserRepository {
   return {
