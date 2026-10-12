@@ -11,7 +11,7 @@ import type { UserRepository } from '@/domain/ports/user.repository'
 import { isAdmin } from '@/core/auth/user'
 import { ErrorCode } from '@/interface/errors/errors'
 import { createAuthMiddleware } from '@/interface/middleware/auth.middleware'
-import { applyCookiePreferences, RETURN_TO_COOKIE, STATE_COOKIE, TRANSIENT_COOKIE_TTL_SECONDS } from './auth.utils'
+import { RETURN_TO_COOKIE, STATE_COOKIE, TRANSIENT_COOKIE_TTL_SECONDS } from './auth.utils'
 
 const OIDC_NOT_CONFIGURED = {
   error: 'Sigarra OIDC is not configured on this server',
@@ -52,7 +52,13 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
   })
   const logout = createLogout({ sessions })
 
-  return new Elysia({ prefix: '/api/v1/auth' })
+  return new Elysia({
+    prefix: '/api/v1/auth',
+    // Every cookie this plugin writes (session + OIDC round-trip state) shares
+    // one attribute set; only maxAge differs per cookie. Elysia's `cookie`
+    // config applies it globally so call sites can't forget it.
+    cookie: { httpOnly: true, sameSite: 'lax' as const, path: '/', secure: config.secureCookies },
+  })
     .use(createAuthMiddleware({ resolveSession: sessions.resolve }))
     .get(
       '/login',
@@ -62,9 +68,9 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
         const { url, state, returnTo } = beginLogin(query.return_to)
 
         cookie[STATE_COOKIE].value = state
-        applyCookiePreferences(cookie[STATE_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
+        cookie[STATE_COOKIE].maxAge = TRANSIENT_COOKIE_TTL_SECONDS
         cookie[RETURN_TO_COOKIE].value = returnTo
-        applyCookiePreferences(cookie[RETURN_TO_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
+        cookie[RETURN_TO_COOKIE].maxAge = TRANSIENT_COOKIE_TTL_SECONDS
 
         return redirect(url, 302)
       },
@@ -98,13 +104,13 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
           const { token, redirectTo } = await completeLogin({
             code: query.code,
             state: query.state ?? '',
-            expectedState: cookie[STATE_COOKIE].value as string | undefined,
-            returnTo: cookie[RETURN_TO_COOKIE].value as string | undefined,
+            expectedState: cookie.oidc_state.value,
+            returnTo: cookie.oidc_return_to.value,
           })
 
           clearTransient()
           cookie.session.value = token
-          applyCookiePreferences(cookie.session, config, config.sessionTtlSeconds)
+          cookie.session.maxAge = config.sessionTtlSeconds
 
           return redirect(redirectTo, 302)
         } catch (error) {
@@ -125,6 +131,11 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
           state: t.Optional(t.String()),
           error: t.Optional(t.String()),
           error_description: t.Optional(t.String()),
+        }),
+        cookie: t.Cookie({
+          session: t.Optional(t.String()),
+          oidc_state: t.Optional(t.String()),
+          oidc_return_to: t.Optional(t.String()),
         }),
       },
     )
@@ -160,7 +171,7 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
         }
 
         cookie.session.value = result.token
-        applyCookiePreferences(cookie.session, config, config.sessionTtlSeconds)
+        cookie.session.maxAge = config.sessionTtlSeconds
 
         return {
           signed: true as const,
@@ -178,11 +189,16 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
             password: t.Optional(t.String()),
           }),
         ),
+        cookie: t.Cookie({ session: t.Optional(t.String()) }),
       },
     )
-    .post('/logout', async ({ cookie }) => {
-      await logout(cookie.session.value as string | undefined)
-      cookie.session.remove()
-      return { signed: false as const }
-    })
+    .post(
+      '/logout',
+      async ({ cookie }) => {
+        await logout(cookie.session.value)
+        cookie.session.remove()
+        return { signed: false as const }
+      },
+      { cookie: t.Cookie({ session: t.Optional(t.String()) }) },
+    )
 }
