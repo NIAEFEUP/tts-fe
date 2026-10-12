@@ -2,17 +2,11 @@ import { createHash } from 'node:crypto'
 import { Temporal } from 'temporal-polyfill'
 import { randomToken } from '@/core/utils/crypto'
 import type { SessionRepository } from '@/domain/ports/session.repository'
-import type { AuthUser, UserRole } from '@/core/auth/user'
 import type { Database } from '@/infrastructure/database/prisma'
+import { toAuthUser } from './auth-user.mapper'
 
 function hashToken(token: string): string {
   return createHash('sha256').update(token).digest('hex')
-}
-
-type UserRow = { id: string; name: string; email: string | null; role: string }
-
-function toAuthUser(row: UserRow): AuthUser {
-  return { id: row.id, name: row.name, email: row.email, role: row.role as UserRole }
 }
 
 /**
