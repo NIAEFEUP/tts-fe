@@ -1,3 +1,4 @@
+import { db as defaultDb } from '@/infrastructure/database/prisma'
 import type { Db } from '@/infrastructure/database/prisma'
 
 import type { Course, Faculty, FacultyRepository } from '@/domain/ports/FacultyRepository'
@@ -13,7 +14,7 @@ import type { Course, Faculty, FacultyRepository } from '@/domain/ports/FacultyR
  * year, so the extra reads are cheaper than a join-shaped API fight.
  */
 export class PrismaFacultyRepository implements FacultyRepository {
-  constructor(private readonly db: Db = db) {}
+  constructor(private readonly db: Db = defaultDb) {}
 
   async findAll(): Promise<Faculty[]> {
     const rows = await this.db.orm.public.Faculty.orderBy((faculty) => faculty.acronym.asc()).all()
