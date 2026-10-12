@@ -2,7 +2,6 @@ import type { AuthConfig } from '@/core/config/auth'
 
 export const SESSION_COOKIE = 'session'
 export const STATE_COOKIE = 'oidc_state'
-export const NONCE_COOKIE = 'oidc_nonce'
 export const RETURN_TO_COOKIE = 'oidc_return_to'
 
 /** Login round-trips should complete well within this window. */

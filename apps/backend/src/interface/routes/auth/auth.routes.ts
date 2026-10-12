@@ -11,13 +11,7 @@ import type { UserRepository } from '@/domain/ports/user.repository'
 import { isAdmin } from '@/core/auth/user'
 import { ErrorCode } from '@/interface/errors/errors'
 import { createAuthMiddleware } from '@/interface/middleware/auth.middleware'
-import {
-  applyCookiePreferences,
-  NONCE_COOKIE,
-  RETURN_TO_COOKIE,
-  STATE_COOKIE,
-  TRANSIENT_COOKIE_TTL_SECONDS,
-} from './auth.utils'
+import { applyCookiePreferences, RETURN_TO_COOKIE, STATE_COOKIE, TRANSIENT_COOKIE_TTL_SECONDS } from './auth.utils'
 
 const OIDC_NOT_CONFIGURED = {
   error: 'Sigarra OIDC is not configured on this server',
@@ -65,12 +59,10 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
       ({ query, cookie, redirect, status }) => {
         if (!config.oidcConfigured) return status(503, OIDC_NOT_CONFIGURED)
 
-        const { url, state, nonce, returnTo } = beginLogin(query.return_to)
+        const { url, state, returnTo } = beginLogin(query.return_to)
 
         cookie[STATE_COOKIE].value = state
         applyCookiePreferences(cookie[STATE_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
-        cookie[NONCE_COOKIE].value = nonce
-        applyCookiePreferences(cookie[NONCE_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
         cookie[RETURN_TO_COOKIE].value = returnTo
         applyCookiePreferences(cookie[RETURN_TO_COOKIE], config, TRANSIENT_COOKIE_TTL_SECONDS)
 
@@ -87,7 +79,6 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
 
         const clearTransient = () => {
           cookie[STATE_COOKIE].remove()
-          cookie[NONCE_COOKIE].remove()
           cookie[RETURN_TO_COOKIE].remove()
         }
 
