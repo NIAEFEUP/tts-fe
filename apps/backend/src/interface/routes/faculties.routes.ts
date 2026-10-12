@@ -77,7 +77,7 @@ export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies
   .get(
     '/:acronym/courses',
     async ({ facultyRepository, params, query }) => {
-      const faculty = void facultyRepository.findByAcronym(params.acronym)
+      const faculty = await facultyRepository.findByAcronym(params.acronym)
       if (!faculty) throw new HttpError('faculty-not-found', `Faculty ${params.acronym} not found`, 404)
 
       const year = query.year
