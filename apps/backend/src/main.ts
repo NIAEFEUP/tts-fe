@@ -4,6 +4,7 @@ import { cors } from '@elysiajs/cors'
 import { pathToFileURL } from 'node:url'
 import { errorHandler } from '@/interface/middleware/error-handler'
 import { loadAuthConfig } from '@/core/config/auth'
+import { openapiPlugin } from '@/interface/plugins/openapi'
 import { healthRoutes } from '@/interface/routes/health.routes'
 import { authRoutes } from '@/interface/routes/auth/auth.routes'
 import { authCompatRoutes } from '@/interface/routes/auth/auth-compat.routes'
@@ -56,6 +57,7 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       // the repository does not connect — the client is lazy — so `createApp()`
       // stays usable in tests without a database.
       .decorate('facultyRepository', dependencies.facultyRepository ?? new PrismaFacultyRepository(db))
+      .use(openapiPlugin)
       .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
       .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
       .use(facultyRoutes)

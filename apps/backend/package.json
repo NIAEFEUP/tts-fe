@@ -36,6 +36,7 @@
     "db:studio": "varlock run -- node -e \"const os=require('os'),fs=require('fs'),path=require('path'),{execSync}=require('child_process');const d=fs.mkdtempSync(path.join(os.tmpdir(),'prisma-studio-'));try{execSync('bun x --yes prisma@7.10.0 studio --url '+process.env.DATABASE_URL,{stdio:'inherit',cwd:d})}finally{fs.rmSync(d,{recursive:true,force:true})}\""
   },
   "dependencies": {
+    "@elysia/openapi": "^1.4.16",
     "@elysiajs/cors": "^1.4.2",
     "@elysiajs/node": "^1.4.5",
     "@prisma/orm-postgres": "8.0.0-rc.12",
