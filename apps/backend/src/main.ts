@@ -8,7 +8,7 @@ import { openapiPlugin } from '@/interface/plugins/openapi'
 import { healthRoutes } from '@/interface/routes/health.routes'
 import { authRoutes } from '@/interface/routes/auth/auth.routes'
 import { authCompatRoutes } from '@/interface/routes/auth/auth-compat.routes'
-import { facultyRoutes } from '@/interface/routes/faculties.routes'
+import { apiRoutes } from '@/interface/routes/api.routes'
 import { createRepositories } from '@/infrastructure/database/repositories'
 import { db } from '@/infrastructure/database/prisma'
 import { createSessionRepository } from '@/infrastructure/database/repositories/session.repository'
@@ -63,7 +63,7 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       .use(openapiPlugin)
       .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
       .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
-      .use(facultyRoutes)
+      .use(apiRoutes)
       .get('/', () => ({ message: 'Hello from tts-be!' }))
   )
 }
