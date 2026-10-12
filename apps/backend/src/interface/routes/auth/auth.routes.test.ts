@@ -37,7 +37,7 @@ function buildApp(config = testConfig()) {
   const tokens = new Map<string, AuthUser>()
 
   const provider: IdentityProvider = {
-    authorizationUrl: ({ state, nonce }) => `https://idp.test/authorize?state=${state}&nonce=${nonce}`,
+    authorizationUrl: ({ state }) => `https://idp.test/authorize?state=${state}`,
     exchangeCodeForUser: async () => ({
       nmec: USER.id,
       name: USER.name,

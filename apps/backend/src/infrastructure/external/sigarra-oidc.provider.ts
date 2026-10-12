@@ -40,14 +40,13 @@ function mapClaims(claims: Record<string, unknown>): OidcUserClaims {
  */
 export function createSigarraOidcProvider(config: SigarraOidcConfig): IdentityProvider {
   return {
-    authorizationUrl({ state, nonce }) {
+    authorizationUrl({ state }) {
       const url = new URL(config.authorizeEndpoint)
       url.searchParams.set('client_id', config.clientId)
       url.searchParams.set('redirect_uri', config.redirectUri)
       url.searchParams.set('response_type', 'code')
       url.searchParams.set('scope', config.scopes)
       url.searchParams.set('state', state)
-      url.searchParams.set('nonce', nonce)
       return url.toString()
     },
 

@@ -6,8 +6,6 @@ export type BeginLoginResult = {
   url: string
   /** CSRF-bound state, echoed back by the IdP and checked on the callback. */
   state: string
-  /** Replay-protection nonce, sent to the IdP. */
-  nonce: string
   /** Sanitised post-login destination (always a known frontend origin). */
   returnTo: string
 }
@@ -32,11 +30,9 @@ export function resolveReturnTo(returnTo: string | undefined, frontendUrl: strin
 export function createBeginLogin(deps: { provider: IdentityProvider; frontendUrl: string }) {
   return function beginLogin(returnTo?: string): BeginLoginResult {
     const state = randomToken(16)
-    const nonce = randomToken(16)
     return {
-      url: deps.provider.authorizationUrl({ state, nonce }),
+      url: deps.provider.authorizationUrl({ state }),
       state,
-      nonce,
       returnTo: resolveReturnTo(returnTo, deps.frontendUrl),
     }
   }

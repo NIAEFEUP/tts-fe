@@ -13,7 +13,6 @@ export type OidcUserClaims = {
 
 export type AuthorizationParams = {
   state: string
-  nonce: string
 }
 
 export type IdentityProvider = {
