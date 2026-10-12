@@ -4,6 +4,21 @@ import { HttpError } from '@/interface/errors/errors'
 import { apiError } from '@/interface/middleware/error-handler'
 import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
 
+const faculty = t.Object({
+  acronym: t.String(),
+  name: t.Union([t.String(), t.Null()]),
+})
+
+const course = t.Object({
+  id: t.Number(),
+  acronym: t.String(),
+  name: t.String(),
+  courseType: t.String(),
+  year: t.Number(),
+  url: t.String(),
+  faculties: t.Array(t.String()),
+})
+
 /**
  * The reference feature from I-1: the first routes built on the port injected
  * by `main.ts`, and the pattern every other endpoint issue copies.
@@ -43,6 +58,7 @@ export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies
   prefix: '/api/v1/faculties',
 })
   .get('/', ({ facultyRepository }) => facultyRepository.findAll(), {
+    response: { 200: t.Array(faculty) },
     detail: { tags: ['faculties'], summary: 'List faculties' },
   })
   .get(
@@ -54,25 +70,23 @@ export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies
       return faculty
     },
     {
+      response: { 200: faculty, 404: apiError },
       detail: { tags: ['faculties'], summary: 'Get one faculty' },
-      // Declaring the error body keeps the frontend's Eden client (typed from
-      // `App`) able to see `{ error, code }` on a 404.
-      response: { 404: apiError },
     },
   )
   .get(
     '/:acronym/courses',
     async ({ facultyRepository, params, query }) => {
-      const faculty = await facultyRepository.findByAcronym(params.acronym)
+      const faculty = void facultyRepository.findByAcronym(params.acronym)
       if (!faculty) throw new HttpError('faculty-not-found', `Faculty ${params.acronym} not found`, 404)
 
-      const year = query.year === undefined ? undefined : Number(query.year)
+      const year = query.year
 
       return facultyRepository.findCoursesByFaculty(params.acronym, year)
     },
     {
+      response: { 200: t.Array(course), 404: apiError },
       detail: { tags: ['faculties'], summary: 'Courses offered by a faculty' },
       query: t.Object({ year: t.Optional(t.Numeric()) }),
-      response: { 404: apiError },
     },
   )

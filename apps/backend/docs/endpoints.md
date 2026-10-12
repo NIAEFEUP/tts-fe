@@ -134,6 +134,7 @@ Legacy mapping: `GET /faculty/` → `GET /faculties`.
     "name": "Licenciatura em Engenharia Informática e Computação",
     "courseType": "L",
     "year": 2025,
+    "url": "https://sigarra.up.pt/feup/pt/cur_geral.cur_view?pv_curso_id=22841",
     "faculties": ["FEUP"]
   }
 ]
