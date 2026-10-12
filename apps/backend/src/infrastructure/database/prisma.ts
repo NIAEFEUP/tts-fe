@@ -15,6 +15,8 @@ export const db = process.env.DATABASE_URL
   ? postgres<Contract>({ contractJson, url: process.env.DATABASE_URL })
   : postgres<Contract>({ contractJson })
 
+export type Db = typeof db
+
 // Call this at app startup to establish the connection eagerly.
 // Optional — the client connects on first query if you skip this.
 let _connection: Promise<void> | undefined

@@ -62,7 +62,7 @@ const repository: FacultyRepository = {
   },
 }
 
-const app = createApp({ facultyRepository: repository })
+const app = createApp({ repositories: { facultyRepository: repository } })
 
 const get = async (path: string) => {
   const response = await app.handle(new Request(`http://localhost${path}`))
