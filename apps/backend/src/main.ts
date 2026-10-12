@@ -7,14 +7,25 @@ import { loadAuthConfig } from '@/core/config/auth'
 import { healthRoutes } from '@/interface/routes/health.routes'
 import { authRoutes } from '@/interface/routes/auth/auth.routes'
 import { authCompatRoutes } from '@/interface/routes/auth/auth-compat.routes'
+import { facultyRoutes } from '@/interface/routes/faculties.routes'
 import { db } from '@/infrastructure/database/prisma'
 import { createSessionRepository } from '@/infrastructure/database/repositories/session.repository'
 import { createUserRepository } from '@/infrastructure/database/repositories/user.repository'
 import { PrismaFacultyRepository } from '@/infrastructure/database/repositories/PrismaFacultyRepository'
 import { createSigarraOidcProvider } from '@/infrastructure/external/sigarra-oidc.provider'
 import { createSigarraDirectAuth } from '@/infrastructure/external/sigarra-direct-auth'
+import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
 
-export function createApp() {
+/**
+ * Dependencies the interface layer receives from the composition root. Every
+ * one can be overridden by a test, which is what keeps `tests/` free of a
+ * database: pass a fake and the whole app still boots through `createApp()`.
+ */
+export type AppDependencies = {
+  facultyRepository: FacultyRepository
+}
+
+export function createApp(dependencies: Partial<AppDependencies> = {}) {
   const config = loadAuthConfig()
 
   // Composition root: build the infrastructure, hand the interface layer the
@@ -39,9 +50,15 @@ export function createApp() {
       .use(cors({ origin: config.allowedOrigins, credentials: true }))
       .use(errorHandler)
       .use(healthRoutes)
-      .decorate('facultyRepository', new PrismaFacultyRepository(db))
+      // Composition root: the interface layer gets its dependencies from the
+      // context and never imports `@/infrastructure/**` itself, which the
+      // clean-architecture lint rule in `.oxlintrc.json` forbids. Constructing
+      // the repository does not connect — the client is lazy — so `createApp()`
+      // stays usable in tests without a database.
+      .decorate('facultyRepository', dependencies.facultyRepository ?? new PrismaFacultyRepository(db))
       .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
       .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
+      .use(facultyRoutes)
       .get('/', () => ({ message: 'Hello from tts-be!' }))
   )
 }
