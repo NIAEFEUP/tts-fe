@@ -4,7 +4,7 @@ import { cors } from '@elysiajs/cors'
 import { pathToFileURL } from 'node:url'
 import { errorHandler } from '@/interface/middleware/error-handler'
 import { healthRoutes } from '@/interface/routes/health.routes'
-import { facultyRoutes } from '@/interface/routes/faculties.routes'
+import { apiRoutes } from '@/interface/routes/api.routes'
 import { createRepositories } from '@/infrastructure/database/repositories'
 import { db } from '@/infrastructure/database/prisma'
 
@@ -34,7 +34,7 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       .use(cors())
       .use(errorHandler)
       .use(healthRoutes)
-      .use(facultyRoutes)
+      .use(apiRoutes)
       .get('/', () => ({ message: 'Hello from tts-be!' }))
   )
 }
