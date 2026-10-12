@@ -24,7 +24,7 @@ const course = t.Object({
  * by `main.ts`, and the pattern every other endpoint issue copies.
  *
  * Behaviour the pattern fixes here:
- * - the route never imports infrastructure; it reads `facultyRepository` off
+ * - the route never imports infrastructure; it reads `repositories` off
  *   the context, so the handler is a few lines of HTTP shaping
  * - a missing faculty throws `new HttpError('faculty-not-found', ...)` — the
  *   domain code from `endpoints.md`, not the generic `not-found` — and the
@@ -40,7 +40,7 @@ const course = t.Object({
  * and the catalog is a handful of rows, so there is nothing to page.
  */
 /**
- * `main.ts` decorates `facultyRepository` onto the Elysia context, but Elysia
+ * `main.ts` decorates `repositories` onto the Elysia context, but Elysia
  * does not propagate a parent instance's `decorate` types into a standalone
  * plugin — a route in its own `new Elysia(...)` sees an empty context. So the
  * dependency is declared on the instance's own type instead, which is the
@@ -48,7 +48,7 @@ const course = t.Object({
  * unchanged: `use()` merges the parent's decoration in.
  */
 type FacultyDependencies = {
-  decorator: { facultyRepository: FacultyRepository }
+  decorator: { repositories: { facultyRepository: FacultyRepository } }
   store: {}
   derive: {}
   resolve: {}
@@ -57,14 +57,14 @@ type FacultyDependencies = {
 export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies>({
   prefix: '/api/v1/faculties',
 })
-  .get('/', ({ facultyRepository }) => facultyRepository.findAll(), {
+  .get('/', ({ repositories }) => repositories.facultyRepository.findAll(), {
     response: { 200: t.Array(faculty) },
     detail: { tags: ['faculties'], summary: 'List faculties' },
   })
   .get(
     '/:acronym',
-    async ({ facultyRepository, params }) => {
-      const faculty = await facultyRepository.findByAcronym(params.acronym)
+    async ({ repositories, params }) => {
+      const faculty = await repositories.facultyRepository.findByAcronym(params.acronym)
       if (!faculty) throw new HttpError('faculty-not-found', `Faculty ${params.acronym} not found`, 404)
 
       return faculty
@@ -76,13 +76,13 @@ export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies
   )
   .get(
     '/:acronym/courses',
-    async ({ facultyRepository, params, query }) => {
-      const faculty = await facultyRepository.findByAcronym(params.acronym)
+    async ({ repositories, params, query }) => {
+      const faculty = await repositories.facultyRepository.findByAcronym(params.acronym)
       if (!faculty) throw new HttpError('faculty-not-found', `Faculty ${params.acronym} not found`, 404)
 
       const year = query.year
 
-      return facultyRepository.findCoursesByFaculty(params.acronym, year)
+      return repositories.facultyRepository.findCoursesByFaculty(params.acronym, year)
     },
     {
       response: { 200: t.Array(course), 404: apiError },

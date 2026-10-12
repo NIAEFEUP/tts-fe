@@ -1,8 +1,6 @@
-import { db } from '@/infrastructure/database/prisma'
+import type { Db } from '@/infrastructure/database/prisma'
 
 import type { Course, Faculty, FacultyRepository } from '@/domain/ports/FacultyRepository'
-
-type Db = typeof db
 
 /**
  * `FacultyRepository` on top of the Prisma 8 ORM client — the only file in the

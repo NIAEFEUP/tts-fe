@@ -9,13 +9,12 @@ import { healthRoutes } from '@/interface/routes/health.routes'
 import { authRoutes } from '@/interface/routes/auth/auth.routes'
 import { authCompatRoutes } from '@/interface/routes/auth/auth-compat.routes'
 import { facultyRoutes } from '@/interface/routes/faculties.routes'
+import { createRepositories } from '@/infrastructure/database/repositories'
 import { db } from '@/infrastructure/database/prisma'
 import { createSessionRepository } from '@/infrastructure/database/repositories/session.repository'
 import { createUserRepository } from '@/infrastructure/database/repositories/user.repository'
-import { PrismaFacultyRepository } from '@/infrastructure/database/repositories/PrismaFacultyRepository'
 import { createSigarraOidcProvider } from '@/infrastructure/external/sigarra-oidc.provider'
 import { createSigarraDirectAuth } from '@/infrastructure/external/sigarra-direct-auth'
-import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
 
 /**
  * Dependencies the interface layer receives from the composition root. Every
@@ -23,11 +22,12 @@ import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
  * database: pass a fake and the whole app still boots through `createApp()`.
  */
 export type AppDependencies = {
-  facultyRepository: FacultyRepository
+  repositories: Partial<ReturnType<typeof createRepositories>>
 }
 
 export function createApp(dependencies: Partial<AppDependencies> = {}) {
   const config = loadAuthConfig()
+  const defaults = createRepositories(db)
 
   // Composition root: build the infrastructure, hand the interface layer the
   // ports it depends on, so `interface/**` never imports `infrastructure/**`.
@@ -56,7 +56,10 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       // clean-architecture lint rule in `.oxlintrc.json` forbids. Constructing
       // the repository does not connect — the client is lazy — so `createApp()`
       // stays usable in tests without a database.
-      .decorate('facultyRepository', dependencies.facultyRepository ?? new PrismaFacultyRepository(db))
+      .decorate('repositories', {
+        ...defaults,
+        ...dependencies.repositories,
+      })
       .use(openapiPlugin)
       .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
       .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
