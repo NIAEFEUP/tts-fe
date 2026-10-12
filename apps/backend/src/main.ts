@@ -4,10 +4,21 @@ import { cors } from '@elysiajs/cors'
 import { pathToFileURL } from 'node:url'
 import { errorHandler } from '@/interface/middleware/error-handler'
 import { healthRoutes } from '@/interface/routes/health.routes'
+import { facultyRoutes } from '@/interface/routes/faculties.routes'
 import { PrismaFacultyRepository } from '@/infrastructure/database/repositories/PrismaFacultyRepository'
 import { db } from '@/infrastructure/database/prisma'
+import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
 
-export function createApp() {
+/**
+ * Dependencies the interface layer receives from the composition root. Every
+ * one can be overridden by a test, which is what keeps `tests/` free of a
+ * database: pass a fake and the whole app still boots through `createApp()`.
+ */
+export type AppDependencies = {
+  facultyRepository: FacultyRepository
+}
+
+export function createApp(dependencies: Partial<AppDependencies> = {}) {
   return (
     new Elysia({ adapter: 'Bun' in globalThis ? undefined : node() })
       // Composition root: the interface layer gets its dependencies from the
@@ -15,10 +26,11 @@ export function createApp() {
       // clean-architecture lint rule in `.oxlintrc.json` forbids. Constructing
       // the repository does not connect — the client is lazy — so `createApp()`
       // stays usable in tests without a database.
-      .decorate('facultyRepository', new PrismaFacultyRepository(db))
+      .decorate('facultyRepository', dependencies.facultyRepository ?? new PrismaFacultyRepository(db))
       .use(cors())
       .use(errorHandler)
       .use(healthRoutes)
+      .use(facultyRoutes)
       .get('/', () => ({ message: 'Hello from tts-be!' }))
   )
 }
