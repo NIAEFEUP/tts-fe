@@ -1,5 +1,6 @@
-import { createHash, randomBytes } from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { Temporal } from 'temporal-polyfill'
+import { randomToken } from '@/core/utils/crypto'
 import type { SessionRepository } from '@/domain/ports/session.repository'
 import type { AuthUser, UserRole } from '@/core/auth/user'
 import type { Database } from '@/infrastructure/database/prisma'
@@ -22,7 +23,7 @@ function toAuthUser(row: UserRow): AuthUser {
 export function createSessionRepository({ db }: { db: Database }): SessionRepository {
   return {
     async issue(userId, ttlMs) {
-      const token = randomBytes(32).toString('base64url')
+      const token = randomToken()
       const expiresAt = Temporal.Now.instant().add({ milliseconds: ttlMs })
 
       await db.orm.public.Session.create({ tokenHash: hashToken(token), userId, expiresAt })
