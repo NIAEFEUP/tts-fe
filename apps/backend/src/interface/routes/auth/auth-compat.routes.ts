@@ -9,7 +9,6 @@ import type { UserRepository } from '@/domain/ports/user.repository'
 import { isAdmin } from '@/core/auth/user'
 import { ErrorCode } from '@/interface/errors/errors'
 import { createAuthMiddleware } from '@/interface/middleware/auth.middleware'
-import { applyCookiePreferences } from './auth.utils'
 
 export type AuthCompatDeps = {
   users: UserRepository
@@ -39,7 +38,10 @@ export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: Aut
     sessionTtlMs: config.sessionTtlSeconds * 1000,
   })
 
-  return new Elysia()
+  return new Elysia({
+    // Same attribute set as the canonical routes (see auth.routes.ts).
+    cookie: { httpOnly: true, sameSite: 'lax' as const, path: '/', secure: config.secureCookies },
+  })
     .use(createAuthMiddleware({ resolveSession: sessions.resolve }))
     .get(
       '/oidc-auth/authenticate/',
@@ -57,26 +59,34 @@ export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: Aut
         query: t.Object({ return_to: t.Optional(t.String()) }),
       },
     )
-    .post('/oidc-auth/logout/', async ({ cookie }) => {
-      await logout(cookie.session.value as string | undefined)
-      cookie.session.remove()
-      return { signed: false as const }
-    })
-    .get('/auth/info/', async ({ cookie }) => {
-      const current = await getCurrentUser(cookie.session.value as string | undefined)
-      if (!current) return { signed: false as const }
+    .post(
+      '/oidc-auth/logout/',
+      async ({ cookie }) => {
+        await logout(cookie.session.value)
+        cookie.session.remove()
+        return { signed: false as const }
+      },
+      { cookie: t.Cookie({ session: t.Optional(t.String()) }) },
+    )
+    .get(
+      '/auth/info/',
+      async ({ cookie }) => {
+        const current = await getCurrentUser(cookie.session.value)
+        if (!current) return { signed: false as const }
 
-      return {
-        signed: true as const,
-        username: current.id,
-        name: current.name,
-        // Exchange eligibility is not implemented on the new backend yet; the
-        // frontend uses this flag to gate the exchange UI, so stay false until
-        // the eligibility endpoint lands.
-        eligible_exchange: false,
-        is_admin: isAdmin(current),
-      }
-    })
+        return {
+          signed: true as const,
+          username: current.id,
+          name: current.name,
+          // Exchange eligibility is not implemented on the new backend yet; the
+          // frontend uses this flag to gate the exchange UI, so stay false until
+          // the eligibility endpoint lands.
+          eligible_exchange: false,
+          is_admin: isAdmin(current),
+        }
+      },
+      { cookie: t.Cookie({ session: t.Optional(t.String()) }) },
+    )
     .post(
       '/sigarra_login/',
       async ({ body, cookie, status }) => {
@@ -97,7 +107,7 @@ export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: Aut
         }
 
         cookie.session.value = result.token
-        applyCookiePreferences(cookie.session, config, config.sessionTtlSeconds)
+        cookie.session.maxAge = config.sessionTtlSeconds
 
         return { message: 'Login successful', user: result.user }
       },
@@ -108,6 +118,7 @@ export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: Aut
             password: t.Optional(t.String()),
           }),
         ),
+        cookie: t.Cookie({ session: t.Optional(t.String()) }),
       },
     )
 }
