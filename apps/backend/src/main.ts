@@ -4,6 +4,7 @@ import { cors } from '@elysiajs/cors'
 import { pathToFileURL } from 'node:url'
 import { errorHandler } from '@/interface/middleware/error-handler'
 import { loadAuthConfig } from '@/core/config/auth'
+import { openapiPlugin } from '@/interface/plugins/openapi'
 import { healthRoutes } from '@/interface/routes/health.routes'
 import { apiRoutes } from '@/interface/routes/api.routes'
 import { authRoutes } from '@/interface/routes/auth/auth.routes'
@@ -65,6 +66,7 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       .use(cors({ origin: config.allowedOrigins, credentials: true }))
       .use(errorHandler)
       .use(healthRoutes)
+      .use(openapiPlugin)
       .use(apiRoutes)
       .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
       .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
