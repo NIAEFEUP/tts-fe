@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { createApp } from './main'
+import { createApp } from '@/main'
 
 describe('app composition', () => {
   it('wires routes without decorator conflicts', async () => {
