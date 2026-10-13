@@ -650,7 +650,7 @@ The current manifest (kept in sync — the sections above list what gets added w
   "dependencies": {
     "@elysiajs/cors": "^1.4.2",
     "@elysiajs/node": "^1.4.5",
-    "@prisma/orm-postgres": "8.0.0-rc.12",
+    "@prisma/orm-postgres": "8.0.0-rc.17",
     "elysia": "^1.4.28",
     "temporal-polyfill": "^1.0.4"
   },
@@ -658,7 +658,7 @@ The current manifest (kept in sync — the sections above list what gets added w
     "@types/node": "^25.6.2",
     "dotenv": "^16.0.0",
     "oxlint": "^1.86.0",
-    "prisma": "8.0.0-rc.18",
+    "prisma": "8.0.0-rc.22",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
