@@ -54,8 +54,8 @@ type FacultyDependencies = {
   resolve: {}
 }
 
-export const facultyRoutes = new Elysia<'/faculties', FacultyDependencies>({
-  prefix: '/faculties',
+export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies>({
+  prefix: '/api/v1/faculties',
 })
   .get('/', ({ repositories }) => repositories.facultyRepository.findAll(), {
     response: { 200: t.Array(faculty) },
