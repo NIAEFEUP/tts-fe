@@ -1,7 +1,6 @@
 {
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "extends": ["../../.oxlintrc.json"],
-  "ignorePatterns": ["prisma-composer.config.ts"],
   "overrides": [
     {
       "files": ["src/domain/**/*.ts"],
