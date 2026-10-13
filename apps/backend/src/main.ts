@@ -11,13 +11,10 @@ import { authRoutes } from '@/interface/routes/auth/auth.routes'
 import { authCompatRoutes } from '@/interface/routes/auth/auth-compat.routes'
 import { createRepositories } from '@/infrastructure/database/repositories'
 import { db } from '@/infrastructure/database/prisma'
-import { createSessionRepository } from '@/infrastructure/database/repositories/session.repository'
-import { createUserRepository } from '@/infrastructure/database/repositories/user.repository'
 import { createSigarraOidcProvider } from '@/infrastructure/external/sigarra-oidc.provider'
 import { createSigarraDirectAuth } from '@/infrastructure/external/sigarra-direct-auth'
+import type { Repositories } from '@/infrastructure/database/repositories'
 import type { AuthConfig } from '@/core/config/auth'
-import type { SessionRepository } from '@/domain/ports/session.repository'
-import type { UserRepository } from '@/domain/ports/user.repository'
 
 /**
  * Dependencies the interface layer receives from the composition root. Every
@@ -25,11 +22,9 @@ import type { UserRepository } from '@/domain/ports/user.repository'
  * database: pass a fake and the whole app still boots through `createApp()`.
  */
 export type AppDependencies = {
-  repositories: Partial<ReturnType<typeof createRepositories>>
+  repositories: Partial<Repositories>
   auth: Partial<{
     config: AuthConfig
-    users: UserRepository
-    sessions: SessionRepository
   }>
 }
 
@@ -37,8 +32,11 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
   const defaults = createRepositories(db)
   const config = dependencies.auth?.config ?? loadAuthConfig()
 
-  const users = dependencies.auth?.users ?? createUserRepository({ db })
-  const sessions = dependencies.auth?.sessions ?? createSessionRepository({ db })
+  const repositories: Repositories = {
+    ...defaults,
+    ...dependencies.repositories,
+  }
+
   const provider = createSigarraOidcProvider({
     clientId: config.clientId,
     clientSecret: config.clientSecret,
@@ -57,10 +55,7 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       // clean-architecture lint rule in `.oxlintrc.json` forbids. Constructing
       // the repository does not connect — the client is lazy — so `createApp()`
       // stays usable in tests without a database.
-      .decorate('repositories', {
-        ...defaults,
-        ...dependencies.repositories,
-      })
+      .decorate('repositories', repositories)
       // Credentialed CORS: the frontend sends the session cookie cross-origin
       // in dev (`:3100` → `:3000`), so the origin must be explicit.
       .use(cors({ origin: config.allowedOrigins, credentials: true }))
@@ -68,8 +63,23 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       .use(healthRoutes)
       .use(openapiPlugin)
       .use(apiRoutes)
-      .use(authRoutes({ provider, users, sessions, sigarraDirect, config }))
-      .use(authCompatRoutes({ users, sessions, sigarraDirect, config }))
+      .use(
+        authRoutes({
+          provider,
+          users: repositories.userRepository,
+          sessions: repositories.sessionRepository,
+          sigarraDirect,
+          config,
+        }),
+      )
+      .use(
+        authCompatRoutes({
+          users: repositories.userRepository,
+          sessions: repositories.sessionRepository,
+          sigarraDirect,
+          config,
+        }),
+      )
       .get('/', () => ({ message: 'Hello from tts-be!' }))
   )
 }
