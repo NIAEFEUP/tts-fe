@@ -19,34 +19,14 @@ const course = t.Object({
   faculties: t.Array(t.String()),
 })
 
-/**
- * The reference feature from I-1: the first routes built on the port injected
- * by `main.ts`, and the pattern every other endpoint issue copies.
- *
- * Behaviour the pattern fixes here:
- * - the route never imports infrastructure; it reads `repositories` off
- *   the context, so the handler is a few lines of HTTP shaping
- * - a missing faculty throws `new HttpError('faculty-not-found', ...)` — the
- *   domain code from `endpoints.md`, not the generic `not-found` — and the
- *   global `onError` hook formats it, so the handler never builds an error body
- *   itself
- * - query params are declared with Elysia's `t` schema, so a bad `year` is
- *   answered 422 `validation-error` by the hook instead of reaching the
- *   handler
- *
- * Response shapes follow `apps/backend/docs/endpoints.md` §2. The two list
- * routes answer a bare array on purpose: `endpoints.md` §Conventions scopes
- * pagination (`page` / `page_size` / `limit`) to admin and marketplace lists,
- * and the catalog is a handful of rows, so there is nothing to page.
- */
-/**
- * `main.ts` decorates `repositories` onto the Elysia context, but Elysia
- * does not propagate a parent instance's `decorate` types into a standalone
- * plugin — a route in its own `new Elysia(...)` sees an empty context. So the
- * dependency is declared on the instance's own type instead, which is the
- * framework's way of typing an injected dependency. Runtime behaviour is
- * unchanged: `use()` merges the parent's decoration in.
- */
+// Routes read `repositories` off the Elysia context — no infrastructure imports.
+// A missing faculty throws `HttpError('faculty-not-found')`; the global `onError`
+// hook formats the response. Query params use Elysia's `t` schema so invalid
+// input is rejected with 422 before reaching the handler.
+
+// Elysia does not propagate a parent instance's `decorate` types into a
+// standalone plugin, so the dependency is declared on the instance's own type.
+// `use()` still merges the parent's decoration at runtime.
 type FacultyDependencies = {
   decorator: { repositories: { facultyRepository: FacultyRepository } }
   store: {}

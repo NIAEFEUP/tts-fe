@@ -4,14 +4,9 @@ import type { Db } from '@/infrastructure/database/prisma'
 import type { Course, Faculty, FacultyRepository } from '@/domain/ports/FacultyRepository'
 
 /**
- * `FacultyRepository` on top of the Prisma 8 ORM client — the only file in the
- * feature that knows Prisma exists.
- *
- * `FacultyCourse` is the explicit many-to-many join (Prisma 8 has no implicit
- * one), so "courses of a faculty" is two reads — join rows for the faculty,
- * then the courses those rows name — plus a third read to resolve the faculty
- * acronyms of each course. The catalog is a few hundred rows per academic
- * year, so the extra reads are cheaper than a join-shaped API fight.
+ * Prisma implementation of `FacultyRepository`. `FacultyCourse` is an explicit
+ * many-to-many join, so resolving a faculty's courses takes three reads:
+ * join rows, the courses they name, then each course's faculty acronyms.
  */
 export class PrismaFacultyRepository implements FacultyRepository {
   constructor(private readonly db: Db = defaultDb) {}

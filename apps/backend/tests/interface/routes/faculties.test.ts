@@ -4,11 +4,9 @@ import { test } from 'node:test'
 import { createApp } from '@/main'
 import type { Course, Faculty, FacultyRepository } from '@/domain/ports/FacultyRepository'
 
-// The reference integration-test pattern from I-1: drive the real app through
-// `createApp().handle(request)` — no listener, no fixtures, no database. The
-// route layer only ever talks to the `FacultyRepository` port, so a fake stands
-// in for the database and these tests assert real HTTP behaviour (status,
-// `{ error, code }` bodies, query validation) instead of "does not crash".
+// Drives the real app via `createApp().handle(request)` — no listener or database.
+// A fake `FacultyRepository` stands in for the database, so tests assert real
+// HTTP behaviour: status codes, error bodies, and query validation.
 
 const faculties: Faculty[] = [
   { acronym: 'FCUP', name: 'Faculdade de Ciências' },
