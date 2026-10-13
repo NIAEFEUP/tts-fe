@@ -1,7 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
+  // Runtime resolution note: `bun test` (and anything else that does not go
+  // through `tsc`) reads the `@/*` alias from the `tsconfig.json` nearest to
+  // the sources — this file. Project-reference configs cannot carry `paths`,
+  // so the alias is declared in `tsconfig.lib.json` for the compiler and
+  // repeated here for the runtime. It is inert for `tsc -b`, which includes no
+  // files in this project.
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
@@ -9,6 +14,7 @@
   "files": [],
   "references": [
     { "path": "./tsconfig.lib.json" },
-    { "path": "./tsconfig.scripts.json" }
+    { "path": "./tsconfig.scripts.json" },
+    { "path": "./tsconfig.tests.json" }
   ]
 }

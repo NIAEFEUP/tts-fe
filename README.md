@@ -94,6 +94,20 @@ account with `ADMIN_ROLE` and full admin scope. NMECs are stored as bare digits,
 
 ## Troubleshooting
 
+### `bun run db:init` fails with `MIGRATION.PLANNING_FAILED`
+
+`db init` only works on an **empty** database. If it fails with a planning error about existing primary keys, the database already has tables. Either the schema is already correct (run `bun run db:sign`) or you need to wipe and recreate it:
+
+```bash
+# from the repo root
+docker compose down -v    # stop and wipe the database volume
+docker compose up -d --wait # start fresh
+
+cd apps/backend
+bun run contract:emit
+bun run db:init
+```
+
 ### `bun run typecheck` complains about missing models or unknown fields
 
 `contract.json` and `contract.d.ts` are git-ignored, so a fresh clone — or a pull that
