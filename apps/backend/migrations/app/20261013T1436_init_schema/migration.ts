@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/be8374929d38e53f6a664e64afcfebc803f598e0f94c781557d782c9062ab3a0/contract';
-import endContract from '../../snapshots/be8374929d38e53f6a664e64afcfebc803f598e0f94c781557d782c9062ab3a0/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/b8cf88cef780e6a64cd5f17b631daf8ea2da908d6e3abc62b0300743cbb65fb5/contract';
+import endContract from '../../snapshots/b8cf88cef780e6a64cd5f17b631daf8ea2da908d6e3abc62b0300743cbb65fb5/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -144,11 +144,11 @@ export default class M extends Migration<never, End> {
           primaryKey(['id']),
           checkExpression(
             'EnrollmentRequest_adminState_check_49a4ff70',
-            "\"adminState\" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')",
+            `"adminState" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')`,
           ),
           checkExpression(
             'EnrollmentRequest_status_check_a8137f16',
-            "\"status\" IN ('PENDING', 'ACCEPTED', 'CANCELLED')",
+            `"status" IN ('PENDING', 'ACCEPTED', 'CANCELLED')`,
           ),
         ],
       }),
@@ -244,15 +244,15 @@ export default class M extends Migration<never, End> {
           primaryKey(['id']),
           checkExpression(
             'ExchangeRequest_adminState_check_49a4ff70',
-            "\"adminState\" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')",
+            `"adminState" IN ('UNTREATED', 'TREATED', 'REJECTED', 'AWAITING_INFORMATION')`,
           ),
           checkExpression(
             'ExchangeRequest_status_check_a8137f16',
-            "\"status\" IN ('PENDING', 'ACCEPTED', 'CANCELLED')",
+            `"status" IN ('PENDING', 'ACCEPTED', 'CANCELLED')`,
           ),
           checkExpression(
             'ExchangeRequest_type_check_a5efca2d',
-            "\"type\" IN ('DIRECT', 'MARKETPLACE', 'URGENT')",
+            `"type" IN ('DIRECT', 'MARKETPLACE', 'URGENT')`,
           ),
         ],
       }),
@@ -395,7 +395,7 @@ export default class M extends Migration<never, End> {
         ],
         constraints: [
           primaryKey(['id']),
-          checkExpression('User_role_check_16739eb3', "\"role\" IN ('USER', 'ADMIN', 'SUPERUSER')"),
+          checkExpression('User_role_check_16739eb3', `"role" IN ('USER', 'ADMIN', 'SUPERUSER')`),
         ],
       }),
       this.addUnique({
