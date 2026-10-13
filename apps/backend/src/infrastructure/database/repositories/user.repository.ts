@@ -1,8 +1,8 @@
 import type { UserRepository } from '@/domain/ports/user.repository'
-import type { Database } from '@/infrastructure/database/prisma'
+import type { Db } from '@/infrastructure/database/prisma'
 import { toAuthUser } from './auth-user.mapper'
 
-export function createUserRepository({ db }: { db: Database }): UserRepository {
+export function createUserRepository({ db }: { db: Db }): UserRepository {
   return {
     async upsertFromClaims(claims) {
       // One atomic statement: two concurrent first logins both find no row, and
