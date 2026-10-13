@@ -18,6 +18,7 @@
 import 'temporal-polyfill/global' // Prisma 8 DateTime fields are Temporal.Instant
 
 import { Temporal } from 'temporal-polyfill'
+import { normalizeNmec } from '@/core/auth/nmec'
 import { db } from '@/infrastructure/database/prisma'
 import fixture from './fixtures/feup-leic-meic-mesw.json' with { type: 'json' }
 
@@ -51,7 +52,7 @@ function assertLocalDatabase(): void {
 // The demo admin is whoever sets `ADMIN_UP` (an NMEC / "up" number) in their
 // environment; falls back to a generic `admin` account. Its role comes from
 // `ADMIN_ROLE` (USER | ADMIN | SUPERUSER, default ADMIN). See `.env.schema`.
-const ADMIN_ID = process.env.ADMIN_UP?.trim() || 'admin'
+const ADMIN_ID = normalizeNmec(process.env.ADMIN_UP?.trim() || 'admin')
 
 const USER_ROLES = ['USER', 'ADMIN', 'SUPERUSER'] as const
 type UserRole = (typeof USER_ROLES)[number]

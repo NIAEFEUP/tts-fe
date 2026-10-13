@@ -14,8 +14,6 @@ import {
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import Exchange from './pages/Exchange'
-import { useEffect } from 'react'
-import api from './api/backend'
 import * as Sentry from '@sentry/react'
 import { ENV } from 'varlock/env'
 
@@ -117,12 +115,6 @@ const App = () => {
   // Enable Analytics
   const { enableAutoPageviews } = plausible
   enableAutoPageviews()
-
-  useEffect(() => {
-    fetch(`${api.BACKEND_URL}/csrf/`, { credentials: 'include' })
-      .then(() => {})
-      .catch((e) => console.error(e))
-  })
 
   const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes)
 
