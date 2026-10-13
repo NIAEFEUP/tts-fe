@@ -38,6 +38,14 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
 
   const users = dependencies.auth?.users ?? createUserRepository({ db })
   const sessions = dependencies.auth?.sessions ?? createSessionRepository({ db })
+
+export function createApp() {
+  const config = loadAuthConfig()
+
+  // Composition root: build the infrastructure, hand the interface layer the
+  // ports it depends on, so `interface/**` never imports `infrastructure/**`.
+  const users = createUserRepository({ db })
+  const sessions = createSessionRepository({ db })
   const provider = createSigarraOidcProvider({
     clientId: config.clientId,
     clientSecret: config.clientSecret,
