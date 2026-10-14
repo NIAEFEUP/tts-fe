@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { Toaster } from './components/ui/new/toaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
+import healthService from './api/services/healthService'
 import {
   AboutPage,
   TimeTableSelectorPage,
@@ -111,6 +113,14 @@ const redirects = [
 const App = () => {
   //TODO(thePeras): Should this be used? Or should this invalidate the storage
   //StorageAPI.updateBackendDataVersion()
+
+  // Ping the backend once on startup so an unreachable or misconfigured backend
+  // is visible right away (see issue #823).
+  useEffect(() => {
+    healthService.checkHealth().catch((error) => {
+      console.warn('Backend health check failed:', error)
+    })
+  }, [])
 
   // Enable Analytics
   const { enableAutoPageviews } = plausible
