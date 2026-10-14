@@ -60,7 +60,10 @@ SIGARRA_USERNAME=202012345    # Sigarra login used by the dev login
 SIGARRA_PASSWORD=…
 ```
 
-The frontend needs no `.env` for local dev. Validate with `bunx varlock load` from inside the app.
+The frontend needs no `.env` for local dev: it talks to `http://localhost:3000` by default.
+For staging/production, set `VITE_APP_BACKEND_URL` per deployment (the `TTS_FE_VARS_CONTENT`
+secret); see [`apps/frontend/README.md`](./apps/frontend/README.md#backend-url-per-environment).
+Validate with `bunx varlock load` from inside the app.
 
 ## Authentication
 
