@@ -1,12 +1,16 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
+import type { AuthUser } from '@/core/auth/user'
+import type { SessionRepository } from '@/domain/ports/session.repository'
 import { createApp } from '@/main'
 import type { Course, Faculty, FacultyRepository } from '@/domain/ports/faculty.repository'
 
 // Drives the real app via `createApp().handle(request)` — no listener or database.
 // A fake `FacultyRepository` stands in for the database, so tests assert real
-// HTTP behaviour: status codes, error bodies, and query validation.
+// HTTP behaviour: status codes, error bodies, and query validation. A fake
+// `SessionRepository` backs the auth guard: `SESSION_TOKEN` is the only session
+// the app recognises, and every request presents it unless told otherwise.
 
 const faculties: Faculty[] = [
   { acronym: 'FCUP', name: 'Faculdade de Ciências' },
@@ -60,10 +64,31 @@ const repository: FacultyRepository = {
   },
 }
 
-const app = createApp({ repositories: { facultyRepository: repository } })
+const USER: AuthUser = {
+  id: 'up202012345',
+  name: 'Ana Silva',
+  email: 'up202012345@up.pt',
+  role: 'USER',
+}
 
-const get = async (path: string) => {
-  const response = await app.handle(new Request(`http://localhost${path}`))
+const SESSION_TOKEN = 'valid-session'
+
+const sessions: SessionRepository = {
+  issue: async () => SESSION_TOKEN,
+  resolve: async (token) => (token === SESSION_TOKEN ? USER : null),
+  revoke: async () => {},
+}
+
+const app = createApp({
+  repositories: { facultyRepository: repository, sessionRepository: sessions },
+})
+
+const get = async (path: string, options: { authenticated?: boolean } = {}) => {
+  const response = await app.handle(
+    new Request(`http://localhost${path}`, {
+      headers: options.authenticated === false ? undefined : { cookie: `session=${SESSION_TOKEN}` },
+    }),
+  )
 
   return {
     status: response.status,
@@ -71,6 +96,22 @@ const get = async (path: string) => {
     body: (await response.json()) as unknown,
   }
 }
+
+test('an anonymous caller is rejected with a 401 unauthorized', async () => {
+  const { status, body } = await get('/api/v1/faculties', { authenticated: false })
+
+  assert.equal(status, 401)
+  assert.deepEqual(body, { error: 'Authentication required', code: 'unauthorized' })
+})
+
+test('an unrecognised session cookie is rejected with a 401', async () => {
+  const response = await app.handle(
+    new Request('http://localhost/api/v1/faculties', { headers: { cookie: 'session=forged' } }),
+  )
+
+  assert.equal(response.status, 401)
+  assert.deepEqual(await response.json(), { error: 'Authentication required', code: 'unauthorized' })
+})
 
 test('every faculty is listed', async () => {
   const { status, contentType, body } = await get('/api/v1/faculties')

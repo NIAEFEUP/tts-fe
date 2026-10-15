@@ -7,5 +7,9 @@ import type { AuthRoutesDeps } from './auth/auth.routes'
 import { authCompatRoutes } from './auth/auth-compat.routes'
 
 export const createApiRoutes = (deps: AuthRoutesDeps) => {
-  return new Elysia().use(healthRoutes).use(facultyRoutes).use(authRoutes(deps)).use(authCompatRoutes(deps))
+  return new Elysia()
+    .use(healthRoutes)
+    .use(facultyRoutes({ sessions: deps.sessions }))
+    .use(authRoutes(deps))
+    .use(authCompatRoutes(deps))
 }
