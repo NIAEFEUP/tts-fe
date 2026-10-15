@@ -51,6 +51,11 @@ type FacultyDependencies = {
 export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies>({
   prefix: '/api/v1/faculties',
 })
+  // `404: 'ApiError'` below references a named model. Elysia resolves model
+  // names per-instance, so it must be registered here too — the app-level
+  // registration in `openapiPlugin` is only visible when `use()`d as a parent
+  // (and it is skipped entirely in production).
+  .model({ ApiError: t.Object({ error: t.String(), code: t.String() }) })
   // GET /api/v1/faculties/
   // Lists all faculties, ordered by acronym. No auth required.
   .get('/', ({ repositories }) => repositories.facultyRepository.findAll(), {
