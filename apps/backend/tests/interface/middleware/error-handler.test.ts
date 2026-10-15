@@ -17,7 +17,21 @@ import { ErrorCode, httpError, HttpError, VALIDATION_ERROR_MESSAGE } from '@/int
 // `node:test` + `node:assert` are used instead of `bun:test` so the same file
 // typechecks under `bun run typecheck` without a Bun types dependency.
 
-const app = createApp()
+import type { FacultyRepository } from '@/domain/ports/faculty.repository'
+
+const fakeRepository: FacultyRepository = {
+  async findAll() {
+    return []
+  },
+  async findByAcronym() {
+    return null
+  },
+  async findCoursesByFaculty() {
+    return []
+  },
+}
+
+const app = createApp({ repositories: { facultyRepository: fakeRepository } })
   .get('/ok', () => ({ message: 'Hello from tts-be!' }))
   .get('/thrown', () => {
     throw httpError.notFound('Faculty FEUP was not found')

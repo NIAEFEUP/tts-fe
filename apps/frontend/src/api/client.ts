@@ -1,7 +1,9 @@
 import { treaty, type Treaty } from '@elysiajs/eden'
 import type { App } from 'tts-be'
+import { ENV } from 'varlock/env'
 
-// In your .env, VITE_APP_BACKEND_URL should now be http://localhost:3000
-const backendUrl = import.meta.env.VITE_APP_BACKEND_URL || 'http://localhost:3000'
+// Same resolution as `api/backend.ts`: `VITE_APP_BACKEND_URL` when set, the local
+// Elysia server in dev, and the page origin in a prod/staging build.
+const backendUrl = ENV.VITE_APP_BACKEND_URL || (ENV.VITE_APP_PROD ? window.location.origin : 'http://localhost:3000')
 
 export const client: Treaty.Create<App> = treaty<App>(backendUrl)

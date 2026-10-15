@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - main
+      - monorepo
     types: [ready_for_review, synchronize, opened, reopened]
 
 jobs:
