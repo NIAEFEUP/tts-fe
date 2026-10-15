@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { createApp } from '@/main'
-import type { Course, Faculty, FacultyRepository } from '@/domain/ports/FacultyRepository'
+import type { Course, Faculty, FacultyRepository } from '@/domain/ports/faculty.repository'
 
 // Drives the real app via `createApp().handle(request)` — no listener or database.
 // A fake `FacultyRepository` stands in for the database, so tests assert real

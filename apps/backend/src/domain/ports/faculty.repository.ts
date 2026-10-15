@@ -19,7 +19,7 @@ export type Course = {
   faculties: string[]
 }
 
-export interface FacultyRepository {
+export type FacultyRepository = {
   /** Every faculty, ordered by acronym. */
   findAll(): Promise<Faculty[]>
 

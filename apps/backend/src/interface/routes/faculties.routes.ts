@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia'
 
 import { HttpError } from '@/interface/errors/errors'
 
-import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
+import type { FacultyRepository } from '@/domain/ports/faculty.repository'
 
 const faculty = t.Object({
   acronym: t.String(),

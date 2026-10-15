@@ -17,7 +17,7 @@ import { ErrorCode, httpError, HttpError, VALIDATION_ERROR_MESSAGE } from '@/int
 // `node:test` + `node:assert` are used instead of `bun:test` so the same file
 // typechecks under `bun run typecheck` without a Bun types dependency.
 
-import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
+import type { FacultyRepository } from '@/domain/ports/faculty.repository'
 
 const fakeRepository: FacultyRepository = {
   async findAll() {
