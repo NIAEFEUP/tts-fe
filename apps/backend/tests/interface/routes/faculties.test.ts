@@ -129,3 +129,10 @@ test('a non-numeric year is rejected by the query schema, not the handler', asyn
   assert.equal(status, 422)
   assert.deepEqual(body, { error: 'Request failed validation', code: 'validation-error' })
 })
+
+test('a non-integer year is rejected by the query schema', async () => {
+  const { status, body } = await get('/api/v1/faculties/FEUP/courses?year=2025.5')
+
+  assert.equal(status, 422)
+  assert.deepEqual(body, { error: 'Request failed validation', code: 'validation-error' })
+})

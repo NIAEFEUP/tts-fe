@@ -67,6 +67,6 @@ export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies
     {
       response: { 200: t.Array(course), 404: apiError },
       detail: { tags: ['faculties'], summary: 'Courses offered by a faculty' },
-      query: t.Object({ year: t.Optional(t.Numeric()) }),
+      query: t.Object({ year: t.Optional(t.Integer()) }),
     },
   )
