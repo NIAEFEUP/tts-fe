@@ -2639,7 +2639,7 @@
                 "properties": {
                   "pv_login": {
                     "type": "string",
-                    "description": "Username, e.g. `up202008169`."
+                    "description": "Username, e.g. `up20YYXXXXX`."
                   },
                   "pv_password": {
                     "type": "string",
@@ -2716,7 +2716,7 @@
             "name": "pv_login",
             "in": "query",
             "required": true,
-            "description": "Username, e.g. `up202008169`.",
+            "description": "Username, e.g. `up20YYXXXXX`.",
             "schema": {
               "type": "string"
             }
@@ -2799,7 +2799,7 @@
                 "properties": {
                   "p_user": {
                     "type": "string",
-                    "description": "Username, with or without the `up` prefix (e.g. `up202008169` or `202008169`)."
+                    "description": "Username, with or without the `up` prefix (e.g. `up20YYXXXXX` or `20YYXXXXX`)."
                   },
                   "p_pass": {
                     "type": "string",
@@ -5330,7 +5330,7 @@
           },
           "codigo": {
             "type": "string",
-            "description": "Username, without the `up` prefix (e.g. `202008169`)."
+            "description": "Username, without the `up` prefix (e.g. `20YYXXXXX`)."
           },
           "tipo": {
             "type": "string",
