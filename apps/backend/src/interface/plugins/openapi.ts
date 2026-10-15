@@ -23,6 +23,8 @@ export const openapiPlugin = new Elysia({ name: 'openapi' })
         },
         tags: [
           { name: 'health', description: 'Health check endpoints' },
+          { name: 'auth', description: 'Authentication and session endpoints' },
+          { name: 'auth-compat', description: 'Legacy auth routes for the un-migrated frontend' },
           { name: 'faculties', description: 'Faculty and course catalog' },
         ],
       },

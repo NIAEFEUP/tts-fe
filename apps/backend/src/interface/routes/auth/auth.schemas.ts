@@ -1,0 +1,55 @@
+import { t } from 'elysia'
+
+// Wire schemas shared by the canonical (`/api/v1/auth/*`) and compatibility
+// auth routes. Elysia uses them to validate responses, generate the OpenAPI
+// docs, and strip fields the client should not see. Keeping them here — rather
+// than inline per route — lets both surfaces describe the session identically.
+//
+// `ApiError` is registered as a named model on each route instance (see
+// `auth.routes.ts` / `auth-compat.routes.ts`), so error responses reference it
+// by name and the spec inlines the shape only once.
+
+/** The `{ error, code }` body every failing request answers with. */
+export const apiError = t.Object({ error: t.String(), code: t.String() })
+
+/** The roles the seeder can assign (see `core/auth/user`). */
+const role = t.Union([t.Literal('USER'), t.Literal('ADMIN'), t.Literal('SUPERUSER')])
+
+/** A signed-in identity as `/auth/me` and `/auth/dev-login` expose it. */
+export const sessionUser = t.Object({
+  signed: t.Literal(true),
+  id: t.String(),
+  name: t.String(),
+  // Sigarra does not always release an email, so the stored value can be null.
+  email: t.Union([t.String(), t.Null()]),
+  isAdmin: t.Boolean(),
+  role,
+})
+
+/** The signed-out marker returned by `/auth/me` and `/auth/logout`. */
+export const anonymous = t.Object({ signed: t.Literal(false) })
+
+/** A raw identity record, as the legacy `/sigarra_login/` returns it. */
+export const userProfile = t.Object({
+  id: t.String(),
+  name: t.String(),
+  email: t.Union([t.String(), t.Null()]),
+  role,
+})
+
+/** `/auth/me` answers with a signed-in user or the anonymous marker. */
+export const sessionInfo = t.Union([sessionUser, anonymous])
+
+/** Legacy `/auth/info/` shape, kept in step with the un-migrated frontend. */
+export const legacySessionInfo = t.Union([
+  t.Object({
+    signed: t.Literal(true),
+    username: t.String(),
+    name: t.String(),
+    // Exchange eligibility is not implemented on the new backend yet, so this
+    // is documented as a boolean even though it is currently always false.
+    eligible_exchange: t.Boolean(),
+    is_admin: t.Boolean(),
+  }),
+  anonymous,
+])
