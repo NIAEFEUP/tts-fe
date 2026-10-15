@@ -45,30 +45,33 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
   })
   const sigarraDirect = createSigarraDirectAuth()
 
-  return (
-    new Elysia({ adapter: 'Bun' in globalThis ? undefined : node() })
-      // Composition root: the interface layer gets its dependencies from the
-      // context and never imports `@/infrastructure/**` itself, which the
-      // clean-architecture lint rule in `.oxlintrc.json` forbids. Constructing
-      // the repository does not connect — the client is lazy — so `createApp()`
-      // stays usable in tests without a database.
-      .decorate('repositories', repositories)
-      // Credentialed CORS: the frontend sends the session cookie cross-origin
-      // in dev (`:3100` → `:3000`), so the origin must be explicit.
-      .use(cors({ origin: config.allowedOrigins, credentials: true }))
-      .use(errorHandler)
-      .use(openapiPlugin, { enabled: process.env.NODE_ENV !== 'production' })
-      .use(
-        createApiRoutes({
-          provider,
-          users: repositories.userRepository,
-          sessions: repositories.sessionRepository,
-          sigarraDirect,
-          config,
-        }),
-      )
-      .get('/', () => ({ message: 'Hello from tts-be!' }))
-  )
+  const app = new Elysia({ adapter: 'Bun' in globalThis ? undefined : node() })
+    // Composition root: the interface layer gets its dependencies from the
+    // context and never imports `@/infrastructure/**` itself, which the
+    // clean-architecture lint rule in `.oxlintrc.json` forbids. Constructing
+    // the repository does not connect — the client is lazy — so `createApp()`
+    // stays usable in tests without a database.
+    .decorate('repositories', repositories)
+    // Credentialed CORS: the frontend sends the session cookie cross-origin
+    // in dev (`:3100` → `:3000`), so the origin must be explicit.
+    .use(cors({ origin: config.allowedOrigins, credentials: true }))
+    .use(errorHandler)
+
+  if (process.env.NODE_ENV !== 'production') {
+    app.use(openapiPlugin)
+  }
+
+  return app
+    .use(
+      createApiRoutes({
+        provider,
+        users: repositories.userRepository,
+        sessions: repositories.sessionRepository,
+        sigarraDirect,
+        config,
+      }),
+    )
+    .get('/', () => ({ message: 'Hello from tts-be!' }))
 }
 
 export type App = ReturnType<typeof createApp>
