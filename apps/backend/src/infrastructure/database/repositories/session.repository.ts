@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { Temporal } from 'temporal-polyfill'
 import { randomToken } from '@/core/utils/crypto'
 import type { SessionRepository } from '@/domain/ports/session.repository'
-import type { Database } from '@/infrastructure/database/prisma'
+import type { Db } from '@/infrastructure/database/prisma'
 import { toAuthUser } from './auth-user.mapper'
 
 function hashToken(token: string): string {
@@ -14,7 +14,7 @@ function hashToken(token: string): string {
  * while the database stores `sha256(token)` as the primary key. A DB leak then
  * yields no usable cookie.
  */
-export function createSessionRepository({ db }: { db: Database }): SessionRepository {
+export function createSessionRepository({ db }: { db: Db }): SessionRepository {
   return {
     async issue(userId, ttlMs) {
       const token = randomToken()
