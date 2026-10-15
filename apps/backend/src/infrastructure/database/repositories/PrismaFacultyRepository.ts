@@ -33,7 +33,9 @@ export class PrismaFacultyRepository implements FacultyRepository {
 
     const facultyLinks = await this.db.orm.public.FacultyCourse.where((link) =>
       link.courseId.in(rows.map((row) => row.id)),
-    ).all()
+    )
+      .orderBy((link) => link.facultyId.asc())
+      .all()
 
     const facultiesByCourse = new Map<number, string[]>()
     for (const link of facultyLinks) {
@@ -57,10 +59,14 @@ export class PrismaFacultyRepository implements FacultyRepository {
     const courses = this.db.orm.public.Course
 
     return year === undefined
-      ? courses.where((course) => course.id.in(courseIds)).all()
+      ? courses
+          .where((course) => course.id.in(courseIds))
+          .orderBy((course) => course.acronym.asc())
+          .all()
       : courses
           .where((course) => course.id.in(courseIds))
           .where((course) => course.year.eq(year))
+          .orderBy((course) => course.acronym.asc())
           .all()
   }
 }
