@@ -57,7 +57,7 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
       // in dev (`:3100` → `:3000`), so the origin must be explicit.
       .use(cors({ origin: config.allowedOrigins, credentials: true }))
       .use(errorHandler)
-      .use(openapiPlugin)
+      .use(openapiPlugin, { enabled: process.env.NODE_ENV !== 'production' })
       .use(
         createApiRoutes({
           provider,
