@@ -6,35 +6,59 @@ import type { FacultyRepository } from '@/domain/ports/faculty.repository'
  * Prisma implementation of `FacultyRepository`. `FacultyCourse` is an explicit
  * many-to-many join, so resolving a faculty's courses takes three reads:
  * join rows, the courses they name, then each course's faculty acronyms.
+ *
+ * This is a factory function: it receives a database connection and returns
+ * an object matching the FacultyRepository interface. The route never calls
+ * this directly — it's wired up in main.ts via createRepositories(db).
  */
 export function createFacultyRepository({ db }: { db: Db }): FacultyRepository {
   return {
+    // GET /api/v1/faculties/ — fetch all faculties, sorted alphabetically.
     async findAll() {
+      // db.orm.public.Faculty accesses the Faculty table (Prisma 8 fluent API).
+      // .orderBy().all() fetches all rows sorted by acronym ascending.
       const rows = await db.orm.public.Faculty.orderBy((faculty) => faculty.acronym.asc()).all()
 
+      // Transform database rows into the Faculty shape (just acronym + name).
       return rows.map((row) => ({ acronym: row.acronym, name: row.name }))
     },
 
+    // GET /api/v1/faculties/:acronym — fetch a single faculty by acronym.
     async findByAcronym(acronym) {
+      // .where({ acronym }) filters to matching rows; .first() returns one or null.
       const row = await db.orm.public.Faculty.where({ acronym }).first()
 
+      // Return the Faculty shape if found, otherwise null (route converts to 404).
       return row ? { acronym: row.acronym, name: row.name } : null
     },
 
+    // GET /api/v1/faculties/:acronym/courses?year=2024 — fetch courses for a faculty.
+    //
+    // Database relationship (many-to-many):
+    //   Faculty ←──→ FacultyCourse (join table) ←──→ Course
+    // A faculty can offer many courses; a course can be offered by many faculties.
     async findCoursesByFaculty(acronym, year) {
+      // Step 1: Find all FacultyCourse join rows where this faculty is linked.
       const links = await db.orm.public.FacultyCourse.where((link) => link.facultyId.eq(acronym)).all()
       const courseIds = links.map((link) => link.courseId)
+      // Early return: if no links exist, skip the remaining queries.
       if (courseIds.length === 0) return []
 
+      // Step 2: Fetch the actual Course rows (optionally filtered by year).
       const rows = await selectCourses(db, courseIds, year)
       if (rows.length === 0) return []
 
+      // Step 3: Get ALL faculty links for those courses — not just the one we
+      // searched for — because courses can be shared across multiple faculties.
       const facultyLinks = await db.orm.public.FacultyCourse.where((link) =>
         link.courseId.in(rows.map((row) => row.id)),
       )
         .orderBy((link) => link.facultyId.asc())
         .all()
 
+      // Step 4: Group faculty acronyms by course ID.
+      // Builds a map: courseId → [facultyAcronym, ...]
+      // Example: Map { 1 → ["FEUP", "FCUP"], 2 → ["FEUP"] }
       const facultiesByCourse = new Map<number, string[]>()
       for (const link of facultyLinks) {
         const faculties = facultiesByCourse.get(link.courseId)
@@ -42,6 +66,9 @@ export function createFacultyRepository({ db }: { db: Db }): FacultyRepository {
         else facultiesByCourse.set(link.courseId, [link.facultyId])
       }
 
+      // Step 5: Assemble the response — map each course row to the Course shape,
+      // attaching the faculties array from the map.
+      // `?? []` means: if no faculties found for a course, use an empty array.
       return rows.map((row) => ({
         id: row.id,
         acronym: row.acronym,
@@ -55,6 +82,11 @@ export function createFacultyRepository({ db }: { db: Db }): FacultyRepository {
   }
 }
 
+/**
+ * Helper: fetch Course rows by ID list, optionally filtered by academic year.
+ * If `year` is undefined, returns all matching courses; otherwise adds a
+ * `.where()` filter for that specific year.
+ */
 async function selectCourses(db: Db, courseIds: number[], year?: number) {
   const courses = db.orm.public.Course
 
