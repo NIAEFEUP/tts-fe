@@ -4,8 +4,9 @@ import { openapi } from '@elysia/openapi'
 /**
  * OpenAPI documentation plugin.
  *
- * Serves a Scalar UI at `/openapi` and registers the shared `ApiError`
- * schema as a named model so error responses reference it in the spec.
+ * Serves a Scalar UI at `/openapi`. The shared `ApiError` schema is
+ * registered as a named model and referenced by name in route response
+ * schemas, so the spec inlines it only once under `#/components/schemas`.
  *
  * The route-level `detail` metadata (tags, summaries) lives alongside each
  * route definition — this plugin only wires up the documentation config.

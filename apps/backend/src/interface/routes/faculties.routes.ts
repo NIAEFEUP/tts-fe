@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 
 import { HttpError } from '@/interface/errors/errors'
-import { apiError } from '@/interface/middleware/error-handler'
+
 import type { FacultyRepository } from '@/domain/ports/FacultyRepository'
 
 const faculty = t.Object({
@@ -50,7 +50,7 @@ export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies
       return faculty
     },
     {
-      response: { 200: faculty, 404: apiError },
+      response: { 200: faculty, 404: 'ApiError' },
       detail: { tags: ['faculties'], summary: 'Get one faculty' },
     },
   )
@@ -65,7 +65,7 @@ export const facultyRoutes = new Elysia<'/api/v1/faculties', FacultyDependencies
       return repositories.facultyRepository.findCoursesByFaculty(params.acronym, year)
     },
     {
-      response: { 200: t.Array(course), 404: apiError },
+      response: { 200: t.Array(course), 404: 'ApiError' },
       detail: { tags: ['faculties'], summary: 'Courses offered by a faculty' },
       query: t.Object({ year: t.Optional(t.Integer()) }),
     },
