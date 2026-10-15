@@ -4,7 +4,7 @@ import type { AuthConfig } from '@/core/config/auth'
 import type { DevAuthenticator } from '@/domain/ports/dev-authenticator'
 import type { SessionRepository } from '@/domain/ports/session.repository'
 import type { UserRepository } from '@/domain/ports/user.repository'
-import { authCompatRoutes } from './auth-compat.routes'
+import { authCompatRoutes } from '@/interface/routes/auth/auth-compat.routes'
 
 const USER: AuthUser = { id: 'up202012345', name: 'Ana Silva', email: null, role: 'USER' }
 

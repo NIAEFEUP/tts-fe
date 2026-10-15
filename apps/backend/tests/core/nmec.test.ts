@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { normalizeNmec } from './nmec'
+import { normalizeNmec } from '@/core/auth/nmec'
 
 describe('normalizeNmec', () => {
   it('strips the display "up" prefix', () => {

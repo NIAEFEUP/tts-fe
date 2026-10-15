@@ -21,6 +21,9 @@ jobs:
           docker_dockerfile: Dockerfile
           docker_context: .
           docker_target: frontend-prod
+          # Per-environment frontend config (base64 `.env`): it must set
+          # VITE_APP_PROD=true, and VITE_APP_BACKEND_URL when the backend is not
+          # same-origin. See apps/frontend/README.md#backend-url-per-environment.
           docker_build_args: |
             TTS_FE_VARS_METHOD=content-var
             TTS_FE_VARS_CONTENT=${{ secrets.TTS_FE_VARS_CONTENT }}
