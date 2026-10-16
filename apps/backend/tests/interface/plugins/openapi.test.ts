@@ -28,11 +28,11 @@ async function readSpec(): Promise<Spec> {
 // carry: `[path, method, tag, summary]`.
 const DOCUMENTED: Array<[string, string, string, string]> = [
   ['/health/', 'get', 'health', 'Health check'],
-  ['/api/v1/auth/login', 'get', 'auth', 'Begin login'],
-  ['/api/v1/auth/callback', 'get', 'auth', 'Complete login'],
-  ['/api/v1/auth/me', 'get', 'auth', 'Current user'],
-  ['/api/v1/auth/dev-login', 'post', 'auth', 'Dev login'],
-  ['/api/v1/auth/logout', 'post', 'auth', 'Log out'],
+  ['/v1/auth/login', 'get', 'auth', 'Begin login'],
+  ['/v1/auth/callback', 'get', 'auth', 'Complete login'],
+  ['/v1/auth/me', 'get', 'auth', 'Current user'],
+  ['/v1/auth/dev-login', 'post', 'auth', 'Dev login'],
+  ['/v1/auth/logout', 'post', 'auth', 'Log out'],
   ['/oidc-auth/authenticate/', 'get', 'auth-compat', 'Legacy login link'],
   ['/oidc-auth/logout/', 'post', 'auth-compat', 'Legacy logout'],
   ['/auth/info/', 'get', 'auth-compat', 'Legacy session info'],
@@ -55,7 +55,7 @@ describe('OpenAPI documentation', () => {
     const spec = await readSpec()
 
     expect(spec.components.schemas.ApiError).toBeDefined()
-    const unauthorized = spec.paths['/api/v1/auth/dev-login'].post.responses['401']
+    const unauthorized = spec.paths['/v1/auth/dev-login'].post.responses['401']
     expect(unauthorized.content?.['application/json']?.schema?.$ref).toBe('#/components/schemas/ApiError')
   })
 
@@ -64,8 +64,8 @@ describe('OpenAPI documentation', () => {
 
     // Guards the sanitizer: `t.Void()` must not reach the client as the
     // plugin's invalid `content: { type: 'void' }`.
-    expect(spec.paths['/api/v1/auth/login'].get.responses['302']).not.toHaveProperty('content')
-    expect(spec.paths['/api/v1/auth/callback'].get.responses['302']).not.toHaveProperty('content')
+    expect(spec.paths['/v1/auth/login'].get.responses['302']).not.toHaveProperty('content')
+    expect(spec.paths['/v1/auth/callback'].get.responses['302']).not.toHaveProperty('content')
     expect(spec.paths['/oidc-auth/authenticate/'].get.responses['302']).not.toHaveProperty('content')
   })
 

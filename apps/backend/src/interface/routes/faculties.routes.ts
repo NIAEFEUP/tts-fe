@@ -49,8 +49,9 @@ type FacultyDependencies = {
   resolve: {}
 }
 
-// A sub-plugin groups related routes under a shared prefix.
-// All routes defined on this instance will be prefixed with `/api/v1/faculties`.
+// All routes defined on this instance will be prefixed with `/v1/faculties`.
+// The `/api` segment seen in public URLs is added by the deployment (Niployments
+// mounts the service under `/api`), so it must not appear here.
 //
 // The catalog is behind a session: `createRequiredAuthMiddleware` derives `user`
 // and rejects anonymous callers with a 401 before any handler runs. The frontend
@@ -60,8 +61,8 @@ export type FacultyRoutesDeps = {
 }
 
 export const facultyRoutes = ({ sessions }: FacultyRoutesDeps) =>
-  new Elysia<'/api/v1/faculties', FacultyDependencies>({
-    prefix: '/api/v1/faculties',
+  new Elysia<'/v1/faculties', FacultyDependencies>({
+    prefix: '/v1/faculties',
   })
     .use(createRequiredAuthMiddleware({ resolveSession: sessions.resolve }))
     // `404: 'ApiError'` below references a named model. Elysia resolves model
@@ -69,13 +70,13 @@ export const facultyRoutes = ({ sessions }: FacultyRoutesDeps) =>
     // registration in `openapiPlugin` is only visible when `use()`d as a parent
     // (and it is skipped entirely in production).
     .model({ ApiError: apiError })
-    // GET /api/v1/faculties/
+    // GET /v1/faculties/
     // Lists all faculties, ordered by acronym. Requires a signed-in user.
     .get('/', ({ repositories }) => repositories.facultyRepository.findAll(), {
       response: { 200: t.Array(faculty) },
       detail: { tags: ['faculties'], summary: 'List faculties' },
     })
-    // GET /api/v1/faculties/FEUP
+    // GET /v1/faculties/FEUP
     // Returns a single faculty by acronym. The `:acronym` path param is captured
     // as `params.acronym`. If not found, throws HttpError → 404 JSON response.
     .get(
@@ -91,7 +92,7 @@ export const facultyRoutes = ({ sessions }: FacultyRoutesDeps) =>
         detail: { tags: ['faculties'], summary: 'Get one faculty' },
       },
     )
-    // GET /api/v1/faculties/FEUP/courses?year=2024
+    // GET /v1/faculties/FEUP/courses?year=2024
     // Returns courses offered by a faculty. The `year` query param is optional;
     // Elysia validates it as an integer — invalid input gets a 422 automatically.
     // First checks the faculty exists (404 if not), then fetches its courses.

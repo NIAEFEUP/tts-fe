@@ -22,9 +22,9 @@ export type AuthCompatDeps = {
 /**
  * Compatibility shims for the un-migrated frontend, mounted at the root (the FE
  * builds its URLs from `BACKEND_URL` with an empty path prefix). Drop these once
- * the frontend points at `/api/v1/auth/*`.
+ * the frontend points at `/v1/auth/*`.
  *
- *   GET  /oidc-auth/authenticate/ — legacy login link → /api/v1/auth/login
+ *   GET  /oidc-auth/authenticate/ — legacy login link → /v1/auth/login
  *   POST /oidc-auth/logout/       — legacy logout (ignores the CSRF header)
  *   GET  /auth/info/              — legacy session info shape
  *   POST /sigarra_login/          — dev-only direct login (env-gated)
@@ -55,7 +55,9 @@ export const authCompatRoutes = ({ users, sessions, sigarraDirect, config }: Aut
           // Undici (the Node adapter) rejects relative redirects, so build an
           // absolute URL. Behind the dev TLS proxy the backend speaks plain HTTP,
           // so honour X-Forwarded-Proto to keep the public scheme https.
-          const target = new URL('/api/v1/auth/login', request.url)
+          // The `/api` mount prefix is added by the deployment (Niployments), so
+          // it comes from config rather than the route declaration.
+          const target = new URL(`${config.publicApiPrefix}/v1/auth/login`, request.url)
           const forwardedProto = headers['x-forwarded-proto']?.split(',')[0]?.trim()
           if (forwardedProto) target.protocol = `${forwardedProto}:`
           if (query.return_to) target.searchParams.set('return_to', query.return_to)

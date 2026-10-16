@@ -29,7 +29,8 @@ export type AuthRoutesDeps = {
 }
 
 /**
- * Canonical auth routes, mounted under `/api/v1/auth`:
+ * Canonical auth routes, mounted under `/v1/auth` (the `/api` prefix is added by
+ * the deployment, not declared here):
  *   GET  /login      — redirect to Sigarra (prod / federated)
  *   GET  /callback   — Sigarra redirects back; set the session cookie
  *   POST /dev-login  — dev-only Sigarra username/password login
@@ -56,7 +57,7 @@ export const authRoutes = ({ provider, users, sessions, sigarraDirect, config }:
 
   return (
     new Elysia({
-      prefix: '/api/v1/auth',
+      prefix: '/v1/auth',
       // Every cookie this plugin writes (session + OIDC round-trip state) shares
       // one attribute set; only maxAge differs per cookie. Elysia's `cookie`
       // config applies it globally so call sites can't forget it.
