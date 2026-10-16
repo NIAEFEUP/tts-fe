@@ -13,7 +13,7 @@ function config(overrides: Partial<AuthConfig> = {}): AuthConfig {
     oidcConfigured: true,
     clientId: 'client',
     clientSecret: 'secret',
-    redirectUri: 'http://localhost:3000/api/v1/auth/callback',
+    redirectUri: 'http://localhost:3000/v1/auth/callback',
     authorizeEndpoint: 'https://idp.test/authorize',
     tokenEndpoint: 'https://idp.test/token',
     userinfoEndpoint: 'https://idp.test/userinfo',
@@ -23,6 +23,7 @@ function config(overrides: Partial<AuthConfig> = {}): AuthConfig {
     allowedOrigins: ['http://localhost:3100'],
     secureCookies: false,
     devLoginEnabled: false,
+    publicApiPrefix: '',
     devAccount: { username: '', password: '' },
     ...overrides,
   }
