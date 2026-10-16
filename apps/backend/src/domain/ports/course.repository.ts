@@ -27,8 +27,8 @@ export type CourseFilter = {
  * The repository contract. All methods return Promises because database
  * operations are async — they take time to complete.
  *
- *   findAll(filter)  → used by GET /api/v1/courses?year=&faculty=
- *   findById(id)     → used by GET /api/v1/courses/:id
+ *   findAll(filter)  → used by GET /v1/courses?year=&faculty=
+ *   findById(id)     → used by GET /v1/courses/:id
  */
 export type CourseRepository = {
   /** Matching courses, ordered by acronym. An empty list is not an error. */
