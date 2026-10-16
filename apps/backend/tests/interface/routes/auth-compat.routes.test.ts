@@ -53,8 +53,16 @@ describe('auth compat routes', () => {
 
     expect(res.status).toBe(302)
     expect(res.headers.get('location')).toBe(
-      'http://localhost/api/v1/auth/login?return_to=http%3A%2F%2Flocalhost%3A3100%2Fx',
+      'http://localhost/v1/auth/login?return_to=http%3A%2F%2Flocalhost%3A3100%2Fx',
     )
+  })
+
+  it('prepends the deployment mount prefix to the canonical login link', async () => {
+    const app = buildApp({ publicApiPrefix: '/api' })
+    const res = await app.handle(new Request('http://tts.niaefeup.pt/oidc-auth/authenticate/'))
+
+    expect(res.status).toBe(302)
+    expect(res.headers.get('location')).toBe('http://tts.niaefeup.pt/api/v1/auth/login')
   })
 
   it('keeps the https scheme when behind a TLS proxy', async () => {
@@ -65,7 +73,7 @@ describe('auth compat routes', () => {
       }),
     )
 
-    expect(res.headers.get('location')).toBe('https://tts-dev.niaefeup.pt/api/v1/auth/login')
+    expect(res.headers.get('location')).toBe('https://tts-dev.niaefeup.pt/v1/auth/login')
   })
 
   it('returns the legacy session shape at /auth/info/', async () => {
