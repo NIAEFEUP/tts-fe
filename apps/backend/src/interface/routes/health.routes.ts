@@ -5,10 +5,10 @@ import { Elysia, t } from 'elysia'
 export const healthRoutes = new Elysia({ prefix: '/health' }).get(
   '/',
   () => ({
-    status: 'ok',
+    status: 'ok' as const,
   }),
   {
-    response: { 200: t.Object({ status: t.String() }) },
+    response: { 200: t.Object({ status: t.Literal('ok') }) },
     detail: { tags: ['health'], summary: 'Health check' },
   },
 )
