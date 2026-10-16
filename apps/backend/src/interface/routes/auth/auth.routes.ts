@@ -11,7 +11,8 @@ import type { UserRepository } from '@/domain/ports/user.repository'
 import { isAdmin } from '@/core/auth/user'
 import { ErrorCode } from '@/interface/errors/errors'
 import { createAuthMiddleware } from '@/interface/middleware/auth.middleware'
-import { anonymous, apiError, sessionInfo, sessionUser } from './auth.schemas'
+import { apiError } from '@/interface/middleware/error-handler'
+import { anonymous, sessionInfo, sessionUser } from './auth.schemas'
 import { RETURN_TO_COOKIE, STATE_COOKIE, TRANSIENT_COOKIE_TTL_SECONDS } from './auth.utils'
 
 const OIDC_NOT_CONFIGURED = {

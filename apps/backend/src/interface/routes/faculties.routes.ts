@@ -10,6 +10,7 @@ import { HttpError } from '@/interface/errors/errors'
 import type { FacultyRepository } from '@/domain/ports/faculty.repository'
 import type { SessionRepository } from '@/domain/ports/session.repository'
 import { createRequiredAuthMiddleware } from '@/interface/middleware/auth.middleware'
+import { apiError } from '@/interface/middleware/error-handler'
 
 // Schema for a faculty response. Elysia uses these to validate responses,
 // generate OpenAPI docs, and strip unexpected fields before sending.
@@ -67,7 +68,7 @@ export const facultyRoutes = ({ sessions }: FacultyRoutesDeps) =>
     // names per-instance, so it must be registered here too — the app-level
     // registration in `openapiPlugin` is only visible when `use()`d as a parent
     // (and it is skipped entirely in production).
-    .model({ ApiError: t.Object({ error: t.String(), code: t.String() }) })
+    .model({ ApiError: apiError })
     // GET /api/v1/faculties/
     // Lists all faculties, ordered by acronym. Requires a signed-in user.
     .get('/', ({ repositories }) => repositories.facultyRepository.findAll(), {

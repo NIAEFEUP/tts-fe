@@ -9,7 +9,8 @@ import type { UserRepository } from '@/domain/ports/user.repository'
 import { isAdmin } from '@/core/auth/user'
 import { ErrorCode } from '@/interface/errors/errors'
 import { createAuthMiddleware } from '@/interface/middleware/auth.middleware'
-import { anonymous, apiError, legacySessionInfo, userProfile } from './auth.schemas'
+import { apiError } from '@/interface/middleware/error-handler'
+import { anonymous, legacySessionInfo, userProfile } from './auth.schemas'
 
 export type AuthCompatDeps = {
   users: UserRepository

@@ -5,12 +5,9 @@ import { t } from 'elysia'
 // docs, and strip fields the client should not see. Keeping them here — rather
 // than inline per route — lets both surfaces describe the session identically.
 //
-// `ApiError` is registered as a named model on each route instance (see
-// `auth.routes.ts` / `auth-compat.routes.ts`), so error responses reference it
-// by name and the spec inlines the shape only once.
-
-/** The `{ error, code }` body every failing request answers with. */
-export const apiError = t.Object({ error: t.String(), code: t.String() })
+// Error bodies (`{ error, code }`) use the shared `apiError` schema from
+// `@/interface/middleware/error-handler`; each route instance registers it as
+// the named model `ApiError`, so the spec inlines the shape only once.
 
 /** The roles the seeder can assign (see `core/auth/user`). */
 const role = t.Union([t.Literal('USER'), t.Literal('ADMIN'), t.Literal('SUPERUSER')])
