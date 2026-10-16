@@ -31,9 +31,9 @@ export type Course = {
  * The repository contract. All methods return Promises because database
  * operations are async — they take time to complete.
  *
- *   findAll()                  → used by GET /api/v1/faculties/
- *   findByAcronym(acronym)     → used by GET /api/v1/faculties/:acronym
- *   findCoursesByFaculty(...)  → used by GET /api/v1/faculties/:acronym/courses
+ *   findAll()                  → used by GET /v1/faculties/
+ *   findByAcronym(acronym)     → used by GET /v1/faculties/:acronym
+ *   findCoursesByFaculty(...)  → used by GET /v1/faculties/:acronym/courses
  */
 export type FacultyRepository = {
   /** Every faculty, ordered by acronym. */

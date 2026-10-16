@@ -16,7 +16,7 @@ const app = createApp()
 
 const preflight = (origin: string) =>
   app.handle(
-    new Request('http://localhost:3000/api/v1/auth/me', {
+    new Request('http://localhost:3000/v1/auth/me', {
       method: 'OPTIONS',
       headers: {
         Origin: origin,

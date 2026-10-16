@@ -13,7 +13,7 @@ import type { FacultyRepository } from '@/domain/ports/faculty.repository'
  */
 export function createFacultyRepository({ db }: { db: Db }): FacultyRepository {
   return {
-    // GET /api/v1/faculties/ — fetch all faculties, sorted alphabetically.
+    // GET /v1/faculties/ — fetch all faculties, sorted alphabetically.
     async findAll() {
       // db.orm.public.Faculty accesses the Faculty table (Prisma 8 fluent API).
       // .orderBy().all() fetches all rows sorted by acronym ascending.
@@ -23,7 +23,7 @@ export function createFacultyRepository({ db }: { db: Db }): FacultyRepository {
       return rows.map((row) => ({ acronym: row.acronym, name: row.name }))
     },
 
-    // GET /api/v1/faculties/:acronym — fetch a single faculty by acronym.
+    // GET /v1/faculties/:acronym — fetch a single faculty by acronym.
     async findByAcronym(acronym) {
       // .where({ acronym }) filters to matching rows; .first() returns one or null.
       const row = await db.orm.public.Faculty.where({ acronym }).first()
@@ -32,7 +32,7 @@ export function createFacultyRepository({ db }: { db: Db }): FacultyRepository {
       return row ? { acronym: row.acronym, name: row.name } : null
     },
 
-    // GET /api/v1/faculties/:acronym/courses?year=2024 — fetch courses for a faculty.
+    // GET /v1/faculties/:acronym/courses?year=2024 — fetch courses for a faculty.
     //
     // Database relationship (many-to-many):
     //   Faculty ←──→ FacultyCourse (join table) ←──→ Course

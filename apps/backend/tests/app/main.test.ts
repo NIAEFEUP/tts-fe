@@ -17,8 +17,8 @@ describe('app composition', () => {
     const app = createApp()
 
     const health = await app.handle(new Request('http://localhost/health'))
-    const me = await app.handle(new Request('http://localhost/api/v1/auth/me'))
-    const faculties = await app.handle(new Request('http://localhost/api/v1/faculties'))
+    const me = await app.handle(new Request('http://localhost/v1/auth/me'))
+    const faculties = await app.handle(new Request('http://localhost/v1/faculties'))
 
     // The session guard is scoped to the faculties instance, so it must not
     // leak into its siblings.

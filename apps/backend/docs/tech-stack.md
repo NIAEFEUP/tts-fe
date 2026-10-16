@@ -244,7 +244,7 @@ export const authMiddleware = new Elysia({ name: 'auth' })
 ```env
 SIGARRA_CLIENT_ID=your-client-id
 SIGARRA_CLIENT_SECRET=your-client-secret
-SIGARRA_REDIRECT_URI=https://tts.niaefeup.pt/api/auth/callback
+SIGARRA_REDIRECT_URI=https://tts.niaefeup.pt/api/v1/auth/callback
 SIGARRA_AUTH_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-connect/auth
 SIGARRA_TOKEN_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-connect/token
 SIGARRA_USERINFO_ENDPOINT=https://open-id.up.pt/realms/sigarra/protocol/openid-connect/userinfo
@@ -307,7 +307,7 @@ volumes:
 **If you prefer tRPC later:** Elysia has a tRPC adapter. You can migrate after launch.
 
 **Conventions:**
-- Prefix all routes with `/api/v1/`
+- Declare all routes under `/v1/` — the `/api` prefix seen in public URLs is added by the deployment (Niployments), not the app
 - Use standard HTTP methods (GET, POST, PUT, DELETE)
 - Return consistent error format: `{ error: string, code: string }`
 - Paginate list endpoints with `?page=1&limit=20`
