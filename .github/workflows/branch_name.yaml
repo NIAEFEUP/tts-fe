@@ -24,7 +24,7 @@ jobs:
           script: |
             const branch = context.payload.pull_request.head.ref;
             const pattern =
-              /^(?<user>[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-?)\/(?:(?<issue>\d+)-|(?<no_issue>NOISSUE)-)(?<slug>[a-z]+(?:-[a-z]+)*)$/;
+              /^(?<user>[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*-?)\/(?<issue>\d+)-(?<slug>[a-z]+(?:-[a-z]+)*)$/;
 
             if (pattern.test(branch)) {
               core.info(`Branch name "${branch}" follows the naming convention.`);
@@ -34,10 +34,9 @@ jobs:
             const body = [
               `👋 Heads up: the branch name \`${branch}\` doesn't follow our branch naming convention.`,
               '',
-              'Branch names should look like one of:',
+              'Branch names should look like:',
               '',
               '- `<user>/<issue-number>-<short-description>` (e.g. `francisca/499-fix-navbar-overflow`)',
-              '- `<user>/NOISSUE-<short-description>` (when there is no GitHub issue)',
               '',
               'The description must be lowercase words (letters only) separated by hyphens.',
               '',
