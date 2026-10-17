@@ -1,4 +1,5 @@
-# Rejects the push when a pushed branch doesn't follow the naming convention:
+# Rejects the push when a new remote branch doesn't follow the naming convention
+# (branches that already exist on the remote can still be pushed to):
 #   <user>/<issue-number>-<short-description>  or  <user>/NOISSUE-<short-description>
 # Keep in sync with .github/workflows/branch_name.yaml.
 pattern='^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*-?/([0-9]+|NOISSUE)-[a-z]+(-[a-z]+)*$'
@@ -13,6 +14,9 @@ while read -r local_ref local_sha remote_ref remote_sha; do
 
   # Deleting a branch
   [ "$local_sha" = "$zero" ] && continue
+
+  # Branch already exists on the remote, so it's grandfathered in
+  [ "$remote_sha" != "$zero" ] && continue
 
   branch="${remote_ref#refs/heads/}"
 
