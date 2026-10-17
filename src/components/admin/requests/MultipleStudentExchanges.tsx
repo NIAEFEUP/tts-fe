@@ -13,7 +13,7 @@ export const MultipleStudentExchanges = () => {
 
   useEffect(() => {
     setTotalPages(totalPages)
-  }, [exchanges])
+  }, [totalPages, setTotalPages])
 
   return (
     <>

@@ -9,6 +9,8 @@ import { buildUrlWithFilterParams } from '../../utils/admin/filters'
  */
 export default (filterContext: RequestFiltersContextContent, pageIndex: number, pageSize: number) => {
   const getExchanges = async (url: string) => {
+    console.log('FETCH:', url)
+
     try {
       const res = await fetch(url, {
         credentials: 'include',
@@ -22,15 +24,21 @@ export default (filterContext: RequestFiltersContextContent, pageIndex: number, 
     }
   }
 
-  const { data, error, mutate } = useSWR(
-    buildUrlWithFilterParams(
-      `${api.BACKEND_URL}/exchange/admin/marketplace?page=${pageIndex}&page_size=${pageSize}`,
-      filterContext,
-    ),
-    getExchanges,
+  const url = buildUrlWithFilterParams(
+    `${api.BACKEND_URL}/exchange/admin/marketplace?page=${pageIndex}&page_size=${pageSize}`,
+    filterContext,
   )
 
+  console.log('SWITCH:', {
+    pageIndex,
+    pageSize,
+    url,
+  })
+
+  const { data, error, mutate } = useSWR(url, getExchanges)
+
   const exchanges = useMemo(() => (data ? [].concat(...data['exchanges']) : null), [data])
+
   const totalPages = useMemo(() => (data ? data['total_pages'] : null), [data])
 
   return {

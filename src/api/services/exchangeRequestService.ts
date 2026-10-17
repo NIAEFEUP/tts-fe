@@ -65,23 +65,27 @@ const submitExchangeRequest = async (
 }
 
 const retrieveMarketplaceRequest = async (url: string): Promise<MarketplaceRequest[]> => {
-  return fetch(url, { credentials: "include" }).then(async (res) => {
-    const json = await res.json();
-    return json;
-  }).catch((e) => {
-    console.error(e);
-    return [];
-  })
+  return fetch(url, { credentials: 'include' })
+    .then(async (res) => {
+      const json = await res.json()
+      return json
+    })
+    .catch((e) => {
+      console.error(e)
+      return []
+    })
 }
 
 const retrieveRequestCardMetadata = async (courseUnitId: Key) => {
-  return fetch(`${api.BACKEND_URL}/course_unit/${courseUnitId}/exchange/metadata`, { credentials: "include" }).then(async (res) => {
-    if (!res.ok) return [];
-    return await res.json();
-  }).catch((e) => {
-    console.error(e);
-    return [];
-  });
+  return fetch(`${api.BACKEND_URL}/course_unit/${courseUnitId}/exchange/metadata`, { credentials: 'include' })
+    .then(async (res) => {
+      if (!res.ok) return []
+      return await res.json()
+    })
+    .catch((e) => {
+      console.error(e)
+      return []
+    })
 }
 
 const adminRejectExchangeRequest = async (requestType: AdminRequestType, id: number) => {
@@ -117,8 +121,8 @@ const adminMarkRequestAsAwaitingInformation = async (requestType: AdminRequestTy
 const verifyExchangeRequest = async (token: string): Promise<boolean> => {
   token = atob(token)
   return fetch(`${api.BACKEND_URL}/exchange/verify/${token}`, {
-    method: "POST",
-    credentials: "include",
+    method: 'POST',
+    credentials: 'include',
     headers: {
       'X-CSRFToken': api.getCSRFToken(),
     },
@@ -244,8 +248,8 @@ const deleteCourseUnitExchangePeriod = async (selectedCourseUnit: number, period
 
 const revalidateExchangeRequest = async (exchangeRequestId: number) => {
   return fetch(`${api.BACKEND_URL}/exchange/${exchangeRequestId}/revalidate/`, {
-    method: "POST",
-    credentials: "include",
+    method: 'POST',
+    credentials: 'include',
     headers: {
       'X-CSRFToken': api.getCSRFToken(),
     },
