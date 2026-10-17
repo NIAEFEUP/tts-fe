@@ -39,7 +39,7 @@ export function createCourseRepository({ db }: { db: Db }): CourseRepository {
       if (!row) return null
 
       const [course] = await attachFaculties(db, [toCourseRow(row)])
-      return course ?? null
+      return course!
     },
   }
 }
