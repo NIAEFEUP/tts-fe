@@ -46,35 +46,17 @@ export async function selectCourses(db: Db, query: CourseQuery = {}): Promise<Co
   const { ids, year } = query
   const courses = db.orm.public.Course
 
-  // An empty id list can match nothing — skip the query entirely.
   if (ids !== undefined && ids.length === 0) return []
 
-  if (ids !== undefined && year !== undefined) {
-    const rows = await courses
-      .where((course) => course.id.in(ids))
-      .where((course) => course.year.eq(year))
-      .orderBy((course) => course.acronym.asc())
-      .all()
-    return rows.map(toCourseRow)
-  }
+  const filters = {} as { id?: { in: number[] }; year?: number }
 
-  if (ids !== undefined) {
-    const rows = await courses
-      .where((course) => course.id.in(ids))
-      .orderBy((course) => course.acronym.asc())
-      .all()
-    return rows.map(toCourseRow)
-  }
+  if (ids !== undefined) filters.id = { in: ids }
+  if (year !== undefined) filters.year = year
 
-  if (year !== undefined) {
-    const rows = await courses
-      .where((course) => course.year.eq(year))
-      .orderBy((course) => course.acronym.asc())
-      .all()
-    return rows.map(toCourseRow)
-  }
-
-  const rows = await courses.orderBy((course) => course.acronym.asc()).all()
+  const rows = await courses
+    .where(filters as never)
+    .orderBy((course) => course.acronym.asc())
+    .all()
   return rows.map(toCourseRow)
 }
 
