@@ -4,7 +4,8 @@ import { test } from 'node:test'
 import type { AuthUser } from '@/core/auth/user'
 import type { SessionRepository } from '@/domain/ports/session.repository'
 import { createApp } from '@/main'
-import type { Course, Faculty, FacultyRepository } from '@/domain/ports/faculty.repository'
+import type { Course } from '@/domain/ports/course.repository'
+import type { Faculty, FacultyRepository } from '@/domain/ports/faculty.repository'
 
 // Drives the real app via `createApp().handle(request)` — no listener or database.
 // A fake `FacultyRepository` stands in for the database, so tests assert real
