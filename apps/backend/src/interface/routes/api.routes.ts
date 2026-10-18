@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia'
 
 import { healthRoutes } from './health.routes'
+import { scheduleRoutes } from './schedule.routes'
 import { facultyRoutes } from './faculties.routes'
 import { authRoutes } from './auth/auth.routes'
 import type { AuthRoutesDeps } from './auth/auth.routes'
@@ -12,4 +13,5 @@ export const createApiRoutes = (deps: AuthRoutesDeps) => {
     .use(facultyRoutes({ sessions: deps.sessions }))
     .use(authRoutes(deps))
     .use(authCompatRoutes(deps))
+    .use(scheduleRoutes({ sessions: deps.sessions }))
 }
