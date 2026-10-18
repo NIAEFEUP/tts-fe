@@ -48,15 +48,32 @@ export async function selectCourses(db: Db, query: CourseQuery = {}): Promise<Co
 
   if (ids !== undefined && ids.length === 0) return []
 
-  const filters = {} as { id?: { in: number[] }; year?: number }
+  if (ids !== undefined && year !== undefined) {
+    const rows = await courses
+      .where((course) => course.id.in(ids))
+      .where((course) => course.year.eq(year))
+      .orderBy((course) => course.acronym.asc())
+      .all()
+    return rows.map(toCourseRow)
+  }
 
-  if (ids !== undefined) filters.id = { in: ids }
-  if (year !== undefined) filters.year = year
+  if (ids !== undefined) {
+    const rows = await courses
+      .where((course) => course.id.in(ids))
+      .orderBy((course) => course.acronym.asc())
+      .all()
+    return rows.map(toCourseRow)
+  }
 
-  const rows = await courses
-    .where(filters as never)
-    .orderBy((course) => course.acronym.asc())
-    .all()
+  if (year !== undefined) {
+    const rows = await courses
+      .where((course) => course.year.eq(year))
+      .orderBy((course) => course.acronym.asc())
+      .all()
+    return rows.map(toCourseRow)
+  }
+
+  const rows = await courses.orderBy((course) => course.acronym.asc()).all()
   return rows.map(toCourseRow)
 }
 
