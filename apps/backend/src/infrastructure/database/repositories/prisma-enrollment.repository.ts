@@ -10,34 +10,43 @@ export function createEnrollmentRepository({ db }: { db: Db }): EnrollmentReposi
 
       if (enrollments.length === 0) return []
 
-      const classIds = [...new Set(enrollments.map((enrollment) => enrollment.classId))]
-      const classes = await db.orm.public.Class.where((classRow) => classRow.id.in(classIds))
-        .orderBy((classRow) => classRow.id.asc())
-        .all()
-      const occurrenceIds = [...new Set(classes.map((classRow) => classRow.occurrenceId))]
-      const occurrences = await db.orm.public.Occurrence.where((occurrence) => occurrence.id.in(occurrenceIds)).all()
-      const courseUnitIds = [...new Set(occurrences.map((occurrence) => occurrence.courseUnitId))]
-      const courseUnits = await db.orm.public.CourseUnit.where((courseUnit) => courseUnit.id.in(courseUnitIds)).all()
+      const loadOrEmpty = async <T>(ids: number[], load: () => PromiseLike<T[]>): Promise<T[]> =>
+        ids.length === 0 ? [] : await load()
 
-      const classSlots = await db.orm.public.SlotClass.where((slotClass) => slotClass.classId.in(classIds)).all()
+      const classIds = [...new Set(enrollments.map((enrollment) => enrollment.classId))]
+      const [classes, classSlots] = await Promise.all([
+        db.orm.public.Class.where((classRow) => classRow.id.in(classIds))
+          .orderBy((classRow) => classRow.id.asc())
+          .all(),
+        db.orm.public.SlotClass.where((slotClass) => slotClass.classId.in(classIds)).all(),
+      ])
+      const occurrenceIds = [...new Set(classes.map((classRow) => classRow.occurrenceId))]
       const slotIds = [...new Set(classSlots.map((slotClass) => slotClass.slotId))]
-      const slots =
-        slotIds.length === 0
-          ? []
-          : await db.orm.public.ScheduleSlot.where((slot) => slot.id.in(slotIds))
-              .orderBy((slot) => slot.id.asc())
-              .all()
-      const slotProfessors =
-        slotIds.length === 0
-          ? []
-          : await db.orm.public.SlotProfessor.where((slotProfessor) => slotProfessor.slotId.in(slotIds)).all()
+      const [occurrences, slots, slotProfessors] = await Promise.all([
+        loadOrEmpty(occurrenceIds, () =>
+          db.orm.public.Occurrence.where((occurrence) => occurrence.id.in(occurrenceIds)).all(),
+        ),
+        loadOrEmpty(slotIds, () =>
+          db.orm.public.ScheduleSlot.where((slot) => slot.id.in(slotIds))
+            .orderBy((slot) => slot.id.asc())
+            .all(),
+        ),
+        loadOrEmpty(slotIds, () =>
+          db.orm.public.SlotProfessor.where((slotProfessor) => slotProfessor.slotId.in(slotIds)).all(),
+        ),
+      ])
+      const courseUnitIds = [...new Set(occurrences.map((occurrence) => occurrence.courseUnitId))]
       const professorIds = [...new Set(slotProfessors.map((slotProfessor) => slotProfessor.professorId))]
-      const professors =
-        professorIds.length === 0
-          ? []
-          : await db.orm.public.Professor.where((professor) => professor.id.in(professorIds))
-              .orderBy((professor) => professor.id.asc())
-              .all()
+      const [courseUnits, professors] = await Promise.all([
+        loadOrEmpty(courseUnitIds, () =>
+          db.orm.public.CourseUnit.where((courseUnit) => courseUnit.id.in(courseUnitIds)).all(),
+        ),
+        loadOrEmpty(professorIds, () =>
+          db.orm.public.Professor.where((professor) => professor.id.in(professorIds))
+            .orderBy((professor) => professor.id.asc())
+            .all(),
+        ),
+      ])
 
       const classesById = new Map(classes.map((classRow) => [classRow.id, classRow] as const))
       const occurrencesByKey = new Map(
@@ -63,6 +72,7 @@ export function createEnrollmentRepository({ db }: { db: Db }): EnrollmentReposi
         if (assigned) assigned.push(classSlot.slotId)
         else classSlotsByClassId.set(classSlot.classId, [classSlot.slotId])
       }
+      for (const slotIds of classSlotsByClassId.values()) slotIds.sort((a, b) => a - b)
 
       return enrollments.map((enrollment) => {
         const classRow = classesById.get(enrollment.classId)

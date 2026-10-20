@@ -81,6 +81,23 @@ test('GET /users/me/enrollments returns the authenticated student enrollment det
   assert.equal(queriedUserId, USER.id)
 })
 
+test('GET /users/me/enrollments returns an empty list when the student has no enrollments', async () => {
+  const emptyApp = createApp({
+    repositories: {
+      enrollmentRepository: { findByUserId: async () => [] },
+      sessionRepository,
+    },
+  })
+  const response = await emptyApp.handle(
+    new Request('http://localhost/api/v1/users/me/enrollments', {
+      headers: { cookie: 'session=valid-session' },
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), [])
+})
+
 test('GET /users/me/enrollments requires a valid session cookie', async () => {
   for (const cookie of [undefined, 'session=invalid-session']) {
     const response = await getEnrollments(cookie)

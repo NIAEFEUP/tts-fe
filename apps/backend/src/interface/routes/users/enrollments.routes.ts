@@ -40,19 +40,21 @@ const enrollment = t.Object({
 })
 
 type EnrollmentRoutesDeps = {
-  enrollments: EnrollmentRepository
-  sessions: SessionRepository
+  decorator: { repositories: { enrollmentRepository: EnrollmentRepository } }
+  store: {}
+  derive: {}
+  resolve: {}
 }
 
-export const enrollmentRoutes = ({ enrollments, sessions }: EnrollmentRoutesDeps) =>
-  new Elysia({ prefix: '/api/v1/users/me' })
+export const enrollmentRoutes = (sessions: SessionRepository) =>
+  new Elysia<'/api/v1/users/me', EnrollmentRoutesDeps>({ prefix: '/api/v1/users/me' })
     .model({ ApiError: t.Object({ error: t.String(), code: t.String() }) })
     .use(createAuthMiddleware({ resolveSession: sessions.resolve }))
     .get(
       '/enrollments',
-      ({ user }) => {
+      ({ user, repositories }) => {
         if (!user) throw httpError.unauthorized()
-        return enrollments.findByUserId(user.id)
+        return repositories.enrollmentRepository.findByUserId(user.id)
       },
       {
         response: { 200: t.Array(enrollment), 401: 'ApiError' },

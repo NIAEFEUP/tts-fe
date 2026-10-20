@@ -1,3 +1,4 @@
+// Read-side contract for the authenticated student's current class assignments.
 export type StudentEnrollment = {
   occurrence: {
     id: number

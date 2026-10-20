@@ -67,7 +67,6 @@ export function createApp(dependencies: Partial<AppDependencies> = {}) {
         provider,
         users: repositories.userRepository,
         sessions: repositories.sessionRepository,
-        enrollments: repositories.enrollmentRepository,
         sigarraDirect,
         config,
       }),
