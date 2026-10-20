@@ -128,6 +128,42 @@ Dependencies point inward. Domain must never import from Application, Interface,
 - Tailwind utility classes for styling; custom CSS only for complex components
 - Use `cn()` utility for conditional class merging (never hand-merge Tailwind classes)
 
+### Testing
+
+**Runner**: `bun:test` only — never `node:test` or `node:assert`. Run with `bun run test` in `apps/backend`.
+
+**Structure**:
+- One top-level `describe` per file, named after the unit under test (e.g. `'courses routes'`), with `it` for each case — `it` and `test` are aliases in `bun:test`; use `it` for consistency.
+- Use `expect` matchers (`toBe`, `toEqual`, `toMatch`), not `assert`.
+
+**Backend route tests**:
+- Drive the real app with `createApp().handle(request)` — no listener and no database. Fake repositories stand in for the database, so tests assert real HTTP behaviour: status codes, error bodies, and query validation.
+- Reuse the shared helpers instead of re-declaring fixtures, config, or fakes:
+  - `tests/interface/routes/catalog-test-utils.ts` — `COURSES`/`FACULTIES`, `createFakeCourseRepository`, `createFakeFacultyRepository`, `createCatalogApp()` → `{ app, get }`, `getCatalog`, `registerCatalogAuthGuard`, `UNAUTHORIZED_BODY`/`VALIDATION_ERROR_BODY`.
+  - `tests/interface/routes/auth-test-utils.ts` — `TEST_USER`/`ADMIN`, `TEST_SESSION_TOKEN`, `createTestAuthConfig`, `createFakeIdentityProvider`/`createFakeUsers`/`createFakeSessions`/`createFakeDevAuthenticator`, `getCookie`.
+- Do not hand-roll `new Request(...)` or copy fixtures/config/user/session fakes into a route test. When a new catalog route group lands (`course-units`, `occurrences`), add its fixtures and fake repository to `catalog-test-utils.ts` and default it in `createCatalogApp()`; add new auth fakes to `auth-test-utils.ts`.
+- Call `registerCatalogAuthGuard` inside the file's `describe`.
+
+```ts
+import { describe, expect, it } from 'bun:test'
+
+import { COURSES, createCatalogApp, registerCatalogAuthGuard } from './catalog-test-utils'
+
+const { app, get } = createCatalogApp()
+
+describe('courses routes', () => {
+  registerCatalogAuthGuard(app, ['/v1/courses', '/v1/courses/22841'])
+
+  it('lists every course with the faculties that offer it', async () => {
+    const { status, contentType, body } = await get('/v1/courses')
+
+    expect(status).toBe(200)
+    expect(contentType).toMatch(/^application\/json/)
+    expect(body).toEqual(COURSES)
+  })
+})
+```
+
 ## State Management
 
 React Context API with `CombinedProvider` pattern:
@@ -182,6 +218,8 @@ cd apps/frontend && bun run dev   # Terminal 2
 - **Do NOT edit `contract.json` or `contract.d.ts` directly** — they are git-ignored and generated. Edit `contract.prisma` then run `bun run contract:emit`
 - **Do NOT run `db:seed` or `db:seed:demo` casually** — they truncate ALL tables
 - **Do NOT add business logic to the interface layer** — keep routes thin, logic belongs in application layer
+- **Do NOT use `node:test` or `node:assert`** — all backend tests run on `bun:test`
+- **Do NOT duplicate fixtures or fake repositories in route tests** — extend `tests/interface/routes/catalog-test-utils.ts` or `auth-test-utils.ts` instead
 - **Do NOT use `import.meta.env` for env vars in frontend** — use `ENV` from `varlock/env` for typed, validated access
 - **Do NOT modify `apps/backend/docs/endpoints.md` unless adding/changing routes** — it is the single source of truth for API documentation
 
