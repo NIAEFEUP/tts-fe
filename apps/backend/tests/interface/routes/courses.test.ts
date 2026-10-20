@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict'
-import { test } from 'node:test'
+import { describe, expect, it } from 'bun:test'
 
 import type { AuthUser } from '@/core/auth/user'
 import type { Course, CourseRepository } from '@/domain/ports/course.repository'
@@ -90,85 +89,87 @@ const get = async (path: string, options: { authenticated?: boolean } = {}) => {
   }
 }
 
-test('an anonymous caller is rejected with a 401 unauthorized', async () => {
-  const list = await get('/v1/courses', { authenticated: false })
-  const single = await get('/v1/courses/22841', { authenticated: false })
+describe('courses routes', () => {
+  it('an anonymous caller is rejected with a 401 unauthorized', async () => {
+    const list = await get('/v1/courses', { authenticated: false })
+    const single = await get('/v1/courses/22841', { authenticated: false })
 
-  assert.equal(list.status, 401)
-  assert.deepEqual(list.body, { error: 'Authentication required', code: 'unauthorized' })
-  assert.equal(single.status, 401)
-  assert.deepEqual(single.body, { error: 'Authentication required', code: 'unauthorized' })
-})
+    expect(list.status).toBe(401)
+    expect(list.body).toEqual({ error: 'Authentication required', code: 'unauthorized' })
+    expect(single.status).toBe(401)
+    expect(single.body).toEqual({ error: 'Authentication required', code: 'unauthorized' })
+  })
 
-test('an unrecognised session cookie is rejected with a 401', async () => {
-  const response = await app.handle(
-    new Request('http://localhost/v1/courses', { headers: { cookie: 'session=forged' } }),
-  )
+  it('an unrecognised session cookie is rejected with a 401', async () => {
+    const response = await app.handle(
+      new Request('http://localhost/v1/courses', { headers: { cookie: 'session=forged' } }),
+    )
 
-  assert.equal(response.status, 401)
-  assert.deepEqual(await response.json(), { error: 'Authentication required', code: 'unauthorized' })
-})
+    expect(response.status).toBe(401)
+    expect(await response.json()).toEqual({ error: 'Authentication required', code: 'unauthorized' })
+  })
 
-test('every course is listed with the faculties that offer it', async () => {
-  const { status, contentType, body } = await get('/v1/courses')
+  it('every course is listed with the faculties that offer it', async () => {
+    const { status, contentType, body } = await get('/v1/courses')
 
-  assert.equal(status, 200)
-  assert.match(contentType, /^application\/json/)
-  assert.deepEqual(body, courses)
-})
+    expect(status).toBe(200)
+    expect(contentType).toMatch(/^application\/json/)
+    expect(body).toEqual(courses)
+  })
 
-test('the year query param filters the courses', async () => {
-  const current = await get('/v1/courses?year=2025')
-  const previous = await get('/v1/courses?year=2024')
+  it('the year query param filters the courses', async () => {
+    const current = await get('/v1/courses?year=2025')
+    const previous = await get('/v1/courses?year=2024')
 
-  assert.deepEqual(current.body, [courses[0], courses[1]])
-  assert.deepEqual(previous.body, [courses[2]])
-})
+    expect(current.body).toEqual([courses[0], courses[1]])
+    expect(previous.body).toEqual([courses[2]])
+  })
 
-test('the faculty query param filters the courses', async () => {
-  const fcup = await get('/v1/courses?faculty=FCUP')
+  it('the faculty query param filters the courses', async () => {
+    const fcup = await get('/v1/courses?faculty=FCUP')
 
-  assert.deepEqual(fcup.body, [courses[1]])
-})
+    expect(fcup.body).toEqual([courses[1]])
+  })
 
-test('the year and faculty filters combine', async () => {
-  const { status, body } = await get('/v1/courses?year=2024&faculty=FEUP')
+  it('the year and faculty filters combine', async () => {
+    const { status, body } = await get('/v1/courses?year=2024&faculty=FEUP')
 
-  assert.equal(status, 200)
-  assert.deepEqual(body, [courses[2]])
-})
+    expect(status).toBe(200)
+    expect(body).toEqual([courses[2]])
+  })
 
-test('an unknown faculty answers an empty list, not an error', async () => {
-  const { status, body } = await get('/v1/courses?faculty=NOPE')
+  it('an unknown faculty answers an empty list, not an error', async () => {
+    const { status, body } = await get('/v1/courses?faculty=NOPE')
 
-  assert.equal(status, 200)
-  assert.deepEqual(body, [])
-})
+    expect(status).toBe(200)
+    expect(body).toEqual([])
+  })
 
-test('a course is returned by its id', async () => {
-  const { status, body } = await get('/v1/courses/22841')
+  it('a course is returned by its id', async () => {
+    const { status, body } = await get('/v1/courses/22841')
 
-  assert.equal(status, 200)
-  assert.deepEqual(body, courses[0])
-})
+    expect(status).toBe(200)
+    expect(body).toEqual(courses[0])
+  })
 
-test('an unknown course id answers 404 course-not-found instead of null', async () => {
-  const { status, body } = await get('/v1/courses/99999')
+  it('an unknown course id answers 404 course-not-found instead of null', async () => {
+    const { status, body } = await get('/v1/courses/99999')
 
-  assert.equal(status, 404)
-  assert.deepEqual(body, { error: 'Course 99999 not found', code: 'course-not-found' })
-})
+    expect(status).toBe(404)
+    expect(body).toEqual({ error: 'Course 99999 not found', code: 'course-not-found' })
+  })
 
-test('a non-numeric course id is rejected by the params schema, not the handler', async () => {
-  const { status, body } = await get('/v1/courses/not-a-number')
+  it('a non-numeric course id is rejected by the params schema, not the handler', async () => {
+    const { status, body } = await get('/v1/courses/not-a-number')
 
-  assert.equal(status, 422)
-  assert.deepEqual(body, { error: 'Request failed validation', code: 'validation-error' })
-})
+    expect(status).toBe(422)
+    expect(body).toEqual({ error: 'Request failed validation', code: 'validation-error' })
+  })
 
-test('a non-numeric year is rejected by the query schema', async () => {
-  const { status, body } = await get('/v1/courses?year=feup')
+  it('a non-numeric year is rejected by the query schema', async () => {
+    const { status, body } = await get('/v1/courses?year=feup')
 
-  assert.equal(status, 422)
-  assert.deepEqual(body, { error: 'Request failed validation', code: 'validation-error' })
+    expect(status).toBe(422)
+    expect(body).toEqual({ error: 'Request failed validation', code: 'validation-error' })
+  })
 })

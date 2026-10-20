@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict'
-import { test } from 'node:test'
+import { describe, expect, it } from 'bun:test'
 
 import type { AuthUser } from '@/core/auth/user'
 import type { SessionRepository } from '@/domain/ports/session.repository'
@@ -98,83 +97,85 @@ const get = async (path: string, options: { authenticated?: boolean } = {}) => {
   }
 }
 
-test('an anonymous caller is rejected with a 401 unauthorized', async () => {
-  const { status, body } = await get('/v1/faculties', { authenticated: false })
+describe('faculties routes', () => {
+  it('an anonymous caller is rejected with a 401 unauthorized', async () => {
+    const { status, body } = await get('/v1/faculties', { authenticated: false })
 
-  assert.equal(status, 401)
-  assert.deepEqual(body, { error: 'Authentication required', code: 'unauthorized' })
-})
+    expect(status).toBe(401)
+    expect(body).toEqual({ error: 'Authentication required', code: 'unauthorized' })
+  })
 
-test('an unrecognised session cookie is rejected with a 401', async () => {
-  const response = await app.handle(
-    new Request('http://localhost/v1/faculties', { headers: { cookie: 'session=forged' } }),
-  )
+  it('an unrecognised session cookie is rejected with a 401', async () => {
+    const response = await app.handle(
+      new Request('http://localhost/v1/faculties', { headers: { cookie: 'session=forged' } }),
+    )
 
-  assert.equal(response.status, 401)
-  assert.deepEqual(await response.json(), { error: 'Authentication required', code: 'unauthorized' })
-})
+    expect(response.status).toBe(401)
+    expect(await response.json()).toEqual({ error: 'Authentication required', code: 'unauthorized' })
+  })
 
-test('every faculty is listed', async () => {
-  const { status, contentType, body } = await get('/v1/faculties')
+  it('every faculty is listed', async () => {
+    const { status, contentType, body } = await get('/v1/faculties')
 
-  assert.equal(status, 200)
-  assert.match(contentType, /^application\/json/)
-  assert.deepEqual(body, faculties)
-})
+    expect(status).toBe(200)
+    expect(contentType).toMatch(/^application\/json/)
+    expect(body).toEqual(faculties)
+  })
 
-test('a faculty is returned by its acronym', async () => {
-  const { status, body } = await get('/v1/faculties/FEUP')
+  it('a faculty is returned by its acronym', async () => {
+    const { status, body } = await get('/v1/faculties/FEUP')
 
-  assert.equal(status, 200)
-  assert.deepEqual(body, { acronym: 'FEUP', name: 'Faculdade de Engenharia' })
-})
+    expect(status).toBe(200)
+    expect(body).toEqual({ acronym: 'FEUP', name: 'Faculdade de Engenharia' })
+  })
 
-test('an unknown acronym answers 404 faculty-not-found instead of null', async () => {
-  const { status, body } = await get('/v1/faculties/NOPE')
+  it('an unknown acronym answers 404 faculty-not-found instead of null', async () => {
+    const { status, body } = await get('/v1/faculties/NOPE')
 
-  assert.equal(status, 404)
-  assert.deepEqual(body, { error: 'Faculty NOPE not found', code: 'faculty-not-found' })
-})
+    expect(status).toBe(404)
+    expect(body).toEqual({ error: 'Faculty NOPE not found', code: 'faculty-not-found' })
+  })
 
-test('courses of a faculty carry every faculty that offers them', async () => {
-  const { status, body } = await get('/v1/faculties/FCUP/courses')
+  it('courses of a faculty carry every faculty that offers them', async () => {
+    const { status, body } = await get('/v1/faculties/FCUP/courses')
 
-  assert.equal(status, 200)
-  assert.deepEqual(body, [courses[1]])
-})
+    expect(status).toBe(200)
+    expect(body).toEqual([courses[1]])
+  })
 
-test('the year query param filters the courses', async () => {
-  const current = await get('/v1/faculties/FEUP/courses?year=2025')
-  const previous = await get('/v1/faculties/FEUP/courses?year=2024')
+  it('the year query param filters the courses', async () => {
+    const current = await get('/v1/faculties/FEUP/courses?year=2025')
+    const previous = await get('/v1/faculties/FEUP/courses?year=2024')
 
-  assert.deepEqual(current.body, [courses[0], courses[1]])
-  assert.deepEqual(previous.body, [courses[2]])
-})
+    expect(current.body).toEqual([courses[0], courses[1]])
+    expect(previous.body).toEqual([courses[2]])
+  })
 
-test('a faculty with no courses for that year answers an empty list, not an error', async () => {
-  const { status, body } = await get('/v1/faculties/FEUP/courses?year=2019')
+  it('a faculty with no courses for that year answers an empty list, not an error', async () => {
+    const { status, body } = await get('/v1/faculties/FEUP/courses?year=2019')
 
-  assert.equal(status, 200)
-  assert.deepEqual(body, [])
-})
+    expect(status).toBe(200)
+    expect(body).toEqual([])
+  })
 
-test('courses of an unknown faculty answer the same 404 as the faculty route', async () => {
-  const { status, body } = await get('/v1/faculties/NOPE/courses')
+  it('courses of an unknown faculty answer the same 404 as the faculty route', async () => {
+    const { status, body } = await get('/v1/faculties/NOPE/courses')
 
-  assert.equal(status, 404)
-  assert.deepEqual(body, { error: 'Faculty NOPE not found', code: 'faculty-not-found' })
-})
+    expect(status).toBe(404)
+    expect(body).toEqual({ error: 'Faculty NOPE not found', code: 'faculty-not-found' })
+  })
 
-test('a non-numeric year is rejected by the query schema, not the handler', async () => {
-  const { status, body } = await get('/v1/faculties/FEUP/courses?year=feup')
+  it('a non-numeric year is rejected by the query schema, not the handler', async () => {
+    const { status, body } = await get('/v1/faculties/FEUP/courses?year=feup')
 
-  assert.equal(status, 422)
-  assert.deepEqual(body, { error: 'Request failed validation', code: 'validation-error' })
-})
+    expect(status).toBe(422)
+    expect(body).toEqual({ error: 'Request failed validation', code: 'validation-error' })
+  })
 
-test('a non-integer year is rejected by the query schema', async () => {
-  const { status, body } = await get('/v1/faculties/FEUP/courses?year=2025.5')
+  it('a non-integer year is rejected by the query schema', async () => {
+    const { status, body } = await get('/v1/faculties/FEUP/courses?year=2025.5')
 
-  assert.equal(status, 422)
-  assert.deepEqual(body, { error: 'Request failed validation', code: 'validation-error' })
+    expect(status).toBe(422)
+    expect(body).toEqual({ error: 'Request failed validation', code: 'validation-error' })
+  })
 })
