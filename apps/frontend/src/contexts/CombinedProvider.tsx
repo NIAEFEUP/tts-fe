@@ -1,14 +1,16 @@
-import { useState } from 'react'
-import { CourseInfo, Major, MultipleOptions } from '../@types'
+import { useState, useEffect } from 'react'
+import { CourseInfo, MultipleOptions } from '../@types'
 import StorageAPI from '../api/storage'
 import MultipleOptionsContext from './MultipleOptionsContext'
 import { ThemeContext } from './ThemeContext'
 import { useDarkMode } from '../hooks'
 import useSession from '../hooks/useSession'
+import useCourses from '../hooks/useCourses'
 import SessionContext from './SessionContext'
 import MajorContext from './MajorContext'
 import CourseContext from './CourseContext'
 import ConflictsContext from './ConflictsContext'
+import { toast } from '../components/ui/new/toaster'
 
 type Props = {
   children: React.JSX.Element
@@ -16,7 +18,6 @@ type Props = {
 
 const CombinedProvider = ({ children }: Props) => {
   StorageAPI.storeCurrentVisit()
-  const [majors, setMajors] = useState<Major[]>([])
   const [coursesInfo, setCoursesInfo] = useState([])
   const [pickedCourses, setPickedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage())
   const [checkboxedCourses, setCheckboxedCourses] = useState<CourseInfo[]>(StorageAPI.getPickedCoursesStorage())
@@ -31,6 +32,19 @@ const CombinedProvider = ({ children }: Props) => {
   const [selectedOption, setSelectedOptionState] = useState<number>(StorageAPI.getSelectedOptionStorage())
 
   const { signedIn: userSignedIn, user, isLoading: isSessionLoading, forceScheduleRevalidation } = useSession()
+
+  // Load the course catalog once, only after the session resolves and the user is
+  // signed in. The hook keys off `enabled` so signed-out visitors fire no request.
+  const { majors, error: majorsError } = useCourses({ enabled: userSignedIn && !isSessionLoading })
+
+  useEffect(() => {
+    if (!majorsError) return
+    toast({
+      variant: 'negative',
+      title: 'Erro',
+      description: 'Não foi possível carregar a lista de cursos. Tenta novamente mais tarde.',
+    })
+  }, [majorsError])
 
   const [conflictSeverity, setConflictSeverity] = useState<boolean>(false)
   const [tClassConflicts, setTClassConflicts] = useState<boolean>(false)
@@ -62,7 +76,7 @@ const CombinedProvider = ({ children }: Props) => {
       }}
     >
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
-        <MajorContext.Provider value={{ majors, setMajors }}>
+        <MajorContext.Provider value={{ majors }}>
           <CourseContext.Provider
             value={{
               pickedCourses,
