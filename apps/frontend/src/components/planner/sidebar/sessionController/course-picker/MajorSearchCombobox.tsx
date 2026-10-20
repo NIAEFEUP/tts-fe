@@ -40,7 +40,11 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor, allowedAcronyms 
           if (!search) return true
           const searchWords = search.toLowerCase().replace(/\s+/g, ' ').trim().split(' ')
           return searchWords.every(
-            (word) => match(major.name, word) || match(major.acronym, word) || match(major.faculty_id, word),
+            (word) =>
+              match(major.name, word) ||
+              match(major.acronym, word) ||
+              match(major.faculty_id, word) ||
+              major.faculties.some((faculty) => match(faculty, word)),
           )
         })
     : []
@@ -83,7 +87,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor, allowedAcronyms 
                 AnalyticsTracker.majorSelected(major)
               }}
             >
-              <span className="truncate">{`${major.name} (${major.acronym}) - ${major.faculty_id.toUpperCase()}`}</span>
+              <span className="truncate">{`${major.name} (${major.acronym}) - ${major.faculties.map((faculty) => faculty.toUpperCase()).join(', ')}`}</span>
               <CheckIcon
                 className={cn('ml-auto h-4 w-4 shrink-0', selectedMajor?.id === major.id ? 'opacity-100' : 'opacity-0')}
               />
