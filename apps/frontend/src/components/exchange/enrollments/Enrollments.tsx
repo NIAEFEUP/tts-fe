@@ -1,9 +1,7 @@
 import { useState, useContext, useEffect, Dispatch, SetStateAction } from 'react'
 // import { Desert } from "../../svgs/";
 import { ExchangeCoursePicker } from '../../planner/sidebar/sessionController/ExchangeCoursePicker'
-import { CourseInfo, Major } from '../../../@types'
-import MajorContext from '../../../contexts/MajorContext'
-import BackendAPI from '../../../api/backend'
+import { CourseInfo } from '../../../@types'
 import CourseContext from '../../../contexts/CourseContext'
 import { Button } from '../../ui/new/button'
 import courseUnitEnrollmentService from '../../../api/services/courseUnitEnrollmentService'
@@ -36,15 +34,8 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
   const [disenrollmentChoices, setDisenrollmentChoices] = useState<Map<number, EnrollmentOption>>(new Map())
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [coursesInfo, setCoursesInfo] = useState<CourseInfo[]>([])
-  const { setMajors } = useContext(MajorContext)
 
   const { enrolledCourseUnits: alreadyEnrolledCourseUnits, loading: loadingEnrolled } = useStudentCourseUnits()
-
-  useEffect(() => {
-    BackendAPI.getMajors().then((majors: Major[]) => {
-      setMajors(majors.filter((major) => major.acronym === 'L.EIC' || major.acronym === 'M.EIC'))
-    })
-  }, [])
 
   useEffect(() => {
     if (!enrollCourses) return
