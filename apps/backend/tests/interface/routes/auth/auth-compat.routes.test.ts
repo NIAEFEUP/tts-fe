@@ -10,7 +10,7 @@ import {
   createFakeUsers,
   createTestAuthConfig,
   getCookie,
-} from './auth-test-utils'
+} from '../support/auth-test-utils'
 
 // The legacy frontend shims share the same fake repositories and config as the
 // canonical auth tests (`auth-test-utils`); only the routes under test differ.

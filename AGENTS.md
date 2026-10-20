@@ -137,17 +137,18 @@ Dependencies point inward. Domain must never import from Application, Interface,
 - Use `expect` matchers (`toBe`, `toEqual`, `toMatch`), not `assert`.
 
 **Backend route tests**:
+- Group route tests by feature under `tests/interface/routes/` — `auth/`, `catalog/`, `users/`, … — mirroring `src/interface/routes/`. Shared helpers live in `tests/interface/routes/support/` (not test files, so Bun does not run them).
 - Drive the real app with `createApp().handle(request)` — no listener and no database. Fake repositories stand in for the database, so tests assert real HTTP behaviour: status codes, error bodies, and query validation.
 - Reuse the shared helpers instead of re-declaring fixtures, config, or fakes:
-  - `tests/interface/routes/catalog-test-utils.ts` — `COURSES`/`FACULTIES`, `createFakeCourseRepository`, `createFakeFacultyRepository`, `createCatalogApp()` → `{ app, get }`, `getCatalog`, `registerCatalogAuthGuard`, `UNAUTHORIZED_BODY`/`VALIDATION_ERROR_BODY`.
-  - `tests/interface/routes/auth-test-utils.ts` — `TEST_USER`/`ADMIN`, `TEST_SESSION_TOKEN`, `createTestAuthConfig`, `createFakeIdentityProvider`/`createFakeUsers`/`createFakeSessions`/`createFakeDevAuthenticator`, `getCookie`.
-- Do not hand-roll `new Request(...)` or copy fixtures/config/user/session fakes into a route test. When a new catalog route group lands (`course-units`, `occurrences`), add its fixtures and fake repository to `catalog-test-utils.ts` and default it in `createCatalogApp()`; add new auth fakes to `auth-test-utils.ts`.
+  - `tests/interface/routes/support/catalog-test-utils.ts` — `COURSES`/`FACULTIES`, `createFakeCourseRepository`, `createFakeFacultyRepository`, `createCatalogApp()` → `{ app, get }`, `getCatalog`, `registerCatalogAuthGuard`, `UNAUTHORIZED_BODY`/`VALIDATION_ERROR_BODY`.
+  - `tests/interface/routes/support/auth-test-utils.ts` — `TEST_USER`/`ADMIN`, `TEST_SESSION_TOKEN`, `createTestAuthConfig`, `createFakeIdentityProvider`/`createFakeUsers`/`createFakeSessions`/`createFakeDevAuthenticator`, `getCookie`.
+- Do not hand-roll `new Request(...)` or copy fixtures/config/user/session fakes into a route test. When a new catalog route group lands (`course-units`, `occurrences`), add its fixtures and fake repository to `support/catalog-test-utils.ts` and default it in `createCatalogApp()`; add new auth fakes to `support/auth-test-utils.ts`.
 - Call `registerCatalogAuthGuard` inside the file's `describe`.
 
 ```ts
 import { describe, expect, it } from 'bun:test'
 
-import { COURSES, createCatalogApp, registerCatalogAuthGuard } from './catalog-test-utils'
+import { COURSES, createCatalogApp, registerCatalogAuthGuard } from '../support/catalog-test-utils'
 
 const { app, get } = createCatalogApp()
 
@@ -219,7 +220,7 @@ cd apps/frontend && bun run dev   # Terminal 2
 - **Do NOT run `db:seed` or `db:seed:demo` casually** — they truncate ALL tables
 - **Do NOT add business logic to the interface layer** — keep routes thin, logic belongs in application layer
 - **Do NOT use `node:test` or `node:assert`** — all backend tests run on `bun:test`
-- **Do NOT duplicate fixtures or fake repositories in route tests** — extend `tests/interface/routes/catalog-test-utils.ts` or `auth-test-utils.ts` instead
+- **Do NOT duplicate fixtures or fake repositories in route tests** — extend `tests/interface/routes/support/catalog-test-utils.ts` or `support/auth-test-utils.ts` instead
 - **Do NOT use `import.meta.env` for env vars in frontend** — use `ENV` from `varlock/env` for typed, validated access
 - **Do NOT modify `apps/backend/docs/endpoints.md` unless adding/changing routes** — it is the single source of truth for API documentation
 

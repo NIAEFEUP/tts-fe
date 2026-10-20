@@ -6,7 +6,7 @@ import {
   VALIDATION_ERROR_BODY,
   createCatalogApp,
   registerCatalogAuthGuard,
-} from './catalog-test-utils'
+} from '../support/catalog-test-utils'
 
 // The fake repositories, fixtures, and `get` helper live in
 // `catalog-test-utils`, shared with the other catalog route tests.

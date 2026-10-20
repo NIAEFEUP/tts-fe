@@ -9,7 +9,7 @@ import {
   createFakeUsers,
   createTestAuthConfig,
   getCookie,
-} from './auth-test-utils'
+} from '../support/auth-test-utils'
 
 // The OIDC flow is driven end to end: `/login` sets the state cookie, the
 // callback verifies it and mints a session, and `/me` resolves that session
