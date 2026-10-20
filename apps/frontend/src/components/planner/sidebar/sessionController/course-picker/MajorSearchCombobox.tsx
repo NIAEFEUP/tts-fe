@@ -10,6 +10,7 @@ import { AnalyticsTracker } from '../../../../../utils/AnalyticsTracker'
 interface Props {
   selectedMajor: Major | null
   setSelectedMajor: (major: Major | null) => void
+  allowedAcronyms?: string[]
 }
 
 /**
@@ -17,7 +18,7 @@ interface Props {
  * wants to select courses from. They can type the major or click on the rightmost corner to open
  * the list of possible majors.
  */
-const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
+const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor, allowedAcronyms }: Props) => {
   const { majors } = useContext(MajorContext)
   const [search, setSearch] = useState('')
 
@@ -33,13 +34,15 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor }: Props) => {
       .includes(query.toLowerCase().replace(/\s+/g, ''))
 
   const filteredMajors = majors
-    ? majors.filter((major) => {
-        if (!search) return true
-        const searchWords = search.toLowerCase().replace(/\s+/g, ' ').trim().split(' ')
-        return searchWords.every(
-          (word) => match(major.name, word) || match(major.acronym, word) || match(major.faculty_id, word),
-        )
-      })
+    ? majors
+        .filter((major) => !allowedAcronyms || allowedAcronyms.includes(major.acronym))
+        .filter((major) => {
+          if (!search) return true
+          const searchWords = search.toLowerCase().replace(/\s+/g, ' ').trim().split(' ')
+          return searchWords.every(
+            (word) => match(major.name, word) || match(major.acronym, word) || match(major.faculty_id, word),
+          )
+        })
     : []
 
   return (

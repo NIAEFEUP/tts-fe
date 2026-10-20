@@ -63,7 +63,11 @@ export const Enrollments = ({ setExchangeSidebarStatus }: Props) => {
         <div className="flex flex-row justify-between items-center w-full">
           <h1 className="font-bold text-xl text-left">Inscrições</h1>
           <div className="w-1/2">
-            <ExchangeCoursePicker enrollCourses={enrollCourses} setEnrollCourses={setEnrollCourses} />
+            <ExchangeCoursePicker
+              enrollCourses={enrollCourses}
+              setEnrollCourses={setEnrollCourses}
+              allowedAcronyms={['L.EIC', 'M.EIC']}
+            />
           </div>
         </div>
 
