@@ -120,6 +120,14 @@ describe('auth routes', () => {
 
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ signed: false })
+
+    const me = await app.handle(
+      new Request('http://localhost/v1/auth/me', {
+        headers: { cookie: `session=${TEST_SESSION_TOKEN}` },
+      }),
+    )
+
+    expect(await me.json()).toEqual({ signed: false })
   })
 
   it('logs in via dev-login using the configured account (no body)', async () => {
