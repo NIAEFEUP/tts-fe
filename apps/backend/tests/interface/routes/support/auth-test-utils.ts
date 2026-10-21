@@ -96,7 +96,9 @@ export function createFakeDevAuthenticator(name: string | null = TEST_USER.name)
 export function getCookie(response: Response, name: string): string | null {
   for (const header of response.headers.getSetCookie()) {
     const [pair] = header.split(';')
-    const [key, value] = pair.split('=')
+    const [key] = pair.split('=')
+    // Slice instead of splitting: cookie values can contain `=` (signed/opaque).
+    const value = pair.slice(key.length + 1)
     if (key === name) return value
   }
   return null
