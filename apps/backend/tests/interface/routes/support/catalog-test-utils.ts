@@ -163,28 +163,27 @@ export function createCatalogApp({
 }
 
 /**
- * Registers the auth-guard tests every catalog route group needs: anonymous and
- * forged-session requests on each `requests` path must answer 401. Call once
- * inside the file's `describe`, right after `createCatalogApp`.
+ * Registers the auth-guard tests every catalog route group needs. For each
+ * `requests` path, an anonymous and a forged-session request must answer 401.
+ * Call once inside the file's `describe`, right after `createCatalogApp`; the
+ * titles name the path so a failure points straight at the broken route.
  */
 export function registerCatalogAuthGuard(app: App, requests: string[]) {
-  it('an anonymous caller is rejected with a 401 unauthorized', async () => {
-    for (const request of requests) {
+  for (const request of requests) {
+    it(`${request} rejects an anonymous caller with a 401 unauthorized`, async () => {
       const { status, body } = await getCatalog(app, request, { authenticated: false })
 
       expect(status).toBe(401)
       expect(body).toEqual(UNAUTHORIZED_BODY)
-    }
-  })
+    })
 
-  it('an unrecognised session cookie is rejected with a 401', async () => {
-    for (const request of requests) {
+    it(`${request} rejects an unrecognised session cookie with a 401`, async () => {
       const response = await app.handle(
         new Request(`http://localhost${request}`, { headers: { cookie: 'session=forged' } }),
       )
 
       expect(response.status).toBe(401)
       expect(await response.json()).toEqual(UNAUTHORIZED_BODY)
-    }
-  })
+    })
+  }
 }
