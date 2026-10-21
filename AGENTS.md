@@ -137,7 +137,7 @@ Dependencies point inward. Domain must never import from Application, Interface,
 - Use `expect` matchers (`toBe`, `toEqual`, `toMatch`), not `assert`.
 
 **Backend route tests**:
-- Group route tests by feature under `tests/interface/routes/` — `auth/`, `catalog/`, `users/`, … — mirroring `src/interface/routes/`. Shared helpers live in `tests/interface/routes/support/` (not test files, so Bun does not run them).
+- Group route tests by feature under `tests/interface/routes/` — `auth/`, `catalog/`, `users/`, …. The grouping is tests-side for now: `src/interface/routes/` still keeps catalog routes flat (`courses.routes.ts`, `faculties.routes.ts`), so don't expect a 1:1 mirror. Shared helpers live in `tests/interface/routes/support/` (not test files, so Bun does not run them).
 - Drive the real app with `createApp().handle(request)` — no listener and no database. Fake repositories stand in for the database, so tests assert real HTTP behaviour: status codes, error bodies, and query validation.
 - Reuse the shared helpers instead of re-declaring fixtures, config, or fakes:
   - `tests/interface/routes/support/catalog-test-utils.ts` — `COURSES`/`FACULTIES`, `createFakeCourseRepository`, `createFakeFacultyRepository`, `createCatalogApp()` → `{ app, get }`, `getCatalog`, `registerCatalogAuthGuard`, `UNAUTHORIZED_BODY`/`VALIDATION_ERROR_BODY`.

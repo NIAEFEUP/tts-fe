@@ -350,7 +350,7 @@ tests/
         └── ...                         # one folder per route group (users, exchanges, admin, …)
 ```
 
-Route tests are grouped by feature, mirroring `src/interface/routes/`. Shared fixtures and fakes go in `support/` (files are not named `*.test.ts`, so Bun never runs them as suites). One `describe` per file, `it` per case.
+Route tests are grouped by feature under `tests/interface/routes/`. That grouping is ahead of `src/interface/routes/`, which still keeps catalog routes flat (`courses.routes.ts`, `faculties.routes.ts`), so don't read the two trees as a 1:1 mirror. Shared fixtures and fakes go in `support/` (files are not named `*.test.ts`, so Bun never runs them as suites). One `describe` per file, `it` per case.
 
 **Example:**
 ```typescript
