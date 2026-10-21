@@ -5,7 +5,7 @@ import type { Faculty, FacultyRepository } from '@/domain/ports/faculty.reposito
 import type { SessionRepository } from '@/domain/ports/session.repository'
 import { createApp } from '@/main'
 import type { App } from '@/main'
-import { TEST_SESSION_TOKEN, TEST_USER, createFakeSessions } from './auth-test-utils'
+import { TEST_SESSION_TOKEN, createFakeSessions } from './auth-test-utils'
 
 // Shared infrastructure for the catalog route tests (`courses`, `faculties`, and
 // the `course-units`/`occurrences` groups still to come).
@@ -14,8 +14,8 @@ import { TEST_SESSION_TOKEN, TEST_USER, createFakeSessions } from './auth-test-u
 // database. The repository fakes owned by this module stand in for the
 // database, so tests assert real HTTP behaviour: status codes, error bodies,
 // and query validation. Auth fakes (user, session, cookies) come from
-// `auth-test-utils`: `SESSION_TOKEN` is the only session the app recognises,
-// and every request presents it unless told otherwise.
+// `auth-test-utils`: `TEST_SESSION_TOKEN` is the only session the app
+// recognises, and every request presents it unless told otherwise.
 //
 // Adding a catalog route group means adding its fixtures + fake repository here
 // and defaulting it in `createCatalogApp`, so its test file stays assertions-only.
@@ -55,12 +55,6 @@ export const FACULTIES: Faculty[] = [
   { acronym: 'FCUP', name: 'Faculdade de Ciências' },
   { acronym: 'FEUP', name: 'Faculdade de Engenharia' },
 ]
-
-// The test user and its session fake live in `auth-test-utils`; this module
-// re-exports them under the catalog-facing names so route tests keep a single
-// import.
-export const USER = TEST_USER
-export const SESSION_TOKEN = TEST_SESSION_TOKEN
 
 /** Error bodies shared by every catalog route, so tests assert shapes, not literals. */
 export const UNAUTHORIZED_BODY = { error: 'Authentication required', code: 'unauthorized' }
@@ -105,8 +99,6 @@ export function createFakeFacultyRepository({
   }
 }
 
-export { createFakeSessions }
-
 export type CatalogRepositories = {
   courseRepository?: CourseRepository
   facultyRepository?: FacultyRepository
@@ -125,7 +117,7 @@ export type GetOptions = { authenticated?: boolean }
 export async function getCatalog(app: App, request: string, options: GetOptions = {}): Promise<CatalogResponse> {
   const response = await app.handle(
     new Request(`http://localhost${request}`, {
-      headers: options.authenticated === false ? undefined : { cookie: `session=${SESSION_TOKEN}` },
+      headers: options.authenticated === false ? undefined : { cookie: `session=${TEST_SESSION_TOKEN}` },
     }),
   )
 
