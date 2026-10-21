@@ -15,13 +15,13 @@ import {
 // callback verifies it and mints a session, and `/me` resolves that session
 // against the fake repositories from `auth-test-utils`.
 
-const USER = ADMIN
+const ADMIN_USER = ADMIN
 
 function buildApp(config = createTestAuthConfig()) {
   return authRoutes({
-    provider: createFakeIdentityProvider(USER),
-    users: createFakeUsers(USER),
-    sessions: createFakeSessions(USER),
+    provider: createFakeIdentityProvider(ADMIN_USER),
+    users: createFakeUsers(ADMIN_USER),
+    sessions: createFakeSessions(ADMIN_USER),
     sigarraDirect: createFakeDevAuthenticator(),
     config,
   })
@@ -101,9 +101,9 @@ describe('auth routes', () => {
 
     expect(await me.json()).toEqual({
       signed: true,
-      id: USER.id,
-      name: USER.name,
-      email: USER.email,
+      id: ADMIN_USER.id,
+      name: ADMIN_USER.name,
+      email: ADMIN_USER.email,
       isAdmin: true,
       role: 'ADMIN',
     })
