@@ -345,7 +345,7 @@ tests/
         ├── catalog/
         │   ├── courses.test.ts
         │   ├── faculties.test.ts
-        │   ├── course-units.test.ts    # planned
+        │   ├── course-units.test.ts
         │   └── occurrences.test.ts     # planned
         └── ...                         # one folder per route group (users, exchanges, admin, …)
 ```
