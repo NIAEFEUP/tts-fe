@@ -8,8 +8,8 @@
     "prepare": "husky",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
-    "format": "oxfmt apps/backend/src apps/frontend/src",
-    "format:check": "oxfmt --check apps/backend/src apps/frontend/src",
+    "format": "oxfmt apps/backend/src apps/backend/tests apps/frontend/src",
+    "format:check": "oxfmt --check apps/backend/src apps/backend/tests apps/frontend/src",
     "postinstall": "prisma skills sync || exit 0"
   },
   "devDependencies": {
