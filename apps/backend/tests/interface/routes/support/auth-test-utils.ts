@@ -69,10 +69,12 @@ export function createFakeUsers(user: AuthUser = TEST_USER): UserRepository {
  */
 export function createFakeSessions(user: AuthUser = TEST_USER): SessionRepository {
   const tokens = new Map<string, AuthUser>([[TEST_SESSION_TOKEN, user]])
+  // Monotonic counter so a revoked `tok-N` is never minted again.
+  let next = 1
 
   return {
     issue: async () => {
-      const token = `tok-${tokens.size + 1}`
+      const token = `tok-${++next}`
       tokens.set(token, user)
       return token
     },
