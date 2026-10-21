@@ -60,8 +60,11 @@ export const FACULTIES: Faculty[] = [
 export const UNAUTHORIZED_BODY = { error: 'Authentication required', code: 'unauthorized' }
 export const VALIDATION_ERROR_BODY = { error: 'Request failed validation', code: 'validation-error' }
 
+/** The catalog data both repository fakes are built from. */
+export type CatalogFixtures = { courses?: Course[]; faculties?: Faculty[] }
+
 /** In-memory `CourseRepository` over `courses` (defaults to `COURSES`). */
-export function createFakeCourseRepository(courses: Course[] = COURSES): CourseRepository {
+export function createFakeCourseRepository({ courses = COURSES }: CatalogFixtures = {}): CourseRepository {
   return {
     async findAll(filter = {}) {
       return courses.filter(
@@ -81,7 +84,7 @@ export function createFakeCourseRepository(courses: Course[] = COURSES): CourseR
 export function createFakeFacultyRepository({
   faculties = FACULTIES,
   courses = COURSES,
-}: { faculties?: Faculty[]; courses?: Course[] } = {}): FacultyRepository {
+}: CatalogFixtures = {}): FacultyRepository {
   return {
     async findAll() {
       return faculties
@@ -99,7 +102,7 @@ export function createFakeFacultyRepository({
   }
 }
 
-export type CatalogRepositories = {
+export type CatalogRepositories = CatalogFixtures & {
   courseRepository?: CourseRepository
   facultyRepository?: FacultyRepository
   sessionRepository?: SessionRepository
@@ -130,17 +133,26 @@ export async function getCatalog(app: App, request: string, options: GetOptions 
 
 /**
  * Builds the app with the in-memory catalog and an always-signed-in session.
- * Any repository can be overridden — pass a custom one when a test needs
- * different data, or none at all to use the fakes above.
+ * `courses`/`faculties` feed both repository fakes, so a custom course list and
+ * its faculty join stay consistent; any repository can be overridden outright
+ * when a test needs different behaviour, or omitted to use the fakes above.
  *
  * Returns the app (for raw `app.handle` calls) and a `get` bound to it.
  */
-export function createCatalogApp(repositories: CatalogRepositories = {}) {
+export function createCatalogApp({
+  courses,
+  faculties,
+  courseRepository,
+  facultyRepository,
+  sessionRepository,
+}: CatalogRepositories = {}) {
+  const fixtures: CatalogFixtures = { courses, faculties }
+
   const app = createApp({
     repositories: {
-      courseRepository: repositories.courseRepository ?? createFakeCourseRepository(),
-      facultyRepository: repositories.facultyRepository ?? createFakeFacultyRepository(),
-      sessionRepository: repositories.sessionRepository ?? createFakeSessions(),
+      courseRepository: courseRepository ?? createFakeCourseRepository(fixtures),
+      facultyRepository: facultyRepository ?? createFakeFacultyRepository(fixtures),
+      sessionRepository: sessionRepository ?? createFakeSessions(),
     },
   })
 
