@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { CourseInfo, MultipleOptions } from '../@types'
 import StorageAPI from '../api/storage'
 import MultipleOptionsContext from './MultipleOptionsContext'
@@ -10,7 +10,6 @@ import SessionContext from './SessionContext'
 import MajorContext from './MajorContext'
 import CourseContext from './CourseContext'
 import ConflictsContext from './ConflictsContext'
-import { toast } from '../components/ui/new/toaster'
 
 type Props = {
   children: React.JSX.Element
@@ -35,16 +34,15 @@ const CombinedProvider = ({ children }: Props) => {
 
   // Load the course catalog once, only after the session resolves and the user is
   // signed in. The hook keys off `enabled` so signed-out visitors fire no request.
-  const { majors, error: majorsError } = useCourses({ enabled: userSignedIn })
-
-  useEffect(() => {
-    if (!majorsError) return
-    toast({
-      variant: 'negative',
-      title: 'Erro',
-      description: 'Não foi possível carregar a lista de cursos. Tenta novamente mais tarde.',
-    })
-  }, [majorsError])
+  // Failures are surfaced inline in the picker (see MajorSearchCombobox), not as a
+  // toast — SWR retries mean a toast here would fire once per retry.
+  const {
+    majors,
+    error: majorsError,
+    retry: retryMajors,
+  } = useCourses({
+    enabled: userSignedIn && !isSessionLoading,
+  })
 
   const [conflictSeverity, setConflictSeverity] = useState<boolean>(false)
   const [tClassConflicts, setTClassConflicts] = useState<boolean>(false)
@@ -76,7 +74,7 @@ const CombinedProvider = ({ children }: Props) => {
       }}
     >
       <ThemeContext.Provider value={{ enabled, setEnabled }}>
-        <MajorContext.Provider value={{ majors }}>
+        <MajorContext.Provider value={{ majors, majorsError, retryMajors }}>
           <CourseContext.Provider
             value={{
               pickedCourses,
