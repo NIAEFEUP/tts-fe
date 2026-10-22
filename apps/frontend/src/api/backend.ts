@@ -1,14 +1,19 @@
 import { Major, CourseInfo } from '../@types'
-import { dev_config, getSemester, config } from '../utils'
+import { dev_config, getSemester } from '../utils'
 import Cookies from 'js-cookie'
 import { ENV } from 'varlock/env'
 
-const BE_CONFIG = ENV.VITE_APP_PROD ? config : dev_config
-const BACKEND_URL =
-  import.meta.env.VITE_APP_BACKEND_URL ||
-  `${BE_CONFIG.api.protocol}://${BE_CONFIG.api.host}:${BE_CONFIG.api.port}${BE_CONFIG.api.pathPrefix}`
-const OIDC_LOGIN_URL = `${BACKEND_URL}/oidc-auth/authenticate/`
-const OIDC_LOGOUT_URL = `${BACKEND_URL}/oidc-auth/logout/`
+// Backend origin. `VITE_APP_BACKEND_URL` is the single knob (see `.env.schema`):
+//   - dev: unset → the local Elysia server (localhost:3000)
+//   - staging/prod: set per deployment through the `TTS_FE_VARS_CONTENT` secret
+//   - when unset in a prod build, fall back to the page origin (the frontend and
+//     the new backend share a domain), so URLs stay absolute — `socket.ts`
+//     parses this at module load and would throw on an empty/relative value.
+const DEV_BACKEND_URL = `${dev_config.api.protocol}://${dev_config.api.host}:${dev_config.api.port}${dev_config.api.pathPrefix}`
+const BACKEND_URL = ENV.VITE_APP_BACKEND_URL || (ENV.VITE_APP_PROD ? window.location.origin : DEV_BACKEND_URL)
+const OIDC_LOGIN_URL = `${BACKEND_URL}/api/v1/auth/login`
+const OIDC_LOGOUT_URL = `${BACKEND_URL}/api/v1/auth/logout`
+const DEV_LOGIN_URL = `${BACKEND_URL}/api/v1/auth/dev-login`
 const SEMESTER = import.meta.env.VITE_APP_SEMESTER || getSemester()
 
 // If we are in september 2024 we use 2024, if we are january 2025 we use 2024 because the first year of the academic year (2024/2025)
@@ -148,6 +153,7 @@ const api = {
   BACKEND_URL,
   OIDC_LOGIN_URL,
   OIDC_LOGOUT_URL,
+  DEV_LOGIN_URL,
 }
 
 export default api

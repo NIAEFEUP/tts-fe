@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - main
+      - monorepo
     types: [ready_for_review, synchronize, opened, reopened]
 
 jobs:
@@ -44,6 +45,14 @@ jobs:
       - name: Typecheck backend
         working-directory: apps/backend
         run: bun run typecheck
+
+      # The tests are the only thing that boots `createApp()`, so they are the
+      # only step that can catch runtime breakage — a module-resolution or
+      # wiring regression typechecks cleanly and still fails at boot. They
+      # need the generated contract, which the emit step above provides.
+      - name: Test backend
+        working-directory: apps/backend
+        run: bun run test
 
       - name: Typecheck frontend
         working-directory: apps/frontend

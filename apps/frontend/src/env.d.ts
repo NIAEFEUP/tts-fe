@@ -60,7 +60,11 @@ export type CoercedEnvSchema = {
   
   /**
    * **VITE_APP_BACKEND_URL**  
-   * Backend URL (defaults to http://localhost:3000 when empty)  
+   * Backend URL for the new Elysia backend. Leave empty in dev (falls back to the  
+   * local server at http://localhost:3000); set it per deployment for staging and  
+   * production through the `TTS_FE_VARS_CONTENT` secret. When empty in a  
+   * production build, it falls back to the page origin (frontend and backend share  
+   * a domain).  
    * ![icon](data:image/svg+xml;utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20fill%3D%22%23808080%22%20d%3D%22M24%2021V9h-2v14h8v-2zm-4-6v-4c0-1.103-.897-2-2-2h-6v14h2v-6h1.48l2.335%206h2.145l-2.333-6H18c1.103%200%202-.897%202-2m-6-4h4v4h-4zM8%2023H4c-1.103%200-2-.897-2-2V9h2v12h4V9h2v12c0%201.103-.897%202-2%202%22%2F%3E%3C%2Fsvg%3E)   
    */
   VITE_APP_BACKEND_URL?: string;
@@ -88,7 +92,8 @@ export type CoercedEnvSchema = {
   
   /**
    * **VITE_APP_FEDERATED_AUTH**  
-   * Enables federated (OIDC) authentication  
+   * Enables federated (OIDC) authentication. Off by default for local dev (login  
+   * with username/password via the backend's dev-login); production sets it true.  
    * ![icon](data:image/svg+xml;utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20fill%3D%22%23808080%22%20d%3D%22M23%2023a7%207%200%201%201%207-7a7.01%207.01%200%200%201-7%207m0-12a5%205%200%201%200%205%205a5.006%205.006%200%200%200-5-5%22%2F%3E%3Ccircle%20cx%3D%229%22%20cy%3D%2216%22%20r%3D%227%22%20fill%3D%22%23808080%22%2F%3E%3C%2Fsvg%3E)   
    */
   VITE_APP_FEDERATED_AUTH: boolean;

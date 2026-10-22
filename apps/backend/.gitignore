@@ -6,3 +6,4 @@ dist/
 src/infrastructure/database/contract.json
 src/infrastructure/database/contract.d.ts
 out-tsc/
+*.tsbuildinfo

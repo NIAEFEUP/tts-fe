@@ -10,6 +10,13 @@ import { Popover } from '../ui/new/popover'
 import ScheduleContext from '../../contexts/ScheduleContext'
 import { Dialog } from '../ui/new/dialog'
 import { Divider } from '../ui/new/divider'
+import { Badge } from '../ui/new/badge'
+
+// Only admins and superusers get a badge; a plain user shows nothing.
+const ROLE_BADGES = {
+  ADMIN: { label: 'Admin', variant: 'success' },
+  SUPERUSER: { label: 'Superuser', variant: 'info' },
+} as const
 
 export const HeaderProfileDropdown = () => {
   const [loggingOut, setLoggingOut] = useState(false)
@@ -17,6 +24,8 @@ export const HeaderProfileDropdown = () => {
 
   const { user, forceScheduleRevalidation } = useContext(SessionContext)
   const { setExchangeSchedule } = useContext(ScheduleContext)
+
+  const roleBadge = user?.role && user.role !== 'USER' ? ROLE_BADGES[user.role as keyof typeof ROLE_BADGES] : null
 
   const logout = async () => {
     setLoggingOut(true)
@@ -27,7 +36,12 @@ export const HeaderProfileDropdown = () => {
   return (
     <Popover placement="bottom-end">
       <Popover.Trigger asChild>
-        <div className="cursor-pointer w-fit">
+        <div className="cursor-pointer w-fit flex items-center gap-2">
+          {roleBadge && (
+            <Badge variant={roleBadge.variant} size="sm">
+              {roleBadge.label}
+            </Badge>
+          )}
           <Avatar className="border shadow-xs">
             <Avatar.Image src={studentInfoService.getStudentPictureUrl(user?.username)} />
             <Avatar.Fallback>{user?.name?.charAt(0) ?? ''}</Avatar.Fallback>

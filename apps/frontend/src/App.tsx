@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { Toaster } from './components/ui/new/toaster'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './app.css'
 import CombinedProvider from './contexts/CombinedProvider'
+import healthService from './api/services/healthService'
 import {
   AboutPage,
   TimeTableSelectorPage,
@@ -14,8 +16,6 @@ import {
 import { getPath, config, dev_config, plausible } from './utils'
 import Layout from './components/layout'
 import Exchange from './pages/Exchange'
-import { useEffect } from 'react'
-import api from './api/backend'
 import * as Sentry from '@sentry/react'
 import { ENV } from 'varlock/env'
 
@@ -114,15 +114,17 @@ const App = () => {
   //TODO(thePeras): Should this be used? Or should this invalidate the storage
   //StorageAPI.updateBackendDataVersion()
 
+  // Ping the backend once on startup so an unreachable or misconfigured backend
+  // is visible right away (see issue #823).
+  useEffect(() => {
+    healthService.checkHealth().catch((error) => {
+      console.warn('Backend health check failed:', error)
+    })
+  }, [])
+
   // Enable Analytics
   const { enableAutoPageviews } = plausible
   enableAutoPageviews()
-
-  useEffect(() => {
-    fetch(`${api.BACKEND_URL}/csrf/`, { credentials: 'include' })
-      .then(() => {})
-      .catch((e) => console.error(e))
-  })
 
   const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes)
 

@@ -68,7 +68,8 @@ Every failing response is `{ error, code }`: `error` is written for the caller, 
 
 ## 1. Auth
 
-Sigarra federated authentication (OIDC-style redirect flow).
+Sigarra federated authentication (OIDC-style redirect flow) in production, plus a
+dev-only username/password login (see `POST /auth/dev-login` below).
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
@@ -76,16 +77,27 @@ Sigarra federated authentication (OIDC-style redirect flow).
 | `GET` | `/auth/callback` | public | Sigarra redirects back here after login |
 | `POST` | `/auth/logout` | `?` | Clear local session cookie |
 | `GET` | `/auth/me` | `?` | Current user profile |
+| `POST` | `/auth/dev-login` | public | Dev-only username/password login (env-gated) |
+
+`POST /auth/dev-login` is enabled by `DEV_LOGIN_ENABLED` (default on, forced off
+when `NODE_ENV=production`). With no body it uses the configured
+`SIGARRA_USERNAME` / `SIGARRA_PASSWORD`; a `{ username, password }` body overrides
+them. It validates against Sigarra and sets the same session cookie as OIDC.
 
 ### Compatibility-only auth routes
 
-These exist because the current frontend still references them. You can drop them once the frontend is migrated.
+Kept for older clients; the current frontend uses the canonical routes above, so
+these can be dropped once nothing references them.
+
+They are mounted at the **root**, not under `/api/v1`, because clients built their
+URLs from `BACKEND_URL` with an empty path prefix.
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/oidc-auth/authenticate/` | public | Legacy login redirect (replace with `/auth/login`) |
-| `POST` | `/oidc-auth/logout/` | `?` | Legacy logout (replace with `/auth/logout`) |
-| `POST` | `/sigarra_login/` | public | Dev-only local login bypass |
+| `GET` | `/oidc-auth/authenticate/` | public | 302 → `/api/v1/auth/login` |
+| `POST` | `/oidc-auth/logout/` | `?` | Clears the session (ignores the legacy CSRF header) |
+| `GET` | `/auth/info/` | public | Legacy `{ signed, username, name, eligible_exchange, is_admin }` shape |
+| `POST` | `/sigarra_login/` | public | Dev-only local login bypass, gated by `DEV_LOGIN_ENABLED` |
 
 ### Flow
 
@@ -102,11 +114,14 @@ These exist because the current frontend still references them. You can drop the
   "email": "up202301234@up.pt",
   "name": "Ana Silva",
   "signed": true,
-  "isAdmin": false
+  "isAdmin": false,
+  "role": "USER"
 }
 ```
 
-Replaces legacy `GET /auth/info/` and `GET /info/`.
+`role` is `USER` | `ADMIN` | `SUPERUSER` and is assigned by the seeder, not by
+logging in (see `db:seed:demo` / `ADMIN_ROLE`). Replaces legacy `GET /auth/info/`
+and `GET /info/`.
 
 ---
 
@@ -134,6 +149,7 @@ Legacy mapping: `GET /faculty/` → `GET /faculties`.
     "name": "Licenciatura em Engenharia Informática e Computação",
     "courseType": "L",
     "year": 2025,
+    "url": "https://sigarra.up.pt/feup/pt/cur_geral.cur_view?pv_curso_id=22841",
     "faculties": ["FEUP"]
   }
 ]
