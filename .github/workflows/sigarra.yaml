@@ -6,7 +6,6 @@ on:
       - develop
       - main
       - beta
-    types: [ready_for_review, synchronize, opened, reopened]
     paths:
       - packages/sigarra/**
       - bun.lock
@@ -14,13 +13,12 @@ on:
 
 jobs:
   generated:
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     name: Generated SDK is up to date
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
@@ -28,7 +26,7 @@ jobs:
           bun-version: 1.4.1
 
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache
           key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
