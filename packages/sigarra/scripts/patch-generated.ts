@@ -54,3 +54,10 @@ patch('BaseClient.ts', [
     'The number of times to retry the request. Defaults to 0.',
   ],
 ])
+
+patch('core/fetcher/makePassthroughRequest.ts', [
+  [
+    'Default number of times to retry the request. Defaults to 2.',
+    'Default number of times to retry the request. Defaults to 0.',
+  ],
+])
