@@ -6,7 +6,7 @@ TypeScript SDK for [SIGARRA](https://sigarra.up.pt), generated from [`openapi.js
 import { SigarraClient } from '@tts/sigarra'
 
 const sigarra = new SigarraClient()
-await sigarra.feup.home()
+await sigarra.home.getHomePage({ faculty: 'feup', language: 'pt' })
 ```
 
 ## Authentication
@@ -47,7 +47,7 @@ Retries are opt-in. Fern retries every request twice by default, including `POST
 
 ```ts
 const sigarra = new SigarraClient({ maxRetries: 2 })
-await sigarra.feup.home({ maxRetries: 1 })
+await sigarra.home.getHomePage({ faculty: 'feup', language: 'pt' }, { maxRetries: 1 })
 ```
 
 Only enable retries for idempotent requests. Don't edit the generated files by hand: change the patch script instead, and `bun run generate` will reapply it.
