@@ -29,7 +29,7 @@ const sigarra = new SigarraClient({ headers: { Cookie: cookie } })
 await sigarra.student.getProfile({ faculty: 'feup', language: 'pt', pv_codigo: data.codigo })
 ```
 
-A wrong username or password throws `Sigarra.ForbiddenError`. Sessions only work from the IP address that logged in and last about 2 hours, so use the SDK from a server and log in again once the session expires. See the `info.description` of [`openapi.json`](./openapi.json) for the other ways to log in (OpenID Connect and SAML).
+A wrong username or password throws `Sigarra.ForbiddenError`. Sessions last about 2 hours and are tied to the IP address that logged in; endpoints that also accept them from other addresses say so in their description. Use the SDK from a server, and log in again once the session expires. See the `info.description` of [`openapi.json`](./openapi.json) for the other ways to log in (OpenID Connect and SAML).
 
 ## Generating
 

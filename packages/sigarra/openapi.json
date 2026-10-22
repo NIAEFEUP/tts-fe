@@ -2093,7 +2093,7 @@
           "calendar"
         ],
         "summary": "Student schedule (v2)",
-        "description": "A student's schedule, from SIGARRA's new schedule module.\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
+        "description": "The session works from any IP address, not only the one that created it.\n\nA student's schedule, from SIGARRA's new schedule module.\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getStudentEvents",
         "parameters": [
@@ -2174,7 +2174,7 @@
           "calendar"
         ],
         "summary": "Student schedule table (v2)",
-        "description": "A student's schedule, from SIGARRA's new schedule module, as an HTML table.\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
+        "description": "The session works from any IP address, not only the one that created it.\n\nA student's schedule, from SIGARRA's new schedule module, as an HTML table.\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getStudentTable",
         "parameters": [
@@ -2254,7 +2254,7 @@
           "calendar"
         ],
         "summary": "Course unit schedule (v2)",
-        "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
+        "description": "The session works from any IP address, not only the one that created it.\n\nThe trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getCourseUnitEvents",
         "parameters": [
@@ -2321,7 +2321,7 @@
           "calendar"
         ],
         "summary": "Course unit schedule table (v2)",
-        "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
+        "description": "The session works from any IP address, not only the one that created it.\n\nThe trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getCourseUnitTable",
         "parameters": [
@@ -2388,7 +2388,7 @@
           "calendar"
         ],
         "summary": "Professor schedule (v2)",
-        "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
+        "description": "The session works from any IP address, not only the one that created it.\n\nThe trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getProfessorEvents",
         "parameters": [
@@ -2455,7 +2455,7 @@
           "calendar"
         ],
         "summary": "Professor schedule table (v2)",
-        "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
+        "description": "The session works from any IP address, not only the one that created it.\n\nThe trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getProfessorTable",
         "parameters": [
