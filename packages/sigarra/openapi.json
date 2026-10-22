@@ -886,7 +886,7 @@
                               "type": "null"
                             },
                             "creditos_ects": {
-                              "type": "integer"
+                              "type": "number"
                             },
                             "n_ucurrs": {
                               "type": "integer"
@@ -989,9 +989,9 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "default": "484377"
-            }
+              "type": "string"
+            },
+            "example": "484377"
           },
           {
             "name": "faculty",
@@ -1083,9 +1083,9 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "default": "484377"
-            }
+              "type": "string"
+            },
+            "example": "484377"
           },
           {
             "name": "faculty",
@@ -1470,10 +1470,11 @@
           {
             "name": "pv_ocorrencia_id",
             "in": "query",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "484377"
-            }
+              "type": "string"
+            },
+            "example": "484377"
           }
         ],
         "responses": {
@@ -1531,9 +1532,9 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "default": "484377"
-            }
+              "type": "string"
+            },
+            "example": "484377"
           },
           {
             "name": "faculty",
@@ -1636,10 +1637,11 @@
             "name": "pv_ocorrencia_id",
             "in": "query",
             "description": "ID of the occurrence of the course unit whose files to get.",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "484400"
-            }
+              "type": "string"
+            },
+            "example": "484400"
           }
         ],
         "deprecated": false,
@@ -1752,10 +1754,11 @@
             "name": "pct_id",
             "in": "query",
             "description": "The id of the document to be downloaded",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "515516"
-            }
+              "type": "string"
+            },
+            "example": "515516"
           },
           {
             "name": "faculty",
@@ -1815,10 +1818,11 @@
             "name": "pv_ocorrencia_id",
             "in": "query",
             "description": "Course unit occurrence ID.",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "484400"
-            }
+              "type": "string"
+            },
+            "example": "484400"
           },
           {
             "name": "faculty",
@@ -1906,28 +1910,31 @@
             "name": "pv_ocorrencia_id",
             "in": "query",
             "description": "Course unit occurrence ID.",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "484400"
-            }
+              "type": "string"
+            },
+            "example": "484400"
           },
           {
             "name": "pv_turma_id",
             "in": "query",
             "description": "Class ID.",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "824506"
-            }
+              "type": "string"
+            },
+            "example": "824506"
           },
           {
             "name": "pv_tipo_aula",
             "in": "query",
             "description": "Lesson type.",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "TP"
-            }
+              "type": "string"
+            },
+            "example": "TP"
           },
           {
             "name": "faculty",
@@ -2011,10 +2018,11 @@
             "name": "pv_sumario_id",
             "in": "query",
             "description": "Summary ID.",
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "2146359"
-            }
+              "type": "string"
+            },
+            "example": "2146359"
           },
           {
             "name": "faculty",
@@ -3075,7 +3083,7 @@
             "description": "Missing token."
           },
           "403": {
-            "description": "No valid session.",
+            "description": "Invalid token.",
             "content": {
               "text/html": {
                 "schema": {
