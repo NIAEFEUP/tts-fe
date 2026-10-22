@@ -9,6 +9,28 @@ const sigarra = new SigarraClient()
 await sigarra.feup.home()
 ```
 
+## Authentication
+
+The SDK doesn't manage sessions. Log in, take the `SI_SESSION` and `SI_SECURITY` cookies from the response, and pass them to a new client through the `headers` option:
+
+```ts
+import { SigarraClient } from '@tts/sigarra'
+
+const { data, rawResponse } = await new SigarraClient().auth
+  .login({ faculty: 'feup', language: 'pt', pv_login: username, pv_password: password })
+  .withRawResponse()
+
+const cookie = rawResponse.headers
+  .getSetCookie()
+  .map((setCookie) => setCookie.split(';')[0])
+  .join('; ')
+
+const sigarra = new SigarraClient({ headers: { Cookie: cookie } })
+await sigarra.student.getProfile({ faculty: 'feup', language: 'pt', pv_codigo: data.codigo })
+```
+
+A wrong username or password throws `Sigarra.ForbiddenError`. Sessions only work from the IP address that logged in and last about 2 hours, so use the SDK from a server and log in again once the session expires. See the `info.description` of [`openapi.json`](./openapi.json) for the other ways to log in (OpenID Connect and SAML).
+
 ## Generating
 
 The generated SDK is committed under `src/generated`. Regenerate the SDK with:
