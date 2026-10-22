@@ -28,7 +28,7 @@ export const courseUnitSchema = t.Object({
   courseId: t.Number(),
   acronym: t.String(),
   name: t.String(),
-  semester: t.Number(),
+  semester: t.Union([t.Literal(1), t.Literal(2)]),
 })
 
 /** A concrete occurrence of a course unit: the (unit, course, year) tuple
