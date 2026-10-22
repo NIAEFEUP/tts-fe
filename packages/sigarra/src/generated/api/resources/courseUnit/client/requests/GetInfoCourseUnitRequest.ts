@@ -5,7 +5,7 @@
  *     {
  *         faculty: "faculty",
  *         language: "language",
- *         pv_ocorrencia_id: "pv_ocorrencia_id"
+ *         pv_ocorrencia_id: "484377"
  *     }
  */
 export interface GetInfoCourseUnitRequest {

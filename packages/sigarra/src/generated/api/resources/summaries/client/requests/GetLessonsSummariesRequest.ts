@@ -4,16 +4,19 @@
  * @example
  *     {
  *         faculty: "faculty",
- *         language: "language"
+ *         language: "language",
+ *         pv_ocorrencia_id: "484400",
+ *         pv_turma_id: "824506",
+ *         pv_tipo_aula: "TP"
  *     }
  */
 export interface GetLessonsSummariesRequest {
     faculty: string;
     language: string;
     /** Course unit occurrence ID. */
-    pv_ocorrencia_id?: string;
+    pv_ocorrencia_id: string;
     /** Class ID. */
-    pv_turma_id?: string;
+    pv_turma_id: string;
     /** Lesson type. */
-    pv_tipo_aula?: string;
+    pv_tipo_aula: string;
 }

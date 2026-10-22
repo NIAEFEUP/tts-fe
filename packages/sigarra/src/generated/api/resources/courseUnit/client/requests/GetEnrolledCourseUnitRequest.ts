@@ -4,11 +4,12 @@
  * @example
  *     {
  *         faculty: "faculty",
- *         language: "language"
+ *         language: "language",
+ *         pv_ocorrencia_id: "484377"
  *     }
  */
 export interface GetEnrolledCourseUnitRequest {
     faculty: string;
     language: string;
-    pv_ocorrencia_id?: string;
+    pv_ocorrencia_id: string;
 }

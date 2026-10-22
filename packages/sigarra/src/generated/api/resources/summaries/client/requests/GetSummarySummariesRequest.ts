@@ -4,12 +4,13 @@
  * @example
  *     {
  *         faculty: "faculty",
- *         language: "language"
+ *         language: "language",
+ *         pv_sumario_id: "2146359"
  *     }
  */
 export interface GetSummarySummariesRequest {
     faculty: string;
     language: string;
     /** Summary ID. */
-    pv_sumario_id?: string;
+    pv_sumario_id: string;
 }

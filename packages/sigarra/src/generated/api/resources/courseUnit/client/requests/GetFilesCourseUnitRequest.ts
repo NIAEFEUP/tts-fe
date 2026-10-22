@@ -4,12 +4,13 @@
  * @example
  *     {
  *         faculty: "faculty",
- *         language: "language"
+ *         language: "language",
+ *         pv_ocorrencia_id: "484400"
  *     }
  */
 export interface GetFilesCourseUnitRequest {
     faculty: string;
     language: string;
     /** ID of the occurrence of the course unit whose files to get. */
-    pv_ocorrencia_id?: string;
+    pv_ocorrencia_id: string;
 }

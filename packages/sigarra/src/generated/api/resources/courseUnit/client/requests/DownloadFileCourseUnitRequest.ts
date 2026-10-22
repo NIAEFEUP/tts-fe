@@ -4,5 +4,5 @@ export interface DownloadFileCourseUnitRequest {
     faculty: string;
     language: string;
     /** The id of the document to be downloaded */
-    pct_id?: string;
+    pct_id: string;
 }
