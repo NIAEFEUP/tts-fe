@@ -1,4 +1,4 @@
-import type { CourseUnit, CourseUnitRepository } from '@/domain/ports/course-unit.repository'
+import type { CourseUnitRepository } from '@/domain/ports/course-unit.repository'
 import type { Db } from '@/infrastructure/database/prisma'
 
 /**
@@ -15,37 +15,19 @@ export function createCourseUnitRepository({ db }: { db: Db }): CourseUnitReposi
   return {
     // GET /v1/course-units/:id — one course unit by its id.
     async findById(id) {
-      // `.where({ id }).first()` returns one row or null (route converts to 404).
-      const row = await db.orm.public.CourseUnit.where({ id }).first()
-      if (!row) return null
-
-      return toCourseUnit(row)
+      return (
+        (await db.orm.public.CourseUnit.where({ id })
+          .select('id', 'courseId', 'acronym', 'name', 'semester')
+          .first()) ?? null
+      )
     },
 
     // GET /v1/courses/:id/units — every unit the course offers, by acronym.
     async findByCourse(courseId) {
-      const rows = await db.orm.public.CourseUnit.where((unit) => unit.courseId.eq(courseId))
+      return db.orm.public.CourseUnit.where((unit) => unit.courseId.eq(courseId))
+        .select('id', 'courseId', 'acronym', 'name', 'semester')
         .orderBy((unit) => unit.acronym.asc())
         .all()
-
-      return rows.map(toCourseUnit)
     },
-  }
-}
-
-/** Pick the API-facing fields out of a raw `CourseUnit` table row. */
-function toCourseUnit(row: {
-  id: number
-  courseId: number
-  acronym: string
-  name: string
-  semester: number
-}): CourseUnit {
-  return {
-    id: row.id,
-    courseId: row.courseId,
-    acronym: row.acronym,
-    name: row.name,
-    semester: row.semester,
   }
 }
