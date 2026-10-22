@@ -53,7 +53,7 @@
     },
     {
       "name": "professor",
-      "description": "Professor (docente) pages and schedules."
+      "description": "Professor pages and schedules."
     },
     {
       "name": "student",
@@ -100,8 +100,8 @@
         "tags": [
           "student"
         ],
-        "summary": "Horário",
-        "description": "Retorna o horários de um estudante (Ainda por testar para retornar um exemplo de response)\n\nReturns the weekly timetable of the week that contains `pv_semana_ini`; `pv_semana_fim` does not widen the range.",
+        "summary": "Student schedule",
+        "description": "Weekly timetable of a student. Returns the weekly timetable of the week that contains `pv_semana_ini`; `pv_semana_fim` does not widen the range.",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getSchedule",
         "parameters": [
@@ -181,8 +181,8 @@
         "tags": [
           "student"
         ],
-        "summary": "Exames",
-        "description": "Exames do usuário autenticado",
+        "summary": "Exams",
+        "description": "The authenticated user's exams.",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getExams",
         "parameters": [
@@ -198,7 +198,7 @@
           {
             "name": "pv_codigo",
             "in": "query",
-            "description": "número mecatrónico",
+            "description": "Student number.",
             "required": true,
             "schema": {
               "type": "string"
@@ -229,11 +229,11 @@
                       },
                       "ocorr_id": {
                         "type": "integer",
-                        "description": "ID da ocorrência"
+                        "description": "Occurrence ID."
                       },
                       "ocorr_nome": {
                         "type": "string",
-                        "description": "Nome da ocorrência"
+                        "description": "Occurrence name."
                       },
                       "data": {
                         "type": "string",
@@ -250,19 +250,19 @@
                       "duracao": {},
                       "pfunc_id": {
                         "type": "integer",
-                        "description": "Vigilante"
+                        "description": "Invigilator."
                       },
                       "tipo": {
                         "type": "string",
-                        "description": "Tipo de exame"
+                        "description": "Exam type."
                       },
                       "tipo_descricao": {
                         "type": "string",
-                        "description": "Descrição do tipo de exame"
+                        "description": "Description of the exam type."
                       },
                       "epoca": {
                         "type": "string",
-                        "description": "Nome da época de avaliação"
+                        "description": "Name of the exam season."
                       },
                       "salas": {
                         "type": "array",
@@ -304,8 +304,8 @@
         "tags": [
           "student"
         ],
-        "summary": "Percurso Académico",
-        "description": "Percurso académico do usuário autenticado",
+        "summary": "Academic path",
+        "description": "The authenticated user's academic path.",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getAcademicPath",
         "parameters": [
@@ -330,7 +330,7 @@
           {
             "name": "pv_codigo",
             "in": "query",
-            "description": "número mecatrónico",
+            "description": "Student number.",
             "required": true,
             "schema": {
               "type": "string"
@@ -563,8 +563,8 @@
         "tags": [
           "student"
         ],
-        "summary": "Perfil",
-        "description": "Dados do usuário autenticado",
+        "summary": "Profile",
+        "description": "The authenticated user's details.",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getProfile",
         "parameters": [
@@ -589,7 +589,7 @@
           {
             "name": "pv_codigo",
             "in": "query",
-            "description": "número mecatrónico",
+            "description": "Student number.",
             "required": true,
             "schema": {
               "type": "string"
@@ -738,8 +738,8 @@
         "tags": [
           "student"
         ],
-        "summary": "Cursos e respetivas UCs",
-        "description": "Retorna uma lista com os cursos a que o estudante está inscrito com as respetivas unidades curriculares atuais",
+        "summary": "Courses and their course units",
+        "description": "Lists the courses the student is enrolled in, with their current course units.",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getCurrentCourses",
         "parameters": [
@@ -764,7 +764,7 @@
           {
             "name": "pv_codigo",
             "in": "query",
-            "description": "número mecatrónico",
+            "description": "Student number.",
             "required": true,
             "schema": {
               "type": "string"
@@ -979,8 +979,8 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "UC - Ocorrências",
-        "description": "Retorna uma lista de ocorrencias de uma Unidade Curricular a partir um ocorrencia já conhecida",
+        "summary": "Course unit occurrences",
+        "description": "Lists the occurrences of a course unit, given one of its occurrences.",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getOccurrences",
         "parameters": [
@@ -1073,8 +1073,8 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "UC - Informações",
-        "description": "A partir de um id de occurência, retorna o conteudo da unidade curricular associada. Retorna",
+        "summary": "Course unit information",
+        "description": "Given an occurrence ID, returns the contents of its course unit.",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getInfo",
         "parameters": [
@@ -1444,8 +1444,8 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "UC - Inscritos",
-        "description": "Devolve uma lista das pessoas inscritas numa Unidade Curricular",
+        "summary": "Course unit enrolled students",
+        "description": "Lists the people enrolled in a course unit.",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getEnrolled",
         "parameters": [
@@ -1522,7 +1522,7 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "UC - Turmas",
+        "summary": "Course unit classes",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getClasses",
         "parameters": [
@@ -1609,8 +1609,8 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "UC - Ficheiros",
-        "description": "Ficheiros (Conteudos) de uma Unidade Curricular",
+        "summary": "Course unit files",
+        "description": "Files (contents) of a course unit.",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getFiles",
         "parameters": [
@@ -1635,7 +1635,7 @@
           {
             "name": "pv_ocorrencia_id",
             "in": "query",
-            "description": "O id da ocorrencia que define a UC a que se pretende ir buscar ficheiros",
+            "description": "ID of the occurrence of the course unit whose files to get.",
             "schema": {
               "type": "string",
               "default": "484400"
@@ -1743,8 +1743,8 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Download Ficheiro",
-        "description": "Without a valid session, SIGARRA answers `200` with an HTML error page (\"Erro!\") instead of the file.\n\nFazer um download de um ficheiro a partir do seu id",
+        "summary": "Download file",
+        "description": "Without a valid session, SIGARRA answers `200` with an HTML error page (\"Erro!\") instead of the file.\n\nDownloads a file by its ID.",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "downloadFile",
         "parameters": [
@@ -1806,15 +1806,15 @@
         "tags": [
           "summaries"
         ],
-        "summary": "Turmas de uma UC",
-        "description": "Dada o id de uma ocorrencia",
+        "summary": "Classes of a course unit",
+        "description": "Lists the classes of a course unit occurrence.",
         "x-fern-sdk-group-name": "summaries",
         "x-fern-sdk-method-name": "getClasses",
         "parameters": [
           {
             "name": "pv_ocorrencia_id",
             "in": "query",
-            "description": "O id da ocorrencia",
+            "description": "Course unit occurrence ID.",
             "schema": {
               "type": "string",
               "default": "484400"
@@ -1897,15 +1897,15 @@
         "tags": [
           "summaries"
         ],
-        "summary": "Aulas de uma turma",
-        "description": "Lista todas as aulas de uma turma com o id do respetivo sumário",
+        "summary": "Lessons of a class",
+        "description": "Lists all the lessons of a class, with the ID of each lesson's summary.",
         "x-fern-sdk-group-name": "summaries",
         "x-fern-sdk-method-name": "getLessons",
         "parameters": [
           {
             "name": "pv_ocorrencia_id",
             "in": "query",
-            "description": "Ocorrencia da UC",
+            "description": "Course unit occurrence ID.",
             "schema": {
               "type": "string",
               "default": "484400"
@@ -1914,7 +1914,7 @@
           {
             "name": "pv_turma_id",
             "in": "query",
-            "description": "O id da turma",
+            "description": "Class ID.",
             "schema": {
               "type": "string",
               "default": "824506"
@@ -1923,7 +1923,7 @@
           {
             "name": "pv_tipo_aula",
             "in": "query",
-            "description": "Tipo de aula",
+            "description": "Lesson type.",
             "schema": {
               "type": "string",
               "default": "TP"
@@ -2002,15 +2002,15 @@
         "tags": [
           "summaries"
         ],
-        "summary": "Sumário de uma Aula",
-        "description": "Vai buscar o sumário de uma aula em específico",
+        "summary": "Lesson summary",
+        "description": "Gets the summary of a specific lesson.",
         "x-fern-sdk-group-name": "summaries",
         "x-fern-sdk-method-name": "getSummary",
         "parameters": [
           {
             "name": "pv_sumario_id",
             "in": "query",
-            "description": "O id de um sumário",
+            "description": "Summary ID.",
             "schema": {
               "type": "string",
               "default": "2146359"
@@ -2108,7 +2108,7 @@
         "tags": [
           "parking"
         ],
-        "summary": "Ocupação de Parques de Estacionamento",
+        "summary": "Parking lot occupancy",
         "x-fern-sdk-group-name": "parking",
         "x-fern-sdk-method-name": "getOccupancy",
         "parameters": [
@@ -2264,8 +2264,8 @@
         "tags": [
           "calendar"
         ],
-        "summary": "Horário v2",
-        "description": "Novo módulo de horários do Sigarra\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
+        "summary": "Student schedule (v2)",
+        "description": "A student's schedule, from SIGARRA's new schedule module.\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getStudentEvents",
         "parameters": [
@@ -2351,8 +2351,8 @@
         "tags": [
           "calendar"
         ],
-        "summary": "Horário v2 (tabela)",
-        "description": "Horário de um estudante no novo módulo de horários do Sigarra, como uma tabela HTML.\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
+        "summary": "Student schedule table (v2)",
+        "description": "A student's schedule, from SIGARRA's new schedule module, as an HTML table.\n\nThe trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getStudentTable",
         "parameters": [
@@ -2437,7 +2437,7 @@
         "tags": [
           "calendar"
         ],
-        "summary": "Horário v2 de uma unidade curricular",
+        "summary": "Course unit schedule (v2)",
         "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getCourseUnitEvents",
@@ -2510,7 +2510,7 @@
         "tags": [
           "calendar"
         ],
-        "summary": "Horário v2 (tabela) de uma unidade curricular",
+        "summary": "Course unit schedule table (v2)",
         "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getCourseUnitTable",
@@ -2583,7 +2583,7 @@
         "tags": [
           "calendar"
         ],
-        "summary": "Horário v2 de um docente",
+        "summary": "Professor schedule (v2)",
         "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getProfessorEvents",
@@ -2656,7 +2656,7 @@
         "tags": [
           "calendar"
         ],
-        "summary": "Horário v2 (tabela) de um docente",
+        "summary": "Professor schedule table (v2)",
         "description": "The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "calendar",
         "x-fern-sdk-method-name": "getProfessorTable",
@@ -2896,7 +2896,7 @@
           "auth"
         ],
         "summary": "Login (credentials)",
-        "description": "Authenticates with a username and password; this is the website's login form (served by `vld_validacao.login`). Works on any faculty path, including `up`.\n\nOn success, sets `SI_SESSION` and `SI_SECURITY` (no expiry date; the session lasts about 2 hours) and redirects with a `<meta http-equiv=\"refresh\">` to `p_address` (`web_page.Inicial` by default). On failure, the reason is in `p.aviso-invalidado` (e.g. \"O conjunto utilizador/senha não é válido.\", \"A sua conta encontra-se bloqueada.\", or an expired password). If the request already carries a valid session, the page is titled \"Problema encontrado\", `p.erro-nota` says \"Já se encontra autenticado com o utilizador <name>.\", and no new session is created.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
+        "description": "Authenticates with a username and password; this is the website's login form (served by `vld_validacao.login`). Works on any faculty path, including `up`.\n\nOn success, sets `SI_SESSION` and `SI_SECURITY` (no expiry date; the session lasts about 2 hours) and redirects with a `<meta http-equiv=\"refresh\">` to `p_address` (`web_page.Inicial` by default). On failure, the reason is in `p.aviso-invalidado` (e.g. \"O conjunto utilizador/senha não é válido.\" for a wrong username or password, \"A sua conta encontra-se bloqueada.\" for a locked account, or an expired password). If the request already carries a valid session, the page is titled \"Problema encontrado\" (\"Problem found\"), `p.erro-nota` says \"Já se encontra autenticado com o utilizador <name>.\" (\"You are already authenticated as <name>.\"), and no new session is created.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "auth",
         "x-fern-sdk-method-name": "loginPage",
         "parameters": [
@@ -3098,7 +3098,7 @@
         "tags": [
           "home"
         ],
-        "summary": "Página inicial",
+        "summary": "Home page",
         "description": "Home page. When authenticated, `.autenticado .fotografia img` links to `fotografias_service.foto?pct_cod=<username>`, which `uni` uses to find the username.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "home",
         "x-fern-sdk-method-name": "getHomePage",
@@ -3149,7 +3149,7 @@
         "tags": [
           "student"
         ],
-        "summary": "Faculdades de uma pessoa",
+        "summary": "A person's faculties",
         "description": "Without a valid session, SIGARRA answers `200` with a redirect page to another faculty instead of the list.\n\nLists the faculties a person belongs to (`#conteudoinner>ul a`, e.g. \"Faculdade de Engenharia (FEUP)\"). `uni` requests it with `faculty` set to `up`.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getFacultiesPage",
@@ -3202,7 +3202,7 @@
         "tags": [
           "student"
         ],
-        "summary": "Cursos de um estudante",
+        "summary": "A student's courses",
         "description": "Lists a student's courses and links to each `fest_geral.curso_percurso_academico_view?pv_fest_id=`. `uni` also uses it to check whether the session is still valid.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getCoursesPage",
@@ -3265,7 +3265,7 @@
         "tags": [
           "student"
         ],
-        "summary": "Percurso académico num curso",
+        "summary": "Academic path in a course",
         "description": "A student's academic path in a course: course units, grades and the course average.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getCourseAcademicPathPage",
@@ -3328,7 +3328,7 @@
         "tags": [
           "student"
         ],
-        "summary": "Inscrições em unidades curriculares",
+        "summary": "Course unit enrolments",
         "description": "A student's course unit enrolments in a course.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getCourseUnitEnrollmentsPage",
@@ -3391,8 +3391,8 @@
         "tags": [
           "student"
         ],
-        "summary": "Informação pessoal",
-        "description": "Without a valid session, SIGARRA answers `200` with a one-line error (\"Erro - Não tem permissões de acesso a esta página.\").\n\nA student's personal details.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
+        "summary": "Personal information",
+        "description": "Without a valid session, SIGARRA answers `200` with a one-line error (\"Erro - Não tem permissões de acesso a esta página.\", i.e. no permission to access the page).\n\nA student's personal details.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getPersonalInfoPage",
         "parameters": [
@@ -3453,7 +3453,7 @@
         "tags": [
           "student"
         ],
-        "summary": "Página de horário de um estudante",
+        "summary": "Student schedule page",
         "description": "A student's schedule page. `#cal-shadow-container[data-evt-source-url]` has the URL for `calendar.getStudentEvents`.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "student",
         "x-fern-sdk-method-name": "getSchedulePage",
@@ -3534,7 +3534,7 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Mapa de exames",
+        "summary": "Exam calendar",
         "description": "Exam calendar of a course unit occurrence; exams are in `td.exame` cells.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getExamsPage",
@@ -3597,7 +3597,7 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Página de horário de uma unidade curricular",
+        "summary": "Course unit schedule page",
         "description": "A course unit's schedule page. `#cal-shadow-container[data-evt-source-url]` has the URL for `calendar.getCourseUnitEvents`.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getSchedulePage",
@@ -3678,7 +3678,7 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Cursos de uma unidade curricular",
+        "summary": "Courses of a course unit",
         "description": "Lists the courses a course unit occurrence belongs to, with links to `it_listagem.lista_turma_disciplina` for each.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getCoursesPage",
@@ -3732,7 +3732,7 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Turmas e estudantes de uma unidade curricular",
+        "summary": "Classes and students of a course unit",
         "description": "Lists a course unit's classes and their students, for one course. `uni` follows the links in `it_listagem.lista_cursos_disciplina`.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getClassesPage",
@@ -3831,7 +3831,7 @@
         "tags": [
           "professor"
         ],
-        "summary": "Página de um funcionário",
+        "summary": "Staff member page",
         "description": "Public, but shows more information with a valid session.\n\nA staff member's page. `uni` extracts the institutional email (from `mailto:` links or an obfuscated `onclick`) and offices (`instal_geral.espaco_view` links).\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "professor",
         "x-fern-sdk-method-name": "getProfilePage",
@@ -3891,7 +3891,7 @@
         "tags": [
           "professor"
         ],
-        "summary": "Página de horário de um docente",
+        "summary": "Professor schedule page",
         "description": "A professor's schedule page. `#cal-shadow-container[data-evt-source-url]` has the URL for `calendar.getProfessorEvents`.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "professor",
         "x-fern-sdk-method-name": "getSchedulePage",
@@ -3972,7 +3972,7 @@
         "tags": [
           "people"
         ],
-        "summary": "Fotografia",
+        "summary": "Photo",
         "description": "Without a valid session, SIGARRA answers `200` with a placeholder image.\n\nPhoto of a student or staff member.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "people",
         "x-fern-sdk-method-name": "getPhoto",
@@ -4033,7 +4033,7 @@
         "tags": [
           "finances"
         ],
-        "summary": "Conta corrente",
+        "summary": "Current account",
         "description": "A person's current account: unpaid fees, payment references and the account statement. `uni` also requests it on the `sasup` faculty for social services.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "finances",
         "x-fern-sdk-method-name": "getCurrentAccountPage",
@@ -4096,7 +4096,7 @@
         "tags": [
           "finances"
         ],
-        "summary": "Saldo de impressões",
+        "summary": "Printing balance",
         "description": "Printing balance and history. `uni` requests it on `feup`.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "finances",
         "x-fern-sdk-method-name": "getPrintingPage",
@@ -4159,7 +4159,7 @@
         "tags": [
           "finances"
         ],
-        "summary": "Gerar referência Multibanco",
+        "summary": "Generate a Multibanco reference",
         "description": "Creates a Multibanco payment reference, e.g. to top up the printing balance. **This creates a real payment reference.** Not verified live.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "finances",
         "x-fern-sdk-method-name": "generateMbReference",
@@ -4237,7 +4237,7 @@
         "tags": [
           "canteen"
         ],
-        "summary": "Ementas da cantina",
+        "summary": "Canteen menus",
         "description": "Canteen menus. `uni` requests it on `feup`.\n\nUsed by [uni](https://github.com/NIAEFEUP/uni).",
         "x-fern-sdk-group-name": "canteen",
         "x-fern-sdk-method-name": "getMenusPage",
@@ -4403,7 +4403,7 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Horário de uma unidade curricular",
+        "summary": "Course unit schedule",
         "description": "Weekly timetable of a course unit occurrence. Returns the weekly timetable of the week that contains `pv_semana_ini`; `pv_semana_fim` does not widen the range.",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getSchedule",
@@ -4484,7 +4484,7 @@
         "tags": [
           "home"
         ],
-        "summary": "Lista de faculdades (redirecionamento)",
+        "summary": "List of faculties (redirect)",
         "description": "Institutional page generator. Only `/up/pt/web_base.gera_pagina?p_pagina=escolas` (the list of faculties) still answers: it redirects (`301`) to `https://www.up.pt/portal/pt/conhecer/sobre-a-uporto/as-faculdades/`. Any other combination (another faculty, another page, or no `p_pagina`) is refused by the web server with a generic `403`.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
         "x-fern-sdk-group-name": "home",
         "x-fern-sdk-method-name": "getFacultiesRedirect",
@@ -4548,8 +4548,8 @@
         "tags": [
           "course"
         ],
-        "summary": "Página de um curso",
-        "description": "A course page: name, acronym (the \"Sigla:\" / \"Acronym:\" row), and a \"Planos de Estudos\" section linking to `cur_geral.cur_planos_estudos_view`. An unknown course answers `200` with a \"Sem resultados\" page.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
+        "summary": "Course page",
+        "description": "A course page: name, acronym (the \"Sigla:\" / \"Acronym:\" row), and a \"Planos de Estudos\" (study plans) section linking to `cur_geral.cur_planos_estudos_view`. An unknown course answers `200` with a \"Sem resultados\" (no results) page.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
         "x-fern-sdk-group-name": "course",
         "x-fern-sdk-method-name": "getPage",
         "security": [],
@@ -4603,7 +4603,7 @@
             "name": "pv_tipo_cur_sigla",
             "in": "query",
             "required": false,
-            "description": "Course type: `A` Actualização, `B` Bacharelato, `CF` Curso de complemento de formação, `CFC` Curso de Formação Contínua, `VI` Curso de Verão/Inverno, `FL` Curso ou Formação livre, `D` Doutoramento, `E` Especialização, `EA` Estudos Avançados, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` Formação Contínua, `L` Licenciatura, `LV` Livres, `M` Mestrado, `MI` Mestrado Integrado, `PD` Programa de Pós-Doutoramento, `UFC` Unidade de Formação Contínua, `UM` Unidade/Módulo/Ação.",
+            "description": "Course type: `A` refresher course, `B` pre-Bologna bachelor's degree (*bacharelato*), `CF` complementary training course, `CFC` continuing education course, `VI` summer/winter course, `FL` free course or training, `D` doctorate, `E` specialisation, `EA` advanced studies, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` continuing education, `L` bachelor's degree (*licenciatura*), `LV` free, `M` master's degree, `MI` integrated master's degree, `PD` postdoctoral programme, `UFC` continuing education unit, `UM` unit/module/training action.",
             "schema": {
               "type": "string"
             }
@@ -4629,7 +4629,7 @@
         "tags": [
           "course"
         ],
-        "summary": "Plano de estudos",
+        "summary": "Study plan",
         "description": "A course's study plan. Each group of course units is a `div[id^=\"div_id_\"]` with an `h3` title and a `table.dadossz` whose rows link to `ucurr_geral.ficha_uc_view?pv_ocorrencia_id=`.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
         "x-fern-sdk-group-name": "course",
         "x-fern-sdk-method-name": "getStudyPlanPage",
@@ -4675,7 +4675,7 @@
             "name": "pv_tipo_cur_sigla",
             "in": "query",
             "required": false,
-            "description": "Course type: `A` Actualização, `B` Bacharelato, `CF` Curso de complemento de formação, `CFC` Curso de Formação Contínua, `VI` Curso de Verão/Inverno, `FL` Curso ou Formação livre, `D` Doutoramento, `E` Especialização, `EA` Estudos Avançados, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` Formação Contínua, `L` Licenciatura, `LV` Livres, `M` Mestrado, `MI` Mestrado Integrado, `PD` Programa de Pós-Doutoramento, `UFC` Unidade de Formação Contínua, `UM` Unidade/Módulo/Ação.",
+            "description": "Course type: `A` refresher course, `B` pre-Bologna bachelor's degree (*bacharelato*), `CF` complementary training course, `CFC` continuing education course, `VI` summer/winter course, `FL` free course or training, `D` doctorate, `E` specialisation, `EA` advanced studies, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` continuing education, `L` bachelor's degree (*licenciatura*), `LV` free, `M` master's degree, `MI` integrated master's degree, `PD` postdoctoral programme, `UFC` continuing education unit, `UM` unit/module/training action.",
             "schema": {
               "type": "string"
             }
@@ -4710,8 +4710,8 @@
         "tags": [
           "course"
         ],
-        "summary": "Vagas nas turmas",
-        "description": "Vacancies in each class of a course's course units, for the current class enrolment period (e.g. \"Inscrições nas turmas 1º Semestre - 2026/2027\"). The data is a table with one row per course unit and pairs of columns (class, vacancies). The course doesn't need to belong to the faculty in the path.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
+        "summary": "Class vacancies",
+        "description": "Vacancies in each class of a course's course units, for the current class enrolment period (e.g. \"Inscrições nas turmas 1º Semestre - 2026/2027\", the 1st semester's class enrolments). The data is a table with one row per course unit and pairs of columns (class, vacancies). The course doesn't need to belong to the faculty in the path.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
         "x-fern-sdk-group-name": "course",
         "x-fern-sdk-method-name": "getClassVacanciesPage",
         "security": [],
@@ -4773,7 +4773,7 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Pesquisa de unidades curriculares",
+        "summary": "Course unit search",
         "description": "Search results for course unit occurrences (the form is `ucurr_geral.pesquisa_ucs`). Each result row (`table.dados .d`) links to `ucurr_geral.ficha_uc_view?pv_ocorrencia_id=`; results are paginated, and the last page is linked from `.paginar-saltar-barra-posicao`. All filters are optional.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "searchPage",
@@ -4864,7 +4864,7 @@
             "name": "pv_uc_periodo",
             "in": "query",
             "required": false,
-            "description": "Period: `1` Anual, `2` 1º Semestre, `3` 2º Semestre, `4`–`7` 1º–4º Trimestre, `8` Sem Período.",
+            "description": "Period: `1` annual, `2` 1st semester, `3` 2nd semester, `4`–`7` 1st–4th trimester, `8` no period.",
             "schema": {
               "type": "string"
             }
@@ -4909,7 +4909,7 @@
             "name": "pv_tipo_curso",
             "in": "query",
             "required": false,
-            "description": "Course type: `A` Actualização, `B` Bacharelato, `CF` Curso de complemento de formação, `CFC` Curso de Formação Contínua, `VI` Curso de Verão/Inverno, `FL` Curso ou Formação livre, `D` Doutoramento, `E` Especialização, `EA` Estudos Avançados, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` Formação Contínua, `L` Licenciatura, `LV` Livres, `M` Mestrado, `MI` Mestrado Integrado, `PD` Programa de Pós-Doutoramento, `UFC` Unidade de Formação Contínua, `UM` Unidade/Módulo/Ação.",
+            "description": "Course type: `A` refresher course, `B` pre-Bologna bachelor's degree (*bacharelato*), `CF` complementary training course, `CFC` continuing education course, `VI` summer/winter course, `FL` free course or training, `D` doctorate, `E` specialisation, `EA` advanced studies, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` continuing education, `L` bachelor's degree (*licenciatura*), `LV` free, `M` master's degree, `MI` integrated master's degree, `PD` postdoctoral programme, `UFC` continuing education unit, `UM` unit/module/training action.",
             "schema": {
               "type": "string"
             }
@@ -4953,8 +4953,8 @@
         "tags": [
           "courseUnit"
         ],
-        "summary": "Ficha de unidade curricular",
-        "description": "A course unit occurrence's page: name, acronym (\"Sigla:\" / \"Acronym:\"), occurrence (`h2`, e.g. \"Ocorrência: 2023/2024 - 1S\"), and the \"Ciclos de Estudo/Cursos\" table (course, curricular year, ECTS). With a valid session it also shows teaching responsibilities and hours, and navigation links (Conteúdos, Estudantes, Horário, Turmas, Exames, …); in particular, `<a>Horário</a>` links to `hor_geral.ucurr_view?pv_ocorrencia_id=` only with a session. An unknown occurrence answers `200` with a \"Sem Resultados\" page.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
+        "summary": "Course unit page",
+        "description": "A course unit occurrence's page: name, acronym (\"Sigla:\" / \"Acronym:\"), occurrence (`h2`, e.g. \"Ocorrência: 2023/2024 - 1S\"), and the \"Ciclos de Estudo/Cursos\" (study cycles/courses) table (course, curricular year, ECTS). With a valid session it also shows teaching responsibilities and hours, and navigation links (contents, students, schedule, classes, exams, …); in particular, the schedule link, `<a>Horário</a>`, links to `hor_geral.ucurr_view?pv_ocorrencia_id=` only with a session. An unknown occurrence answers `200` with a \"Sem Resultados\" (no results) page.\n\nUsed by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).",
         "x-fern-sdk-group-name": "courseUnit",
         "x-fern-sdk-method-name": "getSheetPage",
         "security": [
