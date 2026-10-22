@@ -35,7 +35,7 @@ const CombinedProvider = ({ children }: Props) => {
 
   // Load the course catalog once, only after the session resolves and the user is
   // signed in. The hook keys off `enabled` so signed-out visitors fire no request.
-  const { majors, error: majorsError } = useCourses({ enabled: userSignedIn && !isSessionLoading })
+  const { majors, error: majorsError } = useCourses({ enabled: userSignedIn })
 
   useEffect(() => {
     if (!majorsError) return
