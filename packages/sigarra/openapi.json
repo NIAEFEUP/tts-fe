@@ -106,22 +106,10 @@
         "x-fern-sdk-method-name": "getSchedule",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_codigo",
@@ -187,13 +175,7 @@
         "x-fern-sdk-method-name": "getExams",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
             "name": "pv_codigo",
@@ -205,13 +187,7 @@
             }
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "responses": {
@@ -310,22 +286,10 @@
         "x-fern-sdk-method-name": "getAcademicPath",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_codigo",
@@ -569,22 +533,10 @@
         "x-fern-sdk-method-name": "getProfile",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_codigo",
@@ -744,22 +696,10 @@
         "x-fern-sdk-method-name": "getCurrentCourses",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_codigo",
@@ -994,22 +934,10 @@
             "example": "484377"
           },
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "responses": {
@@ -1088,22 +1016,10 @@
             "example": "484377"
           },
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "responses": {
@@ -1450,22 +1366,10 @@
         "x-fern-sdk-method-name": "getEnrolled",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_ocorrencia_id",
@@ -1537,22 +1441,10 @@
             "example": "484377"
           },
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "responses": {
@@ -1616,22 +1508,10 @@
         "x-fern-sdk-method-name": "getFiles",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_ocorrencia_id",
@@ -1761,22 +1641,10 @@
             "example": "515516"
           },
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "deprecated": false,
@@ -1825,22 +1693,10 @@
             "example": "484400"
           },
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "deprecated": false,
@@ -1937,22 +1793,10 @@
             "example": "TP"
           },
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "deprecated": false,
@@ -2025,22 +1869,10 @@
             "example": "2146359"
           },
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "deprecated": false,
@@ -2121,22 +1953,10 @@
         "x-fern-sdk-method-name": "getOccupancy",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            },
-            "required": true
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "deprecated": false,
@@ -2278,13 +2098,7 @@
         "x-fern-sdk-method-name": "getStudentEvents",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
             "name": "nmec",
@@ -2365,13 +2179,7 @@
         "x-fern-sdk-method-name": "getStudentTable",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
             "name": "nmec",
@@ -2451,13 +2259,7 @@
         "x-fern-sdk-method-name": "getCourseUnitEvents",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
             "name": "ocorr_id",
@@ -2524,13 +2326,7 @@
         "x-fern-sdk-method-name": "getCourseUnitTable",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
             "name": "ocorr_id",
@@ -2597,13 +2393,7 @@
         "x-fern-sdk-method-name": "getProfessorEvents",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
             "name": "doc_codigo",
@@ -2670,13 +2460,7 @@
         "x-fern-sdk-method-name": "getProfessorTable",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
             "name": "doc_codigo",
@@ -2743,22 +2527,10 @@
         "x-fern-sdk-method-name": "login",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "requestBody": {
@@ -2829,22 +2601,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_login",
@@ -2909,22 +2669,10 @@
         "x-fern-sdk-method-name": "loginPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "requestBody": {
@@ -2996,22 +2744,10 @@
         "x-fern-sdk-method-name": "logout",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "responses": {
@@ -3112,22 +2848,10 @@
         "x-fern-sdk-method-name": "getHomePage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "responses": {
@@ -3163,22 +2887,10 @@
         "x-fern-sdk-method-name": "getFacultiesPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pct_codigo",
@@ -3216,22 +2928,10 @@
         "x-fern-sdk-method-name": "getCoursesPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_num_unico",
@@ -3279,22 +2979,10 @@
         "x-fern-sdk-method-name": "getCourseAcademicPathPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_fest_id",
@@ -3342,22 +3030,10 @@
         "x-fern-sdk-method-name": "getCourseUnitEnrollmentsPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_fest_id",
@@ -3405,22 +3081,10 @@
         "x-fern-sdk-method-name": "getPersonalInfoPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_num_unico",
@@ -3467,22 +3131,10 @@
         "x-fern-sdk-method-name": "getSchedulePage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_num_unico",
@@ -3548,22 +3200,10 @@
         "x-fern-sdk-method-name": "getExamsPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "p_ocorr_id",
@@ -3611,22 +3251,10 @@
         "x-fern-sdk-method-name": "getSchedulePage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_ocorrencia_id",
@@ -3692,22 +3320,10 @@
         "x-fern-sdk-method-name": "getCoursesPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_ocorrencia_id",
@@ -3746,22 +3362,10 @@
         "x-fern-sdk-method-name": "getClassesPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_curso_id",
@@ -3845,22 +3449,10 @@
         "x-fern-sdk-method-name": "getProfilePage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "p_codigo",
@@ -3905,22 +3497,10 @@
         "x-fern-sdk-method-name": "getSchedulePage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_doc_codigo",
@@ -3986,22 +3566,10 @@
         "x-fern-sdk-method-name": "getPhoto",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pct_cod",
@@ -4047,22 +3615,10 @@
         "x-fern-sdk-method-name": "getCurrentAccountPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pct_cod",
@@ -4110,22 +3666,10 @@
         "x-fern-sdk-method-name": "getPrintingPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "p_codigo",
@@ -4173,22 +3717,10 @@
         "x-fern-sdk-method-name": "generateMbReference",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "requestBody": {
@@ -4251,22 +3783,10 @@
         "x-fern-sdk-method-name": "getMenusPage",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           }
         ],
         "responses": {
@@ -4297,22 +3817,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "p_address",
@@ -4364,22 +3872,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "p_redirect",
@@ -4417,22 +3913,10 @@
         "x-fern-sdk-method-name": "getSchedule",
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_ocorrencia_id",
@@ -4499,22 +3983,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "p_pagina",
@@ -4563,22 +4035,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_curso_id",
@@ -4644,22 +4104,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_plano_id",
@@ -4725,22 +4173,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_curso_id",
@@ -4788,22 +4224,10 @@
         "security": [],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_ano_lectivo",
@@ -4974,22 +4398,10 @@
         ],
         "parameters": [
           {
-            "name": "faculty",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "feup"
-            }
+            "$ref": "#/components/parameters/Faculty"
           },
           {
-            "name": "language",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "pt"
-            }
+            "$ref": "#/components/parameters/Language"
           },
           {
             "name": "pv_ocorrencia_id",
@@ -5560,6 +4972,26 @@
             "type": "string",
             "description": "User type: `A` for students. Values for other kinds of users haven't been observed."
           }
+        }
+      }
+    },
+    "parameters": {
+      "Faculty": {
+        "name": "faculty",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "default": "feup"
+        }
+      },
+      "Language": {
+        "name": "language",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "default": "pt"
         }
       }
     },
