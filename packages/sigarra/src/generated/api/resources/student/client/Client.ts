@@ -15,6 +15,9 @@ export declare namespace StudentClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Student schedule, exams, academic path, profile, courses and enrolments.
+ */
 export class StudentClient {
     protected readonly _options: NormalizedClientOptions<StudentClient.Options>;
 

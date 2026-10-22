@@ -15,6 +15,9 @@ export declare namespace ProfessorClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Professor (docente) pages and schedules.
+ */
 export class ProfessorClient {
     protected readonly _options: NormalizedClientOptions<ProfessorClient.Options>;
 

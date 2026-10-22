@@ -16,6 +16,9 @@ export declare namespace FinancesClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Current account, printing balance and Multibanco payment references.
+ */
 export class FinancesClient {
     protected readonly _options: NormalizedClientOptions<FinancesClient.Options>;
 

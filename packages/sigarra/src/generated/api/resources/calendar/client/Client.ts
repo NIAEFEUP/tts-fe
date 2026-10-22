@@ -15,6 +15,9 @@ export declare namespace CalendarClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Calendar API (`/calendarios-api/`): schedule events and tables of students, course units and professors.
+ */
 export class CalendarClient {
     protected readonly _options: NormalizedClientOptions<CalendarClient.Options>;
 

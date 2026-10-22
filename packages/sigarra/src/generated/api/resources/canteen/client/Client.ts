@@ -15,6 +15,9 @@ export declare namespace CanteenClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Canteen menus.
+ */
 export class CanteenClient {
     protected readonly _options: NormalizedClientOptions<CanteenClient.Options>;
 

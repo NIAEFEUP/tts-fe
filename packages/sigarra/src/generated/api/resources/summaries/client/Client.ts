@@ -15,6 +15,9 @@ export declare namespace SummariesClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Class summaries: classes of a course unit, their lessons and lesson summaries.
+ */
 export class SummariesClient {
     protected readonly _options: NormalizedClientOptions<SummariesClient.Options>;
 

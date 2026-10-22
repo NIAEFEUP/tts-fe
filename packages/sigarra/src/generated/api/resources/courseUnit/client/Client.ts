@@ -15,6 +15,9 @@ export declare namespace CourseUnitClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Course units (UCs): information, classes, enrolled students, files, occurrences, schedules and exams.
+ */
 export class CourseUnitClient {
     protected readonly _options: NormalizedClientOptions<CourseUnitClient.Options>;
 

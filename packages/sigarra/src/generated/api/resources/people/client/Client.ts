@@ -15,6 +15,9 @@ export declare namespace PeopleClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * People-related resources, such as photographs.
+ */
 export class PeopleClient {
     protected readonly _options: NormalizedClientOptions<PeopleClient.Options>;
 

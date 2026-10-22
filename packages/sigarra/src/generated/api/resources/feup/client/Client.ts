@@ -14,6 +14,9 @@ export declare namespace FeupClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * FEUP faculty entry point.
+ */
 export class FeupClient {
     protected readonly _options: NormalizedClientOptions<FeupClient.Options>;
 

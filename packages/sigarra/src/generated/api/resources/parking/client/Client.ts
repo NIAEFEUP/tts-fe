@@ -15,6 +15,9 @@ export declare namespace ParkingClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Parking lot occupancy.
+ */
 export class ParkingClient {
     protected readonly _options: NormalizedClientOptions<ParkingClient.Options>;
 

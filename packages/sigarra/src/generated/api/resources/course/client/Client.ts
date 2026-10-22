@@ -15,6 +15,9 @@ export declare namespace CourseClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Degree programme pages: study plan and class vacancies.
+ */
 export class CourseClient {
     protected readonly _options: NormalizedClientOptions<CourseClient.Options>;
 

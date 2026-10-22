@@ -15,6 +15,9 @@ export declare namespace HomeClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Faculty home page and the list of faculties.
+ */
 export class HomeClient {
     protected readonly _options: NormalizedClientOptions<HomeClient.Options>;
 

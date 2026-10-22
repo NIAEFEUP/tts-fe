@@ -16,6 +16,9 @@ export declare namespace AuthClient {
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
+/**
+ * Logging in (credentials, OpenID Connect, SAML) and out; obtains the session cookies.
+ */
 export class AuthClient {
     protected readonly _options: NormalizedClientOptions<AuthClient.Options>;
 
