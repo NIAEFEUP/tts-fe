@@ -140,14 +140,18 @@ code, read them through varlock's typed `ENV` object (`import { ENV } from 'varl
 
 Two flows, selected by environment:
 
-- **Local dev — username/password.** `POST /api/v1/auth/dev-login` validates `SIGARRA_USERNAME` /
+- **Local dev — username/password.** `POST /v1/auth/dev-login` validates `SIGARRA_USERNAME` /
   `SIGARRA_PASSWORD` against Sigarra and issues a cookie session. Enabled by `DEV_LOGIN_ENABLED`
   (on by default, forced off when `NODE_ENV=production`). The frontend shows this button when
   `VITE_APP_FEDERATED_AUTH=false` (the default).
-- **Production — Sigarra OIDC.** `GET /api/v1/auth/login` redirects to Sigarra; the callback
+- **Production — Sigarra OIDC.** `GET /v1/auth/login` redirects to Sigarra; the callback
   exchanges the code, upserts the user and sets the same httpOnly `session` cookie. Set
   `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` / `OIDC_REDIRECT_URI` / `FRONTEND_URL` / `ALLOWED_ORIGINS`
   on the backend and `VITE_APP_FEDERATED_AUTH=true` on the frontend.
+
+Routes are served under `/v1`; the public URL also carries an `/api` prefix added by the
+deployment (Niployments), so the frontend's `VITE_APP_BACKEND_URL` must include it (e.g.
+`https://tts.niaefeup.pt/api`) in staging and production.
 
 Roles are assigned by **seeding**, never by logging in: `db:seed:demo` creates the `ADMIN_UP`
 account with `ADMIN_ROLE` and full admin scope.
