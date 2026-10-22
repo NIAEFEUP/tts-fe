@@ -10,7 +10,6 @@ export * as course from "./course/index.js";
 export * from "./courseUnit/client/requests/index.js";
 export * as courseUnit from "./courseUnit/index.js";
 export * from "./courseUnit/types/index.js";
-export * as feup from "./feup/index.js";
 export * from "./finances/client/requests/index.js";
 export * as finances from "./finances/index.js";
 export * from "./home/client/requests/index.js";

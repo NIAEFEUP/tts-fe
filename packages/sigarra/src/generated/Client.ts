@@ -5,7 +5,6 @@ import { CalendarClient } from "./api/resources/calendar/client/Client.js";
 import { CanteenClient } from "./api/resources/canteen/client/Client.js";
 import { CourseClient } from "./api/resources/course/client/Client.js";
 import { CourseUnitClient } from "./api/resources/courseUnit/client/Client.js";
-import { FeupClient } from "./api/resources/feup/client/Client.js";
 import { FinancesClient } from "./api/resources/finances/client/Client.js";
 import { HomeClient } from "./api/resources/home/client/Client.js";
 import { ParkingClient } from "./api/resources/parking/client/Client.js";
@@ -25,7 +24,6 @@ export declare namespace SigarraClient {
 
 export class SigarraClient {
     protected readonly _options: NormalizedClientOptions<SigarraClient.Options>;
-    protected _feup: FeupClient | undefined;
     protected _student: StudentClient | undefined;
     protected _courseUnit: CourseUnitClient | undefined;
     protected _summaries: SummariesClient | undefined;
@@ -41,10 +39,6 @@ export class SigarraClient {
 
     constructor(options: SigarraClient.Options = {}) {
         this._options = normalizeClientOptions(options);
-    }
-
-    public get feup(): FeupClient {
-        return (this._feup ??= new FeupClient(this._options));
     }
 
     public get student(): StudentClient {
