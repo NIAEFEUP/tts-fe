@@ -3,8 +3,8 @@
 /**
  * @example
  *     {
- *         faculty: "faculty",
- *         language: "language",
+ *         faculty: "feup",
+ *         language: "pt",
  *         pv_ocorrencia_id: "pv_ocorrencia_id",
  *         pv_semana_ini: "pv_semana_ini",
  *         pv_semana_fim: "pv_semana_fim"

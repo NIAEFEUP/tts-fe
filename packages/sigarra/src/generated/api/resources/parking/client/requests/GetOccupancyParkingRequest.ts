@@ -3,8 +3,8 @@
 /**
  * @example
  *     {
- *         faculty: "faculty",
- *         language: "language"
+ *         faculty: "feup",
+ *         language: "pt"
  *     }
  */
 export interface GetOccupancyParkingRequest {

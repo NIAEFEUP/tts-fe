@@ -37,8 +37,8 @@ export class SummariesClient {
      *
      * @example
      *     await client.summaries.getClasses({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "484400"
      *     })
      */
@@ -115,8 +115,8 @@ export class SummariesClient {
      *
      * @example
      *     await client.summaries.getLessons({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "484400",
      *         pv_turma_id: "824506",
      *         pv_tipo_aula: "TP"
@@ -206,8 +206,8 @@ export class SummariesClient {
      *
      * @example
      *     await client.summaries.getSummary({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_sumario_id: "2146359"
      *     })
      */

@@ -3,7 +3,7 @@
 /**
  * @example
  *     {
- *         faculty: "faculty",
+ *         faculty: "feup",
  *         doc_codigo: "doc_codigo",
  *         academic_year: 1,
  *         period: [1]

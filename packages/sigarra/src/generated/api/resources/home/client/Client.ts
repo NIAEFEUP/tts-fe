@@ -106,8 +106,8 @@ export class HomeClient {
      *
      * @example
      *     await client.home.getFacultiesRedirect({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         p_pagina: "p_pagina"
      *     })
      */

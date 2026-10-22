@@ -40,8 +40,8 @@ export class AuthClient {
      *
      * @example
      *     await client.auth.loginWithQuery({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_login: "pv_login",
      *         pv_password: "pv_password"
      *     })
@@ -122,8 +122,8 @@ export class AuthClient {
      *
      * @example
      *     await client.auth.login({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_login: "pv_login",
      *         pv_password: "pv_password"
      *     })
@@ -486,8 +486,8 @@ export class AuthClient {
      *
      * @example
      *     await client.auth.federatedLogin({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         p_redirect: "p_redirect"
      *     })
      */

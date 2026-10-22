@@ -3,8 +3,8 @@
 /**
  * @example
  *     {
- *         faculty: "faculty",
- *         language: "language",
+ *         faculty: "feup",
+ *         language: "pt",
  *         pv_login: "pv_login",
  *         pv_password: "pv_password"
  *     }

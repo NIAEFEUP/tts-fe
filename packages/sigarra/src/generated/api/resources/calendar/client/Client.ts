@@ -26,6 +26,8 @@ export class CalendarClient {
     }
 
     /**
+     * The session works from any IP address, not only the one that created it.
+     *
      * A student's schedule, from SIGARRA's new schedule module.
      *
      * The trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.
@@ -40,7 +42,7 @@ export class CalendarClient {
      *
      * @example
      *     await client.calendar.getStudentEvents({
-     *         faculty: "faculty",
+     *         faculty: "feup",
      *         nmec: "nmec",
      *         academic_year: 1,
      *         pv_turma_ocorr: ["pv_turma_ocorr"]
@@ -112,6 +114,8 @@ export class CalendarClient {
     }
 
     /**
+     * The session works from any IP address, not only the one that created it.
+     *
      * A student's schedule, from SIGARRA's new schedule module, as an HTML table.
      *
      * The trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.
@@ -198,6 +202,8 @@ export class CalendarClient {
     }
 
     /**
+     * The session works from any IP address, not only the one that created it.
+     *
      * The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.
      *
      * Used by [uni](https://github.com/NIAEFEUP/uni).
@@ -212,7 +218,7 @@ export class CalendarClient {
      *
      * @example
      *     await client.calendar.getCourseUnitEvents({
-     *         faculty: "faculty",
+     *         faculty: "feup",
      *         ocorr_id: "ocorr_id",
      *         academic_year: 1,
      *         period: [1]
@@ -283,6 +289,8 @@ export class CalendarClient {
     }
 
     /**
+     * The session works from any IP address, not only the one that created it.
+     *
      * The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.
      *
      * Used by [uni](https://github.com/NIAEFEUP/uni).
@@ -368,6 +376,8 @@ export class CalendarClient {
     }
 
     /**
+     * The session works from any IP address, not only the one that created it.
+     *
      * The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.
      *
      * Used by [uni](https://github.com/NIAEFEUP/uni).
@@ -382,7 +392,7 @@ export class CalendarClient {
      *
      * @example
      *     await client.calendar.getProfessorEvents({
-     *         faculty: "faculty",
+     *         faculty: "feup",
      *         doc_codigo: "doc_codigo",
      *         academic_year: 1,
      *         period: [1]
@@ -453,6 +463,8 @@ export class CalendarClient {
     }
 
     /**
+     * The session works from any IP address, not only the one that created it.
+     *
      * The trailing slash is required. The URL is in the `data-evt-source-url` / `data-table-source-url` attributes of the corresponding `hor_geral.*_view` page.
      *
      * Used by [uni](https://github.com/NIAEFEUP/uni).

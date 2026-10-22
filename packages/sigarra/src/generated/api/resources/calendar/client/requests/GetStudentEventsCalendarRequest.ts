@@ -3,7 +3,7 @@
 /**
  * @example
  *     {
- *         faculty: "faculty",
+ *         faculty: "feup",
  *         nmec: "nmec",
  *         academic_year: 1,
  *         pv_turma_ocorr: ["pv_turma_ocorr"]

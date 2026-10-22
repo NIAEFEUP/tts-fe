@@ -34,8 +34,8 @@ export class ParkingClient {
      *
      * @example
      *     await client.parking.getOccupancy({
-     *         faculty: "faculty",
-     *         language: "language"
+     *         faculty: "feup",
+     *         language: "pt"
      *     })
      */
     public getOccupancy(

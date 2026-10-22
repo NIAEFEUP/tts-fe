@@ -37,8 +37,8 @@ export class StudentClient {
      *
      * @example
      *     await client.student.getSchedule({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_codigo: "pv_codigo",
      *         pv_semana_ini: "pv_semana_ini",
      *         pv_semana_fim: "pv_semana_fim"
@@ -125,8 +125,8 @@ export class StudentClient {
      *
      * @example
      *     await client.student.getExams({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_codigo: "pv_codigo"
      *     })
      */
@@ -206,8 +206,8 @@ export class StudentClient {
      *
      * @example
      *     await client.student.getAcademicPath({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_codigo: "pv_codigo"
      *     })
      */
@@ -295,8 +295,8 @@ export class StudentClient {
      *
      * @example
      *     await client.student.getProfile({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_codigo: "pv_codigo"
      *     })
      */
@@ -373,8 +373,8 @@ export class StudentClient {
      *
      * @example
      *     await client.student.getCurrentCourses({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_codigo: "pv_codigo"
      *     })
      */

@@ -36,8 +36,8 @@ export class CourseUnitClient {
      *
      * @example
      *     await client.courseUnit.getOccurrences({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "484377"
      *     })
      */
@@ -111,8 +111,8 @@ export class CourseUnitClient {
      *
      * @example
      *     await client.courseUnit.getInfo({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "484377"
      *     })
      */
@@ -184,8 +184,8 @@ export class CourseUnitClient {
      *
      * @example
      *     await client.courseUnit.getEnrolled({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "484377"
      *     })
      */
@@ -265,8 +265,8 @@ export class CourseUnitClient {
      *
      * @example
      *     await client.courseUnit.getClasses({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "484377"
      *     })
      */
@@ -343,8 +343,8 @@ export class CourseUnitClient {
      *
      * @example
      *     await client.courseUnit.getFiles({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "484400"
      *     })
      */
@@ -832,8 +832,8 @@ export class CourseUnitClient {
      *
      * @example
      *     await client.courseUnit.getSchedule({
-     *         faculty: "faculty",
-     *         language: "language",
+     *         faculty: "feup",
+     *         language: "pt",
      *         pv_ocorrencia_id: "pv_ocorrencia_id",
      *         pv_semana_ini: "pv_semana_ini",
      *         pv_semana_fim: "pv_semana_fim"
