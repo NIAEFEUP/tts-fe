@@ -26,9 +26,7 @@ export class StudentClient {
     }
 
     /**
-     * Retorna o horários de um estudante (Ainda por testar para retornar um exemplo de response)
-     *
-     * Returns the weekly timetable of the week that contains `pv_semana_ini`; `pv_semana_fim` does not widen the range.
+     * Weekly timetable of a student. Returns the weekly timetable of the week that contains `pv_semana_ini`; `pv_semana_fim` does not widen the range.
      *
      * @param {Sigarra.GetScheduleStudentRequest} request
      * @param {StudentClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -116,7 +114,7 @@ export class StudentClient {
     }
 
     /**
-     * Exames do usuário autenticado
+     * The authenticated user's exams.
      *
      * @param {Sigarra.GetExamsStudentRequest} request
      * @param {StudentClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -197,7 +195,7 @@ export class StudentClient {
     }
 
     /**
-     * Percurso académico do usuário autenticado
+     * The authenticated user's academic path.
      *
      * @param {Sigarra.GetAcademicPathStudentRequest} request
      * @param {StudentClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -286,7 +284,7 @@ export class StudentClient {
     }
 
     /**
-     * Dados do usuário autenticado
+     * The authenticated user's details.
      *
      * @param {Sigarra.GetProfileStudentRequest} request
      * @param {StudentClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -364,7 +362,7 @@ export class StudentClient {
     }
 
     /**
-     * Retorna uma lista com os cursos a que o estudante está inscrito com as respetivas unidades curriculares atuais
+     * Lists the courses the student is enrolled in, with their current course units.
      *
      * @param {Sigarra.GetCurrentCoursesStudentRequest} request
      * @param {StudentClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -765,7 +763,7 @@ export class StudentClient {
     }
 
     /**
-     * Without a valid session, SIGARRA answers `200` with a one-line error ("Erro - Não tem permissões de acesso a esta página.").
+     * Without a valid session, SIGARRA answers `200` with a one-line error ("Erro - Não tem permissões de acesso a esta página.", i.e. no permission to access the page).
      *
      * A student's personal details.
      *

@@ -26,7 +26,7 @@ export class CourseUnitClient {
     }
 
     /**
-     * Retorna uma lista de ocorrencias de uma Unidade Curricular a partir um ocorrencia já conhecida
+     * Lists the occurrences of a course unit, given one of its occurrences.
      *
      * @param {Sigarra.GetOccurrencesCourseUnitRequest} request
      * @param {CourseUnitClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -101,7 +101,7 @@ export class CourseUnitClient {
     }
 
     /**
-     * A partir de um id de occurência, retorna o conteudo da unidade curricular associada. Retorna
+     * Given an occurrence ID, returns the contents of its course unit.
      *
      * @param {Sigarra.GetInfoCourseUnitRequest} request
      * @param {CourseUnitClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -173,7 +173,7 @@ export class CourseUnitClient {
     }
 
     /**
-     * Devolve uma lista das pessoas inscritas numa Unidade Curricular
+     * Lists the people enrolled in a course unit.
      *
      * @param {Sigarra.GetEnrolledCourseUnitRequest} request
      * @param {CourseUnitClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -331,7 +331,7 @@ export class CourseUnitClient {
     }
 
     /**
-     * Ficheiros (Conteudos) de uma Unidade Curricular
+     * Files (contents) of a course unit.
      *
      * @param {Sigarra.GetFilesCourseUnitRequest} request
      * @param {CourseUnitClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -413,7 +413,7 @@ export class CourseUnitClient {
     /**
      * Without a valid session, SIGARRA answers `200` with an HTML error page ("Erro!") instead of the file.
      *
-     * Fazer um download de um ficheiro a partir do seu id
+     * Downloads a file by its ID.
      *
      * @throws {@link errors.SigarraError}
      * @throws {@link errors.SigarraTimeoutError}
@@ -1013,7 +1013,7 @@ export class CourseUnitClient {
     }
 
     /**
-     * A course unit occurrence's page: name, acronym ("Sigla:" / "Acronym:"), occurrence (`h2`, e.g. "Ocorrência: 2023/2024 - 1S"), and the "Ciclos de Estudo/Cursos" table (course, curricular year, ECTS). With a valid session it also shows teaching responsibilities and hours, and navigation links (Conteúdos, Estudantes, Horário, Turmas, Exames, …); in particular, `<a>Horário</a>` links to `hor_geral.ucurr_view?pv_ocorrencia_id=` only with a session. An unknown occurrence answers `200` with a "Sem Resultados" page.
+     * A course unit occurrence's page: name, acronym ("Sigla:" / "Acronym:"), occurrence (`h2`, e.g. "Ocorrência: 2023/2024 - 1S"), and the "Ciclos de Estudo/Cursos" (study cycles/courses) table (course, curricular year, ECTS). With a valid session it also shows teaching responsibilities and hours, and navigation links (contents, students, schedule, classes, exams, …); in particular, the schedule link, `<a>Horário</a>`, links to `hor_geral.ucurr_view?pv_ocorrencia_id=` only with a session. An unknown occurrence answers `200` with a "Sem Resultados" (no results) page.
      *
      * Used by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).
      *

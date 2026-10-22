@@ -10,6 +10,6 @@
 export interface GetSummarySummariesRequest {
     faculty: string;
     language: string;
-    /** O id de um sumário */
+    /** Summary ID. */
     pv_sumario_id?: string;
 }

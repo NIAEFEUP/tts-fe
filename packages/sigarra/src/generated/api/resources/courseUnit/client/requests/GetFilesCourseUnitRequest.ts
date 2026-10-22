@@ -10,6 +10,6 @@
 export interface GetFilesCourseUnitRequest {
     faculty: string;
     language: string;
-    /** O id da ocorrencia que define a UC a que se pretende ir buscar ficheiros */
+    /** ID of the occurrence of the course unit whose files to get. */
     pv_ocorrencia_id?: string;
 }

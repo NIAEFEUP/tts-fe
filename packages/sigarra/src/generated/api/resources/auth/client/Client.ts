@@ -188,7 +188,7 @@ export class AuthClient {
     /**
      * Authenticates with a username and password; this is the website's login form (served by `vld_validacao.login`). Works on any faculty path, including `up`.
      *
-     * On success, sets `SI_SESSION` and `SI_SECURITY` (no expiry date; the session lasts about 2 hours) and redirects with a `<meta http-equiv="refresh">` to `p_address` (`web_page.Inicial` by default). On failure, the reason is in `p.aviso-invalidado` (e.g. "O conjunto utilizador/senha não é válido.", "A sua conta encontra-se bloqueada.", or an expired password). If the request already carries a valid session, the page is titled "Problema encontrado", `p.erro-nota` says "Já se encontra autenticado com o utilizador <name>.", and no new session is created.
+     * On success, sets `SI_SESSION` and `SI_SECURITY` (no expiry date; the session lasts about 2 hours) and redirects with a `<meta http-equiv="refresh">` to `p_address` (`web_page.Inicial` by default). On failure, the reason is in `p.aviso-invalidado` (e.g. "O conjunto utilizador/senha não é válido." for a wrong username or password, "A sua conta encontra-se bloqueada." for a locked account, or an expired password). If the request already carries a valid session, the page is titled "Problema encontrado" ("Problem found"), `p.erro-nota` says "Já se encontra autenticado com o utilizador <name>." ("You are already authenticated as <name>."), and no new session is created.
      *
      * Used by [uni](https://github.com/NIAEFEUP/uni).
      *

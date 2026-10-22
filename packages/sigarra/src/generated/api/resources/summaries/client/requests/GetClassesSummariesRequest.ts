@@ -10,6 +10,6 @@
 export interface GetClassesSummariesRequest {
     faculty: string;
     language: string;
-    /** O id da ocorrencia */
+    /** Course unit occurrence ID. */
     pv_ocorrencia_id?: string;
 }

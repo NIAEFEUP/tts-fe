@@ -11,6 +11,6 @@
 export interface GetCurrentCoursesStudentRequest {
     faculty: string;
     language: string;
-    /** número mecatrónico */
+    /** Student number. */
     pv_codigo: string;
 }

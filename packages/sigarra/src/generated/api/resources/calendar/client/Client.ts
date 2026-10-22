@@ -26,7 +26,7 @@ export class CalendarClient {
     }
 
     /**
-     * Novo módulo de horários do Sigarra
+     * A student's schedule, from SIGARRA's new schedule module.
      *
      * The trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.
      *
@@ -112,7 +112,7 @@ export class CalendarClient {
     }
 
     /**
-     * Horário de um estudante no novo módulo de horários do Sigarra, como uma tabela HTML.
+     * A student's schedule, from SIGARRA's new schedule module, as an HTML table.
      *
      * The trailing slash is required: without it SIGARRA redirects to `/calendarios/...`, which returns 404. The URL for a student is in the `data-evt-source-url` and `data-table-source-url` attributes of `hor_geral.estudantes_view`.
      *

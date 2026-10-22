@@ -26,7 +26,7 @@ export class CourseClient {
     }
 
     /**
-     * A course page: name, acronym (the "Sigla:" / "Acronym:" row), and a "Planos de Estudos" section linking to `cur_geral.cur_planos_estudos_view`. An unknown course answers `200` with a "Sem resultados" page.
+     * A course page: name, acronym (the "Sigla:" / "Acronym:" row), and a "Planos de Estudos" (study plans) section linking to `cur_geral.cur_planos_estudos_view`. An unknown course answers `200` with a "Sem resultados" (no results) page.
      *
      * Used by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).
      *
@@ -197,7 +197,7 @@ export class CourseClient {
     }
 
     /**
-     * Vacancies in each class of a course's course units, for the current class enrolment period (e.g. "Inscrições nas turmas 1º Semestre - 2026/2027"). The data is a table with one row per course unit and pairs of columns (class, vacancies). The course doesn't need to belong to the faculty in the path.
+     * Vacancies in each class of a course's course units, for the current class enrolment period (e.g. "Inscrições nas turmas 1º Semestre - 2026/2027", the 1st semester's class enrolments). The data is a table with one row per course unit and pairs of columns (class, vacancies). The course doesn't need to belong to the faculty in the path.
      *
      * Used by [uporto-schedule-scrapper](https://github.com/NIAEFEUP/uporto-schedule-scrapper).
      *

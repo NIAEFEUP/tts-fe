@@ -11,7 +11,7 @@
 export interface GetAcademicPathStudentRequest {
     faculty: string;
     language: string;
-    /** número mecatrónico */
+    /** Student number. */
     pv_codigo: string;
     pv_ano_lectivo_min?: string;
     pv_ano_lectivo_max?: string;

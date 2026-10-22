@@ -26,7 +26,7 @@ export class SummariesClient {
     }
 
     /**
-     * Dada o id de uma ocorrencia
+     * Lists the classes of a course unit occurrence.
      *
      * @param {Sigarra.GetClassesSummariesRequest} request
      * @param {SummariesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -103,7 +103,7 @@ export class SummariesClient {
     }
 
     /**
-     * Lista todas as aulas de uma turma com o id do respetivo sumário
+     * Lists all the lessons of a class, with the ID of each lesson's summary.
      *
      * @param {Sigarra.GetLessonsSummariesRequest} request
      * @param {SummariesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -191,7 +191,7 @@ export class SummariesClient {
     }
 
     /**
-     * Vai buscar o sumário de uma aula em específico
+     * Gets the summary of a specific lesson.
      *
      * @param {Sigarra.GetSummarySummariesRequest} request
      * @param {SummariesClient.RequestOptions} requestOptions - Request-specific configuration.

@@ -2,9 +2,9 @@
 
 export interface GetExamsStudentResponseItem {
     id?: number | undefined;
-    /** ID da ocorrência */
+    /** Occurrence ID. */
     ocorr_id?: number | undefined;
-    /** Nome da ocorrência */
+    /** Occurrence name. */
     ocorr_nome?: string | undefined;
     /** ISO 8601 */
     data?: string | undefined;
@@ -13,13 +13,13 @@ export interface GetExamsStudentResponseItem {
     /** ISO 8601 */
     hora_fim?: string | undefined;
     duracao?: unknown | undefined;
-    /** Vigilante */
+    /** Invigilator. */
     pfunc_id?: number | undefined;
-    /** Tipo de exame */
+    /** Exam type. */
     tipo?: string | undefined;
-    /** Descrição do tipo de exame */
+    /** Description of the exam type. */
     tipo_descricao?: string | undefined;
-    /** Nome da época de avaliação */
+    /** Name of the exam season. */
     epoca?: string | undefined;
     salas?: GetExamsStudentResponseItem.Salas.Item[] | undefined;
 }

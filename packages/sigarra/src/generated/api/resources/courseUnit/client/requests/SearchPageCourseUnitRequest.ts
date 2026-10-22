@@ -24,7 +24,7 @@ export interface SearchPageCourseUnitRequest {
     pv_uc_nome?: string;
     /** Curricular year. */
     pv_uc_ano?: string;
-    /** Period: `1` Anual, `2` 1º Semestre, `3` 2º Semestre, `4`–`7` 1º–4º Trimestre, `8` Sem Período. */
+    /** Period: `1` annual, `2` 1st semester, `3` 2nd semester, `4`–`7` 1st–4th trimester, `8` no period. */
     pv_uc_periodo?: string;
     /** Teacher code. */
     pv_doc_codigo?: string;
@@ -34,7 +34,7 @@ export interface SearchPageCourseUnitRequest {
     pv_doc_nome?: string;
     /** Teaching language. */
     pv_lingua?: string;
-    /** Course type: `A` Actualização, `B` Bacharelato, `CF` Curso de complemento de formação, `CFC` Curso de Formação Contínua, `VI` Curso de Verão/Inverno, `FL` Curso ou Formação livre, `D` Doutoramento, `E` Especialização, `EA` Estudos Avançados, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` Formação Contínua, `L` Licenciatura, `LV` Livres, `M` Mestrado, `MI` Mestrado Integrado, `PD` Programa de Pós-Doutoramento, `UFC` Unidade de Formação Contínua, `UM` Unidade/Módulo/Ação. */
+    /** Course type: `A` refresher course, `B` pre-Bologna bachelor's degree (*bacharelato*), `CF` complementary training course, `CFC` continuing education course, `VI` summer/winter course, `FL` free course or training, `D` doctorate, `E` specialisation, `EA` advanced studies, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` continuing education, `L` bachelor's degree (*licenciatura*), `LV` free, `M` master's degree, `MI` integrated master's degree, `PD` postdoctoral programme, `UFC` continuing education unit, `UM` unit/module/training action. */
     pv_tipo_curso?: string;
     /** Assessment type. */
     pv_tipo_avaliacao?: string;

@@ -16,7 +16,7 @@ export interface GetStudyPlanPageCourseRequest {
     pv_plano_id: string;
     /** Academic year, e.g. `2023`. */
     pv_ano_lectivo: string;
-    /** Course type: `A` Actualização, `B` Bacharelato, `CF` Curso de complemento de formação, `CFC` Curso de Formação Contínua, `VI` Curso de Verão/Inverno, `FL` Curso ou Formação livre, `D` Doutoramento, `E` Especialização, `EA` Estudos Avançados, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` Formação Contínua, `L` Licenciatura, `LV` Livres, `M` Mestrado, `MI` Mestrado Integrado, `PD` Programa de Pós-Doutoramento, `UFC` Unidade de Formação Contínua, `UM` Unidade/Módulo/Ação. */
+    /** Course type: `A` refresher course, `B` pre-Bologna bachelor's degree (*bacharelato*), `CF` complementary training course, `CFC` continuing education course, `VI` summer/winter course, `FL` free course or training, `D` doctorate, `E` specialisation, `EA` advanced studies, `EG` EUGLOH, `EIA` European Innovation Academy, `FC` continuing education, `L` bachelor's degree (*licenciatura*), `LV` free, `M` master's degree, `MI` integrated master's degree, `PD` postdoctoral programme, `UFC` continuing education unit, `UM` unit/module/training action. */
     pv_tipo_cur_sigla?: string;
     /** Where the link came from, e.g. `CUR`. Doesn't change the content. */
     pv_origem?: string;

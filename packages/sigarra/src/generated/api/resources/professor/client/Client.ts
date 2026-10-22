@@ -16,7 +16,7 @@ export declare namespace ProfessorClient {
 }
 
 /**
- * Professor (docente) pages and schedules.
+ * Professor pages and schedules.
  */
 export class ProfessorClient {
     protected readonly _options: NormalizedClientOptions<ProfessorClient.Options>;

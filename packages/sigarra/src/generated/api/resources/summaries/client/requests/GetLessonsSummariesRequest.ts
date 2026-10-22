@@ -10,10 +10,10 @@
 export interface GetLessonsSummariesRequest {
     faculty: string;
     language: string;
-    /** Ocorrencia da UC */
+    /** Course unit occurrence ID. */
     pv_ocorrencia_id?: string;
-    /** O id da turma */
+    /** Class ID. */
     pv_turma_id?: string;
-    /** Tipo de aula */
+    /** Lesson type. */
     pv_tipo_aula?: string;
 }
