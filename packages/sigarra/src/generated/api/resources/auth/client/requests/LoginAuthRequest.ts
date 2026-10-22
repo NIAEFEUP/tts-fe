@@ -12,7 +12,7 @@
 export interface LoginAuthRequest {
     faculty: string;
     language: string;
-    /** Username, e.g. `up202008169`. */
+    /** Username, e.g. `up20YYXXXXX`. */
     pv_login: string;
     pv_password: string;
 }

@@ -2,7 +2,7 @@
 
 export interface LoginResult {
     authenticated: boolean;
-    /** Username, without the `up` prefix (e.g. `202008169`). */
+    /** Username, without the `up` prefix (e.g. `20YYXXXXX`). */
     codigo: string;
     /** User type: `A` for students. Values for other kinds of users haven't been observed. */
     tipo: string;

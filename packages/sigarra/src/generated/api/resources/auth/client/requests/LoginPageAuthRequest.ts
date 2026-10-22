@@ -12,7 +12,7 @@
 export interface LoginPageAuthRequest {
     faculty: string;
     language: string;
-    /** Username, with or without the `up` prefix (e.g. `up202008169` or `202008169`). */
+    /** Username, with or without the `up` prefix (e.g. `up20YYXXXXX` or `20YYXXXXX`). */
     p_user: string;
     p_pass: string;
     /** Page to redirect to after logging in. Defaults to `web_page.Inicial`. */
