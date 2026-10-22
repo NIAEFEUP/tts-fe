@@ -457,5 +457,5 @@ The frontend type-checks against the backend's emitted declarations, so emit the
 - [`apps/backend/docs/endpoints.md`](./apps/backend/docs/endpoints.md) — **the** API source of truth.
 - [`apps/backend/docs/tech-stack.md`](./apps/backend/docs/tech-stack.md) — stack decisions and Prisma 8 usage.
 - [`apps/backend/docs/schema-migration.md`](./apps/backend/docs/schema-migration.md) — legacy Django → Prisma 8 mapping.
-- [`packages/sigarra/README.md`](./packages/sigarra/README.md) — SIGARRA SDK generation and retry policy.
+- [`packages/sigarra/README.md`](./packages/sigarra/README.md) — SIGARRA SDK usage and retry policy.
 - [`docs/all-issues-guide.md`](./docs/all-issues-guide.md) — the cutover issue breakdown.
