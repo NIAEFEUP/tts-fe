@@ -15,9 +15,9 @@ permissions:
   contents: read
 
 jobs:
-  generated:
+  check-sdk-up-to-date:
     runs-on: ubuntu-latest
-    name: Generated SDK is up to date
+    name: Check if generated SDK is up to date
 
     steps:
       - name: Checkout repository
