@@ -4981,18 +4981,18 @@
         "in": "path",
         "required": true,
         "schema": {
-          "type": "string",
-          "default": "feup"
-        }
+          "type": "string"
+        },
+        "example": "feup"
       },
       "Language": {
         "name": "language",
         "in": "path",
         "required": true,
         "schema": {
-          "type": "string",
-          "default": "pt"
-        }
+          "type": "string"
+        },
+        "example": "pt"
       }
     },
     "securitySchemes": {
