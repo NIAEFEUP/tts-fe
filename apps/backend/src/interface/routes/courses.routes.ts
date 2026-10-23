@@ -8,10 +8,11 @@ import { HttpError } from '@/interface/errors/errors'
 // The port (interface) defines *what* methods exist — not *how* they work.
 // Imported as `type` only: the route never touches the database directly.
 import type { CourseRepository } from '@/domain/ports/course.repository'
+import type { CourseUnitRepository } from '@/domain/ports/course-unit.repository'
 import type { SessionRepository } from '@/domain/ports/session.repository'
 import { createRequiredAuthMiddleware } from '@/interface/middleware/auth.middleware'
 import { apiError } from '@/interface/middleware/error-handler'
-import { courseSchema } from './catalog.schemas'
+import { courseSchema, courseUnitSchema } from './catalog.schemas'
 
 // Routes read `repositories` off the Elysia context — no infrastructure imports.
 // A missing course throws `HttpError('course-not-found')`; the global `onError`
@@ -24,7 +25,9 @@ import { courseSchema } from './catalog.schemas'
 // This tells TypeScript: "this plugin expects `repositories.courseRepository`
 // to be available on the Elysia context."
 type CourseDependencies = {
-  decorator: { repositories: { courseRepository: CourseRepository } }
+  decorator: {
+    repositories: { courseRepository: CourseRepository; courseUnitRepository: CourseUnitRepository }
+  }
   store: {}
   derive: {}
   resolve: {}
@@ -79,5 +82,23 @@ export const courseRoutes = ({ sessions }: CourseRoutesDeps) =>
         response: { 200: courseSchema, 404: 'ApiError' },
         params: t.Object({ id: t.Integer() }),
         detail: { tags: ['courses'], summary: 'Get one course' },
+      },
+    )
+    // GET /v1/courses/22841/units
+    // Lists the abstract course units the course offers, ordered by acronym.
+    // The course must exist first: an unknown id throws HttpError → 404. A
+    // course that exists but offers no units answers an empty list, not a 404.
+    .get(
+      '/:id/units',
+      async ({ repositories, params }) => {
+        const course = await repositories.courseRepository.findById(params.id)
+        if (!course) throw new HttpError('course-not-found', `Course ${params.id} not found`, 404)
+
+        return repositories.courseUnitRepository.findByCourse(params.id)
+      },
+      {
+        response: { 200: t.Array(courseUnitSchema), 404: 'ApiError' },
+        params: t.Object({ id: t.Integer() }),
+        detail: { tags: ['courses'], summary: 'Course units of a course' },
       },
     )

@@ -175,6 +175,22 @@ Because a course can belong to multiple faculties, each course lists its faculty
 - `year` — academic year
 - `faculty` — faculty acronym
 
+### `GET /courses/:id/units` — response
+
+The abstract course units the course offers, ordered by acronym. An unknown course id answers `404 course-not-found`; a course that offers no units answers an empty list.
+
+```json
+[
+  {
+    "id": 42,
+    "courseId": 22841,
+    "acronym": "BD",
+    "name": "Bases de Dados",
+    "semester": 1
+  }
+]
+```
+
 ### `GET /courses/:id/occurrences` — query params
 
 - `year` — academic year
@@ -218,6 +234,28 @@ Backend resolves all occurrences for the course, validates no overlap, and creat
   "semester": 1
 }
 ```
+
+An unknown id answers `404 course-unit-not-found`.
+
+### `GET /course-units/:id/occurrences` — response
+
+Every concrete occurrence of the unit, across the courses and academic years it is taught in, newest year first. An unknown id answers `404 course-unit-not-found`; a unit with no occurrences answers an empty list.
+
+```json
+[
+  {
+    "id": 587177,
+    "courseUnitId": 42,
+    "courseId": 22841,
+    "year": 2025,
+    "ects": 6,
+    "url": "https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=587177",
+    "hash": "abc..."
+  }
+]
+```
+
+`id` is the Sigarra occurrence id and is only unique per academic year — the row's real key is `(id, year)`.
 
 ---
 
