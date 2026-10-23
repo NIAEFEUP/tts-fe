@@ -7,6 +7,13 @@
 // periods, admin scope) live on `Occurrence` — see `occurrence.repository.ts`.
 
 /**
+ * The two semesters a course unit can be taught in. The catalog only exposes
+ * 1 or 2 — narrowing the loosely-typed database column here keeps that
+ * invariant visible to every layer that consumes a `CourseUnit`.
+ */
+export type CourseUnitSemester = 1 | 2
+
+/**
  * An abstract course unit. It owns no classes, periods, or enrollments — only
  * `Occurrence` rows do. `courseId` is the course that offers the unit; the
  * unit's occurrences may additionally span other courses and years.
@@ -16,7 +23,7 @@ export type CourseUnit = {
   courseId: number
   acronym: string
   name: string
-  semester: number
+  semester: CourseUnitSemester
 }
 
 /**
