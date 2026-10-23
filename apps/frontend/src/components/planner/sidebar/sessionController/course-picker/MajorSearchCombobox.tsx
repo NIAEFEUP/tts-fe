@@ -19,7 +19,7 @@ interface Props {
  * the list of possible majors.
  */
 const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor, allowedAcronyms }: Props) => {
-  const { majors, majorsError, retryMajors } = useContext(MajorContext)
+  const { majors, majorsError, majorsLoading, retryMajors } = useContext(MajorContext)
   const [search, setSearch] = useState('')
 
   const match = (string: string, query: string) =>
@@ -75,6 +75,7 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor, allowedAcronyms 
           placeholder="Procurar curso..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          isLoading={majorsLoading}
         />
         <div className="overflow-y-auto overscroll-contain">
           {majorsError ? (
@@ -87,7 +88,9 @@ const MajorSearchCombobox = ({ selectedMajor, setSelectedMajor, allowedAcronyms 
           ) : (
             <>
               {selectedMajor && <Menu.Item onSelect={() => setSelectedMajor(null)}>Remover Seleção</Menu.Item>}
-              {filteredMajors.length === 0 && <Menu.Empty>Nenhum curso corresponde à tua pesquisa.</Menu.Empty>}
+              {!majorsLoading && filteredMajors.length === 0 && (
+                <Menu.Empty>Nenhum curso corresponde à tua pesquisa.</Menu.Empty>
+              )}
               {filteredMajors.map((major) => (
                 <Menu.Item
                   key={major.id}
